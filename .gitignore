@@ -1,0 +1,13 @@
+.idea
+*.log
+*.DS_Store
+node_modules
+app/bower_components
+.tmp
+.sass-cache/
+dist/
+*archive.zip
+*.swp
+app/js/generated
+test-results.xml
+control_tower.html
