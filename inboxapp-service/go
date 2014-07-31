@@ -1,0 +1,4 @@
+#!/bin/bash
+
+export SMAIL_BACK_CFG=../config/inboxapp.cfg
+python app/smailback.py

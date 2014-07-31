@@ -19,3 +19,7 @@ artifacts/
 public/
 .DS_Store
 screenshot*
+*.pyc
+env/
+.vagrant/
+__pycache__/
