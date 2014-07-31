@@ -1,0 +1,247 @@
+/*global Smail */
+
+describeComponent('mail_view/ui/mail_view', function () {
+  'use strict';
+
+  var mail;
+
+  var testData;
+
+  beforeEach(function () {
+    mail = {ident: 1, header: { date: '12/12/12T12:12' }, tags: ['inbox']};
+    testData = {mail: Smail.testData().parsedMail.simpleTextPlain};
+    Smail.mockBloodhound();
+    setupComponent('<div></div>', {mail: mail});
+  });
+
+  it('triggers mail:want on ui:openMail', function () {
+    var spyEvent = spyOnEvent(document, Smail.events.mail.want);
+
+    setupComponent('<div></div>', {ident: mail.ident });
+
+    expect(spyEvent).toHaveBeenTriggeredOn(document);
+    expect(spyEvent.mostRecentCall.data.mail).toEqual(1);
+  });
+
+  it('triggers dispatchers.rightPane.openNoMessageSelected when getting mail.notFound', function () {
+    var openNoMessageSelectedEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openNoMessageSelected);
+
+    this.component.trigger(this.component, Smail.events.mail.notFound);
+
+    expect(openNoMessageSelectedEvent).toHaveBeenTriggeredOn(document);
+  });
+
+
+  it('removes the tag from the mail when the tag label is clicked', function() {
+    var updateSpy = spyOnEvent(document, Smail.events.mail.tags.update);
+
+    this.component.displayMail({}, testData);
+    this.component.removeTag('inbox');
+
+    expect(updateSpy).toHaveBeenTriggeredOn(document);
+  });
+
+  it('verifies if new tag input is hidden when rendering mail view', function() {
+
+    this.component.displayMail({}, testData);
+
+    var newTagInputComponent = this.component.select('newTagInput');
+    expect(newTagInputComponent.attr('style').trim()).toEqual('display: none;');
+  });
+
+  it('verifies if new tag input is shown when clicking on new tag button ', function() {
+   this.component.displayMail({}, testData);
+
+    var newTagInputComponent = this.component.select('newTagInput');
+    var addNewComponent = this.component.select('addNew');
+
+    this.component.select('newTagButton').click();
+
+    expect(newTagInputComponent.attr('style').trim()).not.toEqual('display: none;');
+    expect(addNewComponent.attr('style').trim()).toEqual('display: none;');
+  });
+
+  it('hides new tag button when pressing esc key', function(){
+    this.component.displayMail({}, testData);
+    this.component.select('newTagButton').click();
+
+    var e = creatingEvent("keydown", 27);
+    var newTagInputComponent = this.component.select('newTagInput');
+    var addNewComponent = this.component.select('addNew');
+
+    newTagInputComponent.trigger(e);
+
+    expect(newTagInputComponent.attr('style').trim()).toEqual('display: none;');
+    expect(addNewComponent.attr('style').trim()).not.toEqual('display: none;');
+  });
+
+  it('assumes that the mail is encrypted and valid if at least one of the locks are valid', function() {
+    var email = testData;
+    email.security_casing = {locks: [{state: 'valid'}, {state: 'failure'}]};
+    expect(this.component.checkEncrypted(email)).toEqual('encrypted encryption-valid');
+  });
+
+  it('assumes that the mail is encrypted and failure if all the locks are failed', function() {
+    var email = testData;
+    email.security_casing = {locks: [{state: 'failure'}, {state: 'failure'}]};
+    expect(this.component.checkEncrypted(email)).toEqual('encrypted encryption-failure');
+  });
+
+  it('assumes that the mail is not encrypted if it doesn\'t have any locks', function() {
+    var email = testData;
+    email.security_casing = {locks: []};
+    expect(this.component.checkEncrypted(email)).toEqual('not-encrypted');
+  });
+
+  it('assumes that the mail is signed only if all imprints are valid', function() {
+    var email = testData;
+    email.security_casing = {imprints: [{state: 'valid', seal: {trust: 'marginal', validity: 'marginal'}}, {state: 'valid', seal: {trust: 'marginal', validity: 'marginal'}}]};
+    expect(this.component.checkSigned(email)).toEqual('signed');
+  });
+
+  it('assumes that the mail is signed with failures if there is a revoke or expire', function() {
+    var email = testData;
+    email.security_casing = {imprints: [{state: 'valid', seal: {trust: 'marginal', validity: 'marginal'}}, {state: 'from_revoked', seal: {trust: 'marginal', validity: 'marginal'}}]};
+    expect(this.component.checkSigned(email)).toEqual('signed signature-revoked');
+  });
+
+  it('assumes that mail is not trusted if its signature contains no_trust from the user', function() {
+    var email = testData;
+    email.security_casing = {imprints: [{seal: {trust: "no_trust", validity: "ultimate"}}]};
+    expect(this.component.checkSigned(email)).toEqual('signed signature-not-trusted');
+  });
+
+  it('uses validity when trust is not present', function() {
+    var email = testData;
+    email.security_casing = {imprints: [{seal: { validity: "no_trust"}}]};
+    expect(this.component.checkSigned(email)).toEqual('signed signature-not-trusted');
+  });
+
+  it('assumes not trusted when the signature is not found', function(){
+    var email = testData;
+    email.security_casing = {imprints: [{seal: null}]};
+    expect(this.component.checkSigned(email)).toEqual('signed signature-not-trusted');
+  });
+
+  it('assumes that the mail is not signed if there are no imprints', function() {
+    var email = testData
+    email.security_casing = {imprints: []}
+    expect(this.component.checkSigned(email)).toEqual('not-signed');
+  });
+
+  it('shows that mail is encrypted if it is', function() {
+    spyOn(this.component, 'checkEncrypted').andReturn('encrypted');
+    this.component.displayMail({}, testData);
+    expect(this.component.$node.find('.encrypted')).toExist();
+  });
+
+  it('shows that mail is signed if it is', function() {
+    spyOn(this.component, 'checkSigned').andReturn('signed');
+    this.component.displayMail({}, testData);
+    expect(this.component.$node.find('.signed')).toExist();
+  });
+
+  it('shows that mail is not encrypted if it isn\'t', function() {
+    spyOn(this.component, 'checkEncrypted').andReturn('not-encrypted');
+    this.component.displayMail({}, testData);
+    expect(this.component.$node.find('.not-encrypted')).toExist();
+  });
+
+  it('shows that mail is not signed if it isn\'t', function() {
+    spyOn(this.component, 'checkEncrypted').andReturn('not-signed');
+    this.component.displayMail({}, testData);
+    expect(this.component.$node.find('.not-signed')).toExist();
+  });
+
+  it('creates new tag when pressing Enter key on new tag input', function(){
+    var tagsUpdateEvent = spyOnEvent(document, Smail.events.mail.tags.update);
+    var tagListRefreshEvent = spyOnEvent(document, Smail.events.dispatchers.tags.refreshTagList);
+    var e = creatingEvent("keydown", 13);
+
+    this.component.displayMail({}, testData);
+    this.component.select('newTagButton').click();
+
+    var newTagInputComponent = this.component.select('newTagInput');
+    newTagInputComponent.val('Test');
+    newTagInputComponent.trigger(e);
+
+    var tags = testData.mail.tags.slice();
+    tags.push('Test');
+
+    expect(tagListRefreshEvent).toHaveBeenTriggeredOn(document);
+    expect(tagsUpdateEvent).toHaveBeenTriggeredOnAndWith(document, { ident: testData.mail.ident, tags: tags});
+  });
+
+  it('trigger mail delete event when moving email to trash', function(){
+    var mailDeleteEvent = spyOnEvent(document, Smail.events.ui.mail.delete);
+
+    Foundation.global.namespace = '';
+    $(document).foundation();
+
+    this.component.displayMail({}, testData);
+    this.component.moveToTrash();
+
+    expect(mailDeleteEvent).toHaveBeenTriggeredOnAndWith(document, { mail: this.component.attr.mail });
+  });
+
+  it('shows no message selected pane when deleting the email being composed', function() {
+    var openNoMessageSelectedPaneEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openNoMessageSelected);
+    var mails = [{ident: 123}];
+    this.component.attr.mail = mails[0];
+
+    this.component.trigger(document, Smail.events.mail.deleted, {mails: mails});
+
+    expect(openNoMessageSelectedPaneEvent).toHaveBeenTriggeredOn(document);
+  });
+
+  it('does not show no message selected pane when deleting a different set of emails', function() {
+    var openNoMessageSelectedPaneEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openNoMessageSelected);
+    var mails = [{ident: 321}];
+    this.component.attr.mail = {ident: 123};
+
+    this.component.trigger(document, Smail.events.mail.deleted, {mails: mails});
+
+    expect(openNoMessageSelectedPaneEvent).not.toHaveBeenTriggeredOn(document);
+  });
+
+  describe('archiving email', function() {
+    it('trigger tag updates events with no tags', function(){
+      var tagsUpdateEvent = spyOnEvent(document, Smail.events.mail.tags.update);
+
+      Foundation.global.namespace = '';
+      $(document).foundation();
+
+      this.component.displayMail({}, testData);
+      this.component.archiveIt();
+
+      expect(tagsUpdateEvent).toHaveBeenTriggeredOnAndWith(document, { ident: testData.mail.ident, tags: []});
+    });
+
+    it('opens no message selected pane', function() {
+      var openNoMessageSelectedEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openNoMessageSelected);
+
+      Foundation.global.namespace = '';
+      $(document).foundation();
+
+      this.component.displayMail({}, testData);
+      this.component.archiveIt();
+
+      expect(openNoMessageSelectedEvent).toHaveBeenTriggeredOn(document);
+    });
+  });
+
+  it('opens the no message selected pane when clicking the close button', function() {
+    var openNoMessageSelectedEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openNoMessageSelected);
+
+    this.component.displayMail({}, testData);
+    this.component.select('closeMailButton').click();
+
+    expect(openNoMessageSelectedEvent).toHaveBeenTriggeredOn(document);
+  });
+
+  function creatingEvent(event, keyCode) {
+    var e = $.Event(event);
+    e.which = keyCode;
+    return e;
+  }
+});

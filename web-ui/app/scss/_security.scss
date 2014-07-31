@@ -1,0 +1,47 @@
+.security-status {
+  margin: 0 0 5px;
+  clear: both;
+  span {
+    display: inline-block;
+    padding: 2px 5px;
+    white-space: nowrap;
+    background: $success;
+    color: #FFF;
+    &:before {
+      font-family: FontAwesome;
+    }
+    &.encrypted {
+      &:before {
+        content: "\f023  \f00c";
+      }
+      &.encryption-failure {
+        background: $error;
+        &:before {
+          content: "\f023  \f05e";
+        }
+      }
+    }
+    &.signed {
+      &:before {
+        content: "\f007  \f00c";
+      }
+      &.signature-not-trusted {
+        background: $error;
+        &:before {
+          content: "\f007  \f05e";
+        }
+      }
+    }
+    &[class^=not-], &.signature-expired, &.signature-revoked {
+      background: $attention;
+      &:before {
+        content: "\f007  \f12a"
+      }
+    }
+    &.not-encrypted {
+      &:before {
+        content: "\f023  \f12a";
+      }
+    }
+  }
+}

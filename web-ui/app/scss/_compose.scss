@@ -1,0 +1,92 @@
+// COMPOSE BUTTON 
+#compose {
+  margin-bottom: 5px;
+  padding-right: 4px;
+  #compose-trigger {
+    width: 100%;
+    display: inline-block;
+    #compose-mails-trigger {
+      background: $primary_color;
+      color: #FFF;
+      padding: 10px 30px;
+      text-align: center;
+      font-weight: 400;
+      font-size: 1.2em;
+      @include btn-transition;
+      &:hover {
+        background: lighten($primary_color, 10%);
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+// COMPOSE PANE
+#compose-box, #draft-box, #reply-box {
+  margin: 0 0 50px 10px;
+  .input-container {
+    border-bottom: 1px solid #DDD;
+    padding: 1px;
+  }
+  label {
+    color: #AAA;
+    padding: 0.5rem;
+    cursor: text;
+    display: inline-block;
+    padding: 10px;
+  }
+  input, textarea {
+    margin: 0;
+    border: none;
+  }
+  input {
+    &#subject {
+      font-size: 1.6875rem;
+      line-height: 1.4;
+      margin-top: 26px;
+    }
+  }
+  textarea {
+    border-bottom: 2px solid #DDD;
+    min-height: 400px;
+    font-family: inherit;
+    font-weight: normal;
+    font-size: 1rem;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+  }
+
+  &.reply-box, &.forward-box {
+    margin: 0;
+    h4 {
+      font-size: 0.9em;
+      font-style: italic;
+      color: #777;
+      margin: 2px 0;
+      clear: both;
+      cursor: pointer;
+      &:hover {
+        background: $contrast;
+      }
+    }
+    textarea {
+      min-height: 200px;
+      margin: 10px 0;
+    }
+    p {
+      padding: 5px;
+      margin: 10px 0;
+      font-style: italic;
+      cursor: pointer;
+      &:hover {
+        background: $contrast;
+      }
+    }
+  }
+
+  @include recipients;
+}
+
+#reply-box {
+  @include recipients;
+}

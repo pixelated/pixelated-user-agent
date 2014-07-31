@@ -1,0 +1,46 @@
+@import "reset.scss";
+@import "foundation.scss";
+@import "compass/css3";
+@import "colors.scss";
+@import "styles.scss";
+
+
+html {
+    height:100%;
+}
+body {
+    min-height:100%;
+    overflow: hidden;
+    background: #FFF;
+}
+header#main {
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  padding: 5px 0;
+  width: 100%;
+  position: relative;
+  background: $secondary;
+  border-bottom: 1px solid lighten($secondary, 5%);
+  margin-bottom: 0;
+}
+
+
+.no-padding {
+  padding: 0;
+}
+
+.tip-msg {
+  padding: 10px;
+  margin: 8px 20px -25px 20px;
+  background: $warning;
+  color: darken($warning, 50%);
+  font-size: 0.9em;
+  i {
+    margin-right: 5px;
+  }
+}
+
+.text-right {
+  text-align: right;
+}

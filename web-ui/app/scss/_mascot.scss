@@ -1,0 +1,32 @@
+/* SHEEP */
+
+#no-message-selected-pane {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  
+  z-index: -100;
+  background: #e5e5e3;
+  padding: 30px;
+  vertical-align:middle;
+  text-align:center;
+  -webkit-transform: translate3d(0, 0, 0);
+  &:before{
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.25em;
+  }
+  .scene{
+    display:inline-block;
+    vertical-align:middle;
+  }
+
+  .text{
+    color:#666;
+    margin-bottom: 40px;
+  }
+}

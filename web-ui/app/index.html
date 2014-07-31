@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>Pixelated Mail</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+<link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="css/opensans.css" rel="stylesheet" type="text/css">
+<link href="css/news-cycle.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+
+<div class="off-canvas-wrap" data-offcanvas>
+  <header id="main">
+    <div id="logo" class="small-4 large-2 columns"><strong>Pixelated</strong> <i class="fa fa-angle-right"></i> Messages</div>
+    <div id="user-alerts"></div>
+  </header>
+
+  <div class="inner-wrap">
+    <div class="column collapsed-nav no-padding">
+      <a class="left-off-canvas-toggle" href="#"><i class="fa fa-navicon"></i></a>
+      <ul id="tags-shortcuts" class="shortcuts">
+      </ul>
+      <ul id="custom-tags-shortcuts" class="shortcuts">
+        <li>
+        <a class="left-off-canvas-toggle" href="#" title="View your tags"><i class="fa fa-tags"></i><div class="shortcut-label">Tags</div></a>
+        </li>
+      </ul>
+    </div>
+
+    <section id="left-pane" class="left-off-canvas-menu">
+      <nav id="tag-list"></nav>
+    </section>
+
+    <article id='middle-pane-container' class="small-5 medium-5 large-5 columns no-padding">
+      <section id="top-pane" class="small-12 large-12 no-padding">
+        <div id="compose-search-trigger">
+          <div id="compose" class="column small-12 large-4 no-padding">
+            <div id="compose-trigger"></div>
+          </div>
+          <div id="search-trigger" class="small-12 large-8 columns no-padding">
+          </div>
+        </div>
+        <ul id="list-actions"></ul>
+      </section>
+
+      <section id="middle-pane" class="small-9 medium-12 large-12 columns no-padding">
+        <ul id="mail-list">
+        </ul>
+      </section>
+    </article>
+
+    <section id="right-pane" class="small-7 medium-7 large-7 columns">
+    </section>
+
+  </div>
+</div>
+
+<!-- build:js app.min.js -->
+<script src="/bower_components/modernizr/modernizr.js"></script>
+<script src="/bower_components/lodash/dist/lodash.js"></script>
+<script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/js/lib/highlightRegex.js"></script>
+<script src="/bower_components/handlebars/handlebars.min.js"></script>
+<script src="/bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script>
+<script src="/bower_components/foundation/js/foundation.js" ></script>
+<script src="/bower_components/foundation/js/foundation/foundation.reveal.js" ></script>
+<script src="/bower_components/foundation/js/foundation/foundation.offcanvas.js"></script>
+<!-- endbuild-->
+
+<!-- remove-in-build --><script src="/bower_components/requirejs/require.js" data-main="js/main.js"></script><!-- end-remove-in-build -->
+
+
+<script>
+$(document).foundation();
+</script>
+
+
+</body>
+</html>

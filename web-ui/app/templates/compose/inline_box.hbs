@@ -1,0 +1,18 @@
+<div id="subject-container">
+  <h4 id="reply-subject">{{subject}}</h4>
+  <input type="text" value="{{subject}}" style="display: none"/>
+</div>
+<textarea id="text-box" placeholder="{{t 'Body'}}" tabindex=1>{{body}}</textarea>
+
+<a id="all-recipients" tabindex=2>
+  <strong>{{t 'To'}}:</strong> {{formatRecipients recipients}}
+</a>
+
+{{> recipients }}
+
+<div class="buttons-group columns">
+  <button id="send-button" tabindex=6>{{t 'send-button'}}<i class="fa fa-send"></i></button>
+  <button id="trash-button" tabindex=7>{{t 'trash-button'}}<i class="fa fa-trash-o"></i></button>
+  <button id="draft-button">{{t 'draft-button'}}<i class="fa fa-pencil"></i></button>
+  <div id="draft-save-status"></div>
+</div>

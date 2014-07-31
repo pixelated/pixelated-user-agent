@@ -1,0 +1,23 @@
+<span>
+  <input type="checkbox"/>
+</span>
+<span>
+  <a href="/#/{{ tag }}/mail/{{ ident }}">
+    <span class="sent-date">{{ header.formattedDate }}</span>
+
+    <div class="from">{{t 'to:'}} {{#if header.to }}{{
+      header.to }}{{else}}{{t 'no_recipient'}}{{/if}}</div>
+    <div class="subject-and-tags">
+      <ul class="tags">
+        {{#each tagsForListView }}
+            <li class="tag" data-tag="{{this}}">{{ this }}</li>
+        {{/each }}
+      </ul>
+      {{#if header.subject }}
+        {{header.subject}}
+      {{else}}
+        {{t 'no_subject'}}
+      {{/if}}
+    </div>
+  </a>
+</span>

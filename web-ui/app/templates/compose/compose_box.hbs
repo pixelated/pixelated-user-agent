@@ -1,0 +1,23 @@
+<button class="close-mail-button">
+  <i class="fa fa-times"></i>
+</button>
+<div class="tip-msg">
+    <i class="fa fa-lightbulb-o"></i>{{t "Don't worry about recipients right now, you'll be able to add them just before sending." }}
+</div>
+<input type="text" id="subject" value="{{subject}}" placeholder="{{t 'Subject'}}" tabindex="1"/>
+<textarea id="text-box" placeholder="{{t 'Body'}}" tabindex="2">{{body}}</textarea>
+
+{{> recipients }}
+
+<div class="clearfix">
+    <a id="to-trigger" class="hide">{{t 'To'}}</a>
+    <a id="ccs-trigger" class="hide">{{t 'CC'}}</a>
+    <a id="bccs-trigger" class="hide">{{t 'BCC'}}</a>
+</div>
+
+<div class="buttons-group columns">
+  <button id="send-button" tabindex="6">{{t 'send-button'}}<i class="fa fa-send"></i></button>
+  <button id="trash-button" tabindex="7">{{t 'trash-button'}}<i class="fa fa-trash-o"></i></button>
+  <button id="draft-button">{{t 'draft-button'}}<i class="fa fa-pencil"></i></button>
+  <div id="draft-save-status"></div>
+</div>

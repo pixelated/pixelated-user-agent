@@ -1,0 +1,3 @@
+---
+include_pattern: 'app/js/**/*.js'
+exclude_pattern: ''

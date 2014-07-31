@@ -1,0 +1,1 @@
+require(['js/monkey_patching/array', 'js/monkey_patching/post_message'], function () {});

@@ -1,0 +1,205 @@
+// SHARED MIXINS
+@mixin btn-transition {
+  @include transition-property(background-color);
+  @include transition-duration(300ms);
+  @include transition-timing-function(ease-out);
+}
+
+@mixin tooltip($top: 8px, $left: 40px) {
+  background: rgba(0, 0, 0, 0.7);
+  color: #FFF;
+  position: absolute;
+  z-index: 2;
+  left: $left;
+  top: $top;
+  font-size: 0.8rem;
+  padding: 2px 10px;
+  white-space: nowrap;
+  @include border-radius(2px);
+}
+
+@mixin tt-hint {
+  .tt-hint {
+    color: #999
+  }
+  .tt-dropdown-menu {
+    width: 400px;
+    margin-top: 6px;
+    padding: 8px 0;
+    background-color: $contrast;
+    border: 1px solid darken($contrast, 5%);
+  }
+  .tt-suggestion {
+    padding: 3px 10px;
+    font-size: 18px;
+    line-height: 24px;
+    &.tt-cursor {
+      background-color: #FFF;
+    }
+    p {
+      margin: 0;
+    }
+  }
+}
+
+// FORM MIXINS
+@mixin check-box {
+  background-color: #FFF;
+  border: 1px solid #CCC;
+  padding: 7px;
+  margin: 3px 0;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  @include border-radius(2px);
+  @include appearance(none);
+
+  &:focus {
+    outline: none;
+    border-color: #666;
+  }
+
+  &:active, &:checked:active {
+  }
+
+  &:checked {
+    background-color: #EEE;
+    border: 1px solid darken(#DDD, 10%);
+    color: #333;
+  }
+
+  &:checked:after {
+    content: '\2714';
+    font-size: 1em;
+    position: absolute;
+    bottom: -2px;
+    left: 1px;
+    color: $secondary;
+  }
+}
+
+@mixin tags {
+  ul.tags {
+    li {
+      background: #DDD;
+      display: inline;
+      font-size: 0.55em;
+      padding: 2px 3px;
+      margin: 0 1px;
+      position: relative;
+      text-transform: uppercase;
+      @include border-radius(2px);
+      &[data-tag="drafts"] {
+        color: $attention;
+        background: #EEE;
+      }
+      &.tag:hover {
+        text-decoration: line-through;
+        cursor: pointer;
+      }
+      &.add-new {
+        opacity: 0.6;
+        transition: background-color 150ms ease-out;
+        background: transparent;
+        border: 1px solid #DDD;
+        line-height: 0;
+        padding: 1px 2px;
+        @include border-radius(2px);
+        &:hover {
+          opacity: 1;
+          background: #DDD;
+        }
+        i {
+          &:before {
+            vertical-align: middle;
+          }
+        }
+      }
+      &.new-tag {
+        font-size: 0.7em;
+        display: inline-block;
+        padding: 0;
+        background: transparent;
+        input {
+          display: inline;
+          font-size: 1em;
+          padding: 2px 5px;
+          width: 120px;
+          margin: 0;
+        }
+        @include tt-hint;
+        .tt-dropdown-menu {
+          width: 250px;
+        }
+      }
+    }
+  }
+}
+
+@mixin searching($top, $left, $color, $size){
+  &.searching {
+    &:after {
+      font-family: FontAwesome;
+      content: "\f002";
+      font-size: $size;
+      top: $top;
+      left: $left;
+      position: absolute;
+      color: $color;
+      text-shadow: -1px 0 $contrast, 0 1px $contrast, 1px 0 $contrast, 0 -1px $contrast;
+    }
+  }
+}
+
+
+@mixin recipients {
+
+  .recipients-area {
+    -webkit-appearance: none;
+    background-color: white;
+    font-family: inherit;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.898em;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+
+    .recipients-navigation-handler {
+      z-index: -1;
+      position: absolute;
+    }
+
+    .twitter-typeahead {
+      flex: 1 1 50px;
+    }
+
+    input[type=text] {
+      vertical-align: top;
+      height: 35px;
+      margin-left: 1px;
+      font-size: 0.9em;
+      width: 100%;
+    }
+
+    .fixed-recipient {
+      display: inline-block;
+      margin-right: -3px;
+      flex: none;
+
+      .recipient-value {
+        &.selected {
+          border: 1px solid #666666;
+        }
+        background-color: #F5F5F5;
+        border: 1px solid #D9D9D9;
+        border-radius: 2px;
+        margin: 3px;
+        padding: 5px;
+      }
+    }
+  }
+}
+
+@include tt-hint;

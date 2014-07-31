@@ -1,0 +1,105 @@
+/* MAIL PANE */
+
+@mixin read-msg {
+  #mail-view {
+    .msg-header {
+      display: flex;
+      flex-wrap: nowrap;
+
+      position: fixed;
+      width: 57%;
+      top: 0;
+      z-index: 10;
+      background-color: white;
+      font-size: 0.9em;
+      padding: 0px 0;
+      margin: 1px 0 0 0;
+      .recipients {
+        border-bottom: 1px solid #DDD;
+        padding-bottom: 5px;
+        line-height: 1.5em;
+        i {
+          padding: 0 5px;
+        }
+        .from {
+          font-weight: 700;
+        }
+      }
+      .close-mail-button {
+        position: relative;
+        float: none;
+        flex-shrink: 0;
+        display: inline-block;
+        vertical-align: top;
+        height: 27px;
+        margin-right: 3px;
+      }
+    }
+    h3 {
+      margin-bottom: 0;
+    }
+    .tagsArea {
+      clear: both;
+      margin: 0 0 10px;
+      @include tags;
+      ul li {
+        &.tag:hover {
+          &:before {
+            content: "click to remove";
+            text-transform: lowercase;
+            font-size: 0.5rem;
+            @include tooltip(18px, 8px);
+          }
+        }
+      }
+    }
+  }
+}
+
+#mail-actions {
+  text-align: right;
+  padding: 10px 0;
+  button {
+    display: inline-block;
+    display: inline;
+    line-height: 2em;
+    border: 1px solid #DDD;
+    &#reply-button-top {
+      @include border-right-radius(0);
+      padding: 0 20px;
+    }
+    &#view-more-actions {
+      @include border-left-radius(0);
+      padding: 0 5px;
+      margin-left: -4px;
+    }
+    &:hover {
+      @include btn-transition;
+      background: darken($contrast, 5%)
+    }
+  }
+  ul#more-actions {
+    padding: 5px 0;
+    width: 170px;
+    text-align: left;
+    display: block;
+    position: absolute;
+    background: #FFF;
+    border: 1px solid #DDD;
+    right: 0;
+    top: 40px;
+    z-index: 10;
+    li {
+      span, a {
+        padding: 5px 10px;
+        display: block;
+        &:hover {
+          cursor: pointer;
+          background: $contrast;
+        }
+      }
+    }
+  }
+}
+
+

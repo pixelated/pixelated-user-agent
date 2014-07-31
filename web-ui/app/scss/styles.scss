@@ -1,0 +1,610 @@
+@import "compass/css3";
+@import "colors.scss";
+@import "mixins.scss";
+@import "alerts.scss";
+@import "read.scss";
+@import "reply.scss";
+@import "compose.scss";
+@import "security.scss";
+
+
+#logo {
+  color: #FFF;
+}
+
+.search-highlight {
+  background-color: $search-highlight;
+}
+
+
+@mixin list-actions {
+  #list-actions {
+    width: 100%;
+    height: 34px;
+    margin: 0;
+    border-top: 1px solid #FFF;
+    border-bottom: 2px solid lighten($top_pane, 30%);
+    background: $top_pane;
+    clear: both;
+    overflow: hidden;
+    z-index: 1;
+    li {
+      display: inline-block;
+      margin: 0 -3px;
+      vertical-align: top;
+      input[type=checkbox] {
+        @include check-box;
+        margin: 7px 8px;
+      }
+      select {
+        padding: 1px 3px;
+        margin: 0;
+      }
+      input[type=button] {
+        margin: 2px;
+        padding: 4px 10px;
+        background: lighten($contrast, 5%);
+        color: #333;
+        text-transform: uppercase;
+        font-weight: 400;
+        font-size: 0.8em;
+        opacity: 0.7;
+        border: 1px solid darken($contrast, 10%);
+        @include border-radius(1px);
+        @include btn-transition;
+        &:hover {
+          opacity: 1;
+        }
+        &[disabled=disabled] {
+          opacity: 0.4;
+          cursor: default;
+        }
+      }
+    }
+
+    #pagination-trigger {
+      cursor: pointer;
+      margin: 0 5px;
+    }
+  }
+}
+
+@mixin email-list {
+  ul#mail-list {
+    clear: both;
+    li {
+      height: 50px;
+      position: relative;
+      padding: 2px 5px;
+      background: lighten($contrast, 2%);
+      border-bottom: 1px solid white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 150ms ease-out;
+      span {
+        display: inline-block;
+        vertical-align: top;
+        &:last-child {
+          width: 92%;
+        }
+        input[type=checkbox] {
+          @include check-box;
+          margin-right: 2px;
+        }
+        a {
+          color: #333;
+        }
+      }
+      .subject-and-tags {
+        display: inline-block;
+        width: 90%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        @include tags;
+        ul.tags {
+          display: inline-block;
+          li {
+            display: inline-block;
+            height: auto;
+            font-weight: 400;
+            border: none;
+            &.tag:hover {
+              text-decoration: none;
+            }
+          }
+        }
+      }
+
+      .received-date, .sent-date {
+        position: absolute;
+        right: 10px;
+        font-size: 0.7em;
+      }
+      .from {
+        white-space: nowrap;
+        font-size: 0.8em;
+        width: 80%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      &.status-read {
+        background: $contrast;
+        a {
+          font-weight: normal;
+          color: #555;
+        }
+      }
+      &:hover {
+        background: darken($contrast, 5%);
+      }
+      &.selected {
+        background: #FFF;
+        a {
+          color: #333;
+        }
+      }
+    }
+  }
+}
+
+@mixin mail-count($bg_color) {
+  background: $bg_color;
+  color: #FFF;
+  padding: 2px 5px;
+  font-size: 0.7em;
+  margin-left: 5px;
+  font-weight: 700;
+  @include border-radius(100px);
+}
+
+article {
+  padding-left: 50px !important;
+}
+
+section {
+  display: inline-block;
+  vertical-align: top;
+  height: 100vh;
+  overflow-y: scroll;
+  &#top-pane {
+    height: auto;
+    overflow: hidden;
+    background: darken($top_pane, 10%);
+    border-top: 1px solid $top_pane;
+    @include list-actions;
+    #compose-search-trigger {
+      padding: 4px;
+    }
+   #actions {
+      ul {
+        margin: 0;
+        li {
+          display: inline-block;
+          margin-right: -5px;
+          a {
+            transition: background-color 150ms ease-out;
+            background: darken($top_pane, 10%);
+            color: #FFF;
+            font-size: 1.5em;
+            display: block;
+            padding: 14px 20px;
+            margin: 0 1px 0px;
+            opacity: 0.35;
+            &.selected {
+              background: $top_pane;
+              opacity: 1;
+              cursor: default;
+            }
+            &:hover {
+              opacity: 1;
+            }
+          }
+        }
+      }
+    }
+    #search-trigger {
+      input {
+        margin: 0;
+        padding: 8px 30px;
+        color: #EEE;
+        background: lighten(#333, 10%);
+        border: none;
+        transition: background-color 150ms ease-out;
+        &:hover {
+          background: lighten(#333, 12%);
+        }
+        &:focus {
+          background: lighten(#333, 20%);
+        }
+      }
+      &:before {
+        font-family: "FontAwesome";
+        content: "\f002";
+        position: absolute;
+        padding: 0 10px;
+        top: 9px;
+        color: #999;
+      }
+    }
+  }
+
+  &#left-pane {
+    nav {
+      padding-bottom: 25px;
+      border-right: 1px solid $contrast;
+      ul#default-tag-list, #custom-tag-list {
+        li {
+          transition: background-color 150ms ease-out;
+          padding: 2px 10px;
+          cursor: pointer;
+          &:hover {
+            background: #CCC;
+          }
+          &.selected {
+            font-weight: bold;
+            background: $contrast;
+          }
+        }
+      }
+
+      ul#default-tag-list {
+        li {
+          padding: 5px 10px;
+          position: relative;
+          @include searching(4px, 19px, #333, 0.7em);
+
+          &:before {
+            font-family: "FontAwesome";
+            margin-right: 10px;
+            font-weight: normal;
+          }
+          &:nth-child(1) {
+            &:before {
+              content: "\f01c";
+            }
+          }
+          &:nth-child(2) {
+            &:before {
+              content: "\f1d8";
+            }
+          }
+          &:nth-child(3) {
+            &:before {
+              content: "\f040";
+            }
+          }
+          &:nth-child(4) {
+            &:before {
+              content: "\f014";
+            }
+          }
+          &:nth-child(5) {
+            &:before {
+              content: "\f187";
+            }
+          }
+        }
+      }
+
+      ul#custom-tag-list {
+        padding-bottom: 30px;
+        li {
+          font-size: 0.8em;
+          padding: 5px 20px;
+        }
+      }
+
+      h3 {
+        text-transform: uppercase;
+        font-size: 0.6em;
+        padding: 5px;
+        font-weight: 600;
+        margin: 0 10px;
+        border-bottom: 1px dotted #DDD;
+      }
+    }
+  }
+
+  &#middle-pane {
+    background: lighten($contrast, 2%);
+    @include email-list;
+  }
+
+  &#right-pane {
+    padding: 0 10px 60px 0px;
+    background: #FFF;
+    top: -25px;
+    box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.12);
+    z-index: 2;
+    @include read-msg;
+    [id^=fullView-] {
+      position: relative;
+    }
+  }
+}
+
+.unread-count {
+  @include mail-count($error);
+}
+.total-count {
+  @include mail-count($total_count_bg);
+}
+
+
+/* ACTIONS */
+#refresh-mails-trigger {
+  i {
+    cursor: pointer;
+    opacity: 0.9;
+    padding: 4px;
+    &:hover {
+      opacity: 1;
+      &:after {
+        content: "\f021";
+      }
+      &:before {
+        content: "refresh";
+        font-size: 0.8em;
+        padding-right: 5px;
+      }
+    }
+  }
+}
+
+
+
+.buttons-group {
+  clear: both;
+  margin: 20px 0 0;
+  padding: 0;
+}
+
+#draft-save-status {
+  float: right;
+  padding: 0.4rem 1.1rem;
+  color: #91C2D1;
+}
+
+button {
+  border: 1px solid transparent;
+  i {
+    margin-left: 5px;
+  }
+  &#trash-button, &#draft-button {
+    background: #FFF;
+    border: 1px solid #999;
+    color: #999;
+    float: right;
+    margin-left: 5px;
+    &:hover, &:focus {
+      background: #EEE;
+    }
+  }
+  &.close-mail-button {
+    background: transparent;
+    color: #999;
+    float: right;
+    &:hover {
+      color: darken(#999, 10%);
+    }
+  }
+  &.close-mail-button {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+    padding: 3px 6px 5px;
+    background: #DDD;
+    opacity: 0.7;
+    @include border-radius(0);
+    &:hover {
+      opacity: 1;
+    }
+    i {
+      margin: 0;
+    }
+  }
+  &.no-style {
+    background: transparent;
+    color: #999;
+    padding: 0;
+    margin: 0;
+    i {
+      margin: 0;
+      padding: 0;
+      vertical-align: middle;
+    }
+    &:hover {
+    }
+  }
+}
+
+.collapsed-nav {
+  width: 50px;
+  position: absolute;
+  z-index: 2;
+  height: 100vh;
+  background: #FFF;
+  border-right: 1px solid darken($contrast, 20%);
+  .left-off-canvas-toggle {
+    text-align: center;
+    display: block;
+    left: 0;
+    padding: 10px;
+    background: #FFF;
+    top: 0;
+    z-index: 10000;
+    position: relative;
+  }
+  ul.shortcuts {
+    margin-top: 10px;
+    li {
+      position: relative;
+      margin-bottom: 5px;
+      opacity: 0.8;
+      &.selected {
+        background: $contrast;
+        color: #212121;
+        opacity: 1;
+        cursor: default;
+      }
+      @include searching(6px, 26px, #666, 0.9em);
+      a {
+        display: block;
+        position: relative;
+        font-size: 1.4em;
+        padding: 5px;
+        color: #555;
+        text-align: center;
+        &:hover {
+          background: darken($contrast, 10%);
+          color: #333;
+          @include btn-transition;
+        }
+        &[title]:hover:after {
+          content: attr(title);
+          @include tooltip;
+        }
+      }
+      .unread-count, .total-count {
+        font-size: 0.5em;
+        padding: 1px 5px 0;
+        top: 1px;
+        left: 0;
+        border: 1px solid #FFF;
+        position: absolute;
+        opacity: 0.88;
+      }
+      .total-count {
+        background: #999;
+      }
+    }
+  }
+  #custom-tags-shortcuts {
+    li {
+      border-top: 1px solid #DDD;
+    }
+  }
+  div.shortcut-label {
+      font-size: xx-small;
+      text-transform: uppercase;
+      text-align: center;
+  }
+}
+.move-right {
+  ul.shortcuts {
+    li {
+      display: none;
+    }
+  }
+}
+
+.left-off-canvas-menu {
+  width: 222px;
+  -webkit-backface-visibility: hidden;
+  box-sizing: content-box;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  overflow-y: auto;
+  z-index: 1001;
+  transition: transform 500ms ease 0s;
+  -webkit-overflow-scrolling: touch;
+  -ms-transform: translate(-100%, 0);
+  -webkit-transform: translate3d(-100%, 0, 0);
+  -moz-transform: translate3d(-100%, 0, 0);
+  -ms-transform: translate3d(-100%, 0, 0);
+  -o-transform: translate3d(-100%, 0, 0);
+  transform: translate3d(-100%, 0, 0);
+}
+.left-off-canvas-menu * {
+-webkit-backface-visibility: hidden; }
+
+
+.off-canvas-wrap {
+  -webkit-backface-visibility: hidden;
+  position: relative;
+  width: 100%;
+overflow: hidden; }
+.off-canvas-wrap.move-right, .off-canvas-wrap.move-left {
+  min-height: 100%;
+-webkit-overflow-scrolling: touch; }
+
+.inner-wrap {
+  -webkit-backface-visibility: hidden;
+  position: relative;
+  width: 100%;
+  -webkit-transition: -webkit-transform 500ms ease;
+  -moz-transition: -moz-transform 500ms ease;
+  -ms-transition: -ms-transform 500ms ease;
+  -o-transition: -o-transform 500ms ease;
+transition: transform 500ms ease; }
+.inner-wrap:before, .inner-wrap:after {
+  content: " ";
+display: table; }
+.inner-wrap:after {
+clear: both; }
+
+.move-right > .inner-wrap {
+  -ms-transform: translate(13.88889rem, 0);
+  -webkit-transform: translate3d(13.88889rem, 0, 0);
+  -moz-transform: translate3d(13.88889rem, 0, 0);
+  -ms-transform: translate3d(13.88889rem, 0, 0);
+  -o-transform: translate3d(13.88889rem, 0, 0);
+transform: translate3d(13.88889rem, 0, 0); }
+.move-right .exit-off-canvas {
+  -webkit-backface-visibility: hidden;
+  transition: background 300ms ease;
+  cursor: pointer;
+  display: block;
+  position: absolute;
+  background: rgba(255, 255, 255, 0.2);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1002;
+-webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+@media only screen and (min-width:40.063em) {
+  .move-right .exit-off-canvas:hover {
+background: rgba(255, 255, 255, 0.05); } }
+
+.offcanvas-overlap .left-off-canvas-menu, .offcanvas-overlap .right-off-canvas-menu {
+  -ms-transform: none;
+  -webkit-transform: none;
+  -moz-transform: none;
+  -o-transform: none;
+  transform: none;
+z-index: 1003; }
+.offcanvas-overlap .exit-offcanvas-menu {
+  -webkit-backface-visibility: hidden;
+  transition: background 300ms ease;
+  cursor: pointer;
+  display: block;
+  position: absolute;
+  background: rgba(255, 255, 255, 0.2);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1002;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+z-index: 1002; }
+
+
+#delete-modal {
+  button#trash-button, button#archive-button {
+    width: 40%;
+    margin: 0 22px 30px;
+    height: 80px;
+  }
+  small {
+    font-size: 80%;
+    display: block;
+  }
+}
+
+@import "mascot.scss";
