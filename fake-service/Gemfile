@@ -1,0 +1,16 @@
+source 'https://rubygems.org'
+
+gem "rake"
+gem "sinatra"
+gem "sinatra-contrib"
+gem "json"
+gem "faker"
+gem "shotgun"
+gem "rakeup"
+gem "rspec"
+gem "mail"
+
+gem "capybara"
+gem "selenium-webdriver"
+gem "cucumber"
+gem "capybara-screenshot"

@@ -1,0 +1,52 @@
+$: << "lib"
+
+require 'rubygems'
+require 'rakeup'
+require 'smail'
+require 'rake/packagetask'
+
+RakeUp::ServerTask.new do |t|
+  t.port = ENV['RACK_PORT'].nil? ? 4567 : ENV['RACK_PORT'].to_i
+  t.host = '0.0.0.0'
+  t.rackup_file = "config.ru"
+  t.server = :webrick
+  t.pid_file = ".server.pid"
+end
+
+namespace :server do
+  desc "Reloading server"
+  task :reloading do
+    sh "shotgun"
+  end
+end
+
+
+desc "Console"
+task :console do
+  require 'irb'
+  require 'irb/completion'
+  ARGV.clear
+  IRB.start
+end
+
+task :default => :server
+
+namespace :mailset do
+  desc "Create new mailset"
+  task :create, :name, :num, :with_tagging do |t, args|
+    name = args[:name] || "newmailset"
+    num = (args[:num] || "10").to_i
+    tagging = args[:with_tagging] == "true"
+
+    ms = Smail::Mailset.create name, num, tagging
+    ms.save!
+  end
+end
+
+desc "Package"
+Rake::PackageTask.new("archive", :noversion) do |p|
+  p.need_zip = true
+  p.package_dir = "artifacts"
+  p.package_files.include("**/*")
+end
+

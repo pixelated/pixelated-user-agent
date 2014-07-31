@@ -8,6 +8,14 @@ app/bower_components
 dist/
 *archive.zip
 *.swp
+*.swo
 app/js/generated
 test-results.xml
 control_tower.html
+state.yml
+.server.pid
+*archive.zip
+artifacts/
+public/
+.DS_Store
+screenshot*
