@@ -2,7 +2,7 @@ $: << "lib"
 
 require 'rubygems'
 require 'rakeup'
-require 'smail'
+require 'pixelated_service'
 require 'rake/packagetask'
 
 RakeUp::ServerTask.new do |t|
@@ -38,7 +38,7 @@ namespace :mailset do
     num = (args[:num] || "10").to_i
     tagging = args[:with_tagging] == "true"
 
-    ms = Smail::Mailset.create name, num, tagging
+    ms = PixelatedService::Mailset.create name, num, tagging
     ms.save!
   end
 end
@@ -49,4 +49,3 @@ Rake::PackageTask.new("archive", :noversion) do |p|
   p.package_dir = "artifacts"
   p.package_files.include("**/*")
 end
-

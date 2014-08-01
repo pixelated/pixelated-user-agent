@@ -1,1 +1,1 @@
-require 'smail'
+require 'pixelated_service'

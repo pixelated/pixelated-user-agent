@@ -1,4 +1,4 @@
 $: << "lib"
 
-require 'smail'
-run Smail::Server
+require 'pixelated_service'
+run PixelatedService::Server

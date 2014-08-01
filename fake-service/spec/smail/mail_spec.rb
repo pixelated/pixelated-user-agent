@@ -2,10 +2,10 @@
 fixture1 = File.read(File.join(File.dirname(__FILE__), "..", "fixtures", "mail1"))
 fixture2 = File.read(File.join(File.dirname(__FILE__), "..", "fixtures", "mail2"))
 
-describe Smail::Mail do
+describe PixelatedService::Mail do
   describe "#read" do
     context("simple email") do
-      subject(:mail) { Smail::Mail.read(fixture1) }
+      subject(:mail) { PixelatedService::Mail.read(fixture1) }
 
       it "reads the subject correctly" do
         expect(mail.subject).to eq("Doloremque aliquid a facilis et sit numquam libero.")
@@ -39,7 +39,7 @@ BODY
     end
 
     context("with multiple recipients") do
-      subject(:mail) { Smail::Mail.read(fixture2) }
+      subject(:mail) { PixelatedService::Mail.read(fixture2) }
 
       it "reads multiple recipients correctly" do
         expect(mail.to).to eq(%w(cmurphy@thoughtworks.com cgorslin@thoughtworks.com cmitchel@thoughtworks.com dnorth@thoughtworks.com dpgoodwi@thoughtworks.com dbodart@thoughtworks.com dsmith@thoughtworks.com djrice@thoughtworks.com dwhalley@thoughtworks.com))
@@ -53,7 +53,7 @@ BODY
 
   describe ".to_s" do
     context("simple email") do
-      subject(:mail) { Smail::Mail.read(fixture1) }
+      subject(:mail) { PixelatedService::Mail.read(fixture1) }
 
       it "writes correct output" do
         expect(mail.to_s).to eq(<<MAIL)
@@ -76,7 +76,7 @@ MAIL
       end
     end
     context("with multiple recipients") do
-      subject(:mail) { Smail::Mail.read(fixture2) }
+      subject(:mail) { PixelatedService::Mail.read(fixture2) }
 
       it "writes correct output" do
         expect(mail.to_s).to eq(<<MAIL)

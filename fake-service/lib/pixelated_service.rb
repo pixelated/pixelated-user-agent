@@ -1,0 +1,27 @@
+
+module PixelatedService
+end
+
+require 'generator'
+require 'pixelated_service/security_casing'
+require 'pixelated_service/security_casing_examples'
+require 'pixelated_service/stats'
+require 'pixelated_service/stats_observer'
+require 'pixelated_service/sorted_mail'
+require 'pixelated_service/mail'
+require 'pixelated_service/persona'
+require 'pixelated_service/mail_service'
+require 'pixelated_service/fake'
+require 'pixelated_service/mailset'
+require 'pixelated_service/server'
+require 'pixelated_service/paginate'
+require 'pixelated_service/all'
+require 'pixelated_service/search'
+require 'pixelated_service/tags'
+require 'pixelated_service/combined_observer'
+require 'pixelated_service/contacts_observer'
+require 'pixelated_service/contact'
+require 'pixelated_service/contacts'
+require 'pixelated_service/contacts_sorter'
+require 'pixelated_service/contacts_search'
+require 'pixelated_service/mail_scope_filter'

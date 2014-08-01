@@ -59,7 +59,7 @@ module Generator
   def random_mail
     hdr = Mail.random_header
     bd = Mail.random_body
-    Smail::Mail.new(
+    PixelatedService::Mail.new(
                     from: hdr[:from],
                     to: hdr[:to],
                     subject: hdr[:subject],
@@ -71,10 +71,10 @@ module Generator
     hdr = Mail.random_header
     bd = Mail.random_body
     tgs = choose(ladder_distribution(1, 5)).times.map { tagset.sample }.uniq
-    special_tag = ([nil, nil, nil, nil, nil, nil] + Smail::Tags::SPECIAL).sample
+    special_tag = ([nil, nil, nil, nil, nil, nil] + PixelatedService::Tags::SPECIAL).sample
     status = []
     status << :read if special_tag == 'sent'
-    mail = Smail::Mail.new(
+    mail = PixelatedService::Mail.new(
                     from: hdr[:from],
                     to: hdr[:to],
                     subject: hdr[:subject],
@@ -86,7 +86,7 @@ module Generator
   end
 
   def random_persona
-    Smail::Persona.new(Faker::Number.number(10),
+    PixelatedService::Persona.new(Faker::Number.number(10),
                        Faker::Name.name,
                        Faker::Lorem.sentence,
                        Faker::Internet.email)
