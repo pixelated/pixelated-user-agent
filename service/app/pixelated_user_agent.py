@@ -118,7 +118,7 @@ def redirect_to_front(path):
     )
 
 if __name__ == '__main__':
-    app.config.from_envvar('SMAIL_BACK_CFG')
+    app.config.from_envvar('PIXELATED_UA_CFG')
     provider = app.config['PROVIDER']
     account = app.config['ACCOUNT']
 
