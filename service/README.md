@@ -1,27 +1,29 @@
 Development environment
 ---
 
-Install virtualenv:
+* Install virtualenv:
 
+```
 easy_install virtualenv
+```
 
-create a virtualenv:
+* Create a virtualenv:
 
 virtualenv .virtualenv 
 
-Activate your virtualenv:
+* Activate your virtualenv:
 
 source .virtualenv/bin/activate
 
-Install requirements:
+* Install requirements:
 
 pip install -r requirements.txt
 
-To run tests:
+* To run tests:
 
 ./runtests
 
-To run app:
+* To run app:
 
 ./go
 
