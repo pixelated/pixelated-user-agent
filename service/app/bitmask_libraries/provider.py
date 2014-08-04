@@ -44,7 +44,7 @@ class LeapProvider(object):
         return self.server_name == other.server_name
 
     def ensure_supports_mx(self):
-        if not 'mx' in self.services:
+        if 'mx' not in self.services:
             raise Exception
 
     def download_certificate_to(self, filename):
@@ -86,7 +86,6 @@ class LeapProvider(object):
             raise Exception('Certificate fingerprints don\'t match')
 
     def fetch_provider_json(self):
-
         url = '%s/provider.json' % self._provider_base_url()
         response = requests.get(url, verify=which_bundle(self), timeout=self.config.timeout_in_s)
         response.raise_for_status()
