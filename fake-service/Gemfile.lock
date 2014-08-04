@@ -85,6 +85,8 @@ GEM
       rack-test
       sinatra (~> 1.4.0)
       tilt (~> 1.3)
+    sinatra-index (0.0.2)
+      sinatra
     spoon (0.0.4)
       ffi
     tilt (1.4.1)
@@ -113,3 +115,4 @@ DEPENDENCIES
   shotgun
   sinatra
   sinatra-contrib
+  sinatra-index

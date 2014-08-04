@@ -1,13 +1,17 @@
 require 'sinatra/base'
 require 'sinatra/json'
+require 'sinatra-index'
 require 'json'
 require 'net/http'
 
 module PixelatedService
   class Server < Sinatra::Base
     set :root, File.join(File.dirname(__FILE__), '../../')
+    set :public_folder, File.join(File.dirname(__FILE__), '../../../web-ui/app/')
 
     def json_body; JSON.parse request.body.read.to_s; end
+    register Sinatra::Index
+    use_static_index 'index.html'
 
     if ENV['RACK_ENV'] == 'staging'
       get    '/'            do File.read(File.join(settings.root, 'public', 'index.html')) end

@@ -45,7 +45,7 @@ module.exports = function (grunt) {
         files: ['test/spec/{,*/}*.js'],
         tasks: ['newer:jshint:test', 'karma']
       },
-      compass: {
+      sass: {
         files: ['<%= yeoman.app %>/scss/{,*/}*.scss'],
         tasks: ['compass:dev']
       },
@@ -53,15 +53,12 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/index.html'],
         livereload: true
       },
-      handlebars: {
+      templates: {
         files: ['<%= yeoman.app %>/templates/**/*.hbs'],
         tasks: ['handlebars:dev']
       },
       gruntfile: {
         files: ['Gruntfile.js']
-      },
-      options: {
-        livereload: true
       }
     },
 
@@ -76,7 +73,7 @@ module.exports = function (grunt) {
       dev: {
         options: {
           sassDir: '<%= yeoman.app %>/scss',
-          cssDir: '.tmp/css'
+          cssDir: 'app/css'
         }
       }
     },
@@ -87,15 +84,6 @@ module.exports = function (grunt) {
         port: 9000,
         // Change this from '0.0.0.0' to 'localhost' to limit access from outside.
         hostname: '0.0.0.0',
-        livereload: true
-      },
-      dev: {
-        options: {
-          base: [
-            '.tmp',
-            '<%= yeoman.app %>'
-          ]
-        },
         livereload: true
       },
       test: {
@@ -382,9 +370,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-concat');
 
-  grunt.registerTask('serve', function (target) {
+  grunt.registerTask('build', function (target) {
     if (target === 'dist') {
-      return grunt.task.run(['package', 'connect:dist:keepalive']);
+      return grunt.task.run(['package', 'dist:keepalive']);
     }
 
     grunt.task.run([
@@ -392,11 +380,18 @@ module.exports = function (grunt) {
       'compass:dev',
       'handlebars:dev',
       'concurrent:server',
-      'update-control-tower',
-      'connect:dev',
+      'update-control-tower'
+    ]);
+  });
+
+  /*
+  grunt.registerTask('watch', function (target) {
+    grunt.task.run([
+      'build',
       'watch'
     ]);
   });
+  */
 
   grunt.registerTask('test-watch', [
     'clean:server',

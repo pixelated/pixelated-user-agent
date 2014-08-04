@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem "rake"
 gem "sinatra"
 gem "sinatra-contrib"
+gem "sinatra-index"
 gem "json"
 gem "faker"
 gem "shotgun"
