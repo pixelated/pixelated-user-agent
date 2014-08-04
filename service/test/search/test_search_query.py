@@ -1,7 +1,7 @@
 import sys, os
 sys.path.insert(0, os.environ['APP_ROOT'])
 
-from search import SearchQuery
+from app.search import SearchQuery
 
 def test_one_tag():
     assert SearchQuery.compile(u"in:inbox")["tags"] == ["inbox"]

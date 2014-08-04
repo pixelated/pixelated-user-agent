@@ -1,1 +1,2 @@
-APP_ROOT=`pwd`/app py.test test/
+#!/bin/bash
+APP_ROOT=`pwd` py.test test/
