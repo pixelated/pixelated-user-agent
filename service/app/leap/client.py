@@ -1,5 +1,6 @@
 import traceback
 import sys
+import os
 from app.bitmask_libraries.config import LeapConfig
 from app.bitmask_libraries.provider import LeapProvider
 from app.bitmask_libraries.session import LeapSessionFactory
@@ -13,7 +14,7 @@ class Client:
             self.password = 'testpassword'
             self.server_name = 'example.wazokazi.is'
             self.mailbox_name = 'inbox'
-            self.leapdir = '~/.leap'
+            self.leapdir = os.path.join(os.path.abspath("."), "leap")
 
             self._open_leap_session()
         except:
@@ -21,7 +22,7 @@ class Client:
             raise
 
     def _open_leap_session(self):
-        self.leap_config = LeapConfig()
+        self.leap_config = LeapConfig(leap_home=self.leapdir)
         self.provider = LeapProvider(self.server_name, self.leap_config)
         self.leap_session = LeapSessionFactory(self.provider).create(LeapCredentials(self.username, self.password))
         self.mbx = self.leap_session.account.getMailbox(self.mailbox_name)

@@ -1,1 +1,4 @@
 .virtualenv
+leap/providers/**
+leap/soledad/**
+leap/ca.crt
