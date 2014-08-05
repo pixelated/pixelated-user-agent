@@ -24,6 +24,3 @@ class AbstractLeapTest(unittest.TestCase):
     soledad_account = MagicMock()
 
     mail_fetcher_mock = MagicMock()
-
-    def tearDown():
-        reload
