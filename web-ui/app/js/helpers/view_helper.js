@@ -21,7 +21,9 @@ define(
   }
 
   function isQuotedPrintableBodyPart (bodyPart) {
-    return bodyPart.headers['Content-Transfer-Encoding'] && bodyPart.headers['Content-Transfer-Encoding'] === 'quoted-printable';
+    return bodyPart.headers && 
+      bodyPart.headers['Content-Transfer-Encoding'] &&
+      bodyPart.headers['Content-Transfer-Encoding'] === 'quoted-printable';
   }
 
   function getHtmlContentType (mail) {
@@ -52,29 +54,10 @@ define(
         return $(getSanitizedAndDecodedMailBody(mail.getMailPartByContentType(htmlContentType)));
       }
 
-      return $(addParagraphsToPlainText(mail.getMailMultiParts[0]));
+      return $(getSanitizedAndDecodedMailBody(addParagraphsToPlainText(mail.getMailMultiParts[0])));
     }
 
-    return $(addParagraphsToPlainText(mail.body));
-
-    /*
-    var body;
-    // probably parse MIME parts and ugliness here
-    // content_type: "multipart/alternative;  boundary="----=_Part_1115_17865397.1370312509342""
-    var mediaType = new contentType.MediaType(mail.header.content_type);
-    if(mediaType.type === 'multipart/alternative') {
-      var parsedBodyParts = getMailMultiParts(mail.body, mediaType);
-      var selectedBodyPart = getHtmlMailPart(parsedBodyParts) || getPlainTextMailPart(parsedBodyParts) || parsedBodyParts[0];
-      body = selectedBodyPart.body;
-
-      if (isQuotedPrintableBodyPart(selectedBodyPart)) {
-        body = quotedPrintable.decode(body);
-      }
-    } else {
-      body = addParagraphsToPlainText(mail.body);
-    }
-    return $(htmlWhitelister.sanitize(body, htmlWhitelister.tagPolicy));
-    */
+    return $(getSanitizedAndDecodedMailBody(addParagraphsToPlainText(mail.body)));
   }
 
   function moveCaretToEnd(el) {
