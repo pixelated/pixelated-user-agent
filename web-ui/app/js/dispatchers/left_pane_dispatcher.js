@@ -11,7 +11,7 @@ define(
     return defineComponent(leftPaneDispatcher);
 
     function leftPaneDispatcher() {
-       var initialized = false;
+      var initialized = false;
 
       this.refreshTagList = function () {
         this.trigger(document, events.tags.want, { caller: this.$node });
