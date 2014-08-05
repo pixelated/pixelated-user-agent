@@ -1,10 +1,15 @@
-from flask import Flask, request, Response
-from factory import MailConverterFactory, ClientFactory
-from search import SearchQuery
-
+import sys
+import os
 import json
 import datetime
 import requests
+
+sys.path.insert(0, os.environ['APP_ROOT'])
+
+from flask import Flask, request, Response
+from search import SearchQuery
+from adapter.mail_service import MailService
+from adapter.mail_converter import MailConverter
 
 app = Flask(__name__)
 client = None
@@ -40,7 +45,7 @@ def update_draft():
 @app.route('/mails')
 def mails():
     query = SearchQuery.compile(request.args.get("q"))
-    mails = client.drafts() if "drafts" in query['tags'] else client.mails(query)
+    mails = mail_service.drafts() if "drafts" in query['tags'] else mail_service.mails(query)
     mails = [converter.from_mail(mail) for mail in mails]
 
     if "inbox" in query['tags']:
@@ -119,9 +124,8 @@ def redirect_to_front(path):
 
 if __name__ == '__main__':
     app.config.from_envvar('PIXELATED_UA_CFG')
-    provider = app.config['PROVIDER']
     account = app.config['ACCOUNT']
 
-    client = ClientFactory.create(provider, account)
-    converter = MailConverterFactory.create(provider, client)
+    mail_service = MailService()
+    converter = MailConverter(mail_service)
     app.run(host=app.config['HOST'], debug=app.config['DEBUG'], port=app.config['PORT'])

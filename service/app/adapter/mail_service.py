@@ -7,7 +7,7 @@ from app.bitmask_libraries.session import LeapSessionFactory
 from app.bitmask_libraries.auth import LeapCredentials
 
 
-class Client:
+class MailService:
     def __init__(self):
         try:
             self.username = 'test_user'
@@ -25,13 +25,15 @@ class Client:
         self.leap_config = LeapConfig(leap_home=self.leapdir)
         self.provider = LeapProvider(self.server_name, self.leap_config)
         self.leap_session = LeapSessionFactory(self.provider).create(LeapCredentials(self.username, self.password))
-        self.mbx = self.leap_session.account.getMailbox(self.mailbox_name)
+        self.mail_box = self.leap_session.account.getMailbox(self.mailbox_name)
 
     def mails(self, query):
-        raise NotImplementedError()
+        self.mail_box.messages
+        return []
+
 
     def drafts(self):
-        raise NotImplementedError()
+        return []
 
     def mail(self, mail_id):
         raise NotImplementedError()

@@ -1,4 +1,5 @@
 #!/bin/bash
 
 export PIXELATED_UA_CFG=../config/pixelated_ua.cfg
+export APP_ROOT=.
 python app/pixelated_user_agent.py
