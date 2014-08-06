@@ -44,7 +44,7 @@ def update_draft():
 
 @app.route('/mails')
 def mails():
-    query = SearchQuery.compile(request.args.get("q"))
+    query = SearchQuery.compile(request.args.get("q")) if request.args.get("q") else {'tags': {}}
     mails = mail_service.drafts() if "drafts" in query['tags'] else mail_service.mails(query)
     mails = [converter.from_mail(mail) for mail in mails]
 
