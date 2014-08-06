@@ -1,9 +1,9 @@
+import os
 from mock import MagicMock, patch
 from abstract_leap_test import AbstractLeapTest
 from app.bitmask_libraries.smtp import LeapSmtp
 from httmock import all_requests, HTTMock, urlmatch
-import os
-import sys
+
 
 @all_requests
 def not_found_mock(url, request):
@@ -12,12 +12,14 @@ def not_found_mock(url, request):
     return {'status_code': 404,
             'content': 'foobar'}
 
+
 @urlmatch(netloc='api.some-server.test:4430', path='/1/cert')
 def ca_cert_mock(url, request):
     return {
         "status_code": 200,
         "content": "some content"
     }
+
 
 class LeapSmtpTest(AbstractLeapTest):
     keymanager = MagicMock()
@@ -26,7 +28,7 @@ class LeapSmtpTest(AbstractLeapTest):
         self.provider.fetch_smtp_json.return_value = {
             'hosts': {
                 'leap-mx': {
-                   'hostname': 'smtp.some-sever.test',
+                    'hostname': 'smtp.some-sever.test',
                     'port': '1234'
                 }
             }

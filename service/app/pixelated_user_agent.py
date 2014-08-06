@@ -1,10 +1,6 @@
-import sys
-import os
 import json
 import datetime
 import requests
-
-sys.path.insert(0, os.environ['APP_ROOT'])
 
 from flask import Flask, request, Response
 from search import SearchQuery

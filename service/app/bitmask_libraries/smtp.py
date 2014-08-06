@@ -37,7 +37,7 @@ class LeapSmtp(object):
 
         session = requests.session()
         cert_url = '%s/%s/cert' % (self._provider.api_uri, self._provider.api_version)
-        cookies = { "_session_id": self._srp_session.session_id }
+        cookies = {"_session_id": self._srp_session.session_id}
 
         response = requests.get(cert_url, verify=which_bundle(self._provider), cookies=cookies, timeout=self._provider.config.timeout_in_s)
         response.raise_for_status()
@@ -48,10 +48,11 @@ class LeapSmtp(object):
             f.write(client_cert)
 
     def _client_cert_path(self):
-        return os.path.join(self._provider.config.leap_home,
-                "providers",
-                self._provider.domain,
-                "keys", "client", "smtp.pem")
+        return os.path.join(
+            self._provider.config.leap_home,
+            "providers",
+            self._provider.domain,
+            "keys", "client", "smtp.pem")
 
     def start(self):
         self._download_client_certificates()
@@ -74,4 +75,3 @@ class LeapSmtp(object):
             self._smtp_service.doStop()
             self._smtp_port = None
             self._smtp_service = None
-

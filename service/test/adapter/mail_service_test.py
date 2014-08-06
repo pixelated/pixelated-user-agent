@@ -4,6 +4,7 @@ import unittest
 
 from app.adapter.mail_service import MailService
 
+
 class TestMailService(unittest.TestCase):
 
     def test_initialization(self):
