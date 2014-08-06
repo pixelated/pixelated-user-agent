@@ -100,3 +100,44 @@ class LeapSRPTest(unittest.TestCase):
         with HTTMock(timeout_mock):
             lrsp = LeapSecureRemotePassword()
             self.assertRaises(LeapAuthException, lrsp.authenticate, 'https://api.leap.local', 'username', 'password')
+
+    def test_register_raises_auth_exception_on_error(self):
+        with HTTMock(not_found_mock):
+            lsrp = LeapSecureRemotePassword()
+            self.assertRaises(LeapAuthException, lsrp.register, 'https://api.leap.local', 'username', 'password')
+
+    def test_register(self):
+        @urlmatch(netloc=r'(.*\.)?leap\.local$', path='/1/users')
+        def register_success(url, request):
+
+            content = {
+                'login': 'username',
+                'ok': True
+            }
+
+            return {'status_code': 201,
+                    'content': content}
+
+        with HTTMock(register_success, not_found_mock):
+            lsrp = LeapSecureRemotePassword()
+            self.assertTrue(lsrp.register('https://api.leap.local', 'username', 'password'))
+
+    def test_register_user_exists(self):
+        @urlmatch(netloc=r'(.*\.)?leap\.local$', path='/1/users')
+        def register_error_user_exists(url, request):
+            content = {"errors": {
+                "login": [
+                    "has already been taken", "has already been taken", "has already been taken"
+                ]}}
+
+            return {'status_code': 422,
+                    'content': content}
+
+        with HTTMock(register_error_user_exists, not_found_mock):
+            lsrp = LeapSecureRemotePassword()
+            self.assertRaises(LeapAuthException, lsrp.register, 'https://api.leap.local', 'username', 'password')
+
+    def test_registration_timeout(self):
+        with HTTMock(timeout_mock):
+            lsrp = LeapSecureRemotePassword()
+            self.assertRaises(LeapAuthException, lsrp.register, 'https://api.leap.local', 'username', 'password')

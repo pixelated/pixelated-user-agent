@@ -1,10 +1,15 @@
 import binascii
 import json
+import requests
 
 from requests import Session
-from srp import User, srp
+from srp import User, srp, create_salted_verification_key
 from requests.exceptions import HTTPError, SSLError, Timeout
 from config import SYSTEM_CA_BUNDLE
+
+REGISTER_USER_LOGIN_KEY = 'user[login]'
+REGISTER_USER_VERIFIER_KEY = 'user[password_verifier]'
+REGISTER_USER_SALT_KEY = 'user[password_salt]'
 
 
 class LeapAuthException(Exception):
@@ -97,6 +102,28 @@ class LeapSecureRemotePassword(object):
         user.verify_session(M2)
         if not user.authenticated():
             raise LeapAuthException()
+
+    def register(self, api_uri, username, password):
+        try:
+            salt, verifier = create_salted_verification_key(username, password, self.hash_alg, self.ng_type)
+            return self._post_registration_data(api_uri, username, salt, verifier)
+        except (HTTPError, SSLError, Timeout), e:
+            raise LeapAuthException(e)
+
+    def _post_registration_data(self, api_uri, username, salt, verifier):
+        users_url = '%s/%s/users' % (api_uri, self.leap_api_version)
+
+        user_data = {
+            REGISTER_USER_LOGIN_KEY: username,
+            REGISTER_USER_SALT_KEY: binascii.hexlify(salt),
+            REGISTER_USER_VERIFIER_KEY: binascii.hexlify(verifier)
+        }
+
+        response = requests.post(users_url, data=user_data, verify=self.ca_bundle, timeout=self.timeout_in_s)
+        response.raise_for_status()
+        reg_json = json.loads(response.content)
+
+        return reg_json['ok']
 
 
 def _safe_unhexlify(hex_str):
