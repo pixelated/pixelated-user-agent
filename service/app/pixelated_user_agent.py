@@ -7,7 +7,7 @@ from search import SearchQuery
 from adapter.mail_service import MailService
 from adapter.mail_converter import MailConverter
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='../../web-ui/app')
 client = None
 converter = None
 account = None
@@ -108,15 +108,9 @@ def draft_reply_for(mail_id):
         return respond_json(None)
 
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def redirect_to_front(path):
-    response = requests.get("http://localhost:9000/%s" % path)
-    return Response(
-        response=response,
-        status=response.status_code,
-        content_type=response.headers['content-type']
-    )
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
 
 if __name__ == '__main__':
     app.config.from_envvar('PIXELATED_UA_CFG')
