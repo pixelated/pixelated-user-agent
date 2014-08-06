@@ -154,13 +154,13 @@ module PixelatedService
         ("#{INTERNAL_TO_EXTERNAL_HEADER[:to]}: #{format_header_value_out(:to, @to)}" if @to),
         ("#{INTERNAL_TO_EXTERNAL_HEADER[:from]}: #{format_header_value_out(:from, @from)}" if @from),
         ("#{INTERNAL_TO_EXTERNAL_HEADER[:subject]}: #{format_header_value_out(:subject, @subject)}" if @subject),
-        ("#{INTERNAL_TO_EXTERNAL_HEADER[:x_tw_smail_tags]}: #{format_header_value_out(:x_tw_smail_tags, @tags.names)}" if !@tags.names.empty?),
-        ("#{INTERNAL_TO_EXTERNAL_HEADER[:x_tw_smail_status]}: #{format_header_value_out(:x_tw_smail_status, @status)}" if !@status.empty?),
-        ("#{INTERNAL_TO_EXTERNAL_HEADER[:x_tw_smail_ident]}: #{format_header_value_out(:x_tw_smail_ident, @ident)}"),
+        ("#{INTERNAL_TO_EXTERNAL_HEADER[:x_tw_pixelated_tags]}: #{format_header_value_out(:x_tw_smail_tags, @tags.names)}" if !@tags.names.empty?),
+        ("#{INTERNAL_TO_EXTERNAL_HEADER[:x_tw_pixelated_status]}: #{format_header_value_out(:x_tw_smail_status, @status)}" if !@status.empty?),
+        ("#{INTERNAL_TO_EXTERNAL_HEADER[:x_tw_pixelated_ident]}: #{format_header_value_out(:x_tw_smail_ident, @ident)}"),
        ].compact + @headers.map { |k,v| "#{INTERNAL_TO_EXTERNAL_HEADER[k]}: #{format_header_value_out(k, v)}"}).sort.join("\n") + "\n\n#{@body}"
     end
 
-    SPECIAL_HEADERS = [:subject, :from, :to, :x_tw_smail_tags, :x_tw_smail_status, :x_tw_smail_ident]
+    SPECIAL_HEADERS = [:subject, :from, :to, :x_tw_pixelated_tags, :x_tw_smail_status, :x_tw_smail_ident]
     INTERNAL_TO_EXTERNAL_HEADER = {
       :subject => "Subject",
       :date => "Date",
@@ -172,9 +172,9 @@ module PixelatedService
       :mime_version => "Mime-Version",
       :content_type => "Content-Type",
       :content_transfer_encoding => "Content-Transfer-Encoding",
-      :x_tw_smail_tags => "X-TW-SMail-Tags",
-      :x_tw_smail_status => "X-TW-SMail-Status",
-      :x_tw_smail_ident => "X-TW-SMail-Ident",
+      :x_tw_pixelated_tags => "X-TW-Pixelated-Tags",
+      :x_tw_pixelated_status => "X-TW-Pixelated-Status",
+      :x_tw_pixelated_ident => "X-TW-Pixelated-Ident",
     }
 
     def format_header_value_out(k,v)
@@ -183,7 +183,7 @@ module PixelatedService
         v.strftime("%a, %d %b %Y %H:%M:%S %z")
       when :to, :cc, :bcc
         Array(v).join(", ")
-      when :x_tw_smail_tags, :x_tw_smail_status
+      when :x_tw_pixelated_tags, :x_tw_smail_status
         v.join(", ")
       else
         v
@@ -256,9 +256,9 @@ module PixelatedService
             :from => formatted_header(:from, headers),
             :to => formatted_header(:to, headers),
             :headers => header_data,
-            :tags => formatted_header(:x_tw_smail_tags, headers),
-            :status => formatted_header(:x_tw_smail_status, headers),
-            :ident => has_header(:x_tw_smail_ident, headers, formatted_header(:x_tw_smail_ident, headers), ident),
+            :tags => formatted_header(:x_tw_pixelated_tags, headers),
+            :status => formatted_header(:x_tw_pixelated_status, headers),
+            :ident => has_header(:x_tw_pixelated_ident, headers, formatted_header(:x_tw_smail_ident, headers), ident),
             :body => body
             )
       end
@@ -284,11 +284,11 @@ module PixelatedService
           else
             vs
           end
-        when :x_tw_smail_tags
+        when :x_tw_pixelated_tags
           Tags.new *(v || "").split(/, /)
-        when :x_tw_smail_status
+        when :x_tw_pixelated_status
           (v || "").split(/, /).map { |ss| ss.to_sym }
-        when :x_tw_smail_ident
+        when :x_tw_pixelated_ident
           v.to_i
         else
           v
