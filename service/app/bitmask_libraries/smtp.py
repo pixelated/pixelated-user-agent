@@ -2,6 +2,8 @@ import os
 import requests
 from .certs import which_bundle
 from leap.mail.smtp import setup_smtp_gateway
+import random
+
 
 class LeapSmtp(object):
 
@@ -14,6 +16,7 @@ class LeapSmtp(object):
         self._hostname, self._port = self._discover_smtp_server()
         self._smtp_port = None
         self._smtp_service = None
+        self._twisted_port = 10000 + int(random.random() * 5000)
 
     def smtp_info(self):
         return ('localhost', LeapSmtp.SMTP_PORT)
@@ -60,14 +63,15 @@ class LeapSmtp(object):
         email = '%s@%s' % (self._srp_session.user_name, self._provider.domain)
 
         self._smtp_service, self._smtp_port = setup_smtp_gateway(
-            port=LeapSmtp.SMTP_PORT,
+            port=(self._twisted_port),
             userid=email,
             keymanager=self._keymanager,
             smtp_host=self._hostname.encode('UTF-8'),
             smtp_port=self._port,
             smtp_cert=cert_path,
             smtp_key=cert_path,
-            encrypted_only=False)
+            encrypted_only=False
+        )
 
     def stop(self):
         if self._smtp_service is not None:

@@ -50,12 +50,14 @@ class LeapSmtpTest(AbstractLeapTest):
     @patch('app.bitmask_libraries.smtp.setup_smtp_gateway')
     def test_that_start_calls_setup_smtp_gateway(self, gateway_mock):
         smtp = LeapSmtp(self.provider, self.keymanager, self.srp_session)
+        port = 500
+        smtp._twisted_port = port
         gateway_mock.return_value = (None, None)
         with HTTMock(ca_cert_mock, not_found_mock):
             smtp.start()
 
         cert_path = self._client_cert_path()
-        gateway_mock.assert_called_with(keymanager=self.keymanager, smtp_cert=cert_path, smtp_key=cert_path, userid='test_user@some-server.test', smtp_port='1234', encrypted_only=False, smtp_host='smtp.some-sever.test', port=2014)
+        gateway_mock.assert_called_with(keymanager=self.keymanager, smtp_cert=cert_path, smtp_key=cert_path, userid='test_user@some-server.test', smtp_port='1234', encrypted_only=False, smtp_host='smtp.some-sever.test', port=port)
 
     def test_that_client_stop_does_nothing_if_not_started(self):
         smtp = LeapSmtp(self.provider, self.keymanager, self.srp_session)
