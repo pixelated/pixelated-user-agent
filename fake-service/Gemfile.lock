@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     addressable (2.3.6)
+    archive-tar-minitar (0.5.2)
     backports (3.6.0)
     builder (3.2.2)
     capybara (2.3.0)
@@ -102,6 +103,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  archive-tar-minitar
   capybara
   capybara-screenshot
   cucumber

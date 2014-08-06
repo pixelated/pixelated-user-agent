@@ -22,5 +22,6 @@ public/
 screenshot*
 *.pyc
 env/
+fake-service/data/mail-sets/
 .vagrant/
 __pycache__/

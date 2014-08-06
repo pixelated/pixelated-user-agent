@@ -10,6 +10,7 @@ gem "shotgun"
 gem "rakeup"
 gem "rspec"
 gem "mail"
+gem "archive-tar-minitar"
 
 gem "capybara"
 gem "selenium-webdriver"

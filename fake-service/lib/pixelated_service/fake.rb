@@ -1,3 +1,7 @@
+require 'open-uri'
+require 'archive/tar/minitar'
+require 'fileutils'
+
 module PixelatedService
   class << self
     def mail_service
@@ -7,8 +11,8 @@ module PixelatedService
 
   module Fake
     PERSONAS = [
-                Persona.new(1, "Yago Macedo", nil, "sirineu@souza.org")
-               ]
+      Persona.new(1, "Yago Macedo", nil, "sirineu@souza.org")
+    ]
 
     def personas
       PERSONAS.map(&:ident)
@@ -115,6 +119,19 @@ module PixelatedService
     end
 
     def control_mailset_load(name)
+      mbox_root = 'data/mail-sets/'
+      if (Dir["#{mbox_root}/mbox*"].empty?)
+
+        FileUtils.mkdir_p(mbox_root)
+        unless (File.exists?("#{mbox_root}/mediumtagged.tar.gz"))
+          medium_tagged = File.new("#{mbox_root}/mediumtagged.tar.gz", 'w')
+          web_medium_tagged = open('https://example.wazokazi.is:8154/go/static/mediumtagged.tar.gz', :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE)
+          medium_tagged.write(web_medium_tagged.read)
+          medium_tagged.close
+        end
+        Archive::Tar::Minitar.unpack("#{mbox_root}/mediumtagged.tar.gz", mbox_root)
+      end
+
       with_timing do
         {
           stats: PixelatedService.mail_service.load_mailset(name),
