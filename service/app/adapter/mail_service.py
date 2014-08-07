@@ -28,8 +28,7 @@ class MailService:
         self.mail_box = self.leap_session.account.getMailbox(self.mailbox_name)
 
     def mails(self, query):
-        self.mail_box.messages
-        return []
+        return self.mail_box.messages
 
 
     def drafts(self):
