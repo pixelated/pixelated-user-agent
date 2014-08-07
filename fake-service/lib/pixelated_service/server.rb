@@ -63,24 +63,6 @@ module PixelatedService
     post '/control/delete_mails'       do json control_delete_mails end
     post '/control/mailset/:name/load' do |name| json control_mailset_load(name) end
 
-
-    # pass all other requests to asset server
-    get '/*' do
-      url = "http://localhost:9000/#{params['splat'][0]}"
-
-      resp = Net::HTTP.get_response(URI.parse(url))
-      if resp.is_a?(Net::HTTPSuccess)
-        res = resp.body.to_s.gsub(/(href|src)=("|')\//, '\1=\2' + url + '/')
-        content_type resp.content_type
-        status resp.code
-        res
-      else
-        status resp.code
-        resp.message
-      end
-    end
-
-
     include PixelatedService::Fake
   end
 end
