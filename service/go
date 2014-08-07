@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env python
+from app.pixelated_user_agent import setup
+import os
+os.environ['PIXELATED_UA_CFG']='../config/pixelated_ua.cfg'
+setup()
 
-export PIXELATED_UA_CFG=../config/pixelated_ua.cfg
-export APP_ROOT=.
-python app/pixelated_user_agent.py

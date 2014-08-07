@@ -1,5 +1,4 @@
 import sys, os
-sys.path.insert(0, os.environ['APP_ROOT'])
 
 from app.search import SearchQuery
 

@@ -112,10 +112,13 @@ def draft_reply_for(mail_id):
 def index():
     return app.send_static_file('index.html')
 
-if __name__ == '__main__':
+def setup():
     app.config.from_envvar('PIXELATED_UA_CFG')
     account = app.config['ACCOUNT']
 
     mail_service = MailService()
     converter = MailConverter(mail_service)
     app.run(host=app.config['HOST'], debug=app.config['DEBUG'], port=app.config['PORT'])
+
+if __name__ == '__main__':
+    setup()
