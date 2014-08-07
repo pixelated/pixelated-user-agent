@@ -21,7 +21,7 @@ define(
   }
 
   function isQuotedPrintableBodyPart (bodyPart) {
-    return bodyPart.headers && 
+    return bodyPart.headers &&
       bodyPart.headers['Content-Transfer-Encoding'] &&
       bodyPart.headers['Content-Transfer-Encoding'] === 'quoted-printable';
   }
@@ -37,8 +37,10 @@ define(
 
     if (isQuotedPrintableBodyPart(bodyPart)) {
       body = quotedPrintable.decode(bodyPart.body);
-    } else {
+    } else if (bodyPart.body) {
       body = bodyPart.body;
+    } else {
+      body = bodyPart;
     }
 
     return htmlWhitelister.sanitize(body, htmlWhitelister.tagPolicy);

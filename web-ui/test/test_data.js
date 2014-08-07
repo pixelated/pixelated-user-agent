@@ -84,7 +84,7 @@ define(function() {
     ident:1,
     tags:['textplain','inbox'],
     status:[],
-    body: 'Porro quam minus. Doloribus odio vel. Placeat alias sed est assumenda qui esse. Tenetur tempora deserunt est consequatur ducimus laborum. Velit dolor voluptatibus.\n\nRerum repellendus tempore. Aliquam dolores laudantium amet et dolor voluptas. Quod eos magni mollitia et ex. Corrupti quis reprehenderit quasi. Quam cum nobis voluptas accusamus quisquam ut asperiores.\n\nFacilis dicta mollitia non molestiae. Eligendi perspiciatis aut qui eos qui. Laborum cumque odit velit nobis. Cumque quo impedit dignissimos quia.',
+    body: 'Hello Everyone',
     isSentMail: function() { return false; },
     isDraftMail: function() { return false; },
     replyToAddress: function() { return { to: ['laurel@hamill.info'], cc: [] }; },

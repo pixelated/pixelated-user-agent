@@ -59,6 +59,12 @@ define(['helpers/view_helper'], function (viewHelper) {
       expect(viewHelper.formatMailBody(testData.parsedMail.html)).toContainHtml('<p>Hello everyone!</p>');
     });
 
+    it('formats the body of a plain text email', function () {
+      var formatedMail = $('<div></div>');
+      formatedMail.html(viewHelper.formatMailBody(testData.parsedMail.simpleTextPlain));
+      expect(formatedMail).toContainHtml('<p>Hello Everyone</p>');
+    });
+
     it('decodes a quoted-printable email body', function () {
       var result = viewHelper.formatMailBody(testData.parsedMail.htmlQuotedPrintable);
 
