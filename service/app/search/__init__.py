@@ -1,4 +1,5 @@
 from scanner import StringScanner, StringRegexp
+import re
 
 
 def _next_token():
@@ -23,8 +24,8 @@ class SearchQuery:
     @staticmethod
     def compile(query):
         compiled = {"tags": [], "not_tags": []}
-
-        scanner = StringScanner(query.encode('utf8').replace("\"", ""))
+        sanitized_query = re.sub(r"['\"]", "", query.encode('utf8'))
+        scanner = StringScanner(sanitized_query)
         first_token = True
         while not scanner.is_eos:
             token = scanner.scan(_next_token())
