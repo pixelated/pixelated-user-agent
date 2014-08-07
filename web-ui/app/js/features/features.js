@@ -1,13 +1,23 @@
 define([], function() {
-  var disabledFeatures;
+  var cachedDisabledFeatures;
 
   function getFeatures() {
-    disabledFeatures = disabledFeatures || fetchDisabledFeatures();
-    return disabledFeatures;
+    cachedDisabledFeatures = cachedDisabledFeatures || fetchDisabledFeatures();
+    return cachedDisabledFeatures;
   }
 
   function fetchDisabledFeatures() {
-    return ['saveDraft', 'createNewTag', 'replySection'];
+    var disabledFeatures;
+    $.ajax('/disabled_features', {
+      async: false,
+      success: function (results){
+        disabledFeatures = results;
+      },
+      error: function () {
+        console.error('Could not load feature toggles');
+      }
+    });
+    return disabledFeatures;
   }
 
   return {

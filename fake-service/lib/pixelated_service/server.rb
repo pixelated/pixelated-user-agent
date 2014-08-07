@@ -17,6 +17,7 @@ module PixelatedService
       get    '/'            do File.read(File.join(settings.root, 'public', 'index.html')) end
     end
 
+    get    '/disabled_features' do json [] end
     get    '/mails'       do json mails(params["q"], (params["p"] || 0).to_i, (params["w"] || -1).to_i) end
     delete '/mails'       do json delete_mails(params["q"], (params["p"] || 0).to_i, (params["w"] || -1).to_i, params["idents"]) end
     post   '/mails/read'  do json readmails(params["idents"], true) end

@@ -22,6 +22,17 @@ def respond_json(entity):
     response = json.dumps(entity)
     return Response(response=response, mimetype="application/json")
 
+@app.route('/disabled_features')
+def disabled_features():
+    return respond_json([
+        'saveDraft',
+        'createNewTag',
+        'replySection',
+        'removeTag',
+        'encryptionStatus',
+        'contacts'
+    ])
+
 
 @app.route('/mails', methods=['POST'])
 def save_draft_or_send():
