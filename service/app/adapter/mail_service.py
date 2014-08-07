@@ -8,6 +8,9 @@ from app.bitmask_libraries.auth import LeapCredentials
 
 
 class MailService:
+
+    SPECIAL_BOXES = ['inbox', 'sent', 'drafts', 'trash']
+
     def __init__(self):
         try:
             self.username = 'test_user'
@@ -25,11 +28,32 @@ class MailService:
         self.leap_config = LeapConfig(leap_home=self.leapdir)
         self.provider = LeapProvider(self.server_name, self.leap_config)
         self.leap_session = LeapSessionFactory(self.provider).create(LeapCredentials(self.username, self.password))
-        self.mail_box = self.leap_session.account.getMailbox(self.mailbox_name)
+        self.account = self.leap_session.account
+        self.mailbox = self.account.getMailbox(self.mailbox_name)
 
     def mails(self, query):
-        return self.mail_box.messages
+        mailbox = self._switch_mailbox(query['tags'][0])
+        return mailbox.messages if mailbox else []
 
+    def _switch_mailbox(self, name):
+        mailbox = None
+        if name in self.SPECIAL_BOXES:
+            self._create_mailbox(name)
+        try:
+            mailbox = self.account.getMailbox(name)
+        except Exception, e:
+            if not 'MailboxException' == e.__class__.__name__:
+                raise e
+        return mailbox
+
+    def _create_mailbox(self, name):
+        created = False
+        try:
+            created = self.account.addMailbox(name)
+        except Exception, e:
+            if not 'MailboxCollision' == e.__class__.__name__:
+                raise e
+        return created
 
     def drafts(self):
         return []
