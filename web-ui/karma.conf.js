@@ -41,6 +41,7 @@ module.exports = function (config) {
       {pattern: 'app/locales/**/*.json', included: false},
       {pattern: 'app/js/**/*.js', included: false},
       {pattern: 'test/test_data.js', included: false},
+      {pattern: 'test/features.js', included: false},
       {pattern: 'test/spec/**/*.spec.js', included: false},
 
       'test/test-main.js'

@@ -20,7 +20,8 @@ requirejs.config({
     'search': 'js/search',
     'foundation': 'js/foundation',
     'i18next': 'bower_components/i18next/i18next.amd',
-    'quoted-printable': 'bower_components/quoted-printable'
+    'quoted-printable': 'bower_components/quoted-printable',
+    'features': 'js/features/features'
   }
 });
 

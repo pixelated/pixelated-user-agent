@@ -2,9 +2,10 @@ define(
   [
     'flight/lib/component',
     'mail_view/data/mail_builder',
-    'page/events'
+    'page/events',
+    'features'
   ],
-  function (defineComponent, mailBuilder, events) {
+  function (defineComponent, mailBuilder, events, features) {
     'use strict';
 
     return defineComponent(mailSender);
@@ -67,7 +68,9 @@ define(
 
       this.after('initialize', function () {
         this.on(events.mail.send, this.sendMail);
-        this.on(events.mail.saveDraft, this.saveDraft);
+        if(features.isEnabled('saveDraft')) {
+          this.on(events.mail.saveDraft, this.saveDraft);
+        }
         this.on(document, events.mail.save, this.saveMailWithCallback);
       });
     }

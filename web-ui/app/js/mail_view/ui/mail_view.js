@@ -12,10 +12,11 @@ define(
     'helpers/view_helper',
     'mixins/with_hide_and_show',
     'page/events',
-    'views/i18n'
+    'views/i18n',
+    'features'
   ],
 
-  function (defineComponent, templates, mailActions, viewHelpers, withHideAndShow, events, i18n) {
+  function (defineComponent, templates, mailActions, viewHelpers, withHideAndShow, events, i18n, features) {
 
     return defineComponent(mailView, mailActions, withHideAndShow);
 
@@ -148,13 +149,15 @@ define(
       };
 
       this.createNewTag = function() {
-        var tagsCopy = this.attr.mail.tags.slice();
-        tagsCopy.push(this.select('newTagInput').val());
-        this.attr.tagCompleter.clear();
-        this.attr.tagCompleter.clearPrefetchCache();
-        this.attr.tagCompleter.clearRemoteCache();
-        this.trigger(document, events.mail.tags.update, { ident: this.attr.mail.ident, tags: _.uniq(tagsCopy)});
-        this.trigger(document, events.dispatchers.tags.refreshTagList);
+        if(features.isEnabled('createNewTag')) {
+          var tagsCopy = this.attr.mail.tags.slice();
+          tagsCopy.push(this.select('newTagInput').val());
+          this.attr.tagCompleter.clear();
+          this.attr.tagCompleter.clearPrefetchCache();
+          this.attr.tagCompleter.clearRemoteCache();
+          this.trigger(document, events.mail.tags.update, { ident: this.attr.mail.ident, tags: _.uniq(tagsCopy)});
+          this.trigger(document, events.dispatchers.tags.refreshTagList);
+        }
       };
 
       this.handleKeyDown = function(event) {

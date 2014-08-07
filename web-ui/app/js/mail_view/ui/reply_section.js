@@ -5,13 +5,14 @@ define(
     'mail_view/ui/reply_box',
     'mail_view/ui/forward_box',
     'mixins/with_hide_and_show',
+    'mixins/with_feature_toggle',
     'page/events'
   ],
 
-  function (defineComponent, templates, ReplyBox, ForwardBox, withHideAndShow, events) {
+  function (defineComponent, templates, ReplyBox, ForwardBox, withHideAndShow, withFeatureToggle, events) {
     'use strict';
 
-    return defineComponent(replySection, withHideAndShow);
+    return defineComponent(replySection, withHideAndShow, withFeatureToggle('replySection'));
 
     function replySection() {
       this.defaultAttrs({
