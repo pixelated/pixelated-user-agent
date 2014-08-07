@@ -2,7 +2,7 @@ require 'set'
 
 module PixelatedService
   class Mailset
-    DIR = File.expand_path File.join(File.dirname(__FILE__), "..", "..", "data", "mail-sets")
+    DIR = "#{ENV['HOME']}/mailsets"
 
     class << self
       def create(name, number, tagging)

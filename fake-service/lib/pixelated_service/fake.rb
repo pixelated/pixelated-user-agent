@@ -119,8 +119,8 @@ module PixelatedService
     end
 
     def control_mailset_load(name)
-      mbox_root = 'data/mail-sets/'
-      if (Dir["#{mbox_root}/mbox*"].empty?)
+      mbox_root = "#{ENV['HOME']}/mailsets"
+      if (Dir["#{mbox_root}/mediumtagged/mbox*"].empty?)
 
         FileUtils.mkdir_p(mbox_root)
         unless (File.exists?("#{mbox_root}/mediumtagged.tar.gz"))
