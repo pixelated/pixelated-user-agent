@@ -3,7 +3,7 @@ import datetime
 import requests
 
 from flask import Flask, request, Response
-from app.search import SearchQuery
+import app.search_query as search_query
 from app.adapter.mail_service import MailService
 from app.adapter.mail_converter import MailConverter
 
@@ -41,7 +41,7 @@ def update_draft():
 
 @app.route('/mails')
 def mails():
-    query = SearchQuery.compile(request.args.get("q")) if request.args.get("q") else {'tags': {}}
+    query = search_query.compile(request.args.get("q")) if request.args.get("q") else {'tags': {}}
     mails = mail_service.drafts() if "drafts" in query['tags'] else mail_service.mails(query)
     mails = [converter.from_mail(mail) for mail in mails]
 
@@ -95,7 +95,7 @@ def mark_mail_as_read(mail_id):
 
 @app.route('/contacts')
 def contacts():
-    query = SearchQuery.compile(request.args.get("q"))
+    query = search_query.compile(request.args.get("q"))
     desired_contacts = [converter.from_contact(contact) for contact in client.all_contacts(query)]
     return respond_json({'contacts': desired_contacts})
 
