@@ -6,8 +6,9 @@ define(
     'flight/lib/component',
     'views/i18n',
     'services/model/mail',
-    'page/events'
-  ], function (defineComponent, i18n, Mail, events) {
+    'page/events',
+    'features'
+  ], function (defineComponent, i18n, Mail, events, features) {
 
     'use strict';
 
@@ -238,7 +239,9 @@ define(
         this.on(events.mail.want, this.fetchSingle);
         this.on(document, events.mail.read, this.readMail);
         this.on(document, events.mail.unread, this.unreadMail);
-        this.on(document, events.mail.tags.update, this.updateTags);
+        if(features.isEnabled('tags')) {
+          this.on(document, events.mail.tags.update, this.updateTags);
+        }
         this.on(document, events.mail.delete, this.deleteMail);
         this.on(document, events.mail.deleteMany, this.deleteManyMails);
         this.on(document, events.search.perform, this.newSearch);

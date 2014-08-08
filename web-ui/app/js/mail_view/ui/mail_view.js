@@ -61,8 +61,12 @@ define(
         data.mail.header.formattedDate = viewHelpers.getFormattedDate(date);
 
         data.mail.security_casing = data.mail.security_casing || {};
-        var signed = this.checkSigned(data.mail);
-        var encrypted = this.checkEncrypted(data.mail);
+        if(features.isEnabled('signatureStatus')) {
+          var signed = this.checkSigned(data.mail);
+        }
+        if(features.isEnabled('encryptionStatus')) {
+          var encrypted = this.checkEncrypted(data.mail);
+        }
 
         this.$node.html(templates.mails.fullView({
           header: data.mail.header,
@@ -71,7 +75,8 @@ define(
           ident: data.mail.ident,
           tags: data.mail.tags,
           encryptionStatus: encrypted,
-          signatureStatus: signed
+          signatureStatus: signed,
+          features: features
         }));
 
         this.$node.find('.bodyArea').html(viewHelpers.formatMailBody(data.mail));
@@ -79,7 +84,9 @@ define(
         this.trigger(document, events.search.highlightResults, {where: '.subjectArea'});
         this.trigger(document, events.search.highlightResults, {where: '.msg-header .recipients'});
 
-        this.attachTagCompletion();
+        if(features.isEnabled('tags')) {
+          this.attachTagCompletion();
+        }
 
         this.select('tags').on('click', function (event) {
           this.removeTag($(event.target).data('tag'));

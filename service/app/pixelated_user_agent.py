@@ -28,7 +28,8 @@ def disabled_features():
         'saveDraft',
         'createNewTag',
         'replySection',
-        'removeTag',
+        'tags',
+        'signatureStatus',
         'encryptionStatus',
         'contacts'
     ])

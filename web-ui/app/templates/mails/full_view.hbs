@@ -11,12 +11,16 @@
       <div style="display:inline-block;padding-top: 5px;width:95%;flex-shrink:1" >
 
         <div class="column large-10 no-padding security-status">
+            {{#if signatureStatus}}
             <span class="{{signatureStatus}}">
               {{t signatureStatus }}
             </span>
+            {{/if}}
+            {{#if encryptionStatus}}
             <span class="{{encryptionStatus}}">
               {{t encryptionStatus }}
             </span>
+            {{/if}}
         </div>
         <div class="column large-2 no-padding text-right">
             <span class="received-date">{{ header.formattedDate }}</span>
