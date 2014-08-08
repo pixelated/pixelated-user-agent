@@ -4,9 +4,10 @@
 
 define([
     'flight/lib/component',
-    'page/events'
+    'page/events',
+    'features'
   ],
-  function (defineComponent, events) {
+  function (defineComponent, events, features) {
 
     function recipientsInput() {
       var EXIT_KEY_CODE_MAP = {
@@ -54,7 +55,9 @@ define([
             filter: extractContactNames
           }
         });
-        emailCompleter.initialize();
+        if(features.isEnabled('contacts')) {
+          emailCompleter.initialize();
+        }
         return emailCompleter;
       }
 
