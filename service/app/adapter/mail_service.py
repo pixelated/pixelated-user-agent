@@ -13,10 +13,10 @@ class MailService:
 
     def __init__(self):
         try:
-            self.username = 'test_user'
+            self.username = 'testuser2'
             self.password = 'testpassword'
             self.server_name = 'example.wazokazi.is'
-            self.mailbox_name = 'inbox'
+            self.mailbox_name = 'INBOX'
             self.leapdir = os.path.join(os.path.abspath("."), "leap")
 
             self._open_leap_session()
@@ -32,8 +32,11 @@ class MailService:
         self.mailbox = self.account.getMailbox(self.mailbox_name)
 
     def mails(self, query):
-        mailbox = self._switch_mailbox(query['tags'][0])
-        return mailbox.messages if mailbox else []
+        if query.get('tags',False) and len(query['tags']):
+            mailbox = self._switch_mailbox(query['tags'][0])
+            return mailbox.messages.get_all() if mailbox else []
+        else:
+            return []
 
     def _switch_mailbox(self, name):
         mailbox = None

@@ -27,15 +27,15 @@ def respond_json(entity):
 def save_draft_or_send():
     ident = None
     if 'sent' in request.json['tags']:
-        ident = client.send_draft(converter.to_mail(request.json, account))
+        ident = mail_service.send_draft(converter.to_mail(request.json, account))
     else:
-        ident = client.save_draft(converter.to_mail(request.json, account))
+        ident = mail_service.save_draft(converter.to_mail(request.json, account))
     return respond_json({'ident': ident})
 
 
 @app.route('/mails', methods=['PUT'])
 def update_draft():
-    ident = client.save_draft(converter.to_mail(request.json, account))
+    ident = mail_service.save_draft(converter.to_mail(request.json, account))
     return respond_json({'ident': ident})
 
 
@@ -65,44 +65,44 @@ def mails():
 
 @app.route('/mail/<mail_id>', methods=['DELETE'])
 def delete_mails(mail_id):
-    client.delete_mail(mail_id)
+    mail_service.delete_mail(mail_id)
     return respond_json(None)
 
 
 @app.route('/tags')
 def tags():
-    tags = map(lambda x: converter.from_tag(x), client.all_tags())
+    tags = map(lambda x: converter.from_tag(x), mail_service.all_tags())
     return respond_json(tags)
 
 
 @app.route('/mail/<mail_id>')
 def mail(mail_id):
-    mail = client.mail(mail_id)
+    mail = mail_service.mail(mail_id)
     return respond_json(converter.from_mail(mail))
 
 
 @app.route('/mail/<mail_id>/tags')
 def mail_tags(mail_id):
-    mail = converter.from_mail(client.mail(mail_id))
+    mail = converter.from_mail(mail_service.mail(mail_id))
     return respond_json(mail['tags'])
 
 
 @app.route('/mail/<mail_id>/read', methods=['POST'])
 def mark_mail_as_read(mail_id):
-    client.mark_as_read(mail_id)
+    mail_service.mark_as_read(mail_id)
     return ""
 
 
 @app.route('/contacts')
 def contacts():
     query = search_query.compile(request.args.get("q"))
-    desired_contacts = [converter.from_contact(contact) for contact in client.all_contacts(query)]
+    desired_contacts = [converter.from_contact(contact) for contact in mail_service.all_contacts(query)]
     return respond_json({'contacts': desired_contacts})
 
 
 @app.route('/draft_reply_for/<mail_id>')
 def draft_reply_for(mail_id):
-    draft = client.draft_reply_for(mail_id)
+    draft = mail_service.draft_reply_for(mail_id)
     if draft:
         return respond_json(converter.from_mail(draft))
     else:
