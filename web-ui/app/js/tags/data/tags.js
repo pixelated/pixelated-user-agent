@@ -1,7 +1,9 @@
 define(['flight/lib/component', 'page/events', 'mixins/with_feature_toggle'], function (defineComponent, events, withFeatureToggle) {
   'use strict';
 
-  var DataTags = defineComponent(dataTags, withFeatureToggle('tags'));
+  var DataTags = defineComponent(dataTags, withFeatureToggle('tags', function() {
+    $(document).trigger(events.ui.mails.refresh);
+  }));
 
       DataTags.all = {
         name: 'all',
