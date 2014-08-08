@@ -8,7 +8,7 @@ class NickNym(object):
         self._email = '%s@%s' % (srp_session.user_name, provider.domain)
         self.keymanager = KeyManager('%s@%s' % (srp_session.user_name, provider.domain), nicknym_url,
                                      soledad_session.soledad,
-                                     srp_session.session_id, which_bundle(provider), provider.api_uri,
+                                     srp_session.token, which_bundle(provider), provider.api_uri,
                                      provider.api_version,
                                      srp_session.uuid, config.gpg_binary)
 
@@ -28,9 +28,6 @@ class NickNym(object):
         self.keymanager.gen_key(openpgp.OpenPGPKey)
 
     def _send_key_to_leap(self):
-        if True:
-            raise NotImplementedError(
-                'No key sent to leap provider. Reason: leap.keymanager.KeyManager.send_key in latest python module is not compatible with latest LEAP provider')
         self.keymanager.send_key(openpgp.OpenPGPKey)
 
 

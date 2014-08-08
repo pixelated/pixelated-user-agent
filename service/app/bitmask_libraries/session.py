@@ -2,8 +2,10 @@ import os
 import errno
 import traceback
 from leap.mail.imap.fetch import LeapIncomingMail
-from leap.mail.imap.server import SoledadBackedAccount
+from leap.mail.imap.account import SoledadBackedAccount
 import sys
+from leap.mail.imap.memorystore import MemoryStore
+from leap.mail.imap.soledadstore import SoledadStore
 from twisted.internet import reactor
 from .nicknym import NickNym
 
@@ -138,7 +140,8 @@ class LeapSessionFactory(object):
         return NickNym(self._provider, self._config, soledad_session, srp_session)
 
     def _create_account(self, srp_session, soledad_session):
-        return SoledadBackedAccount(srp_session.uuid, soledad_session.soledad)
+        memstore = MemoryStore(permanent_store=SoledadStore(soledad_session.soledad))
+        return SoledadBackedAccount(srp_session.uuid, soledad_session.soledad, memstore)
 
     def _create_incoming_mail_fetcher(self, nicknym, soledad_session, account, auth):
         return LeapIncomingMail(nicknym.keymanager, soledad_session.soledad, account,

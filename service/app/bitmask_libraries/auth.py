@@ -20,3 +20,8 @@ class LeapAuthenticator(object):
         srp = LeapSecureRemotePassword(ca_bundle=which_bundle(self._provider), timeout_in_s=config.timeout_in_s)
         srp_session = srp.authenticate(self._provider.api_uri, credentials.user_name, credentials.password)
         return srp_session
+
+    def register(self, credentials):
+        config = self._provider.config
+        srp = LeapSecureRemotePassword(ca_bundle=which_bundle(self._provider), timeout_in_s=config.timeout_in_s)
+        srp.register(self._provider.api_uri, credentials.user_name, credentials.password)

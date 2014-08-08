@@ -15,7 +15,7 @@ class NickNymTest(AbstractLeapTest):
 
         #then
         init_mock.assert_called_with('test_user@some-server.test', 'https://nicknym.some-server.test:6425/',
-                                     self.soledad, self.session_id, '/some/path/to/ca_cert',
+                                     self.soledad, self.token, '/some/path/to/ca_cert',
                                      'https://api.some-server.test:4430', '1', self.uuid,
                                      '/path/to/gpg')
 
@@ -27,7 +27,7 @@ class NickNymTest(AbstractLeapTest):
         nicknym = NickNym(self.provider, self.config, self.soledad_session, self.srp_session)
 
         #when/then
-        self.assertRaises(NotImplementedError, nicknym.generate_openpgp_key)
+        nicknym.generate_openpgp_key()
 
         keyman.get_key.assert_called_with('test_user@some-server.test', openpgp.OpenPGPKey, fetch_remote=False, private=True)
         keyman.gen_key.assert_called_with(openpgp.OpenPGPKey)
