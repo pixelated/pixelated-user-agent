@@ -1,5 +1,5 @@
 /*global jasmine */
-/*global Smail */
+/*global Pixelated */
 'use strict';
 
 describeComponent('services/mail_service', function () {
@@ -8,14 +8,14 @@ describeComponent('services/mail_service', function () {
 
   beforeEach( function () {
     setupComponent();
-    email1 = Smail.testData().parsedMail.simpleTextPlain;
+    email1 = Pixelated.testData().parsedMail.simpleTextPlain;
     i18n = require('views/i18n');
   } );
 
   it('marks the desired message as read', function () {
     var readRequest = spyOn($, 'ajax').andReturn({});
 
-    this.component.trigger(Smail.events.mail.read, {ident: 1});
+    this.component.trigger(Pixelated.events.mail.read, {ident: 1});
 
     expect(readRequest.mostRecentCall.args[0]).toEqual('/mail/1/read');
   });
@@ -25,8 +25,8 @@ describeComponent('services/mail_service', function () {
 
     beforeEach(function () {
       readRequest = spyOn($, 'ajax').andReturn({done: function(f) { doneMarkAsRead = f; return {fail: function() {}};}});
-      uncheckedEmailsEvent = spyOnEvent(document, Smail.events.ui.mail.unchecked);
-      setCheckAllEvent = spyOnEvent(document, Smail.events.ui.mails.hasMailsChecked);
+      uncheckedEmailsEvent = spyOnEvent(document, Pixelated.events.ui.mail.unchecked);
+      setCheckAllEvent = spyOnEvent(document, Pixelated.events.ui.mails.hasMailsChecked);
       spyOn(this.component, 'refreshResults');
 
       checkedMails = {
@@ -34,7 +34,7 @@ describeComponent('services/mail_service', function () {
         2: {ident: 2}
       };
 
-      this.component.trigger(Smail.events.mail.read, {checkedMails: checkedMails});
+      this.component.trigger(Pixelated.events.mail.read, {checkedMails: checkedMails});
     });
 
     it('makes the correct request to the backend', function () {
@@ -61,9 +61,9 @@ describeComponent('services/mail_service', function () {
   it('fetches a single email', function () {
     var me = {};
     var spyAjax = spyOn($, 'ajax').andReturn({done: function(f) { f(email1); return {fail: function() {}};}});
-    var mailHereEvent = spyOnEvent(me, Smail.events.mail.here);
+    var mailHereEvent = spyOnEvent(me, Pixelated.events.mail.here);
 
-    this.component.trigger(Smail.events.mail.want, { caller: me, mail: email1.ident });
+    this.component.trigger(Pixelated.events.mail.want, { caller: me, mail: email1.ident });
 
     expect(mailHereEvent).toHaveBeenTriggeredOn(me);
     expect(spyAjax.mostRecentCall.args[0]).toEqual('/mail/' + email1.ident);
@@ -72,9 +72,9 @@ describeComponent('services/mail_service', function () {
   it('answers mail:notFound if mail returned from server is null', function () {
     var me = {};
     var spyAjax = spyOn($, 'ajax').andReturn({done: function(f) { f(null); return {fail: function() {}};}});
-    var mailNotFound = spyOnEvent(me, Smail.events.mail.notFound);
+    var mailNotFound = spyOnEvent(me, Pixelated.events.mail.notFound);
 
-    this.component.trigger(Smail.events.mail.want, { caller: me, mail: email1.ident });
+    this.component.trigger(Pixelated.events.mail.want, { caller: me, mail: email1.ident });
 
     expect(mailNotFound).toHaveBeenTriggeredOn(me);
   });
@@ -83,11 +83,11 @@ describeComponent('services/mail_service', function () {
     spyOn(this.component, 'refreshResults');
     var spyAjax = spyOn($, 'ajax').andReturn({done: function(f) { f(); return {fail: function() {}};}});
 
-    var spyEvent = spyOnEvent(document, Smail.events.mail.tags.updated);
+    var spyEvent = spyOnEvent(document, Pixelated.events.mail.tags.updated);
     var component = jasmine.createSpyObj('component',['successUpdateTags']);
     spyOn(this.component, 'fetchMail');
 
-    this.component.trigger(Smail.events.mail.tags.update, { ident: email1.ident, tags: email1.tags });
+    this.component.trigger(Pixelated.events.mail.tags.update, { ident: email1.ident, tags: email1.tags });
 
     expect(spyEvent).toHaveBeenTriggeredOn(document);
     expect(spyAjax.calls[0].args[0]).toEqual('/mail/1/tags');
@@ -98,10 +98,10 @@ describeComponent('services/mail_service', function () {
   it('triggers an error message when it can\'t update the tags', function () {
     var spyAjax = spyOn($, 'ajax').andReturn({done: function() { return {fail: function(f) {f();}};}});
 
-    var spyEvent = spyOnEvent(document, Smail.events.ui.userAlerts.displayMessage);
+    var spyEvent = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
     var component = jasmine.createSpyObj('component',['failureUpdateTags']);
 
-    this.component.trigger(Smail.events.mail.tags.update, { ident: email1.ident, tags: email1.tags });
+    this.component.trigger(Pixelated.events.mail.tags.update, { ident: email1.ident, tags: email1.tags });
 
     expect(spyEvent).toHaveBeenTriggeredOn(document);
     expect(spyAjax.mostRecentCall.args[0]).toEqual('/mail/1/tags');
@@ -110,7 +110,7 @@ describeComponent('services/mail_service', function () {
 
   it('will try to delete a message when requested to', function() {
     var spyAjax = spyOn($, 'ajax').andReturn({done: function() { return {fail: function(f) {}};}});
-    this.component.trigger(Smail.events.mail.delete, {mail: {ident: '43'}});
+    this.component.trigger(Pixelated.events.mail.delete, {mail: {ident: '43'}});
     expect(spyAjax).toHaveBeenCalled();
     expect(spyAjax.mostRecentCall.args[0]).toEqual('/mail/43');
     expect(spyAjax.mostRecentCall.args[1].type).toEqual('DELETE');
@@ -120,10 +120,10 @@ describeComponent('services/mail_service', function () {
     var displayMessageEvent, uncheckedEmailsEvent, setCheckAllEvent, mailsDeletedEvent;
 
     beforeEach(function () {
-      displayMessageEvent = spyOnEvent(document, Smail.events.ui.userAlerts.displayMessage);
-      uncheckedEmailsEvent = spyOnEvent(document, Smail.events.ui.mail.unchecked);
-      setCheckAllEvent = spyOnEvent(document, Smail.events.ui.mails.hasMailsChecked);
-      mailsDeletedEvent = spyOnEvent(document, Smail.events.mail.deleted);
+      displayMessageEvent = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
+      uncheckedEmailsEvent = spyOnEvent(document, Pixelated.events.ui.mail.unchecked);
+      setCheckAllEvent = spyOnEvent(document, Pixelated.events.ui.mails.hasMailsChecked);
+      mailsDeletedEvent = spyOnEvent(document, Pixelated.events.mail.deleted);
       spyOn(this.component, 'refreshResults');
 
       this.component.triggerDeleted({
@@ -155,19 +155,19 @@ describeComponent('services/mail_service', function () {
 
   it('will trigger an error message when a message cannot be deleted', function() {
     spyOn($, 'ajax').andReturn({done: function() { return {fail: function(f) { f(); }};}});
-    var spyEvent = spyOnEvent(document, Smail.events.ui.userAlerts.displayMessage);
+    var spyEvent = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
 
-    this.component.trigger(Smail.events.mail.delete, {mail: {ident: '43'}});
+    this.component.trigger(Pixelated.events.mail.delete, {mail: {ident: '43'}});
 
     expect(spyEvent).toHaveBeenTriggeredOnAndWith(document, {message: i18n('Could not delete email')} );
   });
 
   it('triggers mails:available with received mails and keeps that tag as the current tag', function() {
     var g;
-    var eventSpy = spyOnEvent(document, Smail.events.mails.available);
+    var eventSpy = spyOnEvent(document, Pixelated.events.mails.available);
 
     spyOn($, 'ajax').andReturn({done: function(f) { g = f; return {fail: function(){}};}});
-    this.component.trigger(Smail.events.ui.mails.fetchByTag, {tag: 'inbox'});
+    this.component.trigger(Pixelated.events.ui.mails.fetchByTag, {tag: 'inbox'});
 
     g({stats: {}, mails: [email1]});
     expect(eventSpy.mostRecentCall.data.stats).toEqual({});
@@ -178,18 +178,18 @@ describeComponent('services/mail_service', function () {
   it('wraps the tag in quotes before fetching by tag (to support tags with spaces)', function () {
     spyOn($, 'ajax').andReturn({done: function(f) { return {fail: function(){}};}});
 
-    this.component.trigger(Smail.events.ui.mails.fetchByTag, {tag: 'new tag'});
+    this.component.trigger(Pixelated.events.ui.mails.fetchByTag, {tag: 'new tag'});
 
     expect($.ajax.mostRecentCall.args[0]).toContain(encodeURI('tag:"new tag"'));
   });
 
   it('sends the previous tag when mails:refresh is called without a tag (this happens when the refresher calls it)', function () {
     var g;
-    var eventSpy = spyOnEvent(document, Smail.events.mails.availableForRefresh);
+    var eventSpy = spyOnEvent(document, Pixelated.events.mails.availableForRefresh);
     this.component.attr.currentTag = 'sent';
 
     spyOn($, 'ajax').andReturn({done: function(f) { g = f; return {fail: function(){}};}});
-    this.component.trigger(Smail.events.ui.mails.refresh);
+    this.component.trigger(Pixelated.events.ui.mails.refresh);
 
     g({stats: {}, mails: [email1]});
     expect(eventSpy.mostRecentCall.data.tag).toEqual('sent');
@@ -201,7 +201,7 @@ describeComponent('services/mail_service', function () {
     var g;
 
     beforeEach(function () {
-      pageChangedEvent = spyOnEvent(document, Smail.events.ui.page.changed);
+      pageChangedEvent = spyOnEvent(document, Pixelated.events.ui.page.changed);
       spyOn($, 'ajax').andReturn({done: function(f) {
         g = f;
         return {fail: function(){}};
@@ -212,7 +212,7 @@ describeComponent('services/mail_service', function () {
     it('changes to the previous page and refetch email when ui:page:previous is fired', function() {
       this.component.attr.currentPage = 1;
 
-      this.component.trigger(Smail.events.ui.page.previous);
+      this.component.trigger(Pixelated.events.ui.page.previous);
 
       expect(this.component.fetchMail).toHaveBeenCalled();
       expect(this.component.attr.currentPage).toEqual(0);
@@ -221,7 +221,7 @@ describeComponent('services/mail_service', function () {
     it('won\'t change the page if it was already at the first page and trying to go to previous', function() {
       this.component.attr.currentPage = 0;
 
-      this.component.trigger(Smail.events.ui.page.previous);
+      this.component.trigger(Pixelated.events.ui.page.previous);
 
       expect(this.component.fetchMail).not.toHaveBeenCalled();
       expect(this.component.attr.currentPage).toEqual(0);
@@ -231,7 +231,7 @@ describeComponent('services/mail_service', function () {
       this.component.attr.numPages = 10;
       this.component.attr.currentPage = 1;
 
-      this.component.trigger(Smail.events.ui.page.next);
+      this.component.trigger(Pixelated.events.ui.page.next);
 
       expect(this.component.fetchMail).toHaveBeenCalled();
       expect(this.component.attr.currentPage).toEqual(2);
@@ -241,7 +241,7 @@ describeComponent('services/mail_service', function () {
       this.component.attr.numPages = 10;
       this.component.attr.currentPage = 9;
 
-      this.component.trigger(Smail.events.ui.page.next);
+      this.component.trigger(Pixelated.events.ui.page.next);
 
       expect(this.component.fetchMail).not.toHaveBeenCalled();
       expect(this.component.attr.currentPage).toEqual(9);
@@ -250,7 +250,7 @@ describeComponent('services/mail_service', function () {
 
     it('triggers pageChanged event when going to next page', function() {
       this.component.attr.numPages = 10;
-      this.component.trigger(Smail.events.ui.page.next);
+      this.component.trigger(Pixelated.events.ui.page.next);
 
       expect(pageChangedEvent).toHaveBeenTriggeredOnAndWith(document, {currentPage: 1, numPages: 10});
     });
@@ -258,7 +258,7 @@ describeComponent('services/mail_service', function () {
     it('triggers pageChanged event when going to previous page', function() {
       this.component.attr.numPages = 10;
       this.component.attr.currentPage = 1;
-      this.component.trigger(Smail.events.ui.page.previous);
+      this.component.trigger(Pixelated.events.ui.page.previous);
 
       expect(pageChangedEvent).toHaveBeenTriggeredOnAndWith(document, {currentPage: 0, numPages: 10});
     });
@@ -266,7 +266,7 @@ describeComponent('services/mail_service', function () {
     it('resets currentPage when fetching mails by tag', function() {
       this.component.attr.numPages = 10;
       this.component.attr.currentPage = 999;
-      this.component.trigger(Smail.events.ui.mails.fetchByTag, {tag: 'inbox'});
+      this.component.trigger(Pixelated.events.ui.mails.fetchByTag, {tag: 'inbox'});
 
       expect(this.component.attr.currentPage).toEqual(0);
       expect(pageChangedEvent).toHaveBeenTriggeredOnAndWith(document, {currentPage: 0, numPages: 10});
@@ -285,7 +285,7 @@ describeComponent('services/mail_service', function () {
         this.component.attr.w = 20;
         this.component.attr.numPages = 0;
 
-        this.component.trigger(Smail.events.ui.mails.fetchByTag, {tag: 'another tag'});
+        this.component.trigger(Pixelated.events.ui.mails.fetchByTag, {tag: 'another tag'});
 
         g(mailSetData);
         expect(this.component.attr.numPages).toBe(5);
@@ -296,7 +296,7 @@ describeComponent('services/mail_service', function () {
         this.component.attr.w = 20;
         this.component.attr.numPages = 0;
 
-        this.component.trigger(Smail.events.ui.mails.fetchByTag, {tag: 'another tag'});
+        this.component.trigger(Pixelated.events.ui.mails.fetchByTag, {tag: 'another tag'});
 
         g(mailSetData);
         expect(this.component.attr.numPages).toBe(6);

@@ -8,7 +8,7 @@ describeComponent('tags/data/tags', function () {
   it('asks the server for tags when receiving the tags:want event', function() {
     spyOn($, 'ajax').andReturn({done: function() {}});
 
-    this.component.trigger(Smail.events.tags.want);
+    this.component.trigger(Pixelated.events.tags.want);
 
     expect($.ajax.mostRecentCall.args[0]).toEqual('/tags');
   });
@@ -17,9 +17,9 @@ describeComponent('tags/data/tags', function () {
     var f;
     spyOn($, 'ajax').andReturn({done: function(d) { f = d; }});
     var me = {};
-    var eventSpy = spyOnEvent(me, Smail.events.tags.received);
+    var eventSpy = spyOnEvent(me, Pixelated.events.tags.received);
 
-    this.component.trigger(Smail.events.tags.want, { caller: me});
+    this.component.trigger(Pixelated.events.tags.want, { caller: me});
 
     f(['foo', 'bar', 'quux/bar']);
     expect(eventSpy).toHaveBeenTriggeredOn(me);
@@ -29,8 +29,8 @@ describeComponent('tags/data/tags', function () {
     var f;
     spyOn($, 'ajax').andReturn({done: function(d) { f = d; }});
     var me = {};
-    var eventSpy = spyOnEvent(me, Smail.events.tags.received);
-    this.component.trigger(Smail.events.tags.want, { caller: me });
+    var eventSpy = spyOnEvent(me, Pixelated.events.tags.received);
+    this.component.trigger(Pixelated.events.tags.want, { caller: me });
     var tags = ['foo', 'bar', 'quux/bar'];
     f(tags);
     tags.push(this.component.all);

@@ -1,10 +1,10 @@
-/*global Smail */
+/*global Pixelated */
 
 describeMixin('mail_list/ui/mail_items/mail_item', function () {
   'use strict';
 
   beforeEach(function () {
-    var mail = Smail.testData().parsedMail.simpleTextPlain;
+    var mail = Pixelated.testData().parsedMail.simpleTextPlain;
     mail.tags = ['inbox'];
 
     setupComponent('<li><input type="checkbox"></input></li>', {
@@ -17,8 +17,8 @@ describeMixin('mail_list/ui/mail_items/mail_item', function () {
   describe('mail checkbox', function () {
     var mailCheckedEvent, mailUncheckedEvent, checkbox;
     beforeEach(function () {
-      mailCheckedEvent = spyOnEvent(document, Smail.events.ui.mail.checked);
-      mailUncheckedEvent = spyOnEvent(document, Smail.events.ui.mail.unchecked);
+      mailCheckedEvent = spyOnEvent(document, Pixelated.events.ui.mail.checked);
+      mailUncheckedEvent = spyOnEvent(document, Pixelated.events.ui.mail.unchecked);
       checkbox = this.component.$node.find('input[type=checkbox]');
     });
 

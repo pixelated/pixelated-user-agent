@@ -1,4 +1,4 @@
-/*global Smail */
+/*global Pixelated */
 
 describeComponent('mail_view/ui/mail_view', function () {
   'use strict';
@@ -9,13 +9,13 @@ describeComponent('mail_view/ui/mail_view', function () {
 
   beforeEach(function () {
     mail = {ident: 1, header: { date: '12/12/12T12:12' }, tags: ['inbox']};
-    testData = {mail: Smail.testData().parsedMail.simpleTextPlain};
-    Smail.mockBloodhound();
+    testData = {mail: Pixelated.testData().parsedMail.simpleTextPlain};
+    Pixelated.mockBloodhound();
     setupComponent('<div></div>', {mail: mail});
   });
 
   it('triggers mail:want on ui:openMail', function () {
-    var spyEvent = spyOnEvent(document, Smail.events.mail.want);
+    var spyEvent = spyOnEvent(document, Pixelated.events.mail.want);
 
     setupComponent('<div></div>', {ident: mail.ident });
 
@@ -24,16 +24,16 @@ describeComponent('mail_view/ui/mail_view', function () {
   });
 
   it('triggers dispatchers.rightPane.openNoMessageSelected when getting mail.notFound', function () {
-    var openNoMessageSelectedEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openNoMessageSelected);
+    var openNoMessageSelectedEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
 
-    this.component.trigger(this.component, Smail.events.mail.notFound);
+    this.component.trigger(this.component, Pixelated.events.mail.notFound);
 
     expect(openNoMessageSelectedEvent).toHaveBeenTriggeredOn(document);
   });
 
 
   it('removes the tag from the mail when the tag label is clicked', function() {
-    var updateSpy = spyOnEvent(document, Smail.events.mail.tags.update);
+    var updateSpy = spyOnEvent(document, Pixelated.events.mail.tags.update);
 
     this.component.displayMail({}, testData);
     this.component.removeTag('inbox');
@@ -154,8 +154,8 @@ describeComponent('mail_view/ui/mail_view', function () {
   });
 
   it('creates new tag when pressing Enter key on new tag input', function(){
-    var tagsUpdateEvent = spyOnEvent(document, Smail.events.mail.tags.update);
-    var tagListRefreshEvent = spyOnEvent(document, Smail.events.dispatchers.tags.refreshTagList);
+    var tagsUpdateEvent = spyOnEvent(document, Pixelated.events.mail.tags.update);
+    var tagListRefreshEvent = spyOnEvent(document, Pixelated.events.dispatchers.tags.refreshTagList);
     var e = creatingEvent("keydown", 13);
 
     this.component.displayMail({}, testData);
@@ -173,7 +173,7 @@ describeComponent('mail_view/ui/mail_view', function () {
   });
 
   it('trigger mail delete event when moving email to trash', function(){
-    var mailDeleteEvent = spyOnEvent(document, Smail.events.ui.mail.delete);
+    var mailDeleteEvent = spyOnEvent(document, Pixelated.events.ui.mail.delete);
 
     Foundation.global.namespace = '';
     $(document).foundation();
@@ -185,28 +185,28 @@ describeComponent('mail_view/ui/mail_view', function () {
   });
 
   it('shows no message selected pane when deleting the email being composed', function() {
-    var openNoMessageSelectedPaneEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openNoMessageSelected);
+    var openNoMessageSelectedPaneEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
     var mails = [{ident: 123}];
     this.component.attr.mail = mails[0];
 
-    this.component.trigger(document, Smail.events.mail.deleted, {mails: mails});
+    this.component.trigger(document, Pixelated.events.mail.deleted, {mails: mails});
 
     expect(openNoMessageSelectedPaneEvent).toHaveBeenTriggeredOn(document);
   });
 
   it('does not show no message selected pane when deleting a different set of emails', function() {
-    var openNoMessageSelectedPaneEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openNoMessageSelected);
+    var openNoMessageSelectedPaneEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
     var mails = [{ident: 321}];
     this.component.attr.mail = {ident: 123};
 
-    this.component.trigger(document, Smail.events.mail.deleted, {mails: mails});
+    this.component.trigger(document, Pixelated.events.mail.deleted, {mails: mails});
 
     expect(openNoMessageSelectedPaneEvent).not.toHaveBeenTriggeredOn(document);
   });
 
   describe('archiving email', function() {
     it('trigger tag updates events with no tags', function(){
-      var tagsUpdateEvent = spyOnEvent(document, Smail.events.mail.tags.update);
+      var tagsUpdateEvent = spyOnEvent(document, Pixelated.events.mail.tags.update);
 
       Foundation.global.namespace = '';
       $(document).foundation();
@@ -218,7 +218,7 @@ describeComponent('mail_view/ui/mail_view', function () {
     });
 
     it('opens no message selected pane', function() {
-      var openNoMessageSelectedEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openNoMessageSelected);
+      var openNoMessageSelectedEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
 
       Foundation.global.namespace = '';
       $(document).foundation();
@@ -231,7 +231,7 @@ describeComponent('mail_view/ui/mail_view', function () {
   });
 
   it('opens the no message selected pane when clicking the close button', function() {
-    var openNoMessageSelectedEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openNoMessageSelected);
+    var openNoMessageSelectedEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
 
     this.component.displayMail({}, testData);
     this.component.select('closeMailButton').click();

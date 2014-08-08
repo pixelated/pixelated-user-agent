@@ -37,10 +37,10 @@ requirejs.config({
 
   callback: function () {
     require(['page/events','test/test_data', 'views/i18n', 'monkey_patching/array', 'views/recipientListFormatter'], function (events, testData, i18n, mp, recipientListFormatter) {
-      window['Smail'] = window['Smail'] || {};
-      window['Smail'].events = events;
-      window['Smail'].testData = testData;
-      window['Smail'].mockBloodhound = function() {
+      window['Pixelated'] = window['Pixelated'] || {};
+      window['Pixelated'].events = events;
+      window['Pixelated'].testData = testData;
+      window['Pixelated'].mockBloodhound = function() {
         window.Bloodhound = function() {};
         window.Bloodhound.prototype.initialize = function() {};
         window.Bloodhound.prototype.ttAdapter = function() {};

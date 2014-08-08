@@ -1,4 +1,4 @@
-/*global Smail */
+/*global Pixelated */
 /*global _ */
 /*global Bloodhound */
 

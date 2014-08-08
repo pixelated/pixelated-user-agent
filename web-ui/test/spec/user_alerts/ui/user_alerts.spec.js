@@ -6,7 +6,7 @@ describeComponent('user_alerts/ui/user_alerts', function () {
   });
 
   it('should render message when ui:user_alerts:displayMessage is triggered', function () {
-    this.component.trigger(Smail.events.ui.userAlerts.displayMessage, { message: 'a message' });
+    this.component.trigger(Pixelated.events.ui.userAlerts.displayMessage, { message: 'a message' });
 
     expect(this.component.$node.html()).toMatch('a message');
   });

@@ -1,4 +1,4 @@
-/*global Smail */
+/*global Pixelated */
 
 describeComponent('mail_view/ui/mail_actions', function () {
   'use strict';
@@ -6,7 +6,7 @@ describeComponent('mail_view/ui/mail_actions', function () {
   var testData;
 
   beforeEach(function(){
-    testData = Smail.testData();
+    testData = Pixelated.testData();
     setupComponent(testData);
   });
 
@@ -27,7 +27,7 @@ describeComponent('mail_view/ui/mail_actions', function () {
 
   it('triggers a show reply box event when clicking on reply-button-top', function(){
 
-    var showReplyBoxEvent = spyOnEvent(document, Smail.events.ui.replyBox.showReply);
+    var showReplyBoxEvent = spyOnEvent(document, Pixelated.events.ui.replyBox.showReply);
 
     this.component.select('replyButtonTop').click();
 
@@ -36,7 +36,7 @@ describeComponent('mail_view/ui/mail_actions', function () {
 
   it('triggers a show reply all box event when clicking on reply-button-top and hide more actions list', function(){
 
-    var showReplyAllEvent = spyOnEvent(document, Smail.events.ui.replyBox.showReplyAll);
+    var showReplyAllEvent = spyOnEvent(document, Pixelated.events.ui.replyBox.showReplyAll);
 
     this.component.select('viewMoreActions').click();
     this.component.select('replyAllButtonTop').click();
@@ -49,7 +49,7 @@ describeComponent('mail_view/ui/mail_actions', function () {
 
   it('triggers a delete event when clicking on delete-button-top', function(){
 
-    var deleteEvent = spyOnEvent(document, Smail.events.ui.mail.delete);
+    var deleteEvent = spyOnEvent(document, Pixelated.events.ui.mail.delete);
 
     this.component.select('viewMoreActions').click();
     this.component.select('deleteButtonTop').click();

@@ -1,4 +1,4 @@
-/*global Smail */
+/*global Pixelated */
 /*global jasmine */
 /*global runs */
 /*global waits */
@@ -16,7 +16,7 @@ describeMixin('mixins/with_mail_edit_base', function () {
 
   describe('initialization', function() {
     it('should enable send button when rendering with recipients', function() {
-      var enableSendButtonEvent = spyOnEvent(document, Smail.events.ui.sendbutton.enable);
+      var enableSendButtonEvent = spyOnEvent(document, Pixelated.events.ui.sendbutton.enable);
 
       this.component.render(function() {}, {
         recipients: { to: ['foobar@mail.com'], cc: [] }
@@ -26,7 +26,7 @@ describeMixin('mixins/with_mail_edit_base', function () {
     });
 
     it('should not enable send button when rendering without recipients', function() {
-      var enableSendButtonEvent = spyOnEvent(document, Smail.events.ui.sendbutton.enable);
+      var enableSendButtonEvent = spyOnEvent(document, Pixelated.events.ui.sendbutton.enable);
 
       this.component.render(function() {}, {
         recipients: { to: [], cc: [] }
@@ -42,7 +42,7 @@ describeMixin('mixins/with_mail_edit_base', function () {
     });
 
     it('saves the draft after the save draft interval number of seconds', function() {
-      var saveDraftSpy = spyOnEvent(document, Smail.events.mail.saveDraft);
+      var saveDraftSpy = spyOnEvent(document, Pixelated.events.mail.saveDraft);
       runs(function () {
         this.component.monitorInput();
         expect(saveDraftSpy).not.toHaveBeenTriggeredOn(document);
@@ -54,7 +54,7 @@ describeMixin('mixins/with_mail_edit_base', function () {
     });
 
     it('does not save if mail is sent before the save draft interval number of seconds', function() {
-      var saveDraftSpy = spyOnEvent(document, Smail.events.mail.saveDraft);
+      var saveDraftSpy = spyOnEvent(document, Pixelated.events.mail.saveDraft);
       runs(function () {
         this.component.monitorInput();
         this.component.sendMail();
@@ -68,15 +68,15 @@ describeMixin('mixins/with_mail_edit_base', function () {
 
   describe('when a mail is sent', function () {
     it('displays a message of mail sent', function () {
-      var spy = spyOnEvent(document, Smail.events.ui.userAlerts.displayMessage);
-      this.component.trigger(document, Smail.events.mail.sent);
+      var spy = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
+      this.component.trigger(document, Pixelated.events.mail.sent);
       expect(spy).toHaveBeenTriggeredOn(document);
     });
   });
 
   describe('when user asks to trash the mail', function() {
     it('triggers mail delete for this mail', function() {
-      var spy = spyOnEvent(document, Smail.events.mail.save);
+      var spy = spyOnEvent(document, Pixelated.events.mail.save);
       this.component.trashMail();
       expect(spy).toHaveBeenTriggeredOn(document);
     });
@@ -84,9 +84,9 @@ describeMixin('mixins/with_mail_edit_base', function () {
 
   describe('when recipients are updated', function () {
     it('triggers an event to let the send button know that the recipients in the mail are updated', function () {
-      var uiMailRecipientsUpdated = spyOnEvent(document, Smail.events.ui.mail.recipientsUpdated);
+      var uiMailRecipientsUpdated = spyOnEvent(document, Pixelated.events.ui.mail.recipientsUpdated);
 
-      $(document).trigger(Smail.events.ui.recipients.updated, {recipientsName: 'to', newRecipients: ['fox@somewhere.com']});
+      $(document).trigger(Pixelated.events.ui.recipients.updated, {recipientsName: 'to', newRecipients: ['fox@somewhere.com']});
 
       expect(uiMailRecipientsUpdated).toHaveBeenTriggeredOn(document);
     });

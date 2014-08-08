@@ -17,11 +17,11 @@ describeComponent("tags/ui/tag_shortcut", function () {
   });
 
   it('selects and unselect on tag.select', function () {
-    $(document).trigger(Smail.events.ui.tag.select, { tag: 'inbox'});
+    $(document).trigger(Pixelated.events.ui.tag.select, { tag: 'inbox'});
 
     expect(shortcut.$node).toHaveClass("selected");
 
-    $(document).trigger(Smail.events.ui.tag.select, { tag: 'sent'});
+    $(document).trigger(Pixelated.events.ui.tag.select, { tag: 'sent'});
 
     expect(shortcut.$node).not.toHaveClass("selected");
   });

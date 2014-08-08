@@ -1,5 +1,5 @@
 /*global jasmine */
-/*global Smail */
+/*global Pixelated */
 
 describeComponent('mail_view/ui/reply_section', function () {
   'use strict';
@@ -12,7 +12,7 @@ describeComponent('mail_view/ui/reply_section', function () {
     var mailWantEvent, expectEventData;
 
     beforeEach(function () {
-      mailWantEvent = spyOnEvent(document, Smail.events.mail.want);
+      mailWantEvent = spyOnEvent(document, Pixelated.events.mail.want);
       expectEventData = {
         mail: '12345',
         caller: this.component
@@ -37,7 +37,7 @@ describeComponent('mail_view/ui/reply_section', function () {
     var mailData, ReplyBox, ForwardBox;
 
     beforeEach(function () {
-      mailData = Smail.testData().mail;
+      mailData = Pixelated.testData().mail;
       ReplyBox = require('mail_view/ui/reply_box');
       ForwardBox = require('mail_view/ui/forward_box');
       spyOn(ReplyBox, 'attachTo');
@@ -46,7 +46,7 @@ describeComponent('mail_view/ui/reply_section', function () {
 
     it('for normal reply', function() {
       this.component.attr.replyType = 'reply';
-      this.component.trigger(this.component, Smail.events.mail.here, { mail: mailData });
+      this.component.trigger(this.component, Pixelated.events.mail.here, { mail: mailData });
 
       expect(ReplyBox.attachTo).toHaveBeenCalledWith(jasmine.any(Object), {
         mail: mailData,
@@ -56,7 +56,7 @@ describeComponent('mail_view/ui/reply_section', function () {
 
     it('for reply to all', function() {
       this.component.attr.replyType = 'replyall';
-      this.component.trigger(this.component, Smail.events.mail.here, { mail: mailData });
+      this.component.trigger(this.component, Pixelated.events.mail.here, { mail: mailData });
 
       expect(ReplyBox.attachTo).toHaveBeenCalledWith(jasmine.any(Object), {
         mail: mailData,
@@ -66,7 +66,7 @@ describeComponent('mail_view/ui/reply_section', function () {
 
     it('creates a forward box', function() {
       this.component.attr.replyType = 'forward';
-      this.component.trigger(this.component, Smail.events.mail.here, { mail: mailData });
+      this.component.trigger(this.component, Pixelated.events.mail.here, { mail: mailData });
 
       expect(ForwardBox.attachTo).toHaveBeenCalledWith(jasmine.any(Object), {
         mail: mailData
@@ -88,7 +88,7 @@ describeComponent('mail_view/ui/reply_section', function () {
     this.component.attr.mailIdent = 12345;
     this.component.select('replyButton').click();
 
-    $(document).trigger(Smail.events.ui.composeBox.trashReply);
+    $(document).trigger(Pixelated.events.ui.composeBox.trashReply);
 
     expect(this.component.select('replyButton')).not.toBeHidden();
     expect(this.component.select('replyAllButton')).not.toBeHidden();

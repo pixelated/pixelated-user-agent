@@ -1,5 +1,5 @@
 /*global jasmine */
-/*global Smail */
+/*global Pixelated */
 
 describeComponent('search/search_trigger', function () {
   'use strict';
@@ -16,14 +16,14 @@ describeComponent('search/search_trigger', function () {
   }
 
   it('should trigger search when the submit occurs', function () {
-    var spy = spyOnEvent(document, Smail.events.search.perform);
+    var spy = spyOnEvent(document, Pixelated.events.search.perform);
 
     submitSearch('tanana');
     expect(spy).toHaveBeenTriggeredOnAndWith(document, { query: 'tanana' });
   });
 
   it('should select the "all" tag when submit occurs but should skip mail list refresh', function  (){
-    var tagSelectEvent = spyOnEvent(document, Smail.events.ui.tag.select);
+    var tagSelectEvent = spyOnEvent(document, Pixelated.events.ui.tag.select);
 
     submitSearch('tanana');
 
@@ -34,8 +34,8 @@ describeComponent('search/search_trigger', function () {
   });
 
   it('should select the "all" tag when an empty submit occurs and shoud refresh mail list', function() {
-    var tagSelectEvent = spyOnEvent(document, Smail.events.ui.tag.select);
-    var emptySearchEvent = spyOnEvent(document, Smail.events.search.empty);
+    var tagSelectEvent = spyOnEvent(document, Pixelated.events.ui.tag.select);
+    var emptySearchEvent = spyOnEvent(document, Pixelated.events.search.empty);
 
     submitSearch('');
 
@@ -46,7 +46,7 @@ describeComponent('search/search_trigger', function () {
 
   it('should clear input when selecting a new tag', function(){
     submitSearch('tanana');
-    $(document).trigger(Smail.events.ui.tag.selected, { tag: 'inbox'});
+    $(document).trigger(Pixelated.events.ui.tag.selected, { tag: 'inbox'});
     expect(self.component.select('input').val()).toBe('');
   });
 

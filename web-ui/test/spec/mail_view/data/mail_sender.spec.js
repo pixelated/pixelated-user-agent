@@ -1,4 +1,4 @@
-/*global Smail */
+/*global Pixelated */
 
 describeComponent('mail_view/data/mail_sender', function () {
   'use strict';
@@ -8,17 +8,17 @@ describeComponent('mail_view/data/mail_sender', function () {
 
   beforeEach(function () {
     mailBuilder =  require('mail_view/data/mail_builder');
-    mail = Smail.testData().parsedMail.simpleTextPlain;
+    mail = Pixelated.testData().parsedMail.simpleTextPlain;
     setupComponent();
   });
 
   it('sends mail data with a POST to the server when asked to send email', function() {
-    var mailSentEventSpy = spyOnEvent(document, Smail.events.mail.sent);
+    var mailSentEventSpy = spyOnEvent(document, Pixelated.events.mail.sent);
     var g;
 
     spyOn($, 'ajax').andReturn({done: function(f) { g = f; return {fail: function(){}};}});
 
-    this.component.trigger(Smail.events.mail.send, mail);
+    this.component.trigger(Pixelated.events.mail.send, mail);
 
     g();
 
@@ -31,13 +31,13 @@ describeComponent('mail_view/data/mail_sender', function () {
   });
 
   it('save draft data with a POST to the server when asked to save draft for the first time', function() {
-    var draftSavedEventSpy = spyOnEvent(document, Smail.events.mail.draftSaved);
+    var draftSavedEventSpy = spyOnEvent(document, Pixelated.events.mail.draftSaved);
     var g;
 
     spyOn($, 'ajax').andReturn({done: function(f) { g = f; return {fail: function(){}};}});
 
     mail.ident = '';
-    this.component.trigger(Smail.events.mail.saveDraft, mail);
+    this.component.trigger(Pixelated.events.mail.saveDraft, mail);
 
     g();
 
@@ -50,13 +50,13 @@ describeComponent('mail_view/data/mail_sender', function () {
   });
 
   it('save draft data with a PUT to the server when asked to save draft for the second time', function() {
-    var draftSavedEventSpy = spyOnEvent(document, Smail.events.mail.draftSaved);
+    var draftSavedEventSpy = spyOnEvent(document, Pixelated.events.mail.draftSaved);
     var g;
 
     spyOn($, 'ajax').andReturn({done: function(f) { g = f; return {fail: function(){}};}});
 
     mail.ident = 0;
-    this.component.trigger(Smail.events.mail.saveDraft, mail);
+    this.component.trigger(Pixelated.events.mail.saveDraft, mail);
 
     g();
 

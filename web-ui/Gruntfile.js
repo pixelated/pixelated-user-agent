@@ -320,7 +320,7 @@ module.exports = function (grunt) {
     handlebars: {
       dist: {
         options: {
-          namespace: 'Smail'
+          namespace: 'Pixelated'
         },
         files: {
           '<%= yeoman.dist %>/js/templates.js': '<%= yeoman.app %>/templates/**/*.hbs'
@@ -328,7 +328,7 @@ module.exports = function (grunt) {
       },
       dev: {
         options: {
-          namespace: 'Smail'
+          namespace: 'Pixelated'
         },
         files: {
           '<%= yeoman.app %>/js/generated/hbs/templates.js': '<%= yeoman.app %>/templates/**/*.hbs'

@@ -1,4 +1,4 @@
-/*global Smail */
+/*global Pixelated */
 /*global afterEach */
 
 'use strict';
@@ -27,28 +27,28 @@ describeComponent('page/pane_contract_expand', function () {
     });
 
     it('contracts middle pane and expands right pane on mail open', function () {
-      $(document).trigger(Smail.events.ui.mail.open);
+      $(document).trigger(Pixelated.events.ui.mail.open);
 
       expect($('#middle-pane-container').attr('class')).toEqual(this.component.attr.MIDDLE_PANE_CONTRACT_CLASSES);
       expect($('#right-pane').attr('class')).toEqual(this.component.attr.RIGHT_PANE_EXPAND_CLASSES);
     });
 
     it('contracts middle pane and expands right pane on open compose box', function () {
-      $(document).trigger(Smail.events.dispatchers.rightPane.openComposeBox);
+      $(document).trigger(Pixelated.events.dispatchers.rightPane.openComposeBox);
 
       expect($('#middle-pane-container').attr('class')).toEqual(this.component.attr.MIDDLE_PANE_CONTRACT_CLASSES);
       expect($('#right-pane').attr('class')).toEqual(this.component.attr.RIGHT_PANE_EXPAND_CLASSES);
     });
 
     it('contracts middle pane and expands right pane on open draft', function () {
-      $(document).trigger(Smail.events.dispatchers.rightPane.openDraft);
+      $(document).trigger(Pixelated.events.dispatchers.rightPane.openDraft);
 
       expect($('#middle-pane-container').attr('class')).toEqual(this.component.attr.MIDDLE_PANE_CONTRACT_CLASSES);
       expect($('#right-pane').attr('class')).toEqual(this.component.attr.RIGHT_PANE_EXPAND_CLASSES);
     });
 
     it('expands middle pane and contracts right pane on event on open no message selected pane', function () {
-      $(document).trigger(Smail.events.dispatchers.rightPane.openNoMessageSelected);
+      $(document).trigger(Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
 
       expect($('#middle-pane-container').attr('class')).toEqual(this.component.attr.MIDDLE_PANE_EXPAND_CLASSES);
       expect($('#right-pane').attr('class')).toEqual(this.component.attr.RIGHT_PANE_CONTRACT_CLASSES);

@@ -1,4 +1,4 @@
-/*global Smail */
+/*global Pixelated */
 
 describeComponent('mail_list/ui/mail_list', function () {
   'use strict';
@@ -30,12 +30,12 @@ describeComponent('mail_list/ui/mail_list', function () {
         return '10';
       }
     };
-    var openMailEvent = spyOnEvent(document, Smail.events.ui.mail.open);
+    var openMailEvent = spyOnEvent(document, Pixelated.events.ui.mail.open);
 
-    this.$node.trigger(Smail.events.mails.available, { mails: mailList });
+    this.$node.trigger(Pixelated.events.mails.available, { mails: mailList });
     expect(openMailEvent).toHaveBeenTriggeredOnAndWith(document, { ident: '10' });
 
-    this.$node.trigger(Smail.events.mails.available, { mails: mailList });
+    this.$node.trigger(Pixelated.events.mails.available, { mails: mailList });
     expect(openMailEvent.calls.length).toEqual(1);
   });
 
@@ -48,10 +48,10 @@ describeComponent('mail_list/ui/mail_list', function () {
         return '10';
       }
     };
-    var pushState = spyOnEvent(document, Smail.events.router.pushState);
+    var pushState = spyOnEvent(document, Pixelated.events.router.pushState);
     this.component.attr.currentTag = 'inbox';
 
-    this.$node.trigger(Smail.events.mails.available, { mails: mailList });
+    this.$node.trigger(Pixelated.events.mails.available, { mails: mailList });
 
     expect(pushState).toHaveBeenTriggeredOnAndWith(document, { tag: 'inbox', mailIdent: '10' });
   });
@@ -63,7 +63,7 @@ describeComponent('mail_list/ui/mail_list', function () {
 
       this.component.attr.checkedMails = {};
 
-      $(document).trigger(Smail.events.ui.mail.checked, {mail: mailList[0]});
+      $(document).trigger(Pixelated.events.ui.mail.checked, {mail: mailList[0]});
 
       checkedMails[mailList[0].ident] = mailList[0];
 
@@ -73,18 +73,18 @@ describeComponent('mail_list/ui/mail_list', function () {
     it('returns the list of checked mails to whomever requests them', function () {
       var caller = {};
       this.component.attr.checkedMails = {'1': {}};
-      var mailHereCheckedEvent = spyOnEvent(caller, Smail.events.ui.mail.hereChecked);
+      var mailHereCheckedEvent = spyOnEvent(caller, Pixelated.events.ui.mail.hereChecked);
 
-      $(document).trigger(Smail.events.ui.mail.wantChecked, caller);
+      $(document).trigger(Pixelated.events.ui.mail.wantChecked, caller);
 
       expect(mailHereCheckedEvent).toHaveBeenTriggeredOnAndWith(caller, { checkedMails: {'1': {} }});
     });
 
     it('returns an empty list to whomever requests the checked mails if there are no checked mails', function () {
       var caller = {};
-      var mailHereCheckedEvent = spyOnEvent(caller, Smail.events.ui.mail.hereChecked);
+      var mailHereCheckedEvent = spyOnEvent(caller, Pixelated.events.ui.mail.hereChecked);
 
-      $(document).trigger(Smail.events.ui.mail.wantChecked, caller);
+      $(document).trigger(Pixelated.events.ui.mail.wantChecked, caller);
 
       expect(mailHereCheckedEvent).toHaveBeenTriggeredOnAndWith(caller, { checkedMails: {} });
     });
@@ -96,15 +96,15 @@ describeComponent('mail_list/ui/mail_list', function () {
         '3': {}
       };
 
-      $(document).trigger(Smail.events.ui.mail.unchecked, {mail: {ident: '1'}});
+      $(document).trigger(Pixelated.events.ui.mail.unchecked, {mail: {ident: '1'}});
 
       expect(this.component.attr.checkedMails).toEqual({'2': {}, '3': {} });
     });
 
     it('checks the check all checkbox if at least one mail is checked', function () {
-      var setCheckAllCheckboxEvent = spyOnEvent(document, Smail.events.ui.mails.hasMailsChecked);
+      var setCheckAllCheckboxEvent = spyOnEvent(document, Pixelated.events.ui.mails.hasMailsChecked);
 
-      $(document).trigger(Smail.events.ui.mail.checked, {mail: mailList[0]});
+      $(document).trigger(Pixelated.events.ui.mail.checked, {mail: mailList[0]});
 
       expect(setCheckAllCheckboxEvent).toHaveBeenTriggeredOnAndWith(document, true);
     });
@@ -112,9 +112,9 @@ describeComponent('mail_list/ui/mail_list', function () {
     it('unchecks the check all checkbox if no mail is left checked', function () {
       this.component.attr.checkedMails = {1: {}};
 
-      var setCheckAllCheckboxEvent = spyOnEvent(document, Smail.events.ui.mails.hasMailsChecked);
+      var setCheckAllCheckboxEvent = spyOnEvent(document, Pixelated.events.ui.mails.hasMailsChecked);
 
-      $(document).trigger(Smail.events.ui.mail.unchecked, {mail: {ident: '1'}});
+      $(document).trigger(Pixelated.events.ui.mail.unchecked, {mail: {ident: '1'}});
 
       expect(setCheckAllCheckboxEvent).toHaveBeenTriggeredOnAndWith(document, false);
     });
@@ -122,35 +122,35 @@ describeComponent('mail_list/ui/mail_list', function () {
 
   describe('when mails are available', function () {
     it('should open email if popstate event happened (when mailIdent isnt undefined)', function () {
-      var openMailEvent = spyOnEvent(document, Smail.events.ui.mail.open);
+      var openMailEvent = spyOnEvent(document, Pixelated.events.ui.mail.open);
 
-      this.component.$node.trigger(Smail.events.mails.available, { mails: mailList, mailIdent: '30' });
+      this.component.$node.trigger(Pixelated.events.mails.available, { mails: mailList, mailIdent: '30' });
 
       expect(openMailEvent).toHaveBeenTriggeredOnAndWith(document, { ident: '30'});
     });
 
     it('should open draft in popstate event if tag is Drafts', function () {
-      var openDraftEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openDraft);
+      var openDraftEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openDraft);
 
-      this.component.$node.trigger(Smail.events.mails.available, { mails: mailList, mailIdent: '30', tag: 'drafts' });
+      this.component.$node.trigger(Pixelated.events.mails.available, { mails: mailList, mailIdent: '30', tag: 'drafts' });
 
       expect(openDraftEvent).toHaveBeenTriggeredOnAndWith(document, { ident: '30'});
     });
   });
 
   it('should not append emails when another mails:available event is triggered', function () {
-    this.component.$node.trigger(Smail.events.mails.available, { mails: mailList });
+    this.component.$node.trigger(Pixelated.events.mails.available, { mails: mailList });
 
     expect(this.component.$node.find('a').length).toEqual(2);
 
-    this.component.$node.trigger(Smail.events.mails.available, { mails: mailList });
+    this.component.$node.trigger(Pixelated.events.mails.available, { mails: mailList });
 
     expect(this.component.$node.find('a').length).toEqual(2);
   });
 
   it('resets scroll when opening a new tag or choosing a new tag', function () {
-    var eventSpy = spyOnEvent(document, Smail.events.dispatchers.middlePane.resetScroll);
-    this.component.$node.trigger(Smail.events.mails.available, { mails: mailList });
+    var eventSpy = spyOnEvent(document, Pixelated.events.dispatchers.middlePane.resetScroll);
+    this.component.$node.trigger(Pixelated.events.mails.available, { mails: mailList });
     expect(eventSpy).toHaveBeenTriggeredOn(document);
   });
 
@@ -158,7 +158,7 @@ describeComponent('mail_list/ui/mail_list', function () {
 
     describe('when mails are available for refreshing', function () {
       it('renders the new mails', function () {
-        this.component.$node.trigger(Smail.events.mails.availableForRefresh, { mails: mailList });
+        this.component.$node.trigger(Pixelated.events.mails.availableForRefresh, { mails: mailList });
 
         matchMail(mailList[0], this.component.$node);
         matchMail(mailList[1], this.component.$node);
@@ -167,7 +167,7 @@ describeComponent('mail_list/ui/mail_list', function () {
     });
 
     it('should render all mails sent in ui:mails:show event', function () {
-      this.component.$node.trigger(Smail.events.mails.available, { mails: mailList });
+      this.component.$node.trigger(Pixelated.events.mails.available, { mails: mailList });
 
       matchMail(mailList[0], this.component.$node);
       matchMail(mailList[1], this.component.$node);
@@ -176,7 +176,7 @@ describeComponent('mail_list/ui/mail_list', function () {
     it('should select the current email when mails are available', function () {
       this.component.attr.currentMailIdent = '1';
 
-      this.component.trigger(Smail.events.mails.available, { mails: mailList });
+      this.component.trigger(Pixelated.events.mails.available, { mails: mailList });
 
       matchSelectedMail(mailList[0], this.component.$node);
       matchMail(mailList[1], this.component.$node);
@@ -187,14 +187,14 @@ describeComponent('mail_list/ui/mail_list', function () {
 
       mailIdent = mailList[0].ident;
       this.component.attr.checkedMails[mailIdent] = mailList[0];
-      this.component.$node.trigger(Smail.events.mails.available, { mails: [mailList[0]] });
+      this.component.$node.trigger(Pixelated.events.mails.available, { mails: [mailList[0]] });
       checkbox = this.$node.find('input[type=checkbox]');
 
       expect(checkbox.prop('checked')).toBe(true);
     });
 
     it('should render links for the emails', function () {
-      this.component.$node.trigger(Smail.events.mails.available, { mails: mailList, tag: 'inbox' });
+      this.component.$node.trigger(Pixelated.events.mails.available, { mails: mailList, tag: 'inbox' });
 
       expect(this.$node.html()).toMatch('href="/#/inbox/mail/1');
       expect(this.$node.html()).toMatch('href="/#/inbox/mail/2');
@@ -202,7 +202,7 @@ describeComponent('mail_list/ui/mail_list', function () {
 
     it('should clean the selected email', function () {
       this.component.attr.currentMailIdent = '1';
-      this.component.trigger(Smail.events.ui.mails.cleanSelected);
+      this.component.trigger(Pixelated.events.ui.mails.cleanSelected);
 
       expect(this.component.attr.currentMailIdent).toEqual('');
     });
@@ -222,18 +222,18 @@ describeComponent('mail_list/ui/mail_list', function () {
   describe('when saving a draft', function () {
     it('refreshes the list if the current tag is drafts', function () {
       this.component.attr.currentTag = 'drafts';
-      var spyRefresh = spyOnEvent(document, Smail.events.ui.mails.refresh);
-      var spyScroll = spyOnEvent(document, Smail.events.dispatchers.middlePane.resetScroll);
-      this.component.trigger(Smail.events.mail.draftSaved, {ident: 1});
+      var spyRefresh = spyOnEvent(document, Pixelated.events.ui.mails.refresh);
+      var spyScroll = spyOnEvent(document, Pixelated.events.dispatchers.middlePane.resetScroll);
+      this.component.trigger(Pixelated.events.mail.draftSaved, {ident: 1});
       expect(spyRefresh).toHaveBeenTriggeredOn(document);
       expect(spyScroll).toHaveBeenTriggeredOn(document);
     });
 
     it('does not refresh the list if the current tag is not drafts', function() {
       this.component.attr.currentTag = 'sent';
-      var spyRefresh = spyOnEvent(document, Smail.events.ui.mails.refresh);
-      var spyScroll = spyOnEvent(document, Smail.events.dispatchers.middlePane.resetScroll);
-      this.component.trigger(Smail.events.mail.draftSaved, {ident: 1});
+      var spyRefresh = spyOnEvent(document, Pixelated.events.ui.mails.refresh);
+      var spyScroll = spyOnEvent(document, Pixelated.events.dispatchers.middlePane.resetScroll);
+      this.component.trigger(Pixelated.events.mail.draftSaved, {ident: 1});
       expect(spyRefresh).not.toHaveBeenTriggeredOn(document);
       expect(spyScroll).not.toHaveBeenTriggeredOn(document);
     });
@@ -242,25 +242,25 @@ describeComponent('mail_list/ui/mail_list', function () {
   describe('when sending a mail', function () {
     it('refreshes the list if the current tag is drafts', function () {
       this.component.attr.currentTag = 'drafts';
-      var spyRefresh = spyOnEvent(document, Smail.events.ui.mails.refresh);
-      var spyScroll = spyOnEvent(document, Smail.events.dispatchers.middlePane.resetScroll);
-      this.component.trigger(Smail.events.mail.sent);
+      var spyRefresh = spyOnEvent(document, Pixelated.events.ui.mails.refresh);
+      var spyScroll = spyOnEvent(document, Pixelated.events.dispatchers.middlePane.resetScroll);
+      this.component.trigger(Pixelated.events.mail.sent);
       expect(spyRefresh).toHaveBeenTriggeredOn(document);
       expect(spyScroll).toHaveBeenTriggeredOn(document);
     });
 
     it('refreshes the list if the current tag is sent', function() {
       this.component.attr.currentTag = 'sent';
-      var spyRefresh = spyOnEvent(document, Smail.events.ui.mails.refresh);
-      var spyScroll = spyOnEvent(document, Smail.events.dispatchers.middlePane.resetScroll);
-      this.component.trigger(Smail.events.mail.sent);
+      var spyRefresh = spyOnEvent(document, Pixelated.events.ui.mails.refresh);
+      var spyScroll = spyOnEvent(document, Pixelated.events.dispatchers.middlePane.resetScroll);
+      this.component.trigger(Pixelated.events.mail.sent);
       expect(spyRefresh).toHaveBeenTriggeredOn(document);
       expect(spyScroll).toHaveBeenTriggeredOn(document);
     });
   });
 
   function createMail(subject, from, ident, date) {
-    var mail = Smail.testData().parsedMail.simpleTextPlain;
+    var mail = Pixelated.testData().parsedMail.simpleTextPlain;
 
     return _.merge(mail, {
       header: {

@@ -1,5 +1,5 @@
 /*global _ */
-/*global Smail */
+/*global Pixelated */
 
 define(
   [

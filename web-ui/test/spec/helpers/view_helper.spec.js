@@ -1,4 +1,4 @@
-/*global Smail */
+/*global Pixelated */
 
 define(['helpers/view_helper'], function (viewHelper) {
   'use strict';
@@ -6,7 +6,7 @@ define(['helpers/view_helper'], function (viewHelper) {
   var testData;
   describe('view helper', function() {
     beforeEach(function () {
-      testData = Smail.testData();
+      testData = Pixelated.testData();
     });
 
     describe('quote email', function() {

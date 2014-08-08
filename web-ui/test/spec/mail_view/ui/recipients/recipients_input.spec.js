@@ -1,4 +1,4 @@
-/* global Smail */
+/* global Pixelated */
 
 describeComponent('mail_view/ui/recipients/recipients_input',function () {
   'use strict';
@@ -17,7 +17,7 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
     ], function (keycode) {
 
       it(': ' + keycode[1], function () {
-        var addressEnteredEvent = spyOnEvent(this.$node, Smail.events.ui.recipients.entered);
+        var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
 
         var enterAddressKeyPressEvent = $.Event('keydown', { which: keycode[0] });
         this.$node.val('a@b.c');
@@ -27,7 +27,7 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
       });
 
       it('wont add address if val is empty: ' + keycode[1], function () {
-        var addressEnteredEvent = spyOnEvent(this.$node, Smail.events.ui.recipients.entered);
+        var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
 
         var enterAddressKeyPressEvent = $.Event('keydown', { which: keycode[0] });
         this.$node.val('');
@@ -54,7 +54,7 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
 
     describe('when tab is pressed', function () {
       it('enters an address and prevents event default if there is an input val', function () {
-        var addressEnteredEvent = spyOnEvent(this.$node, Smail.events.ui.recipients.entered);
+        var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
 
         var tabKeyPressEvent = $.Event('keydown', { which: 9});
         spyOn(tabKeyPressEvent, 'preventDefault');
@@ -67,7 +67,7 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
       });
 
       it('doesnt enter an address and doesnt prevent event default if input val is empty (so tab moves it to the next input)', function () {
-        var addressEnteredEvent = spyOnEvent(this.$node, Smail.events.ui.recipients.entered);
+        var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
 
         var tabKeyPressEvent = $.Event('keydown', { which: 9});
         spyOn(tabKeyPressEvent, 'preventDefault');
@@ -83,7 +83,7 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
 
   describe('on keyup', function () {
     it('triggers inputHasNoMail if input is empty', function () {
-      var inputHasNoMailEvent = spyOnEvent(document, Smail.events.ui.recipients.inputHasNoMail);
+      var inputHasNoMailEvent = spyOnEvent(document, Pixelated.events.ui.recipients.inputHasNoMail);
       this.$node.val('');
 
       this.$node.trigger('keyup');
@@ -92,7 +92,7 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
     });
 
     it('triggers inputHasMail if input is not empty', function () {
-      var inputHasMailEvent = spyOnEvent(document, Smail.events.ui.recipients.inputHasMail);
+      var inputHasMailEvent = spyOnEvent(document, Pixelated.events.ui.recipients.inputHasMail);
       this.$node.val('lalala');
 
       this.$node.trigger('keyup');

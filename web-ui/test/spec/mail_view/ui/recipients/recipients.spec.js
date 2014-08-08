@@ -1,4 +1,4 @@
-/* global Smail */
+/* global Pixelated */
 
 describeComponent('mail_view/ui/recipients/recipients',function () {
   'use strict';
@@ -11,7 +11,7 @@ describeComponent('mail_view/ui/recipients/recipients',function () {
     });
 
     it('does not trigger recipients updated events on initialization', function() {
-      recipientsUpdatedEvent = spyOnEvent(document, Smail.events.ui.recipients.updated);
+      recipientsUpdatedEvent = spyOnEvent(document, Pixelated.events.ui.recipients.updated);
 
       setupComponent({name: 'to', addresses: ['foobar@gmail.com'] });
       expect(recipientsUpdatedEvent).not.toHaveBeenTriggeredOn(document);
@@ -21,8 +21,8 @@ describeComponent('mail_view/ui/recipients/recipients',function () {
   describe('adding recipients from the ui', function() {
     beforeEach(function () {
       setupComponent();
-      recipientsUpdatedEvent  = spyOnEvent(document, Smail.events.ui.recipients.updated);
-      this.component.trigger(Smail.events.ui.recipients.entered, {name: 'to', addresses: ['foobar@gmail.com'] });
+      recipientsUpdatedEvent  = spyOnEvent(document, Pixelated.events.ui.recipients.updated);
+      this.component.trigger(Pixelated.events.ui.recipients.entered, {name: 'to', addresses: ['foobar@gmail.com'] });
     });
 
     it('triggers recipients updated', function() {

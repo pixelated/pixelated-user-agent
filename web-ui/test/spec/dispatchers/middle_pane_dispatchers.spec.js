@@ -1,4 +1,4 @@
-/*global Smail */
+/*global Pixelated */
 
 describeComponent('dispatchers/middle_pane_dispatcher', function () {
   'use strict';
@@ -8,20 +8,20 @@ describeComponent('dispatchers/middle_pane_dispatcher', function () {
   });
 
   it ('listens to refresh mail list event', function() {
-    var mailsListRefreshEventSpy = spyOnEvent(document, Smail.events.ui.mails.fetchByTag);
-    this.component.trigger(document, Smail.events.dispatchers.middlePane.refreshMailList);
+    var mailsListRefreshEventSpy = spyOnEvent(document, Pixelated.events.ui.mails.fetchByTag);
+    this.component.trigger(document, Pixelated.events.dispatchers.middlePane.refreshMailList);
     expect(mailsListRefreshEventSpy).toHaveBeenTriggeredOn(document);
   });
 
   it ('listens to unselect event', function() {
-    var mailListUnselectEvent = spyOnEvent(document, Smail.events.ui.mails.cleanSelected);
-    this.component.trigger(document, Smail.events.dispatchers.middlePane.cleanSelected);
+    var mailListUnselectEvent = spyOnEvent(document, Pixelated.events.ui.mails.cleanSelected);
+    this.component.trigger(document, Pixelated.events.dispatchers.middlePane.cleanSelected);
     expect(mailListUnselectEvent).toHaveBeenTriggeredOn(document);
   });
 
   it('resets the scrollTop value when asked to', function() {
     this.component.select('middlePane').scrollTop(200);
-    this.component.trigger(document, Smail.events.dispatchers.middlePane.resetScroll);
+    this.component.trigger(document, Pixelated.events.dispatchers.middlePane.resetScroll);
     expect(this.component.select('middlePane').scrollTop()).toEqual(0);
   });
 });

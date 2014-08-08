@@ -46,8 +46,8 @@ require(
   ],
 
   function(compose, registry, advice, withLogging, debug, events, initializeDefault, _monkeyPatched) {
-    window.Smail = window.Smail || {};
-    window.Smail.events = events;
+    window.Pixelated = window.Pixelated || {};
+    window.Pixelated.events = events;
 
     compose.mixin(registry, [advice.withAdvice, withLogging]);
 

@@ -1,4 +1,4 @@
-/*global Smail */
+/*global Pixelated */
 /*global _ */
 
 describeComponent('tags/ui/tag', function () {
@@ -19,8 +19,8 @@ describeComponent('tags/ui/tag', function () {
     });
 
     it('selects the tag on click', function () {
-      var tagSelectEvent = spyOnEvent(document, Smail.events.ui.tag.select);
-      var cleanSelectedEvent = spyOnEvent(document, Smail.events.ui.mails.cleanSelected);
+      var tagSelectEvent = spyOnEvent(document, Pixelated.events.ui.tag.select);
+      var cleanSelectedEvent = spyOnEvent(document, Pixelated.events.ui.mails.cleanSelected);
 
       this.component.$node.click();
 
@@ -33,28 +33,28 @@ describeComponent('tags/ui/tag', function () {
     it('should remove selected class when selecting a different tag', function () {
       this.$node.click();
 
-      $(document).trigger(Smail.events.ui.tag.select, {tag: 'drafts'});
+      $(document).trigger(Pixelated.events.ui.tag.select, {tag: 'drafts'});
 
       expect(this.$node).not.toHaveClass('selected');
     });
 
     it('triggers tag selected on tag select', function () {
-      var tagSelectedEvent = spyOnEvent(document, Smail.events.ui.tag.select);
+      var tagSelectedEvent = spyOnEvent(document, Pixelated.events.ui.tag.select);
 
-      $(document).trigger(Smail.events.ui.tag.select, { tag: 'drafts'});
+      $(document).trigger(Pixelated.events.ui.tag.select, { tag: 'drafts'});
 
       expect(tagSelectedEvent).toHaveBeenTriggeredOnAndWith(document, { tag: 'drafts'});
     });
 
     it('increases the read count when there is an email read and the email has that tag', function () {
-      $(document).trigger(Smail.events.mail.read, { tags: ['inbox'] });
+      $(document).trigger(Pixelated.events.mail.read, { tags: ['inbox'] });
 
       expect(this.component.attr.tag.counts.read).toEqual(1);
       expect(this.$node.html()).toMatch('<span class="unread-count">99</span>');
     });
 
     it('doesnt increase the read count when the read email doesnt have the tag', function () {
-      $(document).trigger(Smail.events.mail.read, { tags: ['amazing']});
+      $(document).trigger(Pixelated.events.mail.read, { tags: ['amazing']});
 
       expect(this.component.attr.tag.counts.read).toEqual(0);
       expect(this.$node.html()).not.toMatch('<span class="unread-count">99</span>');
@@ -62,7 +62,7 @@ describeComponent('tags/ui/tag', function () {
 
     it('doesnt display the unread count when there are no unreads', function () {
       this.component.attr.tag.counts.read = 100;
-      $(document).trigger(Smail.events.mail.read, { tags: ['inbox']});
+      $(document).trigger(Pixelated.events.mail.read, { tags: ['inbox']});
       expect(this.$node.html()).not.toMatch('"unread-count"');
     });
   });
@@ -83,7 +83,7 @@ describeComponent('tags/ui/tag', function () {
     });
 
     it('shows the total count instead of the unread count', function () {
-      $(document).trigger(Smail.events.mail.read, { tags: ['drafts']});
+      $(document).trigger(Pixelated.events.mail.read, { tags: ['drafts']});
       expect(this.$node.html()).toMatch('<span class="total-count">100</span>');
       expect(this.$node.html()).not.toMatch('"unread-count"');
     });
@@ -104,18 +104,18 @@ describeComponent('tags/ui/tag', function () {
     });
 
     it('adds searching class when user is doing a search', function(){
-      $(document).trigger(Smail.events.search.perform, {});
+      $(document).trigger(Pixelated.events.search.perform, {});
       expect(this.$node.attr('class')).toMatch('searching');
     });
 
     it('removes searching class when user searches for empty string', function(){
-      $(document).trigger(Smail.events.search.perform, {});
-      $(document).trigger(Smail.events.search.empty);
+      $(document).trigger(Pixelated.events.search.perform, {});
+      $(document).trigger(Pixelated.events.search.empty);
       expect(this.$node.attr('class')).not.toMatch('searching');
     });
 
     it('removes searching class when user clicks in any tag', function(){
-      $(document).trigger(Smail.events.search.perform, {});
+      $(document).trigger(Pixelated.events.search.perform, {});
       this.$node.click();
       expect(this.$node.attr('class')).not.toMatch('searching');
     });
@@ -138,12 +138,12 @@ describeComponent('tags/ui/tag', function () {
       });
 
       it('doesn\'t display unread count for special folder', function () {
-        $(document).trigger(Smail.events.mail.read, { tags: [tag_name]});
+        $(document).trigger(Pixelated.events.mail.read, { tags: [tag_name]});
         expect(this.$node.html()).not.toMatch('unread-count');
       });
 
       it('doesn\'t display read count for special folder', function () {
-        $(document).trigger(Smail.events.mail.read, { tags: [tag_name]});
+        $(document).trigger(Pixelated.events.mail.read, { tags: [tag_name]});
         expect(this.$node.html()).not.toMatch('total-count');
       });
     });

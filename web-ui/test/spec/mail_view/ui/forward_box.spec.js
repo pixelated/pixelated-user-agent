@@ -1,5 +1,5 @@
 /*global jasmine */
-/*global Smail */
+/*global Pixelated */
 
 describeComponent('mail_view/ui/forward_box', function () {
   'use strict';
@@ -7,9 +7,9 @@ describeComponent('mail_view/ui/forward_box', function () {
   var attrs;
   var testMail;
   beforeEach(function () {
-    testMail = Smail.testData().parsedMail.simpleTextPlain;
+    testMail = Pixelated.testData().parsedMail.simpleTextPlain;
 
-    Smail.mockBloodhound();
+    Pixelated.mockBloodhound();
   });
 
   it('should have a subject of Fwd: <original_message>', function() {
@@ -50,7 +50,7 @@ describeComponent('mail_view/ui/forward_box', function () {
   });
 
   it('should copy original message headers', function() {
-    var mailSendEvent = spyOnEvent(document, Smail.events.mail.send);
+    var mailSendEvent = spyOnEvent(document, Pixelated.events.mail.send);
 
     testMail.header.bcc = 'original_bcc@email.com';
     testMail.header.cc = 'original_cc@email.com';
@@ -64,7 +64,7 @@ describeComponent('mail_view/ui/forward_box', function () {
     setupComponent({ mail: testMail });
 
     this.component.attr.recipientValues.to.push('forward_to@email.com');
-    $(document).trigger(Smail.events.ui.mail.send);
+    $(document).trigger(Pixelated.events.ui.mail.send);
 
     expect(mailSendEvent).toHaveBeenTriggeredOn(document);
     var sentMail = mailSendEvent.mostRecentCall.data;
@@ -82,9 +82,9 @@ describeComponent('mail_view/ui/forward_box', function () {
   });
 
   it('triggers openMail when email is sent', function() {
-    var eventSpy = spyOnEvent(document, Smail.events.ui.mail.open);
+    var eventSpy = spyOnEvent(document, Pixelated.events.ui.mail.open);
     setupComponent({ mail: testMail });
-    $(document).trigger(Smail.events.mail.sent, {ident: testMail.ident});
+    $(document).trigger(Pixelated.events.mail.sent, {ident: testMail.ident});
     expect(eventSpy).toHaveBeenTriggeredOnAndWith(document, {ident: testMail.ident});
   });
 });

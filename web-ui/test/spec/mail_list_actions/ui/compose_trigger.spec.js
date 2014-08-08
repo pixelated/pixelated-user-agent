@@ -6,7 +6,7 @@ describeComponent('mail_list_actions/ui/compose_trigger', function () {
   });
 
   it('triggers the enableComposebox event when clicked', function () {
-    var spyEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openComposeBox);
+    var spyEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openComposeBox);
 
     this.component.trigger('click');
 

@@ -1,4 +1,4 @@
-/*global Smail */
+/*global Pixelated */
 
 require(['services/model/mail'], function (Mail) {
   var testData;
@@ -21,10 +21,10 @@ require(['services/model/mail'], function (Mail) {
       describe('a single email', function () {
         var sentMail, draftMail, recievedMail, recievedMailWithCC;
         beforeEach(function () {
-          sentMail = Mail.create(Smail.testData().rawMail.sent);
-          draftMail = Mail.create(Smail.testData().rawMail.draft);
-          recievedMail = Mail.create(Smail.testData().rawMail.recieved);
-          recievedMailWithCC = Mail.create(Smail.testData().rawMail.recievedWithCC);
+          sentMail = Mail.create(Pixelated.testData().rawMail.sent);
+          draftMail = Mail.create(Pixelated.testData().rawMail.draft);
+          recievedMail = Mail.create(Pixelated.testData().rawMail.recieved);
+          recievedMailWithCC = Mail.create(Pixelated.testData().rawMail.recievedWithCC);
         });
 
         it('correctly identifies a sent mail', function () {
@@ -64,7 +64,7 @@ require(['services/model/mail'], function (Mail) {
         var parsedMultipartMail;
 
         beforeEach(function () {
-          parsedMultipartMail = Mail.create(Smail.testData().rawMail.multipart);
+          parsedMultipartMail = Mail.create(Pixelated.testData().rawMail.multipart);
         });
 
         it('parses the mail as multipart/alternative', function () {

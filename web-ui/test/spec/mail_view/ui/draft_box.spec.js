@@ -1,4 +1,4 @@
-/* global Smail */
+/* global Pixelated */
 
 describeComponent('mail_view/ui/draft_box', function () {
   'use strict';
@@ -6,13 +6,13 @@ describeComponent('mail_view/ui/draft_box', function () {
   var mail;
 
   beforeEach(function () {
-    Smail.mockBloodhound();
-    mail = Smail.testData().parsedMail.simpleTextPlain;
+    Pixelated.mockBloodhound();
+    mail = Pixelated.testData().parsedMail.simpleTextPlain;
   });
 
   describe('when initializing', function () {
     it('fetches the email to draft', function () {
-      var mailWantEvent = spyOnEvent(document, Smail.events.mail.want);
+      var mailWantEvent = spyOnEvent(document, Pixelated.events.mail.want);
 
       setupComponent({mailIdent: '1'});
 
@@ -32,7 +32,7 @@ describeComponent('mail_view/ui/draft_box', function () {
 
       spyOn(this.component, 'render');
 
-      this.component.trigger(this.component, Smail.events.mail.here, { mail: mail});
+      this.component.trigger(this.component, Pixelated.events.mail.here, { mail: mail});
 
       expect(this.component.render).toHaveBeenCalledWith(templates.compose.box, {
         recipients: { to: mail.header.to, cc: mail.header.cc, bcc: mail.header.bcc },
@@ -45,21 +45,21 @@ describeComponent('mail_view/ui/draft_box', function () {
 
   it('sending a draft sends the correct mailIdent', function () {
     setupComponent({mailIdent: mail.ident});
-    this.component.trigger(this.component, Smail.events.mail.here, { mail: mail});
+    this.component.trigger(this.component, Pixelated.events.mail.here, { mail: mail});
 
-    var sendDraftEvent = spyOnEvent(document, Smail.events.mail.saveDraft);
+    var sendDraftEvent = spyOnEvent(document, Pixelated.events.mail.saveDraft);
     this.component.select('draftButton').click();
 
     expect(sendDraftEvent).toHaveBeenTriggeredOnAndWith(document, jasmine.objectContaining({ident: mail.ident}));
   });
 
   it('shows no message selected pane when draft is sent', function() {
-    var openNoMessageSelectedEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openNoMessageSelected);
+    var openNoMessageSelectedEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
 
     setupComponent({mailIdent: mail.ident});
-    this.component.trigger(this.component, Smail.events.mail.here, { mail: mail});
+    this.component.trigger(this.component, Pixelated.events.mail.here, { mail: mail});
 
-    this.component.trigger(document, Smail.events.mail.sent);
+    this.component.trigger(document, Pixelated.events.mail.sent);
 
     expect(openNoMessageSelectedEvent).toHaveBeenTriggeredOn(document);
   });

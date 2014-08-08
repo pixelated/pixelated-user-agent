@@ -4,7 +4,7 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
   var mail;
 
   beforeEach(function () {
-    mail = Smail.testData().parsedMail.simpleTextPlain;
+    mail = Pixelated.testData().parsedMail.simpleTextPlain;
     mail.tags = ['inbox'];
 
     setupComponent('<li></li>', {
@@ -15,7 +15,7 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
   });
 
   it('should trigger ui:openMail on click', function () {
-    var spyEvent = spyOnEvent(document, Smail.events.ui.mail.open);
+    var spyEvent = spyOnEvent(document, Pixelated.events.ui.mail.open);
 
     this.component.$node.find('a').click();
 
@@ -30,7 +30,7 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
   });
 
   it('should remove selected class when selecting a different mail', function () {
-    $(document).trigger(Smail.events.ui.mail.updateSelected, { ident: 2 });
+    $(document).trigger(Pixelated.events.ui.mail.updateSelected, { ident: 2 });
 
     expect(this.$node).not.toHaveClass('selected');
   });
@@ -38,7 +38,7 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
   it('should remove selected class when enabling compose box', function () {
     this.$node.find('a').click();
 
-    $(document).trigger(Smail.events.ui.composeBox.newMessage);
+    $(document).trigger(Pixelated.events.ui.composeBox.newMessage);
 
     expect(this.$node).not.toHaveClass('selected');
   });
@@ -58,8 +58,8 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
 
     it('triggers mail open and pushes the state', function () {
       var clickEvent = createClickEvent();
-      var mailOpenEvent = spyOnEvent(document, Smail.events.ui.mail.open);
-      var pushStateEvent = spyOnEvent(document, Smail.events.router.pushState);
+      var mailOpenEvent = spyOnEvent(document, Pixelated.events.ui.mail.open);
+      var pushStateEvent = spyOnEvent(document, Pixelated.events.router.pushState);
 
       $(this.$node.find('a')).trigger(clickEvent);
 
@@ -77,8 +77,8 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
       ], function (specialKey) {
         it('doesnt trigger mail open and nor pushes the state', function () {
           var clickEvent = createClickEvent(specialKey);
-          var mailOpenEvent = spyOnEvent(document, Smail.events.ui.mail.open);
-          var pushStateEvent = spyOnEvent(document, Smail.events.router.pushState);
+          var mailOpenEvent = spyOnEvent(document, Pixelated.events.ui.mail.open);
+          var pushStateEvent = spyOnEvent(document, Pixelated.events.router.pushState);
 
           $(this.$node.find('a')).trigger(clickEvent);
 
@@ -89,7 +89,7 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
 
         it('marks the email as read', function () {
           debugger;
-          var mailReadEvent = spyOnEvent(document, Smail.events.mail.read);
+          var mailReadEvent = spyOnEvent(document, Pixelated.events.mail.read);
           var clickEvent = createClickEvent(specialKey);
 
           $(this.$node.find('a')).trigger(clickEvent);
@@ -107,7 +107,7 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
 
   describe('marking emails as read', function () {
     it('should trigger mail:read event when unread is clicked', function () {
-      var mailReadEvent = spyOnEvent(document, Smail.events.mail.read);
+      var mailReadEvent = spyOnEvent(document, Pixelated.events.mail.read);
 
       this.$node.find('a').click();
 
@@ -115,7 +115,7 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
     });
 
     it('should not trigger mail:read event when clicking mail that is already read', function () {
-      var mailReadEvent = spyOnEvent(document, Smail.events.mail.read);
+      var mailReadEvent = spyOnEvent(document, Pixelated.events.mail.read);
       this.component.attr.mail.status.push(this.component.status.READ);
 
       this.$node.find('a').click();

@@ -1,5 +1,5 @@
 /*global jasmine */
-/*global Smail */
+/*global Pixelated */
 
 describeComponent('services/delete_service', function () {
   'use strict';
@@ -24,10 +24,10 @@ describeComponent('services/delete_service', function () {
   };
 
   it('add Trash tag when deleting an email that does not have it', function () {
-    var mailDeleteEvent = spyOnEvent(document, Smail.events.mail.delete);
-    var openNoMessageSelectedEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openNoMessageSelected);
+    var mailDeleteEvent = spyOnEvent(document, Pixelated.events.mail.delete);
+    var openNoMessageSelectedEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
 
-    this.component.trigger(document, Smail.events.ui.mail.delete, {mail: mailWithoutTrashTag});
+    this.component.trigger(document, Pixelated.events.ui.mail.delete, {mail: mailWithoutTrashTag});
 
     var expectedDeleteEventData = {
       mail: mailWithoutTrashTag,
@@ -38,10 +38,10 @@ describeComponent('services/delete_service', function () {
   });
 
   it('removes permanently email that has Trash tag', function(){
-    var mailDeleteEvent = spyOnEvent(document, Smail.events.mail.delete);
-    var openNoMessageSelectedEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openNoMessageSelected);
+    var mailDeleteEvent = spyOnEvent(document, Pixelated.events.mail.delete);
+    var openNoMessageSelectedEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
 
-    this.component.trigger(document, Smail.events.ui.mail.delete, {mail: mailWithTrashTag});
+    this.component.trigger(document, Pixelated.events.ui.mail.delete, {mail: mailWithTrashTag});
 
     var expectedDeleteEventData = {
       mail: mailWithTrashTag,

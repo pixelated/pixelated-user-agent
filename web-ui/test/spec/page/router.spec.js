@@ -1,4 +1,4 @@
-/*global Smail */
+/*global Pixelated */
 /*global jasmine */
 describeComponent('page/router', function () {
   'use strict';
@@ -12,29 +12,29 @@ describeComponent('page/router', function () {
     });
 
     it('pushes the state with the tag and the url', function () {
-      $(document).trigger(Smail.events.router.pushState, { tag: 'inbox'});
+      $(document).trigger(Pixelated.events.router.pushState, { tag: 'inbox'});
 
       expect(fakeHistory.pushState).toHaveBeenCalledWith(jasmine.objectContaining({ tag: 'inbox' }), '', '/#/inbox');
     });
 
     it('pushes the state with mailIdent', function () {
-      $(document).trigger(Smail.events.router.pushState, { tag: 'inbox', mailIdent: 1});
+      $(document).trigger(Pixelated.events.router.pushState, { tag: 'inbox', mailIdent: 1});
 
       expect(fakeHistory.pushState).toHaveBeenCalledWith(jasmine.objectContaining({ tag: 'inbox', mailIdent: 1 }), '', '/#/inbox/mail/1');
     });
 
     it('pushes the state with mailIdent even if mail ident is 0 (that happens for drafts)', function () {
-      $(document).trigger(Smail.events.router.pushState, { tag: 'inbox', mailIdent: 0});
+      $(document).trigger(Pixelated.events.router.pushState, { tag: 'inbox', mailIdent: 0});
 
       expect(fakeHistory.pushState).toHaveBeenCalledWith(jasmine.objectContaining({ tag: 'inbox', mailIdent: 0 }), '', '/#/inbox/mail/0');
     });
 
     it('pushes the state with the displayNoMessage boolean forwarded from the event', function () {
-      $(document).trigger(Smail.events.router.pushState, { tag: 'inbox', mailIdent: 0});
+      $(document).trigger(Pixelated.events.router.pushState, { tag: 'inbox', mailIdent: 0});
 
       expect(fakeHistory.pushState).toHaveBeenCalledWith(jasmine.objectContaining({ isDisplayNoMessageSelected: false}), '', '/#/inbox/mail/0');
 
-      $(document).trigger(Smail.events.router.pushState, { tag: 'inbox', mailIdent: 0, isDisplayNoMessageSelected: true});
+      $(document).trigger(Pixelated.events.router.pushState, { tag: 'inbox', mailIdent: 0, isDisplayNoMessageSelected: true});
 
       expect(fakeHistory.pushState).toHaveBeenCalledWith(jasmine.objectContaining({ isDisplayNoMessageSelected: true}), '', '/#/inbox/mail/0');
     });
@@ -43,7 +43,7 @@ describeComponent('page/router', function () {
       var urlParams = require("page/router/url_params");
       spyOn(urlParams, 'getTag').andReturn('tag');
 
-      var selectTagEvent = spyOnEvent(document, Smail.events.ui.tag.select);
+      var selectTagEvent = spyOnEvent(document, Pixelated.events.ui.tag.select);
 
       this.component.smailPopState({ state: {tag: undefined} });
 
@@ -54,7 +54,7 @@ describeComponent('page/router', function () {
       var urlParams = require("page/router/url_params");
       spyOn(urlParams, 'getTag').andReturn('tag');
 
-      var displayNoMessageEvent = spyOnEvent(document, Smail.events.dispatchers.rightPane.openNoMessageSelectedWithoutPushState);
+      var displayNoMessageEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelectedWithoutPushState);
 
       this.component.smailPopState({ state: {tag: undefined, isDisplayNoMessageSelected: false} });
 

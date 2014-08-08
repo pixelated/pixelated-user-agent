@@ -1,5 +1,5 @@
 /*global jasmine */
-/*global Smail */
+/*global Pixelated */
 
 describeComponent('mail_view/ui/reply_box', function () {
   'use strict';
@@ -7,7 +7,7 @@ describeComponent('mail_view/ui/reply_box', function () {
   var attrs, i18n;
   beforeEach(function () {
     attrs = {
-      mail: Smail.testData().parsedMail.simpleTextPlain
+      mail: Pixelated.testData().parsedMail.simpleTextPlain
     };
     setupComponent(attrs);
     i18n = require('views/i18n');
@@ -49,12 +49,12 @@ describeComponent('mail_view/ui/reply_box', function () {
     });
 
     it('should use set In-Reply-To header when Message-Id header is set', function() {
-      var mailSendEvent = spyOnEvent(document, Smail.events.mail.send);
+      var mailSendEvent = spyOnEvent(document, Pixelated.events.mail.send);
 
       attrs.mail.header.message_id = '12345';
       setupComponent(attrs);
 
-      $(document).trigger(Smail.events.ui.mail.send);
+      $(document).trigger(Pixelated.events.ui.mail.send);
 
       expect(mailSendEvent).toHaveBeenTriggeredOn(document);
       expect(mailSendEvent.mostRecentCall.data.header).toEqual(jasmine.objectContaining({
@@ -63,11 +63,11 @@ describeComponent('mail_view/ui/reply_box', function () {
     });
 
     it('keeps the List-Id header when it exists', function() {
-      var mailSendEvent = spyOnEvent(document, Smail.events.mail.send);
+      var mailSendEvent = spyOnEvent(document, Pixelated.events.mail.send);
       attrs.mail.header.list_id = 'somelist';
 
       setupComponent(attrs);
-      $(document).trigger(Smail.events.ui.mail.send);
+      $(document).trigger(Pixelated.events.ui.mail.send);
 
       expect(mailSendEvent.mostRecentCall.data.header).toEqual(jasmine.objectContaining({
         list_id: 'somelist'
@@ -85,7 +85,7 @@ describeComponent('mail_view/ui/reply_box', function () {
     });
 
     it('triggers mail when cancelling a reply', function () {
-      var mailSaveEvent = spyOnEvent(document, Smail.events.mail.save);
+      var mailSaveEvent = spyOnEvent(document, Pixelated.events.mail.save);
 
       this.component.select('trashButton').click();
 
@@ -93,9 +93,9 @@ describeComponent('mail_view/ui/reply_box', function () {
     });
 
     it('reopens the mail after the reply is sent', function () {
-      var mailOpenEvent = spyOnEvent(document, Smail.events.ui.mail.open);
+      var mailOpenEvent = spyOnEvent(document, Pixelated.events.ui.mail.open);
 
-      this.component.trigger(document, Smail.events.mail.sent);
+      this.component.trigger(document, Pixelated.events.mail.sent);
 
       expect(mailOpenEvent).toHaveBeenTriggeredOnAndWith(document, {
         ident: this.component.attr.mail.ident
