@@ -1,11 +1,12 @@
 import json
 import datetime
-import requests
+import dateutil.parser as dateparser
 
 from flask import Flask, request, Response
 import app.search_query as search_query
 from app.adapter.mail_service import MailService
 from app.adapter.mail_converter import MailConverter
+
 
 app = Flask(__name__, static_url_path='', static_folder='../../web-ui/app')
 
@@ -15,7 +16,7 @@ account = None
 
 
 def from_iso8061_to_date(iso8061):
-    return datetime.datetime.strptime(iso8061, "%Y-%m-%dT%H:%M:%S")
+    return datetime.datetime.strptime(iso8061, "%Y-%m-%dT%H:%M:%S%z")
 
 
 def respond_json(entity):
@@ -60,7 +61,7 @@ def mails():
     if "inbox" in query['tags']:
         mails = [mail for mail in mails if (lambda mail: "trash" not in mail['tags'])(mail)]
 
-    # mails = sorted(mails, key=lambda mail: mail['header']['date'], reverse=True)
+    mails = sorted(mails, key=lambda mail: dateparser.parse(mail['header']['date']), reverse=True)
 
     response = {
         "stats": {
