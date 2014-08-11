@@ -6,6 +6,23 @@ from app.bitmask_libraries.provider import LeapProvider
 from app.bitmask_libraries.session import LeapSessionFactory
 from app.bitmask_libraries.auth import LeapCredentials
 
+import logging
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                    datefmt='%m-%d %H:%M',
+                    filename='/tmp/leap.log',
+                    filemode='w')
+
+# define a Handler which writes INFO messages or higher to the sys.stderr
+console = logging.StreamHandler()
+console.setLevel(logging.DEBUG)
+# set a format which is simpler for console use
+formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
+# tell the handler to use this format
+console.setFormatter(formatter)
+# add the handler to the root logger
+logging.getLogger('').addHandler(console)
 
 class MailService:
 
@@ -13,7 +30,7 @@ class MailService:
 
     def __init__(self):
         try:
-            self.username = 'testuser2'
+            self.username = 'testuser_a003'
             self.password = 'testpassword'
             self.server_name = 'example.wazokazi.is'
             self.mailbox_name = 'INBOX'
@@ -32,9 +49,9 @@ class MailService:
         self.mailbox = self.account.getMailbox(self.mailbox_name)
 
     def mails(self, query):
-        if query.get('tags',False) and len(query['tags']):
+        if query.get('tags', False) and len(query['tags']):
             mailbox = self._switch_mailbox(query['tags'][0])
-            return mailbox.messages.get_all() if mailbox else []
+            return [m for m in mailbox.messages] if mailbox else []
         else:
             return []
 
