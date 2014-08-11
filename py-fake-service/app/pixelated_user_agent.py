@@ -8,10 +8,16 @@ app = Flask(__name__, static_url_path='', static_folder='../../web-ui/app')
 client = None
 converter = None
 account = None
+mail_service = MailService()
 
 def respond_json(entity):
     response = json.dumps(entity)
     return Response(response=response, mimetype="application/json")
+
+
+@app.route('/disabled_features')
+def disabled_features():
+        return respond_json([]) 
 
 
 @app.route('/mails', methods=['POST'])
@@ -76,16 +82,37 @@ def draft_reply_for(mail_id):
     return respond_json(None)
 
 
+@app.route('/control/mailset/<mailset>/load', methods=['POST'])
+def load_mailset(mailset):
+    import os
+    from tarfile import TarFile
+    mbox_root = os.path.join(os.environ['HOME'], 'mailsets')
+    if not os.path.isdir(os.path.join(mbox_root)):
+        os.mkdir(mbox_root)
+
+    if len(os.listdir(mbox_root)) == 0:
+        response = requests.get('https://example.wazokazi.is:8154/go/static/mediumtagged.tar.gz', verify=False)
+        mbox_archive_path = os.path.join(mbox_root, 'mediumtagged.tar.gz')
+        mbox_archive = open(mbox_archive_path, 'w')
+        mbox_archive.write(response.content)
+        mbox_archive.close()
+        tarfile = TarFile(name=mbox_archive_path)
+        tarfile.extractall(path=mbox_root)
+
+    mail_service.load_mailset()
+
+    return respond_json(None)
+
+
+
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
 
-def setup():
-    app.config.from_envvar('PIXELATED_UA_CFG')
-    provider = app.config['PROVIDER']
-    account = app.config['ACCOUNT']
 
-    app.run(host=app.config['HOST'], debug=app.config['DEBUG'], port=app.config['PORT'])
+def setup():
+    app.run(host="0.0.0.0", debug=True, port=4567)
+
 
 if __name__ == '__main__':
     setup()
