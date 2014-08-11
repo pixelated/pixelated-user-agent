@@ -1,11 +1,33 @@
+import dateutil.parser as dateparser
+
 class MailConverter:
 
     def __init__(self, mail_service):
         pass
 
-    def from_mail(self, imap_mail):
-        return inbox_mail
+    def date_to_iso(self, date):
+        return dateparser.parse(date).isoformat()
 
+    def from_mail(self, imap_mail):
+
+        headers = imap_mail.hdoc.content['headers']
+        body = imap_mail.bdoc.content
+
+        return {
+            'header': {
+                'from': [headers['From']],
+                'to': [headers['To']],
+                'cc': headers.get('CC', []),
+                'bcc': headers.get('BCC', []),
+                'date': self.date_to_iso(headers['Date']),
+                'subject': headers['Subject']
+            },
+            'ident': imap_mail.getUID(),
+            'tags': imap_mail.getFlags(),
+            'status': [],
+            'security_casing': {},
+            'body': body['raw']
+        }
 
     def to_mail(self, pixelated_mail, account):
         raise NotImplementedError()

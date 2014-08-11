@@ -49,11 +49,7 @@ class MailService:
         self.mailbox = self.account.getMailbox(self.mailbox_name)
 
     def mails(self, query):
-        if query.get('tags', False) and len(query['tags']):
-            mailbox = self._switch_mailbox(query['tags'][0])
-            return [m for m in mailbox.messages] if mailbox else []
-        else:
-            return []
+        return self.mailbox.messages or []
 
     def _switch_mailbox(self, name):
         mailbox = None
@@ -79,7 +75,9 @@ class MailService:
         return []
 
     def mail(self, mail_id):
-        raise NotImplementedError()
+        for message in self.mailbox.messages:
+            if message.getUID() == int(mail_id):
+                return message
 
     def thread(self, thread_id):
         raise NotImplementedError()

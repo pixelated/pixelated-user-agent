@@ -60,7 +60,7 @@ def mails():
     if "inbox" in query['tags']:
         mails = [mail for mail in mails if (lambda mail: "trash" not in mail['tags'])(mail)]
 
-    mails = sorted(mails, key=lambda mail: mail['header']['date'], reverse=True)
+    # mails = sorted(mails, key=lambda mail: mail['header']['date'], reverse=True)
 
     response = {
         "stats": {
@@ -83,8 +83,8 @@ def delete_mails(mail_id):
 
 @app.route('/tags')
 def tags():
-    tags = map(lambda x: converter.from_tag(x), mail_service.all_tags())
-    return respond_json(tags)
+    #tags = map(lambda x: converter.from_tag(x), mail_service.all_tags())
+    return respond_json(['inbox'])
 
 
 @app.route('/mail/<mail_id>')
@@ -127,9 +127,34 @@ def index():
 
 
 def setup():
+    start_reactor()
     app.config.from_envvar('PIXELATED_UA_CFG')
     account = app.config['ACCOUNT']
     app.run(host=app.config['HOST'], debug=app.config['DEBUG'], port=app.config['PORT'])
+
+from threading import Thread
+from twisted.internet import reactor
+
+import signal
+import sys
+def signal_handler(signal, frame):
+        stop_reactor_on_exit()
+        sys.exit(0)
+signal.signal(signal.SIGINT, signal_handler)
+
+def start_reactor():
+    def start_reactor_run():
+        reactor.run(False)
+
+    global REACTOR_THREAD
+    REACTOR_THREAD = Thread(target=start_reactor_run)
+    REACTOR_THREAD.start()
+
+
+def stop_reactor_on_exit():
+    reactor.callFromThread(reactor.stop)
+    global REACTOR_THREAD
+    REACTOR_THREAD = None
 
 if __name__ == '__main__':
     setup()
