@@ -19,3 +19,10 @@ class TagsSet:
         for tag in tags:
             tag = self.tags.get(tag)
             tag.increment_read()
+
+    def increment_tag_total_count(self, tag):
+        self.tags.get(tag).increment_count()
+        
+    def decrement_tag_total_count(self, tag):
+        self.tags.get(tag).decrement_count()
+

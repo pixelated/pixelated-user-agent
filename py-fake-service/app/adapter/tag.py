@@ -18,3 +18,6 @@ class Tag:
 
     def increment_read(self):
         self.counts['read'] += 1    
+
+    def decrement_count(self):
+        self.counts['total'] -= 1

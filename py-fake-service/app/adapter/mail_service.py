@@ -40,5 +40,27 @@ class MailService:
         self.mailset.mark_as_read(mail_id)
         self.tagsset.mark_as_read(self.mail(mail_id).tags)
 
+    def delete_mail(self, mail_id):
+        purged = self.mailset.delete(mail_id)
+        if not purged:
+            self.tagsset.increment_tag_total_count('trash')
+
+
+    def update_tags_for(self, mail_id, new_tags):
+        mail = self.mail(mail_id)
+        
+        new_tags_set = set(new_tags)
+        old_tags_set = set(mail.tags)
+
+        increment_set = new_tags_set - old_tags_set 
+        decrement_set = old_tags_set - new_tags_set
+        
+        map(lambda x : self.tagsset.increment_tag_total_count(x), increment_set)
+        map(lambda x : self.tagsset.decrement_tag_total_count(x), decrement_set)
+
+        mail.tags = new_tags
+
+        
+
 
 

@@ -53,8 +53,9 @@ def mails():
     return respond_json(response)
 
 
-@app.route('/mail/<mail_id>', methods=['DELETE'])
+@app.route('/mail/<int:mail_id>', methods=['DELETE'])
 def delete_mails(mail_id):
+    mail_service.delete_mail(mail_id)
     return respond_json(None)
 
 
@@ -64,17 +65,19 @@ def tags():
     return respond_json([tag.__dict__ for tag in tags])
 
 
-@app.route('/mail/<mail_id>')
+@app.route('/mail/<int:mail_id>')
 def mail(mail_id):
     return respond_json(mail_service.mail(mail_id).__dict__)
 
 
-@app.route('/mail/<mail_id>/tags')
+@app.route('/mail/<int:mail_id>/tags', methods=['POST'])
 def mail_tags(mail_id):
-    return respond_json([])
+    new_tags = request.json['newtags']
+    mail_service.update_tags_for(mail_id, new_tags)
+    return respond_json(request.json['newtags'])
 
 
-@app.route('/mail/<mail_id>/read', methods=['POST'])
+@app.route('/mail/<int:mail_id>/read', methods=['POST'])
 def mark_mail_as_read(mail_id):
     mail_service.mark_as_read(mail_id)
     return ""
@@ -85,7 +88,7 @@ def contacts():
     return respond_json({'contacts': mail_service.search_contacts(contacts_query)})
 
 
-@app.route('/draft_reply_for/<mail_id>')
+@app.route('/draft_reply_for/<int:mail_id>')
 def draft_reply_for(mail_id):
     return respond_json(None)
 

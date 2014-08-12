@@ -48,8 +48,11 @@ class SearchQuery:
         self.compiled = compiled
 
     def test(self, mail):
-        if set(self.compiled.get('tags')).intersection(mail.tags) or 'all' in self.compiled.get('tags'):
-           return True
+        if set(self.compiled.get('not_tags')).intersection(set(mail.tags)):
+            return False
+
+        if set(self.compiled.get('tags')).intersection(set(mail.tags)) or 'all' in self.compiled.get('tags'):
+            return True
 
         if self.compiled.get('general'):
             search_terms = re.compile(self.compiled['general'])
@@ -58,6 +61,7 @@ class SearchQuery:
 
         if not self.compiled.get('tags') and not self.compiled.get('not_tags'):
             return True
+
 
         return False
 
