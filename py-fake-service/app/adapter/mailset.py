@@ -8,7 +8,13 @@ class MailSet:
         self.mails = {}
 
     def add(self, mbox_mail):
-        self.mails[self.ident] = Mail(mbox_mail)
+        self.mails[self.ident] = Mail(mbox_mail, self.ident)
         self.ident += 1
+
+    def values(self):
+        return self.mails.values()
+
+    def get(self, mail_id):
+        return self.mails.get(int(mail_id))
 
 

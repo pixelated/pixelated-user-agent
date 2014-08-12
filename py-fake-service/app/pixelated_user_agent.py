@@ -3,6 +3,8 @@ from flask import Flask, request, Response, redirect
 import json
 import datetime
 import requests
+from adapter import MailService
+from search import SearchQuery
 
 app = Flask(__name__, static_url_path='', static_folder='../../web-ui/app')
 client = None
@@ -32,7 +34,12 @@ def update_draft():
 
 @app.route('/mails')
 def mails():
-    mails = []
+    query = SearchQuery.compile(request.args.get('q', ''))
+    page = request.args.get('p', '') 
+    window_size = request.args.get('w', '')
+    fetched_mails = mail_service.mails(query, page, window_size)
+
+    mails = [mail.__dict__ for mail in fetched_mails]
     response = {
         "stats": {
             "total": len(mails),
@@ -53,13 +60,13 @@ def delete_mails(mail_id):
 
 @app.route('/tags')
 def tags():
-    tags = []
-    return respond_json(tags)
+    tags = mail_service.tagsset.all_tags()
+    return respond_json([tag.__dict__ for tag in tags])
 
 
 @app.route('/mail/<mail_id>')
 def mail(mail_id):
-    return respond_json({})
+    return respond_json(mail_service.mail(mail_id).__dict__)
 
 
 @app.route('/mail/<mail_id>/tags')
@@ -71,10 +78,10 @@ def mail_tags(mail_id):
 def mark_mail_as_read(mail_id):
     return ""
 
-
 @app.route('/contacts')
 def contacts():
-    return respond_json({'contacts': []})
+    contacts_query = request.args.get('q')
+    return respond_json({'contacts': mail_service.search_contacts(contacts_query)})
 
 
 @app.route('/draft_reply_for/<mail_id>')

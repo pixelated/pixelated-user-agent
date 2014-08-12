@@ -1,4 +1,5 @@
 from datetime import datetime
+import random
 
 class Mail:
 
@@ -13,14 +14,15 @@ class Mail:
     def _get_headers(self, mbox_mail):
         headers = {}
         headers['from'] = mbox_mail.get_from()
-        headers['to'] = [mbox_mail.items()['To']]
-        headers['subject'] = mbox_mail.items()['Subject']
+        headers['to'] = [mbox_mail.get('To')]
+        headers['subject'] = mbox_mail.get('Subject')
         headers['date'] = datetime.fromtimestamp(random.randrange(1222222222, 1444444444)).isoformat()
         return headers
 
     def _get_tags(self, mbox_mail):
-        return mbox_mail.items()['X-TW-Pixelated-Tags'].split(', ')
-
-    
+        return mbox_mail.get('X-TW-Pixelated-Tags').split(', ')
 
         
+    @property
+    def subject(self):
+        return self.headers['subject']

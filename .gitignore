@@ -25,3 +25,4 @@ env/
 fake-service/data/mail-sets/
 .vagrant/
 __pycache__/
+.virtualenv
