@@ -11,14 +11,15 @@ define(
     'mail_view/ui/mail_actions',
     'helpers/view_helper',
     'mixins/with_hide_and_show',
+    'mixins/with_mail_tagging',
     'page/events',
     'views/i18n',
     'features'
   ],
 
-  function (defineComponent, templates, mailActions, viewHelpers, withHideAndShow, events, i18n, features) {
+  function (defineComponent, templates, mailActions, viewHelpers, withHideAndShow, withMailTagging, events, i18n, features) {
 
-    return defineComponent(mailView, mailActions, withHideAndShow);
+    return defineComponent(mailView, mailActions, withHideAndShow, withMailTagging);
 
     function mailView() {
       this.defaultAttrs({
@@ -32,27 +33,6 @@ define(
         closeModalButton: '.close-reveal-modal',
         closeMailButton: '.close-mail-button'
       });
-
-      this.attachTagCompletion = function() {
-        this.attr.tagCompleter = new Bloodhound({
-          datumTokenizer: function(d) { return [d.value]; },
-          queryTokenizer: function(q) { return [q.trim()]; },
-          remote: {
-            url: '/tags?q=%QUERY',
-            filter: function(pr) { return _.map(pr, function(pp) { return {value: pp.name}; }); }
-          }
-        });
-
-        this.attr.tagCompleter.initialize();
-
-        this.select('newTagInput').typeahead({
-          hint: true,
-          highlight: true,
-          minLength: 1
-        }, {
-          source: this.attr.tagCompleter.ttAdapter()
-        });
-      };
 
       this.displayMail = function (event, data) {
         this.attr.mail = data.mail;
@@ -84,9 +64,7 @@ define(
         this.trigger(document, events.search.highlightResults, {where: '.subjectArea'});
         this.trigger(document, events.search.highlightResults, {where: '.msg-header .recipients'});
 
-        if(features.isEnabled('tags')) {
-          this.attachTagCompletion();
-        }
+        this.attachTagCompletion();
 
         this.select('tags').on('click', function (event) {
           this.removeTag($(event.target).data('tag'));
@@ -95,7 +73,6 @@ define(
         this.addTagLoseFocus();
         this.on(this.select('newTagButton'), 'click', this.showNewTagInput);
         this.on(this.select('newTagInput'), 'keydown', this.handleKeyDown);
-        this.on(this.select('newTagInput'), 'typeahead:selected typeahead:autocompleted', this.createNewTag.bind(this));
         this.on(this.select('newTagInput'), 'blur', this.addTagLoseFocus);
         this.on(this.select('trashButton'), 'click', this.moveToTrash);
         this.on(this.select('archiveButton'), 'click', this.archiveIt);
@@ -155,18 +132,6 @@ define(
         this.trigger(document, events.dispatchers.rightPane.openNoMessageSelected);
       };
 
-      this.createNewTag = function() {
-        if(features.isEnabled('createNewTag')) {
-          var tagsCopy = this.attr.mail.tags.slice();
-          tagsCopy.push(this.select('newTagInput').val());
-          this.attr.tagCompleter.clear();
-          this.attr.tagCompleter.clearPrefetchCache();
-          this.attr.tagCompleter.clearRemoteCache();
-          this.trigger(document, events.mail.tags.update, { ident: this.attr.mail.ident, tags: _.uniq(tagsCopy)});
-          this.trigger(document, events.dispatchers.tags.refreshTagList);
-        }
-      };
-
       this.handleKeyDown = function(event) {
         var ENTER_KEY = 13;
         var ESC_KEY = 27;
@@ -198,7 +163,7 @@ define(
           this.displayMail({}, { mail: this.attr.mail });
           this.select('deleteModal').foundation('reveal', 'open');
         } else {
-          this.updateTags(filteredTags);
+          this.updateTags(this.attr.mail, filteredTags);
         }
       };
 
@@ -208,7 +173,7 @@ define(
       };
 
       this.archiveIt = function() {
-        this.updateTags([]);
+        this.updateTags(this.attr.mail, []);
         this.closeModal();
         this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n.get('Your message was archive it!') });
         this.openNoMessageSelectedPane();
@@ -216,10 +181,6 @@ define(
 
       this.closeModal = function() {
         $('#delete-modal').foundation('reveal', 'close');
-      };
-
-      this.updateTags = function(tags) {
-        this.trigger(document, events.mail.tags.update, {ident: this.attr.mail.ident, tags: tags});
       };
 
       this.tagsUpdated = function(ev, data) {
