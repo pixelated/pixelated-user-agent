@@ -24,6 +24,7 @@ console.setFormatter(formatter)
 # add the handler to the root logger
 logging.getLogger('').addHandler(console)
 
+
 class MailService:
 
     SPECIAL_BOXES = ['inbox', 'sent', 'drafts', 'trash']

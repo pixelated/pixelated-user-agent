@@ -6,6 +6,8 @@ from flask import Flask, request, Response
 import app.search_query as search_query
 from app.adapter.mail_service import MailService
 from app.adapter.mail_converter import MailConverter
+from app.tags import Tag
+from app.tags import Tags
 
 
 app = Flask(__name__, static_url_path='', static_folder='../../web-ui/app')
@@ -23,13 +25,13 @@ def respond_json(entity):
     response = json.dumps(entity)
     return Response(response=response, mimetype="application/json")
 
+
 @app.route('/disabled_features')
 def disabled_features():
     return respond_json([
         'saveDraft',
         'createNewTag',
         'replySection',
-        'tags',
         'signatureStatus',
         'encryptionStatus',
         'contacts'
@@ -84,8 +86,8 @@ def delete_mails(mail_id):
 
 @app.route('/tags')
 def tags():
-    #tags = map(lambda x: converter.from_tag(x), mail_service.all_tags())
-    return respond_json(['inbox'])
+    tags = Tags()
+    return respond_json(tags.as_dict())
 
 
 @app.route('/mail/<mail_id>')
@@ -128,7 +130,7 @@ def index():
 
 
 def setup():
-    start_reactor()
+    # start_reactor()
     app.config.from_envvar('PIXELATED_UA_CFG')
     account = app.config['ACCOUNT']
     app.run(host=app.config['HOST'], debug=app.config['DEBUG'], port=app.config['PORT'])
@@ -138,10 +140,13 @@ from twisted.internet import reactor
 
 import signal
 import sys
+
+
 def signal_handler(signal, frame):
         stop_reactor_on_exit()
         sys.exit(0)
 signal.signal(signal.SIGINT, signal_handler)
+
 
 def start_reactor():
     def start_reactor_run():

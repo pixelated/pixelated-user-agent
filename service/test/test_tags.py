@@ -5,8 +5,9 @@ from app.tags import Tags, Tag
 class TagTestCase(unittest.TestCase):
 
     def test_create_tag(self):
-        tag = Tag('test')
+        tag = Tag('test', True)
         self.assertEqual(tag.name, 'test')
+
 
 class TagsTestCase(unittest.TestCase):
 
@@ -28,10 +29,14 @@ class TagsTestCase(unittest.TestCase):
         tag_collection = Tags()
         tag_collection.add('test')
         tag_collection.add('test2')
-        self.assertEqual(tag_collection.find('test'), Tag('test'))
+        self.assertEqual(tag_collection.find('test'), Tag('test', True))
 
     def test_special_tags_always_exist(self):
         special_tags = ['inbox', 'sent', 'drafts', 'trash']
         tag_collection = Tags()
         for tag in special_tags:
-            self.assertIn(Tag(tag), tag_collection)
+            self.assertIn(Tag(tag, True), tag_collection)
+
+    def test_special_tags_are_default(self):
+        tags = Tags()
+        self.assertTrue(tags.find('inbox').default)
