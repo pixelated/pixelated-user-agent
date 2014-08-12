@@ -36,7 +36,9 @@ def save_draft_or_send():
 
 @app.route('/mails', methods=['PUT'])
 def update_draft():
-    return respond_json({'ident': 123})
+    mail = request.json
+    ident = mail_service.update_draft(mail)
+    return respond_json({'ident': ident})
 
 
 @app.route('/mails')

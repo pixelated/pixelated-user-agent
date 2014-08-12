@@ -73,6 +73,10 @@ class MailService:
         return mail.ident
       
       
+    def update_draft(self, mail):
+        mail = Mail.from_json(mail)
+        self.mailset.update(mail)
+        return mail.ident
 
 
 
