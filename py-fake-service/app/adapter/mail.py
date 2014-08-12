@@ -10,11 +10,12 @@ class Mail:
         mail = Mail()
         mail.header = mail_json['header']
         mail.header['date'] = datetime.now().isoformat()
-        mail.ident = mail_json['ident'] or 0
+        mail.ident = mail_json.get('ident', 0)
         mail.body = mail_json['body']
         mail.tags = mail_json['tags']
         mail.security_casing = {}
         mail.status = []
+        mail.draft_reply_for = mail_json.get('draft_reply_for', 0)
         return mail
 
             
@@ -26,6 +27,7 @@ class Mail:
             self.tags = self._get_tags(mbox_mail)
             self.security_casing = {}
             self.status = self._get_status()
+            self.draft_reply_for = -1
 
     def _get_status(self):
         status = []

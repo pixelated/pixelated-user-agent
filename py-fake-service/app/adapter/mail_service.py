@@ -78,5 +78,6 @@ class MailService:
         self.mailset.update(mail)
         return mail.ident
 
-
+    def draft_reply_for(self, mail_id):
+        return self.mailset.find(draft_reply_for=mail_id)
 

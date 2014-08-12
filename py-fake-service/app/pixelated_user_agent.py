@@ -99,7 +99,11 @@ def contacts():
 
 @app.route('/draft_reply_for/<int:mail_id>')
 def draft_reply_for(mail_id):
-    return respond_json(None)
+    mail = mail_service.draft_reply_for(mail_id)
+    if mail:
+        return respond_json(mail.__dict__)
+    else:
+        return respond_json(None)
 
 
 @app.route('/control/mailset/<mailset>/load', methods=['POST'])

@@ -39,4 +39,9 @@ class MailSet:
         self.ident += 1
         return mail
 
-
+    def find(self, draft_reply_for):
+        match = [mail for mail in self.mails.values() if mail.draft_reply_for ==draft_reply_for]
+        if len(match) == 0:
+            return None
+        else:
+            return match[0]
