@@ -8,9 +8,8 @@ class TagsSet:
     def add(self, mbox_mail):
         tags = mbox_mail.get('X-TW-Pixelated-Tags').split(', ')
         for tag in tags:
-            tag = self.tags.setdefault(tag, Tag(tag, self.ident))
+            tag = self._create_new_tag(tag)
             tag.increment_count()
-            self.ident += 1 
             
     def all_tags(self):
         return self.tags.values()
@@ -20,9 +19,19 @@ class TagsSet:
             tag = self.tags.get(tag)
             tag.increment_read()
 
-    def increment_tag_total_count(self, tag):
-        self.tags.get(tag).increment_count()
+    def increment_tag_total_count(self, tagname):
+        tag = self.tags.get(tagname)
+        if tag:
+            tag.increment_count()
+        else:
+            self._create_new_tag(tagname)
         
     def decrement_tag_total_count(self, tag):
         self.tags.get(tag).decrement_count()
+
+    def _create_new_tag(self, tag):
+        tag = self.tags.setdefault(tag, Tag(tag, self.ident))
+        self.ident += 1
+        return tag
+
 
