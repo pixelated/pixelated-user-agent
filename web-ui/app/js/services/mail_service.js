@@ -237,14 +237,14 @@ define(
         that = this;
 
         this.on(events.mail.want, this.fetchSingle);
-        this.on(document, events.mail.read, this.readMail);
-        this.on(document, events.mail.unread, this.unreadMail);
+        this.on(events.mail.read, this.readMail);
+        this.on(events.mail.unread, this.unreadMail);
         if(features.isEnabled('tags')) {
-          this.on(document, events.mail.tags.update, this.updateTags);
+          this.on(events.mail.tags.update, this.updateTags);
         }
-        this.on(document, events.mail.delete, this.deleteMail);
-        this.on(document, events.mail.deleteMany, this.deleteManyMails);
-        this.on(document, events.search.perform, this.newSearch);
+        this.on(events.mail.delete, this.deleteMail);
+        this.on(events.mail.deleteMany, this.deleteManyMails);
+        this.on(events.search.perform, this.newSearch);
         this.on(events.mail.draftReply.want, this.wantDraftReplyForMail);
 
         this.on(events.ui.mails.fetchByTag, this.fetchByTag);
