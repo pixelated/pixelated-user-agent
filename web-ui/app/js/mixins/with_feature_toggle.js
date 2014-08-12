@@ -4,12 +4,14 @@ define(['features'],
     function withFeatureToggle(componentName, behaviorForFeatureOff) {
       return function() {
 
-        this.around('initialize', _.bind(function(basicInitialize) {
+        this.around('initialize', _.bind(function(basicInitialize, node, attrs) {
           if(features.isEnabled(componentName)) {
-            return basicInitialize(arguments[1], arguments[2]);
+            return basicInitialize(node, attrs);
           }
           else if (behaviorForFeatureOff){
-            behaviorForFeatureOff.bind(this).call();
+            behaviorForFeatureOff.call(this);
+
+            return this;
           }
         }, this));
       };

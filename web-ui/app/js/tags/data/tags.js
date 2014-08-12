@@ -5,18 +5,18 @@ define(['flight/lib/component', 'page/events', 'mixins/with_feature_toggle'], fu
     $(document).trigger(events.ui.mails.refresh);
   }));
 
-      DataTags.all = {
-        name: 'all',
-        ident: '8752888923742657436',
-        query: 'in:all',
-        default: true,
-        counts:{
-          total:0,
-            read:0,
-            starred:0,
-            replied:0
-        }
-      };
+  DataTags.all = {
+    name: 'all',
+    ident: '8752888923742657436',
+    query: 'in:all',
+    default: true,
+    counts:{
+      total:0,
+        read:0,
+        starred:0,
+        replied:0
+    }
+  };
 
   return DataTags;
 
