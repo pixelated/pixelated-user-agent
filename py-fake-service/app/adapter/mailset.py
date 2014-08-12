@@ -1,6 +1,5 @@
 from mail import Mail
 
-
 class MailSet:
 
     def __init__(self):
@@ -30,5 +29,14 @@ class MailSet:
             return True
         mail.tags.append('trash') 
         return False
+
+    def update(self, mail):
+        self.mails[mail.ident] = mail
+
+    def add_draft(self, mail):
+        mail.ident = self.ident
+        self.mails[mail.ident] = mail
+        self.ident += 1
+        return mail
 
 

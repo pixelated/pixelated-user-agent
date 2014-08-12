@@ -10,6 +10,7 @@ app = Flask(__name__, static_url_path='', static_folder='../../web-ui/app')
 client = None
 converter = None
 account = None
+loaded = False
 mail_service = MailService()
 
 def respond_json(entity):
@@ -24,7 +25,13 @@ def disabled_features():
 
 @app.route('/mails', methods=['POST'])
 def save_draft_or_send():
-    return respond_json({'ident': 123})
+    mail = request.json
+    if mail['ident']:
+        ident = mail_service.send(mail)
+    else:
+        ident = mail_service.save_draft(mail)
+
+    return respond_json({'ident': ident})
 
 
 @app.route('/mails', methods=['PUT'])
@@ -115,9 +122,13 @@ def load_mailset(mailset):
     return respond_json(None)
 
 
-
 @app.route('/')
 def index():
+    global loaded
+    if not loaded:
+        load_mailset('mediumtagged')
+        loaded = True
+        
     return app.send_static_file('index.html')
 
 

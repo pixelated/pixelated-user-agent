@@ -4,6 +4,7 @@ import mailbox
 from tagsset import TagsSet
 from mailset import MailSet
 from contacts import Contacts
+from mail import Mail
 
 class MailService:
     MAILSET_PATH = os.path.join(os.environ['HOME'], 'mailsets', 'mediumtagged')
@@ -28,7 +29,7 @@ class MailService:
     def mails(self, query, page, window_size):
         mails = self.mailset.values()
         mails = [mail for mail in mails if query.test(mail)]
-        return mails
+        return sorted(mails, key=lambda mail: mail.date, reverse=True)
 
     def mail(self, mail_id):
         return self.mailset.get(mail_id)
@@ -60,7 +61,18 @@ class MailService:
 
         mail.tags = new_tags
 
-        
+    def send(self, mail):
+        mail = Mail.from_json(mail)
+        self.mailset.update(mail)
+        self.tagsset.increment_tag_total_count('sent')
+        self.tagsset.decrement_tag_total_count('drafts')
+        return mail.ident
+
+    def save_draft(self, mail):
+        mail = self.mailset.add_draft(Mail.from_json(mail))
+        return mail.ident
+      
+      
 
 
 
