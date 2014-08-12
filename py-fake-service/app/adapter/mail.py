@@ -9,7 +9,14 @@ class Mail:
         self.body = mbox_mail.get_payload()
         self.tags = self._get_tags(mbox_mail)
         self.security_casing = {}
-        self.status = []
+        self.status = self._get_status()
+
+    def _get_status(self):
+        status = []
+        if 'sent' in self.tags:
+            status.append('read')
+
+        return status
 
     def _get_headers(self, mbox_mail):
         headers = {}

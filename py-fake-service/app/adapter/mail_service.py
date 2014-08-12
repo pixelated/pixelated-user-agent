@@ -36,3 +36,9 @@ class MailService:
     def search_contacts(self, query):
         return self.contacts.search(query)
 
+    def mark_as_read(self, mail_id):
+        self.mailset.mark_as_read(mail_id)
+        self.tagsset.mark_as_read(self.mail(mail_id).tags)
+
+
+

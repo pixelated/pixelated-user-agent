@@ -76,6 +76,7 @@ def mail_tags(mail_id):
 
 @app.route('/mail/<mail_id>/read', methods=['POST'])
 def mark_mail_as_read(mail_id):
+    mail_service.mark_as_read(mail_id)
     return ""
 
 @app.route('/contacts')

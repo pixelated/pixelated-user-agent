@@ -17,4 +17,6 @@ class MailSet:
     def get(self, mail_id):
         return self.mails.get(int(mail_id))
 
-
+    def mark_as_read(self, mail_id):
+        mail = self.mails.get(int(mail_id))
+        mail.status.append('read')

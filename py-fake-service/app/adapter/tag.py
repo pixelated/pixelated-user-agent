@@ -15,3 +15,6 @@ class Tag:
 
     def increment_count(self):
         self.counts['total'] += 1
+
+    def increment_read(self):
+        self.counts['read'] += 1    

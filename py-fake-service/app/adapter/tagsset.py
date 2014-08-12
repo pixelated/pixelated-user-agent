@@ -14,3 +14,8 @@ class TagsSet:
             
     def all_tags(self):
         return self.tags.values()
+
+    def mark_as_read(self, tags):
+        for tag in tags:
+            tag = self.tags.get(tag)
+            tag.increment_read()
