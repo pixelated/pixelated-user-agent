@@ -3,7 +3,7 @@ Feature: forward_trash_archive
     When I open the first mail in the 'inbox'
     Then I choose to forward this mail
     And for the 'CC' field I type 'ab' and chose the first contact that shows
-    And for the 'Bcc' field I type 'fu' and chose the first contact that shows
+    And for the 'Bcc' field I type 'fr' and chose the first contact that shows
     And I forward this mail
     When I open the first mail in the 'sent'
     Then I see the mail has a cc and a bcc recipient
