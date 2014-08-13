@@ -1,8 +1,4 @@
-import sys
-import os
 import unittest
-from mock import patch
-from mock import Mock
 
 from app.adapter.mail_service import MailService
 

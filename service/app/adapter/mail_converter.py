@@ -1,6 +1,14 @@
 import dateutil.parser as dateparser
 
+
 class MailConverter:
+    LEAP_FLAGS = ['\\Seen',
+                  '\\Answered',
+                  '\\Flagged',
+                  '\\Deleted',
+                  '\\Draft',
+                  '\\Recent',
+                  'List']
 
     def __init__(self, mail_service):
         pass

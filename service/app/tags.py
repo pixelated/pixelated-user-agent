@@ -3,7 +3,7 @@ import json
 
 class Tag:
 
-    def __init__(self, name, default):
+    def __init__(self, name, default=False):
         self.name = name
         self.default = default
         self.ident = name.__hash__()

@@ -6,9 +6,8 @@ from flask import Flask, request, Response
 import app.search_query as search_query
 from app.adapter.mail_service import MailService
 from app.adapter.mail_converter import MailConverter
-from app.tags import Tag
+from app.adapter.pixelated_mail import PixelatedMail
 from app.tags import Tags
-
 
 app = Flask(__name__, static_url_path='', static_folder='../../web-ui/app')
 
@@ -57,13 +56,15 @@ def update_draft():
 @app.route('/mails')
 def mails():
     query = search_query.compile(request.args.get("q")) if request.args.get("q") else {'tags': {}}
-    mails = mail_service.drafts() if "drafts" in query['tags'] else mail_service.mails(query)
-    mails = [converter.from_mail(mail) for mail in mails]
+
+    mails = [PixelatedMail(mail) for mail in mail_service.mails(query)]
 
     if "inbox" in query['tags']:
-        mails = [mail for mail in mails if (lambda mail: "trash" not in mail['tags'])(mail)]
+        mails = [mail for mail in mails if not mail.has_tag('trash')]
 
-    mails = sorted(mails, key=lambda mail: dateparser.parse(mail['header']['date']), reverse=True)
+    mails = sorted(mails, key=lambda mail: dateparser.parse(mail.headers['date']), reverse=True)
+
+    mails = [mail.as_dict() for mail in mails]
 
     response = {
         "stats": {
@@ -93,7 +94,8 @@ def tags():
 @app.route('/mail/<mail_id>')
 def mail(mail_id):
     mail = mail_service.mail(mail_id)
-    return respond_json(converter.from_mail(mail))
+    mail = PixelatedMail(mail)
+    return respond_json(mail.as_dict())
 
 
 @app.route('/mail/<mail_id>/tags')
