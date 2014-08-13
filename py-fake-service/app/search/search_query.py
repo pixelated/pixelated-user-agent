@@ -23,25 +23,26 @@ class SearchQuery:
 
     @staticmethod
     def compile(query):
-        compiled = {"tags": [], "not_tags": []}
+        compiled = {"tags": [], "not_tags": [], "general":[]}
 
         scanner = StringScanner(query.encode('utf8').replace("\"", ""))
         first_token = True
-        while not scanner.is_eos:       
+        while not scanner.is_eos:
             token = scanner.scan(_next_token())
 
             if not token:
-                scanner.skip(_separators())     
+                scanner.skip(_separators())
                 continue
 
             if ":" in token:
-                compiled = _compile_tag(compiled, token) 
+                compiled = _compile_tag(compiled, token)
             elif first_token:
-                compiled["general"] = token     
+                compiled["general"].append(token)
 
             if not first_token:
-                first_token = True              
+                first_token = True
 
+        compiled["general"] = ' '.join(compiled["general"])
         return SearchQuery(compiled)
 
     def __init__(self, compiled):
@@ -55,11 +56,11 @@ class SearchQuery:
             return True
 
         if self.compiled.get('general'):
-            search_terms = re.compile(self.compiled['general'])
+            search_terms = re.compile(self.compiled['general'], flags=re.IGNORECASE)
             if search_terms.match(mail.body) or search_terms.match(mail.subject):
                 return True
 
-        if not self.compiled.get('tags') and not self.compiled.get('not_tags'):
+        if not [v for v in self.compiled.values() if v]:
             return True
 
 
