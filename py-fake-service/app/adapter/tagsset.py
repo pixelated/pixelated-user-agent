@@ -16,6 +16,7 @@ class TagsSet:
 
     def mark_as_read(self, tags):
         for tag in tags:
+            tag = tag.lower()
             tag = self.tags.get(tag)
             tag.increment_read()
 
@@ -30,7 +31,8 @@ class TagsSet:
         self.tags.get(tag).decrement_count()
 
     def _create_new_tag(self, tag):
-        tag = self.tags.setdefault(tag, Tag(tag, self.ident))
+        tag = Tag(tag, self.ident)
+        tag = self.tags.setdefault(tag.name, tag)
         self.ident += 1
         return tag
 

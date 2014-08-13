@@ -10,7 +10,7 @@ class Tag:
         }   
 
         self.ident = ident
-        self.name = name
+        self.name = name.lower()
         self.default = name in self.DEFAULT_TAGS
 
     def increment_count(self):
