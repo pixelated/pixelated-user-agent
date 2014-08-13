@@ -1,0 +1,6 @@
+#!/bin/bash
+
+PIXELATED_PATH=/var/lib/pixelated
+. $PIXELATED_PATH/virtualenv/bin/activate
+$PIXELATED_PATH/service/./go
+

@@ -1,4 +1,5 @@
 .idea
+.bundle
 *.log
 *.DS_Store
 web-ui/node_modules
