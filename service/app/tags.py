@@ -41,13 +41,11 @@ class Tags:
             self.tags[name] = self.add(name)
 
     def add(self, tag_input):
-        if tag_input.__class__.__name__ == 'str':
-            tag = Tag(tag_input, tag_input in self.SPECIAL_TAGS)
-            self.tags[tag_input] = tag
-            return tag
-        elif tag_input.__class__.__name__ == 'Tag':
-            self.tags[tag_input.name] = tag_input
-            return tag_input
+        if tag_input.__class__.__name__ == 'Tag':
+            tag_input = tag_input.name
+        tag = Tag(tag_input, tag_input in self.SPECIAL_TAGS)
+        self.tags[tag_input] = tag
+        return tag
 
     def find(self, name):
         return self.tags[name]
