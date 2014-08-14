@@ -40,5 +40,5 @@ deactivate
 cp package/pixelated-user-agent $BIN_PATH
 
 cd $BUILD_PATH
-GEM_HOME=./gems gem install fpm
-gems/bin/fpm -s dir  -t deb -n pixelated-user-agent -C . .
+[[ ! -f '/tmp/gems/bin/fpm' ]] && GEM_HOME=/tmp/gems gem install fpm
+/tmp/gems/bin/fpm -s dir  -t deb -n pixelated-user-agent -C . .
