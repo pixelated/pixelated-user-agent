@@ -41,4 +41,4 @@ cp package/pixelated-user-agent $BIN_PATH
 
 cd $BUILD_PATH
 [[ ! -f '/tmp/gems/bin/fpm' ]] && GEM_HOME=/tmp/gems gem install fpm
-/tmp/gems/bin/fpm -s dir  -t deb -n pixelated-user-agent -C . .
+GEM_HOME=/tmp/gems /tmp/gems/bin/fpm -s dir  -t deb -n pixelated-user-agent -C . .
