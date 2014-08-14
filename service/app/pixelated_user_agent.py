@@ -88,21 +88,23 @@ def delete_mails(mail_id):
 
 @app.route('/tags')
 def tags():
-    tags = Tags()
+    tags = mail_service.all_tags()
     return respond_json(tags.as_dict())
 
 
 @app.route('/mail/<mail_id>')
 def mail(mail_id):
     mail = mail_service.mail(mail_id)
-    mail = PixelatedMail(mail)
     return respond_json(mail.as_dict())
 
 
-@app.route('/mail/<mail_id>/tags')
+@app.route('/mail/<mail_id>/tags', methods=['POST'])
 def mail_tags(mail_id):
-    mail = converter.from_mail(mail_service.mail(mail_id))
-    return respond_json(mail['tags'])
+    new_tags = request.get_json()['newtags']
+    mail = mail_service.mail(mail_id)
+    mail_service.update_tags(mail, new_tags)
+    tag_names = [tag.name for tag in mail.tags]
+    return respond_json(tag_names)
 
 
 @app.route('/mail/<mail_id>/read', methods=['POST'])

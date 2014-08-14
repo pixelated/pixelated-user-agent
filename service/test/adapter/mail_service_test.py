@@ -32,8 +32,10 @@ class TestMailService(unittest.TestCase):
 
         mailservice = MailService()
 
-        raw_mail = self._raw_mail()
-        raw_mail['tags'].append('my_new_tag')
-        mails = mailservice.update_mail(raw_mail)
+        new_tags = ['test']
+        mails = mailservice.update_tags(mailservice.mail(6), new_tags)
 
-        self.assertIn(Tag('my_new_tag'), mailservice.all_tags())
+        for tag in mailservice.all_tags():
+            print tag.name
+
+        self.assertIn(Tag('test'), mailservice.all_tags())
