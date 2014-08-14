@@ -47,7 +47,7 @@ class PixelatedMail:
         tag_names = self._converted_tags(flags) + self._custom_tags(flags)
         tags = []
         for tag in tag_names:
-          tags.append(Tag(tag))
+            tags.append(Tag(tag))
         return tags
 
     def _converted_tags(self, flags):
