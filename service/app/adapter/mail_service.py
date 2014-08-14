@@ -9,6 +9,7 @@ from app.bitmask_libraries.auth import LeapCredentials
 from app.adapter.pixelated_mail import PixelatedMail
 from app.tags import Tags
 
+
 class MailService:
 
     def __init__(self):
@@ -30,6 +31,7 @@ class MailService:
         self.leap_session = LeapSessionFactory(self.provider).create(LeapCredentials(self.username, self.password))
         self.account = self.leap_session.account
         self.mailbox = self.account.getMailbox(self.mailbox_name)
+        
 
     def mails(self, query):
         return self.mailbox.messages or []
