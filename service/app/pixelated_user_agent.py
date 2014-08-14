@@ -29,7 +29,6 @@ def respond_json(entity):
 def disabled_features():
     return respond_json([
         'saveDraft',
-        'createNewTag',
         'replySection',
         'signatureStatus',
         'encryptionStatus',
