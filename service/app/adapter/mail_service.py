@@ -1,6 +1,7 @@
 import traceback
 import sys
 import os
+from twisted.internet import defer
 from app.bitmask_libraries.config import LeapConfig
 from app.bitmask_libraries.provider import LeapProvider
 from app.bitmask_libraries.session import LeapSessionFactory
@@ -36,12 +37,21 @@ class MailService:
     def update_tags(self, mail_id, new_tags):
         mail = self.mail(mail_id)
         new_tags = mail.update_tags(new_tags)
+        self._update_flags(new_tags, mail_id)
         self._update_tag_list(new_tags)
-        return mail
+        return new_tags
 
     def _update_tag_list(self, tags):
         for tag in tags:
             self.tags.add(tag)
+
+    def _update_flags(self, new_tags, mail_id):
+        new_tags_flag_name = ['tag_'+tag.name for tag in new_tags]
+        self.set_flags(mail_id, new_tags_flag_name)
+
+    def set_flags(self, mail_id, new_tags_flag_name):
+        observer = defer.Deferred()
+        self.mailbox.messages.set_flags(self.mailbox, [mail_id], tuple(new_tags_flag_name), 1, observer)
 
     def mail(self, mail_id):
         for message in self.mailbox.messages:

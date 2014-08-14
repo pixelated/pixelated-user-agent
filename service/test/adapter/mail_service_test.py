@@ -25,7 +25,8 @@ class TestMailService(unittest.TestCase):
             "body": "teste"
         }
 
-    def test_custom_tags_get_created_if_not_exists(self):
+    @patch.object(MailService, 'set_flags', return_value=None)
+    def test_custom_tags_get_created_if_not_exists(self, setFlags):
         MailService._open_leap_session = lambda self: None
         MailService.mailbox = Mock(messages=[test_helper.leap_mail(uid=6)])
         MailService.account = Mock(return_value=MagicMock())
