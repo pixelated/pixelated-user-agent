@@ -18,7 +18,7 @@ class Mail:
         mail.draft_reply_for = mail_json.get('draft_reply_for', 0)
         return mail
 
-
+            
     def __init__(self, mbox_mail=None, ident=None):
         if mbox_mail:
             self.header = self._get_headers(mbox_mail)
@@ -31,14 +31,11 @@ class Mail:
 
     def _get_body(self, message):
         if message.is_multipart():
-            boundary = '--{boundary}'.format(boundary= message.get_boundary().strip())
-            body_parts = [x.as_string() for x in message.get_payload()]
+            boundary = message.get_boundary()
+            start_boundary = '--'+boundary
+            join_boundary = start_boundary+'\n'
 
-            body = boundary + '\n'
-            body += '{boundary}\n'.format(boundary=boundary).join(body_parts)
-            body += '{boundary}--\n'.format(boundary=boundary)
-
-            return body
+            return join_boundary + join_boundary.join([x.as_string() for x in message.get_payload()]) + start_boundary+ '--'
         else:
             return message.get_payload()
 
@@ -63,7 +60,7 @@ class Mail:
     def _get_tags(self, mbox_mail):
         return mbox_mail.get('X-TW-Pixelated-Tags').split(', ')
 
-
+        
     @property
     def subject(self):
         return self.header['subject']

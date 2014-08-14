@@ -100,7 +100,7 @@ define(['helpers/contenttype'],
     };
 
     function getMailMediaType () {
-      return new contentType.MediaType(this.header['Content-Type']);
+      return new contentType.MediaType(this.header.content_type);
     }
 
     function isMailMultipartAlternative () {
