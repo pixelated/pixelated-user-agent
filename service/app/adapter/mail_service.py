@@ -97,7 +97,7 @@ class MailService:
     def mail(self, mail_id):
         for message in self.mailbox.messages:
             if message.getUID() == int(mail_id):
-                return message
+                return PixelatedMail(message)
 
     def thread(self, thread_id):
         raise NotImplementedError()
