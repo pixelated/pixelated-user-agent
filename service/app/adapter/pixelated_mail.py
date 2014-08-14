@@ -40,6 +40,8 @@ class PixelatedMail:
         temporary_headers = {}
         for header, value in self.leap_mail.hdoc.content['headers'].items():
             temporary_headers[header.lower()] = value
+        if(temporary_headers.get('to') is not None):
+            temporary_headers['to'] = [temporary_headers['to']]
         return temporary_headers
 
     def extract_tags(self):
