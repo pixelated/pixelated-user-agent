@@ -1,33 +1,28 @@
 import unittest
 
 from app.adapter.pixelated_mail import PixelatedMail
-from mock import Mock
 from app.tags import Tag
+from app.tags import Tags
+import test_helper
 
 
 class TestPixelatedMail(unittest.TestCase):
 
-    LEAP_FLAGS = ['\\Seen',
-                  '\\Answered',
-                  '\\Flagged',
-                  '\\Deleted',
-                  '\\Draft',
-                  '\\Recent',
-                  'List']
-
-    def setUp(self):
-        self.leap_mail = Mock(getUID=Mock(return_value=0),
-                              getFlags=Mock(return_value=self.LEAP_FLAGS),
-                              bdoc=Mock(content={'raw': 'test'}),
-                              hdoc=Mock(content={'headers': {}}))
-
     def test_leap_flags_that_are_tags_are_handled(self):
-        pixelated_mail = PixelatedMail(self.leap_mail)
+        pixelated_mail = PixelatedMail(test_helper.leap_mail())
         self.assertIn(Tag('inbox'), pixelated_mail.tags)
         self.assertIn(Tag('trash'), pixelated_mail.tags)
         self.assertIn(Tag('drafts'), pixelated_mail.tags)
 
     def test_leap_flags_that_are_status_are_handled(self):
-        pixelated_mail = PixelatedMail(self.leap_mail)
+        pixelated_mail = PixelatedMail(test_helper.leap_mail())
         self.assertIn('read', pixelated_mail.status)
         self.assertIn('replied', pixelated_mail.status)
+
+    def test_leap_flags_that_are_custom_tags_are_handled(self):
+        pixelated_mail = PixelatedMail(test_helper.leap_mail(extra_flags=['tag_work']))
+        self.assertIn(Tag('work'), pixelated_mail.tags)
+
+    def test_custom_tags_containing_our_prefix_are_handled(self):
+        pixelated_mail = PixelatedMail(test_helper.leap_mail(extra_flags=['tag_tag_work_tag_']))
+        self.assertIn(Tag('tag_work_tag_'), pixelated_mail.tags)

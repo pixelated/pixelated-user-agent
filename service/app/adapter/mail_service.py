@@ -5,6 +5,8 @@ from app.bitmask_libraries.config import LeapConfig
 from app.bitmask_libraries.provider import LeapProvider
 from app.bitmask_libraries.session import LeapSessionFactory
 from app.bitmask_libraries.auth import LeapCredentials
+from app.adapter.pixelated_mail import PixelatedMail
+from app.tags import Tags
 
 import logging
 
@@ -36,7 +38,7 @@ class MailService:
             self.server_name = 'example.wazokazi.is'
             self.mailbox_name = 'INBOX'
             self.leapdir = os.path.join(os.path.abspath("."), "leap")
-
+            self.tags = Tags()
             self._open_leap_session()
         except:
             traceback.print_exc(file=sys.stdout)
@@ -108,7 +110,7 @@ class MailService:
         raise NotImplementedError()
 
     def all_tags(self):
-        raise NotImplementedError()
+        return self.tags
 
     def all_contacts(self, query):
         raise NotImplementedError()
