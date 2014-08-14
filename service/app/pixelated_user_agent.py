@@ -2,7 +2,11 @@ import json
 import datetime
 import dateutil.parser as dateparser
 
-from flask import Flask, request, Response
+from flask import Flask
+from flask import request
+from flask import Response
+
+import app.reactor_manager as reactor_manager
 import app.search_query as search_query
 from app.adapter.mail_service import MailService
 from app.adapter.mail_converter import MailConverter
@@ -14,10 +18,6 @@ app = Flask(__name__, static_url_path='', static_folder='../../web-ui/app')
 mail_service = MailService()
 converter = MailConverter(mail_service)
 account = None
-
-
-def from_iso8061_to_date(iso8061):
-    return datetime.datetime.strptime(iso8061, "%Y-%m-%dT%H:%M:%S%z")
 
 
 def respond_json(entity):
@@ -133,37 +133,11 @@ def index():
 
 
 def setup():
-    start_reactor()
+    reactor_manager.start_reactor()
     app.config.from_envvar('PIXELATED_UA_CFG')
     account = app.config['ACCOUNT']
     app.run(host=app.config['HOST'], debug=app.config['DEBUG'], port=app.config['PORT'])
 
-from threading import Thread
-from twisted.internet import reactor
-
-import signal
-import sys
-
-
-def signal_handler(signal, frame):
-        stop_reactor_on_exit()
-        sys.exit(0)
-signal.signal(signal.SIGINT, signal_handler)
-
-
-def start_reactor():
-    def start_reactor_run():
-        reactor.run(False)
-
-    global REACTOR_THREAD
-    REACTOR_THREAD = Thread(target=start_reactor_run)
-    REACTOR_THREAD.start()
-
-
-def stop_reactor_on_exit():
-    reactor.callFromThread(reactor.stop)
-    global REACTOR_THREAD
-    REACTOR_THREAD = None
 
 if __name__ == '__main__':
     setup()
