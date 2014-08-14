@@ -100,9 +100,8 @@ def mail(mail_id):
 @app.route('/mail/<mail_id>/tags', methods=['POST'])
 def mail_tags(mail_id):
     new_tags = request.get_json()['newtags']
-    mail = mail_service.mail(mail_id)
-    mail_service.update_tags(mail, new_tags)
-    tag_names = [tag.name for tag in mail.tags]
+    tags = mail_service.update_tags(mail_id, new_tags)
+    tag_names = [tag.name for tag in tags]
     return respond_json(tag_names)
 
 

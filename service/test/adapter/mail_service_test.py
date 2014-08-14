@@ -33,7 +33,7 @@ class TestMailService(unittest.TestCase):
         mailservice = MailService()
 
         new_tags = ['test']
-        mails = mailservice.update_tags(mailservice.mail(6), new_tags)
+        mails = mailservice.update_tags(6, new_tags)
 
         for tag in mailservice.all_tags():
             print tag.name

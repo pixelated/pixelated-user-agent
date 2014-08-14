@@ -54,7 +54,8 @@ class MailService:
     def mails(self, query):
         return self.mailbox.messages or []
 
-    def update_tags(self, mail, new_tags):
+    def update_tags(self, mail_id, new_tags):
+        mail = self.mail(mail_id)
         new_tags = mail.update_tags(new_tags)
         self._update_tag_list(new_tags)
         return mail
