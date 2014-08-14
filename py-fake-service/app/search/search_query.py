@@ -57,7 +57,7 @@ class SearchQuery:
 
         if self.compiled.get('general'):
             search_terms = re.compile(self.compiled['general'], flags=re.IGNORECASE)
-            if search_terms.match(mail.body) or search_terms.match(mail.subject):
+            if search_terms.search(mail.body) or search_terms.search(mail.subject):
                 return True
 
         if not [v for v in self.compiled.values() if v]:

@@ -23,11 +23,22 @@ class Mail:
         if mbox_mail:
             self.header = self._get_headers(mbox_mail)
             self.ident = ident
-            self.body = mbox_mail.get_payload()
+            self.body = self._get_body(mbox_mail)
             self.tags = self._get_tags(mbox_mail)
             self.security_casing = {}
             self.status = self._get_status()
             self.draft_reply_for = -1
+
+    def _get_body(self, message):
+        if message.is_multipart():
+            boundary = message.get_boundary()
+            start_boundary = '--'+boundary
+            join_boundary = start_boundary+'\n'
+
+            return join_boundary + join_boundary.join([x.as_string() for x in message.get_payload()]) + start_boundary+ '--'
+        else:
+            return message.get_payload()
+
 
     def _get_status(self):
         status = []
@@ -42,6 +53,8 @@ class Mail:
         headers['to'] = [mbox_mail.get('To')]
         headers['subject'] = mbox_mail.get('Subject')
         headers['date'] = datetime.fromtimestamp(random.randrange(1222222222, self.NOW)).isoformat()
+        headers['Content-Type'] = mbox_mail.get('Content-Type')
+
         return headers
 
     def _get_tags(self, mbox_mail):
