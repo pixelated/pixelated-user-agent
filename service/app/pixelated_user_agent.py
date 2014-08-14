@@ -132,7 +132,7 @@ def index():
 
 
 def setup():
-    # start_reactor()
+    start_reactor()
     app.config.from_envvar('PIXELATED_UA_CFG')
     account = app.config['ACCOUNT']
     app.run(host=app.config['HOST'], debug=app.config['DEBUG'], port=app.config['PORT'])
