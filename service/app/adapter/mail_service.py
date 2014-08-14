@@ -54,6 +54,23 @@ class MailService:
     def mails(self, query):
         return self.mailbox.messages or []
 
+    def update_mail(self, dict_mail):
+        # Iterating over messages because messages.getUID() is not trustworthy
+        mail = None
+        for message in self.mailbox.messages:
+            if message.getUID() == dict_mail['ident']:
+                mail = PixelatedMail(message)
+
+        new_tags = mail.update_tags(dict_mail['tags'])
+
+        self._update_tag_list(new_tags)
+
+        return mail
+
+    def _update_tag_list(self, tags):
+        for tag in tags:
+            self.tags.add(tag)
+
     def _switch_mailbox(self, name):
         mailbox = None
         if name in self.SPECIAL_BOXES:
