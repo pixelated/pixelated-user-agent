@@ -1,0 +1,29 @@
+@import "compass/css3";
+
+body {
+  display: block;
+  overflow: scroll !important; 
+}
+
+nav {
+  height: 50px;
+  background-color: #3e3a37;
+  color: white;
+}
+
+ul li {
+  display: inline;
+}
+
+section.guide-section {
+  display: block;
+  height: 300px;
+
+  &:nth-child(even) {
+    background: white
+  }
+  
+  &:nth-child(odd) {
+    background: #E5E5E3
+  }
+}
