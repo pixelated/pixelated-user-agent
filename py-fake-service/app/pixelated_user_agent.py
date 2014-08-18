@@ -130,6 +130,7 @@ def load_mailset(mailset):
         tarfile = TarFile(fileobj=gzippedfile)
         tarfile.extractall(path=mbox_root)
 
+    mail_service.reset()
     mail_service.load_mailset()
 
     return respond_json(None)

@@ -15,6 +15,11 @@ class MailService:
         self.tagsset = TagsSet()
         self.contacts = Contacts()
 
+    def reset(self):
+        self.mailset = MailSet()
+        self.tagsset = TagsSet()
+        self.contacts = Contacts()
+
     def load_mailset(self):
         mbox_filenames = [
             filename
