@@ -9,14 +9,12 @@ from flask import Response
 import app.reactor_manager as reactor_manager
 import app.search_query as search_query
 from app.adapter.mail_service import MailService
-from app.adapter.mail_converter import MailConverter
 from app.adapter.pixelated_mail import PixelatedMail
 from app.tags import Tags
 
 app = Flask(__name__, static_url_path='', static_folder='../../web-ui/app')
 
 mail_service = MailService()
-converter = MailConverter(mail_service)
 account = None
 
 
