@@ -20,7 +20,7 @@ ul li {
 
 ul.left, ul.right {
   padding: 12px;
-  margin-bottom: 0px;
+  margin: 0px 25px;
   font-weight: bold;
 }
 
@@ -32,9 +32,9 @@ ul.right {
 
 section.guide-section {
   display: block;
-  height: 300px;
-  padding-top: 50px;
+  height: 550px;
   overflow-y: auto;
+  padding: 82px 32px;
 
   &:nth-child(even) {
     background: white
