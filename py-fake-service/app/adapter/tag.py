@@ -1,5 +1,5 @@
 class Tag:
-    DEFAULT_TAGS = ["inbox", "sent", "trash", "drafts"] 
+    DEFAULT_TAGS = ["inbox", "sent", "trash", "drafts"]
 
     def __init__(self, name, ident):
         self.counts = {
@@ -7,7 +7,7 @@ class Tag:
             'read': 0,
             'starred': 0,
             'reply': 0
-        }   
+        }
 
         self.ident = ident
         self.name = name.lower()
@@ -17,7 +17,7 @@ class Tag:
         self.counts['total'] += 1
 
     def increment_read(self):
-        self.counts['read'] += 1    
+        self.counts['read'] += 1
 
     def decrement_count(self):
         self.counts['total'] -= 1

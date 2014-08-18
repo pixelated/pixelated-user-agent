@@ -3,27 +3,27 @@ import re
 
 
 def _next_token():
-    return StringRegexp('[^\s]+')   
+    return StringRegexp('[^\s]+')
 
 
-def _separators():             
-    return StringRegexp('[\s&]+')   
+def _separators():
+    return StringRegexp('[\s&]+')
 
 
 def _compile_tag(compiled, token):
-    tag = token.split(":").pop()    
-    if token[0] == "-":        
+    tag = token.split(":").pop()
+    if token[0] == "-":
         compiled["not_tags"].append(tag)
-    else:                      
-        compiled["tags"].append(tag)    
-    return compiled            
+    else:
+        compiled["tags"].append(tag)
+    return compiled
 
 
 class SearchQuery:
 
     @staticmethod
     def compile(query):
-        compiled = {"tags": [], "not_tags": [], "general":[]}
+        compiled = {"tags": [], "not_tags": [], "general": []}
 
         scanner = StringScanner(query.encode('utf8').replace("\"", ""))
         first_token = True
@@ -56,15 +56,13 @@ class SearchQuery:
             return True
 
         if self.compiled.get('general'):
-            search_terms = re.compile(self.compiled['general'], flags=re.IGNORECASE)
+            search_terms = re.compile(
+                self.compiled['general'],
+                flags=re.IGNORECASE)
             if search_terms.search(mail.body) or search_terms.search(mail.subject):
                 return True
 
         if not [v for v in self.compiled.values() if v]:
             return True
 
-
         return False
-
-    
-

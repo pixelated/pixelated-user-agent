@@ -1,5 +1,6 @@
 from mail import Mail
 
+
 class MailSet:
 
     def __init__(self):
@@ -27,7 +28,7 @@ class MailSet:
         if 'trash' in mail.tags:
             del self.mails[mail_id]
             return True
-        mail.tags.append('trash') 
+        mail.tags.append('trash')
         return False
 
     def update(self, mail):
@@ -40,7 +41,10 @@ class MailSet:
         return mail
 
     def find(self, draft_reply_for):
-        match = [mail for mail in self.mails.values() if mail.draft_reply_for ==draft_reply_for]
+        match = [
+            mail
+            for mail in self.mails.values
+            () if mail.draft_reply_for == draft_reply_for]
         if len(match) == 0:
             return None
         else:

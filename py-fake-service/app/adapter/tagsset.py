@@ -1,6 +1,8 @@
 from tag import Tag
 
+
 class TagsSet:
+
     def __init__(self):
         self.tags = {}
         self.ident = 0
@@ -10,7 +12,7 @@ class TagsSet:
         for tag in tags:
             tag = self._create_new_tag(tag)
             tag.increment_count()
-            
+
     def all_tags(self):
         return self.tags.values()
 
@@ -26,7 +28,7 @@ class TagsSet:
             tag.increment_count()
         else:
             self._create_new_tag(tagname)
-        
+
     def decrement_tag_total_count(self, tag):
         self.tags.get(tag).decrement_count()
 
@@ -35,5 +37,3 @@ class TagsSet:
         tag = self.tags.setdefault(tag.name, tag)
         self.ident += 1
         return tag
-
-

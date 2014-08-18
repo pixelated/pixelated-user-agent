@@ -6,6 +6,7 @@ from mailset import MailSet
 from contacts import Contacts
 from mail import Mail
 
+
 class MailService:
     MAILSET_PATH = os.path.join(os.environ['HOME'], 'mailsets', 'mediumtagged')
 
@@ -15,8 +16,13 @@ class MailService:
         self.contacts = Contacts()
 
     def load_mailset(self):
-        mbox_filenames = [filename for filename in os.listdir(self.MAILSET_PATH) if filename.startswith('mbox')]
-        boxes = (mailbox.mbox(os.path.join(self.MAILSET_PATH, mbox)) for mbox in mbox_filenames)
+        mbox_filenames = [
+            filename
+            for filename in os.listdir
+            (self.MAILSET_PATH) if filename.startswith('mbox')]
+        boxes = (mailbox.mbox
+                 (os.path.join(self.MAILSET_PATH, mbox))
+                 for mbox in mbox_filenames)
 
         for box in boxes:
             message = box.popitem()[1]
@@ -44,7 +50,6 @@ class MailService:
         if not purged:
             self.tagsset.increment_tag_total_count('trash')
 
-
     def update_tags_for(self, mail_id, new_tags):
         mail = self.mail(mail_id)
 
@@ -54,8 +59,8 @@ class MailService:
         increment_set = new_tags_set - old_tags_set
         decrement_set = old_tags_set - new_tags_set
 
-        map(lambda x : self.tagsset.increment_tag_total_count(x), increment_set)
-        map(lambda x : self.tagsset.decrement_tag_total_count(x), decrement_set)
+        map(lambda x: self.tagsset.increment_tag_total_count(x), increment_set)
+        map(lambda x: self.tagsset.decrement_tag_total_count(x), decrement_set)
 
         mail.tags = new_tags
 
@@ -70,7 +75,6 @@ class MailService:
         mail = self.mailset.add_draft(Mail.from_json(mail))
         return mail.ident
 
-
     def update_draft(self, mail):
         mail = Mail.from_json(mail)
         self.mailset.update(mail)
@@ -78,4 +82,3 @@ class MailService:
 
     def draft_reply_for(self, mail_id):
         return self.mailset.find(draft_reply_for=mail_id)
-

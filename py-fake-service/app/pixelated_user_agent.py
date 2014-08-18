@@ -13,6 +13,7 @@ account = None
 loaded = False
 mail_service = MailService()
 
+
 def respond_json(entity):
     response = json.dumps(entity)
     return Response(response=response, mimetype="application/json")
@@ -20,7 +21,7 @@ def respond_json(entity):
 
 @app.route('/disabled_features')
 def disabled_features():
-        return respond_json([]) 
+    return respond_json([])
 
 
 @app.route('/mails', methods=['POST'])
@@ -44,7 +45,7 @@ def update_draft():
 @app.route('/mails')
 def mails():
     query = SearchQuery.compile(request.args.get('q', ''))
-    page = request.args.get('p', '') 
+    page = request.args.get('p', '')
     window_size = request.args.get('w', '')
     fetched_mails = mail_service.mails(query, page, window_size)
 
@@ -91,10 +92,12 @@ def mark_mail_as_read(mail_id):
     mail_service.mark_as_read(mail_id)
     return ""
 
+
 @app.route('/contacts')
 def contacts():
     contacts_query = request.args.get('q')
-    return respond_json({'contacts': mail_service.search_contacts(contacts_query)})
+    return respond_json(
+        {'contacts': mail_service.search_contacts(contacts_query)})
 
 
 @app.route('/draft_reply_for/<int:mail_id>')
@@ -115,7 +118,9 @@ def load_mailset(mailset):
         os.mkdir(mbox_root)
 
     if len(os.listdir(mbox_root)) == 0:
-        response = requests.get('https://example.wazokazi.is:8154/go/static/mediumtagged.tar.gz', verify=False)
+        response = requests.get(
+            'https://example.wazokazi.is:8154/go/static/mediumtagged.tar.gz',
+            verify=False)
         mbox_archive_path = os.path.join(mbox_root, 'mediumtagged.tar.gz')
         mbox_archive = open(mbox_archive_path, 'w')
         mbox_archive.write(response.content)
@@ -134,7 +139,7 @@ def index():
     if not loaded:
         load_mailset('mediumtagged')
         loaded = True
-        
+
     return app.send_static_file('index.html')
 
 
