@@ -6,7 +6,10 @@ body {
 }
 
 nav {
+  position: fixed;    
+  z-index: 10;
   height: 50px;
+  width: 100%;
   background-color: #3e3a37;
   color: white;
 }
@@ -30,6 +33,7 @@ ul.right {
 section.guide-section {
   display: block;
   height: 300px;
+  padding-top: 50px;
 
   &:nth-child(even) {
     background: white
