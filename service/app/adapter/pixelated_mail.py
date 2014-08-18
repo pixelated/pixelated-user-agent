@@ -1,5 +1,6 @@
 from app.tags import Tag
 from app.tags import Tags
+import dateutil.parser as dateparser
 
 
 class PixelatedMail:
@@ -27,6 +28,7 @@ class PixelatedMail:
         self.leap_mail = leap_mail
         self.body = leap_mail.bdoc.content['raw']
         self.headers = self.extract_headers()
+        self.date = dateparser.parse(self.headers['date'])
         self.ident = leap_mail.getUID()
         self.status = self.extract_status()
         self.security_casing = {}

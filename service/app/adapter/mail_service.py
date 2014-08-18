@@ -34,7 +34,9 @@ class MailService:
         
 
     def mails(self, query):
-        return self.mailbox.messages or []
+        mails = self.mailbox.messages or []
+        mails = [PixelatedMail(mail) for mail in mails]
+        return mails
 
     def update_tags(self, mail_id, new_tags):
         mail = self.mail(mail_id)

@@ -57,12 +57,12 @@ def update_draft():
 def mails():
     query = search_query.compile(request.args.get("q")) if request.args.get("q") else {'tags': {}}
 
-    mails = [PixelatedMail(mail) for mail in mail_service.mails(query)]
+    mails = mail_service.mails(query)
 
     if "inbox" in query['tags']:
         mails = [mail for mail in mails if not mail.has_tag('trash')]
 
-    mails = sorted(mails, key=lambda mail: dateparser.parse(mail.headers['date']), reverse=True)
+    mails = sorted(mails, key=lambda mail: mail.date, reverse=True)
 
     mails = [mail.as_dict() for mail in mails]
 
