@@ -40,29 +40,29 @@ describeComponent('page/router', function () {
     });
 
     it('when popping a state with no tag should select tag from url', function () {
-      var urlParams = require("page/router/url_params");
+      var urlParams = require('page/router/url_params');
       spyOn(urlParams, 'getTag').andReturn('tag');
 
       var selectTagEvent = spyOnEvent(document, Pixelated.events.ui.tag.select);
 
       this.component.smailPopState({ state: {tag: undefined} });
 
-      expect(selectTagEvent).toHaveBeenTriggeredOnAndWith(document, jasmine.objectContaining({ tag: "tag"}))
+      expect(selectTagEvent).toHaveBeenTriggeredOnAndWith(document, jasmine.objectContaining({ tag: 'tag'}));
     });
 
     it('when popping a state triggers the displayNoMessage pane if required', function () {
-      var urlParams = require("page/router/url_params");
+      var urlParams = require('page/router/url_params');
       spyOn(urlParams, 'getTag').andReturn('tag');
 
       var displayNoMessageEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelectedWithoutPushState);
 
       this.component.smailPopState({ state: {tag: undefined, isDisplayNoMessageSelected: false} });
 
-      expect(displayNoMessageEvent).not.toHaveBeenTriggeredOn(document)
+      expect(displayNoMessageEvent).not.toHaveBeenTriggeredOn(document);
 
       this.component.smailPopState({ state: {tag: undefined, isDisplayNoMessageSelected: true} });
 
-      expect(displayNoMessageEvent).toHaveBeenTriggeredOn(document)
+      expect(displayNoMessageEvent).toHaveBeenTriggeredOn(document);
     });
 
   });
