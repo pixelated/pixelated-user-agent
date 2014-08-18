@@ -34,6 +34,7 @@ section.guide-section {
   display: block;
   height: 300px;
   padding-top: 50px;
+  overflow-y: auto;
 
   &:nth-child(even) {
     background: white
