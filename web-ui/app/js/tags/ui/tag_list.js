@@ -56,13 +56,20 @@ define(
           this.trigger(list, events.tags.teardown);
           list.empty();
         }.bind(this));
+
       }
+
+      this.resetShortcuts = function () {
+        $('#tags-shortcuts').empty();
+        this.trigger(document, events.tags.shortcuts.teardown);
+      };
 
       this.renderTagList = function(tags) {
         var defaultList = this.select('defaultTagList');
         var customList = this.select('customTagList');
 
         resetTagList.bind(this, [defaultList, customList]).call();
+        this.resetShortcuts();
 
         tags.forEach(function (tag) {
           renderTag.bind(this, tag, defaultList, customList).call();

@@ -7,7 +7,12 @@ describeComponent("tags/ui/tag_shortcut", function () {
 
     component = jasmine.createSpyObj('tagComponent', ['triggerSelect']);
     parent = $("<ul>");
+    $('body').append(parent);
     shortcut = TagShortcut.appendedTo(parent, { linkTo: { name: 'inbox', counts: { total: 15 }}, trigger: component });
+  });
+
+  afterEach(function () {
+    $('body')[0].removeChild(parent[0])
   });
 
   it('renders the shortcut inside the parent', function () {
@@ -32,4 +37,18 @@ describeComponent("tags/ui/tag_shortcut", function () {
     expect(component.triggerSelect).toHaveBeenCalled();
   });
 
+  it('teardown shortcuts on event but only if they are not in the DOM', function () {
+    parent.empty();
+    var shortcutAddedAfterEmptyingParent = TagShortcut.appendedTo(parent, { linkTo: { name: 'inbox', counts: { total: 15 }}, trigger: component });
+    // by now shorcut is not in the DOM anymore but shortcutAddedAfterEmptyingParent is
+
+    spyOn(shortcut, 'teardown');
+    spyOn(shortcutAddedAfterEmptyingParent, 'teardown');
+
+    $(document).trigger(Pixelated.events.tags.shortcuts.teardown);
+
+    expect(shortcut.teardown).toHaveBeenCalled();
+    expect(shortcutAddedAfterEmptyingParent.teardown).not.toHaveBeenCalled();
+  });
 });
+

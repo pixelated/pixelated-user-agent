@@ -3,10 +3,11 @@ define(
     'flight/lib/component',
     'views/templates',
     'page/events',
-    'tags/ui/tag_base'
+    'tags/ui/tag_base',
+    'flight/lib/utils'
   ],
 
-  function (describeComponent, templates, events, tagBase) {
+  function (describeComponent, templates, events, tagBase, utils) {
 
     var TagShortcut =  describeComponent(tagShortcut, tagBase);
 
@@ -19,7 +20,6 @@ define(
     return TagShortcut;
 
     function tagShortcut() {
-
 
       this.renderAndAttach = function (parent, options) {
         var linkTo = options.linkTo;
@@ -58,9 +58,16 @@ define(
         this.$node.addClass('selected');
       };
 
+      this.doTeardown = function () {
+        if (!jQuery.contains(document, this.$node[0])) {
+          this.teardown();
+        }
+      };
+
       this.after('initialize', function () {
         this.on('click', function () { this.attr.trigger.triggerSelect(); });
         this.on(document, events.ui.tag.select, this.selectTag);
+        this.on(document, events.tags.shortcuts.teardown, this.doTeardown);
       });
 
     }

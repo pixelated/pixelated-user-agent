@@ -114,7 +114,10 @@ define(function () {
     tags: {
       want: 'tags:want',
       received: 'tags:received',
-      teardown: 'tags:teardown'
+      teardown: 'tags:teardown',
+      shortcuts: {
+        teardown: 'tags:shortcuts:teardown'
+      }
     },
     route: {
       toUrl: 'route:toUrl'
