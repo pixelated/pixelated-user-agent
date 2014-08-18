@@ -113,6 +113,7 @@ def draft_reply_for(mail_id):
 def load_mailset(mailset):
     import os
     from tarfile import TarFile
+    from gzip import GzipFile
     mbox_root = os.path.join(os.environ['HOME'], 'mailsets')
     if not os.path.isdir(os.path.join(mbox_root)):
         os.mkdir(mbox_root)
@@ -125,7 +126,8 @@ def load_mailset(mailset):
         mbox_archive = open(mbox_archive_path, 'w')
         mbox_archive.write(response.content)
         mbox_archive.close()
-        tarfile = TarFile(name=mbox_archive_path)
+        gzippedfile = GzipFile(filename=mbox_archive_path)
+        tarfile = TarFile(fileobj=gzippedfile)
         tarfile.extractall(path=mbox_root)
 
     mail_service.load_mailset()
