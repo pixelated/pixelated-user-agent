@@ -13,8 +13,10 @@ class Contacts:
     def search(self, query):
         contacts_query = re.compile(query)
         return [
-            contact.__dict__ for contact in self.contacts if contacts_query.match(
-                contact.addresses[0])]
+            contact.__dict__
+            for contact in self.contacts
+            if contacts_query.match(contact.addresses[0])
+        ]
 
 
 class Contact:

@@ -49,17 +49,20 @@ class SearchQuery:
         self.compiled = compiled
 
     def test(self, mail):
+        if 'all' in self.compiled.get('tags'):
+            return True
+
         if set(self.compiled.get('not_tags')).intersection(set(mail.tags)):
             return False
 
-        if set(self.compiled.get('tags')).intersection(set(mail.tags)) or 'all' in self.compiled.get('tags'):
+        if set(self.compiled.get('tags')).intersection(set(mail.tags)):
             return True
 
         if self.compiled.get('general'):
             search_terms = re.compile(
                 self.compiled['general'],
                 flags=re.IGNORECASE)
-            if search_terms.search(mail.body) or search_terms.search(mail.subject):
+            if search_terms.search(mail.subject+' '+mail.body):
                 return True
 
         if not [v for v in self.compiled.values() if v]:

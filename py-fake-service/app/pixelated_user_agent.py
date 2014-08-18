@@ -7,6 +7,8 @@ from adapter import MailService
 from search import SearchQuery
 
 app = Flask(__name__, static_url_path='', static_folder='../../web-ui/app')
+MEDIUM_TAGGED_URL = 'https://example.wazokazi.is:8154\
+                    /go/static/py-mediumtagged.tar.gz'
 client = None
 converter = None
 account = None
@@ -119,9 +121,7 @@ def load_mailset(mailset):
         os.mkdir(mbox_root)
 
     if len(os.listdir(mbox_root)) == 0:
-        response = requests.get(
-            'https://example.wazokazi.is:8154/go/static/py-mediumtagged.tar.gz',
-            verify=False)
+        response = requests.get(MEDIUM_TAGGED_URL, verify=False)
         mbox_archive_path = os.path.join(mbox_root, 'py-mediumtagged.tar.gz')
         mbox_archive = open(mbox_archive_path, 'w')
         mbox_archive.write(response.content)

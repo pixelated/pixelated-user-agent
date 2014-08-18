@@ -22,7 +22,10 @@ class MailSet:
         mail.status.append('read')
 
     def delete(self, mail_id):
-        """ Returns True if the email got purged, else returns False meaning the email got moved to trash """
+        """
+        Returns True if the email got purged,
+        else returns False meaning the email got moved to trash
+        """
 
         mail = self.get(mail_id)
         if 'trash' in mail.tags:
