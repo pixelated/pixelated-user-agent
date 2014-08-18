@@ -121,7 +121,7 @@ def load_mailset(mailset):
         response = requests.get(
             'https://example.wazokazi.is:8154/go/static/py-mediumtagged.tar.gz',
             verify=False)
-        mbox_archive_path = os.path.join(mbox_root, 'mediumtagged.tar.gz')
+        mbox_archive_path = os.path.join(mbox_root, 'py-mediumtagged.tar.gz')
         mbox_archive = open(mbox_archive_path, 'w')
         mbox_archive.write(response.content)
         mbox_archive.close()
