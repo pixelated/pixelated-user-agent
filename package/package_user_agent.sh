@@ -2,6 +2,7 @@
 
 set -x 
 
+PACKAGE_VERSION="$1"
 BUILD_PATH=/tmp/pix-user-agent-build
 PIXELATED_LIB_PATH=$BUILD_PATH/var/lib/pixelated
 PIXELATED_WEB_LIB_PATH=$PIXELATED_LIB_PATH/web-ui/app
@@ -41,4 +42,4 @@ cp package/pixelated-user-agent $BIN_PATH
 
 cd $BUILD_PATH
 [[ ! -f '/tmp/gems/bin/fpm' ]] && GEM_HOME=/tmp/gems gem install fpm
-GEM_HOME=/tmp/gems /tmp/gems/bin/fpm -s dir  -t deb -n pixelated-user-agent -C . .
+GEM_HOME=/tmp/gems /tmp/gems/bin/fpm -s dir -v ${PACKAGE_VERSION} -t deb -n pixelated-user-agent -C . .
