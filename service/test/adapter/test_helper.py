@@ -1,4 +1,5 @@
 from mock import Mock
+from datetime import datetime
 
 LEAP_FLAGS = ['\\Seen',
               '\\Answered',
@@ -8,7 +9,7 @@ LEAP_FLAGS = ['\\Seen',
               '\\Recent',
               'List']
 
-def leap_mail(uid=0, extra_flags=[], headers={}):
+def leap_mail(uid=0, extra_flags=[], headers={'date': str(datetime.now())}):
   flags = LEAP_FLAGS + extra_flags
   return Mock(getUID=Mock(return_value=uid),
               getFlags=Mock(return_value=flags),
