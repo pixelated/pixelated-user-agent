@@ -15,6 +15,18 @@ ul li {
   display: inline;
 }
 
+ul.left, ul.right {
+  padding: 12px;
+  margin-bottom: 0px;
+  font-weight: bold;
+}
+
+ul.right {
+  li {
+    margin: 8px;
+  }
+}
+
 section.guide-section {
   display: block;
   height: 300px;
