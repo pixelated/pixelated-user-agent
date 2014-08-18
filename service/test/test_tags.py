@@ -14,16 +14,16 @@ class TagsTestCase(unittest.TestCase):
     def test_add_tag_to_collection(self):
         tag_collection = Tags()
         tag_collection.add('test')
-        self.assertEqual(len(tag_collection), len(Tags())+1)
+        self.assertEqual(len(tag_collection), len(Tags()) + 1)
         tag_collection.add('test2')
-        self.assertEqual(len(tag_collection), len(Tags())+2)
+        self.assertEqual(len(tag_collection), len(Tags()) + 2)
 
     def test_no_tag_duplication(self):
         tag_collection = Tags()
         tag_collection.add('test')
-        self.assertEqual(len(tag_collection), len(Tags())+1)
+        self.assertEqual(len(tag_collection), len(Tags()) + 1)
         tag_collection.add('test')
-        self.assertEqual(len(tag_collection), len(Tags())+1)
+        self.assertEqual(len(tag_collection), len(Tags()) + 1)
 
     def test_find_tag_on_collection(self):
         tag_collection = Tags()

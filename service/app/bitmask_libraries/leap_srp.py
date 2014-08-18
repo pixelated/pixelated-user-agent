@@ -129,4 +129,3 @@ class LeapSecureRemotePassword(object):
 def _safe_unhexlify(hex_str):
     return binascii.unhexlify(hex_str) \
         if (len(hex_str) % 2 == 0) else binascii.unhexlify('0' + hex_str)
-

@@ -101,7 +101,7 @@ class LeapSessionFactory(object):
         nicknym = self._create_nicknym(auth, soledad)
         account = self._create_account(auth, soledad)
         incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad,
-                                                                        account, auth)
+                                                                   account, auth)
 
         smtp = self._create_smtp_service(nicknym, auth)
         smtp.start()

@@ -31,7 +31,6 @@ class MailService:
         self.leap_session = LeapSessionFactory(self.provider).create(LeapCredentials(self.username, self.password))
         self.account = self.leap_session.account
         self.mailbox = self.account.getMailbox(self.mailbox_name)
-        
 
     def mails(self, query):
         mails = self.mailbox.messages or []
@@ -50,7 +49,7 @@ class MailService:
             self.tags.add(tag)
 
     def _update_flags(self, new_tags, mail_id):
-        new_tags_flag_name = ['tag_'+tag.name for tag in new_tags]
+        new_tags_flag_name = ['tag_' + tag.name for tag in new_tags]
         self.set_flags(mail_id, new_tags_flag_name)
 
     def set_flags(self, mail_id, new_tags_flag_name):

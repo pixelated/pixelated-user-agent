@@ -9,21 +9,20 @@ import srp
 
 from app.bitmask_libraries.leap_srp import LeapSecureRemotePassword, LeapAuthException
 
-
-
-(salt_bytes, verification_key_bytes) =  srp.create_salted_verification_key('username', 'password', hash_alg=srp.SHA256, ng_type=srp.NG_1024)
+(salt_bytes, verification_key_bytes) = srp.create_salted_verification_key('username', 'password', hash_alg=srp.SHA256, ng_type=srp.NG_1024)
 verifier = None
 
 
 @all_requests
 def not_found_mock(url, request):
     return {'status_code': 404,
-                'content': 'foobar'}
+            'content': 'foobar'}
 
 
 @all_requests
 def timeout_mock(url, request):
     raise Timeout()
+
 
 @urlmatch(netloc=r'(.*\.)?leap\.local$')
 def srp_login_server_simulator_mock(url, request):

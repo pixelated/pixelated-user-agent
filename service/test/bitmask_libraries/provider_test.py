@@ -13,6 +13,7 @@ def not_found_mock(url, request):
     return {'status_code': 404,
             'content': 'foobar'}
 
+
 @urlmatch(netloc=r'(.*\.)?some-provider\.test$', path='/provider.json')
 def provider_json_mock(url, request):
     return provider_json_response("SHA256: 06e2300bdbc118c290eda0dc977c24080718f4eeca68c8b0ad431872a2baa22d")
@@ -50,18 +51,18 @@ def soledad_json_mock(url, request):
         "content": json.dumps(content)
     }
 
+
 @urlmatch(netloc=r'api\.some-provider\.test:4430$', path='/1/config/smtp-service.json')
 def smtp_json_mock(url, request):
     content = {
         "hosts": {
             "leap-mx": {
-                    "hostname": "mx.some-provider.test",
-                    "ip_address": "0.0.0.0",
-                    "port": 465
-                }
-            },
-            "locations": {
+                "hostname": "mx.some-provider.test",
+                "ip_address": "0.0.0.0",
+                "port": 465
+            }
         },
+        "locations": {},
         "serial": 1,
         "version": 1
     }
