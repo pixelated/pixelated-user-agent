@@ -18,7 +18,7 @@ class MailService:
             self.password = 'testpassword'
             self.server_name = 'example.wazokazi.is'
             self.mailbox_name = 'INBOX'
-            self.leapdir = os.path.join(os.path.abspath("."), "leap")
+            self.certs_home = os.path.join(os.path.abspath("."), "leap")
             self.tags = Tags()
             self._open_leap_session()
         except:
@@ -26,7 +26,7 @@ class MailService:
             raise
 
     def _open_leap_session(self):
-        self.leap_config = LeapConfig(leap_home=self.leapdir)
+        self.leap_config = LeapConfig(certs_home=self.certs_home)
         self.provider = LeapProvider(self.server_name, self.leap_config)
         self.leap_session = LeapSessionFactory(self.provider).create(LeapCredentials(self.username, self.password))
         self.account = self.leap_session.account

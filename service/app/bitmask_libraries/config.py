@@ -28,7 +28,7 @@ class LeapConfig(object):
 
     def __init__(self, leap_home=DEFAULT_LEAP_HOME, ca_cert_bundle=AUTO_DETECT_CA_BUNDLE, verify_ssl=True,
                  fetch_interval_in_s=30,
-                 timeout_in_s=15, start_background_jobs=True, gpg_binary=discover_gpg_binary()):
+                 timeout_in_s=15, start_background_jobs=True, gpg_binary=discover_gpg_binary(), certs_home=None):
         """
         Constructor.
 
@@ -58,6 +58,7 @@ class LeapConfig(object):
 
         """
         self.leap_home = leap_home
+        self.certs_home = certs_home
         self.ca_cert_bundle = ca_cert_bundle
         self.verify_ssl = verify_ssl
         self.timeout_in_s = timeout_in_s

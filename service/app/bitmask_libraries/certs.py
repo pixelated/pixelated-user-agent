@@ -13,7 +13,7 @@ class LeapCertificate(object):
     def __init__(self, provider):
         self._config = provider.config
         self._server_name = provider.server_name
-        self._leap_home = self._config.leap_home
+        self._certs_home = self._config.certs_home
 
     def auto_detect_ca_bundle(self):
         if self._config.ca_cert_bundle == AUTO_DETECT_CA_BUNDLE:
@@ -26,7 +26,7 @@ class LeapCertificate(object):
             return self._config.ca_cert_bundle
 
     def _local_server_cert(self):
-        cert_file = os.path.join(self._leap_home, '%s.ca.crt' % self._server_name)
+        cert_file = os.path.join(self._certs_home, '%s.ca.crt' % self._server_name)
         if os.path.isfile(cert_file):
             return cert_file
         else:

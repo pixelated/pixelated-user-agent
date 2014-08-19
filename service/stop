@@ -1,0 +1,2 @@
+#!/bin/bash
+pgrep -f 'python ./go' | xargs kill -9
