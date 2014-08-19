@@ -2,5 +2,7 @@
 
 PIXELATED_PATH=/var/lib/pixelated
 . $PIXELATED_PATH/virtualenv/bin/activate
-$PIXELATED_PATH/service/./go
+cd $PIXELATED_PATH/service/
+
+$PIXELATED_PATH/virtualenv/bin/python go
 
