@@ -1,5 +1,5 @@
-from app.tags import Tag
-from app.tags import Tags
+from pixelated.tags import Tag
+from pixelated.tags import Tags
 import dateutil.parser as dateparser
 
 

@@ -2,12 +2,12 @@ import traceback
 import sys
 import os
 from twisted.internet import defer
-from app.bitmask_libraries.config import LeapConfig
-from app.bitmask_libraries.provider import LeapProvider
-from app.bitmask_libraries.session import LeapSessionFactory
-from app.bitmask_libraries.auth import LeapCredentials
-from app.adapter.pixelated_mail import PixelatedMail
-from app.tags import Tags
+from pixelated.bitmask_libraries.config import LeapConfig
+from pixelated.bitmask_libraries.provider import LeapProvider
+from pixelated.bitmask_libraries.session import LeapSessionFactory
+from pixelated.bitmask_libraries.auth import LeapCredentials
+from pixelated.adapter.pixelated_mail import PixelatedMail
+from pixelated.tags import Tags
 
 
 class MailService:
