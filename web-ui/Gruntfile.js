@@ -323,7 +323,7 @@ module.exports = function (grunt) {
           namespace: 'Pixelated'
         },
         files: {
-          '<%= yeoman.dist %>/js/templates.js': '<%= yeoman.app %>/templates/**/*.hbs'
+          '<%= yeoman.dist %>/js/generated/hbs/templates.js': '<%= yeoman.app %>/templates/**/*.hbs'
         }
       },
       dev: {
