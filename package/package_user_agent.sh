@@ -37,8 +37,8 @@ virtualenv $PIXELATED_VIRTUALENV_PATH
 . $PIXELATED_VIRTUALENV_PATH/bin/activate
 pip install --upgrade pip
 pip install --upgrade setuptools
-easy_install leap.soledad.common
-pip install -r service/requirements.txt
+python service/setup.py develop
+python service/setup.py install
 deactivate
 
 cp package/pixelated-user-agent $BIN_PATH

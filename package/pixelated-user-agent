@@ -4,5 +4,4 @@ PIXELATED_PATH=/var/lib/pixelated
 . $PIXELATED_PATH/virtualenv/bin/activate
 cd $PIXELATED_PATH/service/
 
-$PIXELATED_PATH/virtualenv/bin/python go
-
+$PIXELATED_PATH/virtualenv/bin/python pixelated-user-agent
