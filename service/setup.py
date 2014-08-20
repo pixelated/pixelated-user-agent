@@ -34,7 +34,6 @@ setup(name='Pixelated User Agent Service',
           'nose',
           'mock',
           'httmock',
-          'service_identity'
       ],
       package_data={'': ['config/*']},
       entry_points={
