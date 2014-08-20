@@ -427,7 +427,7 @@ module.exports = function (grunt) {
     'clean:dist',
     'useminPrepare',
     'compass:dist',
-    'handlebars:dist',
+    'handlebars:dev',
     'concurrent:dist',
     'copy:dist',
     'cdnify',
