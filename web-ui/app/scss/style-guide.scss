@@ -28,6 +28,8 @@ ul.typography li {
   min-height: 125px;
   min-width: 130px;
   border: 1px solid #EEE;
+  background-color: white;  
+  border-radius: 5px;
 }
 
 ul.left, ul.right {
@@ -45,14 +47,18 @@ ul.right {
 section.guide-section {
   display: block;
   height: 100%;
+  min-height: 666px;
   overflow-y: auto;
   padding: 66px 32px;
+
+  &:nth-child(even) {
+    background-color: $top_pane;  
+  }
 }
 
 .color-card {
   width: 160px;
   height: 230px;
-  background-color: #344a5f;
   border-radius: 5px;
   display: inline-block;
   margin-right: 15px;
