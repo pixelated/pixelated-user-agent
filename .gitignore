@@ -27,3 +27,5 @@ fake-service/data/mail-sets/
 .vagrant/
 __pycache__/
 .virtualenv
+gunicorn.pid
+gunicorn.log

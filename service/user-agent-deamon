@@ -1,0 +1,33 @@
+#!/bin/bash
+export PYTHONPATH=`pwd`/app:$PYTHONPATH
+
+USER_AGENT_PORT=3333
+
+function do_stop() {
+        test -e gunicorn.pid && (kill -9 $(cat gunicorn.pid) && rm gunicorn.pid && echo "Stopped User Agent") || echo "User Agent is not running"
+}
+
+function do_start() {
+        echo "gunicorn pixelated_user_agent:app -b 0.0.0.0:$USER_AGENT_PORT -D -p gunicorn.pid --log-file=gunicorn.log"
+        gunicorn pixelated_user_agent:app -b 0.0.0.0:$USER_AGENT_PORT -D -p gunicorn.pid --log-file=gunicorn.log
+}
+
+case $1 in
+        restart)
+                do_stop && do_start
+                ;;
+        start)
+                do_start
+                ;;
+        stop)
+                do_stop
+                ;;
+        killall)
+                pgrep -f gunicorn | xargs kill -9
+                rm -rf gunicorn.pid
+                ;;
+        *)
+                echo "usage: start|stop|restart|killall"
+                ;;
+esac
+
