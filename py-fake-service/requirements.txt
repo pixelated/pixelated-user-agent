@@ -1,4 +1,7 @@
 flask==0.10.1
 scanner==0.0.5
 requests==2.3.0
+PyHamcrest==1.8.0
+behave==1.2.4
+selenium==2.42.1
 
