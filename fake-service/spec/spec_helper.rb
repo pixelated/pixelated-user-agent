@@ -1,1 +1,0 @@
-require 'pixelated_service'
