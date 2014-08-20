@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -x
+set -e
 
 PACKAGE_VERSION="$1"
 BUILD_PATH=/tmp/pix-user-agent-build
