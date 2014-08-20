@@ -132,7 +132,7 @@ def index():
 
 def setup():
     reactor_manager.start_reactor()
-    app.config.from_pyfile('config/pixelated_ua.cfg')
+    app.config.from_pyfile('../config/pixelated_ua.cfg')
     account = app.config['ACCOUNT']
     app.run(host=app.config['HOST'], debug=app.config['DEBUG'], port=app.config['PORT'])
 
