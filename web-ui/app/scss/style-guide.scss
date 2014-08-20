@@ -49,7 +49,7 @@ section.guide-section {
   padding: 66px 32px;
 }
 
-.color-swatch {
+.color-card {
   width: 160px;
   height: 230px;
   background-color: #344a5f;
@@ -77,3 +77,24 @@ section.guide-section {
   font-size: small;
 }
 
+/* Color Cards definition */
+
+.color-grid {
+  #primary-color-card { background-color: $primary_color; }
+  #secondary-color-card { background-color: $secondary;}
+  #top-pane-card { background-color: $top_pane;}
+  #contrast-card { background-color: $contrast;}
+  #action-buttons-card { background-color: $action_buttons; }
+  #success-card { background-color: $success;}
+  #attention-card { background-color: $attention; }
+  #warning-card { background-color: $warning; }
+  #error-card { background-color: $error; }
+  #search-highlight-card { background-color: $search_highlight; }
+  #count-background-card { background-color: $total_count_bg; }
+}
+/* Typeface cards definition*/
+ul.typography li h2 {
+  &.bold-header { font-weight: bold; }
+  &.extra-bold-header { font-weight: 800; }
+  &.lighter-header { font-weight: lighter; }
+}
