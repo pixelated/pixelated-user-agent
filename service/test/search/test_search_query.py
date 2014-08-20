@@ -1,7 +1,7 @@
 import sys
 import os
 import unittest
-import app.search_query as search_query
+import pixelated.search_query as search_query
 
 
 class SearchTestCase(unittest.TestCase):

@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+import sys
+if 'develop' in sys.argv:
+    sys.argv.append('--always-unzip')
+
 from setuptools import setup
 import os
 
@@ -14,15 +18,12 @@ setup(name='Pixelated User Agent Service',
       author_email='pixelated-team@thoughtworks.com',
       url='http://pixelated-project.github.io',
       packages=['pixelated'],
+      test_suite='nose.collector',
       install_requires=[
-          'scrypt',
-          'Twisted==12.2.0',
-          'flask==0.10.1',
-          'scanner==0.0.5',
-          'requests==2.3.0',
-          'pytest==2.6.0',
-          'mock==1.0.1',
-          'httmock==1.2.2',
+          'Twisted',
+          'flask',
+          'scanner',
+          'requests',
           'srp==1.0.4',
           'dirspec==13.10',
           'u1db==13.09',
@@ -30,5 +31,8 @@ setup(name='Pixelated User Agent Service',
           'leap.soledad.common==0.5.2',
           'leap.soledad.client==0.5.2',
           'leap.mail==0.3.9-1-gc1f9c92',
+          'nose',
+          'mock',
+          'httmock',
       ],
      )

@@ -1,5 +1,5 @@
 import unittest
-from app.tags import Tags, Tag
+from pixelated.tags import Tags, Tag
 
 
 class TagTestCase(unittest.TestCase):

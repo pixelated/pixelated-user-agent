@@ -7,7 +7,7 @@ from httmock import urlmatch, all_requests, HTTMock, response
 from requests.exceptions import Timeout
 import srp
 
-from app.bitmask_libraries.leap_srp import LeapSecureRemotePassword, LeapAuthException
+from pixelated.bitmask_libraries.leap_srp import LeapSecureRemotePassword, LeapAuthException
 
 (salt_bytes, verification_key_bytes) = srp.create_salted_verification_key('username', 'password', hash_alg=srp.SHA256, ng_type=srp.NG_1024)
 verifier = None

@@ -1,6 +1,6 @@
 from mock import patch
 
-from app.bitmask_libraries.session import LeapSession
+from pixelated.bitmask_libraries.session import LeapSession
 from abstract_leap_test import AbstractLeapTest
 
 
@@ -8,7 +8,7 @@ class SessionTest(AbstractLeapTest):
     def test_background_jobs_are_started(self):
         self.config.start_background_jobs = True
 
-        with patch('app.bitmask_libraries.session.reactor.callFromThread', new=_execute_func) as _:
+        with patch('pixelated.bitmask_libraries.session.reactor.callFromThread', new=_execute_func) as _:
             self._create_session()
 
             self.mail_fetcher_mock.start_loop.assert_called_once_with()
@@ -16,13 +16,13 @@ class SessionTest(AbstractLeapTest):
     def test_background_jobs_are_not_started(self):
         self.config.start_background_jobs = False
 
-        with patch('app.bitmask_libraries.session.reactor.callFromThread', new=_execute_func) as _:
+        with patch('pixelated.bitmask_libraries.session.reactor.callFromThread', new=_execute_func) as _:
             self._create_session()
 
             self.assertFalse(self.mail_fetcher_mock.start_loop.called)
 
     def test_that_close_stops_background_jobs(self):
-        with patch('app.bitmask_libraries.session.reactor.callFromThread', new=_execute_func) as _:
+        with patch('pixelated.bitmask_libraries.session.reactor.callFromThread', new=_execute_func) as _:
             session = self._create_session()
 
             session.close()

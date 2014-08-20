@@ -1,7 +1,7 @@
 import os
 from mock import MagicMock, patch
 from abstract_leap_test import AbstractLeapTest
-from app.bitmask_libraries.smtp import LeapSmtp
+from pixelated.bitmask_libraries.smtp import LeapSmtp
 from httmock import all_requests, HTTMock, urlmatch
 
 
@@ -47,7 +47,7 @@ class LeapSmtpTest(AbstractLeapTest):
     def _client_cert_path(self):
         return os.path.join(self.leap_home, 'providers', 'some-server.test', 'keys', 'client', 'smtp.pem')
 
-    @patch('app.bitmask_libraries.smtp.setup_smtp_gateway')
+    @patch('pixelated.bitmask_libraries.smtp.setup_smtp_gateway')
     def test_that_start_calls_setup_smtp_gateway(self, gateway_mock):
         smtp = LeapSmtp(self.provider, self.keymanager, self.srp_session)
         port = 500
@@ -65,7 +65,7 @@ class LeapSmtpTest(AbstractLeapTest):
         with HTTMock(not_found_mock):
             smtp.stop()
 
-    @patch('app.bitmask_libraries.smtp.setup_smtp_gateway')
+    @patch('pixelated.bitmask_libraries.smtp.setup_smtp_gateway')
     def test_that_running_smtp_sevice_is_stopped(self, gateway_mock):
         smtp = LeapSmtp(self.provider, self.keymanager, self.srp_session)
 

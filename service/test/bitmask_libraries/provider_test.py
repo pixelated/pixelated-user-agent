@@ -3,8 +3,8 @@ import json
 from httmock import all_requests, HTTMock, urlmatch
 from requests import HTTPError
 
-from app.bitmask_libraries.config import LeapConfig
-from app.bitmask_libraries.provider import LeapProvider
+from pixelated.bitmask_libraries.config import LeapConfig
+from pixelated.bitmask_libraries.provider import LeapProvider
 from abstract_leap_test import AbstractLeapTest
 
 

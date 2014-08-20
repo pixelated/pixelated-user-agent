@@ -1,9 +1,9 @@
 import unittest
 
-from app.adapter.mail_service import MailService
+from pixelated.adapter.mail_service import MailService
 from mock import Mock, MagicMock, patch
 import test_helper
-from app.tags import Tag
+from pixelated.tags import Tag
 
 
 class TestMailService(unittest.TestCase):

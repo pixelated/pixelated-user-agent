@@ -1,9 +1,9 @@
 from mock import patch
-from app.bitmask_libraries.soledad import SoledadSession
+from pixelated.bitmask_libraries.soledad import SoledadSession
 from abstract_leap_test import AbstractLeapTest
 
 
-@patch('app.bitmask_libraries.soledad.Soledad')
+@patch('pixelated.bitmask_libraries.soledad.Soledad')
 class SoledadSessionTest(AbstractLeapTest):
 
     def setUp(self):
@@ -16,7 +16,7 @@ class SoledadSessionTest(AbstractLeapTest):
             }
         }}
 
-    @patch('app.bitmask_libraries.soledad.Soledad.__init__')
+    @patch('pixelated.bitmask_libraries.soledad.Soledad.__init__')
     def test_that_soledad_is_created_with_required_params(self, soledad_mock, init_mock):
         # when
         SoledadSession(self.provider, 'any-passphrase', self.srp_session)

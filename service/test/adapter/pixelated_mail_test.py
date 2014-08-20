@@ -1,8 +1,8 @@
 import unittest
 
-from app.adapter.pixelated_mail import PixelatedMail
-from app.tags import Tag
-from app.tags import Tags
+from pixelated.adapter.pixelated_mail import PixelatedMail
+from pixelated.tags import Tag
+from pixelated.tags import Tags
 import test_helper
 
 

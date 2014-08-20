@@ -1,12 +1,12 @@
 from mock import patch
 
 from leap.keymanager import openpgp, KeyNotFound
-from app.bitmask_libraries.nicknym import NickNym
+from pixelated.bitmask_libraries.nicknym import NickNym
 from abstract_leap_test import AbstractLeapTest
 
 
 class NickNymTest(AbstractLeapTest):
-    @patch('app.bitmask_libraries.nicknym.KeyManager.__init__', return_value=None)
+    @patch('pixelated.bitmask_libraries.nicknym.KeyManager.__init__', return_value=None)
     def test_that_keymanager_is_created(self, init_mock):
         # given
 
@@ -19,7 +19,7 @@ class NickNymTest(AbstractLeapTest):
                                      'https://api.some-server.test:4430', '1', self.uuid,
                                      '/path/to/gpg')
 
-    @patch('app.bitmask_libraries.nicknym.KeyManager')
+    @patch('pixelated.bitmask_libraries.nicknym.KeyManager')
     def test_gen_key(self, keymanager_mock):
         # given
         keyman = keymanager_mock.return_value
