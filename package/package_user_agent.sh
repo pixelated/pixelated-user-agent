@@ -33,6 +33,7 @@ cp -rf service $PIXELATED_LIB_PATH
 cp -rf web-ui/dist/* $PIXELATED_WEB_LIB_PATH
 
 # build virtual env
+cd service
 virtualenv $PIXELATED_VIRTUALENV_PATH
 . $PIXELATED_VIRTUALENV_PATH/bin/activate
 pip install --upgrade pip
@@ -40,6 +41,7 @@ pip install --upgrade setuptools
 python service/setup.py develop
 python service/setup.py install
 deactivate
+cd ..
 
 cp package/pixelated-user-agent $BIN_PATH
 
