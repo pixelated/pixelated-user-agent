@@ -20,17 +20,29 @@ class MailService:
         self.tagsset = TagsSet()
         self.contacts = Contacts()
 
+    def _read_file(self, filename):
+        with open(filename, 'r') as fd:
+            return fd.read()
+
+    def _create_message_from_file(self, filename):
+        data = self._read_file(filename)
+        if data.startswith('From '):
+            msg = mailbox.mbox(filename).popitem()[1]
+            msg.from_addr = msg.get_from()
+        else:
+            msg = mailbox.Message(data)
+            msg.from_addr = msg.get('From')
+        return msg
+
     def load_mailset(self):
         mbox_filenames = [
             filename
             for filename in os.listdir
             (self.MAILSET_PATH) if filename.startswith('mbox')]
-        boxes = (mailbox.mbox
-                 (os.path.join(self.MAILSET_PATH, mbox))
+        messages = (self._create_message_from_file(os.path.join(self.MAILSET_PATH, mbox))
                  for mbox in mbox_filenames)
 
-        for box in boxes:
-            message = box.popitem()[1]
+        for message in messages:
             self.mailset.add(message)
             self.tagsset.add(message)
             self.contacts.add(message)
