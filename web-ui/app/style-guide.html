@@ -12,26 +12,6 @@
 <link href="css/style-guide.css" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" href="../css/main.css">
 </head>
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script type="text/javascript">
-	$(document).ready(function(){
-	  $('a[href*=#]').click(function() {
-	    if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'')
-	    && location.hostname == this.hostname) {
-	      var $target = $(this.hash);
-	      $target = $target.length && $target
-	      || $('[name=' + this.hash.slice(1) +']');
-	      if ($target.length) {
-	        var targetOffset = $target.offset().top;
-	        $('html,body')
-	        .animate({scrollTop: targetOffset}, 500);
-	       return false;
-	      }
-	    }
-	  });
-	});
-</script>
-
 <body>
 	<div id="style-guide-wrap" data-offcanvas>
 		<nav class="top-bar" data-topbar>
@@ -192,5 +172,8 @@
 			 </br>
 		</section>
 	</div>
+
+<script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/js/style_guide/main.js"></script>
 </body>
 </html>
