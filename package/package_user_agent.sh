@@ -38,8 +38,8 @@ virtualenv $PIXELATED_VIRTUALENV_PATH
 . $PIXELATED_VIRTUALENV_PATH/bin/activate
 pip install --upgrade pip
 pip install --upgrade setuptools
-python service/setup.py develop
-python service/setup.py install
+python setup.py develop
+python setup.py install
 deactivate
 cd ..
 
