@@ -16,6 +16,10 @@ nav {
   opacity: 0.95;
 }
 
+a.logo-anchor {
+  color: white;
+}
+
 ul li {
   display: inline;
 }
@@ -87,11 +91,11 @@ section.guide-section {
 
 .color-grid {
   #primary-color-card { background-color: $primary_color; }
-  #secondary-color-card { background-color: $secondary;}
-  #top-pane-card { background-color: $top_pane;}
-  #contrast-card { background-color: $contrast;}
+  #secondary-color-card { background-color: $secondary; }
+  #top-pane-card { background-color: $top_pane; }
+  #contrast-card { background-color: $contrast; }
   #action-buttons-card { background-color: $action_buttons; }
-  #success-card { background-color: $success;}
+  #success-card { background-color: $success; }
   #attention-card { background-color: $attention; }
   #warning-card { background-color: $warning; }
   #error-card { background-color: $error; }
@@ -103,4 +107,9 @@ ul.typography li h2 {
   &.bold-header { font-weight: bold; }
   &.extra-bold-header { font-weight: 800; }
   &.lighter-header { font-weight: lighter; }
+}
+
+ul.headers-and-sizes {
+  margin: 32px 100px 0 0;
+  display: inline-block;
 }
