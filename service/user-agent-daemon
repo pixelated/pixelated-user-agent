@@ -1,5 +1,5 @@
 #!/bin/bash
-export PYTHONPATH=`pwd`/app:$PYTHONPATH
+export PYTHONPATH=`pwd`/pixelated:$PYTHONPATH
 
 USER_AGENT_PORT=3333
 
@@ -9,7 +9,7 @@ function do_stop() {
 
 function do_start() {
         echo "gunicorn pixelated_user_agent:app -b 0.0.0.0:$USER_AGENT_PORT -D -p gunicorn.pid --log-file=gunicorn.log"
-        gunicorn pixelated_user_agent:app -b 0.0.0.0:$USER_AGENT_PORT -D -p gunicorn.pid --log-file=gunicorn.log
+        gunicorn user_agent:app -b 0.0.0.0:$USER_AGENT_PORT -D -p gunicorn.pid --log-file=gunicorn.log
 }
 
 case $1 in
