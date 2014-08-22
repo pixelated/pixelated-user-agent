@@ -14,7 +14,7 @@ from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.tags import Tags
 
 app = Flask(__name__, static_url_path='', static_folder='../../web-ui/app')
-app.config.from_pyfile('config/pixelated_ua.cfg')
+app.config.from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
 mail_service = MailService(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'], app.config['LEAP_SERVER_NAME'])
 
 

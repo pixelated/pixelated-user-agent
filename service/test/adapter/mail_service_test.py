@@ -14,7 +14,7 @@ class TestMailService(unittest.TestCase):
         MailService.mailbox = Mock(messages=[test_helper.leap_mail(uid=6, leap_flags=['\\Recent'])])
         MailService.account = Mock(return_value=MagicMock())
 
-        mailservice = MailService()
+        mailservice = MailService('username', 'password', 'leap_server')
 
         new_tags = ['test', 'inbox']
         updated_tags = mailservice.update_tags(6, new_tags)
