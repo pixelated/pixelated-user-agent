@@ -27,6 +27,9 @@ class Tag:
             }
         }
 
+    def __repr__(self):
+        return self.name
+
 
 class Tags:
 
