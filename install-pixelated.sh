@@ -10,7 +10,7 @@ function check_installed() {
         fi
 }
 
-for dependency in node npm ruby bundle virtualenv; do
+for dependency in node npm ruby bundle virtualenv git; do
         check_installed $dependency     
 done
 
