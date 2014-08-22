@@ -29,7 +29,7 @@ virtualenv .virtualenv
 source .virtualenv/bin/activate
 ./go develop --always-unzip
 
-# run service
+# print usage
 cat <<EOF
 
 ###############
