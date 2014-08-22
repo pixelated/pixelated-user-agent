@@ -5,6 +5,7 @@ from mock import Mock, MagicMock, patch
 import test_helper
 from pixelated.tags import Tag
 
+
 class TestMailService(unittest.TestCase):
 
     @patch.object(MailService, 'set_flags', return_value=None)

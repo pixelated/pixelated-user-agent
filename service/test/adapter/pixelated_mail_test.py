@@ -35,4 +35,3 @@ class TestPixelatedMail(unittest.TestCase):
     def test_custom_tags_containing_our_prefix_are_handled(self):
         pixelated_mail = PixelatedMail(test_helper.leap_mail(extra_flags=['tag_tag_work_tag_']))
         self.assertIn(Tag('tag_work_tag_'), pixelated_mail.tags)
-
