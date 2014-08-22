@@ -29,3 +29,4 @@ __pycache__/
 .virtualenv
 gunicorn.pid
 gunicorn.log
+Pixelated_User_Agent_Service.egg-info
