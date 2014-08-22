@@ -1,4 +1,5 @@
 import json
+import os
 import datetime
 import dateutil.parser as dateparser
 
@@ -131,10 +132,12 @@ def index():
 
 
 def setup():
-    reactor_manager.start_reactor()
+    debug_enabled = os.environ.get('DEBUG', False)
+    reactor_manager.start_reactor(logging=debug_enabled)
     app.config.from_pyfile('../config/pixelated_ua.cfg')
     account = app.config['ACCOUNT']
-    app.run(host=app.config['HOST'], debug=app.config['DEBUG'], port=app.config['PORT'])
+    app.config['DEBUG'] = debug_enabled 
+    app.run(host=app.config['HOST'], debug=debug_enabled, port=app.config['PORT'])
 
 
 if __name__ == '__main__':
