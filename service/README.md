@@ -58,20 +58,30 @@ virtualenv .virtualenv
 source .virtualenv/bin/activate
 ```
 
-* Install requirements:
+* Configure the application
+
+You will need an account in a LEAP provider. Once you have it, modify the service/pixelated.example file and move it to ~/.pixelated
+
+You also might need to add your LEAP provider ssl certificate inside the pixelated/certificates named as your provider domain name, example:
 
 ```
-pip install -r requirements.txt
+your.leapprovider.org.crt
+```
+
+* Start the developer mode
+
+```
+./go develop --always-unzip
 ```
 
 * To run tests:
 
 ```
-./runtests
+./go test
 ```
 
-* To run app:
+* To run app (after starting the developer mode):
 
 ```
-./go
-````
+pixelated-user-agent
+```
