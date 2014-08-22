@@ -17,7 +17,7 @@ setup(name='Pixelated User Agent Service',
       author='Thoughtworks',
       author_email='pixelated-team@thoughtworks.com',
       url='http://pixelated-project.github.io',
-      packages=['pixelated', 'pixelated.adapter', 'pixelated.bitmask_libraries'],
+      packages=['pixelated', 'pixelated.adapter', 'pixelated.bitmask_libraries', 'pixelated.config', 'pixelated.certificates'],
       test_suite='nose.collector',
       install_requires=[
           'Twisted',
@@ -36,7 +36,6 @@ setup(name='Pixelated User Agent Service',
           'httmock',
           'gunicorn'
       ],
-      package_data={'': ['config/*']},
       entry_points={
         'console_scripts': [
             'pixelated-user-agent = pixelated.user_agent:setup'

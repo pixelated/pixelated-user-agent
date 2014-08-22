@@ -134,7 +134,7 @@ def index():
 def setup():
     debug_enabled = os.environ.get('DEBUG', False)
     reactor_manager.start_reactor(logging=debug_enabled)
-    app.config.from_pyfile('../config/pixelated_ua.cfg')
+    app.config.from_pyfile('config/pixelated_ua.cfg')
     account = app.config['ACCOUNT']
     app.config['DEBUG'] = debug_enabled 
     app.run(host=app.config['HOST'], debug=debug_enabled, port=app.config['PORT'])
