@@ -38,9 +38,12 @@ virtualenv $PIXELATED_VIRTUALENV_PATH
 . $PIXELATED_VIRTUALENV_PATH/bin/activate
 pip install --upgrade pip
 pip install --upgrade setuptools
-python setup.py develop
-python setup.py install
 deactivate
+cd $PIXELATED_VIRTUALENV_PATH
+for file in $(grep -l '/tmp/pix-user-agent-build' bin/*); do 
+        sed -i '' 's|/tmp/pix-user-agent-build||' $file;
+done
+cd -
 cd ..
 
 cp package/pixelated-user-agent $BIN_PATH

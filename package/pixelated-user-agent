@@ -4,4 +4,4 @@ PIXELATED_PATH=/var/lib/pixelated
 . $PIXELATED_PATH/virtualenv/bin/activate
 cd $PIXELATED_PATH/service/
 
-$PIXELATED_PATH/virtualenv/bin/python pixelated-user-agent
+$PIXELATED_PATH/virtualenv/bin/gunicorn user_agent:app -b 0.0.0.0:$USER_AGENT_PORT -D -p ~/.gunicorn.pid --log-file=~/.gunicorn.log
