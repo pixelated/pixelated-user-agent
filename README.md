@@ -8,6 +8,18 @@ The User Agent is composed of 2 components:
 - The Web Ui, which is the the HTML, CSS and JS files served to the browser; and
 - The Service component, which is the web service that serves the Web Ui to the browser, provides the REST API which the the Web Ui uses, and integrates with the LEAP or Pixelated provider.
 
+## Quickstart
+
+Dependencies are: node, npm, ruby, bundle, virtualenv, git
+
+Once you have that, run:
+
+```
+curl https://raw.githubusercontent.com/pixelated-project/pixelated-user-agent/master/install-pixelated.sh | /bin/bash
+```
+
+_____________
+
 ## Web Ui
 The Web Ui needs to generate the templates and CSS to be served. For that, you need (from inside `./web-ui`) to run the command `./go build` at least once after downloading the code. From here on, you can run `./go watch` to auto-generate the resources as they are changed.
 
