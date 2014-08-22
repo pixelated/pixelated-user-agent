@@ -12,11 +12,11 @@ from pixelated.tags import Tags
 
 class MailService:
 
-    def __init__(self):
+    def __init__(self, username, password, server_name):
         try:
-            self.username = 'testuser_a003'
-            self.password = 'testpassword'
-            self.server_name = 'example.wazokazi.is'
+            self.username = username
+            self.password = password
+            self.server_name = server_name
             self.mailbox_name = 'INBOX'
             self.certs_home = os.path.join(os.path.abspath("."), "pixelated", "certificates")
             self.tags = Tags()

@@ -14,9 +14,8 @@ from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.tags import Tags
 
 app = Flask(__name__, static_url_path='', static_folder='../../web-ui/app')
-
-mail_service = MailService()
-account = None
+app.config.from_pyfile('config/pixelated_ua.cfg')
+mail_service = MailService(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'], app.config['LEAP_SERVER_NAME'])
 
 
 def respond_json(entity):
@@ -134,9 +133,6 @@ def index():
 def setup():
     debug_enabled = os.environ.get('DEBUG', False)
     reactor_manager.start_reactor(logging=debug_enabled)
-    app.config.from_pyfile('config/pixelated_ua.cfg')
-    account = app.config['ACCOUNT']
-    app.config['DEBUG'] = debug_enabled
     app.run(host=app.config['HOST'], debug=debug_enabled, port=app.config['PORT'])
 
 
