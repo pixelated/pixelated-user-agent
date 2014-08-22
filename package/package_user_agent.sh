@@ -41,7 +41,7 @@ pip install --upgrade setuptools
 deactivate
 cd $PIXELATED_VIRTUALENV_PATH
 for file in $(grep -l '/tmp/pix-user-agent-build' bin/*); do 
-        sed -i '' 's|/tmp/pix-user-agent-build||' $file;
+        sed -i 's|/tmp/pix-user-agent-build||' $file;
 done
 cd -
 cd ..
