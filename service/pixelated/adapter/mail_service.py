@@ -30,11 +30,10 @@ class MailService:
         self.provider = LeapProvider(self.server_name, self.leap_config)
         self.leap_session = LeapSessionFactory(self.provider).create(LeapCredentials(self.username, self.password))
         self.account = self.leap_session.account
-    
+
     @property
     def mailbox(self):
         return self.account.getMailbox(self.mailbox_name)
-
 
     def mails(self, query):
         mails = self.mailbox.messages or []
