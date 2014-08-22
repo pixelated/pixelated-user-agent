@@ -27,8 +27,21 @@ bundle install
 cd ../service
 virtualenv .virtualenv
 source .virtualenv/bin/activate
-easy_install leap.soledad.common
-pip install -r requirements.txt
+./go develop --always-unzip
 
 # run service
-./go
+cat <<EOF
+
+###############
+
+## You will need an account in a LEAP provider. You may find some at http://bitmask.net/
+
+## Once you have it, modify the service/pixelated.example file and move it to ~/.pixelated
+
+## You might also need to add your LEAP provider ssl certificate to the pixelated/certificates folder, named as your provider domain name (in case it uses TLS):
+##      - example: your.leapprovider.org.crt
+
+## Once you are done, just run:
+##        pixelated-user-agent
+
+EOF
