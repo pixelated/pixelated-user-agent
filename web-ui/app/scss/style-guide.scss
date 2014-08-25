@@ -18,6 +18,10 @@ nav {
 
 a.logo-anchor {
   color: white;
+
+  &:hover {
+    color: darken(white, 30);
+  }
 }
 
 ul li {
@@ -110,6 +114,6 @@ ul.typography li h2 {
 }
 
 ul.headers-and-sizes {
-  margin: 32px 100px 0 0;
+  margin: 20px 100px 0 0;
   display: inline-block;
 }
