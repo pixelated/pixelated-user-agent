@@ -20,7 +20,37 @@ if 'develop' in sys.argv:
     sys.argv.append('--always-unzip')
 
 from setuptools import setup
+from collections import defaultdict
 import os
+
+
+def _folder_for(file):
+    broken_path = file.split('/')
+    new_path = "web-ui/app/" + "/".join(broken_path[3:(len(broken_path) -1)])
+    return new_path[0:-1] if new_path[-1] == '/' else new_path
+
+def _create_data_files(original_files):
+    data_files_hash = defaultdict(list)
+
+    for file in original_files:
+        data_files_hash[_folder_for(file)].append(file)
+
+    return data_files_hash.items()
+
+def _web_ui_files():
+    web_ui_files = []
+    for root, dirname, filenames in os.walk('../web-ui/dist'):
+        for filename in filenames:
+            web_ui_files.append(os.path.join(root, filename))
+    return web_ui_files
+
+def data_files():
+    certificates = ('pixelated/certificates', ['pixelated/certificates/example.wazokazi.is.ca.crt'])
+
+    _data_files = _create_data_files(_web_ui_files())
+    _data_files.append(certificates)
+
+    return _data_files
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
@@ -55,5 +85,6 @@ setup(name='Pixelated User Agent Service',
         'console_scripts': [
             'pixelated-user-agent = pixelated.user_agent:setup'
         ]
-      }
+      },
+      data_files=data_files()
      )

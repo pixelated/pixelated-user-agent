@@ -33,7 +33,7 @@ class MailService:
             self.password = password
             self.server_name = server_name
             self.mailbox_name = 'INBOX'
-            self.certs_home = os.path.join(os.path.abspath("."), "pixelated", "certificates")
+            self.certs_home = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "certificates"))
             self.tags = Tags()
             self._open_leap_session()
         except:
