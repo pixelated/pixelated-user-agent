@@ -1,4 +1,4 @@
-; Modify this file and move it to ~/.pixelated
+# Modify this file and move it to ~/.pixelated
 
 HOST="127.0.0.1"
 PORT=3333
