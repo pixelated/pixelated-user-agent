@@ -3,7 +3,7 @@
 # Copyright (c) 2014 ThoughtWorks, Inc.
 #
 # Pixelated is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
+
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
@@ -44,8 +44,9 @@ virtualenv $PIXELATED_VIRTUALENV_PATH
 . $PIXELATED_VIRTUALENV_PATH/bin/activate
 pip install --upgrade pip
 pip install --upgrade setuptools
-python setup.py develop --always-unzip
 python setup.py install
+pip uninstall -y scrypt
+pip install scrypt
 deactivate
 
 cd $PIXELATED_VIRTUALENV_PATH
