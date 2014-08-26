@@ -77,7 +77,7 @@ class MailService:
         return self.mailbox.mail(mail_id)
 
     def all_tags(self):
-        return self.mailbox.all_tags();
+        return self.mailbox.all_tags()
 
     def thread(self, thread_id):
         raise NotImplementedError()

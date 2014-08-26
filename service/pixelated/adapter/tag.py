@@ -31,7 +31,7 @@ class Tag:
     @classmethod
     def from_flag(cls, flag):
         if flag in cls.LEAP_FLAGS_TAGS.keys():
-            return Tag(cls.LEAP_FLAGS_TAGS[flag]) 
+            return Tag(cls.LEAP_FLAGS_TAGS[flag])
         if flag.startswith('tag_'):
             return Tag(cls._remove_prefix(flag))
         return None

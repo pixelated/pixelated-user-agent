@@ -18,6 +18,7 @@
 from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.tag import Tag
 
+
 class PixelatedMailbox:
 
     SPECIAL_TAGS = ['inbox', 'sent', 'drafts', 'trash']
