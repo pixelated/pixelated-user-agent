@@ -18,6 +18,28 @@ import json
 
 class Tag:
 
+    LEAP_FLAGS_TAGS = {
+        '\\Deleted': 'trash',
+        '\\Draft': 'drafts',
+        '\\Recent': 'inbox'
+    }
+
+    @classmethod
+    def from_flags(cls, flags):
+        return set(filter(None, (cls.from_flag(flag) for flag in flags)))
+
+    @classmethod
+    def from_flag(cls, flag):
+        if flag in cls.LEAP_FLAGS_TAGS.keys():
+            return Tag(cls.LEAP_FLAGS_TAGS[flag]) 
+        if flag.startswith('tag_'):
+            return Tag(cls._remove_prefix(flag))
+        return None
+
+    @classmethod
+    def _remove_prefix(cls, flag_name):
+        return flag_name.replace('tag_', '', 1)
+
     def __init__(self, name, default=False):
         self.name = name
         self.default = default
@@ -44,35 +66,3 @@ class Tag:
 
     def __repr__(self):
         return self.name
-
-
-class Tags:
-
-    SPECIAL_TAGS = ['inbox', 'sent', 'drafts', 'trash']
-
-    def __init__(self):
-        self.tags = {}
-        self.create_default_tags()
-
-    def create_default_tags(self):
-        for name in self.SPECIAL_TAGS:
-            self.tags[name] = self.add(name)
-
-    def add(self, tag_input):
-        if tag_input.__class__.__name__ == 'Tag':
-            tag_input = tag_input.name
-        tag = Tag(tag_input, tag_input in self.SPECIAL_TAGS)
-        self.tags[tag_input] = tag
-        return tag
-
-    def find(self, name):
-        return self.tags[name]
-
-    def __len__(self):
-        return len(self.tags)
-
-    def __iter__(self):
-        return self.tags.itervalues()
-
-    def as_dict(self):
-        return [tag.as_dict() for tag in self.tags.values()]

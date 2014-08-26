@@ -18,8 +18,7 @@ import unittest
 from pixelated.adapter.mail_service import MailService
 from mock import Mock, MagicMock, patch
 import test_helper
-from pixelated.tags import Tag
-
+from pixelated.adapter.tag import Tag
 
 class TestMailService(unittest.TestCase):
 

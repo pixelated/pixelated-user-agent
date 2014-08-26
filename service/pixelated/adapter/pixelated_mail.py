@@ -13,31 +13,12 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from pixelated.tags import Tag
-from pixelated.tags import Tags
+from pixelated.adapter.tag import Tag
+from pixelated.adapter.status import Status
 import dateutil.parser as dateparser
 
 
 class PixelatedMail:
-
-    LEAP_FLAGS = ['\\Seen',
-                  '\\Answered',
-                  '\\Flagged',
-                  '\\Deleted',
-                  '\\Draft',
-                  '\\Recent',
-                  'List']
-
-    LEAP_FLAGS_STATUSES = {
-        '\\Seen': 'read',
-        '\\Answered': 'replied'
-    }
-
-    LEAP_FLAGS_TAGS = {
-        '\\Deleted': 'trash',
-        '\\Draft': 'drafts',
-        '\\Recent': 'inbox'
-    }
 
     def __init__(self):
         pass
@@ -56,8 +37,7 @@ class PixelatedMail:
         return mail
 
     def _extract_status(self):
-        flags = self.leap_mail.getFlags()
-        return [converted for flag, converted in self.LEAP_FLAGS_STATUSES.items() if flag in flags]
+        return Status.from_flags(self.leap_mail.getFlags())
 
     def _extract_headers(self):
         temporary_headers = {}
@@ -69,20 +49,8 @@ class PixelatedMail:
 
     def _extract_tags(self):
         flags = self.leap_mail.getFlags()
-        tag_names = self._converted_tags(flags) + self._custom_tags(flags)
-        tags = []
-        for tag in tag_names:
-            tags.append(Tag(tag))
+        tags = set(Tag.from_flag(flag) for flag in flags)
         return tags
-
-    def _converted_tags(self, flags):
-        return [converted for flag, converted in self.LEAP_FLAGS_TAGS.items() if flag in flags]
-
-    def _custom_tags(self, flags):
-        return [self._remove_prefix(flag) for flag in self.leap_mail.getFlags() if flag.startswith('tag_')]
-
-    def _remove_prefix(self, flag_name):
-        return flag_name.replace('tag_', '', 1)
 
     def update_tags(self, tags):
         self.tags = [Tag(tag) for tag in tags]
@@ -93,11 +61,12 @@ class PixelatedMail:
 
     def as_dict(self):
         tags = [tag.name for tag in self.tags]
+        statuses = [status.name for status in self.status]
         return {
             'header': self.headers,
             'ident': self.ident,
             'tags': tags,
-            'status': self.status,
+            'status': statuses,
             'security_casing': self.security_casing,
             'body': self.body
         }

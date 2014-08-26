@@ -26,7 +26,6 @@ import pixelated.reactor_manager as reactor_manager
 import pixelated.search_query as search_query
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.pixelated_mail import PixelatedMail
-from pixelated.tags import Tags
 
 static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "web-ui", "app"))
 # this is a workaround for packaging
@@ -105,7 +104,7 @@ def delete_mails(mail_id):
 @app.route('/tags')
 def tags():
     tags = mail_service.all_tags()
-    return respond_json(tags.as_dict())
+    return respond_json([tag.as_dict() for tag in tags])
 
 
 @app.route('/mail/<mail_id>')

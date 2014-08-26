@@ -16,8 +16,8 @@
 import unittest
 
 from pixelated.adapter.pixelated_mail import PixelatedMail
-from pixelated.tags import Tag
-from pixelated.tags import Tags
+from pixelated.adapter.tag import Tag
+from pixelated.adapter.status import Status
 import test_helper
 
 
@@ -34,14 +34,6 @@ class TestPixelatedMail(unittest.TestCase):
     def test_leap_draft_flag_is_translated_to_draft_tag(self):
         pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(leap_flags=['\\Draft']))
         self.assertIn(Tag('drafts'), pixelated_mail.tags)
-
-    def test_leap_seen_flag_is_translated_to_read_status(self):
-        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(leap_flags=['\\Seen']))
-        self.assertIn('read', pixelated_mail.status)
-
-    def test_leap_answered_flag_is_translated_to_replied_status(self):
-        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(leap_flags=['\\Answered']))
-        self.assertIn('replied', pixelated_mail.status)
 
     def test_leap_flags_that_are_custom_tags_are_handled(self):
         pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_flags=['tag_work']))

@@ -22,7 +22,6 @@ from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.session import LeapSessionFactory
 from pixelated.bitmask_libraries.auth import LeapCredentials
 from pixelated.adapter.pixelated_mail import PixelatedMail
-from pixelated.tags import Tags
 
 
 class MailService:
@@ -34,7 +33,6 @@ class MailService:
             self.server_name = server_name
             self.mailbox_name = 'INBOX'
             self.certs_home = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "certificates"))
-            self.tags = Tags()
             self._open_leap_session()
         except:
             traceback.print_exc(file=sys.stdout)
@@ -64,10 +62,11 @@ class MailService:
 
     def _update_tag_list(self, tags):
         for tag in tags:
-            self.tags.add(tag)
+            pass
+            # self.tags.add(tag)
 
     def _update_flags(self, new_tags, mail_id):
-        new_tags_flag_name = ['tag_' + tag.name for tag in new_tags if tag.name not in Tags.SPECIAL_TAGS]
+        new_tags_flag_name = ['tag_' + tag.name for tag in new_tags if tag.name not in ['inbox', 'drafts', 'sent', 'trash']]
         self.set_flags(mail_id, new_tags_flag_name)
 
     def set_flags(self, mail_id, new_tags_flag_name):
@@ -80,7 +79,7 @@ class MailService:
                 return PixelatedMail.from_leap_mail(message)
 
     def all_tags(self):
-        return self.tags
+        return []
 
     def thread(self, thread_id):
         raise NotImplementedError()
