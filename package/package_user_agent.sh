@@ -53,8 +53,8 @@ cd $PIXELATED_VIRTUALENV_PATH
 for file in $(grep -l '/tmp/pix-user-agent-build' bin/*); do 
         sed -i 's|/tmp/pix-user-agent-build||' $file;
 done
-find . -perm 600 | xargs chmod 644
-find . -perm 640 | xargs chmod 644
+find . -perm 600 | xargs --no-run-if-empty chmod 644
+find . -perm 640 | xargs --no-run-if-empty chmod 644
 cd -
 cd ..
 
