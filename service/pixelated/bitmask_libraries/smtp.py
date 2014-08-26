@@ -32,6 +32,7 @@ class LeapSmtp(object):
         self._smtp_port = None
         self._smtp_service = None
         self._twisted_port = 10000 + int(random.random() * 5000)
+        print "## SMTP port: " + str(self._twisted_port)
 
     def smtp_info(self):
         return ('localhost', LeapSmtp.SMTP_PORT)

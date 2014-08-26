@@ -39,21 +39,27 @@ class PixelatedMail:
         '\\Recent': 'inbox'
     }
 
-    def __init__(self, leap_mail):
-        self.leap_mail = leap_mail
-        self.body = leap_mail.bdoc.content['raw']
-        self.headers = self.extract_headers()
-        self.date = dateparser.parse(self.headers['date'])
-        self.ident = leap_mail.getUID()
-        self.status = self.extract_status()
-        self.security_casing = {}
-        self.tags = self.extract_tags()
+    def __init__(self):
+        pass
 
-    def extract_status(self):
+    @staticmethod
+    def from_leap_mail(leap_mail):
+        mail = PixelatedMail()
+        mail.leap_mail = leap_mail
+        mail.body = leap_mail.bdoc.content['raw']
+        mail.headers = mail._extract_headers()
+        mail.date = dateparser.parse(mail.headers['date'])
+        mail.ident = leap_mail.getUID()
+        mail.status = mail._extract_status()
+        mail.security_casing = {}
+        mail.tags = mail._extract_tags()
+        return mail
+
+    def _extract_status(self):
         flags = self.leap_mail.getFlags()
         return [converted for flag, converted in self.LEAP_FLAGS_STATUSES.items() if flag in flags]
 
-    def extract_headers(self):
+    def _extract_headers(self):
         temporary_headers = {}
         for header, value in self.leap_mail.hdoc.content['headers'].items():
             temporary_headers[header.lower()] = value
@@ -61,7 +67,7 @@ class PixelatedMail:
             temporary_headers['to'] = [temporary_headers['to']]
         return temporary_headers
 
-    def extract_tags(self):
+    def _extract_tags(self):
         flags = self.leap_mail.getFlags()
         tag_names = self._converted_tags(flags) + self._custom_tags(flags)
         tags = []
@@ -95,3 +101,7 @@ class PixelatedMail:
             'security_casing': self.security_casing,
             'body': self.body
         }
+
+    @staticmethod
+    def from_dict(mail_dict):
+        return PixelatedMail()

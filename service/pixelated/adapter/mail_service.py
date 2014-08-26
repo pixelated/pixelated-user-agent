@@ -52,7 +52,7 @@ class MailService:
 
     def mails(self, query):
         mails = self.mailbox.messages or []
-        mails = [PixelatedMail(mail) for mail in mails]
+        mails = [PixelatedMail.from_leap_mail(mail) for mail in mails]
         return mails
 
     def update_tags(self, mail_id, new_tags):
@@ -77,7 +77,7 @@ class MailService:
     def mail(self, mail_id):
         for message in self.mailbox.messages:
             if message.getUID() == int(mail_id):
-                return PixelatedMail(message)
+                return PixelatedMail.from_leap_mail(message)
 
     def all_tags(self):
         return self.tags
