@@ -22,6 +22,7 @@ from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.session import LeapSessionFactory
 from pixelated.bitmask_libraries.auth import LeapCredentials
 from pixelated.adapter.pixelated_mail import PixelatedMail
+from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 
 
 class MailService:
@@ -46,12 +47,10 @@ class MailService:
 
     @property
     def mailbox(self):
-        return self.account.getMailbox(self.mailbox_name)
+        return PixelatedMailbox(self.account.getMailbox(self.mailbox_name))
 
     def mails(self, query):
-        mails = self.mailbox.messages or []
-        mails = [PixelatedMail.from_leap_mail(mail) for mail in mails]
-        return mails
+        return self.mailbox.mails()
 
     def update_tags(self, mail_id, new_tags):
         mail = self.mail(mail_id)
@@ -66,20 +65,19 @@ class MailService:
             # self.tags.add(tag)
 
     def _update_flags(self, new_tags, mail_id):
-        new_tags_flag_name = ['tag_' + tag.name for tag in new_tags if tag.name not in ['inbox', 'drafts', 'sent', 'trash']]
+        new_tags_flag_name = ['tag_' + tag.name for tag in new_tags if tag.name not in PixelatedMailbox.SPECIAL_TAGS]
         self.set_flags(mail_id, new_tags_flag_name)
 
     def set_flags(self, mail_id, new_tags_flag_name):
         observer = defer.Deferred()
-        self.mailbox.messages.set_flags(self.mailbox, [mail_id], tuple(new_tags_flag_name), 1, observer)
+        leap_mailbox = self.account.getMailbox(self.mailbox_name)
+        self.mailbox.messages.set_flags(leap_mailbox, [mail_id], tuple(new_tags_flag_name), 1, observer)
 
     def mail(self, mail_id):
-        for message in self.mailbox.messages:
-            if message.getUID() == int(mail_id):
-                return PixelatedMail.from_leap_mail(message)
+        return self.mailbox.mail(mail_id)
 
     def all_tags(self):
-        return []
+        return self.mailbox.all_tags();
 
     def thread(self, thread_id):
         raise NotImplementedError()

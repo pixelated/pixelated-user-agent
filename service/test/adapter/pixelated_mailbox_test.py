@@ -21,19 +21,15 @@ import test_helper
 from pixelated.adapter.tag import Tag
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 
-class TestMailService(unittest.TestCase):
+class TestPixelatedMailbox(unittest.TestCase):
 
     @patch.object(MailService, 'set_flags', return_value=None)
-    def test_custom_tags_get_created_if_not_exists(self, mockSetFlags):
+    def test_retrieve_all_tags_from_mailbox(self, mockSetFlags):
         MailService._open_leap_session = lambda self: None
-        MailService.mailbox = PixelatedMailbox(Mock(messages=[test_helper.leap_mail(uid=6, leap_flags=['\\Recent'])]))
+        leap_flags = ['\\Deleted', '\\Draft', '\\Recent', 'tag_custom', 'should_ignore_all_from_here', 'List']
+        MailService.mailbox = PixelatedMailbox(test_helper.leap_mailbox(leap_flags=leap_flags))
         MailService.account = Mock(return_value=MagicMock())
 
         mailservice = MailService('username', 'password', 'leap_server')
 
-        new_tags = ['test', 'inbox']
-        updated_tags = mailservice.update_tags(6, new_tags)
-
-        self.assertEquals(set([Tag('test'), Tag('inbox')]), set(updated_tags))
-        # make sure that special tags are skipped when setting leap flags (eg.: tag_inbox)
-        mockSetFlags.assert_called_with(6, ['tag_test'])
+        self.assertEquals(set([Tag('trash'), Tag('inbox'), Tag('drafts'), Tag('custom')]), mailservice.all_tags())
