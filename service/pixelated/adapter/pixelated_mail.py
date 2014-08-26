@@ -73,4 +73,9 @@ class PixelatedMail:
 
     @staticmethod
     def from_dict(mail_dict):
-        return PixelatedMail()
+        mail = PixelatedMail()
+        mail.headers = mail_dict['header']
+        mail.body = mail_dict['body']
+        mail.ident = mail_dict['ident']
+        mail.tags = mail_dict['tags']
+        return mail

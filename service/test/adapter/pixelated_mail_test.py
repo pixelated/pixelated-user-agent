@@ -43,7 +43,7 @@ class TestPixelatedMail(unittest.TestCase):
         pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_flags=['tag_tag_work_tag_']))
         self.assertIn(Tag('tag_work_tag_'), pixelated_mail.tags)
 
-    def from_dict(self):
+    def test_from_dict(self):
         mail_dict = {
             'body': 'Este \xe9 o corpo',
             'header': {
@@ -58,10 +58,10 @@ class TestPixelatedMail(unittest.TestCase):
 
         mail = PixelatedMail.from_dict(mail_dict)
 
-        self.assertEqual(mail.headers.cc, ['cc@pixelated.com'])
-        self.assertEqual(mail.headers.to, ['to@pixelated.com'])
-        self.assertEqual(mail.headers.bcc, ['bcc@pixelated.com'])
-        self.assertEqual(mail.headers.subject, 'Oi')
+        self.assertEqual(mail.headers['cc'], ['cc@pixelated.com'])
+        self.assertEqual(mail.headers['to'], ['to@pixelated.com'])
+        self.assertEqual(mail.headers['bcc'], ['bcc@pixelated.com'])
+        self.assertEqual(mail.headers['subject'], 'Oi')
         self.assertEqual(mail.ident, '')
         self.assertEqual(mail.tags, ['sent'])
         self.assertEqual(mail.body, 'Este \xe9 o corpo')
