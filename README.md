@@ -3,11 +3,12 @@ Pixelated User Agent
 
 This contains the Pixelated User Agent, which is composed of a web UI written as a JavaScript single page app, and a service that provides a REST-ful interface that the UI can use for all User Agent actions. For now, all of these actions are mail-related but this might evolve later. The default service is written to talk to a Pixelated or LEAP provider.
 
-**The pixelated User Agent is still in early development state!**
+>**The Pixelated User Agent is still in early development state!**
 
-        Some things may not yet work the way you expect it to.
+>Some things may not yet work the way you expect it to.
+>Setting up the service (as opposed to the fake service or inbox-app) is still rather troublesome and so far it only serves limited functionality.
 
-        Especially setting up the service (as opposed to the fake service or inbox-app) is still rather troublesome and so far it only serves limited functionality.
+
 
 # Running it
 The User Agent is composed of 2 components:
