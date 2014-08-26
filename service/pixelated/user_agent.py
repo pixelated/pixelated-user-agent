@@ -29,6 +29,9 @@ from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.tags import Tags
 
 static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "web-ui", "app"))
+# this is a workaround for packaging
+if not os.path.exists(static_folder):
+    static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))
 app = Flask(__name__, static_url_path='', static_folder=static_folder)
 app.config.from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
 mail_service = MailService(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'], app.config['LEAP_SERVER_NAME'])
