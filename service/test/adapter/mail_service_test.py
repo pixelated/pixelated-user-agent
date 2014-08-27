@@ -21,6 +21,7 @@ import test_helper
 from pixelated.adapter.tag import Tag
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 
+
 class TestMailService(unittest.TestCase):
 
     @patch.object(MailService, 'set_flags', return_value=None)
