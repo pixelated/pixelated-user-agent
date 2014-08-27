@@ -48,9 +48,7 @@ class PixelatedMail:
         return temporary_headers
 
     def _extract_tags(self):
-        flags = self.leap_mail.getFlags()
-        tags = set(Tag.from_flag(flag) for flag in flags)
-        return tags
+        return Tag.from_flags(self.leap_mail.getFlags())
 
     def update_tags(self, tags):
         self.tags = [Tag(tag) for tag in tags]

@@ -17,7 +17,6 @@ import unittest
 
 from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.tag import Tag
-from pixelated.adapter.status import Status
 import test_helper
 
 
@@ -42,6 +41,11 @@ class TestPixelatedMail(unittest.TestCase):
     def test_custom_tags_containing_our_prefix_are_handled(self):
         pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_flags=['tag_tag_work_tag_']))
         self.assertIn(Tag('tag_work_tag_'), pixelated_mail.tags)
+
+    def test_non_tags_flags_are_ignored(self):
+        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(leap_flags=['\\Recent'],
+                                                      extra_flags=['this_is_not_a_tag', 'tag_custom_tag']))
+        self.assertEquals(set([Tag('custom_tag'), Tag('inbox')]), pixelated_mail.tags)
 
     def test_from_dict(self):
         mail_dict = {
