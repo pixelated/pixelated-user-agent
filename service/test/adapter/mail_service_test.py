@@ -24,10 +24,10 @@ from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 
 class TestMailService(unittest.TestCase):
 
-    @patch.object(MailService, 'set_flags', return_value=None)
+    @patch.object(MailService, '_set_mail_flags', return_value=None)
     def test_custom_tags_get_created_if_not_exists(self, mockSetFlags):
         MailService._open_leap_session = lambda self: None
-        MailService.mailbox = PixelatedMailbox(Mock(messages=[test_helper.leap_mail(uid=6, leap_flags=['\\Recent'])]))
+        MailService.mailbox = PixelatedMailbox(test_helper.leap_mailbox(leap_flags=['\\Recent']))
         MailService.account = Mock(return_value=MagicMock())
 
         mailservice = MailService('username', 'password', 'leap_server')

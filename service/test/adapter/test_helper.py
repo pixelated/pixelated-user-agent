@@ -35,4 +35,5 @@ def leap_mail(uid=0, leap_flags=LEAP_FLAGS, extra_flags=[], headers={'date': str
 
 def leap_mailbox(leap_flags=LEAP_FLAGS, extra_flags=[]):
     flags = leap_flags + extra_flags
-    return Mock(getFlags=Mock(return_value=flags))
+    return Mock(getFlags=Mock(return_value=flags),
+                messages=[leap_mail(uid=6, leap_flags=[], extra_flags=[])])

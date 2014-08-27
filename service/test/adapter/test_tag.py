@@ -16,7 +16,6 @@
 import unittest
 
 from pixelated.adapter.tag import Tag
-import test_helper
 
 
 class TestTag(unittest.TestCase):
@@ -44,3 +43,19 @@ class TestTag(unittest.TestCase):
     def test_bulk_conversion(self):
         tags = Tag.from_flags(['\\Answered', '\\Seen', '\\Recent', 'tag_a_custom', 'List'])
         self.assertEquals(set([Tag('inbox'), Tag('a_custom')]), tags)
+
+    def test_inbox_tag_is_translated_to_leap_recent_flag(self):
+        flag = Tag('inbox').to_flag()
+        self.assertEquals('\\Recent', flag)
+
+    def test_trash_tag_is_translated_to_leap_deleted_flag(self):
+        flag = Tag('trash').to_flag()
+        self.assertEquals('\\Deleted', flag)
+
+    def test_drafts_tag_is_translated_to_leap_draft_flag(self):
+        flag = Tag('drafts').to_flag()
+        self.assertEquals('\\Draft', flag)
+
+    def test_custom_tag_has_prefix_when_translated_to_flag(self):
+        flag = Tag('work').to_flag()
+        self.assertEquals('tag_work', flag)

@@ -13,7 +13,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import json
 
 
 class Tag:
@@ -35,6 +34,12 @@ class Tag:
         if flag.startswith('tag_'):
             return Tag(cls._remove_prefix(flag))
         return None
+
+    def to_flag(self):
+        for flag, tag in self.LEAP_FLAGS_TAGS.items():
+            if tag == str(self.name):
+                return flag
+        return 'tag_' + str(self.name)
 
     @classmethod
     def _remove_prefix(cls, flag_name):

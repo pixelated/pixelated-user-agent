@@ -15,8 +15,6 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
 
-from pixelated.adapter.mail_service import MailService
-from mock import Mock, MagicMock, patch
 import test_helper
 from pixelated.adapter.tag import Tag
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
@@ -24,13 +22,20 @@ from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 
 class TestPixelatedMailbox(unittest.TestCase):
 
-    @patch.object(MailService, 'set_flags', return_value=None)
-    def test_retrieve_all_tags_from_mailbox(self, mockSetFlags):
-        MailService._open_leap_session = lambda self: None
+    def test_retrieve_all_tags_from_mailbox(self):
         leap_flags = ['\\Deleted', '\\Draft', '\\Recent', 'tag_custom', 'should_ignore_all_from_here', 'List']
-        MailService.mailbox = PixelatedMailbox(test_helper.leap_mailbox(leap_flags=leap_flags))
-        MailService.account = Mock(return_value=MagicMock())
+        mailbox = PixelatedMailbox(test_helper.leap_mailbox(leap_flags=leap_flags))
 
-        mailservice = MailService('username', 'password', 'leap_server')
+        self.assertEquals(set([Tag('trash'), Tag('inbox'), Tag('drafts'), Tag('custom')]), mailbox.all_tags())
 
-        self.assertEquals(set([Tag('trash'), Tag('inbox'), Tag('drafts'), Tag('custom')]), mailservice.all_tags())
+    def test_new_tags_are_added_to_mailbox(self):
+        leap_flags = ['\\Deleted', 'tag_custom_one', 'tag_custom_two']
+        leap_mailbox_mock = test_helper.leap_mailbox(leap_flags=leap_flags)
+        mailbox = PixelatedMailbox(leap_mailbox_mock)
+        tags = [Tag('custom_one'), Tag('custom_three')]
+        mailbox.update_tags(tags)
+
+        expected = set(('\\Deleted', 'tag_custom_one', 'tag_custom_two', 'tag_custom_three'))
+        actual_args = set(leap_mailbox_mock.setFlags.call_args[0][0])
+
+        self.assertEquals(expected, actual_args)

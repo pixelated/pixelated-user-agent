@@ -21,8 +21,8 @@ from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.session import LeapSessionFactory
 from pixelated.bitmask_libraries.auth import LeapCredentials
-from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
+from pixelated.adapter.tag import Tag
 
 
 class MailService:
@@ -55,20 +55,19 @@ class MailService:
     def update_tags(self, mail_id, new_tags):
         mail = self.mail(mail_id)
         new_tags = mail.update_tags(new_tags)
-        self._update_flags(new_tags, mail_id)
-        self._update_tag_list(new_tags)
+        self._update_mail_flags(new_tags, mail_id)
+        self._update_mailbox_tags(new_tags)
         return new_tags
 
-    def _update_tag_list(self, tags):
-        for tag in tags:
-            pass
-            # self.tags.add(tag)
+    def _update_mailbox_tags(self, str_tags):
+        tags = [Tag(str_tag) for str_tag in str_tags]
+        self.mailbox.update_tags(tags)
 
-    def _update_flags(self, new_tags, mail_id):
+    def _update_mail_flags(self, new_tags, mail_id):
         new_tags_flag_name = ['tag_' + tag.name for tag in new_tags if tag.name not in PixelatedMailbox.SPECIAL_TAGS]
-        self.set_flags(mail_id, new_tags_flag_name)
+        self._set_mail_flags(mail_id, new_tags_flag_name)
 
-    def set_flags(self, mail_id, new_tags_flag_name):
+    def _set_mail_flags(self, mail_id, new_tags_flag_name):
         observer = defer.Deferred()
         leap_mailbox = self.account.getMailbox(self.mailbox_name)
         self.mailbox.messages.set_flags(leap_mailbox, [mail_id], tuple(new_tags_flag_name), 1, observer)

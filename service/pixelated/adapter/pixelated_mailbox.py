@@ -42,3 +42,10 @@ class PixelatedMailbox:
 
     def all_tags(self):
         return Tag.from_flags(self.leap_mailbox.getFlags())
+
+    def update_tags(self, tags):
+        new_flags = set(tag.to_flag() for tag in tags)
+        current_flags = set(self.leap_mailbox.getFlags())
+
+        flags = tuple(current_flags.union(new_flags))
+        self.leap_mailbox.setFlags(flags)
