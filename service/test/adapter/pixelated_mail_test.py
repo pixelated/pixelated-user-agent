@@ -21,6 +21,17 @@ import test_helper
 
 
 class TestPixelatedMail(unittest.TestCase):
+    mail_dict = {
+        'body': 'Este \xe9 o corpo',
+        'header': {
+            'cc': ['cc@pixelated.org'],
+            'to': ['to@pixelated.org'],
+            'subject': 'Oi',
+            'bcc': ['bcc@pixelated.org']
+        },
+        'ident': '',
+        'tags': ['sent']
+    }
 
     def test_leap_recent_flag_is_translated_to_inbox_tag(self):
         pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(leap_flags=['\\Recent']))
@@ -48,23 +59,12 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEquals(set([Tag('custom_tag'), Tag('inbox')]), pixelated_mail.tags)
 
     def test_from_dict(self):
-        mail_dict = {
-            'body': 'Este \xe9 o corpo',
-            'header': {
-                'cc': ['cc@pixelated.com'],
-                'to': ['to@pixelated.com'],
-                'subject': 'Oi',
-                'bcc': ['bcc@pixelated.com']
-            },
-            'ident': '',
-            'tags': ['sent']
-        }
 
-        mail = PixelatedMail.from_dict(mail_dict)
+        mail = PixelatedMail.from_dict(self.mail_dict)
 
-        self.assertEqual(mail.headers['cc'], ['cc@pixelated.com'])
-        self.assertEqual(mail.headers['to'], ['to@pixelated.com'])
-        self.assertEqual(mail.headers['bcc'], ['bcc@pixelated.com'])
+        self.assertEqual(mail.headers['cc'], ['cc@pixelated.org'])
+        self.assertEqual(mail.headers['to'], ['to@pixelated.org'])
+        self.assertEqual(mail.headers['bcc'], ['bcc@pixelated.org'])
         self.assertEqual(mail.headers['subject'], 'Oi')
         self.assertEqual(mail.ident, '')
         self.assertEqual(mail.tags, ['sent'])
@@ -75,3 +75,13 @@ class TestPixelatedMail(unittest.TestCase):
         current_tags, removed_tags = pixelated_mail.update_tags(set([Tag('custom_1'), Tag('custom_3')]))
         self.assertEquals(set([Tag('custom_3'), Tag('custom_1')]), current_tags)
         self.assertEquals(set([Tag('custom_2')]), removed_tags)
+
+    def test_to_mime_multipart(self):
+        mail = PixelatedMail.from_dict(self.mail_dict)
+
+        mime_multipart = mail.to_mime_multipart()
+
+        self.assertRegexpMatches(mime_multipart.as_string(), "\nTo: to@pixelated.org\n")
+        self.assertRegexpMatches(mime_multipart.as_string(), "\nSubject: Oi\n")
+        self.assertRegexpMatches(mime_multipart.as_string(), "\nEste \xe9 o corpo")
+

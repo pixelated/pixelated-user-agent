@@ -16,6 +16,8 @@
 from pixelated.adapter.tag import Tag
 from pixelated.adapter.status import Status
 import dateutil.parser as dateparser
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
 
 
 class PixelatedMail:
@@ -70,6 +72,13 @@ class PixelatedMail:
             'security_casing': self.security_casing,
             'body': self.body
         }
+
+    def to_mime_multipart(self):
+        mime_multipart = MIMEMultipart()
+        mime_multipart['To'] = self.headers['to'][0]
+        mime_multipart['Subject'] = self.headers['subject']
+        mime_multipart.attach(MIMEText(self.body, 'plain'))
+        return mime_multipart
 
     @staticmethod
     def from_dict(mail_dict):
