@@ -1,4 +1,0 @@
-#!/bin/bash
-
-export PIXELATED_SERVICE_CFG=../config/inboxapp.cfg
-python app/pixelated_service.py
