@@ -41,11 +41,18 @@ class PixelatedMailbox:
                 return PixelatedMail.from_leap_mail(message)
 
     def all_tags(self):
-        return Tag.from_flags(self.leap_mailbox.getFlags())
+        return Tag.from_flags(self._getFlags())
+
+    def _getFlags(self):
+        # XXX Temporary workaround while getFlags from leap is disabled
+        mbox = self.leap_mailbox._get_mbox_doc()
+        if not mbox:
+            return self.leap_mailbox.getFlags()
+        return mbox.content.get(self.leap_mailbox.FLAGS_KEY, [])
 
     def update_tags(self, tags):
         new_flags = set(tag.to_flag() for tag in tags)
-        current_flags = set(self.leap_mailbox.getFlags())
+        current_flags = set(self._getFlags())
 
         flags = tuple(current_flags.union(new_flags))
         self.leap_mailbox.setFlags(flags)
