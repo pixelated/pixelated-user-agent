@@ -32,9 +32,7 @@ static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", ".
 if not os.path.exists(static_folder):
     static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))
 app = Flask(__name__, static_url_path='', static_folder=static_folder)
-app.config.from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
-leap_session = open_leap_session(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'], app.config['LEAP_SERVER_NAME'])
-mail_service = MailService(leap_session)
+
 
 
 def respond_json(entity):
@@ -143,6 +141,10 @@ def index():
 def setup():
     debug_enabled = os.environ.get('DEBUG', False)
     reactor_manager.start_reactor(logging=debug_enabled)
+    app.config.from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
+    leap_session = open_leap_session(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'], app.config['LEAP_SERVER_NAME'])
+    mail_service = MailService(leap_session)
+    global mail_service
     mail_service.start()
     app.run(host=app.config['HOST'], debug=debug_enabled, port=app.config['PORT'])
 
