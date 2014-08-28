@@ -65,7 +65,8 @@ class TestMailService(unittest.TestCase):
         mailbox.messages = [matching_mail, not_matching_mail]
         mailbox.all_tags.return_value = set()
         account = MagicMock()
-        account.mailboxes = [mailbox]
+        account.mailboxes = ['inbox']
+        account.getMailbox.return_value = mailbox
 
         leap_session = MagicMock(account=account)
 

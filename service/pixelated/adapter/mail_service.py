@@ -57,8 +57,8 @@ class MailService:
         mails = []
         if query['tags']:
             tags = [Tag(tag) for tag in query['tags']]
-            for leap_mailbox in self.account.mailboxes:
-                mailbox = PixelatedMailbox(leap_mailbox)
+            for leap_mailbox_name in self.account.mailboxes:
+                mailbox = PixelatedMailbox(self.account.getMailbox(leap_mailbox_name))
                 if len(mailbox.all_tags().intersection(tags)):
                     # mailbox has at least one mail with tag
                     for mail in mailbox.mails():
