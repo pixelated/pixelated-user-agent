@@ -36,6 +36,7 @@ app.config.from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
 leap_session = open_leap_session(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'], app.config['LEAP_SERVER_NAME'])
 mail_service = MailService(leap_session)
 
+
 def respond_json(entity):
     response = json.dumps(entity)
     return Response(response=response, mimetype="application/json")
@@ -57,6 +58,7 @@ def send_mail():
     mail = PixelatedMail.from_dict(request.json)
     mail_service.send(mail)
     return respond_json(None)
+
 
 @app.route('/mails', methods=['PUT'])
 def update_draft():
@@ -127,9 +129,11 @@ def mark_mail_as_read(mail_id):
 def contacts():
     pass
 
+
 @app.route('/draft_reply_for/<mail_id>')
 def draft_reply_for(mail_id):
     pass
+
 
 @app.route('/')
 def index():

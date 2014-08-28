@@ -51,7 +51,7 @@ class MailService:
 
     def start(self):
         try:
-            self.smtp_server =  self._create_smtp_server()
+            self.smtp_server = self._create_smtp_server()
             self.smtp_client = self._create_smtp_client(self.smtp_server.smtp_info())
         except:
             traceback.print_exc(file=sys.stdout)

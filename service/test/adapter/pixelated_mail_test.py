@@ -91,4 +91,3 @@ class TestPixelatedMail(unittest.TestCase):
         smtp_format = mail.to_smtp_format(_from='pixelated@org')
 
         self.assertRegexpMatches(smtp_format, "\nFrom: pixelated@org")
-
