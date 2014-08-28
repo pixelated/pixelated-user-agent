@@ -34,7 +34,6 @@ if not os.path.exists(static_folder):
 app = Flask(__name__, static_url_path='', static_folder=static_folder)
 
 
-
 def respond_json(entity):
     response = json.dumps(entity)
     return Response(response=response, mimetype="application/json")
