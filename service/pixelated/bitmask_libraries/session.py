@@ -118,12 +118,7 @@ class LeapSessionFactory(object):
         incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad,
                                                                    account, auth)
 
-        smtp = self._create_smtp_service(nicknym, auth)
-        smtp.start()
-
-        session = LeapSession(self._provider, auth, soledad, nicknym, account, incoming_mail_fetcher)
-
-        return session
+        return LeapSession(self._provider, auth, soledad, nicknym, account, incoming_mail_fetcher)
 
     def _lookup_session(self, key):
         global SESSIONS
@@ -161,9 +156,6 @@ class LeapSessionFactory(object):
     def _create_incoming_mail_fetcher(self, nicknym, soledad_session, account, auth):
         return LeapIncomingMail(nicknym.keymanager, soledad_session.soledad, account,
                                 self._config.fetch_interval_in_s, self._account_email(auth))
-
-    def _create_smtp_service(self, nicknym, auth):
-        return LeapSmtp(self._provider, nicknym.keymanager, auth)
 
     def _account_email(self, auth):
         domain = self._provider.domain

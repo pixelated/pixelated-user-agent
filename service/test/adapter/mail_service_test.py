@@ -77,3 +77,22 @@ class TestMailService(unittest.TestCase):
         # then
         self.assertEqual(1, len(mails))
         self.assertEqual(set([Tag('custom_tag')]), mails[0].tags)
+
+
+    def test_send_mail(self):
+        leap_session = Mock(account_email=lambda: "username@leap_server")
+        mail_service = MailService(leap_session)
+        mail_service._create_smtp_server = lambda: None
+        mail_service._create_smtp_server = lambda: None
+
+        mail_service.smtp_client = Mock()
+        mail = Mock(
+            to_smtp_format=lambda _from=None: "mail as string",
+            get_to=lambda: 'to@pixelated.org'
+        )
+
+        mail_service.send(mail)
+
+        mail_service.smtp_client.sendmail.assert_called_with('username@leap_server', 'to@pixelated.org', "mail as string")
+
+

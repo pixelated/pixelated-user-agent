@@ -36,7 +36,6 @@ app.config.from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
 leap_session = open_leap_session(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'], app.config['LEAP_SERVER_NAME'])
 mail_service = MailService(leap_session)
 
-
 def respond_json(entity):
     response = json.dumps(entity)
     return Response(response=response, mimetype="application/json")
@@ -54,14 +53,10 @@ def disabled_features():
 
 
 @app.route('/mails', methods=['POST'])
-def save_draft_or_send():
-    ident = None
-    if 'sent' in request.json['tags']:
-        ident = mail_service.send_draft(converter.to_mail(request.json, account))
-    else:
-        ident = mail_service.save_draft(converter.to_mail(request.json, account))
-    return respond_json({'ident': ident})
-
+def send_mail():
+    mail = PixelatedMail.from_dict(request.json)
+    mail_service.send(mail)
+    return respond_json(None)
 
 @app.route('/mails', methods=['PUT'])
 def update_draft():
@@ -130,19 +125,11 @@ def mark_mail_as_read(mail_id):
 
 @app.route('/contacts')
 def contacts():
-    query = search_query.compile(request.args.get("q"))
-    desired_contacts = [converter.from_contact(contact) for contact in mail_service.all_contacts(query)]
-    return respond_json({'contacts': desired_contacts})
-
+    pass
 
 @app.route('/draft_reply_for/<mail_id>')
 def draft_reply_for(mail_id):
-    draft = mail_service.draft_reply_for(mail_id)
-    if draft:
-        return respond_json(converter.from_mail(draft))
-    else:
-        return respond_json(None)
-
+    pass
 
 @app.route('/')
 def index():
@@ -152,6 +139,7 @@ def index():
 def setup():
     debug_enabled = os.environ.get('DEBUG', False)
     reactor_manager.start_reactor(logging=debug_enabled)
+    mail_service.start()
     app.run(host=app.config['HOST'], debug=debug_enabled, port=app.config['PORT'])
 
 

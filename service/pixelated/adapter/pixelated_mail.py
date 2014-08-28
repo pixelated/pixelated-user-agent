@@ -38,6 +38,12 @@ class PixelatedMail:
         mail.tags = mail._extract_tags()
         return mail
 
+    def set_from(self, _from):
+        self.headers['from'] = [_from]
+
+    def get_to(self):
+        return self.headers['to'][0]
+
     def _extract_status(self):
         return Status.from_flags(self.leap_mail.getFlags())
 
@@ -80,11 +86,20 @@ class PixelatedMail:
         mime_multipart.attach(MIMEText(self.body, 'plain'))
         return mime_multipart
 
+    def to_smtp_format(self, _from=None):
+        mime_multipart = self.to_mime_multipart()
+        mime_multipart['From'] = _from
+        return mime_multipart.as_string()
+
     @staticmethod
     def from_dict(mail_dict):
-        mail = PixelatedMail()
-        mail.headers = mail_dict['header']
-        mail.body = mail_dict['body']
-        mail.ident = mail_dict['ident']
-        mail.tags = mail_dict['tags']
-        return mail
+        return from_dict(mail_dict)
+
+
+def from_dict(mail_dict):
+    mail = PixelatedMail()
+    mail.headers = mail_dict['header']
+    mail.body = mail_dict['body']
+    mail.ident = mail_dict['ident']
+    mail.tags = mail_dict['tags']
+    return mail

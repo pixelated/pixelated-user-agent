@@ -16,6 +16,8 @@
 import traceback
 import sys
 import os
+import smtplib
+from pixelated.bitmask_libraries.smtp import LeapSmtp
 from twisted.internet import defer
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
@@ -44,7 +46,26 @@ class MailService:
     def __init__(self, leap_session):
         self.leap_session = leap_session
         self.account = leap_session.account
+        self.user_email = leap_session.account_email()
         self.mailbox_name = 'INBOX'
+
+    def start(self):
+        try:
+            self.smtp_server =  self._create_smtp_server()
+            self.smtp_client = self._create_smtp_client(self.smtp_server.smtp_info())
+        except:
+            traceback.print_exc(file=sys.stdout)
+            raise
+
+    def _create_smtp_server(self):
+        server = LeapSmtp(self.leap_session.provider, self.leap_session.nicknym.keymanager, self.leap_session.srp_session)
+        server.start()
+        return server
+
+    def _create_smtp_client(self, smtp_info):
+        smtp_servername, smtp_port = smtp_info
+        client = smtplib.SMTP(smtp_servername, smtp_port)
+        return client
 
     @property
     def mailbox(self):
@@ -97,6 +118,12 @@ class MailService:
 
     def mail(self, mail_id):
         return self.mailbox.mail(mail_id)
+
+    def send(self, mail):
+        _from = self.user_email
+        _to = mail.get_to()
+
+        self.smtp_client.sendmail(_from, _to, mail.to_smtp_format(_from=_from))
 
     def all_tags(self):
         return self.mailbox.all_tags()
