@@ -37,5 +37,3 @@ class SearchTestCase(unittest.TestCase):
     def test_tags_with_quotes(self):
         self.assertEquals(search_query.compile(u"in:\"inbox\"")["tags"], ["inbox"])
         self.assertEquals(search_query.compile(u"in:'inbox'")["tags"], ["inbox"])
-
-

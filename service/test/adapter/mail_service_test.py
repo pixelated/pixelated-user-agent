@@ -76,4 +76,3 @@ class TestMailService(unittest.TestCase):
         # then
         self.assertEqual(1, len(mails))
         self.assertEqual(set([Tag('custom_tag')]), mails[0].tags)
-
