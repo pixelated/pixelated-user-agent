@@ -24,7 +24,7 @@ from flask import Response
 
 import pixelated.reactor_manager as reactor_manager
 import pixelated.search_query as search_query
-from pixelated.adapter.mail_service import MailService
+from pixelated.adapter.mail_service import MailService, open_leap_session
 from pixelated.adapter.pixelated_mail import PixelatedMail
 
 static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "web-ui", "app"))
@@ -33,7 +33,8 @@ if not os.path.exists(static_folder):
     static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))
 app = Flask(__name__, static_url_path='', static_folder=static_folder)
 app.config.from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
-mail_service = MailService(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'], app.config['LEAP_SERVER_NAME'])
+leap_session = open_leap_session(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'], app.config['LEAP_SERVER_NAME'])
+mail_service = MailService(leap_session)
 
 
 def respond_json(entity):

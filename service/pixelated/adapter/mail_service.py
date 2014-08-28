@@ -25,32 +25,46 @@ from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 from pixelated.adapter.tag import Tag
 
 
+def open_leap_session(username, password, server_name):
+    try:
+        certs_home = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "certificates"))
+
+        config = LeapConfig(certs_home=certs_home)
+        provider = LeapProvider(server_name, config)
+        session = LeapSessionFactory(provider).create(LeapCredentials(username, password))
+        return session
+    except:
+        traceback.print_exc(file=sys.stdout)
+        raise
+
+
 class MailService:
+    __slots__ = ['leap_session', 'account', 'mailbox_name']
 
-    def __init__(self, username, password, server_name):
-        try:
-            self.username = username
-            self.password = password
-            self.server_name = server_name
-            self.mailbox_name = 'INBOX'
-            self.certs_home = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "certificates"))
-            self._open_leap_session()
-        except:
-            traceback.print_exc(file=sys.stdout)
-            raise
-
-    def _open_leap_session(self):
-        self.leap_config = LeapConfig(certs_home=self.certs_home)
-        self.provider = LeapProvider(self.server_name, self.leap_config)
-        self.leap_session = LeapSessionFactory(self.provider).create(LeapCredentials(self.username, self.password))
-        self.account = self.leap_session.account
+    def __init__(self, leap_session):
+        self.leap_session = leap_session
+        self.account = leap_session.account
+        self.mailbox_name = 'INBOX'
 
     @property
     def mailbox(self):
         return PixelatedMailbox(self.account.getMailbox(self.mailbox_name))
 
     def mails(self, query):
-        return self.mailbox.mails()
+        if not query:
+            return self.mailbox.mails()
+
+        mails = []
+        if query['tags']:
+            tags = [Tag(tag) for tag in query['tags']]
+            for leap_mailbox in self.account.mailboxes:
+                mailbox = PixelatedMailbox(leap_mailbox)
+                if len(mailbox.all_tags().intersection(tags)):
+                    # mailbox has at least one mail with tag
+                    for mail in mailbox.mails():
+                        if len(mail.tags.intersection(tags)) > 0:
+                            mails.append(mail)
+        return mails
 
     def update_tags(self, mail_id, new_tags):
         mail = self.mail(mail_id)
