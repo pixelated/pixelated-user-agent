@@ -24,8 +24,9 @@ from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 
 class TestMailService(unittest.TestCase):
 
-    @patch.object(MailService, '_set_mail_flags', return_value=None)
-    def test_custom_tags_get_created_if_not_exists(self, mockSetFlags):
+    @patch.object(MailService, '_append_mail_flags', return_value=None)
+    @patch.object(MailService, '_remove_mail_flags', return_value=None)
+    def test_custom_tags_get_created_if_not_exists(self, mockRemoveFlags, mockAppendFlags):
         MailService._open_leap_session = lambda self: None
         MailService.mailbox = PixelatedMailbox(test_helper.leap_mailbox(leap_flags=['\\Recent']))
         MailService.account = Mock(return_value=MagicMock())
@@ -37,4 +38,5 @@ class TestMailService(unittest.TestCase):
 
         self.assertEquals(set([Tag('test'), Tag('inbox')]), set(updated_tags))
         # make sure that special tags are skipped when setting leap flags (eg.: tag_inbox)
-        mockSetFlags.assert_called_with(6, ['tag_test'])
+        mockAppendFlags.assert_called_with(6, ['tag_test'])
+        mockRemoveFlags.assert_called_with(6, [])

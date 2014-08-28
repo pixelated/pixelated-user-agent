@@ -54,23 +54,32 @@ class MailService:
 
     def update_tags(self, mail_id, new_tags):
         mail = self.mail(mail_id)
-        new_tags = mail.update_tags(new_tags)
-        self._update_mail_flags(new_tags, mail_id)
-        self._update_mailbox_tags(new_tags)
-        return new_tags
+        tags = set(Tag(str_tag) for str_tag in new_tags)
+        current_tags, removed_tags = mail.update_tags(tags)
+        self._update_mail_flags(current_tags, removed_tags, mail_id)
+        self._update_mailbox_tags(tags)
+        return current_tags
 
-    def _update_mailbox_tags(self, str_tags):
-        tags = [Tag(str_tag) for str_tag in str_tags]
+    def _update_mailbox_tags(self, tags):
         self.mailbox.update_tags(tags)
 
-    def _update_mail_flags(self, new_tags, mail_id):
-        new_tags_flag_name = ['tag_' + tag.name for tag in new_tags if tag.name not in PixelatedMailbox.SPECIAL_TAGS]
-        self._set_mail_flags(mail_id, new_tags_flag_name)
+    def _update_mail_flags(self, current_tags, removed_tags, mail_id):
+        new_flags = ['tag_' + tag.name for tag in current_tags if tag.name not in PixelatedMailbox.SPECIAL_TAGS]
+        self._append_mail_flags(mail_id, new_flags)
 
-    def _set_mail_flags(self, mail_id, new_tags_flag_name):
+        removed_flags = ['tag_' + tag.name for tag in removed_tags if tag.name not in PixelatedMailbox.SPECIAL_TAGS]
+        self._remove_mail_flags(mail_id, removed_flags)
+
+    def _append_mail_flags(self, mail_id, flags):
+        self._set_mail_flags(mail_id, flags, 1)
+
+    def _remove_mail_flags(self, mail_id, flags):
+        self._set_mail_flags(mail_id, flags, -1)
+
+    def _set_mail_flags(self, mail_id, flags, operation):
         observer = defer.Deferred()
         leap_mailbox = self.account.getMailbox(self.mailbox_name)
-        self.mailbox.messages.set_flags(leap_mailbox, [mail_id], tuple(new_tags_flag_name), 1, observer)
+        self.mailbox.messages.set_flags(leap_mailbox, [mail_id], tuple(flags), operation, observer)
 
     def mail(self, mail_id):
         return self.mailbox.mail(mail_id)

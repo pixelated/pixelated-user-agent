@@ -69,3 +69,9 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEqual(mail.ident, '')
         self.assertEqual(mail.tags, ['sent'])
         self.assertEqual(mail.body, 'Este \xe9 o corpo')
+
+    def test_update_tags_return_a_set_for_current_tags_and_a_set_for_removed(self):
+        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(leap_flags=[], extra_flags=['tag_custom_1', 'tag_custom_2']))
+        current_tags, removed_tags = pixelated_mail.update_tags(set([Tag('custom_1'), Tag('custom_3')]))
+        self.assertEquals(set([Tag('custom_3'), Tag('custom_1')]), current_tags)
+        self.assertEquals(set([Tag('custom_2')]), removed_tags)
