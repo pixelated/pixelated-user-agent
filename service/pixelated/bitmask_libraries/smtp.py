@@ -22,7 +22,7 @@ import random
 
 class LeapSmtp(object):
 
-    SMTP_PORT = 2014
+    TWISTED_PORT = 4650
 
     def __init__(self, provider, keymanager=None, leap_srp_session=None):
         self._provider = provider
@@ -31,8 +31,7 @@ class LeapSmtp(object):
         self._hostname, self._port = self._discover_smtp_server()
         self._smtp_port = None
         self._smtp_service = None
-        self._twisted_port = 10000 + int(random.random() * 5000)
-        print "## SMTP port: " + str(self._twisted_port)
+        print('Running on port %d' % TWISTED_PORT)
 
     def smtp_info(self):
         return ('localhost', self._twisted_port)

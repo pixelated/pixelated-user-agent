@@ -145,7 +145,8 @@ def setup():
     mail_service = MailService(leap_session)
     global mail_service
     mail_service.start()
-    app.run(host=app.config['HOST'], debug=debug_enabled, port=app.config['PORT'])
+    app.run(host=app.config['HOST'], debug=debug_enabled,
+            port=app.config['PORT'], use_reloader=False)
 
 
 if __name__ == '__main__':
