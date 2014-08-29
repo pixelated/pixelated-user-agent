@@ -34,7 +34,7 @@ class LeapSmtp(object):
         print('Running on port %d' % self.TWISTED_PORT)
 
     def smtp_info(self):
-        return ('localhost', self._twisted_port)
+        return ('localhost', self.TWISTED_PORT)
 
     def _discover_smtp_server(self):
         json_data = self._provider.fetch_smtp_json()
