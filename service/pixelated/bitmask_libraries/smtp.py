@@ -31,7 +31,7 @@ class LeapSmtp(object):
         self._hostname, self._port = self._discover_smtp_server()
         self._smtp_port = None
         self._smtp_service = None
-        print('Running on port %d' % TWISTED_PORT)
+        print('Running on port %d' % self.TWISTED_PORT)
 
     def smtp_info(self):
         return ('localhost', self._twisted_port)
@@ -78,7 +78,7 @@ class LeapSmtp(object):
         email = '%s@%s' % (self._srp_session.user_name, self._provider.domain)
 
         self._smtp_service, self._smtp_port = setup_smtp_gateway(
-            port=self._twisted_port,
+            port=self.TWISTED_PORT,
             userid=email,
             keymanager=self._keymanager,
             smtp_host=self._hostname.encode('UTF-8'),
