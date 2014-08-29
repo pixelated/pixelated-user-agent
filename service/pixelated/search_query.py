@@ -22,6 +22,7 @@ def compile(query):
     sanitized_query = re.sub(r"['\"]", "", query.encode('utf8'))
     scanner = StringScanner(sanitized_query)
     first_token = True
+
     while not scanner.is_eos:
         token = scanner.scan(_next_token())
 

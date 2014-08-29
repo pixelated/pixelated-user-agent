@@ -79,6 +79,7 @@ setup(name='Pixelated User Agent Service',
           'nose',
           'mock',
           'httmock',
+          'mockito',
           'gunicorn'
       ],
       entry_points={

@@ -35,6 +35,9 @@ class PixelatedMailbox:
         mails = [PixelatedMail.from_leap_mail(mail) for mail in mails]
         return mails
 
+    def mails_by_tags(self, tags):
+        return [mail for mail in self.mails() if len(mail.tags.intersection(tags)) > 0]
+
     def mail(self, mail_id):
         for message in self.leap_mailbox.messages:
             if message.getUID() == int(mail_id):
@@ -56,3 +59,7 @@ class PixelatedMailbox:
 
         flags = tuple(current_flags.union(new_flags))
         self.leap_mailbox.setFlags(flags)
+
+    @classmethod
+    def create(cls, account, mailbox_name='INBOX'):
+        return PixelatedMailbox(account.getMailbox(mailbox_name))

@@ -21,14 +21,29 @@ from leap.mail.imap.account import SoledadBackedAccount
 import sys
 from leap.mail.imap.memorystore import MemoryStore
 from leap.mail.imap.soledadstore import SoledadStore
+from pixelated.bitmask_libraries.config import LeapConfig
+from pixelated.bitmask_libraries.provider import LeapProvider
 from twisted.internet import reactor
 from .nicknym import NickNym
 
-from .auth import LeapAuthenticator
+from .auth import LeapAuthenticator, LeapCredentials
 from .soledad import SoledadSessionFactory, SoledadSession
 from .smtp import LeapSmtp
 
 SESSIONS = {}
+
+
+def open(username, password, server_name):
+    try:
+        certs_home = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "certificates"))
+
+        config = LeapConfig(certs_home=certs_home)
+        provider = LeapProvider(server_name, config)
+        session = LeapSessionFactory(provider).create(LeapCredentials(username, password))
+        return session
+    except:
+        traceback.print_exc(file=sys.stdout)
+        raise
 
 
 class LeapSession(object):
@@ -117,6 +132,9 @@ class LeapSessionFactory(object):
         account = self._create_account(auth, soledad)
         incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad,
                                                                    account, auth)
+
+        smtp = LeapSmtp(self._provider, nicknym.keymanager, auth)
+        smtp.start()
 
         return LeapSession(self._provider, auth, soledad, nicknym, account, incoming_mail_fetcher)
 

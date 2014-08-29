@@ -14,20 +14,22 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
-import os
-import datetime
-import dateutil.parser as dateparser
 
+import os
 from flask import Flask
 from flask import request
 from flask import Response
-
+from pixelated.adapter.pixelated_mail_sender import PixelatedMailSender
+from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
 import pixelated.reactor_manager as reactor_manager
 import pixelated.search_query as search_query
-from pixelated.adapter.mail_service import MailService, open_leap_session
+import pixelated.bitmask_libraries.session as LeapSession
+from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.pixelated_mail import PixelatedMail
 
+
 static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "web-ui", "app"))
+
 # this is a workaround for packaging
 if not os.path.exists(static_folder):
     static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))
@@ -73,10 +75,6 @@ def mails():
     if "inbox" in query['tags']:
         mails = [mail for mail in mails if not mail.has_tag('trash')]
 
-    mails = sorted(mails, key=lambda mail: mail.date, reverse=True)
-
-    mails = [mail.as_dict() for mail in mails]
-
     response = {
         "stats": {
             "total": len(mails),
@@ -84,7 +82,7 @@ def mails():
             "starred": 0,
             "replied": 0
         },
-        "mails": mails
+        "mails": [mail.as_dict() for mail in mails]
     }
 
     return respond_json(response)
@@ -141,10 +139,15 @@ def setup():
     debug_enabled = os.environ.get('DEBUG', False)
     reactor_manager.start_reactor(logging=debug_enabled)
     app.config.from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
-    leap_session = open_leap_session(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'], app.config['LEAP_SERVER_NAME'])
-    mail_service = MailService(leap_session)
+
+    leap_session = LeapSession.open(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'],
+                                    app.config['LEAP_SERVER_NAME'])
+    pixelated_mailboxes = PixelatedMailBoxes(leap_session.account)
+    pixelated_mail_sender = PixelatedMailSender(leap_session.account_email())
+
     global mail_service
-    mail_service.start()
+    mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender)
+
     app.run(host=app.config['HOST'], debug=debug_enabled,
             port=app.config['PORT'], use_reloader=False)
 
