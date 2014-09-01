@@ -24,10 +24,10 @@ class TestPixelatedMail(unittest.TestCase):
     mail_dict = {
         'body': 'Este \xe9 o corpo',
         'header': {
-            'cc': ['cc@pixelated.org'],
-            'to': ['to@pixelated.org'],
-            'subject': 'Oi',
-            'bcc': ['bcc@pixelated.org']
+            'cc': ['cc@pixelated.org', 'anothercc@pixelated.org'],
+            'to': ['to@pixelated.org', 'anotherto@pixelated.org'],
+            'bcc': ['bcc@pixelated.org', 'anotherbcc@pixelated.org'],
+            'subject': 'Oi'
         },
         'ident': '',
         'tags': ['sent']
@@ -62,9 +62,9 @@ class TestPixelatedMail(unittest.TestCase):
 
         mail = PixelatedMail.from_dict(self.mail_dict)
 
-        self.assertEqual(mail.headers['cc'], ['cc@pixelated.org'])
-        self.assertEqual(mail.headers['to'], ['to@pixelated.org'])
-        self.assertEqual(mail.headers['bcc'], ['bcc@pixelated.org'])
+        self.assertEqual(mail.headers['cc'], ['cc@pixelated.org', 'anothercc@pixelated.org'])
+        self.assertEqual(mail.headers['to'], ['to@pixelated.org', 'anotherto@pixelated.org'])
+        self.assertEqual(mail.headers['bcc'], ['bcc@pixelated.org', 'anotherbcc@pixelated.org'])
         self.assertEqual(mail.headers['subject'], 'Oi')
         self.assertEqual(mail.ident, '')
         self.assertEqual(mail.tags, ['sent'])
@@ -81,7 +81,9 @@ class TestPixelatedMail(unittest.TestCase):
 
         mime_multipart = mail.to_mime_multipart()
 
-        self.assertRegexpMatches(mime_multipart.as_string(), "\nTo: to@pixelated.org\n")
+        self.assertRegexpMatches(mime_multipart.as_string(), "\nTo: to@pixelated.org, anotherto@pixelated.org\n")
+        self.assertRegexpMatches(mime_multipart.as_string(), "\nCc: cc@pixelated.org, anothercc@pixelated.org\n")
+        self.assertRegexpMatches(mime_multipart.as_string(), "\nBcc: bcc@pixelated.org, anotherbcc@pixelated.org\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nSubject: Oi\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nEste \xe9 o corpo")
 

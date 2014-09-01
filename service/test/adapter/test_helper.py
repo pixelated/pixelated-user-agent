@@ -25,6 +25,20 @@ LEAP_FLAGS = ['\\Seen',
               'List']
 
 
+def mail_dict():
+    return {
+        'header': {
+            'to': ['to@pixelated.org', 'anotherto@pixelated.org'],
+            'cc': ['cc@pixelated.org', 'anothercc@pixelated.org'],
+            'bcc': ['bcc@pixelated.org', 'anotherbcc@pixelated.org'],
+            'subject': 'Subject'
+        },
+        'body': 'Body',
+        'ident': '',
+        'tags': []
+    }
+
+
 def leap_mail(uid=0, leap_flags=LEAP_FLAGS, extra_flags=[], headers={'date': str(datetime.now())}):
     flags = leap_flags + extra_flags
     return Mock(getUID=Mock(return_value=uid),

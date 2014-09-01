@@ -42,7 +42,13 @@ class PixelatedMail:
         self.headers['from'] = [_from]
 
     def get_to(self):
-        return self.headers['to'][0]
+        return self.headers['to']
+
+    def get_cc(self):
+        return self.headers['cc']
+
+    def get_bcc(self):
+        return self.headers['bcc']
 
     def _extract_status(self):
         return Status.from_flags(self.leap_mail.getFlags())
@@ -81,7 +87,9 @@ class PixelatedMail:
 
     def to_mime_multipart(self):
         mime_multipart = MIMEMultipart()
-        mime_multipart['To'] = self.headers['to'][0]
+        mime_multipart['To'] = ", ".join(self.headers['to'])
+        mime_multipart['Cc'] = ", ".join(self.headers['cc'])
+        mime_multipart['Bcc'] = ", ".join(self.headers['bcc'])
         mime_multipart['Subject'] = self.headers['subject']
         mime_multipart.attach(MIMEText(self.body, 'plain'))
         return mime_multipart
