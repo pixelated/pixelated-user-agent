@@ -23,8 +23,8 @@ import test_helper
 class PixelatedMailSenderTest(unittest.TestCase):
     def setUp(self):
         self.mail_address = "pixelated@pixelated.org"
-        self.mail_sender = PixelatedMailSender(self.mail_address)
-        self.mail_sender.smtp_client = mock()
+        self.smtp_client = mock()
+        self.mail_sender = PixelatedMailSender(self.mail_address, self.smtp_client)
 
     def test_send_mail_sends_to_To_Cc_and_Bcc(self):
         mail_dict = test_helper.mail_dict()
@@ -41,4 +41,4 @@ class PixelatedMailSenderTest(unittest.TestCase):
                                'anothercc@pixelated.org',
                                'bcc@pixelated.org', 'anotherbcc@pixelated.org']
 
-        verify(self.mail_sender.smtp_client).sendmail(self.mail_address, expected_recipients, "mail as smtp string")
+        verify(self.smtp_client).sendmail(self.mail_address, expected_recipients, "mail as smtp string")

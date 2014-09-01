@@ -18,9 +18,9 @@ from pixelated.support.functional import flatten
 
 
 class PixelatedMailSender():
-    def __init__(self, account_email_address):
+    def __init__(self, account_email_address, smtp_client=None):
         self.account_email_address = account_email_address
-        self.smtp_client = smtplib.SMTP('localhost', 4650)
+        self.smtp_client = smtp_client or smtplib.SMTP('localhost', 4650)
 
     def sendmail(self, mail):
         recipients = flatten([mail.get_to(), mail.get_cc(), mail.get_bcc()])
