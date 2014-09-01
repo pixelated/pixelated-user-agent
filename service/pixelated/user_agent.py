@@ -14,8 +14,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
-
+import argparse
 import os
+
 from flask import Flask
 from flask import request
 from flask import Response
@@ -136,7 +137,12 @@ def index():
 
 
 def setup():
-    debug_enabled = os.environ.get('DEBUG', False)
+    parser = argparse.ArgumentParser(description='Pixelated user agent.')
+    parser.add_argument('--debug', action='store_true',
+                        help='DEBUG mode.')
+
+    args = parser.parse_args()
+    debug_enabled = args.debug or os.environ.get('DEBUG', False)
     reactor_manager.start_reactor(logging=debug_enabled)
     app.config.from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
 
