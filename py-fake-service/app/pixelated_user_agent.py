@@ -22,7 +22,7 @@ from adapter import MailService
 from search import SearchQuery
 
 app = Flask(__name__, static_url_path='', static_folder='../../web-ui/app')
-MEDIUM_TAGGED_URL = 'https://example.wazokazi.is/go/static/py-mediumtagged.tar.gz'
+MEDIUM_TAGGED_URL = 'https://static.wazokazi.is/py-mediumtagged.tar.gz'
 client = None
 converter = None
 account = None
