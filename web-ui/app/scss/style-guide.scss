@@ -6,6 +6,20 @@ body {
   overflow: scroll !important; 
 }
 
+div#style-guide-wrap {
+  font-size: 1rem;
+}
+
+div#style-guide-wrap p {
+  font-size: 1rem;
+}
+
+img.screenshot {
+  max-width: 60%;
+  margin: 0 auto;   
+  display: block;
+}
+
 nav {
   position: fixed;    
   z-index: 10;
@@ -94,6 +108,7 @@ section.guide-section {
 /* Color Cards definition */
 
 .color-grid {
+  margin-bottom: 25px;
   #primary-color-card { background-color: $primary_color; }
   #secondary-color-card { background-color: $secondary; }
   #top-pane-card { background-color: $top_pane; }
