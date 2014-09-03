@@ -35,7 +35,7 @@ class TestPixelatedMail(unittest.TestCase):
 
     def test_parse_date_from_leap_mail_uses_date_header_if_available(self):
         leap_mail_date = 'Wed, 3 Sep 2014 12:36:17 -0300'
-        leap_mail_date_in_iso_format = "2014-09-03 12:36:17-03:00"
+        leap_mail_date_in_iso_format = "2014-09-03T12:36:17-03:00"
 
         leap_mail = test_helper.leap_mail(headers={'date': leap_mail_date})
 
@@ -45,7 +45,7 @@ class TestPixelatedMail(unittest.TestCase):
 
     def test_parse_date_from_leap_mail_fallback_to_received_header_if_date_header_isnt_available(self):
         leap_mail_date = "Wed, 03 Sep 2014 13:11:15 -0300"
-        leap_mail_date_in_iso_format = "2014-09-03 13:11:15-03:00"
+        leap_mail_date_in_iso_format = "2014-09-03T13:11:15-03:00"
         leap_mail_received_header = "by bitmask.local from 127.0.0.1 with ESMTP ;\n " + leap_mail_date
 
         leap_mail = test_helper.leap_mail(headers={'received': leap_mail_received_header})
