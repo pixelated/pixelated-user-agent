@@ -31,8 +31,6 @@ class PixelatedMailbox:
         return self.leap_mailbox.messages
 
     def mails(self):
-
-
         mails = self.leap_mailbox.messages or []
         mails = [PixelatedMail.from_leap_mail(mail) for mail in mails]
         return mails
