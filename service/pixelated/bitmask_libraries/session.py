@@ -40,6 +40,8 @@ def open(username, password, server_name):
         config = LeapConfig(certs_home=certs_home)
         provider = LeapProvider(server_name, config)
         session = LeapSessionFactory(provider).create(LeapCredentials(username, password))
+        session.nicknym.generate_openpgp_key()
+
         return session
     except:
         traceback.print_exc(file=sys.stdout)
