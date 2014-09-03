@@ -22,7 +22,7 @@ class Contacts:
         self.contacts = []
 
     def add(self, mbox_mail):
-        contact = mbox_mail.from_addr
+        contact = mbox_mail.get('From')
         self.contacts.append(Contact(contact))
 
     def search(self, query):

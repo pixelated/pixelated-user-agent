@@ -18,12 +18,15 @@ from tag import Tag
 
 class TagsSet:
 
+    DEFAULT_TAGS = ["inbox", "sent", "trash", "drafts"]
+
     def __init__(self):
-        self.tags = {}
         self.ident = 0
+        self.tags = {}
+        self.tags = {tag: self._create_new_tag(tag) for tag in self.DEFAULT_TAGS}
 
     def add(self, mbox_mail):
-        tags = mbox_mail.get('X-TW-Pixelated-Tags').split(', ')
+        tags = filter(len, mbox_mail.get('X-TW-Pixelated-Tags').split(', '))
         for tag in tags:
             tag = self._create_new_tag(tag)
             tag.increment_count()

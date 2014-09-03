@@ -49,14 +49,20 @@ class MailService:
             msg.from_addr = msg.get('From')
         return msg
 
+    def _create_message_from_string(self, data):
+        return mailbox.Message(data)
+
     def load_mailset(self):
         mbox_filenames = [
             filename
             for filename in os.listdir
             (self.MAILSET_PATH) if filename.startswith('mbox')]
         messages = (self._create_message_from_file(os.path.join(self.MAILSET_PATH, mbox))
-                 for mbox in mbox_filenames)
+                    for mbox in mbox_filenames)
 
+        self.index_messages(messages)
+
+    def index_messages(self, messages):
         for message in messages:
             self.mailset.add(message)
             self.tagsset.add(message)

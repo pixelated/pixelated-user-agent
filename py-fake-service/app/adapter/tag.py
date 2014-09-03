@@ -13,12 +13,14 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+
+
 class Tag:
     DEFAULT_TAGS = ["inbox", "sent", "trash", "drafts"]
 
     def __init__(self, name, ident):
         self.counts = {
-            'total': 1,
+            'total': 0,
             'read': 0,
             'starred': 0,
             'reply': 0

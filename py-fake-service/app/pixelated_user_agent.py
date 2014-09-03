@@ -14,9 +14,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from flask import Flask, request, Response, redirect
-
+import csv
 import json
 import datetime
+import mailbox
+import StringIO
 import requests
 from adapter import MailService
 from search import SearchQuery
@@ -26,7 +28,7 @@ MEDIUM_TAGGED_URL = 'https://static.wazokazi.is/py-mediumtagged.tar.gz'
 client = None
 converter = None
 account = None
-loaded = False
+loaded = True
 mail_service = MailService()
 
 
@@ -123,6 +125,32 @@ def draft_reply_for(mail_id):
         return respond_json(mail.__dict__)
     else:
         return respond_json(None)
+
+
+def utf_8_encoder(unicode_csv_data):
+    for line in unicode_csv_data:
+        yield line.encode('utf-8')
+
+
+@app.route('/control/mailset/csv/load', methods=['POST'])
+def load_mailset_from_csv():
+    csv_data = request.form.keys()[0]
+    csv_string = StringIO.StringIO(csv_data)
+    csv_reader = csv.reader(utf_8_encoder(csv_string))
+    headers = csv_reader.next()
+    messages = []
+    for row in csv_reader:
+        mail = ""
+        row[3] = ', '.join(filter(len, row[3].split(' ')))
+        for header, value in zip(headers, row):
+            if header == 'Body':
+                mail += "\n"
+            else:
+                mail += header + ": "
+            mail += value + "\n"
+        messages.append(mailbox.mboxMessage(mail))
+    mail_service.index_messages(messages)
+    return respond_json(None)
 
 
 @app.route('/control/mailset/<mailset>/load', methods=['POST'])
