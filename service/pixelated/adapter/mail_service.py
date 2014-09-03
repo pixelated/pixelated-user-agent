@@ -33,7 +33,7 @@ class MailService:
     def mails(self, query):
         _mails = None
 
-        if not query:
+        if not query['tags']:
             return self.mailbox.mails()
 
         if query['tags']:

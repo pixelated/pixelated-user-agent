@@ -30,7 +30,7 @@ class TestMailService(unittest.TestCase):
         when(mailbox_inbox).mails().thenReturn(["mail"])
         when(self.mailboxes).inbox().thenReturn(mailbox_inbox)
 
-        mails = self.mail_service.mails({})
+        mails = self.mail_service.mails({'tags': {}})
 
         self.assertEqual(1, len(mails))
 

@@ -31,11 +31,16 @@ class PixelatedMailbox:
         return self.leap_mailbox.messages
 
     def mails(self):
+
+
         mails = self.leap_mailbox.messages or []
         mails = [PixelatedMail.from_leap_mail(mail) for mail in mails]
         return mails
 
     def mails_by_tags(self, tags):
+        if 'all' in map(str, tags):
+            return self.mails()
+
         return [mail for mail in self.mails() if len(mail.tags.intersection(tags)) > 0]
 
     def mail(self, mail_id):
