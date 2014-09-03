@@ -169,7 +169,7 @@ define(
       }
 
       function emailFormatChecker(email) {
-        var emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var emailFormat = /[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailFormat.test(email);
       }
 
