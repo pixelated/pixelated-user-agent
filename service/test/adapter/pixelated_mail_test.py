@@ -33,6 +33,27 @@ class TestPixelatedMail(unittest.TestCase):
         'tags': ['sent']
     }
 
+    def test_parse_date_from_leap_mail_uses_date_header_if_available(self):
+        leap_mail_date = 'Wed, 3 Sep 2014 12:36:17 -0300'
+        leap_mail_date_in_iso_format = "2014-09-03 12:36:17-03:00"
+
+        leap_mail = test_helper.leap_mail(headers={'date': leap_mail_date})
+
+        mail = PixelatedMail.from_leap_mail(leap_mail)
+
+        self.assertEqual(str(mail.date), leap_mail_date_in_iso_format)
+
+    def test_parse_date_from_leap_mail_fallback_to_received_header_if_date_header_isnt_available(self):
+        leap_mail_date = "Wed, 03 Sep 2014 13:11:15 -0300"
+        leap_mail_date_in_iso_format = "2014-09-03 13:11:15-03:00"
+        leap_mail_received_header = "by bitmask.local from 127.0.0.1 with ESMTP ;\n " + leap_mail_date
+
+        leap_mail = test_helper.leap_mail(headers={'received': leap_mail_received_header})
+
+        mail = PixelatedMail.from_leap_mail(leap_mail)
+
+        self.assertEqual(str(mail.date), leap_mail_date_in_iso_format)
+
     def test_leap_recent_flag_is_translated_to_inbox_tag(self):
         pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(leap_flags=['\\Recent']))
         self.assertIn(Tag('inbox'), pixelated_mail.tags)
@@ -59,7 +80,6 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEquals(set([Tag('custom_tag'), Tag('inbox')]), pixelated_mail.tags)
 
     def test_from_dict(self):
-
         mail = PixelatedMail.from_dict(self.mail_dict)
 
         self.assertEqual(mail.headers['cc'], ['cc@pixelated.org', 'anothercc@pixelated.org'])

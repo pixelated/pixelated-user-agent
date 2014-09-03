@@ -31,7 +31,7 @@ class PixelatedMail:
         mail.leap_mail = leap_mail
         mail.body = leap_mail.bdoc.content['raw']
         mail.headers = mail._extract_headers()
-        mail.date = dateparser.parse(mail.headers['date'])
+        mail.date = PixelatedMail._get_date(mail.headers)
         mail.ident = leap_mail.getUID()
         mail.status = mail._extract_status()
         mail.security_casing = {}
@@ -76,8 +76,10 @@ class PixelatedMail:
     def as_dict(self):
         tags = [tag.name for tag in self.tags]
         statuses = [status.name for status in self.status]
+        _headers = self.headers.copy()
+        _headers['date'] = self.date
         return {
-            'header': self.headers,
+            'header': _headers,
             'ident': self.ident,
             'tags': tags,
             'status': statuses,
@@ -102,6 +104,13 @@ class PixelatedMail:
     @staticmethod
     def from_dict(mail_dict):
         return from_dict(mail_dict)
+
+    @classmethod
+    def _get_date(cls, headers):
+        date = headers.get('date', None)
+        if not date:
+            date = headers['received'].split(";")[-1].strip()
+        return dateparser.parse(date).isoformat()
 
 
 def from_dict(mail_dict):
