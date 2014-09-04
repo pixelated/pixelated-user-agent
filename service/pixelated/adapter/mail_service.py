@@ -42,7 +42,7 @@ class MailService:
     def update_tags(self, mail_id, new_tags):
         mail = self.mail(mail_id)
         tags = set(Tag(str_tag) for str_tag in new_tags)
-        current_tags, removed_tags = mail.update_tags(tags)
+        current_tags = mail.update_tags(tags)
         self._update_mailbox_tags(tags)
         return current_tags
 
