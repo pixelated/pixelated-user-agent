@@ -62,13 +62,18 @@ class PixelatedMail:
         return temporary_headers
 
     def _extract_tags(self):
-        return Tag.from_flags(self.leap_mail.getFlags())
+        return set(Tag(tag_name) for tag_name in self.headers.get('x-tags', []))
 
     def update_tags(self, tags):
-        old_tags = self.tags
         self.tags = tags
-        removed_tags = old_tags.difference(self.tags)
-        return self.tags, removed_tags
+        self._persist_mail_tags(tags)
+        return self.tags
+
+    def _persist_mail_tags(self, current_tags):
+        tags_headers = [tag.name for tag in current_tags]
+        hdoc = self.leap_mail.hdoc
+        hdoc.content['headers']['X-Tags'] = tags_headers
+        self.leap_mail._soledad.put_doc(hdoc)
 
     def has_tag(self, tag):
         return Tag(tag) in self.tags

@@ -24,6 +24,8 @@ LEAP_FLAGS = ['\\Seen',
               '\\Recent',
               'List']
 
+DEFAULT_HEADERS = {'date': str(datetime.now())}
+
 
 def mail_dict():
     return {
@@ -39,8 +41,8 @@ def mail_dict():
     }
 
 
-def leap_mail(uid=0, leap_flags=LEAP_FLAGS, extra_flags=[], headers={'date': str(datetime.now())}):
-    flags = leap_flags + extra_flags
+def leap_mail(uid=0, flags=LEAP_FLAGS, headers=DEFAULT_HEADERS, extra_headers={}):
+    headers = dict(headers.items() + extra_headers.items())
     return Mock(getUID=Mock(return_value=uid),
                 getFlags=Mock(return_value=flags),
                 bdoc=Mock(content={'raw': 'test'}),
@@ -51,4 +53,4 @@ def leap_mailbox(leap_flags=LEAP_FLAGS, extra_flags=[]):
     flags = leap_flags + extra_flags
     return Mock(getFlags=Mock(return_value=flags),
                 _get_mbox_doc=Mock(return_value=None),
-                messages=[leap_mail(uid=6, leap_flags=[], extra_flags=[])])
+                messages=[leap_mail(uid=6)])

@@ -54,31 +54,6 @@ class TestPixelatedMail(unittest.TestCase):
 
         self.assertEqual(str(mail.date), leap_mail_date_in_iso_format)
 
-    def test_leap_recent_flag_is_translated_to_inbox_tag(self):
-        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(leap_flags=['\\Recent']))
-        self.assertIn(Tag('inbox'), pixelated_mail.tags)
-
-    def test_leap_deleted_flag_is_translated_to_trash_tag(self):
-        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(leap_flags=['\\Deleted']))
-        self.assertIn(Tag('trash'), pixelated_mail.tags)
-
-    def test_leap_draft_flag_is_translated_to_draft_tag(self):
-        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(leap_flags=['\\Draft']))
-        self.assertIn(Tag('drafts'), pixelated_mail.tags)
-
-    def test_leap_flags_that_are_custom_tags_are_handled(self):
-        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_flags=['tag_work']))
-        self.assertIn(Tag('work'), pixelated_mail.tags)
-
-    def test_custom_tags_containing_our_prefix_are_handled(self):
-        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_flags=['tag_tag_work_tag_']))
-        self.assertIn(Tag('tag_work_tag_'), pixelated_mail.tags)
-
-    def test_non_tags_flags_are_ignored(self):
-        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(leap_flags=['\\Recent'],
-                                                      extra_flags=['this_is_not_a_tag', 'tag_custom_tag']))
-        self.assertEquals(set([Tag('custom_tag'), Tag('inbox')]), pixelated_mail.tags)
-
     def test_from_dict(self):
         mail = PixelatedMail.from_dict(self.mail_dict)
 
@@ -90,11 +65,10 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEqual(mail.tags, ['sent'])
         self.assertEqual(mail.body, 'Este \xe9 o corpo')
 
-    def test_update_tags_return_a_set_for_current_tags_and_a_set_for_removed(self):
-        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(leap_flags=[], extra_flags=['tag_custom_1', 'tag_custom_2']))
-        current_tags, removed_tags = pixelated_mail.update_tags(set([Tag('custom_1'), Tag('custom_3')]))
+    def test_update_tags_return_a_set_for_current_tags(self):
+        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_headers={'X-tags': ['custom_1', 'custom_2']}))
+        current_tags = pixelated_mail.update_tags(set([Tag('custom_1'), Tag('custom_3')]))
         self.assertEquals(set([Tag('custom_3'), Tag('custom_1')]), current_tags)
-        self.assertEquals(set([Tag('custom_2')]), removed_tags)
 
     def test_to_mime_multipart(self):
         mail = PixelatedMail.from_dict(self.mail_dict)
