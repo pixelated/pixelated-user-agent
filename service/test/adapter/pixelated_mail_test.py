@@ -87,3 +87,23 @@ class TestPixelatedMail(unittest.TestCase):
         smtp_format = mail.to_smtp_format(_from='pixelated@org')
 
         self.assertRegexpMatches(smtp_format, "\nFrom: pixelated@org")
+
+    def test_extract_headers_should_break_header_in_multiple_recipients(self):
+        headers = test_helper.DEFAULT_HEADERS.copy()
+        headers['to'] = "nlima@example.com, ddornelles@example.com"
+        headers['bcc'] = "nlima@example.com, ddornelles@example.com"
+        headers['cc'] = "nlima@example.com, ddornelles@example.com"
+        
+        leap_mail = test_helper.leap_mail(headers=headers)
+
+        pixelated_mail = PixelatedMail.from_leap_mail(leap_mail)
+        
+        self.assertEquals(pixelated_mail.headers['to'], ["nlima@example.com", "ddornelles@example.com" ])
+        self.assertEquals(pixelated_mail.headers['bcc'], ["nlima@example.com", "ddornelles@example.com" ])
+        self.assertEquals(pixelated_mail.headers['cc'], ["nlima@example.com", "ddornelles@example.com" ])
+
+
+
+
+
+ 

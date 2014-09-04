@@ -53,12 +53,18 @@ class PixelatedMail:
     def _extract_status(self):
         return Status.from_flags(self.leap_mail.getFlags())
 
+    def _split_recipients(self, header_type, temporary_headers):
+        if(temporary_headers.get(header_type) is not None):
+            recipients = temporary_headers[header_type].split(',')
+            temporary_headers[header_type] = map (lambda x: x.replace(' ', ''), recipients)
+
     def _extract_headers(self):
         temporary_headers = {}
         for header, value in self.leap_mail.hdoc.content['headers'].items():
             temporary_headers[header.lower()] = value
-        if(temporary_headers.get('to') is not None):
-            temporary_headers['to'] = [temporary_headers['to']]
+
+        map(lambda x: self._split_recipients(x, temporary_headers), ['to', 'bcc','cc'])
+
         return temporary_headers
 
     def _extract_tags(self):
