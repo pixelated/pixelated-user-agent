@@ -62,7 +62,7 @@ class MailService:
         raise NotImplementedError()
 
     def mark_as_read(self, mail_id):
-        raise NotImplementedError()
+        return self.mail(mail_id).mark_as_read()
 
     def tags_for_thread(self, thread):
         raise NotImplementedError()

@@ -33,7 +33,7 @@ class PixelatedMail:
         mail.headers = mail._extract_headers()
         mail.date = PixelatedMail._get_date(mail.headers)
         mail.ident = leap_mail.getUID()
-        mail.status = mail._extract_status()
+        mail.status = set(mail._extract_status())
         mail.security_casing = {}
         mail.tags = mail._extract_tags()
         return mail
@@ -74,6 +74,9 @@ class PixelatedMail:
         self.tags = tags
         self._persist_mail_tags(tags)
         return self.tags
+
+    def mark_as_read(self):
+        self.status.add("read")
 
     def _persist_mail_tags(self, current_tags):
         tags_headers = [tag.name for tag in current_tags]
@@ -126,8 +129,9 @@ class PixelatedMail:
 
 def from_dict(mail_dict):
     mail = PixelatedMail()
-    mail.headers = mail_dict['header']
-    mail.body = mail_dict['body']
-    mail.ident = mail_dict['ident']
-    mail.tags = mail_dict['tags']
+    mail.headers = mail_dict.get('header', {})
+    mail.body = mail_dict.get('body', '')
+    mail.ident = mail_dict.get('ident', None)
+    mail.tags = mail_dict.get('tags', [])
+    mail.status = set(mail_dict.get('status', []))
     return mail

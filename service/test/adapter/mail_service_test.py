@@ -40,3 +40,10 @@ class TestMailService(unittest.TestCase):
         self.mail_service.send(mail)
 
         verify(self.mail_sender).sendmail(mail)
+
+    def test_mark_as_read(self):
+        mail = mock()
+        when(self.mail_service).mail(any()).thenReturn(mail)
+        self.mail_service.mark_as_read(1)
+
+        verify(mail).mark_as_read()

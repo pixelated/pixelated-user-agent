@@ -102,8 +102,9 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEquals(pixelated_mail.headers['bcc'], ["nlima@example.com", "ddornelles@example.com" ])
         self.assertEquals(pixelated_mail.headers['cc'], ["nlima@example.com", "ddornelles@example.com" ])
 
+    def test_mark_as_read(self):
+        mail = PixelatedMail.from_dict(self.mail_dict)
 
+        mail.mark_as_read()
 
-
-
- 
+        self.assertIn("read", mail.status)
