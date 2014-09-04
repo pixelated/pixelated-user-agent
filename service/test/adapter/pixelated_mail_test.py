@@ -93,14 +93,14 @@ class TestPixelatedMail(unittest.TestCase):
         headers['to'] = "nlima@example.com, ddornelles@example.com"
         headers['bcc'] = "nlima@example.com, ddornelles@example.com"
         headers['cc'] = "nlima@example.com, ddornelles@example.com"
-        
+
         leap_mail = test_helper.leap_mail(headers=headers)
 
         pixelated_mail = PixelatedMail.from_leap_mail(leap_mail)
-        
-        self.assertEquals(pixelated_mail.headers['to'], ["nlima@example.com", "ddornelles@example.com" ])
-        self.assertEquals(pixelated_mail.headers['bcc'], ["nlima@example.com", "ddornelles@example.com" ])
-        self.assertEquals(pixelated_mail.headers['cc'], ["nlima@example.com", "ddornelles@example.com" ])
+
+        self.assertEquals(pixelated_mail.headers['to'], ["nlima@example.com", "ddornelles@example.com"])
+        self.assertEquals(pixelated_mail.headers['bcc'], ["nlima@example.com", "ddornelles@example.com"])
+        self.assertEquals(pixelated_mail.headers['cc'], ["nlima@example.com", "ddornelles@example.com"])
 
     def test_mark_as_read(self):
         mail = PixelatedMail.from_dict(self.mail_dict)
