@@ -16,7 +16,8 @@
 import json
 import argparse
 import os
-
+import sys
+import os.path
 from flask import Flask
 from flask import request
 from flask import Response
@@ -25,9 +26,12 @@ from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
 import pixelated.reactor_manager as reactor_manager
 import pixelated.search_query as search_query
 import pixelated.bitmask_libraries.session as LeapSession
+from pixelated.bitmask_libraries.config import LeapConfig
+from pixelated.bitmask_libraries.provider import LeapProvider
+from pixelated.bitmask_libraries.auth import LeapAuthenticator, LeapCredentials
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.pixelated_mail import PixelatedMail
-
+import getpass
 
 static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "web-ui", "app"))
 
@@ -136,16 +140,18 @@ def index():
     return app.send_static_file('index.html')
 
 
-def setup():
-    parser = argparse.ArgumentParser(description='Pixelated user agent.')
-    parser.add_argument('--debug', action='store_true',
-                        help='DEBUG mode.')
+def register_new_user(username):
+    server_name = app.config['LEAP_SERVER_NAME']
+    certs_home = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "certificates"))
+    config = LeapConfig(certs_home=certs_home)
+    provider = LeapProvider(server_name, config)
+    password = getpass.getpass('Please enter password for %s: ' % username)
+    LeapAuthenticator(provider).register(LeapCredentials(username, password))
+    session = LeapSession.open(username, password, server_name)
+    session.nicknym.generate_openpgp_key()
 
-    args = parser.parse_args()
-    debug_enabled = args.debug or os.environ.get('DEBUG', False)
-    reactor_manager.start_reactor(logging=debug_enabled)
-    app.config.from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
 
+def start_user_agent(debug_enabled):
     leap_session = LeapSession.open(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'],
                                     app.config['LEAP_SERVER_NAME'])
     pixelated_mailboxes = PixelatedMailBoxes(leap_session.account)
@@ -157,6 +163,25 @@ def setup():
     app.run(host=app.config['HOST'], debug=debug_enabled,
             port=app.config['PORT'], use_reloader=False)
 
+
+def setup():
+    try:
+        parser = argparse.ArgumentParser(description='Pixelated user agent.')
+        parser.add_argument('--debug', action='store_true',
+                            help='DEBUG mode.')
+        parser.add_argument('--register', metavar='username', help='register user with name.')
+
+        args = parser.parse_args()
+        debug_enabled = args.debug or os.environ.get('DEBUG', False)
+        reactor_manager.start_reactor(logging=debug_enabled)
+        app.config.from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
+
+        if args.register:
+            register_new_user(args.register)
+        else:
+            start_user_agent(debug_enabled)
+    finally:
+        reactor_manager.stop_reactor_on_exit()
 
 if __name__ == '__main__':
     setup()

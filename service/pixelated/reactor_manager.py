@@ -34,6 +34,7 @@ def start_reactor(logging=False):
 
     global REACTOR_THREAD
     REACTOR_THREAD = Thread(target=start_reactor_run)
+    daemon = True
     REACTOR_THREAD.start()
 
 
