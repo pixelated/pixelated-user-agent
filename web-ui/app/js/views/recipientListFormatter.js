@@ -20,7 +20,9 @@ define(function() {
   'use strict';
   Handlebars.registerHelper('formatRecipients', function (header) {
     function wrapWith(begin, end) {
-      return function (x) { return begin + x + end; };
+      return function (x) {
+        return begin + Handlebars.Utils.escapeExpression(x) + end;
+      };
     }
 
     var to = _.map(header.to, wrapWith('<span class="to">', '</span>'));
