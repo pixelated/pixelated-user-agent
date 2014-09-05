@@ -37,6 +37,7 @@ cd pixelated-user-agent/web-ui
 npm install
 node_modules/bower/bin/bower install
 bundle install
+LC_ALL=en_US.UTF-8 ./go build
 
 # install service dependencies
 cd ../service
