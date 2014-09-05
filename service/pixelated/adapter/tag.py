@@ -62,12 +62,11 @@ class Tag:
                        'read': 0,
                        'starred': 0,
                        'replied': 0},
-            'mails': self.mails
+            'mails': list(self.mails)
         }
 
     def as_json_string(self):
         tag_dict = self.as_dict()
-        tag_dict['mails'] = list(self.mails)
         return json.dumps(tag_dict)
 
     def __repr__(self):

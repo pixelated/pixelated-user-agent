@@ -82,7 +82,7 @@ class PixelatedMail:
 
     def _persist_mail_tags(self, current_tags):
         hdoc = self.leap_mail.hdoc
-        hdoc.content['headers']['X-Tags'] = current_tags
+        hdoc.content['headers']['X-Tags'] = list(current_tags)
         self.leap_mail._soledad.put_doc(hdoc)
 
     def has_tag(self, tag):
@@ -95,7 +95,7 @@ class PixelatedMail:
         return {
             'header': _headers,
             'ident': self.ident,
-            'tags': self.tags,
+            'tags': list(self.tags),
             'status': statuses,
             'security_casing': self.security_casing,
             'body': self.body

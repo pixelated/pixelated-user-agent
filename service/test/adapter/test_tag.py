@@ -39,7 +39,7 @@ class TestTag(unittest.TestCase):
     def test_as_dict_puts_all_tag_attributes_in_the_returning_dict(self):
         tag = Tag('some_tag', default=True)
         tag.counts = {'total': 0, 'read': 0, 'starred': 0, 'replied': 0}
-        tag.mails = set([1, 2, 3])
+        tag.mails = [1, 2, 3]
 
         tag_dict = tag.as_dict()
 
