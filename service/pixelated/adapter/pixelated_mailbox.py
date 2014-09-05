@@ -17,14 +17,19 @@
 
 from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.tag import Tag
+from pixelated.adapter.tag_index import TagIndex
 
 
 class PixelatedMailbox:
 
-    SPECIAL_TAGS = ['inbox', 'sent', 'drafts', 'trash']
+    SPECIAL_TAGS = set([Tag('inbox', True), Tag('sent', True), Tag('drafts', True), Tag('trash', True)])
 
-    def __init__(self, leap_mailbox):
+    def __init__(self, leap_mailbox, index_file_path):
         self.leap_mailbox = leap_mailbox
+        self.tag_index = TagIndex(index_file_path)
+        for tag in self.SPECIAL_TAGS:
+            if tag not in self.tag_index.values():
+                self.tag_index.set(tag)
 
     @property
     def messages(self):
@@ -47,22 +52,18 @@ class PixelatedMailbox:
                 return PixelatedMail.from_leap_mail(message)
 
     def all_tags(self):
-        return Tag.from_flags(self._getFlags())
+        return self.tag_index.values().union(self.SPECIAL_TAGS)
 
-    def _getFlags(self):
-        # XXX Temporary workaround while getFlags from leap is disabled
-        mbox = self.leap_mailbox._get_mbox_doc()
-        if not mbox:
-            return self.leap_mailbox.getFlags()
-        return mbox.content.get(self.leap_mailbox.FLAGS_KEY, [])
-
-    def update_tags(self, tags):
-        new_flags = set(tag.to_flag() for tag in tags)
-        current_flags = set(self._getFlags())
-
-        flags = tuple(current_flags.union(new_flags))
-        self.leap_mailbox.setFlags(flags)
+    def notify_tags_updated(self, added_tags, removed_tags, mail_ident):
+        for removed_tag in removed_tags:
+            tag = self.tag_index.get(removed_tag)
+            tag.decrement(mail_ident)
+            self.tag_index.set(tag)
+        for added_tag in added_tags:
+            tag = self.tag_index.get(added_tag) or Tag(added_tag)
+            tag.increment(mail_ident)
+            self.tag_index.set(tag)
 
     @classmethod
     def create(cls, account, mailbox_name='INBOX'):
-        return PixelatedMailbox(account.getMailbox(mailbox_name))
+        return PixelatedMailbox(account.getMailbox(mailbox_name), '~/.pixelated_index')

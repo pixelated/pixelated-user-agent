@@ -14,41 +14,32 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+import json
+
 
 class Tag:
 
-    LEAP_FLAGS_TAGS = {
-        '\\Deleted': 'trash',
-        '\\Draft': 'drafts',
-        '\\Recent': 'inbox'
-    }
+    @classmethod
+    def from_dict(cls, tag_dict):
+        tag = Tag(tag_dict['name'], tag_dict['default'])
+        tag.mails = tag_dict['mails']
+        return tag
 
     @classmethod
-    def from_flags(cls, flags):
-        return set(filter(None, (cls.from_flag(flag) for flag in flags)))
+    def from_json_string(cls, json_string):
+        tag_dict = json.loads(json_string)
+        tag_dict['mails'] = set(tag_dict['mails'])
+        return Tag.from_dict(tag_dict)
 
-    @classmethod
-    def from_flag(cls, flag):
-        if flag in cls.LEAP_FLAGS_TAGS.keys():
-            return Tag(cls.LEAP_FLAGS_TAGS[flag])
-        if flag.startswith('tag_'):
-            return Tag(cls._remove_prefix(flag))
-        return None
-
-    def to_flag(self):
-        for flag, tag in self.LEAP_FLAGS_TAGS.items():
-            if tag == str(self.name):
-                return flag
-        return 'tag_' + str(self.name)
-
-    @classmethod
-    def _remove_prefix(cls, flag_name):
-        return flag_name.replace('tag_', '', 1)
+    @property
+    def total(self):
+        return len(self.mails)
 
     def __init__(self, name, default=False):
         self.name = name
-        self.default = default
         self.ident = name.__hash__()
+        self.default = default
+        self.mails = set()
 
     def __eq__(self, other):
         return self.name == other.name
@@ -56,18 +47,28 @@ class Tag:
     def __hash__(self):
         return self.name.__hash__()
 
+    def increment(self, mail_ident):
+        self.mails.add(mail_ident)
+
+    def decrement(self, mail_ident):
+        self.mails.discard(mail_ident)
+
     def as_dict(self):
         return {
             'name': self.name,
             'default': self.default,
             'ident': self.ident,
-            'counts': {
-                'total': 0,
-                'read': 0,
-                'starred': 0,
-                'replied': 0
-            }
+            'counts': {'total': self.total,
+                       'read': 0,
+                       'starred': 0,
+                       'replied': 0},
+            'mails': self.mails
         }
+
+    def as_json_string(self):
+        tag_dict = self.as_dict()
+        tag_dict['mails'] = list(self.mails)
+        return json.dumps(tag_dict)
 
     def __repr__(self):
         return self.name

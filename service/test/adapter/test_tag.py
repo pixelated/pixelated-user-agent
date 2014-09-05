@@ -20,42 +20,58 @@ from pixelated.adapter.tag import Tag
 
 class TestTag(unittest.TestCase):
 
-    def test_leap_recent_flag_is_translated_to_inbox_tag(self):
-        tag = Tag.from_flag('\\Recent')
-        self.assertEquals(Tag('inbox'), tag)
+    def test_from_dict_sets_all_tag_attributes(self):
+        tag_dict = {'name': 'a_tag',
+                    'default': False,
+                    'counts': {'total': 3,
+                               'read': 1,
+                               'starred': 1,
+                               'replied': 1},
+                    'mails': set([1, 2, 3])}
 
-    def test_leap_deleted_flag_is_translated_to_trash_tag(self):
-        tag = Tag.from_flag('\\Deleted')
-        self.assertEquals(Tag('trash'), tag)
+        tag = Tag.from_dict(tag_dict)
 
-    def test_leap_draft_flag_is_translated_to_draft_tag(self):
-        tag = Tag.from_flag('\\Draft')
-        self.assertEquals(Tag('drafts'), tag)
+        self.assertEquals(tag_dict['name'], tag.name)
+        self.assertEquals(tag_dict['default'], tag.default)
+        self.assertEquals(tag_dict['counts']['total'], tag.total)
+        self.assertEquals(tag_dict['mails'], tag.mails)
 
-    def test_leap_flags_that_are_custom_tags_are_handled(self):
-        tag = Tag.from_flag('tag_work')
-        self.assertEquals(Tag('work'), tag)
+    def test_as_dict_puts_all_tag_attributes_in_the_returning_dict(self):
+        tag = Tag('some_tag', default=True)
+        tag.counts = {'total': 0, 'read': 0, 'starred': 0, 'replied': 0}
+        tag.mails = set([1, 2, 3])
 
-    def test_custom_tags_containing_our_prefix_are_handled(self):
-        tag = Tag.from_flag('tag_tag_work_tag_')
-        self.assertEquals(Tag('tag_work_tag_'), tag)
+        tag_dict = tag.as_dict()
 
-    def test_bulk_conversion(self):
-        tags = Tag.from_flags(['\\Answered', '\\Seen', '\\Recent', 'tag_a_custom', 'List'])
-        self.assertEquals(set([Tag('inbox'), Tag('a_custom')]), tags)
+        self.assertEquals(tag.name, tag_dict['name'])
+        self.assertEquals(tag.default, tag_dict['default'])
+        self.assertEquals(tag.total, tag_dict['counts']['total'])
+        self.assertEquals(tag.mails, tag_dict['mails'])
 
-    def test_inbox_tag_is_translated_to_leap_recent_flag(self):
-        flag = Tag('inbox').to_flag()
-        self.assertEquals('\\Recent', flag)
+    def test_increments_total_count_and_adds_mails_id_to_mails(self):
+        tag = Tag('another')
+        tag.increment(12)
 
-    def test_trash_tag_is_translated_to_leap_deleted_flag(self):
-        flag = Tag('trash').to_flag()
-        self.assertEquals('\\Deleted', flag)
+        self.assertIn(12, tag.mails)
+        self.assertEquals(1, tag.total)
 
-    def test_drafts_tag_is_translated_to_leap_draft_flag(self):
-        flag = Tag('drafts').to_flag()
-        self.assertEquals('\\Draft', flag)
+    def test_decrement_does_nothing_if_mail_has_not_the_tag(self):
+        tag = Tag('tag')
+        tag.decrement(2000)
 
-    def test_custom_tag_has_prefix_when_translated_to_flag(self):
-        flag = Tag('work').to_flag()
-        self.assertEquals('tag_work', flag)
+        self.assertEquals(0, tag.total)
+
+    def test_increment_does_nothing_if_mail_already_has_the_tag(self):
+        tag = Tag('tag')
+        tag.mails = set([12])
+        tag.increment(12)
+
+        self.assertEquals(1, tag.total)
+
+    def test_decrements_total_count_and_removes_mails_id_from_mails(self):
+        tag = Tag('one_more')
+        tag.mails = set([12])
+        tag.decrement(12)
+
+        self.assertNotIn(12, tag.mails)
+        self.assertEquals(0, tag.total)

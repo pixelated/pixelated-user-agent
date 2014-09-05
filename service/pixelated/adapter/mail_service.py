@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from pixelated.adapter.tag import Tag
-
 
 class MailService:
     __slots__ = ['leap_session', 'account', 'mailbox_name']
@@ -41,13 +39,9 @@ class MailService:
 
     def update_tags(self, mail_id, new_tags):
         mail = self.mail(mail_id)
-        tags = set(Tag(str_tag) for str_tag in new_tags)
-        current_tags = mail.update_tags(tags)
-        self._update_mailbox_tags(tags)
-        return current_tags
-
-    def _update_mailbox_tags(self, tags):
-        self.mailbox.update_tags(tags)
+        added, removed = mail.update_tags(new_tags)
+        self.mailbox.notify_tags_updated(added, removed, self.ident)
+        return new_tags
 
     def mail(self, mail_id):
         return self.mailbox.mail(mail_id)

@@ -16,7 +16,6 @@
 import unittest
 
 from pixelated.adapter.pixelated_mail import PixelatedMail
-from pixelated.adapter.tag import Tag
 import test_helper
 
 
@@ -65,10 +64,11 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEqual(mail.tags, ['sent'])
         self.assertEqual(mail.body, 'Este \xe9 o corpo')
 
-    def test_update_tags_return_a_set_for_current_tags(self):
+    def test_update_tags_return_a_set_for_added_tags_and_a_set_for_removed_ones(self):
         pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_headers={'X-tags': ['custom_1', 'custom_2']}))
-        current_tags = pixelated_mail.update_tags(set([Tag('custom_1'), Tag('custom_3')]))
-        self.assertEquals(set([Tag('custom_3'), Tag('custom_1')]), current_tags)
+        added, removed = pixelated_mail.update_tags(set(['custom_1', 'custom_3']))
+        self.assertEquals(set(['custom_3']), added)
+        self.assertEquals(set(['custom_2']), removed)
 
     def test_to_mime_multipart(self):
         mail = PixelatedMail.from_dict(self.mail_dict)

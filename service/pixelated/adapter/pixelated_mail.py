@@ -13,7 +13,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from pixelated.adapter.tag import Tag
 from pixelated.adapter.status import Status
 import dateutil.parser as dateparser
 from email.MIMEMultipart import MIMEMultipart
@@ -68,34 +67,35 @@ class PixelatedMail:
         return temporary_headers
 
     def _extract_tags(self):
-        return set(Tag(tag_name) for tag_name in self.headers.get('x-tags', []))
+        return set(self.headers.get('x-tags', []))
 
     def update_tags(self, tags):
+        old_tags = self.tags
         self.tags = tags
+        removed = old_tags.difference(tags)
+        added = tags.difference(old_tags)
         self._persist_mail_tags(tags)
-        return self.tags
+        return added, removed
 
     def mark_as_read(self):
         self.status.add("read")
 
     def _persist_mail_tags(self, current_tags):
-        tags_headers = [tag.name for tag in current_tags]
         hdoc = self.leap_mail.hdoc
-        hdoc.content['headers']['X-Tags'] = tags_headers
+        hdoc.content['headers']['X-Tags'] = current_tags
         self.leap_mail._soledad.put_doc(hdoc)
 
     def has_tag(self, tag):
-        return Tag(tag) in self.tags
+        return tag in self.tags
 
     def as_dict(self):
-        tags = [tag.name for tag in self.tags]
         statuses = [status.name for status in self.status]
         _headers = self.headers.copy()
         _headers['date'] = self.date
         return {
             'header': _headers,
             'ident': self.ident,
-            'tags': tags,
+            'tags': self.tags,
             'status': statuses,
             'security_casing': self.security_casing,
             'body': self.body
