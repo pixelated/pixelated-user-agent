@@ -28,7 +28,7 @@ MEDIUM_TAGGED_URL = 'https://static.wazokazi.is/py-mediumtagged.tar.gz'
 client = None
 converter = None
 account = None
-loaded = True
+loaded = False
 mail_service = MailService()
 
 

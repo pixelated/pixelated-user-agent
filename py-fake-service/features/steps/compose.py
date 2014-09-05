@@ -44,7 +44,7 @@ def choose_impl(context, recipients_field, to_type):
     recipients_element.find_element_by_css_selector(
         '.tt-input'
         ).send_keys(to_type)
-    wait_until_element_is_visible_by_locator(context, (By.CLASS_NAME, 'tt-dropdown-menu'))
+    wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, '.tt-dropdown-menu div div'))
     browser.find_element_by_css_selector('.tt-dropdown-menu div div').click()
 
 @then("for the '{recipients_field}' field I type '{to_type}' and chose the first contact that shows")

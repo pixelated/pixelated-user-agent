@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import os
+import re
 import mailbox
 
 from tagsset import TagsSet
@@ -41,9 +42,14 @@ class MailService:
 
     def _create_message_from_file(self, filename):
         data = self._read_file(filename)
+        return self.create_message_from_string(data, filename)
+
+    def create_message_from_string(self, data, filename=None):
         if data.startswith('From '):
-            msg = mailbox.mbox(filename).popitem()[1]
-            msg.from_addr = msg.get_from()
+            msg = mailbox.mboxMessage(data)
+            from_addr = re.sub(r"^From ", "", msg.get_unixfrom())
+            msg.from_addr = from_addr
+            msg.set_from(from_addr)
         else:
             msg = mailbox.Message(data)
             msg.from_addr = msg.get('From')
