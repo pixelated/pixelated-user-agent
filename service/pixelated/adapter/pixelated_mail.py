@@ -56,7 +56,7 @@ class PixelatedMail:
     def _split_recipients(self, header_type, temporary_headers):
         if(temporary_headers.get(header_type) is not None):
             recipients = temporary_headers[header_type].split(',')
-            temporary_headers[header_type] = map(lambda x: x.replace(' ', ''), recipients)
+            temporary_headers[header_type] = map(lambda x: x.lstrip(), recipients)
 
     def _extract_headers(self):
         temporary_headers = {}
