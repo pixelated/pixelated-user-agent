@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.tag import Tag
 from pixelated.adapter.tag_index import TagIndex
@@ -66,4 +68,5 @@ class PixelatedMailbox:
 
     @classmethod
     def create(cls, account, mailbox_name='INBOX'):
-        return PixelatedMailbox(account.getMailbox(mailbox_name), '~/.pixelated_index')
+        db_path = os.path.join(os.environ['HOME'], '.pixelated_index')
+        return PixelatedMailbox(account.getMailbox(mailbox_name), db_path)
