@@ -39,8 +39,8 @@ class MailService:
 
     def update_tags(self, mail_id, new_tags):
         mail = self.mail(mail_id)
-        added, removed = mail.update_tags(new_tags)
-        self.mailbox.notify_tags_updated(added, removed, self.ident)
+        added, removed = mail.update_tags(set(new_tags))
+        self.mailbox.notify_tags_updated(added, removed, mail_id)
         return new_tags
 
     def mail(self, mail_id):
