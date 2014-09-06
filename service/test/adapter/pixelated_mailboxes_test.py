@@ -35,7 +35,7 @@ class PixelatedMailboxesTest(unittest.TestCase):
         when(mailbox).mails_by_tags(any(list)).thenReturn(["mail"])
 
         # when
-        mails = self.mailboxes.mails_by_tag(tags_to_search_for)
+        mails = self.mailboxes.mails_by_tag(tags_to_search_for['tags'])
 
         # then
         self.assertEqual(1, len(mails))

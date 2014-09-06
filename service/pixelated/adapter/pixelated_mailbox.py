@@ -1,4 +1,3 @@
-
 #
 # Copyright (c) 2014 ThoughtWorks, Inc.
 #
@@ -43,7 +42,7 @@ class PixelatedMailbox:
         return mails
 
     def mails_by_tags(self, tags):
-        if 'all' in map(str, tags):
+        if 'all' in tags:
             return self.mails()
 
         return [mail for mail in self.mails() if len(mail.tags.intersection(tags)) > 0]

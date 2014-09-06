@@ -16,7 +16,6 @@
 import json
 import argparse
 import os
-import sys
 import os.path
 from flask import Flask
 from flask import request
@@ -115,8 +114,7 @@ def mail(mail_id):
 def mail_tags(mail_id):
     new_tags = request.get_json()['newtags']
     tags = mail_service.update_tags(mail_id, new_tags)
-    tag_names = [tag.name for tag in tags]
-    return respond_json(tag_names)
+    return respond_json(tags)
 
 
 @app.route('/mail/<mail_id>/read', methods=['POST'])

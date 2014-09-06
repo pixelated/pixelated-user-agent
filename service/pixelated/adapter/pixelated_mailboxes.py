@@ -1,4 +1,3 @@
-from pixelated.adapter.tag import Tag
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 
 
@@ -16,11 +15,9 @@ class PixelatedMailBoxes():
                 self.account.mailboxes]
 
     def mails_by_tag(self, query_tags):
-        tags = map(Tag, query_tags)
-
         mails = []
         for mailbox in self.mailboxes:
-            mails.extend(mailbox.mails_by_tags(tags))
+            mails.extend(mailbox.mails_by_tags(query_tags))
 
         return mails
 
