@@ -24,12 +24,15 @@ class TagIndex:
     Manages an index for mail's tags using a file storage.
     """
 
-    def __init__(self, filename):
-        self.db = dbm.open(filename, 'c')
+    def __init__(self, db_path):
+        self.db_path = db_path
+        self.db = dbm.open(db_path, 'c')
         atexit.register(self.close_db)
 
     def set(self, tag):
         self.db[tag.name] = tag.as_json_string()
+        self.close_db()  # force flush
+        self.db = dbm.open(self.db_path, 'c')
 
     def get(self, tag_name):
         if tag_name in self.db:
