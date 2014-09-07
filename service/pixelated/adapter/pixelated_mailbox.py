@@ -61,7 +61,10 @@ class PixelatedMailbox:
         for removed_tag in removed_tags:
             tag = self.tag_index.get(removed_tag)
             tag.decrement(mail_ident)
-            self.tag_index.set(tag)
+            if tag.total == 0:
+                self.tag_index.remove(tag.name)
+            else:
+                self.tag_index.set(tag)
         for added_tag in added_tags:
             tag = self.tag_index.get(added_tag) or Tag(added_tag)
             tag.increment(mail_ident)

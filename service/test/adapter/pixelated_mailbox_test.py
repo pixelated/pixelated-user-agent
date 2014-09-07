@@ -51,8 +51,12 @@ class TestPixelatedMailbox(unittest.TestCase):
         tag_index.close_db()
         mailbox = PixelatedMailbox(test_helper.leap_mailbox(), self.db_file_path)
         self.assertEquals(0, mailbox.tag_index.get('inbox').total)
+        self.assertEquals(1, mailbox.tag_index.get('one_tag').total)
+
         mailbox.notify_tags_updated(set(['inbox']), set(['one_tag']), 12)
+
         self.assertEquals(1, mailbox.tag_index.get('inbox').total)
+        self.assertIsNone(mailbox.tag_index.get('one_tag'))
 
     def test_index_is_initialized_with_mail_tags_if_empty(self):
         mail_one = test_helper.leap_mail(uid=0, extra_headers={'X-Tags': ['tag_1']})
