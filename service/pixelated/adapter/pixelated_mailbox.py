@@ -28,6 +28,9 @@ class PixelatedMailbox:
     def __init__(self, leap_mailbox, index_file_path):
         self.leap_mailbox = leap_mailbox
         self.tag_index = TagIndex(index_file_path)
+        if self.tag_index.empty():
+            for mail in self.mails():
+                self.notify_tags_updated(mail.tags, [], mail.ident)
         for tag in self.SPECIAL_TAGS:
             self.tag_index.add(tag)
 
