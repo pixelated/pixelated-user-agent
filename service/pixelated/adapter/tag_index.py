@@ -34,6 +34,10 @@ class TagIndex:
         self.close_db()  # force flush
         self.db = dbm.open(self.db_path, 'c')
 
+    def add(self, tag):
+        if tag.name not in self.db:
+            self.set(tag)
+
     def get(self, tag_name):
         if tag_name in self.db:
             return Tag.from_json_string(self.db.get(tag_name))
