@@ -61,3 +61,10 @@ class TestTagIndex(unittest.TestCase):
         self.tag_index.add(same_name_tag)
 
         self.assertEquals(True, self.tag_index.get('tag').default)
+
+    def test_empty_returns_true_if_there_are_no_values(self):
+        self.assertTrue(self.tag_index.empty())
+
+    def test_empty_returns_false_if_there_are_values(self):
+        self.tag_index.set(Tag('tag'))
+        self.assertFalse(self.tag_index.empty())

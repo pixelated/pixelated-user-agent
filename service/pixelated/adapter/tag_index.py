@@ -44,6 +44,9 @@ class TagIndex:
         else:
             return None
 
+    def empty(self):
+        return len(self.db.keys()) == 0
+
     def values(self):
         return set(self.get(key) for key in self.db.keys())
 
