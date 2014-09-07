@@ -44,6 +44,10 @@ class TagIndex:
         else:
             return None
 
+    def remove(self, tag_name):
+        if tag_name in self.db:
+            del self.db[tag_name]
+
     def empty(self):
         return len(self.db.keys()) == 0
 

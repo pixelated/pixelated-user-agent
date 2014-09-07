@@ -68,3 +68,11 @@ class TestTagIndex(unittest.TestCase):
     def test_empty_returns_false_if_there_are_values(self):
         self.tag_index.set(Tag('tag'))
         self.assertFalse(self.tag_index.empty())
+
+    def test_remove_deletes_the_tag_with_the_given_key_from_the_index(self):
+        self.tag_index.set(Tag('tag'))
+        self.tag_index.remove('tag')
+        self.assertEquals(None, self.tag_index.get('tag'))
+
+    def test_remove_does_not_raises_exception_if_key_is_not_present(self):
+        self.tag_index.remove('not_there')
