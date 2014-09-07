@@ -29,8 +29,7 @@ class PixelatedMailbox:
         self.leap_mailbox = leap_mailbox
         self.tag_index = TagIndex(index_file_path)
         for tag in self.SPECIAL_TAGS:
-            if tag not in self.tag_index.values():
-                self.tag_index.set(tag)
+            self.tag_index.add(tag)
 
     @property
     def messages(self):
