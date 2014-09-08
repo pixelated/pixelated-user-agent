@@ -1,0 +1,4 @@
+include README.md
+recursive-include pixelated/certificates *.*
+recursive-include debian *
+

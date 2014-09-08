@@ -55,7 +55,7 @@ def data_files():
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-setup(name='Pixelated User Agent Service',
+setup(name='pixelated-user-agent',
       version='0.1',
       description='API to serve the pixelated front-end requests',
       long_description=read('README.md'),
