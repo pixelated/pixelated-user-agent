@@ -76,3 +76,12 @@ class TestTagIndex(unittest.TestCase):
 
     def test_remove_does_not_raises_exception_if_key_is_not_present(self):
         self.tag_index.remove('not_there')
+
+    def test_removals_are_visible_between_instances_using_same_file(self):
+        tag = Tag('some_tag')
+        self.tag_index.set(tag)
+
+        other_tag_index = TagIndex(self.db_path)
+        other_tag_index.remove('some_tag')
+
+        self.assertIsNone(self.tag_index.get('some_tag'))

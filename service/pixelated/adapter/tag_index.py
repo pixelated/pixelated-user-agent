@@ -31,8 +31,7 @@ class TagIndex:
 
     def set(self, tag):
         self.db[tag.name] = tag.as_json_string()
-        self.close_db()  # force flush
-        self.db = dbm.open(self.db_path, 'c')
+        self._flush()
 
     def add(self, tag):
         if tag.name not in self.db:
@@ -47,6 +46,7 @@ class TagIndex:
     def remove(self, tag_name):
         if tag_name in self.db:
             del self.db[tag_name]
+            self._flush()
 
     def empty(self):
         return len(self.db.keys()) == 0
@@ -56,3 +56,7 @@ class TagIndex:
 
     def close_db(self):
         self.db.close()
+
+    def _flush(self):
+        self.close_db()
+        self.db = dbm.open(self.db_path, 'c')
