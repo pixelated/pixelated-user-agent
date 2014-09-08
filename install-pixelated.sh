@@ -25,7 +25,7 @@ function check_installed() {
         fi
 }
 
-for dependency in node npm ruby bundle virtualenv git; do
+for dependency in node npm ruby bundle virtualenv git gpg; do
         check_installed $dependency     
 done
 
