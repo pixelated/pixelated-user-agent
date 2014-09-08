@@ -40,8 +40,16 @@ class PixelatedMailbox:
 
     def mails(self):
         mails = self.leap_mailbox.messages or []
-        mails = [PixelatedMail.from_leap_mail(mail) for mail in mails]
-        return mails
+        result = []
+        mailbox_name = self.leap_mailbox.mbox
+        for mail in mails:
+            pixelated_mail = PixelatedMail.from_leap_mail(mail)
+            if not pixelated_mail.has_tag(mailbox_name):
+                new_tags = set([mailbox_name.lower()])
+                pixelated_mail.update_tags(new_tags.union(pixelated_mail.tags))
+                self.notify_tags_updated(new_tags, [], pixelated_mail.ident)
+            result.append(pixelated_mail)
+        return result
 
     def mails_by_tags(self, tags):
         if 'all' in tags:

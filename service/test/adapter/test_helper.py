@@ -49,6 +49,7 @@ def leap_mail(uid=0, flags=LEAP_FLAGS, headers=DEFAULT_HEADERS, extra_headers={}
                 hdoc=Mock(content={'headers': headers}))
 
 
-def leap_mailbox(messages=[leap_mail(uid=6)]):
+def leap_mailbox(messages=[leap_mail(uid=6)], mailbox_name='INBOX'):
     return Mock(_get_mbox_doc=Mock(return_value=None),
+                mbox=mailbox_name,
                 messages=messages)

@@ -57,6 +57,15 @@ class TestPixelatedMailbox(unittest.TestCase):
         self.assertEquals(1, mailbox.tag_index.get('inbox').total)
         self.assertIsNone(mailbox.tag_index.get('one_tag'))
 
+    def test_mailbox_tag_is_added_when_new_mail_arrives(self):
+        mail_one = test_helper.leap_mail(uid=0)
+
+        leap_mailbox = test_helper.leap_mailbox(messages=[mail_one], mailbox_name='SENT')
+        mailbox = PixelatedMailbox(leap_mailbox, self.db_file_path)
+
+        mail = mailbox.mail(0)
+        self.assertIn('sent', mail.tags)
+
     def test_index_is_initialized_with_mail_tags_if_empty(self):
         mail_one = test_helper.leap_mail(uid=0, extra_headers={'X-Tags': ['tag_1']})
         mail_two = test_helper.leap_mail(uid=1, extra_headers={'X-Tags': ['tag_2']})
