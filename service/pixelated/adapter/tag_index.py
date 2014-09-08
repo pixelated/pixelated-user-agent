@@ -24,14 +24,17 @@ class TagIndex:
     Manages an index for mail's tags using a file storage.
     """
 
+    __db_instances = dict()
+
     def __init__(self, db_path):
         self.db_path = db_path
-        self.db = dbm.open(db_path, 'c')
-        atexit.register(self.close_db)
+        if db_path not in TagIndex.__db_instances:
+            TagIndex.__db_instances[db_path] = dbm.open(db_path, 'c')
+        self.db = TagIndex.__db_instances[db_path]
+        atexit.register(self._close_db)
 
     def set(self, tag):
         self.db[tag.name] = tag.as_json_string()
-        self._flush()
 
     def add(self, tag):
         if tag.name not in self.db:
@@ -46,7 +49,6 @@ class TagIndex:
     def remove(self, tag_name):
         if tag_name in self.db:
             del self.db[tag_name]
-            self._flush()
 
     def empty(self):
         return len(self.db.keys()) == 0
@@ -54,9 +56,7 @@ class TagIndex:
     def values(self):
         return set(self.get(key) for key in self.db.keys())
 
-    def close_db(self):
+    def _close_db(self):
         self.db.close()
-
-    def _flush(self):
-        self.close_db()
-        self.db = dbm.open(self.db_path, 'c')
+        if self.db_path in TagIndex.__db_instances:
+            del TagIndex.__db_instances[self.db_path]

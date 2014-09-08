@@ -28,6 +28,7 @@ class TestPixelatedMailbox(unittest.TestCase):
         self.db_file_path = '/tmp/test_tags'
 
     def tearDown(self):
+        TagIndex(self.db_file_path)._close_db()
         os.remove(self.db_file_path + '.db')
 
     def test_special_tags_always_exists(self):
@@ -38,7 +39,6 @@ class TestPixelatedMailbox(unittest.TestCase):
         tag_index = TagIndex(self.db_file_path)
         tag_index.set(Tag('one_tag'))
         tag_index.set(Tag('two_tag'))
-        tag_index.close_db()
         mailbox = PixelatedMailbox(test_helper.leap_mailbox(), self.db_file_path)
         expected_tags = set([Tag('one_tag'), Tag('two_tag')]).union(mailbox.SPECIAL_TAGS)
         self.assertEquals(expected_tags, mailbox.all_tags())
@@ -48,7 +48,6 @@ class TestPixelatedMailbox(unittest.TestCase):
         tag = Tag('one_tag')
         tag.increment(12)
         tag_index.set(tag)
-        tag_index.close_db()
         mailbox = PixelatedMailbox(test_helper.leap_mailbox(), self.db_file_path)
         self.assertEquals(0, mailbox.tag_index.get('inbox').total)
         self.assertEquals(1, mailbox.tag_index.get('one_tag').total)

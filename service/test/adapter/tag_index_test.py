@@ -16,6 +16,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
 import os
+import uuid
 
 from pixelated.adapter.tag_index import TagIndex
 from pixelated.adapter.tag import Tag
@@ -24,11 +25,11 @@ from pixelated.adapter.tag import Tag
 class TestTagIndex(unittest.TestCase):
 
     def setUp(self):
-        self.db_path = '/tmp/database_test_tag_index'
+        self.db_path = '/tmp/test_tag_index_' + str(uuid.uuid4())
         self.tag_index = TagIndex(self.db_path)
 
     def tearDown(self):
-        self.tag_index.close_db()
+        self.tag_index._close_db()
         os.remove(self.db_path + '.db')
 
     def test_get_and_set_works(self):
