@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.status import Status
+import pixelated.support.date
 import dateutil.parser as dateparser
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
@@ -107,6 +108,7 @@ class PixelatedMail:
         mime_multipart['Cc'] = ", ".join(self.headers['cc'])
         mime_multipart['Bcc'] = ", ".join(self.headers['bcc'])
         mime_multipart['Subject'] = self.headers['subject']
+        mime_multipart['Date'] = self.headers['date']
         mime_multipart.attach(MIMEText(self.body, 'plain'))
         return mime_multipart
 
@@ -130,6 +132,7 @@ class PixelatedMail:
 def from_dict(mail_dict):
     mail = PixelatedMail()
     mail.headers = mail_dict.get('header', {})
+    mail.headers['date'] = pixelated.support.date.iso_now()
     mail.body = mail_dict.get('body', '')
     mail.ident = mail_dict.get('ident', None)
     mail.tags = mail_dict.get('tags', [])

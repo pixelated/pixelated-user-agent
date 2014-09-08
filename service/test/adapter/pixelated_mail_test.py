@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
 
+import pixelated.support.date
 from pixelated.adapter.pixelated_mail import PixelatedMail
 import test_helper
 
@@ -64,6 +65,13 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEqual(mail.tags, ['sent'])
         self.assertEqual(mail.body, 'Este \xe9 o corpo')
 
+    def test_from_dict_adds_current_date(self):
+        pixelated.support.date.iso_now = lambda: 'date now'
+
+        mail = PixelatedMail.from_dict(self.mail_dict)
+
+        self.assertEqual('date now', mail.headers['date'])
+
     def test_update_tags_return_a_set_for_added_tags_and_a_set_for_removed_ones(self):
         pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_headers={'X-tags': ['custom_1', 'custom_2']}))
         added, removed = pixelated_mail.update_tags(set(['custom_1', 'custom_3']))
@@ -71,13 +79,14 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEquals(set(['custom_2']), removed)
 
     def test_to_mime_multipart(self):
-        mail = PixelatedMail.from_dict(self.mail_dict)
+        pixelated.support.date.iso_now = lambda: 'date now'
 
-        mime_multipart = mail.to_mime_multipart()
+        mime_multipart = PixelatedMail.from_dict(self.mail_dict).to_mime_multipart()
 
         self.assertRegexpMatches(mime_multipart.as_string(), "\nTo: to@pixelated.org, anotherto@pixelated.org\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nCc: cc@pixelated.org, anothercc@pixelated.org\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nBcc: bcc@pixelated.org, anotherbcc@pixelated.org\n")
+        self.assertRegexpMatches(mime_multipart.as_string(), "\nDate: date now\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nSubject: Oi\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nEste \xe9 o corpo")
 
