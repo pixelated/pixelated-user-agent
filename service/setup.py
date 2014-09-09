@@ -76,11 +76,13 @@ setup(name='pixelated-user-agent',
           'leap.soledad.common==0.5.2',
           'leap.soledad.client==0.5.2',
           'leap.mail==0.3.9-1-gc1f9c92',
+          'gunicorn'
+      ],
+      tests_require=[
           'nose',
           'mock',
           'httmock',
-          'mockito',
-          'gunicorn'
+          'mockito'
       ],
       entry_points={
         'console_scripts': [

@@ -4,8 +4,6 @@ scanner==0.0.5
 requests==2.3.0
 pytest==2.6.0
 #requirements for bitmask libraries
-mock==1.0.1
-httmock==1.2.2
 srp==1.0.4
 --allow-external dirspec
 --allow-unverified dirspec
