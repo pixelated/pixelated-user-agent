@@ -2,6 +2,7 @@
 .bundle
 *.log
 *.DS_Store
+*.egg-info
 web-ui/node_modules
 web-ui/app/bower_components
 .tmp
@@ -29,4 +30,3 @@ __pycache__/
 .virtualenv
 gunicorn.pid
 gunicorn.log
-Pixelated_User_Agent_Service.egg-info
