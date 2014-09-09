@@ -4,10 +4,11 @@ Section: python
 Priority: optional
 Build-Depends: python-setuptools (>= 0.6b3), python-all (>= 2.6.6-3), debhelper (>= 7.4.3)
 Standards-Version: 3.9.1
+Homepage: http://pixelated-project.org
+Vcs-Git: https://github.com/pixelated-project/pixelated-user-agent.git
+Vcs-Browser: https://github.com/pixelated-project/pixelated-user-agent
 
-
-
-Package: python-pixelated-user-agent
+Package: pixelated-user-agent
 Architecture: all
 Depends: python (>= 2.7), python (<< 2.8), leap-keymanager, soledad-common, soledad-client,, leap-mail, gunicorn, python-srp, python-dirspec, python-u1db
 Description: API to serve the pixelated front-end requests
@@ -31,6 +32,4 @@ Description: API to serve the pixelated front-end requests
  POST   /mail/:id/unstar
  POST   /mail/:id/replied
  POST   /mail/:id/unreplied
-
-
 
