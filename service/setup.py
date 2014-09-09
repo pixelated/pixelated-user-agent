@@ -62,7 +62,7 @@ setup(name='pixelated-user-agent',
       author='Thoughtworks',
       author_email='pixelated-team@thoughtworks.com',
       url='http://pixelated-project.github.io',
-      packages=['pixelated', 'pixelated.adapter', 'pixelated.bitmask_libraries', 'pixelated.config', 'pixelated.certificates'],
+      packages=['pixelated', 'pixelated.adapter', 'pixelated.bitmask_libraries', 'pixelated.config', 'pixelated.certificates', 'pixelated.support'],
       test_suite='nose.collector',
       install_requires=[
           'Twisted',
