@@ -1,3 +1,12 @@
+pixelated-user-agent (0.2) wheezy; urgency=medium
+
+  [ Christoph Kluenter ]
+  * fix debian buildscripts
+  * fix requirements
+  * ignore all egg-info files
+
+ -- Christoph Kluenter <ckluente@thouthworks.com>  Tue, 09 Sep 2014 10:01:52 +0200
+
 pixelated-user-agent (0.1-1) unstable; urgency=low
 
   * source package automatically created by stdeb 0.8.2
