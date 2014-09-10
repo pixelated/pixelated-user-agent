@@ -33,11 +33,11 @@ override_dh_auto_clean:
 
 override_dh_auto_build:
 	dh_auto_build
-	# patch requires.txt file by stripping version information - these are provided by debian depends
-	find debian/ -name requires.txt |xargs perl -i -pe "s/(.*)==.*/\1/"
 	dh_auto_build --sourcedirectory=web-ui
 
 override_dh_auto_install:
 	dh_auto_install
+	# patch requires.txt file by stripping version information - these are provided by debian depends
+	find debian/ -name requires.txt |xargs perl -i -pe "s/(.*)==.*/\1/"
 	dh_auto_install --sourcedirectory=web-ui
 
