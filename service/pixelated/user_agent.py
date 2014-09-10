@@ -37,6 +37,8 @@ static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", ".
 # this is a workaround for packaging
 if not os.path.exists(static_folder):
     static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))
+if not os.path.exists(static_folder):
+    static_folder = os.path.join('usr', 'share', 'pixelated-user-agent')
 app = Flask(__name__, static_url_path='', static_folder=static_folder)
 
 

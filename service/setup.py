@@ -89,5 +89,6 @@ setup(name='pixelated-user-agent',
             'pixelated-user-agent = pixelated.user_agent:setup'
         ]
       },
-      data_files=data_files()
+      data_files=data_files(),
+      include_package_data=True
      )

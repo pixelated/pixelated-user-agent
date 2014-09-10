@@ -2,11 +2,12 @@ Source: pixelated-user-agent
 Maintainer: Thoughtworks <pixelated-team@thoughtworks.com>
 Section: python
 Priority: optional
-Build-Depends: python-setuptools (>= 0.6b3), python-all (>= 2.6.6-3), debhelper (>= 7.4.3)
+Build-Depends: python-setuptools (>= 0.6b3), python-all (>= 2.6.6-3), debhelper (>= 7.4.3), ruby-compass, nodejs
 Standards-Version: 3.9.1
 Homepage: http://pixelated-project.org
 Vcs-Git: https://github.com/pixelated-project/pixelated-user-agent.git
 Vcs-Browser: https://github.com/pixelated-project/pixelated-user-agent
+X-Python-Version: >= 2.7
 
 Package: pixelated-user-agent
 Architecture: all

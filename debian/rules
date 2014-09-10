@@ -27,6 +27,15 @@ include /usr/share/dpkg/default.mk
 #	dh_auto_configure -- \
 #	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
 
+override_dh_auto_clean:
+	dh_auto_clean
+	dh_auto_clean --sourcedirectory=web-ui
 
+override_dh_auto_build:
+	dh_auto_build
+	dh_auto_build --sourcedirectory=web-ui
 
+override_dh_auto_install:
+	dh_auto_install
+	dh_auto_install --sourcedirectory=web-ui
 
