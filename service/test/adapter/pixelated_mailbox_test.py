@@ -18,7 +18,6 @@ from mockito import *
 import leap
 import os
 from pixelated.adapter.pixelated_mail import PixelatedMail
-from mockito import *
 import test_helper
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 from mockito import *
@@ -34,7 +33,6 @@ class TestPixelatedMailbox(unittest.TestCase):
 
     def test_mailbox_tag_is_added_when_new_mail_arrives(self):
         mails = self.mailbox.mails()
-
         self.assertIn('sent', mails[0].tags)
 
     def test_add_message_to_mailbox(self):
