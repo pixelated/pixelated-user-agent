@@ -38,3 +38,11 @@ class TestMailService(unittest.TestCase):
         self.mail_service.mark_as_read(1)
 
         verify(mail).mark_as_read()
+
+    def test_create_draft(self):
+        drafts_mailbox = mock()
+        when(self.mailboxes).drafts().thenReturn(drafts_mailbox)
+
+        self.mail_service.create_draft('a new draft')
+
+        verify(drafts_mailbox).add('a new draft')

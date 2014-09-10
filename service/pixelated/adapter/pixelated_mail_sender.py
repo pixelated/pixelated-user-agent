@@ -28,5 +28,5 @@ class PixelatedMailSender():
         self.smtp_client.sendmail(
             self.account_email_address,
             recipients,
-            mail.to_smtp_format(_from=self.account_email_address)
+            mail.to_smtp_format()
         )

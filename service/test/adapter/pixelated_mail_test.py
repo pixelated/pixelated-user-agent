@@ -91,9 +91,10 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertRegexpMatches(mime_multipart.as_string(), "\nEste \xe9 o corpo")
 
     def test_smtp_format(self):
+        PixelatedMail.from_email_address = 'pixelated@org'
         mail = PixelatedMail.from_dict(self.mail_dict)
 
-        smtp_format = mail.to_smtp_format(_from='pixelated@org')
+        smtp_format = mail.to_smtp_format()
 
         self.assertRegexpMatches(smtp_format, "\nFrom: pixelated@org")
 

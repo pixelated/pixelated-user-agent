@@ -15,8 +15,12 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
 from mockito import *
+import leap
+import os
+from pixelated.adapter.pixelated_mail import PixelatedMail
 import test_helper
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
+from mockito import *
 
 
 class TestPixelatedMailbox(unittest.TestCase):
@@ -31,3 +35,18 @@ class TestPixelatedMailbox(unittest.TestCase):
         mails = self.mailbox.mails()
 
         self.assertIn('sent', mails[0].tags)
+
+    def test_add_message_to_mailbox(self):
+        PixelatedMail.from_email_address = 'pixel@ted.org'
+        mail = PixelatedMail.from_dict(test_helper.mail_dict())
+        mail.to_smtp_format = lambda: 'the mail in smtp format'
+
+        leap_mailbox_messages = mock()
+        leap_mailbox = test_helper.leap_mailbox(messages=[])
+        mailbox = PixelatedMailbox(leap_mailbox, self.db_file_path)
+        mailbox.leap_mailbox.messages = leap_mailbox_messages
+
+        mailbox.add(mail)
+
+        verify(leap_mailbox_messages).add_msg('the mail in smtp format')
+        

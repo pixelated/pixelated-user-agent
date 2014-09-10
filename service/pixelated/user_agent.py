@@ -51,7 +51,6 @@ def respond_json(entity):
 @app.route('/disabled_features')
 def disabled_features():
     return respond_json([
-        'saveDraft',
         'draftReply',
         'signatureStatus',
         'encryptionStatus',
@@ -62,7 +61,10 @@ def disabled_features():
 @app.route('/mails', methods=['POST'])
 def send_mail():
     mail = PixelatedMail.from_dict(request.json)
-    mail_service.send(mail)
+    if mail.ident:
+        mail_service.send_draft(mail)
+    else:
+        mail_service.create_draft(mail)
     return respond_json(None)
 
 
@@ -163,6 +165,7 @@ def register_new_user(username):
 def start_user_agent(debug_enabled):
     leap_session = LeapSession.open(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'],
                                     app.config['LEAP_SERVER_NAME'])
+    PixelatedMail.from_email_address = leap_session.account_email()
     pixelated_mailboxes = PixelatedMailBoxes(leap_session.account)
     pixelated_mail_sender = PixelatedMailSender(leap_session.account_email())
 

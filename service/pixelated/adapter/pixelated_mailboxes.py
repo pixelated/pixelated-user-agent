@@ -2,8 +2,17 @@ from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 
 
 class PixelatedMailBoxes():
+
     def __init__(self, account):
         self.account = account
+
+    def _create_or_get(self, mailbox_name):
+        if mailbox_name not in self.account.mailboxes:
+            self.account.addMailbox(mailbox_name)
+        return PixelatedMailbox.create(self.account, mailbox_name)
+
+    def drafts(self):
+        return self._create_or_get('DRAFTS')
 
     @property
     def mailboxes(self):

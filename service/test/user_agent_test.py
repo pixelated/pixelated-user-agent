@@ -16,7 +16,8 @@
 
 import unittest
 import pixelated.user_agent
-from mock import Mock
+from pixelated.adapter.pixelated_mail import PixelatedMail
+from mockito import *
 import pixelated.adapter.pixelated_mail
 
 
@@ -24,11 +25,31 @@ class UserAgentTest(unittest.TestCase):
 
     def setUp(self):
         self.app = pixelated.user_agent.app.test_client()
+        self.mail_service = mock()
+        pixelated.user_agent.mail_service = self.mail_service
 
-    def test_send_mail_should_add_user_account(self):
-        pixelated.user_agent.mail_service = Mock()
-        pixelated.adapter.pixelated_mail.from_dict = lambda self: 'mail'
+    def test_create_or_send_draft_should_create_draft_if_mail_has_no_ident(self):
+        mail = self.mail_without_ident()
+        pixelated.adapter.pixelated_mail.from_dict = lambda self: mail  #has no ident
 
         self.app.post('/mails', data='{}', content_type="application/json")
 
-        pixelated.user_agent.mail_service.send.assert_called_with('mail')
+        verify(self.mail_service).create_draft(mail)
+
+    def test_create_or_send_draft_should_send_draft_if_mail_has_ident(self):
+        mail = self.mail_with_ident()
+        pixelated.adapter.pixelated_mail.from_dict = lambda self: mail #does have ident
+
+        self.app.post('/mails', data='{}', content_type="application/json")
+
+        verify(self.mail_service).send_draft(mail)
+
+    def mail_without_ident(self):
+        mail = PixelatedMail()
+        mail.ident = ''
+        return mail
+
+    def mail_with_ident(self):
+        mail = PixelatedMail()
+        mail.ident = 1
+        return mail

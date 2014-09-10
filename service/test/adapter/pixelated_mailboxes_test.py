@@ -40,3 +40,4 @@ class PixelatedMailboxesTest(unittest.TestCase):
         # then
         self.assertEqual(1, len(mails))
         self.assertEqual("mail", mails[0])
+

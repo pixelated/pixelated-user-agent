@@ -58,6 +58,9 @@ class PixelatedMailbox:
         original_flags = mail.leap_mail.getFlags()
         self.leap_mailbox.addMessage(mail.raw_message(), original_flags)
 
+    def add(self, mail):
+        self.leap_mailbox.messages.add_msg(mail.to_smtp_format())
+
     @classmethod
     def create(cls, account, mailbox_name='INBOX'):
         return PixelatedMailbox(account.getMailbox(mailbox_name))

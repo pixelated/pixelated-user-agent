@@ -142,9 +142,9 @@ class PixelatedMail:
         mime_multipart.attach(MIMEText(self.body, 'plain'))
         return mime_multipart
 
-    def to_smtp_format(self, _from=None):
+    def to_smtp_format(self):
         mime_multipart = self.to_mime_multipart()
-        mime_multipart['From'] = _from
+        mime_multipart['From'] = PixelatedMail.from_email_address
         return mime_multipart.as_string()
 
     @staticmethod

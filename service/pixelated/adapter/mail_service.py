@@ -47,6 +47,13 @@ class MailService:
     def send(self, mail):
         self.mail_sender.sendmail(mail)
 
+    def create_draft(self, mail):
+        drafts = self.mailboxes.drafts()
+        drafts.add(mail)
+
+    def send_draft(self, mail):
+        pass
+
     def all_tags(self):
         return self.tag_service.all_tags()
 
@@ -72,9 +79,6 @@ class MailService:
         self.tag_service.notify_tags_updated([new_mailbox_tag], [], None)
 
     def save_draft(self, draft):
-        raise NotImplementedError()
-
-    def send_draft(self, draft):
         raise NotImplementedError()
 
     def draft_reply_for(self, mail_id):
