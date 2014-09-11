@@ -14,48 +14,39 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from pixelated.adapter.pixelated_mail import PixelatedMail
-from pixelated.adapter.tag import Tag
-from pixelated.adapter.tag_index import TagIndex
+from pixelated.adapter.tag_service import TagService
 from pixelated.support.id_gen import gen_pixelated_uid
 
 
 class PixelatedMailbox:
 
-    SPECIAL_TAGS = set([Tag('inbox', True), Tag('sent', True), Tag('drafts', True), Tag('trash', True)])
-
-    def __init__(self, leap_mailbox, index_file_path):
+    def __init__(self, leap_mailbox, tag_service=TagService.get_instance()):
+        self.tag_service = tag_service
         self.leap_mailbox = leap_mailbox
-        self.tag_index = TagIndex(index_file_path)
-        if self.tag_index.empty():
-            for mail in self.mails():
-                self.notify_tags_updated(mail.tags, [], mail.ident)
-        for tag in self.SPECIAL_TAGS:
-            self.tag_index.add(tag)
+        self.mailbox_tag = self.leap_mailbox.mbox.lower()
 
     @property
     def messages(self):
         return self.leap_mailbox.messages
 
+    def add_mailbox_tag_if_not_there(self, pixelated_mail):
+        if not pixelated_mail.has_tag(self.mailbox_tag):
+            pixelated_mail.update_tags({self.mailbox_tag}.union(pixelated_mail.tags))
+            self.tag_service.notify_tags_updated({self.mailbox_tag}, [], pixelated_mail.ident)
+
     def mails(self):
         mails = self.leap_mailbox.messages or []
         result = []
-        mailbox_name = self.leap_mailbox.mbox
         for mail in mails:
             pixelated_mail = PixelatedMail.from_leap_mail(mail)
-            if not pixelated_mail.has_tag(mailbox_name):
-                new_tags = set([mailbox_name.lower()])
-                pixelated_mail.update_tags(new_tags.union(pixelated_mail.tags))
-                self.notify_tags_updated(new_tags, [], pixelated_mail.ident)
+            self.add_mailbox_tag_if_not_there(pixelated_mail)
             result.append(pixelated_mail)
         return result
 
     def mails_by_tags(self, tags):
         if 'all' in tags:
             return self.mails()
-
         return [mail for mail in self.mails() if len(mail.tags.intersection(tags)) > 0]
 
     def mail(self, mail_id):
@@ -63,23 +54,6 @@ class PixelatedMailbox:
             if gen_pixelated_uid(self.leap_mailbox.mbox, message.getUID()) == mail_id:
                 return PixelatedMail.from_leap_mail(message)
 
-    def all_tags(self):
-        return self.tag_index.values().union(self.SPECIAL_TAGS)
-
-    def notify_tags_updated(self, added_tags, removed_tags, mail_ident):
-        for removed_tag in removed_tags:
-            tag = self.tag_index.get(removed_tag)
-            tag.decrement(mail_ident)
-            if tag.total == 0:
-                self.tag_index.remove(tag.name)
-            else:
-                self.tag_index.set(tag)
-        for added_tag in added_tags:
-            tag = self.tag_index.get(added_tag) or Tag(added_tag)
-            tag.increment(mail_ident)
-            self.tag_index.set(tag)
-
     @classmethod
     def create(cls, account, mailbox_name='INBOX'):
-        db_path = os.path.join(os.environ['HOME'], '.pixelated_index')
-        return PixelatedMailbox(account.getMailbox(mailbox_name), db_path)
+        return PixelatedMailbox(account.getMailbox(mailbox_name))

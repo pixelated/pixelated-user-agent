@@ -4,10 +4,6 @@ from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 class PixelatedMailBoxes():
     def __init__(self, account):
         self.account = account
-        self.mailbox_name = 'INBOX'
-
-    def inbox(self):
-        return PixelatedMailbox.create(self.account)
 
     @property
     def mailboxes(self):
@@ -21,5 +17,8 @@ class PixelatedMailBoxes():
 
         return mails
 
-    def leap_inbox_mailbox(self):
-        return self.account.getMailbox(self.mailbox_name)
+    def mail(self, mail_id):
+        for mailbox in self.mailboxes:
+            mail = mailbox.mail(mail_id)
+            if mail:
+                return mail

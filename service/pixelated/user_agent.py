@@ -22,6 +22,7 @@ from flask import request
 from flask import Response
 from pixelated.adapter.pixelated_mail_sender import PixelatedMailSender
 from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
+from pixelated.adapter.tag_service import TagService
 import pixelated.reactor_manager as reactor_manager
 import pixelated.search_query as search_query
 import pixelated.bitmask_libraries.session as LeapSession
@@ -114,7 +115,7 @@ def mail(mail_id):
 
 @app.route('/mail/<mail_id>/tags', methods=['POST'])
 def mail_tags(mail_id):
-    new_tags = request.get_json()['newtags']
+    new_tags = map(lambda tag: tag.lower(), request.get_json()['newtags'])
     tags = mail_service.update_tags(mail_id, new_tags)
     return respond_json(tags)
 

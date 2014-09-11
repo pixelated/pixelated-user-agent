@@ -25,15 +25,6 @@ class TestMailService(unittest.TestCase):
         self.mail_sender = mock()
         self.mail_service = MailService(self.mailboxes, self.mail_sender)
 
-    def test_search_without_query_returns_unfiltered_mailbox(self):
-        mailbox_inbox = mock()
-        when(mailbox_inbox).mails().thenReturn(["mail"])
-        when(self.mailboxes).inbox().thenReturn(mailbox_inbox)
-
-        mails = self.mail_service.mails({'tags': {}})
-
-        self.assertEqual(1, len(mails))
-
     def test_send_mail(self):
         mail = "mail"
 

@@ -36,8 +36,8 @@ class Tag:
         return len(self.mails)
 
     def __init__(self, name, default=False):
-        self.name = name
-        self.ident = name.__hash__()
+        self.name = name.lower()
+        self.ident = self.name.__hash__()
         self.default = default
         self.mails = set()
 

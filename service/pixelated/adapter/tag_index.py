@@ -13,9 +13,10 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-
+#
 import dbm
 import atexit
+import os
 from pixelated.adapter.tag import Tag
 
 
@@ -23,10 +24,11 @@ class TagIndex:
     """
     Manages an index for mail's tags using a file storage.
     """
+    DB_PATH = os.path.join(os.environ['HOME'], '.pixelated_index')
 
     __db_instances = dict()
 
-    def __init__(self, db_path):
+    def __init__(self, db_path=DB_PATH):
         self.db_path = db_path
         if db_path not in TagIndex.__db_instances:
             TagIndex.__db_instances[db_path] = dbm.open(db_path, 'c')
@@ -39,6 +41,7 @@ class TagIndex:
     def add(self, tag):
         if tag.name not in self.db:
             self.set(tag)
+        return tag
 
     def get(self, tag_name):
         if tag_name in self.db:
