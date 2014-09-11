@@ -1,12 +1,11 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: pixelated-user-agent
-Source: <http://pixelated-project.org>
+Upstream-Name: Pixelated Dispatcher
+Source: https://github.com/pixelated-project/pixelated-user-agent
 
 Files: *
-Copyright: 2014 Thoughtworks Inc.
+Copyright: Copyright 2014 Thoughtworks Inc.
 License: AGPL-3+
 
-License: AGPL
  Pixelated is free software: you can redistribute it and/or modify
  it under the terms of the GNU Affero General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -18,4 +17,5 @@ License: AGPL
  GNU Affero General Public License for more details.
 
  You should have received a copy of the GNU Affero General Public License
+ along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
