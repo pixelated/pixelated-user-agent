@@ -17,9 +17,13 @@
 
 class Status:
 
+    class PixelatedStatus:
+        SEEN = u'\\Seen'
+        ANSWERED = u'\\Answered'
+
     LEAP_FLAGS_STATUSES = {
-        '\\Seen': 'read',
-        '\\Answered': 'replied'
+        PixelatedStatus.SEEN: 'read',
+        PixelatedStatus.ANSWERED: 'replied'
     }
 
     @classmethod

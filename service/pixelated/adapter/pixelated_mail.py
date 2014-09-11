@@ -27,9 +27,10 @@ class PixelatedMail:
         pass
 
     @staticmethod
-    def from_leap_mail(leap_mail):
+    def from_leap_mail(leap_mail, leap_mail_collection=None):
         mail = PixelatedMail()
         mail.leap_mail = leap_mail
+        mail.leap_mail._collection = leap_mail_collection #Work around until they fix the issue of mails not having the collection set on a LeapMailbox
         mail.body = leap_mail.bdoc.content['raw']
         mail.headers = mail._extract_headers()
         mail.date = PixelatedMail._get_date(mail.headers)
@@ -80,7 +81,9 @@ class PixelatedMail:
         return added, removed
 
     def mark_as_read(self):
-        self.status.add("read")
+        self.leap_mail.setFlags((Status.PixelatedStatus.SEEN,), 1)
+        self.status = self._extract_status()
+        return self
 
     def _persist_mail_tags(self, current_tags):
         hdoc = self.leap_mail.hdoc
@@ -136,6 +139,6 @@ def from_dict(mail_dict):
     mail.headers['date'] = pixelated.support.date.iso_now()
     mail.body = mail_dict.get('body', '')
     mail.ident = mail_dict.get('ident', None)
-    mail.tags = mail_dict.get('tags', [])
+    mail.tags = set(mail_dict.get('tags', []))
     mail.status = set(mail_dict.get('status', []))
     return mail

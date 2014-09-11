@@ -39,7 +39,7 @@ class PixelatedMailbox:
         mails = self.leap_mailbox.messages or []
         result = []
         for mail in mails:
-            pixelated_mail = PixelatedMail.from_leap_mail(mail)
+            pixelated_mail = PixelatedMail.from_leap_mail(mail, mails)
             self.add_mailbox_tag_if_not_there(pixelated_mail)
             result.append(pixelated_mail)
         return result
@@ -50,9 +50,9 @@ class PixelatedMailbox:
         return [mail for mail in self.mails() if len(mail.tags.intersection(tags)) > 0]
 
     def mail(self, mail_id):
-        for message in self.leap_mailbox.messages:
-            if gen_pixelated_uid(self.leap_mailbox.mbox, message.getUID()) == mail_id:
-                return PixelatedMail.from_leap_mail(message)
+        for message in self.mails():
+            if message.ident == mail_id:
+                return message
 
     @classmethod
     def create(cls, account, mailbox_name='INBOX'):

@@ -17,6 +17,7 @@ import unittest
 
 import pixelated.support.date
 from pixelated.adapter.pixelated_mail import PixelatedMail
+from pixelated.adapter.pixelated_mail import Status
 import test_helper
 
 
@@ -62,7 +63,7 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEqual(mail.headers['bcc'], ['bcc@pixelated.org', 'anotherbcc@pixelated.org'])
         self.assertEqual(mail.headers['subject'], 'Oi')
         self.assertEqual(mail.ident, '')
-        self.assertEqual(mail.tags, ['sent'])
+        self.assertEqual(mail.tags, set(['sent']))
         self.assertEqual(mail.body, 'Este \xe9 o corpo')
 
     def test_from_dict_adds_current_date(self):
@@ -113,8 +114,8 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEquals(pixelated_mail.headers['cc'], ["nlima@example.com", "Duda Dornelles <ddornelles@example.com>"])
 
     def test_mark_as_read(self):
-        mail = PixelatedMail.from_dict(self.mail_dict)
+        mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(flags=[]))
 
-        mail.mark_as_read()
+        read_mail = mail.mark_as_read()
 
-        self.assertIn("read", mail.status)
+        self.assertEquals(mail.leap_mail.setFlags.call_args[0], (('\\Seen',), 1))
