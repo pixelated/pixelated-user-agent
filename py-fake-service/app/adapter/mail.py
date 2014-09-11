@@ -71,7 +71,7 @@ class Mail:
 
     def _get_headers(self, mbox_mail):
         headers = {}
-        headers['from'] = mbox_mail.get('From')
+        headers['from'] = mbox_mail.get('From') or mbox_mail.from_addr
         headers['to'] = [mbox_mail.get('To')]
         headers['subject'] = mbox_mail.get('Subject')
         headers['date'] = datetime.fromtimestamp(

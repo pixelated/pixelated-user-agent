@@ -1,5 +1,4 @@
-#
-# Copyright (c) 2014 ThoughtWorks, Inc.
+# # Copyright (c) 2014 ThoughtWorks, Inc.
 #
 # Pixelated is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +27,7 @@ MEDIUM_TAGGED_URL = 'https://static.wazokazi.is/py-mediumtagged.tar.gz'
 client = None
 converter = None
 account = None
-loaded = True
+loaded = False
 mail_service = MailService()
 
 
