@@ -30,7 +30,7 @@ class PixelatedMail:
     def from_leap_mail(leap_mail, leap_mail_collection=None):
         mail = PixelatedMail()
         mail.leap_mail = leap_mail
-        mail.leap_mail._collection = leap_mail_collection #Work around until they fix the issue of mails not having the collection set on a LeapMailbox
+        mail.leap_mail._collection = leap_mail_collection  # Work around until they fix the issue of mails not having the collection set on a LeapMailbox
         mail.body = leap_mail.bdoc.content['raw']
         mail.headers = mail._extract_headers()
         mail.date = PixelatedMail._get_date(mail.headers)
