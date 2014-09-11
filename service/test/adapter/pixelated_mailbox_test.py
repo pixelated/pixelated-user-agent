@@ -18,6 +18,7 @@ from mockito import *
 import leap
 import os
 from pixelated.adapter.pixelated_mail import PixelatedMail
+from mockito import *
 import test_helper
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 from mockito import *
