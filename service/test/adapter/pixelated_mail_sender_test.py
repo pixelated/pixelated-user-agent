@@ -33,7 +33,7 @@ class PixelatedMailSenderTest(unittest.TestCase):
         mail_dict['header']['bcc'] = ['bcc@pixelated.org', 'anotherbcc@pixelated.org']
 
         mail = PixelatedMail.from_dict(mail_dict)
-        mail.to_smtp_format = lambda _from: "mail as smtp string"
+        mail.to_smtp_format = lambda : "mail as smtp string"
 
         self.mail_sender.sendmail(mail)
 
