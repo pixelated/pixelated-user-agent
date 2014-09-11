@@ -19,6 +19,7 @@ import os
 from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.tag import Tag
 from pixelated.adapter.tag_index import TagIndex
+from pixelated.support.id_gen import gen_pixelated_uid
 
 
 class PixelatedMailbox:
@@ -59,7 +60,7 @@ class PixelatedMailbox:
 
     def mail(self, mail_id):
         for message in self.leap_mailbox.messages:
-            if message.getUID() == int(mail_id):
+            if gen_pixelated_uid(self.leap_mailbox.mbox, message.getUID()) == mail_id:
                 return PixelatedMail.from_leap_mail(message)
 
     def all_tags(self):

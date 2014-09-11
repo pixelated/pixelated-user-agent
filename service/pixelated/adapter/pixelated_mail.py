@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.status import Status
+from pixelated.support.id_gen import gen_pixelated_uid
 import pixelated.support.date
 import dateutil.parser as dateparser
 from email.MIMEMultipart import MIMEMultipart
@@ -32,7 +33,7 @@ class PixelatedMail:
         mail.body = leap_mail.bdoc.content['raw']
         mail.headers = mail._extract_headers()
         mail.date = PixelatedMail._get_date(mail.headers)
-        mail.ident = leap_mail.getUID()
+        mail.ident = gen_pixelated_uid(leap_mail._mbox, leap_mail.getUID())
         mail.status = set(mail._extract_status())
         mail.security_casing = {}
         mail.tags = mail._extract_tags()

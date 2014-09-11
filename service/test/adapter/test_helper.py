@@ -41,9 +41,10 @@ def mail_dict():
     }
 
 
-def leap_mail(uid=0, flags=LEAP_FLAGS, headers=DEFAULT_HEADERS, extra_headers={}):
+def leap_mail(uid=0, flags=LEAP_FLAGS, headers=DEFAULT_HEADERS, extra_headers={}, mbox='INBOX'):
     headers = dict(headers.items() + extra_headers.items())
     return Mock(getUID=Mock(return_value=uid),
+                _mbox=mbox,
                 getFlags=Mock(return_value=flags),
                 bdoc=Mock(content={'raw': 'test'}),
                 hdoc=Mock(content={'headers': headers}))

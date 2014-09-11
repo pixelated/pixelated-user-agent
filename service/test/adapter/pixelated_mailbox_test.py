@@ -58,12 +58,13 @@ class TestPixelatedMailbox(unittest.TestCase):
         self.assertIsNone(mailbox.tag_index.get('one_tag'))
 
     def test_mailbox_tag_is_added_when_new_mail_arrives(self):
-        mail_one = test_helper.leap_mail(uid=0)
+        mail_one = test_helper.leap_mail(uid=0, mbox='SENT')
 
         leap_mailbox = test_helper.leap_mailbox(messages=[mail_one], mailbox_name='SENT')
         mailbox = PixelatedMailbox(leap_mailbox, self.db_file_path)
 
-        mail = mailbox.mail(0)
+        from pixelated.support.id_gen import gen_pixelated_uid
+        mail = mailbox.mail(gen_pixelated_uid('SENT', 0))
         self.assertIn('sent', mail.tags)
 
     def test_index_is_initialized_with_mail_tags_if_empty(self):
