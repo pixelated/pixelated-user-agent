@@ -25,7 +25,13 @@ from email.MIMEText import MIMEText
 class PixelatedMail:
 
     def __init__(self):
-        pass
+        self.body = ''
+        self.headers = {}
+        self.ident = None
+        self.status = []
+        self.security_casing = {}
+        self.tags = []
+        self.ident = None
 
     @staticmethod
     def from_leap_mail(leap_mail, leap_mailbox=None):
@@ -34,7 +40,7 @@ class PixelatedMail:
         mail.leap_mailbox = leap_mailbox
         mail.body = leap_mail.bdoc.content['raw']
         mail.headers = mail._extract_headers()
-        mail.date = PixelatedMail._get_date(mail.headers)
+        mail.headers['date'] = PixelatedMail._get_date(mail.headers)
         mail.status = set(mail._extract_status())
         mail.security_casing = {}
         mail.tags = mail._extract_tags()
@@ -121,10 +127,8 @@ class PixelatedMail:
 
     def as_dict(self):
         statuses = [status.name for status in self.status]
-        _headers = self.headers.copy()
-        _headers['date'] = self.date
         return {
-            'header': _headers,
+            'header': self.headers,
             'ident': self.ident,
             'tags': list(self.tags),
             'status': statuses,
@@ -146,6 +150,9 @@ class PixelatedMail:
         mime_multipart = self.to_mime_multipart()
         mime_multipart['From'] = PixelatedMail.from_email_address
         return mime_multipart.as_string()
+
+    def set_ident(self, mailbox_name, uid):
+        self.ident = gen_pixelated_uid(mailbox_name, uid)
 
     @staticmethod
     def from_dict(mail_dict):

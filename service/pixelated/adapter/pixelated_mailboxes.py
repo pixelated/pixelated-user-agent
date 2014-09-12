@@ -26,6 +26,12 @@ class PixelatedMailBoxes():
 
         return mails
 
+    def add_draft(self, mail):
+        drafts = self.drafts()
+        draft_id = drafts.add(mail)
+        mail.set_ident(drafts.mailbox_name, draft_id)
+        return mail
+
     def mail(self, mail_id):
         for mailbox in self.mailboxes:
             mail = mailbox.mail(mail_id)

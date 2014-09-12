@@ -15,14 +15,16 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 import argparse
+import getpass
+
 import os
 import os.path
+import crochet
 from flask import Flask
 from flask import request
 from flask import Response
 from pixelated.adapter.pixelated_mail_sender import PixelatedMailSender
 from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
-from pixelated.adapter.tag_service import TagService
 import pixelated.reactor_manager as reactor_manager
 import pixelated.search_query as search_query
 import pixelated.bitmask_libraries.session as LeapSession
@@ -31,7 +33,7 @@ from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.auth import LeapAuthenticator, LeapCredentials
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.pixelated_mail import PixelatedMail
-import getpass
+
 
 static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "web-ui", "app"))
 
@@ -60,12 +62,12 @@ def disabled_features():
 
 @app.route('/mails', methods=['POST'])
 def send_mail():
-    mail = PixelatedMail.from_dict(request.json)
-    if mail.ident:
-        mail_service.send_draft(mail)
+    _mail = PixelatedMail.from_dict(request.json)
+    if _mail.ident:
+        mail_service.send_draft(_mail)
     else:
-        mail_service.create_draft(mail)
-    return respond_json(None)
+        _mail = mail_service.create_draft(_mail)
+    return respond_json(_mail.as_dict())
 
 
 @app.route('/mails', methods=['PUT'])
@@ -186,6 +188,8 @@ def setup():
         args = parser.parse_args()
         debug_enabled = args.debug or os.environ.get('DEBUG', False)
         reactor_manager.start_reactor(logging=debug_enabled)
+
+        crochet.setup()
         app.config.from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
 
         if args.register:

@@ -76,7 +76,8 @@ setup(name='pixelated-user-agent',
           'leap.soledad.common==0.5.2',
           'leap.soledad.client==0.5.2',
           'leap.mail==0.3.9-1-gc1f9c92',
-          'gunicorn'
+          'gunicorn',
+          'crochet'
       ],
       tests_require=[
           'nose',

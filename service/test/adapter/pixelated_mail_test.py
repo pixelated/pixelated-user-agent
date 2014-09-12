@@ -41,7 +41,7 @@ class TestPixelatedMail(unittest.TestCase):
 
         mail = PixelatedMail.from_leap_mail(leap_mail)
 
-        self.assertEqual(str(mail.date), leap_mail_date_in_iso_format)
+        self.assertEqual(str(mail.headers['date']), leap_mail_date_in_iso_format)
 
     def test_parse_date_from_leap_mail_fallback_to_received_header_if_date_header_isnt_available(self):
         leap_mail_date = "Wed, 03 Sep 2014 13:11:15 -0300"
@@ -52,7 +52,7 @@ class TestPixelatedMail(unittest.TestCase):
 
         mail = PixelatedMail.from_leap_mail(leap_mail)
 
-        self.assertEqual(str(mail.date), leap_mail_date_in_iso_format)
+        self.assertEqual(str(mail.headers['date']), leap_mail_date_in_iso_format)
 
     def test_from_dict(self):
         mail = PixelatedMail.from_dict(self.mail_dict)

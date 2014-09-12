@@ -43,7 +43,6 @@ class TestPixelatedMailbox(unittest.TestCase):
         leap_mailbox_messages = mock()
         self.mailbox.leap_mailbox.messages = leap_mailbox_messages
 
-        self.mailbox.add(mail)
+        self.mailbox.add.wrapped_function(self.mailbox, mail)
 
         verify(leap_mailbox_messages).add_msg('the mail in smtp format')
-        

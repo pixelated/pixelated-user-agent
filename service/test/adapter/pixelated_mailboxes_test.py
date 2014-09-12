@@ -23,10 +23,12 @@ from mockito import *
 class PixelatedMailboxesTest(unittest.TestCase):
     def setUp(self):
         self.account = mock()
+        self.drafts_mailbox = mock()
+        self.drafts_mailbox.mailbox_name = 'drafts'
         self.mailboxes = PixelatedMailBoxes(self.account)
+        self.mailboxes.drafts = lambda: self.drafts_mailbox
 
     def test_search_for_tags(self):
-        # given
         mailbox = mock()
         self.account.mailboxes = ['INBOX']
         tags_to_search_for = {'tags': ['inbox', 'custom_tag']}
@@ -34,10 +36,16 @@ class PixelatedMailboxesTest(unittest.TestCase):
         when(PixelatedMailbox).create(self.account, 'INBOX').thenReturn(mailbox)
         when(mailbox).mails_by_tags(any(list)).thenReturn(["mail"])
 
-        # when
         mails = self.mailboxes.mails_by_tag(tags_to_search_for['tags'])
 
-        # then
         self.assertEqual(1, len(mails))
         self.assertEqual("mail", mails[0])
 
+    def test_add_draft(self):
+        mail = mock()
+        when(self.drafts_mailbox).add(mail).thenReturn(1)
+
+        self.mailboxes.add_draft(mail)
+
+        verify(self.drafts_mailbox).add(mail)
+        verify(mail).set_ident('drafts', 1)

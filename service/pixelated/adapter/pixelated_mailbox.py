@@ -16,6 +16,7 @@
 
 from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.tag_service import TagService
+from crochet import wait_for
 
 
 class PixelatedMailbox:
@@ -28,6 +29,10 @@ class PixelatedMailbox:
     @property
     def messages(self):
         return self.leap_mailbox.messages
+
+    @property
+    def mailbox_name(self):
+        return self.leap_mailbox.mbox
 
     def add_mailbox_tag_if_not_there(self, pixelated_mail):
         if not pixelated_mail.has_tag(self.mailbox_tag):
@@ -58,8 +63,9 @@ class PixelatedMailbox:
         original_flags = mail.leap_mail.getFlags()
         self.leap_mailbox.addMessage(mail.raw_message(), original_flags)
 
+    @wait_for(timeout=3.0)
     def add(self, mail):
-        self.leap_mailbox.messages.add_msg(mail.to_smtp_format())
+        return self.leap_mailbox.messages.add_msg(mail.to_smtp_format())
 
     @classmethod
     def create(cls, account, mailbox_name='INBOX'):

@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.tag_service import TagService
+from pixelated.support.id_gen import gen_pixelated_uid
 
 
 class MailService:
@@ -33,7 +34,7 @@ class MailService:
         if query['tags']:
             _mails = self.mailboxes.mails_by_tag(query['tags'])
 
-        return sorted(_mails or [], key=lambda mail: mail.date, reverse=True)
+        return sorted(_mails or [], key=lambda mail: mail.headers['date'], reverse=True)
 
     def update_tags(self, mail_id, new_tags):
         mail = self.mail(mail_id)
@@ -48,8 +49,7 @@ class MailService:
         self.mail_sender.sendmail(mail)
 
     def create_draft(self, mail):
-        drafts = self.mailboxes.drafts()
-        drafts.add(mail)
+        return self.mailboxes.add_draft(mail)
 
     def send_draft(self, mail):
         pass
