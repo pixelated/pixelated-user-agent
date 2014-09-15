@@ -26,6 +26,8 @@ class UserAgentTest(unittest.TestCase):
     def setUp(self):
         self.app = pixelated.user_agent.app.test_client()
         self.mail_service = mock()
+
+        pixelated.user_agent.DISABLED_FEATURES = []
         pixelated.user_agent.mail_service = self.mail_service
 
     def test_create_or_send_draft_should_create_draft_if_mail_has_no_ident(self):
