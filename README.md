@@ -54,6 +54,22 @@ If you don't have `bower` installed globaly, change the third line to `$ ./node_
 ## Fake Service
 From inside `./fake-service`
 ```
-$ bundle install
+$ virtualenv .virtualenv
+$ source .virtualenv/bin/activate
+$ pip install -r requirements.txt
+$ ./go
 ```
+
+If you want to see random emails on the fake service, run it like this
+```
+$ env AUTOLOAD=True ./go
+```
+
+If you want to control the emails you'll see on the fake service, edit the mailset.csv.example file
+and run the following command while the server is running
+```
+$ curl --data-binary @mailset.csv.example http://localhost:4567/control/mailset/csv/load
+```
+
+
 And that's it.
