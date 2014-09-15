@@ -43,13 +43,13 @@ if not os.path.exists(static_folder):
 if not os.path.exists(static_folder):
     static_folder = os.path.join('usr', 'share', 'pixelated-user-agent')
 app = Flask(__name__, static_url_path='', static_folder=static_folder)
+DISABLED_FEATURES = ['saveDraft', 'draftReply', 'signatureStatus', 'encryptionStatus', 'contacts']
 
 
 def respond_json(entity):
     response = json.dumps(entity)
     return Response(response=response, mimetype="application/json")
 
-DISABLED_FEATURES = ['saveDraft', 'draftReply', 'signatureStatus', 'encryptionStatus', 'contacts']
 
 @app.route('/disabled_features')
 def disabled_features():
@@ -59,7 +59,7 @@ def disabled_features():
 @app.route('/mails', methods=['POST'])
 def send_mail():
     _mail = PixelatedMail.from_dict(request.json)
-    if 'saveDrafts' in DISABLED_FEATURES:
+    if 'saveDraft' in DISABLED_FEATURES:
         mail_service.send(_mail)
     else:
         if _mail.ident:
