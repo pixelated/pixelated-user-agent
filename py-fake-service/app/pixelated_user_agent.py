@@ -28,7 +28,7 @@ MEDIUM_TAGGED_URL = 'https://static.wazokazi.is/py-mediumtagged.tar.gz'
 client = None
 converter = None
 account = None
-loaded = False
+autoload = os.environ.get('AUTOLOAD', False)
 mail_service = MailService()
 
 
@@ -180,10 +180,10 @@ def load_mailset(mailset):
 
 @app.route('/')
 def index():
-    global loaded
-    if not loaded:
+    global autoload
+    if autoload:
         load_mailset('mediumtagged')
-        loaded = True
+        autoload = False
 
     return app.send_static_file('index.html')
 
