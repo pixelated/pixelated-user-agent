@@ -49,24 +49,23 @@ def respond_json(entity):
     response = json.dumps(entity)
     return Response(response=response, mimetype="application/json")
 
+DISABLED_FEATURES = ['saveDraft', 'draftReply', 'signatureStatus', 'encryptionStatus', 'contacts']
 
 @app.route('/disabled_features')
 def disabled_features():
-    return respond_json([
-        'draftReply',
-        'signatureStatus',
-        'encryptionStatus',
-        'contacts'
-    ])
+    return respond_json(DISABLED_FEATURES)
 
 
 @app.route('/mails', methods=['POST'])
 def send_mail():
     _mail = PixelatedMail.from_dict(request.json)
-    if _mail.ident:
-        mail_service.send_draft(_mail)
+    if 'saveDrafts' in DISABLED_FEATURES:
+        mail_service.send(_mail)
     else:
-        _mail = mail_service.create_draft(_mail)
+        if _mail.ident:
+            mail_service.send_draft(_mail)
+        else:
+            _mail = mail_service.create_draft(_mail)
     return respond_json(_mail.as_dict())
 
 
