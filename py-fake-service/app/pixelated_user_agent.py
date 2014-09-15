@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from flask import Flask, request, Response, redirect
+import os
 import csv
 import json
 import datetime

@@ -16,7 +16,7 @@
 from datetime import datetime
 import random
 import calendar
-
+from dateutil import parser
 
 class Mail:
 
@@ -74,10 +74,7 @@ class Mail:
         headers['from'] = mbox_mail.get('From') or mbox_mail.from_addr
         headers['to'] = [mbox_mail.get('To')]
         headers['subject'] = mbox_mail.get('Subject')
-        headers['date'] = datetime.fromtimestamp(
-            random.randrange(
-                1222222222,
-                self.NOW)).isoformat()
+        headers['date'] = parser.parse(mbox_mail['Date']).isoformat()
         headers['content_type'] = mbox_mail.get('Content-Type')
 
         return headers

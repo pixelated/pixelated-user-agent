@@ -2,3 +2,4 @@ flask==0.10.1
 scanner==0.0.5
 requests==2.3.0
 gunicorn==19.1.1
+python-dateutil
