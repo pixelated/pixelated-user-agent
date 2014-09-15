@@ -16,7 +16,6 @@
 
 from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.tag_service import TagService
-from pixelated.support.id_gen import gen_pixelated_uid
 
 
 class PixelatedMailbox:
@@ -39,7 +38,8 @@ class PixelatedMailbox:
         mails = self.leap_mailbox.messages or []
         result = []
         for mail in mails:
-            pixelated_mail = PixelatedMail.from_leap_mail(mail, mails)
+            mail._collection = mails
+            pixelated_mail = PixelatedMail.from_leap_mail(mail, self.leap_mailbox)
             self.add_mailbox_tag_if_not_there(pixelated_mail)
             result.append(pixelated_mail)
         return result
@@ -53,6 +53,10 @@ class PixelatedMailbox:
         for message in self.mails():
             if message.ident == mail_id:
                 return message
+
+    def add_mail(self, mail):
+        original_flags = mail.leap_mail.getFlags()
+        self.leap_mailbox.addMessage(mail.raw_message(), original_flags)
 
     @classmethod
     def create(cls, account, mailbox_name='INBOX'):

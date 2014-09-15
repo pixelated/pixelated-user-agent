@@ -22,3 +22,11 @@ class PixelatedMailBoxes():
             mail = mailbox.mail(mail_id)
             if mail:
                 return mail
+
+    def mailbox_exists(self, name):
+        return name.upper() in map(lambda x: x.upper(), self.account.mailboxes)
+
+    def trash(self):
+        if not self.mailbox_exists('TRASH'):
+            self.account.addMailbox('TRASH')
+        return PixelatedMailbox.create(self.account, 'TRASH')

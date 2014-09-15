@@ -20,6 +20,7 @@ class Status:
     class PixelatedStatus:
         SEEN = u'\\Seen'
         ANSWERED = u'\\Answered'
+        DELETED = u'\\Deleted'
 
     LEAP_FLAGS_STATUSES = {
         PixelatedStatus.SEEN: 'read',

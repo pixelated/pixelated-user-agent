@@ -66,7 +66,10 @@ class MailService:
         raise NotImplementedError()
 
     def delete_mail(self, mail_id):
-        raise NotImplementedError()
+        mail = self.mailboxes.mail(mail_id)
+        new_mailbox_tag, old_mailbox_tag = mail.move_to(self.mailboxes.trash())
+        self.tag_service.notify_tags_updated([], [old_mailbox_tag], mail_id)
+        self.tag_service.notify_tags_updated([new_mailbox_tag], [], None)
 
     def save_draft(self, draft):
         raise NotImplementedError()

@@ -96,8 +96,16 @@ def mails():
 
 
 @app.route('/mail/<mail_id>', methods=['DELETE'])
-def delete_mails(mail_id):
+def delete_mail(mail_id):
     mail_service.delete_mail(mail_id)
+    return respond_json(None)
+
+
+@app.route('/mails', methods=['DELETE'])
+def delete_mails():
+    idents = json.loads(request.form['idents'])
+    for ident in idents:
+        mail_service.delete_mail(ident)
     return respond_json(None)
 
 

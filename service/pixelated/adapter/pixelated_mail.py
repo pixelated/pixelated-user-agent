@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.status import Status
 from pixelated.support.id_gen import gen_pixelated_uid
+import json
 import pixelated.support.date
 import dateutil.parser as dateparser
 from email.MIMEMultipart import MIMEMultipart
@@ -27,18 +28,21 @@ class PixelatedMail:
         pass
 
     @staticmethod
-    def from_leap_mail(leap_mail, leap_mail_collection=None):
+    def from_leap_mail(leap_mail, leap_mailbox=None):
         mail = PixelatedMail()
         mail.leap_mail = leap_mail
-        mail.leap_mail._collection = leap_mail_collection  # Work around until they fix the issue of mails not having the collection set on a LeapMailbox
+        mail.leap_mailbox = leap_mailbox
         mail.body = leap_mail.bdoc.content['raw']
         mail.headers = mail._extract_headers()
         mail.date = PixelatedMail._get_date(mail.headers)
-        mail.ident = gen_pixelated_uid(leap_mail._mbox, leap_mail.getUID())
         mail.status = set(mail._extract_status())
         mail.security_casing = {}
         mail.tags = mail._extract_tags()
         return mail
+
+    @property
+    def ident(self):
+        return gen_pixelated_uid(self.leap_mailbox.mbox, self.leap_mail.getUID())
 
     def set_from(self, _from):
         self.headers['from'] = [_from]
@@ -70,7 +74,7 @@ class PixelatedMail:
         return temporary_headers
 
     def _extract_tags(self):
-        return set(self.headers.get('x-tags', []))
+        return set(json.loads(self.headers.get('x-tags', '[]')))
 
     def update_tags(self, tags):
         old_tags = self.tags
@@ -87,11 +91,33 @@ class PixelatedMail:
 
     def _persist_mail_tags(self, current_tags):
         hdoc = self.leap_mail.hdoc
-        hdoc.content['headers']['X-Tags'] = list(current_tags)
+        hdoc.content['headers']['X-Tags'] = json.dumps(list(current_tags))
         self.leap_mail._soledad.put_doc(hdoc)
 
     def has_tag(self, tag):
         return tag in self.tags
+
+    def move_to(self, destiny_mailbox):
+        new_leap_mail = destiny_mailbox.add_mail(self)
+        self._delete_from_leap_mailbox()
+        old_mailbox_tag = self.leap_mailbox.mbox.lower()
+        self._update_leap_references(destiny_mailbox.leap_mailbox, new_leap_mail)
+
+        return destiny_mailbox.mailbox_tag, old_mailbox_tag
+
+    def _delete_from_leap_mailbox(self):
+        self.leap_mail.setFlags((Status.PixelatedStatus.DELETED,), 1)
+        self.leap_mailbox.expunge()
+
+    def _update_leap_references(self, new_leap_mailbox, new_leap_mail):
+        self.leap_mailbox = new_leap_mailbox
+        self.leap_mail = new_leap_mail
+
+    def raw_message(self):
+        raw_message = ''.join("%s: %s\n" % (key, value) for key, value in self.leap_mail.hdoc.content['headers'].items())
+        raw_message += '\n\n'
+        raw_message += self.leap_mail.bdoc.content['raw']
+        return raw_message
 
     def as_dict(self):
         statuses = [status.name for status in self.status]

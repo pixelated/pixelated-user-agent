@@ -17,7 +17,6 @@ import unittest
 
 import pixelated.support.date
 from pixelated.adapter.pixelated_mail import PixelatedMail
-from pixelated.adapter.pixelated_mail import Status
 import test_helper
 
 
@@ -74,7 +73,7 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEqual('date now', mail.headers['date'])
 
     def test_update_tags_return_a_set_for_added_tags_and_a_set_for_removed_ones(self):
-        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_headers={'X-tags': ['custom_1', 'custom_2']}))
+        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_headers={'X-tags': '["custom_1", "custom_2"]'}))
         added, removed = pixelated_mail.update_tags(set(['custom_1', 'custom_3']))
         self.assertEquals(set(['custom_3']), added)
         self.assertEquals(set(['custom_2']), removed)
@@ -116,6 +115,6 @@ class TestPixelatedMail(unittest.TestCase):
     def test_mark_as_read(self):
         mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(flags=[]))
 
-        read_mail = mail.mark_as_read()
+        mail.mark_as_read()
 
         self.assertEquals(mail.leap_mail.setFlags.call_args[0], (('\\Seen',), 1))

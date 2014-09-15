@@ -30,8 +30,8 @@ class TagServiceTest(unittest.TestCase):
         self.tag_service = TagService(tag_index=self.tag_index)
 
     def test_index_is_initialized_with_mail_tags_if_empty(self):
-        mail_one = PixelatedMail.from_leap_mail(test_helper.leap_mail(uid=0, extra_headers={'X-Tags': ['tag_1']}))
-        mail_two = PixelatedMail.from_leap_mail(test_helper.leap_mail(uid=1, extra_headers={'X-Tags': ['tag_2']}))
+        mail_one = PixelatedMail.from_leap_mail(test_helper.leap_mail(uid=0, extra_headers={'X-Tags': '["tag_1"]'}), test_helper.leap_mailbox())
+        mail_two = PixelatedMail.from_leap_mail(test_helper.leap_mail(uid=1, extra_headers={'X-Tags': '["tag_2"]'}), test_helper.leap_mailbox())
         mails = [mail_one, mail_two]
 
         self.tag_service.load_index(mails)
