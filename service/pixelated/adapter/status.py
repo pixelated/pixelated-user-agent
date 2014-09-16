@@ -21,10 +21,12 @@ class Status:
         SEEN = u'\\Seen'
         ANSWERED = u'\\Answered'
         DELETED = u'\\Deleted'
+        RECENT = u'\\Recent'
 
     LEAP_FLAGS_STATUSES = {
         PixelatedStatus.SEEN: 'read',
-        PixelatedStatus.ANSWERED: 'replied'
+        PixelatedStatus.ANSWERED: 'replied',
+        PixelatedStatus.RECENT: 'recent'
     }
 
     @classmethod
