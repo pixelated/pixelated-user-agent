@@ -27,11 +27,9 @@ class PixelatedMail:
     def __init__(self):
         self.body = ''
         self.headers = {}
-        self.ident = None
         self.status = []
         self.security_casing = {}
         self.tags = []
-        self.ident = None
 
     @staticmethod
     def from_leap_mail(leap_mail, leap_mailbox=None):
@@ -80,7 +78,10 @@ class PixelatedMail:
         return temporary_headers
 
     def _extract_tags(self):
-        return set(json.loads(self.headers.get('x-tags', '[]')))
+        tags = self.headers.get('x-tags', '[]')
+        if type(tags) is list:
+            return set(tags)
+        return set(json.loads(tags))
 
     def update_tags(self, tags):
         old_tags = self.tags
