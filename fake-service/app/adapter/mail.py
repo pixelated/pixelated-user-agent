@@ -74,10 +74,18 @@ class Mail:
         headers['from'] = mbox_mail.get('From') or mbox_mail.from_addr
         headers['to'] = [mbox_mail.get('To')]
         headers['subject'] = mbox_mail.get('Subject')
-        headers['date'] = parser.parse(mbox_mail['Date']).isoformat()
+        headers['date'] = self._get_date(mbox_mail)
         headers['content_type'] = mbox_mail.get('Content-Type')
 
         return headers
+
+    def _get_date(self, mbox_mail):
+        random_date = datetime.fromtimestamp(random.randrange(1222222222, self.NOW)).isoformat()
+        mbox_date = mbox_mail.get('Date')
+
+        if not mbox_date:  # means we are still using the mailsets - important for functional tests
+           return random_date
+        return parser.parse(mbox_mail['Date']).isoformat()
 
     def _get_tags(self, mbox_mail):
         return filter(len, mbox_mail.get('X-TW-Pixelated-Tags').split(', '))
