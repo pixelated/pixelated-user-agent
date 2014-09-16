@@ -3,6 +3,8 @@ from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 
 class PixelatedMailBoxes():
 
+
+
     def __init__(self, account):
         self.account = account
 
@@ -13,6 +15,9 @@ class PixelatedMailBoxes():
 
     def drafts(self):
         return self._create_or_get('DRAFTS')
+
+    def trash(self):
+        return self._create_or_get('TRASH')
 
     @property
     def mailboxes(self):
@@ -41,7 +46,4 @@ class PixelatedMailBoxes():
     def mailbox_exists(self, name):
         return name.upper() in map(lambda x: x.upper(), self.account.mailboxes)
 
-    def trash(self):
-        if not self.mailbox_exists('TRASH'):
-            self.account.addMailbox('TRASH')
-        return PixelatedMailbox.create(self.account, 'TRASH')
+
