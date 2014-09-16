@@ -43,7 +43,6 @@ class MailService:
         return new_tags
 
     def mail(self, mail_id):
-        import pdb;pdb.set_trace()
         return self.mailboxes.mail(mail_id)
 
     def send(self, mail):
