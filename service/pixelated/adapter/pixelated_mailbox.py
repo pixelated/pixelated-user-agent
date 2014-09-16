@@ -35,9 +35,10 @@ class PixelatedMailbox:
         return self.leap_mailbox.mbox
 
     def add_mailbox_tag_if_not_there(self, pixelated_mail):
-        if not pixelated_mail.has_tag(self.mailbox_tag):
+        if not pixelated_mail.has_tag(self.mailbox_tag) and pixelated_mail.is_recent:
             pixelated_mail.update_tags({self.mailbox_tag}.union(pixelated_mail.tags))
             self.tag_service.notify_tags_updated({self.mailbox_tag}, [], pixelated_mail.ident)
+            pixelated_mail.mark_as_not_recent()
 
     def mails(self):
         mails = self.leap_mailbox.messages or []

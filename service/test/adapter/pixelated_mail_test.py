@@ -119,3 +119,10 @@ class TestPixelatedMail(unittest.TestCase):
         mail.mark_as_read()
 
         self.assertEquals(mail.leap_mail.setFlags.call_args[0], (('\\Seen',), 1))
+
+    def test_mark_as_not_recent(self):
+        mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(flags=[]))
+
+        mail.mark_as_not_recent()
+
+        self.assertEquals(mail.leap_mail.setFlags.call_args[0], (('\\Recent',), -1))

@@ -31,9 +31,15 @@ class TestPixelatedMailbox(unittest.TestCase):
         self.tag_service = mock()
         self.mailbox = PixelatedMailbox(leap_mailbox, self.tag_service)
 
-    def test_mailbox_tag_is_added_when_new_mail_arrives(self):
-        mails = self.mailbox.mails()
-        self.assertIn('sent', mails[0].tags)
+    def test_mailbox_tag_is_added_when_recent_mail_arrives(self):
+        recent_leap_mail = test_helper.leap_mail(uid=0, mbox='SPAM', flags=['\\Recent'])
+        mailbox = PixelatedMailbox(test_helper.leap_mailbox(messages=[recent_leap_mail], mailbox_name='SPAM'))
+        self.assertIn('spam', mailbox.mails()[0].tags)
+
+    def test_mailbox_tag_is_ignored_for_non_recent_mail(self):
+        recent_leap_mail = test_helper.leap_mail(uid=0, mbox='SPAM', flags=[])
+        mailbox = PixelatedMailbox(test_helper.leap_mailbox(messages=[recent_leap_mail], mailbox_name='SPAM'))
+        self.assertNotIn('spam', mailbox.mails()[0].tags)
 
     def test_add_message_to_mailbox(self):
         PixelatedMail.from_email_address = 'pixel@ted.org'

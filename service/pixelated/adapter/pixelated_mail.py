@@ -45,6 +45,10 @@ class PixelatedMail:
         return mail
 
     @property
+    def is_recent(self):
+        return Status('recent') in self.status
+
+    @property
     def ident(self):
         return gen_pixelated_uid(self.leap_mailbox.mbox, self.leap_mail.getUID())
 
@@ -93,6 +97,11 @@ class PixelatedMail:
 
     def mark_as_read(self):
         self.leap_mail.setFlags((Status.PixelatedStatus.SEEN,), 1)
+        self.status = self._extract_status()
+        return self
+
+    def mark_as_not_recent(self):
+        self.leap_mail.setFlags((Status.PixelatedStatus.RECENT,), -1)
         self.status = self._extract_status()
         return self
 
