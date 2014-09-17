@@ -40,8 +40,9 @@ class PixelatedMailBoxes():
         mail.remove_all_tags()
         origin_mailbox = mail.mailbox_name
 
+        new_mail_id = self.trash().add(mail)
         self._create_or_get(origin_mailbox).remove(mail)
-        return self.trash().add(mail)
+        return new_mail_id
 
     def mail(self, mail_id):
         for mailbox in self.mailboxes:
