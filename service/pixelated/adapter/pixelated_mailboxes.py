@@ -3,8 +3,6 @@ from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 
 class PixelatedMailBoxes():
 
-
-
     def __init__(self, account):
         self.account = account
 
@@ -45,5 +43,3 @@ class PixelatedMailBoxes():
 
     def mailbox_exists(self, name):
         return name.upper() in map(lambda x: x.upper(), self.account.mailboxes)
-
-
