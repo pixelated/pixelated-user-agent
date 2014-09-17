@@ -14,10 +14,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
+import os
 
 import pixelated.support.date
-from pixelated.adapter.pixelated_mail import PixelatedMail
 import test_helper
+from pixelated.adapter.pixelated_mail import PixelatedMail
+from pixelated.adapter.tag_service import TagService
+from pixelated.adapter.tag_index import TagIndex
+from pixelated.adapter.tag import Tag
+from mock import Mock
 
 
 class TestPixelatedMail(unittest.TestCase):
@@ -72,11 +77,10 @@ class TestPixelatedMail(unittest.TestCase):
 
         self.assertEqual('date now', mail.headers['date'])
 
-    def test_update_tags_return_a_set_for_added_tags_and_a_set_for_removed_ones(self):
-        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_headers={'X-tags': '["custom_1", "custom_2"]'}))
-        added, removed = pixelated_mail.update_tags(set(['custom_1', 'custom_3']))
-        self.assertEquals(set(['custom_3']), added)
-        self.assertEquals(set(['custom_2']), removed)
+    def test_update_tags_return_a_set_with_the_current_tags(self):
+        pixelated_mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_headers={'X-tags': '["custom_1", "custom_2"]'}), Mock())
+        current_tags = pixelated_mail.update_tags(set(['custom_1', 'custom_3']))
+        self.assertEquals(set(['custom_3', 'custom_1']), current_tags)
 
     def test_to_mime_multipart(self):
         pixelated.support.date.iso_now = lambda: 'date now'
@@ -126,3 +130,20 @@ class TestPixelatedMail(unittest.TestCase):
         mail.mark_as_not_recent()
 
         self.assertEquals(mail.leap_mail.setFlags.call_args[0], (('\\Recent',), -1))
+
+    def test_remove_all_tags(self):
+        mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_headers={'X-Tags': '["skinka", "altoids"]'}), Mock())
+        self.assertEquals(set(['skinka', 'altoids']), mail.tags)
+
+        mail.remove_all_tags()
+        self.assertEquals(set([]), mail.tags)
+
+    def test_update_tags_notifies_tag_service(self):
+        db_path = '/tmp/test_update_tags_notifies_tag_service'
+        tag_service = TagService(TagIndex(db_path))
+        mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(), tag_service)
+
+        mail.update_tags(set(['new_tag']))
+        self.assertIn(Tag('new_tag'), tag_service.all_tags())
+
+        os.remove(db_path + '.db')

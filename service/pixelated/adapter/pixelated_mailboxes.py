@@ -7,6 +7,7 @@ class PixelatedMailBoxes():
         self.account = account
 
     def _create_or_get(self, mailbox_name):
+        mailbox_name = mailbox_name.upper()
         if mailbox_name not in self.account.mailboxes:
             self.account.addMailbox(mailbox_name)
         return PixelatedMailbox.create(self.account, mailbox_name)
@@ -35,11 +36,15 @@ class PixelatedMailBoxes():
         mail.set_ident(drafts.mailbox_name, draft_id)
         return mail
 
+    def move_to_trash(self, mail):
+        mail.remove_all_tags()
+        origin_mailbox = mail.mailbox_name
+
+        self._create_or_get(origin_mailbox).remove(mail)
+        return self.trash().add(mail)
+
     def mail(self, mail_id):
         for mailbox in self.mailboxes:
             mail = mailbox.mail(mail_id)
             if mail:
                 return mail
-
-    def mailbox_exists(self, name):
-        return name.upper() in map(lambda x: x.upper(), self.account.mailboxes)

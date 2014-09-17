@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.tag_service import TagService
-from pixelated.support.id_gen import gen_pixelated_uid
 
 
 class MailService:
@@ -38,9 +37,7 @@ class MailService:
 
     def update_tags(self, mail_id, new_tags):
         mail = self.mail(mail_id)
-        added, removed = mail.update_tags(set(new_tags))
-        self.tag_service.notify_tags_updated(added, removed, mail_id)
-        return new_tags
+        return mail.update_tags(set(new_tags))
 
     def mail(self, mail_id):
         return self.mailboxes.mail(mail_id)
@@ -73,10 +70,8 @@ class MailService:
         raise NotImplementedError()
 
     def delete_mail(self, mail_id):
-        mail = self.mailboxes.mail(mail_id)
-        new_mailbox_tag, old_mailbox_tag = mail.move_to(self.mailboxes.trash())
-        self.tag_service.notify_tags_updated([], [old_mailbox_tag], mail_id)
-        self.tag_service.notify_tags_updated([new_mailbox_tag], [], None)
+        _mail = self.mailboxes.mail(mail_id)
+        return self.mailboxes.move_to_trash(_mail)
 
     def save_draft(self, draft):
         raise NotImplementedError()

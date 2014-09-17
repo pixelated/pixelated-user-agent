@@ -14,10 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
-from mockito import *
-import leap
-import os
 from pixelated.adapter.pixelated_mail import PixelatedMail
+from pixelated.adapter.status import Status
 import test_helper
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 from mockito import *
@@ -42,13 +40,24 @@ class TestPixelatedMailbox(unittest.TestCase):
         self.assertNotIn('spam', mailbox.mails()[0].tags)
 
     def test_add_message_to_mailbox(self):
-        PixelatedMail.from_email_address = 'pixel@ted.org'
         mail = PixelatedMail.from_dict(test_helper.mail_dict())
-        mail.to_smtp_format = lambda: 'the mail in smtp format'
+        mail.raw_message = lambda: 'the mail in smtp format'
 
         leap_mailbox_messages = mock()
         self.mailbox.leap_mailbox.messages = leap_mailbox_messages
 
-        self.mailbox.add.wrapped_function(self.mailbox, mail)
+        self.mailbox._do_add_async.wrapped_function(self.mailbox, mail)
 
         verify(leap_mailbox_messages).add_msg('the mail in smtp format')
+
+    def test_remove_message_from_mailbox(self):
+        mail = PixelatedMail.from_dict(test_helper.mail_dict())
+        mail.raw_message = lambda: 'the mail in smtp format'
+
+        mail.leap_mail = mock()
+        self.mailbox.leap_mailbox = mock()
+
+        self.mailbox.remove(mail)
+
+        verify(mail.leap_mail).setFlags((Status.PixelatedStatus.DELETED,), 1)
+        verify(self.mailbox.leap_mailbox).expunge()

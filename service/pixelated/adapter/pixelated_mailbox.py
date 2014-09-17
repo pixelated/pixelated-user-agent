@@ -14,7 +14,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+from pixelated.support.id_gen import gen_pixelated_uid
 from pixelated.adapter.pixelated_mail import PixelatedMail
+from pixelated.adapter.status import Status
 from pixelated.adapter.tag_service import TagService
 from crochet import wait_for
 
@@ -45,7 +47,7 @@ class PixelatedMailbox:
         result = []
         for mail in mails:
             mail._collection = mails
-            pixelated_mail = PixelatedMail.from_leap_mail(mail, self.leap_mailbox)
+            pixelated_mail = PixelatedMail.from_leap_mail(mail)
             self.add_mailbox_tag_if_not_there(pixelated_mail)
             result.append(pixelated_mail)
         return result
@@ -60,13 +62,18 @@ class PixelatedMailbox:
             if message.ident == mail_id:
                 return message
 
-    def add_mail(self, mail):
-        original_flags = mail.leap_mail.getFlags()
-        self.leap_mailbox.addMessage(mail.raw_message(), original_flags)
+    def add(self, mail):
+        leap_id = self._do_add_async(mail)
+        new_id = gen_pixelated_uid(self.leap_mailbox.mbox, leap_id)
+        return new_id
 
     @wait_for(timeout=3.0)
-    def add(self, mail):
-        return self.leap_mailbox.messages.add_msg(mail.to_smtp_format())
+    def _do_add_async(self, mail):
+        return self.leap_mailbox.messages.add_msg(mail.raw_message())
+
+    def remove(self, mail):
+        mail.leap_mail.setFlags((Status.PixelatedStatus.DELETED,), 1)
+        self.leap_mailbox.expunge()
 
     @classmethod
     def create(cls, account, mailbox_name='INBOX'):

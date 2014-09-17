@@ -128,7 +128,7 @@ def mail(mail_id):
 def mail_tags(mail_id):
     new_tags = map(lambda tag: tag.lower(), request.get_json()['newtags'])
     tags = mail_service.update_tags(mail_id, new_tags)
-    return respond_json(tags)
+    return respond_json(list(tags))
 
 
 @app.route('/mail/<mail_id>/read', methods=['POST'])
