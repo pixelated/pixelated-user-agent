@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
+from pixelated.adapter.pixelated_mail import PixelatedMail
 
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
@@ -42,10 +43,23 @@ class PixelatedMailboxesTest(unittest.TestCase):
         self.assertEqual("mail", mails[0])
 
     def test_add_draft(self):
-        mail = mock()
+        mail = PixelatedMail()
         when(self.drafts_mailbox).add(mail).thenReturn(1)
 
         self.mailboxes.add_draft(mail)
 
         verify(self.drafts_mailbox).add(mail)
-        verify(mail).set_ident('drafts', 1)
+        self.assertEqual('drafts', mail.mailbox_name)
+        self.assertEqual(1, mail.uid)
+
+    def test_update_draft(self):
+        mail = PixelatedMail()
+        when(self.drafts_mailbox).add(mail).thenReturn(1)
+
+        self.mailboxes.update_draft(mail)
+
+        inorder.verify(self.drafts_mailbox).add(mail)
+        inorder.verify(self.drafts_mailbox).remove(mail)
+
+        self.assertEqual('drafts', mail.mailbox_name)
+        self.assertEqual(1, mail.uid)

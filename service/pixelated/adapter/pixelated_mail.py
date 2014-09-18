@@ -26,11 +26,13 @@ from email.MIMEText import MIMEText
 class PixelatedMail:
 
     def __init__(self):
-        self.body = ''
+        self.body = None
         self.headers = {}
         self.status = []
         self.security_casing = {}
         self.tags = []
+        self.mailbox_name = None
+        self.uid = None
 
     @staticmethod
     def from_leap_mail(leap_mail, tag_service=TagService.get_instance()):
@@ -148,9 +150,6 @@ class PixelatedMail:
         mime_multipart = self.to_mime_multipart()
         mime_multipart['From'] = PixelatedMail.from_email_address
         return mime_multipart.as_string()
-
-    def set_ident(self, mailbox_name, uid):
-        self.ident = gen_pixelated_uid(mailbox_name, uid)
 
     @staticmethod
     def from_dict(mail_dict):

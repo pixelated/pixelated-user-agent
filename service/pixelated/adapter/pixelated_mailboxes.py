@@ -33,8 +33,14 @@ class PixelatedMailBoxes():
     def add_draft(self, mail):
         drafts = self.drafts()
         draft_id = drafts.add(mail)
-        mail.set_ident(drafts.mailbox_name, draft_id)
+        mail.mailbox_name = drafts.mailbox_name
+        mail.uid = draft_id
         return mail
+
+    def update_draft(self, mail):
+        new_mail = self.add_draft(mail)
+        self.drafts().remove(mail)
+        return new_mail
 
     def move_to_trash(self, mail):
         mail.remove_all_tags()
