@@ -32,7 +32,7 @@ class UserAgentTest(unittest.TestCase):
 
     def test_create_or_send_draft_should_create_draft_if_mail_has_no_ident(self):
         mail = self.mail_without_ident()
-        pixelated.adapter.pixelated_mail.from_dict = lambda self: mail  # has no ident
+        pixelated.adapter.pixelated_mail.from_dict = lambda x: mail  # has no ident
 
         self.app.post('/mails', data='{}', content_type="application/json")
 
@@ -40,11 +40,19 @@ class UserAgentTest(unittest.TestCase):
 
     def test_create_or_send_draft_should_send_draft_if_mail_has_ident(self):
         mail = self.mail_with_ident()
-        pixelated.adapter.pixelated_mail.from_dict = lambda self: mail  # does have ident
+        pixelated.adapter.pixelated_mail.from_dict = lambda x: mail  # does have ident
 
         self.app.post('/mails', data='{}', content_type="application/json")
 
         verify(self.mail_service).send_draft(mail)
+
+    def test_update_draft(self):
+        mail = PixelatedMail()
+        pixelated.adapter.pixelated_mail.from_dict = lambda x: mail
+
+        self.app.put('/mails', data='{}', content_type="application/json")
+
+        verify(self.mail_service).update_draft(mail)
 
     def mail_without_ident(self):
         mail = PixelatedMail()
