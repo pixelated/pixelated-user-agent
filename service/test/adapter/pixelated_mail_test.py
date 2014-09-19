@@ -26,7 +26,7 @@ from mock import Mock
 
 
 class TestPixelatedMail(unittest.TestCase):
-    mail_dict = {
+    mail_dict = lambda x: {
         'body': 'Este \xe9 o corpo',
         'header': {
             'cc': ['cc@pixelated.org', 'anothercc@pixelated.org'],
@@ -60,7 +60,7 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEqual(str(mail.headers['date']), leap_mail_date_in_iso_format)
 
     def test_from_dict(self):
-        mail = PixelatedMail.from_dict(self.mail_dict)
+        mail = PixelatedMail.from_dict(self.mail_dict())
 
         self.assertEqual(mail.headers['cc'], ['cc@pixelated.org', 'anothercc@pixelated.org'])
         self.assertEqual(mail.headers['to'], ['to@pixelated.org', 'anotherto@pixelated.org'])
@@ -73,7 +73,7 @@ class TestPixelatedMail(unittest.TestCase):
     def test_from_dict_adds_current_date(self):
         pixelated.support.date.iso_now = lambda: 'date now'
 
-        mail = PixelatedMail.from_dict(self.mail_dict)
+        mail = PixelatedMail.from_dict(self.mail_dict())
 
         self.assertEqual('date now', mail.headers['date'])
 
@@ -85,7 +85,7 @@ class TestPixelatedMail(unittest.TestCase):
     def test_to_mime_multipart(self):
         pixelated.support.date.iso_now = lambda: 'date now'
 
-        mime_multipart = PixelatedMail.from_dict(self.mail_dict).to_mime_multipart()
+        mime_multipart = PixelatedMail.from_dict(self.mail_dict()).to_mime_multipart()
 
         self.assertRegexpMatches(mime_multipart.as_string(), "\nTo: to@pixelated.org, anotherto@pixelated.org\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nCc: cc@pixelated.org, anothercc@pixelated.org\n")
@@ -94,9 +94,25 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertRegexpMatches(mime_multipart.as_string(), "\nSubject: Oi\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nEste \xe9 o corpo")
 
+    def test_to_mime_multipart_should_add_blank_fields(self):
+        pixelated.support.date.iso_now = lambda: 'date now'
+
+        mail_dict = self.mail_dict()
+        mail_dict['header']['to'] = ''
+        mail_dict['header']['bcc'] = ''
+        mail_dict['header']['cc'] = ''
+        mail_dict['header']['subject'] = ''
+
+        mime_multipart = PixelatedMail.from_dict(mail_dict).to_mime_multipart()
+
+        self.assertNotRegexpMatches(mime_multipart.as_string(), "\nTo: \n")
+        self.assertNotRegexpMatches(mime_multipart.as_string(), "\nBcc: \n")
+        self.assertNotRegexpMatches(mime_multipart.as_string(), "\nCc: \n")
+        self.assertNotRegexpMatches(mime_multipart.as_string(), "\nSubject: \n")
+
     def test_smtp_format(self):
         PixelatedMail.from_email_address = 'pixelated@org'
-        mail = PixelatedMail.from_dict(self.mail_dict)
+        mail = PixelatedMail.from_dict(self.mail_dict())
 
         smtp_format = mail.to_smtp_format()
 

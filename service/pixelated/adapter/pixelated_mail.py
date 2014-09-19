@@ -138,10 +138,14 @@ class PixelatedMail:
 
     def to_mime_multipart(self):
         mime_multipart = MIMEMultipart()
-        mime_multipart['To'] = ", ".join(self.headers['to'])
-        mime_multipart['Cc'] = ", ".join(self.headers['cc'])
-        mime_multipart['Bcc'] = ", ".join(self.headers['bcc'])
-        mime_multipart['Subject'] = self.headers['subject']
+
+        for header in ['To', 'Cc', 'Bcc']:
+            if self.headers[header.lower()]:
+                mime_multipart[header] = ", ".join(self.headers[header.lower()])
+
+        if self.headers['subject']:
+            mime_multipart['Subject'] = self.headers['subject']
+
         mime_multipart['Date'] = self.headers['date']
         mime_multipart.attach(MIMEText(self.body, 'plain'))
         return mime_multipart
