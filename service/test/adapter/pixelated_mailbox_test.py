@@ -21,7 +21,7 @@ from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 from mockito import *
 
 
-class TestPixelatedMailbox(unittest.TestCase):
+class PixelatedMailboxTest(unittest.TestCase):
     def setUp(self):
         mail_one = test_helper.leap_mail(uid=0, mbox='SENT')
         leap_mailbox = test_helper.leap_mailbox(messages=[mail_one], mailbox_name='SENT')
@@ -39,16 +39,27 @@ class TestPixelatedMailbox(unittest.TestCase):
         mailbox = PixelatedMailbox(test_helper.leap_mailbox(messages=[recent_leap_mail], mailbox_name='SPAM'))
         self.assertNotIn('spam', mailbox.mails()[0].tags)
 
-    def test_add_message_to_mailbox(self):
+    def test_add_message_to_mailbox_with_raw_message(self):
         mail = PixelatedMail.from_dict(test_helper.mail_dict())
-        mail.raw_message = lambda: 'the mail in smtp format'
+        mail.raw_message = lambda: 'raw mail'
 
         leap_mailbox_messages = mock()
         self.mailbox.leap_mailbox.messages = leap_mailbox_messages
 
-        self.mailbox._do_add_async.wrapped_function(self.mailbox, mail)
+        self.mailbox._do_add_async.wrapped_function(self.mailbox, mail, use_smtp_format=False)
 
-        verify(leap_mailbox_messages).add_msg('the mail in smtp format')
+        verify(leap_mailbox_messages).add_msg('raw mail')
+
+    def test_add_message_to_mailbox_with_smtp_format(self):
+        mail = PixelatedMail.from_dict(test_helper.mail_dict())
+        mail.to_smtp_format = lambda: 'smtp format mail'
+
+        leap_mailbox_messages = mock()
+        self.mailbox.leap_mailbox.messages = leap_mailbox_messages
+
+        self.mailbox._do_add_async.wrapped_function(self.mailbox, mail, use_smtp_format=True)
+
+        verify(leap_mailbox_messages).add_msg('smtp format mail')
 
     def test_remove_message_from_mailbox(self):
         mail = PixelatedMail.from_dict(test_helper.mail_dict())

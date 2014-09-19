@@ -32,7 +32,7 @@ class PixelatedMailBoxes():
 
     def add_draft(self, mail):
         drafts = self.drafts()
-        draft_id = drafts.add(mail)
+        draft_id = drafts.add(mail, use_smtp_format=True)
         mail.mailbox_name = drafts.mailbox_name
         mail.uid = draft_id
         return mail

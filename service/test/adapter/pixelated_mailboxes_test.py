@@ -44,21 +44,21 @@ class PixelatedMailboxesTest(unittest.TestCase):
 
     def test_add_draft(self):
         mail = PixelatedMail()
-        when(self.drafts_mailbox).add(mail).thenReturn(1)
+        when(self.drafts_mailbox).add(mail, use_smtp_format=True).thenReturn(1)
 
         self.mailboxes.add_draft(mail)
 
-        verify(self.drafts_mailbox).add(mail)
+        verify(self.drafts_mailbox).add(mail, use_smtp_format=True)
         self.assertEqual('drafts', mail.mailbox_name)
         self.assertEqual(1, mail.uid)
 
     def test_update_draft(self):
         mail = PixelatedMail()
-        when(self.drafts_mailbox).add(mail).thenReturn(1)
+        when(self.drafts_mailbox).add(mail, use_smtp_format=True).thenReturn(1)
 
         self.mailboxes.update_draft(mail)
 
-        inorder.verify(self.drafts_mailbox).add(mail)
+        inorder.verify(self.drafts_mailbox).add(mail, use_smtp_format=True)
         inorder.verify(self.drafts_mailbox).remove(mail)
 
         self.assertEqual('drafts', mail.mailbox_name)

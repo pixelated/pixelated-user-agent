@@ -62,14 +62,15 @@ class PixelatedMailbox:
             if message.ident == mail_id:
                 return message
 
-    def add(self, mail):
-        leap_id = self._do_add_async(mail)
+    def add(self, mail, use_smtp_format=False):
+        leap_id = self._do_add_async(mail, use_smtp_format)
         new_id = gen_pixelated_uid(self.leap_mailbox.mbox, leap_id)
         return new_id
 
     @wait_for(timeout=3.0)
-    def _do_add_async(self, mail):
-        return self.leap_mailbox.messages.add_msg(mail.raw_message())
+    def _do_add_async(self, mail, use_smtp_format):
+        raw = mail.to_smtp_format() if use_smtp_format else mail.raw_message()
+        return self.leap_mailbox.messages.add_msg(raw)
 
     def remove(self, mail):
         mail.leap_mail.setFlags((Status.PixelatedStatus.DELETED,), 1)
