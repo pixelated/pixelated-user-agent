@@ -203,7 +203,6 @@ define(
         data = data || {};
         this.attr.mail.tags = data.tags;
         this.displayMail({}, { mail: this.attr.mail });
-        this.trigger(document, events.ui.tagList.refresh);
       };
 
       this.mailDeleted = function(ev, data) {

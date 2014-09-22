@@ -40,7 +40,6 @@ define(function () {
         loaded: 'ui:tagsLoaded'
       },
       tagList: {
-        refresh: 'ui:tagList:refresh',
         load: 'ui:tagList:load'
       },
       mails: {
