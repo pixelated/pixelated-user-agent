@@ -41,6 +41,13 @@ describeComponent('mail_view/ui/mail_view', function () {
     expect(updateSpy).toHaveBeenTriggeredOn(document);
   });
 
+  it('remove tag triggers refreshTagList event', function(){
+    var refreshTagListEvent = spyOnEvent(document, Pixelated.events.dispatchers.tags.refreshTagList);
+    this.component.displayMail({}, testData);
+    this.component.removeTag('inbox');
+    expect(refreshTagListEvent).toHaveBeenTriggeredOn(document);
+  });
+
   it('verifies if new tag input is hidden when rendering mail view', function() {
 
     this.component.displayMail({}, testData);

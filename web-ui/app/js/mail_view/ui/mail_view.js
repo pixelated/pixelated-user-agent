@@ -180,6 +180,7 @@ define(
           this.select('deleteModal').foundation('reveal', 'open');
         } else {
           this.updateTags(this.attr.mail, filteredTags);
+          this.trigger(document, events.dispatchers.tags.refreshTagList);
         }
       };
 
