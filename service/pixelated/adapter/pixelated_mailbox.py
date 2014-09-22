@@ -37,19 +37,25 @@ class PixelatedMailbox:
         return self.leap_mailbox.mbox
 
     def add_mailbox_tag_if_not_there(self, pixelated_mail):
-        if not pixelated_mail.has_tag(self.mailbox_tag) and pixelated_mail.is_recent:
+        if not pixelated_mail.has_tag(self.mailbox_tag):
             pixelated_mail.update_tags({self.mailbox_tag}.union(pixelated_mail.tags))
             self.tag_service.notify_tags_updated({self.mailbox_tag}, [], pixelated_mail.ident)
             pixelated_mail.mark_as_not_recent()
 
     def mails(self):
-        mails = self.leap_mailbox.messages or []
+        soledad = self.leap_mailbox._soledad
+
+        fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in soledad.get_from_index('by-type-and-mbox', 'flags', self.leap_mailbox.mbox)]
+        fdocs_hdocs = [(f[0], soledad.get_from_index('by-type-and-contenthash', 'head', f[1])[0]) for f in fdocs_chash]
+        fdocs_hdocs_phash = [(f[0], f[1], f[1].content.get('body')) for f in fdocs_hdocs]
+        fdocs_hdocs_bdocs = [(f[0], f[1], soledad.get_from_index('by-type-and-payloadhash', 'cnt', f[2])[0]) for f in fdocs_hdocs_phash]
+
+        mails = [PixelatedMail.from_soledad(*raw_mail) for raw_mail in fdocs_hdocs_bdocs]
+
         result = []
         for mail in mails:
-            mail._collection = mails
-            pixelated_mail = PixelatedMail.from_leap_mail(mail)
-            self.add_mailbox_tag_if_not_there(pixelated_mail)
-            result.append(pixelated_mail)
+            self.add_mailbox_tag_if_not_there(mail)
+            result.append(mail)
         return result
 
     def mails_by_tags(self, tags):
