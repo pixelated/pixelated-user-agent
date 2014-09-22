@@ -63,9 +63,7 @@ class PixelatedMailbox:
                 return message
 
     def add(self, mail, use_smtp_format=False):
-        leap_id = self._do_add_async(mail, use_smtp_format)
-        new_id = gen_pixelated_uid(self.leap_mailbox.mbox, leap_id)
-        return new_id
+        return self._do_add_async(mail, use_smtp_format)
 
     @wait_for(timeout=3.0)
     def _do_add_async(self, mail, use_smtp_format):

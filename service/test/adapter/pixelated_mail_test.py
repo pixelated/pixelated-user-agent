@@ -66,7 +66,7 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEqual(mail.headers['to'], ['to@pixelated.org', 'anotherto@pixelated.org'])
         self.assertEqual(mail.headers['bcc'], ['bcc@pixelated.org', 'anotherbcc@pixelated.org'])
         self.assertEqual(mail.headers['subject'], 'Oi')
-        self.assertEqual(mail.ident, '')
+        self.assertEqual(mail.ident, None)
         self.assertEqual(mail.tags, set(['sent']))
         self.assertEqual(mail.body, 'Este \xe9 o corpo')
 

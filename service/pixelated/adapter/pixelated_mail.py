@@ -33,6 +33,7 @@ class PixelatedMail:
         self.tags = []
         self.mailbox_name = None
         self.uid = None
+        self._ident = None
 
     @staticmethod
     def from_leap_mail(leap_mail, tag_service=TagService.get_instance()):
@@ -40,7 +41,7 @@ class PixelatedMail:
         mail.tag_service = tag_service
         mail.leap_mail = leap_mail
         mail.mailbox_name = leap_mail._mbox
-        mail.ident = gen_pixelated_uid(leap_mail._mbox, leap_mail.getUID())
+        mail.uid = leap_mail.getUID()
         mail.body = leap_mail.bdoc.content['raw']
         mail.headers = mail._extract_headers()
         mail.headers['date'] = PixelatedMail._get_date(mail.headers)
@@ -52,6 +53,13 @@ class PixelatedMail:
     @property
     def is_recent(self):
         return Status('recent') in self.status
+
+    @property
+    def ident(self):
+        if self.uid and self.mailbox_name:
+            return gen_pixelated_uid(self.mailbox_name, self.uid)
+        if self._ident:
+            return self._ident
 
     def set_from(self, _from):
         self.headers['from'] = [_from]
@@ -172,7 +180,7 @@ def from_dict(mail_dict):
     mail.headers = mail_dict.get('header', {})
     mail.headers['date'] = pixelated.support.date.iso_now()
     mail.body = mail_dict.get('body', '')
-    mail.ident = mail_dict.get('ident', None)
+    mail._ident = mail_dict.get('ident', None)
     mail.tags = set(mail_dict.get('tags', []))
     mail.status = set(mail_dict.get('status', []))
     return mail
