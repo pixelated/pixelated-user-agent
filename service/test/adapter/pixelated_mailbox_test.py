@@ -62,13 +62,10 @@ class PixelatedMailboxTest(unittest.TestCase):
         verify(leap_mailbox_messages).add_msg('smtp format mail')
 
     def test_remove_message_from_mailbox(self):
-        mail = PixelatedMail.from_dict(test_helper.mail_dict())
-        mail.raw_message = lambda: 'the mail in smtp format'
-
-        mail.leap_mail = mock()
+        mail = mock()
         self.mailbox.leap_mailbox = mock()
 
         self.mailbox.remove(mail)
 
-        verify(mail.leap_mail).setFlags((Status.PixelatedStatus.DELETED,), 1)
+        verify(mail).mark_as_deleted()
         verify(self.mailbox.leap_mailbox).expunge()

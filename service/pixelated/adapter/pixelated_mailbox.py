@@ -71,7 +71,8 @@ class PixelatedMailbox:
         return self.leap_mailbox.messages.add_msg(raw)
 
     def remove(self, mail):
-        mail.leap_mail.setFlags((Status.PixelatedStatus.DELETED,), 1)
+        mail.mark_as_deleted()
+
         self.leap_mailbox.expunge()
 
     @classmethod

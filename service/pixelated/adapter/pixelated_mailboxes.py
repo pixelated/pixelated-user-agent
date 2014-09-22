@@ -43,7 +43,6 @@ class PixelatedMailBoxes():
         return new_mail
 
     def move_to_trash(self, mail):
-        mail.remove_all_tags()
         origin_mailbox = mail.mailbox_name
 
         new_mail_id = self.trash().add(mail)

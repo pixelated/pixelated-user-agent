@@ -147,12 +147,15 @@ class TestPixelatedMail(unittest.TestCase):
 
         self.assertEquals(mail.leap_mail.setFlags.call_args[0], (('\\Recent',), -1))
 
-    def test_remove_all_tags(self):
-        mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_headers={'X-Tags': '["skinka", "altoids"]'}), Mock())
+    def test_mark_as_deleted(self):
+        mail = PixelatedMail.from_leap_mail(test_helper.leap_mail(extra_headers={'X-Tags': '["skinka", "altoids"]'}, flags=[]), Mock())
+
         self.assertEquals(set(['skinka', 'altoids']), mail.tags)
 
-        mail.remove_all_tags()
+        mail.mark_as_deleted()
+
         self.assertEquals(set([]), mail.tags)
+        self.assertEquals(mail.leap_mail.setFlags.call_args[0], ((u'\\Deleted',), 1))
 
     def test_update_tags_notifies_tag_service(self):
         db_path = '/tmp/test_update_tags_notifies_tag_service'

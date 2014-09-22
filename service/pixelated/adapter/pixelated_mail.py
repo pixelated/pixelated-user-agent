@@ -96,6 +96,10 @@ class PixelatedMail:
             return set(tags)
         return set(json.loads(tags))
 
+    def mark_as_deleted(self):
+        self.remove_all_tags()
+        self.leap_mail.setFlags((Status.PixelatedStatus.DELETED,), 1)
+
     def remove_all_tags(self):
         self.update_tags(set([]))
 
