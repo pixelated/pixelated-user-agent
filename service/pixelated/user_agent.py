@@ -78,21 +78,33 @@ def update_draft():
 
 @app.route('/mails')
 def mails():
+    # query = search_query.compile(request.args.get("q")) if request.args.get("q") else {'tags': {}}
+    #
+    # mails = mail_service.mails(query)
+    #
+    # if "inbox" in query['tags']:
+    #     mails = [mail for mail in mails if not mail.has_tag('trash')]
+
     query = search_query.compile(request.args.get("q")) if request.args.get("q") else {'tags': {}}
 
-    mails = mail_service.mails(query)
+    fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in soledad.get_from_index('by-type', 'flags')]
+    fdocs_hdocs = [(f[0], soledad.get_from_index('by-type-and-contenthash', 'head', f[1])[0]) for f in fdocs_chash]
+    fdocs_hdocs_phash = [(f[0], f[1], f[1].content.get('body')) for f in fdocs_hdocs]
+    fdocs_hdocs_bdocs = [(f[0], f[1], soledad.get_from_index('by-type-and-payloadhash', 'cnt', f[2])[0]) for f in fdocs_hdocs_phash]
 
-    if "inbox" in query['tags']:
-        mails = [mail for mail in mails if not mail.has_tag('trash')]
+
+    all_mails = [PixelatedMail(*raw_mail) for raw_mail in fdocs_hdocs_bdocs]
+
+    filtered_mails = [_mail for _mail in all_mails if set(query['tags']).intersection(_mail.tags)]
 
     response = {
         "stats": {
-            "total": len(mails),
+            "total": len(filtered_mails),
             "read": 0,
             "starred": 0,
             "replied": 0
         },
-        "mails": [mail.as_dict() for mail in mails]
+        "mails": [pixelated_mail.as_dict() for pixelated_mail in filtered_mails]
     }
 
     return respond_json(response)
@@ -171,7 +183,9 @@ def start_user_agent(debug_enabled):
     pixelated_mail_sender = PixelatedMailSender(leap_session.account_email())
 
     global mail_service
-    mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender)
+    #mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender)
+    global soledad
+    soledad = leap_session.soledad_session.soledad
 
     app.run(host=app.config['HOST'], debug=debug_enabled,
             port=app.config['PORT'], use_reloader=False)
