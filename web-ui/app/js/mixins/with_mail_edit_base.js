@@ -58,6 +58,12 @@ define(
         Recipients.attachTo(this.select('bccArea'), { name: 'bcc', addresses: context.recipients.bcc || []});
       };
 
+      function thereAreRecipientsToDisplay() {
+        return this.attr.recipientValues.to
+          && this.attr.recipientValues.cc
+          && !_.isEmpty(this.attr.recipientValues.to.concat(this.attr.recipientValues.cc));
+      }
+
       this.render = function(template, context) {
         this.$node.html(template(context));
 
@@ -71,7 +77,7 @@ define(
         this.on(this.select('trashButton'), 'click', this.trashMail);
         SendButton.attachTo(this.select('sendButton'));
 
-        if (!_.isEmpty(this.attr.recipientValues.to.concat(this.attr.recipientValues.cc))) {
+        if (thereAreRecipientsToDisplay.call(this)) {
           this.trigger(document, events.ui.sendbutton.enable);
         }
       };
@@ -190,7 +196,6 @@ define(
         this.on(document, events.ui.mail.send, this.sendMail);
 
         this.on(document, events.ui.tag.selected, this.saveTag);
-
       });
     }
 
