@@ -32,7 +32,7 @@ from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.auth import LeapAuthenticator, LeapCredentials
 from pixelated.adapter.mail_service import MailService
-from pixelated.adapter.pixelated_mail import PixelatedMail
+from pixelated.adapter.pixelated_mail import PixelatedMail, InputMail
 from pixelated.adapter.soledad_querier import SoledadQuerier
 
 
@@ -44,7 +44,7 @@ if not os.path.exists(static_folder):
 if not os.path.exists(static_folder):
     static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
 app = Flask(__name__, static_url_path='', static_folder=static_folder)
-DISABLED_FEATURES = ['saveDraft', 'draftReply', 'signatureStatus', 'encryptionStatus', 'contacts']
+DISABLED_FEATURES = ['draftReply', 'signatureStatus', 'encryptionStatus', 'contacts']
 
 
 def respond_json(entity):
@@ -59,7 +59,7 @@ def disabled_features():
 
 @app.route('/mails', methods=['POST'])
 def send_mail():
-    _mail = PixelatedMail.from_dict(request.json)
+    _mail = InputMail.from_dict(request.json)
     if 'saveDraft' in DISABLED_FEATURES:
         mail_service.send(_mail)
     else:

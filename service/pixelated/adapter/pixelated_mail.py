@@ -13,14 +13,121 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from pixelated.adapter.status import Status
-from pixelated.support.id_gen import gen_pixelated_uid
-from pixelated.adapter.tag_service import TagService
 import json
-import pixelated.support.date
+from leap.mail.imap.fields import fields
+from leap.mail.walk import get_parts
 import dateutil.parser as dateparser
+from pixelated.adapter.status import Status
+from pixelated.adapter.tag_service import TagService
+import pixelated.support.date
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
+from pycryptopp.hash import sha256
+
+
+class InputMail:
+
+    def __init__(self):
+        self._raw_message = None
+        self._fd = None
+        self._hd = None
+        self._bd = None
+        self._mime = None
+
+    @staticmethod
+    def from_dict(mail_dict):
+        input_mail = InputMail()
+        input_mail.headers = mail_dict['header']
+        input_mail.headers['date'] = pixelated.support.date.iso_now()
+        input_mail.body = mail_dict['body']
+        input_mail.ident = mail_dict.get('ident', None)
+        input_mail.tags = set(mail_dict.get('tags', []))
+        input_mail.status = set(mail_dict.get('status', []))
+        return input_mail
+
+    @property
+    def _mime_multipart(self):
+        if self._mime:
+            return self._mime
+        mime = MIMEMultipart()
+        for key, value in self.headers.items():
+            mime[key] = value
+        mime.attach(MIMEText(self.body, 'plain'))
+        self._mime = mime
+        return mime
+
+    def _raw(self):
+        if self._raw_message:
+            return self._raw_message
+        self._raw_message = self._mime_multipart.as_string()
+        return self._raw_message
+
+    def _get_chash(self):
+        return sha256.SHA256(self._raw()).hexdigest()
+
+    def _get_for_save(self, next_uid):
+        return (self._fdoc(next_uid), self._hdoc(), self._bdoc())
+
+    def _fdoc(self, next_uid):
+        if self._fd:
+            return self._fd
+
+        fd = {}
+        fd[fields.MBOX_KEY] = 'DRAFTS'
+        fd[fields.UID_KEY] = next_uid
+        fd[fields.CONTENT_HASH_KEY] = self._get_chash()
+        fd[fields.SIZE_KEY] = len(self._raw())
+        fd[fields.MULTIPART_KEY] = True
+        fd[fields.RECENT_KEY] = True
+        self._fd = fd
+        return fd
+
+    def _hdoc(self):
+        if self._hd:
+            return self._hd
+
+        hd = {}
+        hd[fields.HEADERS_KEY] = self.headers
+        hd[fields.DATE_KEY] = self.headers['date']
+        hd[fields.CONTENT_HASH_KEY] = self._get_chash()
+        hd[fields.MSGID_KEY] = ''
+        hd[fields.MULTIPART_KEY] = True
+        hd[fields.SUBJECT_KEY] = self.headers.get('subject')
+        hd[fields.TYPE_KEY] = fields.TYPE_HEADERS_VAL
+        hd[fields.BODY_KEY] = sha256.SHA256.hexdigest(self._mime_multipart.get_payload())
+
+        parts_array = get_parts(self._mime_multipart)
+        parts = {}
+        for index, part in enumerate(parts_array):
+            part[fields.PAYLOAD_HASH_KEY] = hd[fields.BODY_KEY]
+            parts[index] = part
+        hd[fields.PARTS_MAP_KEY] = parts
+
+        self._hd = hd
+        return hd
+
+    def _bdoc(self):
+
+        pass
+
+    def to_mime_multipart(self):
+        mime_multipart = MIMEMultipart()
+
+        for header in ['To', 'Cc', 'Bcc']:
+            if self.headers[header.lower()]:
+                mime_multipart[header] = ", ".join(self.headers[header.lower()])
+
+        if self.headers['subject']:
+            mime_multipart['Subject'] = self.headers['subject']
+
+        mime_multipart['Date'] = self.headers['date']
+        mime_multipart.attach(MIMEText(self.body, 'plain'))
+        return mime_multipart
+
+    def to_smtp_format(self):
+        mime_multipart = self.to_mime_multipart()
+        mime_multipart['From'] = PixelatedMail.from_email_address
+        return mime_multipart.as_string()
 
 
 class PixelatedMail:
@@ -28,14 +135,14 @@ class PixelatedMail:
     def __init__(self, tag_service=TagService.get_instance()):
         self.tag_service = tag_service
         self.mailbox_name = None
-        self.querier = SoledadQuerier.get_instance()
 
     @staticmethod
-    def from_soledad(fdoc, hdoc, bdoc):
+    def from_soledad(fdoc, hdoc, bdoc, soledad_querier):
         mail = PixelatedMail()
         mail.bdoc = bdoc
         mail.fdoc = fdoc
         mail.hdoc = hdoc
+        mail.querier = soledad_querier
         return mail
 
     @property
@@ -130,13 +237,6 @@ class PixelatedMail:
     def has_tag(self, tag):
         return tag in self.tags
 
-    def raw_message(self):
-        mime = MIMEMultipart()
-        for key, value in self.hdoc.content['headers'].items():
-            mime[key] = value
-        mime.attach(MIMEText(self.bdoc.content['raw'], 'plain'))
-        return mime.as_string()
-
     def as_dict(self):
         statuses = [status.name for status in self.status]
         return {
@@ -148,24 +248,6 @@ class PixelatedMail:
             'body': self.body
         }
 
-    def to_mime_multipart(self):
-        mime_multipart = MIMEMultipart()
-
-        for header in ['To', 'Cc', 'Bcc']:
-            if self.headers[header.lower()]:
-                mime_multipart[header] = ", ".join(self.headers[header.lower()])
-
-        if self.headers['subject']:
-            mime_multipart['Subject'] = self.headers['subject']
-
-        mime_multipart['Date'] = self.headers['date']
-        mime_multipart.attach(MIMEText(self.body, 'plain'))
-        return mime_multipart
-
-    def to_smtp_format(self):
-        mime_multipart = self.to_mime_multipart()
-        mime_multipart['From'] = PixelatedMail.from_email_address
-        return mime_multipart.as_string()
 
     @staticmethod
     def from_dict(mail_dict):
@@ -189,5 +271,3 @@ def from_dict(mail_dict):
     mail.status = set(mail_dict.get('status', []))
     return mail
 
-
-from pixelated.adapter.soledad_querier import SoledadQuerier
