@@ -18,6 +18,7 @@ from pixelated.support.id_gen import gen_pixelated_uid
 from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.status import Status
 from pixelated.adapter.tag_service import TagService
+from pixelated.adapter.soledad_querier import SoledadQuerier
 from crochet import wait_for
 
 
@@ -27,6 +28,7 @@ class PixelatedMailbox:
         self.tag_service = tag_service
         self.leap_mailbox = leap_mailbox
         self.mailbox_tag = self.leap_mailbox.mbox.lower()
+        self.querier = SoledadQuerier(self.leap_mailbox._soledad)
 
     @property
     def messages(self):
@@ -43,17 +45,10 @@ class PixelatedMailbox:
             pixelated_mail.mark_as_not_recent()
 
     def mails(self):
-        soledad = self.leap_mailbox._soledad
-
-        fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in soledad.get_from_index('by-type-and-mbox', 'flags', self.leap_mailbox.mbox)]
-        fdocs_hdocs = [(f[0], soledad.get_from_index('by-type-and-contenthash', 'head', f[1])[0]) for f in fdocs_chash]
-        fdocs_hdocs_phash = [(f[0], f[1], f[1].content.get('body')) for f in fdocs_hdocs]
-        fdocs_hdocs_bdocs = [(f[0], f[1], soledad.get_from_index('by-type-and-payloadhash', 'cnt', f[2])[0]) for f in fdocs_hdocs_phash]
-
-        mails = [PixelatedMail.from_soledad(*raw_mail) for raw_mail in fdocs_hdocs_bdocs]
+        _mails = self.querier.all_mails_by_mailbox(self.leap_mailbox.mbox)
 
         result = []
-        for mail in mails:
+        for mail in _mails:
             self.add_mailbox_tag_if_not_there(mail)
             result.append(mail)
         return result

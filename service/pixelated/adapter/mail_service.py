@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.tag_service import TagService
+from pixelated.adapter.pixelated_mail import PixelatedMail
+from pixelated.adapter.soledad_querier import SoledadQuerier
 
 
 class MailService:
@@ -24,15 +26,12 @@ class MailService:
     def __init__(self, mailboxes, mail_sender, tag_service=TagService.get_instance()):
         self.tag_service = tag_service
         self.mailboxes = mailboxes
+        self.querier = SoledadQuerier(self.mailboxes.account._soledad)
         self.mail_sender = mail_sender
         self.tag_service.load_index(self.mails(MailService.ALL_MAILS_QUERY))
 
     def mails(self, query):
-        _mails = None
-
-        if query['tags']:
-            _mails = self.mailboxes.mails_by_tag(query['tags'])
-
+        _mails = self.mailboxes.mails_by_tag(query['tags']) if query['tags'] else self.querier.all_mails()
         return sorted(_mails or [], key=lambda mail: mail.headers['date'], reverse=True)
 
     def update_tags(self, mail_id, new_tags):
