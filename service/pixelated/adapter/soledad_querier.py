@@ -19,5 +19,3 @@ class SoledadQuerier:
         fdocs_hdocs_phash = [(f[0], f[1], f[1].content.get('body')) for f in fdocs_hdocs]
         fdocs_hdocs_bdocs = [(f[0], f[1], self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', f[2])[0]) for f in fdocs_hdocs_phash]
         return [PixelatedMail.from_soledad(*raw_mail) for raw_mail in fdocs_hdocs_bdocs]
-
-

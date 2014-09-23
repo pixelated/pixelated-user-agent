@@ -90,7 +90,6 @@ class PixelatedMail:
             recipients = temporary_headers[header_type].split(',')
             temporary_headers[header_type] = map(lambda x: x.lstrip(), recipients)
 
-
     def mark_as_deleted(self):
         # self.remove_all_tags()
         # self.leap_mail.setFlags((Status.PixelatedStatus.DELETED,), 1)
@@ -100,12 +99,12 @@ class PixelatedMail:
         self.update_tags(set([]))
 
     def update_tags(self, tags):
-        #old_tags = self.tags
-        #self.tags = tags
-        #removed = old_tags.difference(tags)
-        #added = tags.difference(old_tags)
-        #self._persist_mail_tags(tags)
-        #self.tag_service.notify_tags_updated(added, removed, self.ident)
+        # old_tags = self.tags
+        # self.tags = tags
+        # removed = old_tags.difference(tags)
+        # added = tags.difference(old_tags)
+        # self._persist_mail_tags(tags)
+        # self.tag_service.notify_tags_updated(added, removed, self.ident)
         return self.tags
 
     def mark_as_read(self):
@@ -176,6 +175,7 @@ class PixelatedMail:
         if not date:
             date = headers['received'].split(";")[-1].strip()
         return dateparser.parse(date).isoformat()
+
 
 def from_dict(mail_dict):
     mail = PixelatedMail()
