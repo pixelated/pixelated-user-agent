@@ -8,7 +8,7 @@
 #
 # Pixelated is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PCULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
@@ -28,6 +28,7 @@ class PixelatedMail:
     def __init__(self, tag_service=TagService.get_instance()):
         self.tag_service = tag_service
         self.mailbox_name = None
+        self.querier = SoledadQuerier.get_instance()
 
     @staticmethod
     def from_soledad(fdoc, hdoc, bdoc):
@@ -73,6 +74,9 @@ class PixelatedMail:
     def is_recent(self):
         return Status('recent') in self.status
 
+    def save(self):
+        return self.querier.save_mail(self)
+
     def set_from(self, _from):
         self.headers['from'] = [_from]
 
@@ -99,12 +103,12 @@ class PixelatedMail:
         self.update_tags(set([]))
 
     def update_tags(self, tags):
-        # old_tags = self.tags
-        # self.tags = tags
-        # removed = old_tags.difference(tags)
-        # added = tags.difference(old_tags)
-        # self._persist_mail_tags(tags)
-        # self.tag_service.notify_tags_updated(added, removed, self.ident)
+        old_tags = self.tags
+        self.tags = tags
+        removed = old_tags.difference(tags)
+        added = tags.difference(old_tags)
+        self._persist_mail_tags(tags)
+        self.tag_service.notify_tags_updated(added, removed, self.ident)
         return self.tags
 
     def mark_as_read(self):
@@ -120,10 +124,8 @@ class PixelatedMail:
         pass
 
     def _persist_mail_tags(self, current_tags):
-        # hdoc = self.leap_mail.hdoc
-        # hdoc.content['headers']['X-Tags'] = json.dumps(list(current_tags))
-        # self.leap_mail._soledad.put_doc(hdoc)
-        pass
+        self.hdoc.content['headers']['X-Tags'] = json.dumps(list(current_tags))
+        self.save()
 
     def has_tag(self, tag):
         return tag in self.tags
@@ -186,3 +188,6 @@ def from_dict(mail_dict):
     mail.tags = set(mail_dict.get('tags', []))
     mail.status = set(mail_dict.get('status', []))
     return mail
+
+
+from pixelated.adapter.soledad_querier import SoledadQuerier

@@ -28,7 +28,7 @@ class PixelatedMailbox:
         self.tag_service = tag_service
         self.leap_mailbox = leap_mailbox
         self.mailbox_tag = self.leap_mailbox.mbox.lower()
-        self.querier = SoledadQuerier(self.leap_mailbox._soledad)
+        self.querier = SoledadQuerier.get_instance()
 
     @property
     def messages(self):

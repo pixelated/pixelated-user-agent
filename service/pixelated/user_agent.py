@@ -33,6 +33,7 @@ from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.auth import LeapAuthenticator, LeapCredentials
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.pixelated_mail import PixelatedMail
+from pixelated.adapter.soledad_querier import SoledadQuerier
 
 
 static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "web-ui", "app"))
@@ -166,6 +167,8 @@ def register_new_user(username):
 def start_user_agent(debug_enabled):
     leap_session = LeapSession.open(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'],
                                     app.config['LEAP_SERVER_NAME'])
+    querier = SoledadQuerier.get_instance()
+    querier.soledad = leap_session.account._soledad
     PixelatedMail.from_email_address = leap_session.account_email()
     pixelated_mailboxes = PixelatedMailBoxes(leap_session.account)
     pixelated_mail_sender = PixelatedMailSender(leap_session.account_email())

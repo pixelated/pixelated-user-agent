@@ -26,7 +26,7 @@ class MailService:
     def __init__(self, mailboxes, mail_sender, tag_service=TagService.get_instance()):
         self.tag_service = tag_service
         self.mailboxes = mailboxes
-        self.querier = SoledadQuerier(self.mailboxes.account._soledad)
+        self.querier = SoledadQuerier.get_instance()
         self.mail_sender = mail_sender
         self.tag_service.load_index(self.mails(MailService.ALL_MAILS_QUERY))
 
