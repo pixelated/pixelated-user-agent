@@ -47,8 +47,8 @@ class MailService:
     def create_draft(self, mail):
         return self.mailboxes.add_draft(mail)
 
-    def update_draft(self, mail):
-        return self.mailboxes.update_draft(mail)
+    def update_draft(self, ident, new_version):
+        return self.mailboxes.update_draft(ident, new_version)
 
     def send_draft(self, mail):
         pass

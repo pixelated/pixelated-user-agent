@@ -47,7 +47,6 @@ class InputMail:
             'body': self.body
         }
 
-
     @staticmethod
     def from_dict(mail_dict):
         input_mail = InputMail()
@@ -262,7 +261,6 @@ class PixelatedMail:
             'body': self.body
         }
 
-
     @staticmethod
     def from_dict(mail_dict):
         return from_dict(mail_dict)
@@ -284,4 +282,3 @@ def from_dict(mail_dict):
     mail.tags = set(mail_dict.get('tags', []))
     mail.status = set(mail_dict.get('status', []))
     return mail
-

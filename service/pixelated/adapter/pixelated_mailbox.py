@@ -63,9 +63,9 @@ class PixelatedMailbox:
     def add(self, mail, use_smtp_format=False):
         self.querier.create_mail(mail, self.mailbox_name)
 
-    def remove(self, mail):
-        mail.mark_as_deleted()
-
+    def remove(self, ident):
+        mail = self.querier.mail(ident)
+        self.querier.remove_mail(mail)
         self.leap_mailbox.expunge()
 
     @classmethod

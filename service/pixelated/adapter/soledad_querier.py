@@ -44,6 +44,17 @@ class SoledadQuerier:
         new_docs = [self.soledad.create_doc(doc) for doc in mail._get_for_save(next_uid=uid)]
         self._update_index(new_docs)
 
+    def mail(self, ident):
+        fdoc = self.soledad.get_from_index('by-type-and-contenthash', 'flags', ident)[0]
+        hdoc = self.soledad.get_from_index('by-type-and-contenthash', 'head', ident)[0]
+        bdoc = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', hdoc.content['body'])[0]
+        return PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self)
+
+    def remove_mail(self, mail):
+        _mail = self.mail(mail.ident)
+        self.soledad.delete_doc(_mail.bdoc)
+        self.soledad.delete_doc(_mail.hdoc)
+        self.soledad.delete_doc(_mail.fdoc)
 
     def _next_uid_for_mailbox(self, mailbox_name):
         mails = self.all_mails_by_mailbox(mailbox_name)

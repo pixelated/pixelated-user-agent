@@ -34,9 +34,9 @@ class PixelatedMailBoxes():
         self.drafts().add(mail, use_smtp_format=True)
         return mail
 
-    def update_draft(self, mail):
-        new_mail = self.add_draft(mail)
-        self.drafts().remove(mail)
+    def update_draft(self, ident, new_version):
+        new_mail = self.add_draft(new_version)
+        self.drafts().remove(ident)
         return new_mail
 
     def move_to_trash(self, mail):

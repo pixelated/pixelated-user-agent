@@ -72,8 +72,8 @@ def send_mail():
 
 @app.route('/mails', methods=['PUT'])
 def update_draft():
-    _mail = PixelatedMail.from_dict(request.json)
-    ident = mail_service.update_draft(_mail)
+    _mail = InputMail.from_dict(request.json)
+    ident = mail_service.update_draft(request.json['ident'], _mail).ident
     return respond_json({'ident': ident})
 
 
