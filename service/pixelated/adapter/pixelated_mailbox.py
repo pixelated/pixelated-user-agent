@@ -61,12 +61,7 @@ class PixelatedMailbox:
                 return message
 
     def add(self, mail, use_smtp_format=False):
-        return self._do_add_async(mail, use_smtp_format)
-
-    @wait_for(timeout=3.0)
-    def _do_add_async(self, mail, use_smtp_format):
-        raw = mail.to_smtp_format() if use_smtp_format else mail.raw_message()
-        return self.leap_mailbox.messages.add_msg(raw)
+        self.querier.create_mail(mail, self.mailbox_name)
 
     def remove(self, mail):
         mail.mark_as_deleted()

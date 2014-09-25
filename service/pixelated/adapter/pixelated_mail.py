@@ -16,6 +16,7 @@
 import json
 from leap.mail.imap.fields import fields
 from leap.mail.walk import get_parts
+import leap.mail.walk as walk
 import dateutil.parser as dateparser
 from pixelated.adapter.status import Status
 from pixelated.adapter.tag_service import TagService
@@ -23,6 +24,7 @@ import pixelated.support.date
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from pycryptopp.hash import sha256
+from pixelated.support.functional import flatten
 
 
 class InputMail:
@@ -34,13 +36,24 @@ class InputMail:
         self._bd = None
         self._mime = None
 
+    def as_dict(self):
+        statuses = [status.name for status in self.status]
+        return {
+            'header': self.headers,
+            'ident': self.ident,
+            'tags': list(self.tags),
+            'status': statuses,
+            'security_casing': {},
+            'body': self.body
+        }
+
+
     @staticmethod
     def from_dict(mail_dict):
         input_mail = InputMail()
         input_mail.headers = mail_dict['header']
         input_mail.headers['date'] = pixelated.support.date.iso_now()
         input_mail.body = mail_dict['body']
-        input_mail.ident = mail_dict.get('ident', None)
         input_mail.tags = set(mail_dict.get('tags', []))
         input_mail.status = set(mail_dict.get('status', []))
         return input_mail
@@ -51,10 +64,14 @@ class InputMail:
             return self._mime
         mime = MIMEMultipart()
         for key, value in self.headers.items():
-            mime[key] = value
+            mime[str(key)] = str(value)
         mime.attach(MIMEText(self.body, 'plain'))
         self._mime = mime
         return mime
+
+    @property
+    def ident(self):
+        return self._get_chash()
 
     def _raw(self):
         if self._raw_message:
@@ -66,7 +83,9 @@ class InputMail:
         return sha256.SHA256(self._raw()).hexdigest()
 
     def _get_for_save(self, next_uid):
-        return (self._fdoc(next_uid), self._hdoc(), self._bdoc())
+        docs = [self._fdoc(next_uid), self._hdoc()]
+        docs.extend([m for m in self._cdocs()])
+        return docs
 
     def _fdoc(self, next_uid):
         if self._fd:
@@ -82,6 +101,9 @@ class InputMail:
         self._fd = fd
         return fd
 
+    def _get_body_phash(self):
+        return walk.get_body_phash_multi(walk.get_payloads(self._mime_multipart))
+
     def _hdoc(self):
         if self._hd:
             return self._hd
@@ -94,21 +116,14 @@ class InputMail:
         hd[fields.MULTIPART_KEY] = True
         hd[fields.SUBJECT_KEY] = self.headers.get('subject')
         hd[fields.TYPE_KEY] = fields.TYPE_HEADERS_VAL
-        hd[fields.BODY_KEY] = sha256.SHA256.hexdigest(self._mime_multipart.get_payload())
-
-        parts_array = get_parts(self._mime_multipart)
-        parts = {}
-        for index, part in enumerate(parts_array):
-            part[fields.PAYLOAD_HASH_KEY] = hd[fields.BODY_KEY]
-            parts[index] = part
-        hd[fields.PARTS_MAP_KEY] = parts
+        hd[fields.BODY_KEY] = self._get_body_phash()
+        hd[fields.PARTS_MAP_KEY] = walk.walk_msg_tree(walk.get_parts(self._mime_multipart), body_phash=self._get_body_phash())
 
         self._hd = hd
         return hd
 
-    def _bdoc(self):
-
-        pass
+    def _cdocs(self):
+        return walk.get_raw_docs(self._mime_multipart, self._mime_multipart.walk())
 
     def to_mime_multipart(self):
         mime_multipart = MIMEMultipart()
@@ -180,6 +195,10 @@ class PixelatedMail:
     @property
     def is_recent(self):
         return Status('recent') in self.status
+
+    @property
+    def uid(self):
+        return self.fdoc.content['uid']
 
     def save(self):
         return self.querier.save_mail(self)

@@ -167,8 +167,7 @@ def register_new_user(username):
 def start_user_agent(debug_enabled):
     leap_session = LeapSession.open(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'],
                                     app.config['LEAP_SERVER_NAME'])
-    querier = SoledadQuerier.get_instance()
-    querier.soledad = leap_session.account._soledad
+    SoledadQuerier.get_instance(soledad=leap_session.account._soledad)
     PixelatedMail.from_email_address = leap_session.account_email()
     pixelated_mailboxes = PixelatedMailBoxes(leap_session.account)
     pixelated_mail_sender = PixelatedMailSender(leap_session.account_email())

@@ -1,13 +1,19 @@
 from pixelated.adapter.pixelated_mail import PixelatedMail
 
+
 class SoledadQuerier:
 
     instance = None
 
+    def __init__(self, soledad):
+        self.soledad = soledad
+
     @classmethod
-    def get_instance(cls):
+    def get_instance(cls, soledad=None):
         if not cls.instance:
-            cls.instance = SoledadQuerier()
+            if not soledad:
+                raise Exception("Need a soledad for the first time you call this")
+            cls.instance = SoledadQuerier(soledad)
         return cls.instance
 
     def all_mails(self):
@@ -25,8 +31,17 @@ class SoledadQuerier:
         return [PixelatedMail.from_soledad(*raw_mail, soledad_querier=self) for raw_mail in fdocs_hdocs_bdocs]
 
     def save_mail(self, mail):
-        #self.soledad.put_doc(mail.fdoc)
-        #self.soledad.put_doc(mail.hdoc)  # XXX update only what has to be updated
-        #self.soledad.put_doc(mail.bdoc)
-        pass
+        # XXX update only what has to be updated
+        self.soledad.put_doc(mail.fdoc)
+        self.soledad.put_doc(mail.hdoc)
+
+    def create_mail(self, mail, mailbox_name):
+        uid = self._next_uid_for_mailbox(mailbox_name)
+        for doc in mail._get_for_save(next_uid=uid):
+            self.soledad.create_doc(doc)
+
+    def _next_uid_for_mailbox(self, mailbox_name):
+        mails = self.all_mails_by_mailbox(mailbox_name)
+        mails.sort(key=lambda x: x.uid, reverse=True)
+        return mails[0].uid + 1
 
