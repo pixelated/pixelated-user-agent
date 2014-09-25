@@ -18,10 +18,16 @@ class SoledadQuerier:
 
     def all_mails(self):
         fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in self.soledad.get_from_index('by-type', 'flags')]
+        import pdb;pdb.set_trace()
+        if len(fdocs_chash) == 0:
+            return []
         return self._build_mails_from_fdocs(fdocs_chash)
 
     def all_mails_by_mailbox(self, mailbox_name):
         fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in self.soledad.get_from_index('by-type-and-mbox', 'flags', mailbox_name)]
+        import pdb;pdb.set_trace()
+        if len(fdocs_chash) == 0:
+            return []
         return self._build_mails_from_fdocs(fdocs_chash)
 
     def _build_mails_from_fdocs(self, fdocs_chash):
@@ -37,11 +43,25 @@ class SoledadQuerier:
 
     def create_mail(self, mail, mailbox_name):
         uid = self._next_uid_for_mailbox(mailbox_name)
-        for doc in mail._get_for_save(next_uid=uid):
-            self.soledad.create_doc(doc)
+        new_docs = [self.soledad.create_doc(doc) for doc in mail._get_for_save(next_uid=uid)]
+        self._update_index(new_docs)
+
 
     def _next_uid_for_mailbox(self, mailbox_name):
         mails = self.all_mails_by_mailbox(mailbox_name)
         mails.sort(key=lambda x: x.uid, reverse=True)
+        if len(mails) == 0:
+            return 1
         return mails[0].uid + 1
 
+    def _update_index(self, docs):
+        db = self.soledad._db
+
+        indexed_fields = db._get_indexed_fields()
+        if indexed_fields:
+            # It is expected that len(indexed_fields) is shorter than
+            # len(raw_doc)
+            getters = [(field, db._parse_index_definition(field))
+                       for field in indexed_fields]
+            for doc in docs:
+                db._update_indexes(doc.doc_id, doc.content, getters, db._db_handle)

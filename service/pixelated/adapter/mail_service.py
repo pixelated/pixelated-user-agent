@@ -32,7 +32,7 @@ class MailService:
 
     def mails(self, query):
         _mails = self.mailboxes.mails_by_tag(query['tags']) if query['tags'] else self.querier.all_mails()
-        return sorted(_mails or [], key=lambda mail: mail.headers['date'], reverse=True)
+        return sorted(_mails or [], key=lambda mail: mail.headers['Date'], reverse=True)
 
     def update_tags(self, mail_id, new_tags):
         mail = self.mail(mail_id)

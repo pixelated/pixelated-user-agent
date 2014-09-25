@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
+
 from leap.mail.imap.fields import fields
-from leap.mail.walk import get_parts
 import leap.mail.walk as walk
 import dateutil.parser as dateparser
 from pixelated.adapter.status import Status
@@ -51,8 +51,8 @@ class InputMail:
     @staticmethod
     def from_dict(mail_dict):
         input_mail = InputMail()
-        input_mail.headers = mail_dict['header']
-        input_mail.headers['date'] = pixelated.support.date.iso_now()
+        input_mail.headers = {key.capitalize: value for key, value in mail_dict['header'].items()}
+        input_mail.headers['Date'] = pixelated.support.date.iso_now()
         input_mail.body = mail_dict['body']
         input_mail.tags = set(mail_dict.get('tags', []))
         input_mail.status = set(mail_dict.get('status', []))
@@ -98,6 +98,8 @@ class InputMail:
         fd[fields.SIZE_KEY] = len(self._raw())
         fd[fields.MULTIPART_KEY] = True
         fd[fields.RECENT_KEY] = True
+        fd[fields.TYPE_KEY] = fields.TYPE_FLAGS_VAL
+        fd[fields.FLAGS_KEY] = []
         self._fd = fd
         return fd
 
@@ -110,11 +112,11 @@ class InputMail:
 
         hd = {}
         hd[fields.HEADERS_KEY] = self.headers
-        hd[fields.DATE_KEY] = self.headers['date']
+        hd[fields.DATE_KEY] = self.headers['Date']
         hd[fields.CONTENT_HASH_KEY] = self._get_chash()
         hd[fields.MSGID_KEY] = ''
         hd[fields.MULTIPART_KEY] = True
-        hd[fields.SUBJECT_KEY] = self.headers.get('subject')
+        hd[fields.SUBJECT_KEY] = self.headers.get('Subject')
         hd[fields.TYPE_KEY] = fields.TYPE_HEADERS_VAL
         hd[fields.BODY_KEY] = self._get_body_phash()
         hd[fields.PARTS_MAP_KEY] = walk.walk_msg_tree(walk.get_parts(self._mime_multipart), body_phash=self._get_body_phash())
@@ -129,13 +131,13 @@ class InputMail:
         mime_multipart = MIMEMultipart()
 
         for header in ['To', 'Cc', 'Bcc']:
-            if self.headers[header.lower()]:
-                mime_multipart[header] = ", ".join(self.headers[header.lower()])
+            if self.headers[header]:
+                mime_multipart[header] = ", ".join(self.headers[header])
 
         if self.headers['subject']:
-            mime_multipart['Subject'] = self.headers['subject']
+            mime_multipart['Subject'] = self.headers['Subject']
 
-        mime_multipart['Date'] = self.headers['date']
+        mime_multipart['Date'] = self.headers['Date']
         mime_multipart.attach(MIMEText(self.body, 'plain'))
         return mime_multipart
 
@@ -149,7 +151,6 @@ class PixelatedMail:
 
     def __init__(self, tag_service=TagService.get_instance()):
         self.tag_service = tag_service
-        self.mailbox_name = None
 
     @staticmethod
     def from_soledad(fdoc, hdoc, bdoc, soledad_querier):
@@ -166,9 +167,8 @@ class PixelatedMail:
 
     @property
     def headers(self):
-        _headers = ['From', 'Date', 'Subject', 'Cc', 'Bcc']
-        _headers = {header.lower(): self.hdoc.content['headers'].get(header) for header in _headers}
-        map(lambda header: self._split_recipients(header, _headers), ['to', 'bcc', 'cc'])
+        _headers = ['From', 'Date', 'To', 'Subject', 'Cc', 'Bcc']
+        _headers = {header: self.hdoc.content['headers'].get(header) for header in _headers}
         return _headers
 
     @property
@@ -215,11 +215,6 @@ class PixelatedMail:
     def get_bcc(self):
         return self.headers['bcc']
 
-    def _split_recipients(self, header_type, temporary_headers):
-        if(temporary_headers.get(header_type) is not None):
-            recipients = temporary_headers[header_type].split(',')
-            temporary_headers[header_type] = map(lambda x: x.lstrip(), recipients)
-
     def mark_as_deleted(self):
         # self.remove_all_tags()
         # self.leap_mail.setFlags((Status.PixelatedStatus.DELETED,), 1)
@@ -259,7 +254,7 @@ class PixelatedMail:
     def as_dict(self):
         statuses = [status.name for status in self.status]
         return {
-            'header': self.headers,
+            'header': {k.lower(): v for k, v in self.headers.items()},
             'ident': self.ident,
             'tags': list(self.tags),
             'status': statuses,
