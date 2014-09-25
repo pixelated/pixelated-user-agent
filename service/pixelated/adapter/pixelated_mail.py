@@ -51,7 +51,7 @@ class InputMail:
     @staticmethod
     def from_dict(mail_dict):
         input_mail = InputMail()
-        input_mail.headers = {key.capitalize: value for key, value in mail_dict['header'].items()}
+        input_mail.headers = {key.capitalize(): value for key, value in mail_dict['header'].items()}
         input_mail.headers['Date'] = pixelated.support.date.iso_now()
         input_mail.body = mail_dict['body']
         input_mail.tags = set(mail_dict.get('tags', []))

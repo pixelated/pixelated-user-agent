@@ -18,14 +18,12 @@ class SoledadQuerier:
 
     def all_mails(self):
         fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in self.soledad.get_from_index('by-type', 'flags')]
-        import pdb;pdb.set_trace()
         if len(fdocs_chash) == 0:
             return []
         return self._build_mails_from_fdocs(fdocs_chash)
 
     def all_mails_by_mailbox(self, mailbox_name):
         fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in self.soledad.get_from_index('by-type-and-mbox', 'flags', mailbox_name)]
-        import pdb;pdb.set_trace()
         if len(fdocs_chash) == 0:
             return []
         return self._build_mails_from_fdocs(fdocs_chash)
