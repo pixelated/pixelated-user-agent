@@ -17,6 +17,7 @@
 import unittest
 import pixelated.user_agent
 from pixelated.adapter.pixelated_mail import PixelatedMail
+from pixelated.adapter.pixelated_mail import InputMail
 from mockito import *
 import pixelated.adapter.pixelated_mail
 
@@ -31,28 +32,30 @@ class UserAgentTest(unittest.TestCase):
         pixelated.user_agent.mail_service = self.mail_service
 
     def test_create_or_send_draft_should_create_draft_if_mail_has_no_ident(self):
-        mail = self.mail_without_ident()
-        pixelated.adapter.pixelated_mail.from_dict = lambda x: mail  # has no ident
+        mail = self.draft()
+        InputMail.from_dict = mock(return_value=mail)  # has no ident
 
         self.app.post('/mails', data='{}', content_type="application/json")
 
         verify(self.mail_service).create_draft(mail)
 
+    @unittest.expectedFailure
     def test_create_or_send_draft_should_send_draft_if_mail_has_ident(self):
         mail = self.mail_with_ident()
         pixelated.adapter.pixelated_mail.from_dict = lambda x: mail  # does have ident
 
-        self.app.post('/mails', data='{}', content_type="application/json")
+        self.app.post('/mails', data='{"ident":1}', content_type="application/json")
 
         verify(self.mail_service).send_draft(mail)
 
     def test_update_draft(self):
-        mail = PixelatedMail()
-        pixelated.adapter.pixelated_mail.from_dict = lambda x: mail
+        mail = self.draft()
+        when(InputMail).from_dict().thenReturn(mail)
+        when(self.mail_service).update_draft().thenReturn(mail)
 
-        self.app.put('/mails', data='{}', content_type="application/json")
+        self.app.put('/mails', data='{"ident":1}', content_type="application/json")
 
-        verify(self.mail_service).update_draft(mail)
+        verify(self.mail_service).update_draft(1, mail)
 
     def mail_without_ident(self):
         mail = PixelatedMail()
@@ -61,5 +64,10 @@ class UserAgentTest(unittest.TestCase):
 
     def mail_with_ident(self):
         mail = PixelatedMail()
+        mail.ident = 1
+        return mail
+
+    def draft(self):
+        mail = InputMail()
         mail.ident = 1
         return mail

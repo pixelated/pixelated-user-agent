@@ -63,7 +63,7 @@ def send_mail():
     if 'saveDraft' in DISABLED_FEATURES:
         mail_service.send(_mail)
     else:
-        if request.json['ident']:
+        if request.json.get('ident'):
             mail_service.send_draft(_mail)
         else:
             _mail = mail_service.create_draft(_mail)
@@ -73,7 +73,8 @@ def send_mail():
 @app.route('/mails', methods=['PUT'])
 def update_draft():
     _mail = InputMail.from_dict(request.json)
-    ident = mail_service.update_draft(request.json['ident'], _mail).ident
+    new_revision = mail_service.update_draft(request.json['ident'], _mail)
+    ident = new_revision.ident
     return respond_json({'ident': ident})
 
 
