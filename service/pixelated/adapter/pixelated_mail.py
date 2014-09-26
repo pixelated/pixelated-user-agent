@@ -184,7 +184,7 @@ class PixelatedMail:
 
     @property
     def tags(self):
-        _tags = self.hdoc.content.get('X-Tags', '[]')
+        _tags = self.hdoc.content['headers'].get('X-Tags', '[]')
         return set(_tags) if type(_tags) is list or type(_tags) is set else set(json.loads(_tags))
 
     @property

@@ -23,6 +23,7 @@ global querier
 pixelated.adapter.soledad_querier.get_soledad_querier_instance = lambda x, y: querier
 
 from pixelated.adapter.pixelated_mail import PixelatedMail
+from pixelated.adapter.pixelated_mail import InputMail
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
 
@@ -50,7 +51,7 @@ class PixelatedMailboxesTest(unittest.TestCase):
         self.assertEqual("mail", mails[0])
 
     def test_add_draft(self):
-        mail = PixelatedMail()
+        mail = InputMail()
         when(self.drafts_mailbox).add(mail).thenReturn(1)
 
         self.mailboxes.add_draft(mail)

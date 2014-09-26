@@ -27,7 +27,6 @@ LEAP_FLAGS = ['\\Seen',
 
 DEFAULT_HEADERS = {'date': str(datetime.now())}
 
-
 def mail_dict():
     return {
         'header': {
@@ -41,30 +40,27 @@ def mail_dict():
         'tags': []
     }
 
+class TestDoc:
+    def __init__(self, content):
+        self.content = content
 
-def doc(content):
-    class TestDoc:
-        def __init__(self, content):
-            self.content = content
-
-    return TestDoc(content)
-
-
-def leap_mail(uid=0, flags=LEAP_FLAGS, headers=DEFAULT_HEADERS, extra_headers={}, mbox='INBOX', body='body',
+def leap_mail(uid=0, flags=LEAP_FLAGS, headers=None, extra_headers={}, mbox='INBOX', body='body',
               chash='chash'):
-    fdoc = doc({'flags': flags, 'mbox': mbox, 'type': 'flags', 'uid': uid, 'chash': chash})
+    fdoc = TestDoc({'flags': flags, 'mbox': mbox, 'type': 'flags', 'uid': uid, 'chash': chash})
 
+    if headers is None: headers = {}
+    if not (headers.get('received') or headers.get('date')): headers.update(DEFAULT_HEADERS)
     headers['headers'] = extra_headers
-    hdoc = doc(headers)
+    hdoc = TestDoc(headers)
 
-    bdoc = doc({'raw': body, 'type': 'cnt'})
+    bdoc = TestDoc({'raw': body, 'type': 'cnt'})
 
     return (fdoc, hdoc, bdoc)
 
 
 def input_mail():
     mail = InputMail()
-    mail.fdoc = doc({})
+    mail.fdoc = TestDoc({})
     mail._chash = "123"
     mail.as_dict = lambda: None
     return mail
