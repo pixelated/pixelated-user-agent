@@ -16,24 +16,15 @@
 
 from pixelated.adapter.tag_service import TagService
 from pixelated.adapter.soledad_querier import SoledadQuerier
-from crochet import wait_for
 
 
 class PixelatedMailbox:
 
-    def __init__(self, leap_mailbox, tag_service=TagService.get_instance()):
+    def __init__(self, mailbox_name, querier, tag_service=TagService.get_instance()):
         self.tag_service = tag_service
-        self.leap_mailbox = leap_mailbox
-        self.mailbox_tag = self.leap_mailbox.mbox.lower()
-        self.querier = SoledadQuerier.get_instance()
-
-    @property
-    def messages(self):
-        return self.leap_mailbox.messages
-
-    @property
-    def mailbox_name(self):
-        return self.leap_mailbox.mbox
+        self.mailbox_name = mailbox_name
+        self.mailbox_tag = mailbox_name.lower()
+        self.querier = querier
 
     def add_mailbox_tag_if_not_there(self, pixelated_mail):
         if not pixelated_mail.has_tag(self.mailbox_tag):
@@ -42,7 +33,7 @@ class PixelatedMailbox:
             pixelated_mail.mark_as_not_recent()
 
     def mails(self):
-        _mails = self.querier.all_mails_by_mailbox(self.leap_mailbox.mbox)
+        _mails = self.querier.all_mails_by_mailbox(self.mailbox_name)
 
         result = []
         for mail in _mails:
@@ -60,14 +51,13 @@ class PixelatedMailbox:
             if message.ident == mail_id:
                 return message
 
-    def add(self, mail, use_smtp_format=False):
+    def add(self, mail):
         self.querier.create_mail(mail, self.mailbox_name)
 
     def remove(self, ident):
         mail = self.querier.mail(ident)
         self.querier.remove_mail(mail)
-        self.leap_mailbox.expunge()
 
     @classmethod
-    def create(cls, account, mailbox_name='INBOX'):
-        return PixelatedMailbox(account.getMailbox(mailbox_name))
+    def create(cls, mailbox_name='INBOX'):
+        return PixelatedMailbox(mailbox_name, SoledadQuerier.get_instance())

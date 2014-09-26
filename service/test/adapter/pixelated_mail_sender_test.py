@@ -27,12 +27,13 @@ class PixelatedMailSenderTest(unittest.TestCase):
         self.mail_sender = PixelatedMailSender(self.mail_address, self.smtp_client)
 
     def test_send_mail_sends_to_To_Cc_and_Bcc(self):
-        mail_dict = test_helper.mail_dict()
-        mail_dict['header']['to'] = ['to@pixelated.org', 'anotherto@pixelated.org']
-        mail_dict['header']['cc'] = ['cc@pixelated.org', 'anothercc@pixelated.org']
-        mail_dict['header']['bcc'] = ['bcc@pixelated.org', 'anotherbcc@pixelated.org']
+        headers = {
+            'To': ['to@pixelated.org', 'anotherto@pixelated.org'],
+            'Cc': ['cc@pixelated.org', 'anothercc@pixelated.org'],
+            'Bcc': ['bcc@pixelated.org', 'anotherbcc@pixelated.org']
+        }
 
-        mail = PixelatedMail.from_dict(mail_dict)
+        mail = PixelatedMail.from_soledad(*test_helper.leap_mail(extra_headers=headers))
         mail.to_smtp_format = lambda: "mail as smtp string"
 
         self.mail_sender.sendmail(mail)

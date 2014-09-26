@@ -1,4 +1,27 @@
+#
+# Copyright (c) 2014 ThoughtWorks, Inc.
+#
+# Pixelated is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Pixelated is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.pixelated_mail import PixelatedMail
+
+
+def get_soledad_querier_instance(cls, soledad=None):
+    if not cls.instance:
+        if not soledad:
+            raise Exception("Need a soledad for the first time you call this")
+        cls.instance = SoledadQuerier(soledad)
+    return cls.instance
 
 
 class SoledadQuerier:
@@ -10,11 +33,7 @@ class SoledadQuerier:
 
     @classmethod
     def get_instance(cls, soledad=None):
-        if not cls.instance:
-            if not soledad:
-                raise Exception("Need a soledad for the first time you call this")
-            cls.instance = SoledadQuerier(soledad)
-        return cls.instance
+        return get_soledad_querier_instance(cls, soledad)
 
     def all_mails(self):
         fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in self.soledad.get_from_index('by-type', 'flags')]
@@ -48,10 +67,12 @@ class SoledadQuerier:
         fdoc = self.soledad.get_from_index('by-type-and-contenthash', 'flags', ident)[0]
         hdoc = self.soledad.get_from_index('by-type-and-contenthash', 'head', ident)[0]
         bdoc = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', hdoc.content['body'])[0]
+
         return PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self)
 
     def remove_mail(self, mail):
         _mail = self.mail(mail.ident)
+        # FIX-ME: Must go through all the part_map phash to delete all the cdocs
         self.soledad.delete_doc(_mail.bdoc)
         self.soledad.delete_doc(_mail.hdoc)
         self.soledad.delete_doc(_mail.fdoc)

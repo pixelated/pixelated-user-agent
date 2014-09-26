@@ -17,10 +17,14 @@ import unittest
 
 from pixelated.adapter.mail_service import MailService
 from mockito import *
+import pixelated.adapter.soledad_querier
 
 
 class TestMailService(unittest.TestCase):
     def setUp(self):
+        self.querier = mock()
+        pixelated.adapter.soledad_querier.get_soledad_querier_instance = lambda x, y: self.querier
+
         self.mailboxes = mock()
         self.mail_sender = mock()
         self.mail_service = MailService(self.mailboxes, self.mail_sender)

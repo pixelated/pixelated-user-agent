@@ -14,15 +14,22 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
-from pixelated.adapter.pixelated_mail import PixelatedMail
+from test.adapter import test_helper
+from mockito import *
 
+import pixelated.adapter.soledad_querier
+querier = mock()
+global querier
+pixelated.adapter.soledad_querier.get_soledad_querier_instance = lambda x, y: querier
+
+from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
-from mockito import *
 
 
 class PixelatedMailboxesTest(unittest.TestCase):
     def setUp(self):
+
         self.account = mock()
         self.drafts_mailbox = mock()
         self.drafts_mailbox.mailbox_name = 'drafts'
@@ -34,7 +41,7 @@ class PixelatedMailboxesTest(unittest.TestCase):
         self.account.mailboxes = ['INBOX']
         tags_to_search_for = {'tags': ['inbox', 'custom_tag']}
 
-        when(PixelatedMailbox).create(self.account, 'INBOX').thenReturn(mailbox)
+        when(PixelatedMailbox).create('INBOX').thenReturn(mailbox)
         when(mailbox).mails_by_tags(any(list)).thenReturn(["mail"])
 
         mails = self.mailboxes.mails_by_tag(tags_to_search_for['tags'])
@@ -44,22 +51,18 @@ class PixelatedMailboxesTest(unittest.TestCase):
 
     def test_add_draft(self):
         mail = PixelatedMail()
-        when(self.drafts_mailbox).add(mail, use_smtp_format=True).thenReturn(1)
+        when(self.drafts_mailbox).add(mail).thenReturn(1)
 
         self.mailboxes.add_draft(mail)
 
-        verify(self.drafts_mailbox).add(mail, use_smtp_format=True)
-        self.assertEqual('drafts', mail.mailbox_name)
-        self.assertEqual(1, mail.uid)
+        verify(self.drafts_mailbox).add(mail)
 
     def test_update_draft(self):
-        mail = PixelatedMail()
-        when(self.drafts_mailbox).add(mail, use_smtp_format=True).thenReturn(1)
+        mail = test_helper.input_mail()
+        when(self.drafts_mailbox).add(mail).thenReturn(mail)
 
-        self.mailboxes.update_draft(mail)
+        self.mailboxes.update_draft(mail.ident, mail)
 
-        inorder.verify(self.drafts_mailbox).add(mail, use_smtp_format=True)
-        inorder.verify(self.drafts_mailbox).remove(mail)
+        inorder.verify(self.drafts_mailbox).add(mail)
+        inorder.verify(self.drafts_mailbox).remove(mail.ident)
 
-        self.assertEqual('drafts', mail.mailbox_name)
-        self.assertEqual(1, mail.uid)

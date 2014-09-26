@@ -30,8 +30,8 @@ class TagServiceTest(unittest.TestCase):
         self.tag_service = TagService(tag_index=self.tag_index)
 
     def test_index_is_initialized_with_mail_tags_if_empty(self):
-        mail_one = PixelatedMail.from_leap_mail(test_helper.leap_mail(uid=0, extra_headers={'X-Tags': '["tag_1"]'}))
-        mail_two = PixelatedMail.from_leap_mail(test_helper.leap_mail(uid=1, extra_headers={'X-Tags': '["tag_2"]'}))
+        mail_one = PixelatedMail.from_soledad(*test_helper.leap_mail(uid=0, extra_headers={'X-Tags': '["tag_1"]'}))
+        mail_two = PixelatedMail.from_soledad(*test_helper.leap_mail(uid=1, extra_headers={'X-Tags': '["tag_2"]'}))
         mails = [mail_one, mail_two]
 
         self.tag_service.load_index(mails)
@@ -53,7 +53,7 @@ class TagServiceTest(unittest.TestCase):
         self.assertEquals(0, self.tag_service.tag_index.get('inbox').total)
         self.assertEquals(1, self.tag_service.tag_index.get('one_tag').total)
 
-        self.tag_service.notify_tags_updated(set(['inbox']), set(['one_tag']), mail_ident)
+        self.tag_service.notify_tags_updated({'inbox'}, {'one_tag'}, mail_ident)
 
         self.assertEquals(1, self.tag_service.tag_index.get('inbox').total)
         self.assertIsNone(self.tag_service.tag_index.get('one_tag'))

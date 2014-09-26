@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from mock import Mock
 from datetime import datetime
+from pixelated.adapter.pixelated_mail import InputMail
 
 LEAP_FLAGS = ['\\Seen',
               '\\Answered',
@@ -41,16 +42,30 @@ def mail_dict():
     }
 
 
-def leap_mail(uid=0, flags=LEAP_FLAGS, headers=DEFAULT_HEADERS, extra_headers={}, mbox='INBOX'):
-    headers = dict(headers.items() + extra_headers.items())
-    return Mock(getUID=Mock(return_value=uid),
-                _mbox=mbox,
-                getFlags=Mock(return_value=flags),
-                bdoc=Mock(content={'raw': 'test'}),
-                hdoc=Mock(content={'headers': headers}))
+def doc(content):
+    class TestDoc:
+        def __init__(self, content):
+            self.content = content
+
+    return TestDoc(content)
 
 
-def leap_mailbox(messages=[leap_mail(uid=6)], mailbox_name='INBOX'):
-    return Mock(_get_mbox_doc=Mock(return_value=None),
-                mbox=mailbox_name,
-                messages=messages)
+def leap_mail(uid=0, flags=LEAP_FLAGS, headers=DEFAULT_HEADERS, extra_headers={}, mbox='INBOX', body='body',
+              chash='chash'):
+    fdoc = doc({'flags': flags, 'mbox': mbox, 'type': 'flags', 'uid': uid, 'chash': chash})
+
+    headers['headers'] = extra_headers
+    hdoc = doc(headers)
+
+    bdoc = doc({'raw': body, 'type': 'cnt'})
+
+    return (fdoc, hdoc, bdoc)
+
+
+def input_mail():
+    mail = InputMail()
+    mail.fdoc = doc({})
+    mail._chash = "123"
+    mail.as_dict = lambda: None
+    return mail
+

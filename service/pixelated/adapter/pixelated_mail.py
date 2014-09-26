@@ -49,13 +49,8 @@ class InputMail:
 
     @staticmethod
     def from_dict(mail_dict):
-        input_mail = InputMail()
-        input_mail.headers = {key.capitalize(): value for key, value in mail_dict.get('header', {}).items()}
-        input_mail.headers['Date'] = pixelated.support.date.iso_now()
-        input_mail.body = mail_dict.get('body', '')
-        input_mail.tags = set(mail_dict.get('tags', []))
-        input_mail.status = set(mail_dict.get('status', []))
-        return input_mail
+        return input_mail_from_dict(mail_dict)
+
 
     @property
     def _mime_multipart(self):
@@ -73,13 +68,14 @@ class InputMail:
         return self._get_chash()
 
     def _raw(self):
-        if self._raw_message:
-            return self._raw_message
-        self._raw_message = self._mime_multipart.as_string()
+        if not self._raw_message:
+            self._raw_message = self._mime_multipart.as_string()
         return self._raw_message
 
     def _get_chash(self):
-        return sha256.SHA256(self._raw()).hexdigest()
+        if not self._chash:
+            self._chash = sha256.SHA256(self._raw()).hexdigest()
+        return self._chash
 
     def _get_for_save(self, next_uid):
         docs = [self._fdoc(next_uid), self._hdoc()]
@@ -133,7 +129,7 @@ class InputMail:
             if self.headers[header]:
                 mime_multipart[header] = ", ".join(self.headers[header])
 
-        if self.headers['subject']:
+        if self.headers['Subject']:
             mime_multipart['Subject'] = self.headers['Subject']
 
         mime_multipart['Date'] = self.headers['Date']
@@ -152,7 +148,7 @@ class PixelatedMail:
         self.tag_service = tag_service
 
     @staticmethod
-    def from_soledad(fdoc, hdoc, bdoc, soledad_querier):
+    def from_soledad(fdoc, hdoc, bdoc, soledad_querier=None):
         mail = PixelatedMail()
         mail.bdoc = bdoc
         mail.fdoc = fdoc
@@ -166,9 +162,17 @@ class PixelatedMail:
 
     @property
     def headers(self):
-        _headers = ['From', 'Date', 'To', 'Subject', 'Cc', 'Bcc']
+        _headers = ['From', 'To', 'Subject', 'Cc', 'Bcc']
         _headers = {header: self.hdoc.content['headers'].get(header) for header in _headers}
+        _headers['Date'] = self._get_date()
         return _headers
+
+    def _get_date(self):
+        date = self.hdoc.content.get('date', None)
+        if not date:
+
+            date = self.hdoc.content['received'].split(";")[-1].strip()
+        return dateparser.parse(date).isoformat()
 
     @property
     def status(self):
@@ -180,8 +184,8 @@ class PixelatedMail:
 
     @property
     def tags(self):
-        _tags = self.headers.get('x-tags', '[]')
-        return set(_tags) if type(_tags) is list else set(json.loads(_tags))
+        _tags = self.hdoc.content.get('X-Tags', '[]')
+        return set(_tags) if type(_tags) is list or type(_tags) is set else set(json.loads(_tags))
 
     @property
     def ident(self):
@@ -203,45 +207,37 @@ class PixelatedMail:
         return self.querier.save_mail(self)
 
     def set_from(self, _from):
-        self.headers['from'] = [_from]
+        self.headers['From'] = [_from]
 
     def get_to(self):
-        return self.headers['to']
+        return self.headers['To']
 
     def get_cc(self):
-        return self.headers['cc']
+        return self.headers['Cc']
 
     def get_bcc(self):
-        return self.headers['bcc']
-
-    def mark_as_deleted(self):
-        # self.remove_all_tags()
-        # self.leap_mail.setFlags((Status.PixelatedStatus.DELETED,), 1)
-        pass
+        return self.headers['Bcc']
 
     def remove_all_tags(self):
         self.update_tags(set([]))
 
     def update_tags(self, tags):
         old_tags = self.tags
-        self.tags = tags
+        self._persist_mail_tags(tags)
         removed = old_tags.difference(tags)
         added = tags.difference(old_tags)
-        self._persist_mail_tags(tags)
         self.tag_service.notify_tags_updated(added, removed, self.ident)
         return self.tags
 
     def mark_as_read(self):
-        # self.leap_mail.setFlags((Status.PixelatedStatus.SEEN,), 1)
-        # self.status = self._extract_status()
-        # return self
-        pass
+        self.fdoc.content['flags'].append(Status.PixelatedStatus.SEEN)
+        #self.status = self._extract_status()
+        return self
 
     def mark_as_not_recent(self):
-        # self.leap_mail.setFlags((Status.PixelatedStatus.RECENT,), -1)
-        # self.status = self._extract_status()
-        # return self
-        pass
+        self.fdoc.content['flags'].remove(Status.PixelatedStatus.RECENT)
+        #self.status = self._extract_status()
+        return self
 
     def _persist_mail_tags(self, current_tags):
         self.hdoc.content['headers']['X-Tags'] = json.dumps(list(current_tags))
@@ -261,24 +257,12 @@ class PixelatedMail:
             'body': self.body
         }
 
-    @staticmethod
-    def from_dict(mail_dict):
-        return from_dict(mail_dict)
 
-    @classmethod
-    def _get_date(cls, headers):
-        date = headers.get('date', None)
-        if not date:
-            date = headers['received'].split(";")[-1].strip()
-        return dateparser.parse(date).isoformat()
-
-
-def from_dict(mail_dict):
-    mail = PixelatedMail()
-    mail.headers = mail_dict.get('header', {})
-    mail.headers['date'] = pixelated.support.date.iso_now()
-    mail.body = mail_dict.get('body', '')
-    mail._ident = mail_dict.get('ident', None)
-    mail.tags = set(mail_dict.get('tags', []))
-    mail.status = set(mail_dict.get('status', []))
-    return mail
+def input_mail_from_dict(mail_dict):
+    input_mail = InputMail()
+    input_mail.headers = {key.capitalize(): value for key, value in mail_dict.get('header', {}).items()}
+    input_mail.headers['Date'] = pixelated.support.date.iso_now()
+    input_mail.body = mail_dict.get('body', '')
+    input_mail.tags = set(mail_dict.get('tags', []))
+    input_mail.status = set(mail_dict.get('status', []))
+    return input_mail

@@ -14,58 +14,35 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
+
 from pixelated.adapter.pixelated_mail import PixelatedMail
-from pixelated.adapter.status import Status
-import test_helper
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
+import test_helper
 from mockito import *
 
 
 class PixelatedMailboxTest(unittest.TestCase):
     def setUp(self):
-        mail_one = test_helper.leap_mail(uid=0, mbox='SENT')
-        leap_mailbox = test_helper.leap_mailbox(messages=[mail_one], mailbox_name='SENT')
-
         self.tag_service = mock()
-        self.mailbox = PixelatedMailbox(leap_mailbox, self.tag_service)
+        self.querier = mock()
+        self.mailbox = PixelatedMailbox('INBOX', self.querier, tag_service=self.tag_service)
 
     def test_mailbox_tag_is_added_when_recent_mail_arrives(self):
-        recent_leap_mail = test_helper.leap_mail(uid=0, mbox='SPAM', flags=['\\Recent'])
-        mailbox = PixelatedMailbox(test_helper.leap_mailbox(messages=[recent_leap_mail], mailbox_name='SPAM'))
-        self.assertIn('spam', mailbox.mails()[0].tags)
+        recent_leap_mail = test_helper.leap_mail(uid=0, mbox='INBOX', flags=['\\Recent'])
+        when(self.querier).all_mails_by_mailbox('INBOX').thenReturn([PixelatedMail.from_soledad(*recent_leap_mail, soledad_querier=self.querier)])
+
+        self.assertIn('inbox', self.mailbox.mails()[0].tags)
 
     def test_mailbox_tag_is_ignored_for_non_recent_mail(self):
-        recent_leap_mail = test_helper.leap_mail(uid=0, mbox='SPAM', flags=[])
-        mailbox = PixelatedMailbox(test_helper.leap_mailbox(messages=[recent_leap_mail], mailbox_name='SPAM'))
-        self.assertNotIn('spam', mailbox.mails()[0].tags)
+        recent_leap_mail = test_helper.leap_mail(uid=0, mbox='INBOX', flags=[])
+        when(self.querier).all_mails_by_mailbox('INBOX').thenReturn([PixelatedMail.from_soledad(*recent_leap_mail, soledad_querier=self.querier)])
 
-    def test_add_message_to_mailbox_with_raw_message(self):
-        mail = PixelatedMail.from_dict(test_helper.mail_dict())
-        mail.raw_message = lambda: 'raw mail'
-
-        leap_mailbox_messages = mock()
-        self.mailbox.leap_mailbox.messages = leap_mailbox_messages
-
-        self.mailbox._do_add_async.wrapped_function(self.mailbox, mail, use_smtp_format=False)
-
-        verify(leap_mailbox_messages).add_msg('raw mail')
-
-    def test_add_message_to_mailbox_with_smtp_format(self):
-        mail = PixelatedMail.from_dict(test_helper.mail_dict())
-        mail.to_smtp_format = lambda: 'smtp format mail'
-
-        leap_mailbox_messages = mock()
-        self.mailbox.leap_mailbox.messages = leap_mailbox_messages
-
-        self.mailbox._do_add_async.wrapped_function(self.mailbox, mail, use_smtp_format=True)
-
-        verify(leap_mailbox_messages).add_msg('smtp format mail')
+        self.assertNotIn('spam', self.mailbox.mails()[0].tags)
 
     def test_remove_message_from_mailbox(self):
-        mail = mock()
-        self.mailbox.leap_mailbox = mock()
+        mail = PixelatedMail()
+        when(self.querier).mail(1).thenReturn(mail)
 
-        self.mailbox.remove(mail)
+        self.mailbox.remove(1)
 
-        verify(mail).mark_as_deleted()
-        verify(self.mailbox.leap_mailbox).expunge()
+        verify(self.querier).remove_mail(mail)
