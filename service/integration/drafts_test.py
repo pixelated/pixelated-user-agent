@@ -44,10 +44,21 @@ class DraftsTest(unittest.TestCase, SoledadTestBase):
         sent_mails = self.get_mails_by_tag('sent')
         drafts = self.get_mails_by_tag('drafts')
 
-        import pdb;pdb.set_trace()
-
         self.assertEquals(1, len(sent_mails))
         self.assertEquals('Second draft', sent_mails[0].subject)
         self.assertEquals(0, len(drafts))
+
+    def test_update_draft(self):
+        draft = JSONMailBuilder().with_subject('First draft').build()
+        create_draft_response = self.post_mail(draft)
+        draft_ident = create_draft_response.ident
+
+        updated_draft = JSONMailBuilder().with_subject('First draft edited').with_ident(draft_ident).build()
+        self.put_mail(updated_draft)
+
+        drafts = self.get_mails_by_tag('drafts')
+
+        self.assertEquals(1, len(drafts))
+        self.assertEquals('First draft edited', drafts[0].subject)
 
 

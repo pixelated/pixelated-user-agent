@@ -131,6 +131,10 @@ class SoledadTestBase:
         response = json.loads(self.app.post('/mails', data=data, content_type="application/json").data)
         return ResponseMail(response)
 
+    def put_mail(self, data):
+        response = json.loads(self.app.put('/mails', data=data, content_type="application/json").data)
+        return response['ident']
+
 
 class ResponseMail:
 
