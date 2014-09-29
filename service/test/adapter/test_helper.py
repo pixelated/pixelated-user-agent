@@ -27,6 +27,7 @@ LEAP_FLAGS = ['\\Seen',
 
 DEFAULT_HEADERS = {'date': str(datetime.now())}
 
+
 def mail_dict():
     return {
         'header': {
@@ -40,16 +41,20 @@ def mail_dict():
         'tags': []
     }
 
+
 class TestDoc:
     def __init__(self, content):
         self.content = content
+
 
 def leap_mail(uid=0, flags=LEAP_FLAGS, headers=None, extra_headers={}, mbox='INBOX', body='body',
               chash='chash'):
     fdoc = TestDoc({'flags': flags, 'mbox': mbox, 'type': 'flags', 'uid': uid, 'chash': chash})
 
-    if headers is None: headers = {}
-    if not (headers.get('received') or headers.get('date')): headers.update(DEFAULT_HEADERS)
+    if headers is None:
+        headers = {}
+    if not (headers.get('received') or headers.get('date')):
+        headers.update(DEFAULT_HEADERS)
     headers['headers'] = extra_headers
     hdoc = TestDoc(headers)
 
@@ -64,4 +69,3 @@ def input_mail():
     mail._chash = "123"
     mail.as_dict = lambda: None
     return mail
-

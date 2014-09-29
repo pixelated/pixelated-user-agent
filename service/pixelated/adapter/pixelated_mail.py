@@ -52,7 +52,6 @@ class InputMail:
     def from_dict(mail_dict):
         return input_mail_from_dict(mail_dict)
 
-
     @property
     def _mime_multipart(self):
         if self._mime:

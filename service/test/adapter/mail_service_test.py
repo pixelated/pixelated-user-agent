@@ -26,13 +26,17 @@ class TestMailService(unittest.TestCase):
         pixelated.adapter.soledad_querier.get_soledad_querier_instance = lambda x, y: self.querier
 
         self.mailboxes = mock()
+        self.mailboxes.drafts = lambda: mock()
+        self.mailboxes.trash = lambda: mock()
+        self.mailboxes.sent = lambda: mock()
+
         self.mail_sender = mock()
         self.mail_service = MailService(self.mailboxes, self.mail_sender)
 
     def test_send_mail(self):
         mail = "mail"
 
-        self.mail_service.send(mail)
+        self.mail_service.send(1, mail)
 
         verify(self.mail_sender).sendmail(mail)
 

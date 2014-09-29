@@ -47,7 +47,7 @@ class UserAgentTest(unittest.TestCase):
 
         self.app.post('/mails', data='{"ident":1}', content_type="application/json")
 
-        verify(self.mail_service).send_draft(self.input_mail)
+        verify(self.mail_service).send(1, self.input_mail)
 
     def test_update_draft(self):
         self.input_mail = self.draft()
@@ -57,8 +57,6 @@ class UserAgentTest(unittest.TestCase):
         self.app.put('/mails', data='{"ident":1}', content_type="application/json")
 
         verify(self.mail_service).update_draft(1, self.input_mail)
-
-
 
     def draft(self):
         return test_helper.input_mail()

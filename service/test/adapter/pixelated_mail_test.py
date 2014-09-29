@@ -24,6 +24,7 @@ from pixelated.adapter.tag_index import TagIndex
 from pixelated.adapter.tag import Tag
 from mockito import *
 
+
 class TestPixelatedMail(unittest.TestCase):
 
     def setUp(self):
@@ -82,6 +83,7 @@ class TestPixelatedMail(unittest.TestCase):
 
         os.remove(db_path + '.db')
 
+
 class InputMailTest(unittest.TestCase):
     mail_dict = lambda x: {
         'body': 'Este \xe9 o corpo',
@@ -94,7 +96,6 @@ class InputMailTest(unittest.TestCase):
         'ident': '',
         'tags': ['sent']
     }
-
 
     def test_to_mime_multipart_should_add_blank_fields(self):
         pixelated.support.date.iso_now = lambda: 'date now'
@@ -112,7 +113,6 @@ class InputMailTest(unittest.TestCase):
         self.assertNotRegexpMatches(mime_multipart.as_string(), "\nCc: \n")
         self.assertNotRegexpMatches(mime_multipart.as_string(), "\nSubject: \n")
 
-
     def test_to_mime_multipart(self):
         pixelated.support.date.iso_now = lambda: 'date now'
 
@@ -124,7 +124,6 @@ class InputMailTest(unittest.TestCase):
         self.assertRegexpMatches(mime_multipart.as_string(), "\nDate: date now\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nSubject: Oi\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nEste \xe9 o corpo")
-
 
     def test_smtp_format(self):
         PixelatedMail.from_email_address = 'pixelated@org'
