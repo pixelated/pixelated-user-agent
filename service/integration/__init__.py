@@ -24,7 +24,7 @@ from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.tag_index import TagIndex
 from pixelated.adapter.tag_service import TagService
 import pixelated.user_agent
-from pixelated.adapter.pixelated_mail import PixelatedMail
+from pixelated.adapter.pixelated_mail import PixelatedMail, InputMail
 from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
 from pixelated.adapter.soledad_querier import SoledadQuerier
 
@@ -71,7 +71,7 @@ def initialize_soledad(tempdir):
     return _soledad
 
 
-class JSONMailBuilder:
+class MailBuilder:
     def __init__(self):
         self.mail = {
             'header': {
@@ -95,8 +95,12 @@ class JSONMailBuilder:
         self.mail['ident'] = ident
         return self
 
-    def build(self):
+    def build_json(self):
         return json.dumps(self.mail)
+
+    def build_input_mail(self):
+        return InputMail.from_dict(self.mail)
+
 
 
 class SoledadTestBase:
@@ -135,6 +139,9 @@ class SoledadTestBase:
         response = json.loads(self.app.put('/mails', data=data, content_type="application/json").data)
         return response['ident']
 
+    def post_tags(self, mail_ident, tags_json):
+        return json.loads(self.app.post('/mail/' + mail_ident + '/tags', data=tags_json, content_type="application/json").data)
+
 
 class ResponseMail:
 
@@ -152,3 +159,7 @@ class ResponseMail:
     @property
     def ident(self):
         return self.mail_dict['ident']
+
+    @property
+    def tags(self):
+        return self.mail_dict['tags']

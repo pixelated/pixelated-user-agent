@@ -27,6 +27,9 @@ class PixelatedMailBoxes():
             self.account.addMailbox(mailbox_name)
         return PixelatedMailbox.create(mailbox_name)
 
+    def inbox(self):
+        return self._create_or_get('INBOX')
+
     def drafts(self):
         return self._create_or_get('DRAFTS')
 

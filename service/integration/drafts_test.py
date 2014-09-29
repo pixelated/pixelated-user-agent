@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
-from integration import JSONMailBuilder, SoledadTestBase
+from integration import MailBuilder, SoledadTestBase
 
 
 class DraftsTest(unittest.TestCase, SoledadTestBase):
@@ -26,7 +26,7 @@ class DraftsTest(unittest.TestCase, SoledadTestBase):
         self.teardown_soledad()
 
     def test_post_creates_a_draft_when_data_has_no_ident(self):
-        mail = JSONMailBuilder().with_subject('A new draft').build()
+        mail = MailBuilder().with_subject('A new draft').build_json()
 
         self.post_mail(mail)
         mails = self.get_mails_by_tag('drafts')
@@ -34,11 +34,11 @@ class DraftsTest(unittest.TestCase, SoledadTestBase):
         self.assertEquals('A new draft', mails[0].subject)
 
     def test_post_sends_mail_and_deletes_previous_draft_when_data_has_ident(self):
-        first_draft = JSONMailBuilder().with_subject('First draft').build()
+        first_draft = MailBuilder().with_subject('First draft').build_json()
         first_draft_response = self.post_mail(first_draft)
         first_draft_ident = first_draft_response.ident
 
-        second_draft = JSONMailBuilder().with_subject('Second draft').with_ident(first_draft_ident).build()
+        second_draft = MailBuilder().with_subject('Second draft').with_ident(first_draft_ident).build_json()
         self.post_mail(second_draft)
 
         sent_mails = self.get_mails_by_tag('sent')
@@ -49,11 +49,11 @@ class DraftsTest(unittest.TestCase, SoledadTestBase):
         self.assertEquals(0, len(drafts))
 
     def test_update_draft(self):
-        draft = JSONMailBuilder().with_subject('First draft').build()
+        draft = MailBuilder().with_subject('First draft').build_json()
         create_draft_response = self.post_mail(draft)
         draft_ident = create_draft_response.ident
 
-        updated_draft = JSONMailBuilder().with_subject('First draft edited').with_ident(draft_ident).build()
+        updated_draft = MailBuilder().with_subject('First draft edited').with_ident(draft_ident).build_json()
         self.put_mail(updated_draft)
 
         drafts = self.get_mails_by_tag('drafts')
