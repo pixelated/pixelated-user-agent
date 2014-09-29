@@ -41,8 +41,10 @@ class MailService:
     def mail(self, mail_id):
         return self.mailboxes.mail(mail_id)
 
-    def send(self, mail):
+    def send(self, last_draft_ident, mail):
         self.mail_sender.sendmail(mail)
+        self.mailboxes.drafts().remove(last_draft_ident)
+        self.mailboxes.sent().add(mail)
 
     def create_draft(self, mail):
         return self.mailboxes.add_draft(mail)

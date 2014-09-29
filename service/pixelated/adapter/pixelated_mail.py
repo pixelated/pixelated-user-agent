@@ -35,6 +35,7 @@ class InputMail:
         self._hd = None
         self._bd = None
         self._mime = None
+        self._chash = None
 
     def as_dict(self):
         statuses = [status.name for status in self.status]
@@ -94,7 +95,7 @@ class InputMail:
         fd[fields.MULTIPART_KEY] = True
         fd[fields.RECENT_KEY] = True
         fd[fields.TYPE_KEY] = fields.TYPE_FLAGS_VAL
-        fd[fields.FLAGS_KEY] = []
+        fd[fields.FLAGS_KEY] = ["\\Recent"]
         self._fd = fd
         return fd
 
@@ -121,6 +122,15 @@ class InputMail:
 
     def _cdocs(self):
         return walk.get_raw_docs(self._mime_multipart, self._mime_multipart.walk())
+
+    def get_to(self):
+        return self.headers['To']
+
+    def get_cc(self):
+        return self.headers['Cc']
+
+    def get_bcc(self):
+        return self.headers['Bcc']
 
     def to_mime_multipart(self):
         mime_multipart = MIMEMultipart()
@@ -231,12 +241,12 @@ class PixelatedMail:
 
     def mark_as_read(self):
         self.fdoc.content['flags'].append(Status.PixelatedStatus.SEEN)
-        #self.status = self._extract_status()
+        self.save()
         return self
 
     def mark_as_not_recent(self):
         self.fdoc.content['flags'].remove(Status.PixelatedStatus.RECENT)
-        #self.status = self._extract_status()
+        self.save()
         return self
 
     def _persist_mail_tags(self, current_tags):

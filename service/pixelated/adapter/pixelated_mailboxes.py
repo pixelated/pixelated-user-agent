@@ -33,6 +33,9 @@ class PixelatedMailBoxes():
     def trash(self):
         return self._create_or_get('TRASH')
 
+    def sent(self):
+        return self._create_or_get('TRASH')
+
     @property
     def mailboxes(self):
         return [PixelatedMailbox.create(leap_mailbox_name) for leap_mailbox_name in
