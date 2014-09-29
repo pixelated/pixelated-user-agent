@@ -77,17 +77,17 @@ class InputMail:
             self._chash = sha256.SHA256(self._raw()).hexdigest()
         return self._chash
 
-    def _get_for_save(self, next_uid):
-        docs = [self._fdoc(next_uid), self._hdoc()]
+    def _get_for_save(self, next_uid, mailbox):
+        docs = [self._fdoc(next_uid, mailbox), self._hdoc()]
         docs.extend([m for m in self._cdocs()])
         return docs
 
-    def _fdoc(self, next_uid):
+    def _fdoc(self, next_uid, mailbox):
         if self._fd:
             return self._fd
 
         fd = {}
-        fd[fields.MBOX_KEY] = 'DRAFTS'
+        fd[fields.MBOX_KEY] = mailbox
         fd[fields.UID_KEY] = next_uid
         fd[fields.CONTENT_HASH_KEY] = self._get_chash()
         fd[fields.SIZE_KEY] = len(self._raw())

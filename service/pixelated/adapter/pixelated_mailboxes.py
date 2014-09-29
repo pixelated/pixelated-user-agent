@@ -34,7 +34,7 @@ class PixelatedMailBoxes():
         return self._create_or_get('TRASH')
 
     def sent(self):
-        return self._create_or_get('TRASH')
+        return self._create_or_get('SENT')
 
     @property
     def mailboxes(self):

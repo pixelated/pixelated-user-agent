@@ -21,6 +21,8 @@ import os
 from mock import Mock
 import shutil
 from pixelated.adapter.mail_service import MailService
+from pixelated.adapter.tag_index import TagIndex
+from pixelated.adapter.tag_service import TagService
 import pixelated.user_agent
 from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
@@ -89,34 +91,60 @@ class JSONMailBuilder:
         self.mail['header']['subject'] = subject
         return self
 
+    def with_ident(self, ident):
+        self.mail['ident'] = ident
+        return self
+
     def build(self):
         return json.dumps(self.mail)
 
 
 class SoledadTestBase:
 
-    def __init__(self):
-        pass
-
     def teardown_soledad(self):
         self.soledad.close()
         shutil.rmtree(soledad_test_folder)
 
     def setup_soledad(self):
-        self.app = pixelated.user_agent.app.test_client()
-        self.account = FakeAccount()
-        self.mail_sender = mock()
-        self.mail_address = "test@pixelated.org"
         self.soledad = initialize_soledad(tempdir=soledad_test_folder)
+        self.mail_address = "test@pixelated.org"
 
         SoledadQuerier.instance = None
         SoledadQuerier.get_instance(soledad=self.soledad)
         PixelatedMail.from_email_address = self.mail_address
-        pixelated_mailboxes = PixelatedMailBoxes(self.account)
-        pixelated.user_agent.mail_service = MailService(pixelated_mailboxes, self.mail_sender)
+
+        self.app = pixelated.user_agent.app.test_client()
+        self.account = FakeAccount()
+        self.mail_sender = mock()
+        self.tag_index = TagIndex(os.path.join(soledad_test_folder, 'tag_index'))
+        self.tag_service = TagService(self.tag_index)
+        self.pixelated_mailboxes = PixelatedMailBoxes(self.account)
+        self.mail_service = MailService(self.pixelated_mailboxes, self.mail_sender, self.tag_service)
+
+        pixelated.user_agent.mail_service = self.mail_service
 
     def get_mails_by_tag(self, tag):
-        return json.loads(self.app.get("/mails?q=tag" + tag).data)
+        response = json.loads(self.app.get("/mails?q=tag:" + tag).data)
+        return [ResponseMail(m) for m in response['mails']]
 
     def post_mail(self, data):
-        self.app.post('/mails', data=data, content_type="application/json")
+        response = json.loads(self.app.post('/mails', data=data, content_type="application/json").data)
+        return ResponseMail(response)
+
+
+class ResponseMail:
+
+    def __init__(self, mail_dict):
+        self.mail_dict = mail_dict
+
+    @property
+    def subject(self):
+        return self.headers['subject']
+
+    @property
+    def headers(self):
+        return self.mail_dict['header']
+
+    @property
+    def ident(self):
+        return self.mail_dict['ident']

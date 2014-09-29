@@ -60,7 +60,7 @@ class SoledadQuerier:
 
     def create_mail(self, mail, mailbox_name):
         uid = self._next_uid_for_mailbox(mailbox_name)
-        new_docs = [self.soledad.create_doc(doc) for doc in mail._get_for_save(next_uid=uid)]
+        new_docs = [self.soledad.create_doc(doc) for doc in mail._get_for_save(next_uid=uid, mailbox=mailbox_name)]
         self._update_index(new_docs)
 
     def mail(self, ident):

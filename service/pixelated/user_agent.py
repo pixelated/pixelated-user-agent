@@ -60,14 +60,11 @@ def disabled_features():
 @app.route('/mails', methods=['POST'])
 def send_mail():
     _mail = InputMail.from_dict(request.json)
-    if 'saveDraft' in DISABLED_FEATURES:
-        mail_service.send(_mail)
+    draft_id = request.json.get('ident')
+    if draft_id:
+        mail_service.send(draft_id, _mail)
     else:
-        draft_id = request.json.get('ident')
-        if draft_id:
-            mail_service.send(draft_id, _mail)
-        else:
-            _mail = mail_service.create_draft(_mail)
+        _mail = mail_service.create_draft(_mail)
     return respond_json(_mail.as_dict())
 
 
