@@ -1,8 +1,8 @@
+import json
+
 from leap.soledad.client import Soledad
 import os
-import unittest
 from mock import Mock
-import json
 
 
 def initialize_soledad(tempdir):

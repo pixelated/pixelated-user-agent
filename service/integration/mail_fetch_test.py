@@ -25,6 +25,7 @@ class MailFetchTest(unittest.TestCase):
         self.mail_address = "test@pixelated.org"
         self.soledad = initialize_soledad(tempdir=self.soledad_test_folder)
 
+        SoledadQuerier.instance = None
         SoledadQuerier.get_instance(soledad=self.soledad)
         PixelatedMail.from_email_address = self.mail_address
         pixelated_mailboxes = PixelatedMailBoxes(self.account)
@@ -36,8 +37,8 @@ class MailFetchTest(unittest.TestCase):
         import shutil
         shutil.rmtree(self.soledad_test_folder)
 
-    def get(self, url):
-        return json.loads(self.app.get(url).data)
+    def get_mails_by_tag(self, tag):
+        return json.loads(self.app.get("/mails?q=tag" + tag).data)
 
     def post_mail(self, data):
         self.app.post('/mails', data=data, content_type="application/json")
@@ -49,7 +50,7 @@ class MailFetchTest(unittest.TestCase):
         self.post_mail(mail_one)
         self.post_mail(mail_two)
 
-        response = self.get('/mails?q=tag:drafts')
+        response = self.get_mails_by_tag("drafts")
 
         # ordered by creation date
         self.assertEquals(u'Mail Two', response['mails'][0]['header']['subject'])
