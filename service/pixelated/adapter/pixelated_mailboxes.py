@@ -60,11 +60,8 @@ class PixelatedMailBoxes():
         self.drafts().remove(ident)
         return new_mail
 
-    def move_to_trash(self, mail):
-        origin_mailbox = mail.mailbox_name
-
-        new_mail_id = self.trash().add(mail)
-        self._create_or_get(origin_mailbox).remove(mail)
+    def move_to_trash(self, mail_id):
+        new_mail_id = self.trash().add_existing(mail_id)
         return new_mail_id
 
     def mail(self, mail_id):

@@ -57,6 +57,7 @@ class SoledadQuerier:
         # XXX update only what has to be updated
         self.soledad.put_doc(mail.fdoc)
         self.soledad.put_doc(mail.hdoc)
+        self._update_index([mail.fdoc, mail.hdoc])
 
     def create_mail(self, mail, mailbox_name):
         uid = self._next_uid_for_mailbox(mailbox_name)

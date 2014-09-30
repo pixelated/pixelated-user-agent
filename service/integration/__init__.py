@@ -102,7 +102,6 @@ class MailBuilder:
         return InputMail.from_dict(self.mail)
 
 
-
 class SoledadTestBase:
 
     def teardown_soledad(self):
@@ -141,6 +140,9 @@ class SoledadTestBase:
 
     def post_tags(self, mail_ident, tags_json):
         return json.loads(self.app.post('/mail/' + mail_ident + '/tags', data=tags_json, content_type="application/json").data)
+
+    def delete_mail(self, mail_ident):
+        self.app.delete('/mail/' + mail_ident)
 
 
 class ResponseMail:

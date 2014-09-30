@@ -74,8 +74,7 @@ class MailService:
         raise NotImplementedError()
 
     def delete_mail(self, mail_id):
-        _mail = self.mailboxes.mail(mail_id)
-        return self.mailboxes.move_to_trash(_mail)
+        return self.mailboxes.move_to_trash(mail_id)
 
     def save_draft(self, draft):
         raise NotImplementedError()

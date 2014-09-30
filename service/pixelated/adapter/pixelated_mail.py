@@ -215,6 +215,12 @@ class PixelatedMail:
     def save(self):
         return self.querier.save_mail(self)
 
+    def set_mailbox(self, mailbox_name):
+        self.fdoc.content['mbox'] = mailbox_name
+
+    def set_recent(self):
+        self.fdoc.content['flags'].append("\\Recent")
+
     def set_from(self, _from):
         self.headers['From'] = [_from]
 

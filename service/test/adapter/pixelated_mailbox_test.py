@@ -40,7 +40,7 @@ class PixelatedMailboxTest(unittest.TestCase):
         self.assertNotIn('spam', self.mailbox.mails()[0].tags)
 
     def test_remove_message_from_mailbox(self):
-        mail = PixelatedMail()
+        mail = PixelatedMail.from_soledad(*test_helper.leap_mail(), soledad_querier=self.querier)
         when(self.querier).mail(1).thenReturn(mail)
 
         self.mailbox.remove(1)

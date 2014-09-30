@@ -13,12 +13,11 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import json
 import unittest
 from integration import MailBuilder, SoledadTestBase
 
 
-class TagsTest(unittest.TestCase, SoledadTestBase):
+class DeleteMailTest(unittest.TestCase, SoledadTestBase):
 
     def setUp(self):
         self.setup_soledad()
@@ -26,19 +25,16 @@ class TagsTest(unittest.TestCase, SoledadTestBase):
     def tearDown(self):
         self.teardown_soledad()
 
-    def _tags_json(self, tags):
-        return json.dumps({'newtags': tags})
-
-    def test_add_tag_to_an_inbox_mail_and_query(self):
+    def test_move_mail_to_trash_when_deleting(self):
         mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
         self.pixelated_mailboxes.inbox().add(mail)
 
-        self.post_tags(mail.ident, self._tags_json(['INBOX', 'IMPORTANT']))
+        inbox_mails = self.get_mails_by_tag('inbox')
+        self.assertEquals(1, len(inbox_mails))
 
-        mails = self.get_mails_by_tag('inbox')
-        self.assertEquals({'inbox', 'important'}, set(mails[0].tags))
+        self.delete_mail(mail.ident)
 
-        mails = self.get_mails_by_tag('important')
-        self.assertEquals('Mail with tags', mails[0].subject)
-
-
+        inbox_mails = self.get_mails_by_tag('inbox')
+        self.assertEquals(0, len(inbox_mails))
+        trash_mails = self.get_mails_by_tag('trash')
+        self.assertEquals(1, len(trash_mails))

@@ -55,9 +55,6 @@ class TestMailService(unittest.TestCase):
         verify(self.mailboxes).add_draft(mail)
 
     def test_delete_mail(self):
-        mail = mock()
-        when(self.mailboxes).mail(any()).thenReturn(mail)
-
         self.mail_service.delete_mail(1)
 
-        verify(self.mailboxes).move_to_trash(mail)
+        verify(self.mailboxes).move_to_trash(1)
