@@ -144,6 +144,9 @@ class SoledadTestBase:
     def delete_mail(self, mail_ident):
         self.app.delete('/mail/' + mail_ident)
 
+    def mark_as_read(self, mail_ident):
+        self.app.post('/mail/' + mail_ident + '/read', content_type="application/json")
+
 
 class ResponseMail:
 
@@ -165,3 +168,7 @@ class ResponseMail:
     @property
     def tags(self):
         return self.mail_dict['tags']
+
+    @property
+    def status(self):
+        return self.mail_dict['status']
