@@ -8,6 +8,7 @@
     "Saved as draft.": "Saved as draft.",
     "One or more of the recipients are not valid emails": "One or more of the recipients are not valid emails",
     "Could not update mail tags": "Could not update mail tags",
+    "Invalid tag name": "Invalid tag name",
     "Could not delete email": "Could not delete email",
     "Could not fetch messages": "Could not fetch messages",
     "TO": "TO",

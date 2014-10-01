@@ -60,7 +60,13 @@ define(
           that.refreshResults();
           $(document).trigger(events.mail.tags.updated, { ident: ident, tags: data });
         })
-          .fail(this.errorMessage(i18n('Could not update mail tags')));
+          .fail(function (resp) {
+              var msg = i18n('Could not update mail tags');
+              if(resp.status == 403) {
+                msg = i18n('Invalid tag name');
+              }
+              that.trigger(document, events.ui.userAlerts.displayMessage, { message: msg });
+          });
       };
 
       this.readMail = function (ev, data) {

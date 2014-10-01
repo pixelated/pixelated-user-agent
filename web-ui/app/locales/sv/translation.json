@@ -8,6 +8,7 @@
     "Saved as draft.": "Sparat som utkast.",
     "One or more of the recipients are not valid emails": "En eller flera mottagare är inte giltiga epost-adresser",
     "Could not update mail tags": "Kan inte ändra taggar",
+    "Invalid tag name": "Ogiltigt taggnamn",
     "Could not delete email": "Kan inte ta bort meddelande",
     "Could not fetch messages": "Kan inte hämta meddelanden",
     "TO": "TILL",

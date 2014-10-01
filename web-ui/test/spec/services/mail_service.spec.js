@@ -96,7 +96,7 @@ describeComponent('services/mail_service', function () {
   });
 
   it('triggers an error message when it can\'t update the tags', function () {
-    var spyAjax = spyOn($, 'ajax').andReturn({done: function() { return {fail: function(f) {f();}};}});
+    var spyAjax = spyOn($, 'ajax').andReturn({done: function() { return {fail: function(f) {f({status:500});}};}});
 
     var spyEvent = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
     var component = jasmine.createSpyObj('component',['failureUpdateTags']);

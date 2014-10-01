@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.tag_service import TagService
-from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.soledad_querier import SoledadQuerier
 
 
@@ -37,7 +36,7 @@ class MailService:
     def update_tags(self, mail_id, new_tags):
         reserved_words = self.tag_service.extract_reserved(new_tags)
         if len(reserved_words):
-            raise ValueError('None of the following words can be used as tags: %s' % list(reserved_words))
+            raise ValueError('None of the following words can be used as tags: ' + ' '.join(reserved_words))
         mail = self.mail(mail_id)
         return mail.update_tags(set(new_tags))
 
