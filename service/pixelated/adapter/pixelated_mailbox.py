@@ -26,23 +26,16 @@ class PixelatedMailbox:
         self.mailbox_tag = mailbox_name.lower()
         self.querier = querier
 
-    def add_mailbox_tag_if_not_there(self, pixelated_mail):
-        if not pixelated_mail.has_tag(self.mailbox_tag):
-            pixelated_mail.update_tags({self.mailbox_tag}.union(pixelated_mail.tags))
-            self.tag_service.notify_tags_updated({self.mailbox_tag}, [], pixelated_mail.ident)
-            pixelated_mail.mark_as_not_recent()
-
     def mails(self):
         _mails = self.querier.all_mails_by_mailbox(self.mailbox_name)
 
         result = []
         for mail in _mails:
-            self.add_mailbox_tag_if_not_there(mail)
             result.append(mail)
         return result
 
     def mails_by_tags(self, tags):
-        if 'all' in tags:
+        if 'all' in tags or self.mailbox_tag in tags:
             return self.mails()
         return [mail for mail in self.mails() if len(mail.tags.intersection(tags)) > 0]
 
@@ -59,7 +52,6 @@ class PixelatedMailbox:
         mail.remove_all_tags()
         mail.set_mailbox(self.mailbox_name)
         mail.save()
-        self.add_mailbox_tag_if_not_there(mail)
 
     def remove(self, ident):
         mail = self.querier.mail(ident)

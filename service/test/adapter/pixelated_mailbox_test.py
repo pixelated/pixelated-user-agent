@@ -27,18 +27,6 @@ class PixelatedMailboxTest(unittest.TestCase):
         self.querier = mock()
         self.mailbox = PixelatedMailbox('INBOX', self.querier, tag_service=self.tag_service)
 
-    def test_mailbox_tag_is_added_when_recent_mail_arrives(self):
-        recent_leap_mail = test_helper.leap_mail(uid=0, mbox='INBOX', flags=['\\Recent'])
-        when(self.querier).all_mails_by_mailbox('INBOX').thenReturn([PixelatedMail.from_soledad(*recent_leap_mail, soledad_querier=self.querier)])
-
-        self.assertIn('inbox', self.mailbox.mails()[0].tags)
-
-    def test_mailbox_tag_is_ignored_for_non_recent_mail(self):
-        recent_leap_mail = test_helper.leap_mail(uid=0, mbox='INBOX', flags=[])
-        when(self.querier).all_mails_by_mailbox('INBOX').thenReturn([PixelatedMail.from_soledad(*recent_leap_mail, soledad_querier=self.querier)])
-
-        self.assertNotIn('spam', self.mailbox.mails()[0].tags)
-
     def test_remove_message_from_mailbox(self):
         mail = PixelatedMail.from_soledad(*test_helper.leap_mail(), soledad_querier=self.querier)
         when(self.querier).mail(1).thenReturn(mail)

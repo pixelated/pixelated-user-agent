@@ -36,7 +36,7 @@ class TagsTest(unittest.TestCase, SoledadTestBase):
         self.post_tags(mail.ident, self._tags_json(['IMPORTANT']))
 
         mails = self.get_mails_by_tag('inbox')
-        self.assertEquals({'inbox', 'important'}, set(mails[0].tags))
+        self.assertEquals({'important'}, set(mails[0].tags))
 
         mails = self.get_mails_by_tag('important')
         self.assertEquals('Mail with tags', mails[0].subject)
