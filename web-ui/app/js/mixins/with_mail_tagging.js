@@ -33,7 +33,7 @@ define(
           queryTokenizer: function(q) { return [q.trim()]; },
           remote: {
             url: '/tags?q=%QUERY',
-            filter: function(pr) { return _.map(pr, function(pp) { return {value: pp.name}; }); }
+            filter: function(pr) { return _.map(pr, function(pp) { return {value: Handlebars.Utils.escapeExpression(pp.name)}; }); }
           }
         });
 
