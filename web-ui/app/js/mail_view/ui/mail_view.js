@@ -43,10 +43,8 @@ define(
         newTagInput: '#new-tag-input',
         newTagButton: '#new-tag-button',
         addNew: '.add-new',
-        deleteModal: '#delete-modal',
         trashButton: '#trash-button',
         archiveButton: '#archive-button',
-        closeModalButton: '.close-reveal-modal',
         closeMailButton: '.close-mail-button'
       });
 
@@ -91,8 +89,6 @@ define(
         this.on(this.select('newTagInput'), 'keydown', this.handleKeyDown);
         this.on(this.select('newTagInput'), 'blur', this.addTagLoseFocus);
         this.on(this.select('trashButton'), 'click', this.moveToTrash);
-        this.on(this.select('archiveButton'), 'click', this.archiveIt);
-        this.on(this.select('closeModalButton'), 'click', this.closeModal);
         this.on(this.select('closeMailButton'), 'click', this.openNoMessageSelectedPane);
 
         mailActions.attachTo('#mail-actions', data);
@@ -175,29 +171,12 @@ define(
 
       this.removeTag = function (tag) {
         var filteredTags = _.without(this.attr.mail.tags, tag);
-        if (_.isEmpty(filteredTags)){
-          this.displayMail({}, { mail: this.attr.mail });
-          this.select('deleteModal').foundation('reveal', 'open');
-        } else {
-          this.updateTags(this.attr.mail, filteredTags);
-          this.trigger(document, events.dispatchers.tags.refreshTagList);
-        }
+        this.updateTags(this.attr.mail, filteredTags);
+        this.trigger(document, events.dispatchers.tags.refreshTagList);
       };
 
       this.moveToTrash = function(){
-        this.closeModal();
         this.trigger(document, events.ui.mail.delete, { mail: this.attr.mail });
-      };
-
-      this.archiveIt = function() {
-        this.updateTags(this.attr.mail, []);
-        this.closeModal();
-        this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n.get('Your message was archive it!') });
-        this.openNoMessageSelectedPane();
-      };
-
-      this.closeModal = function() {
-        $('#delete-modal').foundation('reveal', 'close');
       };
 
       this.tagsUpdated = function(ev, data) {

@@ -211,32 +211,6 @@ describeComponent('mail_view/ui/mail_view', function () {
     expect(openNoMessageSelectedPaneEvent).not.toHaveBeenTriggeredOn(document);
   });
 
-  describe('archiving email', function() {
-    it('trigger tag updates events with no tags', function(){
-      var tagsUpdateEvent = spyOnEvent(document, Pixelated.events.mail.tags.update);
-
-      Foundation.global.namespace = '';
-      $(document).foundation();
-
-      this.component.displayMail({}, testData);
-      this.component.archiveIt();
-
-      expect(tagsUpdateEvent).toHaveBeenTriggeredOnAndWith(document, { ident: testData.mail.ident, tags: []});
-    });
-
-    it('opens no message selected pane', function() {
-      var openNoMessageSelectedEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
-
-      Foundation.global.namespace = '';
-      $(document).foundation();
-
-      this.component.displayMail({}, testData);
-      this.component.archiveIt();
-
-      expect(openNoMessageSelectedEvent).toHaveBeenTriggeredOn(document);
-    });
-  });
-
   it('opens the no message selected pane when clicking the close button', function() {
     var openNoMessageSelectedEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
 

@@ -63,20 +63,6 @@
       </div>
     </header>
 
-    <div id="delete-modal" class="reveal-modal" data-reveal>
-        <p class="lead">{{t 'You are trying to delete the last tag on this message.'}}</p>
-
-        <p>{{t 'What would you like to do?'}}</p>
-        <button id="trash-button">{{t 'Trash message'}}</button>
-        <button id="archive-button">{{t 'Archive it'}}</button>
-        <span class="close-reveal-modal">&#215;</span>
-        <small><strong>{{t 'Trash:'}}</strong> {{t 'we will keep this message for 30 days, then delete it forever.'}}
-        </small>
-        <small>
-            <strong>{{t 'Archive:'}}</strong> {{t 'we will remove all the tags, but keep it in your account in case you need it.'}}
-        </small>
-    </div>
-
     <div class="bodyArea column large-12">
       {{#each body }}
           <p>{{ this }}</p>
