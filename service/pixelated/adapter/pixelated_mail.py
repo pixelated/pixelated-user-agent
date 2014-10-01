@@ -170,9 +170,19 @@ class PixelatedMail:
 
     @property
     def headers(self):
-        _headers = ['From', 'To', 'Subject', 'Cc', 'Bcc']
-        _headers = {header: self.hdoc.content['headers'].get(header) for header in _headers}
+        _headers = {}
+
+        for header in ['To', 'Cc', 'Bcc']:
+            header_value = self.hdoc.content['headers'].get(header)
+            if not header_value:
+                continue
+            _headers[header] = header_value if type(header_value) is list else header_value.split(', ')
+
+        for header in ['From', 'Subject']:
+            _headers[header] = self.hdoc.content['headers'].get(header)
+
         _headers['Date'] = self._get_date()
+
         return _headers
 
     def _get_date(self):
