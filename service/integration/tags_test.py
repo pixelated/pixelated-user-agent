@@ -33,7 +33,7 @@ class TagsTest(unittest.TestCase, SoledadTestBase):
         mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
         self.pixelated_mailboxes.inbox().add(mail)
 
-        self.post_tags(mail.ident, self._tags_json(['INBOX', 'IMPORTANT']))
+        self.post_tags(mail.ident, self._tags_json(['IMPORTANT']))
 
         mails = self.get_mails_by_tag('inbox')
         self.assertEquals({'inbox', 'important'}, set(mails[0].tags))
@@ -41,4 +41,12 @@ class TagsTest(unittest.TestCase, SoledadTestBase):
         mails = self.get_mails_by_tag('important')
         self.assertEquals('Mail with tags', mails[0].subject)
 
+    def test_addition_of_reserved_tags_is_not_allowed(self):
+        mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
+        self.pixelated_mailboxes.inbox().add(mail)
 
+        response = self.post_tags(mail.ident, self._tags_json(['DRAFTS']))
+        self.assertEquals("None of the following words can be used as tags: ['drafts']", response)
+
+        mail = self.pixelated_mailboxes.inbox().mail(mail.ident)
+        self.assertNotIn('drafts', mail.tags)

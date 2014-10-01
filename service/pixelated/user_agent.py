@@ -47,9 +47,11 @@ app = Flask(__name__, static_url_path='', static_folder=static_folder)
 DISABLED_FEATURES = ['draftReply', 'signatureStatus', 'encryptionStatus', 'contacts']
 
 
-def respond_json(entity):
-    response = json.dumps(entity)
-    return Response(response=response, mimetype="application/json")
+def respond_json(entity, status_code=200):
+    json_response = json.dumps(entity)
+    response = Response(response=json_response, mimetype="application/json")
+    response.status_code = status_code
+    return response
 
 
 @app.route('/disabled_features')
@@ -127,7 +129,10 @@ def mail(mail_id):
 @app.route('/mail/<mail_id>/tags', methods=['POST'])
 def mail_tags(mail_id):
     new_tags = map(lambda tag: tag.lower(), request.get_json()['newtags'])
-    tags = mail_service.update_tags(mail_id, new_tags)
+    try:
+        tags = mail_service.update_tags(mail_id, new_tags)
+    except ValueError as ve:
+        return respond_json(ve.message, 403)
     return respond_json(list(tags))
 
 

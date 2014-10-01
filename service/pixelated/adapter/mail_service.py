@@ -35,6 +35,9 @@ class MailService:
         return sorted(_mails or [], key=lambda mail: mail.headers['Date'], reverse=True)
 
     def update_tags(self, mail_id, new_tags):
+        reserved_words = self.tag_service.extract_reserved(new_tags)
+        if len(reserved_words):
+            raise ValueError('None of the following words can be used as tags: %s' % list(reserved_words))
         mail = self.mail(mail_id)
         return mail.update_tags(set(new_tags))
 

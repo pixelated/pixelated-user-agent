@@ -24,7 +24,6 @@ import pixelated.support.date
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from pycryptopp.hash import sha256
-from pixelated.support.functional import flatten
 
 
 class InputMail:
@@ -250,8 +249,9 @@ class PixelatedMail:
         return self
 
     def mark_as_not_recent(self):
-        self.fdoc.content['flags'].remove(Status.PixelatedStatus.RECENT)
-        self.save()
+        if Status.PixelatedStatus.RECENT in self.fdoc.content['flags']:
+            self.fdoc.content['flags'].remove(Status.PixelatedStatus.RECENT)
+            self.save()
         return self
 
     def _persist_mail_tags(self, current_tags):

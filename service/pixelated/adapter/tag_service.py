@@ -20,7 +20,11 @@ from pixelated.adapter.tag_index import TagIndex
 class TagService:
 
     instance = None
-    SPECIAL_TAGS = {Tag('inbox', True), Tag('sent', True), Tag('drafts', True), Tag('trash', True)}
+    SPECIAL_TAGS = [Tag('inbox', True), Tag('sent', True), Tag('drafts', True), Tag('trash', True)]
+
+    @classmethod
+    def extract_reserved(cls, tags):
+        return set(tag.name for tag in cls.SPECIAL_TAGS if tag.name in tags)
 
     @classmethod
     def get_instance(cls):
