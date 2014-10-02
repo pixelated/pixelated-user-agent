@@ -19,9 +19,13 @@ import pixelated.user_agent
 from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.pixelated_mail import InputMail
 from mockito import *
+import crochet
+import pixelated.reactor_manager as reactor_manager
 import test.adapter.test_helper as test_helper
 import json
 import pixelated.adapter.pixelated_mail
+import sys
+import os
 
 
 class UserAgentTest(unittest.TestCase):
@@ -34,6 +38,9 @@ class UserAgentTest(unittest.TestCase):
         pixelated.user_agent.mail_service = self.mail_service
         self.input_mail = None
         pixelated.adapter.pixelated_mail.input_mail_from_dict = lambda x: self.input_mail
+
+    def tearDown(self):
+        unstub()
 
     def test_create_or_send_draft_should_create_draft_if_mail_has_no_ident(self):
         self.input_mail = self.draft()
@@ -60,3 +67,33 @@ class UserAgentTest(unittest.TestCase):
 
     def draft(self):
         return test_helper.input_mail()
+
+    def test_that_default_config_file_is_home_dot_pixelated(self):
+        orig_config = pixelated.user_agent.app.config
+        try:
+            when(crochet).setup().thenReturn(None)
+            when(reactor_manager).start_reactor().thenReturn(None)
+            when(pixelated.user_agent).start_user_agent().thenReturn(None)
+            pixelated.user_agent.app.config = mock()
+
+            sys.argv = ['/tmp/does_not_exist']
+            pixelated.user_agent.setup()
+
+            verify(pixelated.user_agent.app.config).from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
+        finally:
+            pixelated.user_agent.app.config = orig_config
+
+    def test_that_config_file_can_be_specified_on_command_line(self):
+        orig_config = pixelated.user_agent.app.config
+        try:
+            when(crochet).setup().thenReturn(None)
+            when(reactor_manager).start_reactor().thenReturn(None)
+            when(pixelated.user_agent).start_user_agent().thenReturn(None)
+            pixelated.user_agent.app.config = mock()
+
+            sys.argv = ['/tmp/does_not_exist', '--config', '/tmp/some/config/file']
+            pixelated.user_agent.setup()
+
+            verify(pixelated.user_agent.app.config).from_pyfile('/tmp/some/config/file')
+        finally:
+            pixelated.user_agent.app.config = orig_config

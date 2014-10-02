@@ -185,17 +185,20 @@ def start_user_agent(debug_enabled):
 
 def setup():
     try:
+        default_config_path = os.path.join(os.environ['HOME'], '.pixelated')
+
         parser = argparse.ArgumentParser(description='Pixelated user agent.')
         parser.add_argument('--debug', action='store_true',
                             help='DEBUG mode.')
         parser.add_argument('--register', metavar='username', help='register user with name.')
+        parser.add_argument('-c', '--config', metavar='configfile', default=default_config_path, help='use specified config file. Default is ~/.pixelated.')
 
         args = parser.parse_args()
         debug_enabled = args.debug or os.environ.get('DEBUG', False)
         reactor_manager.start_reactor(logging=debug_enabled)
 
         crochet.setup()
-        app.config.from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
+        app.config.from_pyfile(args.config)
 
         if args.register:
             register_new_user(args.register)
