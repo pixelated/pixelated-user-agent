@@ -12,8 +12,8 @@ dirspec==13.10
 --allow-unverified u1db
 u1db==13.10
 leap.keymanager==0.3.8
-leap.soledad.common==0.5.2
-leap.soledad.client==0.5.2
+leap.soledad.common==0.6.0-26-g509f76c
+leap.soledad.client==0.6.0-26-g509f76c
 leap.mail==0.3.9-1-gc1f9c92
 gunicorn==19.1.1
 
