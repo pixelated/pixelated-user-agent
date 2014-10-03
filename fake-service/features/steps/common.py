@@ -70,8 +70,8 @@ def wait_until_button_is_visible(context, title):
     locator_tuple = (By.XPATH, ("//%s[contains(.,'%s')]" % ('button', title)))
     wait.until(EC.visibility_of_element_located(locator_tuple))
 
-def click_button(context,  title):
-    button = find_element_containing_text(context, title, element_type='button')
+def click_button(context, title, element='button'):
+    button = find_element_containing_text(context, title, element_type=element)
     button.click()
 
 def mail_subject(context):

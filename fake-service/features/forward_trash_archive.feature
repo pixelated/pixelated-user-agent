@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 Feature: forward_trash_archive
-  Scenario: User forwards a mail, add CC and BCC address, later trash and archive the mail
+  Scenario: User forwards a mail, add CC and BCC address, later trash the mail
     When I open the first mail in the 'inbox'
     Then I choose to forward this mail
     And for the 'CC' field I type 'ab' and chose the first contact that shows
@@ -23,6 +23,5 @@ Feature: forward_trash_archive
     And I forward this mail
     When I open the first mail in the 'sent'
     Then I see the mail has a cc and a bcc recipient
-    And I remove all tags
     And I choose to trash
     Then I see that mail under the 'trash' tag
