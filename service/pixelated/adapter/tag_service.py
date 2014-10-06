@@ -45,6 +45,8 @@ class TagService:
     def notify_tags_updated(self, added_tags, removed_tags, mail_ident):
         for removed_tag in removed_tags:
             tag = self.tag_index.get(removed_tag)
+            if not tag:
+                continue
             tag.decrement(mail_ident)
             if tag.total == 0:
                 self.tag_index.remove(tag.name)

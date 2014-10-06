@@ -22,7 +22,7 @@ class Tag:
     @classmethod
     def from_dict(cls, tag_dict):
         tag = Tag(tag_dict['name'], tag_dict['default'])
-        tag.mails = tag_dict['mails']
+        tag.mails = set(tag_dict['mails'])
         return tag
 
     @classmethod

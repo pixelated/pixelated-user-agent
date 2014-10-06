@@ -27,14 +27,16 @@ class TestTag(unittest.TestCase):
                                'read': 1,
                                'starred': 1,
                                'replied': 1},
-                    'mails': set([1, 2, 3])}
+                    'mails': [1, 2, 3]}
 
         tag = Tag.from_dict(tag_dict)
 
         self.assertEquals(tag_dict['name'], tag.name)
         self.assertEquals(tag_dict['default'], tag.default)
         self.assertEquals(tag_dict['counts']['total'], tag.total)
-        self.assertEquals(tag_dict['mails'], tag.mails)
+        # Checks if mail ids are aways restored as set()
+        self.assertEquals(type(tag.mails), type(set()))
+        self.assertEquals(set(tag_dict['mails']), tag.mails)
 
     def test_as_dict_puts_all_tag_attributes_in_the_returning_dict(self):
         tag = Tag('some_tag', default=True)
