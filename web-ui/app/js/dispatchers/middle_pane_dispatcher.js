@@ -36,7 +36,7 @@ define(['flight/lib/component', 'page/events', 'helpers/triggering'], function(d
 
     this.updateMiddlePaneHeight = function() {
         var vh = $(window).height();
-        var top = $("#main").outerHeight() + $("#top-pane").outerHeight();
+        var top = $('#main').outerHeight() + $('#top-pane').outerHeight();
         this.select('middlePane').css({height: (vh - top) + 'px'});
     };
 

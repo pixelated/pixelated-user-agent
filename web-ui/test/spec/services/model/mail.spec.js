@@ -1,6 +1,7 @@
 /*global Pixelated */
 
 require(['services/model/mail'], function (Mail) {
+  'use strict';
   var testData;
 
   describe('services/model/mail', function () {

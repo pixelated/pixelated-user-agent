@@ -42,7 +42,7 @@ define(
     
       this.viewFor = function (tag, template) {
         return template({
-          tagName: tag.default ? i18n("tags." + tag.name) : tag.name,
+          tagName: tag.default ? i18n('tags.' + tag.name) : tag.name,
           ident: tag.ident,
           count: this.badgeType(tag) === 'total' ? tag.counts.total : (tag.counts.total - tag.counts.read),
           displayBadge: this.displayBadge(tag),
@@ -64,7 +64,8 @@ define(
       };
 
       this.selectTag = function (ev, data) {
-        data.tag === this.attr.tag.name ? this.doSelect(data) : this.doUnselect();
+        if(data.tag === this.attr.tag.name) { this.doSelect(data); }
+        else { this.doUnselect(); }
       };
 
       this.doUnselect = function () {

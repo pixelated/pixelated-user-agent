@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
+'use strict';
 define(
   [
     'flight/lib/component',
@@ -63,7 +64,8 @@ define(
       };
 
       this.selectTag = function (ev, data) {
-        data.tag === this.attr.linkTo.name ? this.doSelect() : this.doUnselect();
+        if(data.tag === this.attr.linkTo.name) { this.doSelect(); }
+        else { this.doUnselect(); }
       };
 
       this.doUnselect = function () {

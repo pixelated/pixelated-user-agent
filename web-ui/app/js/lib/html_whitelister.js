@@ -63,10 +63,10 @@ define(['lib/html-sanitizer'], function (htmlSanitizer) {
         attributesAndValues.push(attributes[i]);
         attributesAndValues.push(attributes[i+1]);
       }
-    };
+    }
 
     return attributesAndValues;
-  };
+  }
 
   function tagPolicy (tagName, attributes) {
     if (!tagAndAttributeWhitelist[tagName]) {

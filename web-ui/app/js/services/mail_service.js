@@ -62,7 +62,7 @@ define(
         })
           .fail(function (resp) {
               var msg = i18n('Could not update mail tags');
-              if(resp.status == 403) {
+              if(resp.status === 403) {
                 msg = i18n('Invalid tag name');
               }
               that.trigger(document, events.ui.userAlerts.displayMessage, { message: msg });

@@ -23,7 +23,7 @@ define(['flight/lib/component', 'page/events', 'page/router/url_params'], functi
     });
 
     function createHash(data) {
-      var hash = "/#/" + data.tag;
+      var hash = '/#/' + data.tag;
       if (!_.isUndefined(data.mailIdent)) {
         hash += '/mail/' + data.mailIdent;
       }

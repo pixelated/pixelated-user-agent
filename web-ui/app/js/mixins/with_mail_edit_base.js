@@ -59,9 +59,9 @@ define(
       };
 
       function thereAreRecipientsToDisplay() {
-        return this.attr.recipientValues.to
-          && this.attr.recipientValues.cc
-          && !_.isEmpty(this.attr.recipientValues.to.concat(this.attr.recipientValues.cc));
+        return this.attr.recipientValues.to &&
+               this.attr.recipientValues.cc &&
+               !_.isEmpty(this.attr.recipientValues.to.concat(this.attr.recipientValues.cc));
       }
 
       this.render = function(template, context) {

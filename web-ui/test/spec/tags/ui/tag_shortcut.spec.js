@@ -1,4 +1,8 @@
-describeComponent("tags/ui/tag_shortcut", function () {
+/* global jasmine */
+/* global Pixelated */
+
+describeComponent('tags/ui/tag_shortcut', function () {
+  'use strict';
 
   var parent, shortcut, component, TagShortcut;
 
@@ -6,13 +10,13 @@ describeComponent("tags/ui/tag_shortcut", function () {
     TagShortcut = require('tags/ui/tag_shortcut');
 
     component = jasmine.createSpyObj('tagComponent', ['triggerSelect']);
-    parent = $("<ul>");
+    parent = $('<ul>');
     $('body').append(parent);
     shortcut = TagShortcut.appendedTo(parent, { linkTo: { name: 'inbox', counts: { total: 15 }}, trigger: component });
   });
 
-  afterEach(function () {
-    $('body')[0].removeChild(parent[0])
+  jasmine.afterEach(function () {
+    $('body')[0].removeChild(parent[0]);
   });
 
   it('renders the shortcut inside the parent', function () {
@@ -24,11 +28,11 @@ describeComponent("tags/ui/tag_shortcut", function () {
   it('selects and unselect on tag.select', function () {
     $(document).trigger(Pixelated.events.ui.tag.select, { tag: 'inbox'});
 
-    expect(shortcut.$node).toHaveClass("selected");
+    expect(shortcut.$node).toHaveClass('selected');
 
     $(document).trigger(Pixelated.events.ui.tag.select, { tag: 'sent'});
 
-    expect(shortcut.$node).not.toHaveClass("selected");
+    expect(shortcut.$node).not.toHaveClass('selected');
   });
 
   it('delegates the click to linked tag', function (){

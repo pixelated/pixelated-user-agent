@@ -1,5 +1,3 @@
-/* global Pixelated */
-
 describeComponent('mail_view/ui/recipients/recipients_input',function () {
   'use strict';
 
@@ -40,12 +38,12 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
         var enterAddressKeyPressEvent = $.Event('keydown', { which: keycode[0] });
         spyOn(enterAddressKeyPressEvent, 'preventDefault');
 
-        this.$node.val('')
+        this.$node.val('');
         this.$node.trigger(enterAddressKeyPressEvent);
         expect(enterAddressKeyPressEvent.preventDefault).toHaveBeenCalled();
 
         enterAddressKeyPressEvent.preventDefault.reset();
-        this.$node.val('anything')
+        this.$node.val('anything');
         this.$node.trigger(enterAddressKeyPressEvent);
         expect(enterAddressKeyPressEvent.preventDefault).toHaveBeenCalled();
       });

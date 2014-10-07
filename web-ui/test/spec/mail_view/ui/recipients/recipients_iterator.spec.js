@@ -11,7 +11,7 @@ define(['mail_view/ui/recipients/recipients_iterator'], function (RecipientsIter
     exitInput;
 
   function createIterator(elements) {
-    return recipientsIterator = new RecipientsIterator({ elements: elements, exitInput: exitInput });
+    return new RecipientsIterator({ elements: elements, exitInput: exitInput });
   }
 
   function resetMock(m) {

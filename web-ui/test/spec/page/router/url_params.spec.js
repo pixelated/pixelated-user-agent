@@ -1,4 +1,7 @@
+/* global jasmine */
+
 require(['page/router/url_params'], function (urlParams) {
+  'use strict';
 
   describe('urlParams', function () {
 
@@ -8,7 +11,7 @@ require(['page/router/url_params'], function (urlParams) {
       window.onpopstate = function () {};
     });
 
-    afterEach(function () {
+    jasmine.afterEach(function () {
       document.location.hash = '';
     });
 

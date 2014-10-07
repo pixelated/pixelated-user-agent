@@ -79,9 +79,9 @@ define(
   }
 
   function moveCaretToEnd(el) {
-    if (typeof el.selectionStart == "number") {
+    if (typeof el.selectionStart === 'number') {
       el.selectionStart = el.selectionEnd = el.value.length;
-    } else if (typeof el.createTextRange != "undefined") {
+    } else if (typeof el.createTextRange !== 'undefined') {
       el.focus();
       var range = el.createTextRange();
       range.collapse(false);
@@ -92,7 +92,7 @@ define(
   function fixedSizeNumber(num, size) {
     var res = num.toString();
     while(res.length < size) {
-      res = "0" + res;
+      res = '0' + res;
     }
     return res;
   }
@@ -100,9 +100,9 @@ define(
   function getFormattedDate(date){
     var today = createTodayDate();
     if (date.getTime() > today.getTime()) {
-      return fixedSizeNumber(date.getHours(), 2) + ":" + fixedSizeNumber(date.getMinutes(), 2);
+      return fixedSizeNumber(date.getHours(), 2) + ':' + fixedSizeNumber(date.getMinutes(), 2);
     } else {
-      return "" + date.getFullYear() + "-" + fixedSizeNumber(date.getMonth() + 1, 2) + "-" + fixedSizeNumber(date.getDate(), 2);
+      return '' + date.getFullYear() + '-' + fixedSizeNumber(date.getMonth() + 1, 2) + '-' + fixedSizeNumber(date.getDate(), 2);
     }
   }
 

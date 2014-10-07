@@ -31,7 +31,7 @@ define(
 
     function sentItem() {
       function isOpeningOnANewTab(ev) {
-        return ev.metaKey || ev.ctrlKey || ev.which == 2;
+        return ev.metaKey || ev.ctrlKey || ev.which === 2;
       }
 
       this.triggerOpenMail = function (ev) {
@@ -55,7 +55,7 @@ define(
         var mailItemHtml = templates.mails.sent(this.attr);
         this.$node.html(mailItemHtml);
         this.$node.addClass(this.attr.statuses);
-        this.attr.selected && this.select();
+        if(this.attr.selected) { this.select(); }
         this.on(this.$node.find('a'), 'click', this.triggerOpenMail);
       };
 

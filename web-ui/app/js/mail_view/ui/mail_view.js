@@ -54,12 +54,14 @@ define(
         var date = new Date(data.mail.header.date);
         data.mail.header.formattedDate = viewHelpers.getFormattedDate(date);
 
+        var signed, encrypted;
+
         data.mail.security_casing = data.mail.security_casing || {};
         if(features.isEnabled('signatureStatus')) {
-          var signed = this.checkSigned(data.mail);
+          signed = this.checkSigned(data.mail);
         }
         if(features.isEnabled('encryptionStatus')) {
-          var encrypted = this.checkEncrypted(data.mail);
+          encrypted = this.checkEncrypted(data.mail);
         }
 
         this.$node.html(templates.mails.fullView({

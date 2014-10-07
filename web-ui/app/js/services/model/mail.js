@@ -113,7 +113,7 @@ define(['helpers/contenttype'],
       bodyParts = _.reject(bodyParts, function(bodyPart) { return _.isEmpty(bodyPart.trim()); });
 
       return _.map(bodyParts, parseWithHeaders);
-    };
+    }
 
     function getMailMediaType () {
       return new contentType.MediaType(this.header.content_type);

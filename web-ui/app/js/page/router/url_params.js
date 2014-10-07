@@ -15,6 +15,7 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 define([], function () {
+  'use strict';
 
   function defaultTag() {
     return 'inbox';

@@ -72,7 +72,7 @@ describeComponent('mail_view/ui/mail_view', function () {
     this.component.displayMail({}, testData);
     this.component.select('newTagButton').click();
 
-    var e = creatingEvent("keydown", 27);
+    var e = creatingEvent('keydown', 27);
     var newTagInputComponent = this.component.select('newTagInput');
     var addNewComponent = this.component.select('addNew');
 
@@ -114,13 +114,13 @@ describeComponent('mail_view/ui/mail_view', function () {
 
   it('assumes that mail is not trusted if its signature contains no_trust from the user', function() {
     var email = testData;
-    email.security_casing = {imprints: [{seal: {trust: "no_trust", validity: "ultimate"}}]};
+    email.security_casing = {imprints: [{seal: {trust: 'no_trust', validity: 'ultimate'}}]};
     expect(this.component.checkSigned(email)).toEqual('signed signature-not-trusted');
   });
 
   it('uses validity when trust is not present', function() {
     var email = testData;
-    email.security_casing = {imprints: [{seal: { validity: "no_trust"}}]};
+    email.security_casing = {imprints: [{seal: { validity: 'no_trust'}}]};
     expect(this.component.checkSigned(email)).toEqual('signed signature-not-trusted');
   });
 
@@ -131,8 +131,8 @@ describeComponent('mail_view/ui/mail_view', function () {
   });
 
   it('assumes that the mail is not signed if there are no imprints', function() {
-    var email = testData
-    email.security_casing = {imprints: []}
+    var email = testData;
+    email.security_casing = {imprints: []};
     expect(this.component.checkSigned(email)).toEqual('not-signed');
   });
 
@@ -163,7 +163,7 @@ describeComponent('mail_view/ui/mail_view', function () {
   it('creates new tag when pressing Enter key on new tag input', function(){
     var tagsUpdateEvent = spyOnEvent(document, Pixelated.events.mail.tags.update);
     var tagListRefreshEvent = spyOnEvent(document, Pixelated.events.dispatchers.tags.refreshTagList);
-    var e = creatingEvent("keydown", 13);
+    var e = creatingEvent('keydown', 13);
 
     this.component.displayMail({}, testData);
     this.component.select('newTagButton').click();

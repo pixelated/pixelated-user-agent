@@ -1,4 +1,8 @@
+/* global Pixelated */
+
 describeComponent('mail_view/ui/send_button', function () {
+
+  'use strict';
 
   describe('send button', function () {
     beforeEach(function () {
@@ -81,7 +85,7 @@ describeComponent('mail_view/ui/send_button', function () {
         var sendMailEvent = spyOnEvent(document, Pixelated.events.ui.mail.send);
         spyOn(this.component, 'off');
 
-        _.times(3, function () { $(document).trigger(Pixelated.events.ui.mail.recipientsUpdated) });;
+        _.times(3, function () { $(document).trigger(Pixelated.events.ui.mail.recipientsUpdated); });
 
         expect(sendMailEvent).toHaveBeenTriggeredOn(document);
         expect(this.component.off).toHaveBeenCalledWith(document, Pixelated.events.ui.mail.recipientsUpdated);

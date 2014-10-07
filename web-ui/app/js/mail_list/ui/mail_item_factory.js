@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
+/* global _ */
 'use strict';
 
 define(
@@ -50,12 +51,12 @@ define(
 
     var detectMailType = function(mail) {
       if(_.include(mail.tags, 'drafts')) {
-        return MAIL_ITEM_TYPE['drafts'];
+        return MAIL_ITEM_TYPE.drafts;
       } else if(_.include(mail.tags, 'sent')) {
-        return MAIL_ITEM_TYPE['sent'];
+        return MAIL_ITEM_TYPE.sent;
       } else {
         return GenericMailItem;
-      };
+      }
     };
 
     return {

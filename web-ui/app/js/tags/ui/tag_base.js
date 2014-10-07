@@ -15,6 +15,7 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 define(['views/i18n', 'page/events'], function(i18n, events) {
+  'use strict';
 
   function tagBase() {
     var ALWAYS_HIDE_BADGE_FOR = ['sent', 'trash', 'all'];

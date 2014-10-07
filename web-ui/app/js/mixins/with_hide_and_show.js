@@ -15,6 +15,7 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 define(function(require) {
+  'use strict';
 
   function withHideAndShow() {
     this.hide = function () {

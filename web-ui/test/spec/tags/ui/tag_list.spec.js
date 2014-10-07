@@ -1,3 +1,7 @@
+/* global _ */
+/* global Pixelated */
+/* global jasmine */
+
 describeComponent('tags/ui/tag_list', function () {
   'use strict';
   var tagsShortcutsContainer;
@@ -11,12 +15,12 @@ describeComponent('tags/ui/tag_list', function () {
   describe('post initialization', function () {
     beforeEach(function () {
       setupComponent();
-      tagsShortcutsContainer = $('<ul>', { id: "tags-shortcuts" });
+      tagsShortcutsContainer = $('<ul>', { id: 'tags-shortcuts' });
       $('body').append(tagsShortcutsContainer);
     });
 
-    afterEach(function () {
-      $('body')[0].removeChild(tagsShortcutsContainer[0])
+    jasmine.afterEach(function () {
+      $('body')[0].removeChild(tagsShortcutsContainer[0]);
     });
 
     it('should render tags when tagsList:load is received', function () {
@@ -83,7 +87,7 @@ describeComponent('tags/ui/tag_list', function () {
       var tagList = [tag('tag1', 1, false), tag('tag2', 2, true), tag('tag3', 3, true)];
       $(document).trigger(Pixelated.events.ui.tagList.load, {tags: tagList});
 
-      var tagList = [tag('tag1', 1, false), tag('tag2', 2, true)];
+      tagList = [tag('tag1', 1, false), tag('tag2', 2, true)];
       $(document).trigger(Pixelated.events.ui.tagList.load, {tags: tagList});
 
       var customTags = _.map(this.component.select('customTagList').find('li'), function (el) {
@@ -101,7 +105,7 @@ describeComponent('tags/ui/tag_list', function () {
       var tagList = [tag('inbox', 1, true)];
       $(document).trigger(Pixelated.events.ui.tagList.load, {tags: tagList});
 
-      var tagList = [tag('sent', 1, true)];
+      tagList = [tag('sent', 1, true)];
       $(document).trigger(Pixelated.events.ui.tagList.load, {tags: tagList});
 
       var shortcuts = _.map($('#tags-shortcuts').find('li'), function (el) {

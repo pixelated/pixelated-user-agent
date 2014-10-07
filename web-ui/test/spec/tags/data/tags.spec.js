@@ -1,3 +1,5 @@
+/* global Pixelated */
+
 describeComponent('tags/data/tags', function () {
   'use strict';
 

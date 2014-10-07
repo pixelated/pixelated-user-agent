@@ -30,7 +30,7 @@ define(
       this.defaultAttrs({
         previous: '#left-arrow',
         next: '#right-arrow',
-        currentPage: "#current-page"
+        currentPage: '#current-page'
       });
 
       this.renderWithPageNumber = function(pageNumber) {

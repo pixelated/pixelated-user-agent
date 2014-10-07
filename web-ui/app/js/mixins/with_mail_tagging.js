@@ -15,6 +15,9 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 /*global Bloodhound */
+/*global _ */
+/*global Handlebars */
+'use strict';
 define(
   ['page/events', 'features'],
   function (events, features) {
@@ -63,7 +66,7 @@ define(
       this.after('displayMail', function () {
         this.on(this.select('newTagInput'), 'typeahead:selected typeahead:autocompleted', this.createNewTag);
       });
-    };
+    }
 
     return withMailTagging;
   }

@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
+'use strict';
 define([], function () {
   var exports = {};
 
@@ -23,24 +24,25 @@ define([], function () {
   function MediaType(s, p){
 	this.type = '';
 	this.params = {};
-	if(typeof s=='string'){
-	  var c = splitQuotedString(s);
+    var c, i, n;
+	if(typeof s==='string'){
+	  c = splitQuotedString(s);
 	  this.type = c.shift();
-	  for(var i=0; i<c.length; i++){
+	  for(i=0; i<c.length; i++){
 		this.parseParameter(c[i]);
 	  }
 	}else if(s instanceof MediaType){
 	  this.type = s.type;
 	  this.q = s.q;
-	  for(var n in s.params) this.params[n]=s.params[n];
+	  for(n in s.params) this.params[n]=s.params[n];
 	}
-	if(typeof p=='string'){
-	  var c = splitQuotedString(p);
-	  for(var i=0; i<c.length; i++){
+	if(typeof p==='string'){
+	  c = splitQuotedString(p);
+	  for(i=0; i<c.length; i++){
 		this.parseParameter(c[i]);
 	  }
-	}else if(typeof p=='object'){
-	  for(var n in p) this.params[n]=p[n];
+	}else if(typeof p==='object'){
+	  for(n in p) this.params[n]=p[n];
 	}
   }
   MediaType.prototype.parseParameter = function parseParameter(s){
@@ -48,16 +50,16 @@ define([], function () {
 	var name = param[0].trim();
 	var value = s.substr(param[0].length+1).trim();
 	if(!value || !name) return;
-	if(name=='q' && this.q===undefined){
+	if(name==='q' && this.q===undefined){
 	  this.q=parseFloat(value);
 	}else{
-	  if(value[0]=='"' && value[value.length-1]=='"'){
+	  if(value[0]==='"' && value[value.length-1]==='"'){
 		value = value.substr(1, value.length-2);
 		value = value.replace(/\\(.)/g, function(a,b){return b;});
 	  }
 	  this.params[name]=value;
 	}
-  }
+  };
   MediaType.prototype.toString = function toString(){
 	var str = this.type + ';q='+this.q;
 	for(var n in this.params){
@@ -69,7 +71,7 @@ define([], function () {
 	  }
 	}
 	return str;
-  }
+  };
   exports.MediaType = MediaType;
 
   // Split a string by character, but ignore quoted parts and backslash-escaped characters
@@ -157,8 +159,8 @@ define([], function () {
 	else if(a.type!=='*/*' && b.type==='*/*') return -1;
 	var ac = (a.type||'').split('/');
 	var bc = (b.type||'').split('/');
-	if(ac[0]=='*' && bc[0]!='*') return 1;
-	if(ac[0]!='*' && bc[0]=='*') return -1;
+	if(ac[0]==='*' && bc[0]!=='*') return 1;
+	if(ac[0]!=='*' && bc[0]==='*') return -1;
 	if(a.type!==b.type) return null;
 	var ap = a.params || {};
 	var bp = b.params || {};

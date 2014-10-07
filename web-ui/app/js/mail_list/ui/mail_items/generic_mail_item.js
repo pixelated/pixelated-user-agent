@@ -88,7 +88,7 @@ define(
         var mailItemHtml = templates.mails.single(this.attr);
         this.$node.html(mailItemHtml);
         this.$node.addClass(this.attr.statuses);
-        this.attr.selected && this.select();
+        if(this.attr.selected) { this.select(); }
         this.on(this.$node.find('a'), 'click', this.triggerOpenMail);
       };
 

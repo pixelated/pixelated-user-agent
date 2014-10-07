@@ -55,8 +55,7 @@ define(
       };
 
       this.clearInput = function(event, data) {
-        if (!data.skipMailListRefresh)
-          this.select('input').val('');
+        if (!data.skipMailListRefresh) { this.select('input').val(''); }
       };
 
       this.showOnlySearchTerms = function(event){

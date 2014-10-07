@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
+'use strict';
 define(function () {
 
   return Iterator;
@@ -24,7 +25,7 @@ define(function () {
     this.elems = elems;
 
     this.hasPrevious = function () {
-      return this.index != 0;
+      return this.index !== 0;
     };
 
     this.hasNext = function () {
@@ -51,7 +52,7 @@ define(function () {
       var removed = this.current(),
         toRemove = this.index;
 
-      !this.hasNext() && this.index--;
+      if(!this.hasNext()) { this.index--; }
       this.elems.remove(toRemove);
       return removed;
     };

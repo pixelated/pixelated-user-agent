@@ -1,3 +1,5 @@
+/* global Pixelated */
+
 describeComponent('user_alerts/ui/user_alerts', function () {
   'use strict';
 
@@ -13,9 +15,9 @@ describeComponent('user_alerts/ui/user_alerts', function () {
 
   it('should be emptied and hidden when hide is called', function() {
     expect(this.$node).not.toBeHidden();
-    this.component.hide()
+    this.component.hide();
     expect(this.$node).toBeHidden();
-    expect(this.$node.html()).toEqual('')
+    expect(this.$node.html()).toEqual('');
   });
 
 

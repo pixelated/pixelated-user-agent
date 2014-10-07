@@ -37,7 +37,7 @@ describeComponent('mail_view/ui/reply_box', function () {
 
       setupComponent(attrs);
 
-      expect(this.component.attr.recipientValues['to']).toEqual([attrs.mail.header.from]);
+      expect(this.component.attr.recipientValues.to).toEqual([attrs.mail.header.from]);
     });
 
     it('should have a subject of Re: <original_message>', function() {

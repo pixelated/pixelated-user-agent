@@ -1,6 +1,6 @@
 define(['mail_view/data/mail_builder'], function (mailBuilder) {
+  'use strict';
   describe('mail builder', function () {
-    'use strict';
 
     it('sets ident if passed to constructor', function() {
       var mail = mailBuilder.newMail('12345').build();
@@ -15,15 +15,15 @@ define(['mail_view/data/mail_builder'], function (mailBuilder) {
     });
 
     it('sets the subject', function() {
-      var mail = mailBuilder.newMail().subject("subject").build();
+      var mail = mailBuilder.newMail().subject('subject').build();
 
-      expect(mail.header.subject).toBe("subject");
+      expect(mail.header.subject).toBe('subject');
     });
 
     it('sets the body', function() {
-      var mail = mailBuilder.newMail().body("some body text").build();
+      var mail = mailBuilder.newMail().body('some body text').build();
 
-      expect(mail.body).toBe("some body text");
+      expect(mail.body).toBe('some body text');
     });
 
     describe('to field', function() {

@@ -88,7 +88,6 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
         });
 
         it('marks the email as read', function () {
-          debugger;
           var mailReadEvent = spyOnEvent(document, Pixelated.events.mail.read);
           var clickEvent = createClickEvent(specialKey);
 
