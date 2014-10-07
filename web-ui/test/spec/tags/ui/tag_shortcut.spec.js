@@ -15,7 +15,7 @@ describeComponent('tags/ui/tag_shortcut', function () {
     shortcut = TagShortcut.appendedTo(parent, { linkTo: { name: 'inbox', counts: { total: 15 }}, trigger: component });
   });
 
-  jasmine.afterEach(function () {
+  afterEach(function () {
     $('body')[0].removeChild(parent[0]);
   });
 

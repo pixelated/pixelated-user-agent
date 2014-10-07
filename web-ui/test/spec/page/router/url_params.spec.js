@@ -11,7 +11,7 @@ require(['page/router/url_params'], function (urlParams) {
       window.onpopstate = function () {};
     });
 
-    jasmine.afterEach(function () {
+    afterEach(function () {
       document.location.hash = '';
     });
 

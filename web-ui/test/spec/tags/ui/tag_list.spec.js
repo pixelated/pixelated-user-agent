@@ -19,7 +19,7 @@ describeComponent('tags/ui/tag_list', function () {
       $('body').append(tagsShortcutsContainer);
     });
 
-    jasmine.afterEach(function () {
+    afterEach(function () {
       $('body')[0].removeChild(tagsShortcutsContainer[0]);
     });
 
