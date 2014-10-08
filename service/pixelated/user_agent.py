@@ -66,13 +66,16 @@ def features():
 
 @app.route('/mails', methods=['POST'])
 def send_mail():
-    _mail = InputMail.from_dict(request.json)
-    draft_id = request.json.get('ident')
-    if draft_id:
-        mail_service.send(draft_id, _mail)
-    else:
-        _mail = mail_service.create_draft(_mail)
-    return respond_json(_mail.as_dict())
+    try:
+        _mail = InputMail.from_dict(request.json)
+        draft_id = request.json.get('ident')
+        if draft_id:
+            mail_service.send(draft_id, _mail)
+        else:
+            _mail = mail_service.create_draft(_mail)
+        return respond_json(_mail.as_dict())
+    except Exception as error:
+        return respond_json({'message': '\n'.join(list(error.args))}, status_code=500)
 
 
 @app.route('/mails', methods=['PUT'])
