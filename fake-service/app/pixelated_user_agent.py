@@ -37,9 +37,9 @@ def respond_json(entity):
     return Response(response=response, mimetype="application/json")
 
 
-@app.route('/disabled_features')
+@app.route('/features')
 def disabled_features():
-    return respond_json([])
+    return respond_json({'disabled_features': [], 'dispatcher_features': {}})
 
 
 @app.route('/mails', methods=['POST'])
