@@ -18,6 +18,8 @@ import unittest
 import pixelated.user_agent
 from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.pixelated_mail import InputMail
+from pixelated.adapter.tag import Tag
+from pixelated.adapter.tag_service import TagService
 from mockito import *
 import crochet
 import pixelated.reactor_manager as reactor_manager
@@ -97,3 +99,21 @@ class UserAgentTest(unittest.TestCase):
             verify(pixelated.user_agent.app.config).from_pyfile('/tmp/some/config/file')
         finally:
             pixelated.user_agent.app.config = orig_config
+
+    def test_that_tags_returns_all_tags(self):
+        when(self.mail_service).all_tags().thenReturn(TagService.SPECIAL_TAGS)
+
+        response = self.app.get('/tags')
+
+        self.assertEqual(200, response.status_code)
+        expected = json.dumps([tag.as_dict() for tag in TagService.SPECIAL_TAGS])
+        self.assertEqual(expected, response.data)
+
+    def test_that_tags_are_filtered_by_query(self):
+        when(self.mail_service).all_tags().thenReturn(TagService.SPECIAL_TAGS)
+
+        response = self.app.get('/tags?q=dr')
+
+        self.assertEqual(200, response.status_code)
+        expected = json.dumps([Tag('drafts', True).as_dict()])
+        self.assertEqual(expected, response.data)

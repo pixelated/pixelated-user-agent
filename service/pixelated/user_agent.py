@@ -19,6 +19,7 @@ import getpass
 
 import os
 import os.path
+import re
 import crochet
 from flask import Flask
 from flask import request
@@ -120,7 +121,13 @@ def delete_mails():
 
 @app.route('/tags')
 def tags():
-    tags = mail_service.all_tags()
+    query = request.args.get('q')
+
+    if query:
+        tags = [tag for tag in mail_service.all_tags() if bool(re.match(query, tag.name, re.IGNORECASE))]
+    else:
+        tags = mail_service.all_tags()
+
     return respond_json([tag.as_dict() for tag in tags])
 
 
