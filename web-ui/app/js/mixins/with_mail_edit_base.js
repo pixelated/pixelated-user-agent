@@ -69,7 +69,6 @@ define(
       }
 
       this.render = function(template, context) {
-        debugger;
         this.$node.html(template(context));
 
         if(!context || _.isEmpty(context)){
