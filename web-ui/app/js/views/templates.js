@@ -52,6 +52,9 @@ define(['hbs/templates'], function (templates) {
     noMessageSelected: window.Pixelated['app/templates/no_message_selected.hbs'],
     search: {
       trigger: window.Pixelated['app/templates/search/search_trigger.hbs']
+    },
+    page: {
+      logout: window.Pixelated['app/templates/page/logout.hbs']
     }
   };
 

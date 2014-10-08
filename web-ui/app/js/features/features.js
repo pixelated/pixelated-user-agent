@@ -18,29 +18,41 @@
 'use strict';
 define([], function() {
   var cachedDisabledFeatures;
+  var cachedDispatcherFeatures;
 
-  function getFeatures() {
-    cachedDisabledFeatures = cachedDisabledFeatures || fetchDisabledFeatures();
+  function getDisabledFeatures() {
+    cachedDisabledFeatures = cachedDisabledFeatures || fetchFeatures().disabled_features;
     return cachedDisabledFeatures;
   }
 
-  function fetchDisabledFeatures() {
-    var disabledFeatures;
-    $.ajax('/disabled_features', {
+  function getDispatcherFeatures() {
+    cachedDispatcherFeatures = cachedDispatcherFeatures || fetchFeatures().dispatcher_features;
+    return cachedDispatcherFeatures;
+  }
+
+  function fetchFeatures() {
+    var features;
+    $.ajax('/features', {
       async: false,
       success: function (results){
-        disabledFeatures = results;
+	features = results;
       },
       error: function () {
         console.error('Could not load feature toggles');
       }
     });
-    return disabledFeatures;
+    return features;
   }
 
   return {
-    isEnabled: function(featureName) {
-      return ! _.contains(getFeatures(), featureName);
+    isEnabled: function (featureName) {
+      return ! _.contains(getDisabledFeatures(), featureName);
+    },
+    isLogoutEnabled: function () {
+      return _.has(getDispatcherFeatures(), 'logout');
+    },
+    getLogoutUrl: function () {
+      return getDispatcherFeatures().logout;
     }
   };
 });

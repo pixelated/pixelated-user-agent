@@ -39,7 +39,8 @@ define(
     'page/pane_contract_expand',
     'views/i18n',
     'views/recipientListFormatter',
-    'flight/lib/logger'
+    'flight/lib/logger',
+    'page/logout'
   ],
 
   function (
@@ -66,7 +67,8 @@ define(
     paneContractExpand,
     viewI18n,
     recipientListFormatter,
-    withLogging) {
+    withLogging,
+    logout) {
 
     'use strict';
     function initialize(path) {
@@ -96,6 +98,7 @@ define(
       leftPaneDispatcher.attachTo(document);
 
       offCanvas.attachTo(document);
+      logout.attachTo('#logout');
     }
 
     return initialize;

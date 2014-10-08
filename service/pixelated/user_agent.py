@@ -54,9 +54,13 @@ def respond_json(entity, status_code=200):
     return response
 
 
-@app.route('/disabled_features')
-def disabled_features():
-    return respond_json(DISABLED_FEATURES)
+@app.route('/features')
+def features():
+    try:
+        disabled_features = {'logout': os.environ['DISPATCHER_LOGOUT_URL']}
+    except KeyError:
+        disabled_features = {}
+    return respond_json({'disabled_features': DISABLED_FEATURES, 'dispatcher_features': disabled_features})
 
 
 @app.route('/mails', methods=['POST'])
