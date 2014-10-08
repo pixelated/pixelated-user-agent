@@ -20,18 +20,18 @@ from pixelated.adapter.soledad_querier import SoledadQuerier
 class MailService:
     __slots__ = ['leap_session', 'account', 'mailbox_name']
 
-    ALL_MAILS_QUERY = {'tags': ['all']}
-
     def __init__(self, mailboxes, mail_sender, tag_service=TagService.get_instance()):
         self.tag_service = tag_service
         self.mailboxes = mailboxes
         self.querier = SoledadQuerier.get_instance()
         self.mail_sender = mail_sender
-        self.tag_service.load_index(self.mails(MailService.ALL_MAILS_QUERY))
+        self.tag_service.load_index(self.all_mails())
 
-    def mails(self, query):
-        _mails = self.mailboxes.mails_by_tag(query['tags']) if query['tags'] else self.querier.all_mails()
-        return sorted(_mails or [], key=lambda mail: mail.headers['Date'], reverse=True)
+    def all_mails(self):
+        return self.querier.all_mails()
+
+    def mails(self, ids):
+        return self.querier.mails(ids)
 
     def update_tags(self, mail_id, new_tags):
         reserved_words = self.tag_service.extract_reserved(new_tags)
@@ -46,19 +46,7 @@ class MailService:
     def send(self, last_draft_ident, mail):
         self.mail_sender.sendmail(mail)
         self.mailboxes.drafts().remove(last_draft_ident)
-        self.mailboxes.sent().add(mail)
-
-    def create_draft(self, mail):
-        return self.mailboxes.add_draft(mail)
-
-    def update_draft(self, ident, new_version):
-        return self.mailboxes.update_draft(ident, new_version)
-
-    def send_draft(self, mail):
-        pass
-
-    def all_tags(self):
-        return self.tag_service.all_tags()
+        return self.mailboxes.sent().add(mail)
 
     def thread(self, thread_id):
         raise NotImplementedError()

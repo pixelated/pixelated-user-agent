@@ -27,7 +27,7 @@ class MarkAsReadTest(unittest.TestCase, SoledadTestBase):
 
     def test_mark_as_read(self):
         input_mail = MailBuilder().build_input_mail()
-        self.pixelated_mailboxes.inbox().add(input_mail)
+        self.add_mail_to_inbox(input_mail)
 
         mails = self.get_mails_by_tag('inbox')
         self.assertFalse('read' in mails[0].status)

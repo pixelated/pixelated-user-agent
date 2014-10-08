@@ -48,20 +48,3 @@ class PixelatedMailboxesTest(unittest.TestCase):
 
         self.assertEqual(1, len(mails))
         self.assertEqual("mail", mails[0])
-
-    def test_add_draft(self):
-        mail = InputMail()
-        when(self.drafts_mailbox).add(mail).thenReturn(1)
-
-        self.mailboxes.add_draft(mail)
-
-        verify(self.drafts_mailbox).add(mail)
-
-    def test_update_draft(self):
-        mail = test_helper.input_mail()
-        when(self.drafts_mailbox).add(mail).thenReturn(mail)
-
-        self.mailboxes.update_draft(mail.ident, mail)
-
-        inorder.verify(self.drafts_mailbox).add(mail)
-        inorder.verify(self.drafts_mailbox).remove(mail.ident)

@@ -21,8 +21,10 @@ import os
 from mock import Mock
 import shutil
 from pixelated.adapter.mail_service import MailService
+from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.tag_index import TagIndex
 from pixelated.adapter.tag_service import TagService
+from pixelated.adapter.draft_service import DraftService
 import pixelated.user_agent
 from pixelated.adapter.pixelated_mail import PixelatedMail, InputMail
 from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
@@ -121,13 +123,19 @@ class SoledadTestBase:
         PixelatedMail.from_email_address = self.mail_address
         self.app = pixelated.user_agent.app.test_client()
         self.account = FakeAccount()
+        self.pixelated_mailboxes = PixelatedMailBoxes(self.account)
         self.mail_sender = mock()
         self.tag_index = TagIndex(os.path.join(soledad_test_folder, 'tag_index'))
         self.tag_service = TagService(self.tag_index)
-        self.pixelated_mailboxes = PixelatedMailBoxes(self.account)
+        self.draft_service = DraftService(self.pixelated_mailboxes)
         self.mail_service = MailService(self.pixelated_mailboxes, self.mail_sender, self.tag_service)
+        self.search_engine = SearchEngine()
+        self.search_engine.index_mails(self.mail_service.all_mails())
 
         pixelated.user_agent.mail_service = self.mail_service
+        pixelated.user_agent.draft_service = self.draft_service
+        pixelated.user_agent.tag_service = self.tag_service
+        pixelated.user_agent.search_engine = self.search_engine
 
     def get_mails_by_tag(self, tag):
         response = json.loads(self.app.get("/mails?q=tag:" + tag).data)
@@ -150,6 +158,10 @@ class SoledadTestBase:
 
     def mark_as_read(self, mail_ident):
         self.app.post('/mail/' + mail_ident + '/read', content_type="application/json")
+
+    def add_mail_to_inbox(self, input_mail):
+        mail = self.pixelated_mailboxes.inbox().add(input_mail)
+        self.search_engine.index_mail(mail)
 
 
 class ResponseMail:

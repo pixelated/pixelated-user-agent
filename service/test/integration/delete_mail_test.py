@@ -26,13 +26,13 @@ class DeleteMailTest(unittest.TestCase, SoledadTestBase):
         self.teardown_soledad()
 
     def test_move_mail_to_trash_when_deleting(self):
-        mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        self.pixelated_mailboxes.inbox().add(mail)
+        input_mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
+        self.add_mail_to_inbox(input_mail)
 
         inbox_mails = self.get_mails_by_tag('inbox')
         self.assertEquals(1, len(inbox_mails))
 
-        self.delete_mail(mail.ident)
+        self.delete_mail(input_mail.ident)
 
         inbox_mails = self.get_mails_by_tag('inbox')
         self.assertEquals(0, len(inbox_mails))

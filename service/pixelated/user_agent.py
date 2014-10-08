@@ -27,7 +27,6 @@ from flask import Response
 from pixelated.adapter.pixelated_mail_sender import PixelatedMailSender
 from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
 import pixelated.reactor_manager as reactor_manager
-import pixelated.search_query as search_query
 import pixelated.bitmask_libraries.session as LeapSession
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
@@ -35,7 +34,9 @@ from pixelated.bitmask_libraries.auth import LeapAuthenticator, LeapCredentials
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.pixelated_mail import PixelatedMail, InputMail
 from pixelated.adapter.soledad_querier import SoledadQuerier
-
+from pixelated.adapter.search import SearchEngine
+from pixelated.adapter.tag_service import TagService
+from pixelated.adapter.draft_service import DraftService
 
 static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "web-ui", "app"))
 
@@ -70,9 +71,12 @@ def send_mail():
         _mail = InputMail.from_dict(request.json)
         draft_id = request.json.get('ident')
         if draft_id:
-            mail_service.send(draft_id, _mail)
+            _mail = mail_service.send(draft_id, _mail)
+            search_engine.index_mail(_mail)
+            search_engine.remove_from_index(draft_id)
         else:
-            _mail = mail_service.create_draft(_mail)
+            _mail = draft_service.create_draft(_mail)
+            search_engine.index_mail(mail_service.mail(_mail.ident))
         return respond_json(_mail.as_dict())
     except Exception as error:
         return respond_json({'message': '\n'.join(list(error.args))}, status_code=500)
@@ -81,19 +85,17 @@ def send_mail():
 @app.route('/mails', methods=['PUT'])
 def update_draft():
     _mail = InputMail.from_dict(request.json)
-    new_revision = mail_service.update_draft(request.json['ident'], _mail)
+    new_revision = draft_service.update_draft(request.json['ident'], _mail)
     ident = new_revision.ident
+    search_engine.index_mail(mail_service.mail(ident))
+    search_engine.remove_from_index(request.json['ident'])
     return respond_json({'ident': ident})
 
 
 @app.route('/mails')
 def mails():
-    query = search_query.compile(request.args.get("q")) if request.args.get("q") else {'tags': {}}
-
-    mails = mail_service.mails(query)
-
-    if "inbox" in query['tags']:
-        mails = [mail for mail in mails if not mail.has_tag('trash')]
+    mail_ids = search_engine.search(request.args.get('q'))
+    mails = mail_service.mails(mail_ids)
 
     response = {
         "stats": {
@@ -110,7 +112,8 @@ def mails():
 
 @app.route('/mail/<mail_id>', methods=['DELETE'])
 def delete_mail(mail_id):
-    mail_service.delete_mail(mail_id)
+    trashed_mail = mail_service.delete_mail(mail_id)
+    search_engine.index_mail(trashed_mail)
     return respond_json(None)
 
 
@@ -124,8 +127,6 @@ def delete_mails():
 
 @app.route('/tags')
 def tags():
-    tag_service = mail_service.tag_service
-
     query = request.args.get('q')
     skipDefaultTags = request.args.get('skipDefaultTags')
 
@@ -150,6 +151,7 @@ def mail_tags(mail_id):
     new_tags = map(lambda tag: tag.lower(), request.get_json()['newtags'])
     try:
         tags = mail_service.update_tags(mail_id, new_tags)
+        search_engine.index_mail(mail_service.mail(mail_id))
     except ValueError as ve:
         return respond_json(ve.message, 403)
     return respond_json(list(tags))
@@ -197,6 +199,13 @@ def start_user_agent(debug_enabled):
 
     global mail_service
     mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender)
+    global search_engine
+    search_engine = SearchEngine()
+    search_engine.index_mails(mail_service.all_mails())
+    global draft_service
+    draft_service = DraftService(pixelated_mailboxes)
+    global tag_service
+    tag_service = TagService.get_instance()
 
     app.run(host=app.config['HOST'], debug=debug_enabled,
             port=app.config['PORT'], use_reloader=False)

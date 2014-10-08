@@ -47,13 +47,6 @@ class TestMailService(unittest.TestCase):
 
         verify(mail).mark_as_read()
 
-    def test_create_draft(self):
-        mail = ''
-
-        self.mail_service.create_draft(mail)
-
-        verify(self.mailboxes).add_draft(mail)
-
     def test_delete_mail(self):
         self.mail_service.delete_mail(1)
 
