@@ -59,12 +59,17 @@ define(
       };
 
       function thereAreRecipientsToDisplay() {
-        return this.attr.recipientValues.to &&
-               this.attr.recipientValues.cc &&
-               !_.isEmpty(this.attr.recipientValues.to.concat(this.attr.recipientValues.cc));
+        var allRecipients = _.chain(this.attr.recipientValues).
+          values().
+          flatten().
+          remove(undefined).
+          value();
+
+        return !_.isEmpty(allRecipients);
       }
 
       this.render = function(template, context) {
+        debugger;
         this.$node.html(template(context));
 
         if(!context || _.isEmpty(context)){
