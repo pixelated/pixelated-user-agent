@@ -34,7 +34,7 @@ define(
         this.tagFilter = function (parsedResult) {
             var filtered = _.filter(parsedResult, function (tag) {return ! _.contains(mail.tags, tag.name); });
             return _.map(filtered, function(tag) { return {value: Handlebars.Utils.escapeExpression(tag.name)}; });
-        }
+        };
 
         this.tagCompleter = new Bloodhound({
           datumTokenizer: function(d) { return [d.value]; },

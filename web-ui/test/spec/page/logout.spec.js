@@ -8,7 +8,7 @@ describeComponent('page/logout', function () {
 
     beforeEach(function() {
       features = require('features');
-   });
+    });
 
     it('should provide logout link if logout is enabled', function () {
       spyOn(features, 'isLogoutEnabled').andReturn(true);
