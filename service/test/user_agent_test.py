@@ -35,6 +35,8 @@ class UserAgentTest(unittest.TestCase):
     def setUp(self):
         self.app = pixelated.user_agent.app.test_client()
         self.mail_service = mock()
+        self.tag_service = mock()
+        self.mail_service.tag_service = self.tag_service
 
         pixelated.user_agent.DISABLED_FEATURES = []
         pixelated.user_agent.mail_service = self.mail_service
@@ -61,11 +63,11 @@ class UserAgentTest(unittest.TestCase):
     def test_sending_mail_return_sent_mail_data_when_send_succeeds(self):
         self.input_mail = self.draft()
         self.input_mail.as_dict = lambda: {'header': {'from': 'a@a.a', 'to': 'b@b.b'},
-            'ident': 1,
-            'tags': [],
-            'status': [],
-            'security_casing': {},
-            'body': 'email body'}
+                                           'ident': 1,
+                                           'tags': [],
+                                           'status': [],
+                                           'security_casing': {},
+                                           'body': 'email body'}
 
         result = self.app.post('/mails', data='{"ident":1}', content_type="application/json")
 
@@ -128,7 +130,7 @@ class UserAgentTest(unittest.TestCase):
             pixelated.user_agent.app.config = orig_config
 
     def test_that_tags_returns_all_tags(self):
-        when(self.mail_service).all_tags().thenReturn(TagService.SPECIAL_TAGS)
+        when(self.tag_service).all_tags().thenReturn(TagService.SPECIAL_TAGS)
 
         response = self.app.get('/tags')
 
@@ -137,10 +139,20 @@ class UserAgentTest(unittest.TestCase):
         self.assertEqual(expected, response.data)
 
     def test_that_tags_are_filtered_by_query(self):
-        when(self.mail_service).all_tags().thenReturn(TagService.SPECIAL_TAGS)
+        when(self.tag_service).all_tags().thenReturn(TagService.SPECIAL_TAGS)
 
         response = self.app.get('/tags?q=dr')
 
         self.assertEqual(200, response.status_code)
         expected = json.dumps([Tag('drafts', True).as_dict()])
+        self.assertEqual(expected, response.data)
+
+    def test_that_default_tags_are_ignorable(self):
+        when(self.tag_service).all_tags().thenReturn(TagService.SPECIAL_TAGS)
+        when(self.tag_service).all_custom_tags().thenReturn([Tag('test')])
+
+        response = self.app.get('/tags?skipDefaultTags=true')
+
+        self.assertEqual(200, response.status_code)
+        expected = json.dumps([Tag('test').as_dict()])
         self.assertEqual(expected, response.data)

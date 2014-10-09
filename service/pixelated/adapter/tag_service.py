@@ -59,3 +59,6 @@ class TagService:
 
     def all_tags(self):
         return self.tag_index.values().union(self.SPECIAL_TAGS)
+
+    def all_custom_tags(self):
+        return self.tag_index.values().difference(self.SPECIAL_TAGS)

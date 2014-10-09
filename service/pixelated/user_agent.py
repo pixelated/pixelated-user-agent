@@ -124,12 +124,17 @@ def delete_mails():
 
 @app.route('/tags')
 def tags():
+    tag_service = mail_service.tag_service
+
     query = request.args.get('q')
+    skipDefaultTags = request.args.get('skipDefaultTags')
+
+    all_tags = tag_service.all_custom_tags() if skipDefaultTags else tag_service.all_tags()
 
     if query:
-        tags = [tag for tag in mail_service.all_tags() if bool(re.match(query, tag.name, re.IGNORECASE))]
+        tags = [tag for tag in all_tags if bool(re.match(query, tag.name, re.IGNORECASE))]
     else:
-        tags = mail_service.all_tags()
+        tags = all_tags
 
     return respond_json([tag.as_dict() for tag in tags])
 

@@ -40,7 +40,7 @@ define(
           datumTokenizer: function(d) { return [d.value]; },
           queryTokenizer: function(q) { return [q.trim()]; },
           remote: {
-            url: '/tags?q=%QUERY',
+            url: '/tags?skipDefaultTags=true&q=%QUERY',
             filter: this.tagFilter
           }
         });
