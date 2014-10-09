@@ -16,12 +16,12 @@
 
 Feature: compose mail, save draft and send mail
 
-  @wip
   Scenario: user composes and email, save the draft, later sends the draft and checks the sent message
     Given I compose a message with
-      | subject      | body                                        |
+      | subject          | body                                        |
       | Pixelated rocks! | You should definitely use it. Cheers, User. |
-    And for the 'To' field I type 'ab' and chose the first contact that shows
+    # And for the 'To' field I type 'ab' and chose the first contact that shows
+    And for the 'To' field I enter 'pixelated@friends.org'
     And I save the draft
     When I open the saved draft and send it
     Then I see that mail under the 'sent' tag

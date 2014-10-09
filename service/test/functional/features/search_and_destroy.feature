@@ -16,6 +16,7 @@
 
 Feature: search html mail and destroy
 
+  @wip
   Scenario: User searches for a mail and deletes it
     When I search for a mail with the words "this is a html mail"
     When I open the first mail in the mail list

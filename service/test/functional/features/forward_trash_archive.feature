@@ -15,6 +15,8 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 Feature: forward_trash_archive
+
+  @wip
   Scenario: User forwards a mail, add CC and BCC address, later trash the mail
     When I open the first mail in the 'inbox'
     Then I choose to forward this mail

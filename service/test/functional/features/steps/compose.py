@@ -45,12 +45,14 @@ def choose_impl(context, recipients_field, to_type):
     browser.find_element_by_css_selector('.tt-dropdown-menu div div').click()
 
 
+@given("for the '{recipients_field}' field I enter '{to_type}'")
+def enter_address_impl(context, recipients_field, to_type):
+    _enter_recipient(context, recipients_field, to_type + "\n")
+
+
 @then("for the '{recipients_field}' field I type '{to_type}' and chose the first contact that shows")
 def choose_impl(context, recipients_field, to_type):
-    recipients_field = recipients_field.lower()
-    browser = context.browser
-    field = browser.find_element_by_css_selector('#recipients-%s-area .tt-input' % recipients_field)
-    field.send_keys(to_type)
+    _enter_recipient(context, recipients_field, to_type)
     sleep(1)
     find_element_by_css_selector(context, '.tt-dropdown-menu div div').click()
 
@@ -66,4 +68,12 @@ def send_impl(context):
     context.execute_steps(u"when I open the first mail in the mail list")
     assert_that(is_not(page_has_css(context, '#send-button[disabled]')))
     click_button(context, 'Send')
+    sleep(1)
     element_should_have_content(context, '#user-alerts', 'Your message was sent!')
+
+
+def _enter_recipient(context, recipients_field, to_type):
+    recipients_field = recipients_field.lower()
+    browser = context.browser
+    field = browser.find_element_by_css_selector('#recipients-%s-area .tt-input' % recipients_field)
+    field.send_keys(to_type)

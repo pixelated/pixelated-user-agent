@@ -34,7 +34,7 @@ def open_current_mail(context):
 @then('I see that mail under the \'{tag}\' tag')
 def impl(context, tag):
     context.execute_steps("when I select the tag '%s'" % tag)
-    check_current_mail_is_visible(context)
+    context.execute_steps(u'When I open the first mail in the mail list')
 
 
 @when('I open that mail')

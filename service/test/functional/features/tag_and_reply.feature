@@ -15,6 +15,8 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 Feature: tagging and replying
+
+  @wip
   Scenario: User tags a mail, replies to it then checks that mail is in the right tag
     When I open the first mail in the 'inbox'
     Then that email has the 'inbox' tag
