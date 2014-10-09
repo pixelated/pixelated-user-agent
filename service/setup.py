@@ -84,6 +84,9 @@ setup(name='pixelated-user-agent',
           'crochet'
       ],
       tests_require=[
+          'PyHamcrest==1.8.0',
+          'behave==1.2.4',
+          'selenium==2.42.1',
           'nose',
           'mock',
           'httmock',
