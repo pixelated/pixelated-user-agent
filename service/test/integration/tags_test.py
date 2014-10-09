@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 import unittest
-from integration import MailBuilder, SoledadTestBase
+from test.support.integration_helper import MailBuilder, SoledadTestBase
 
 
 class TagsTest(unittest.TestCase, SoledadTestBase):

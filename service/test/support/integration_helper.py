@@ -16,7 +16,7 @@
 import json
 
 from leap.soledad.client import Soledad
-from mockito import mock
+from mockito import mock, unstub
 import os
 from mock import Mock
 import shutil
@@ -45,7 +45,6 @@ def initialize_soledad(tempdir):
     cert_file = ""
 
     class MockSharedDB(object):
-
         get_doc = Mock(return_value=None)
         put_doc = Mock()
         lock = Mock(return_value=('atoken', 300))
@@ -65,6 +64,7 @@ def initialize_soledad(tempdir):
         cert_file)
 
     from leap.mail.imap.fields import fields
+
     for name, expression in fields.INDEXES.items():
         _soledad.create_index(name, *expression)
 
@@ -103,19 +103,22 @@ class MailBuilder:
 
 
 class SoledadTestBase:
-
     def teardown_soledad(self):
         self.soledad.close()
         shutil.rmtree(soledad_test_folder)
 
     def setup_soledad(self):
+        unstub()  # making sure all mocks from other tests are reset
+
         self.soledad = initialize_soledad(tempdir=soledad_test_folder)
         self.mail_address = "test@pixelated.org"
 
-        SoledadQuerier.instance = None
+        # resetting soledad querier
+        SoledadQuerier.reset()
         SoledadQuerier.get_instance(soledad=self.soledad)
-        PixelatedMail.from_email_address = self.mail_address
 
+        # setup app
+        PixelatedMail.from_email_address = self.mail_address
         self.app = pixelated.user_agent.app.test_client()
         self.account = FakeAccount()
         self.mail_sender = mock()
@@ -139,7 +142,8 @@ class SoledadTestBase:
         return response['ident']
 
     def post_tags(self, mail_ident, tags_json):
-        return json.loads(self.app.post('/mail/' + mail_ident + '/tags', data=tags_json, content_type="application/json").data)
+        return json.loads(
+            self.app.post('/mail/' + mail_ident + '/tags', data=tags_json, content_type="application/json").data)
 
     def delete_mail(self, mail_ident):
         self.app.delete('/mail/' + mail_ident)
@@ -149,7 +153,6 @@ class SoledadTestBase:
 
 
 class ResponseMail:
-
     def __init__(self, mail_dict):
         self.mail_dict = mail_dict
 

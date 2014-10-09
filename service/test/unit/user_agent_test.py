@@ -15,18 +15,17 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
+import json
+import sys
+
 import pixelated.user_agent
-from pixelated.adapter.pixelated_mail import PixelatedMail
-from pixelated.adapter.pixelated_mail import InputMail
 from pixelated.adapter.tag import Tag
 from pixelated.adapter.tag_service import TagService
 from mockito import *
 import crochet
 import pixelated.reactor_manager as reactor_manager
-import test.adapter.test_helper as test_helper
-import json
+import test.support.test_helper as test_helper
 import pixelated.adapter.pixelated_mail
-import sys
 import os
 
 

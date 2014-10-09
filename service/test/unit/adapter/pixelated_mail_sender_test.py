@@ -14,10 +14,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
+
 from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.pixelated_mail_sender import PixelatedMailSender
 from mockito import *
-import test_helper
+from test.support import test_helper
 
 
 class PixelatedMailSenderTest(unittest.TestCase):

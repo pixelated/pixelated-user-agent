@@ -14,15 +14,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
-import os
 
+import os
 import pixelated.support.date
-import test_helper
 from pixelated.adapter.pixelated_mail import PixelatedMail, InputMail
 from pixelated.adapter.tag_service import TagService
 from pixelated.adapter.tag_index import TagIndex
 from pixelated.adapter.tag import Tag
 from mockito import *
+from test.support import test_helper
 
 
 class TestPixelatedMail(unittest.TestCase):

@@ -13,26 +13,3 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import unittest
-from integration import MailBuilder, SoledadTestBase
-
-
-class MarkAsReadTest(unittest.TestCase, SoledadTestBase):
-
-    def setUp(self):
-        self.setup_soledad()
-
-    def tearDown(self):
-        self.teardown_soledad()
-
-    def test_mark_as_read(self):
-        input_mail = MailBuilder().build_input_mail()
-        self.pixelated_mailboxes.inbox().add(input_mail)
-
-        mails = self.get_mails_by_tag('inbox')
-        self.assertFalse('read' in mails[0].status)
-
-        self.mark_as_read(input_mail.ident)
-
-        mails = self.get_mails_by_tag('inbox')
-        self.assertTrue('read' in mails[0].status)

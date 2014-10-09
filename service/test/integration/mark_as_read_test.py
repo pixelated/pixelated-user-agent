@@ -14,10 +14,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
-from integration import MailBuilder, SoledadTestBase
+from test.support.integration_helper import MailBuilder, SoledadTestBase
 
 
-class DeleteMailTest(unittest.TestCase, SoledadTestBase):
+class MarkAsReadTest(unittest.TestCase, SoledadTestBase):
 
     def setUp(self):
         self.setup_soledad()
@@ -25,16 +25,14 @@ class DeleteMailTest(unittest.TestCase, SoledadTestBase):
     def tearDown(self):
         self.teardown_soledad()
 
-    def test_move_mail_to_trash_when_deleting(self):
-        mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        self.pixelated_mailboxes.inbox().add(mail)
+    def test_mark_as_read(self):
+        input_mail = MailBuilder().build_input_mail()
+        self.pixelated_mailboxes.inbox().add(input_mail)
 
-        inbox_mails = self.get_mails_by_tag('inbox')
-        self.assertEquals(1, len(inbox_mails))
+        mails = self.get_mails_by_tag('inbox')
+        self.assertFalse('read' in mails[0].status)
 
-        self.delete_mail(mail.ident)
+        self.mark_as_read(input_mail.ident)
 
-        inbox_mails = self.get_mails_by_tag('inbox')
-        self.assertEquals(0, len(inbox_mails))
-        trash_mails = self.get_mails_by_tag('trash')
-        self.assertEquals(1, len(trash_mails))
+        mails = self.get_mails_by_tag('inbox')
+        self.assertTrue('read' in mails[0].status)

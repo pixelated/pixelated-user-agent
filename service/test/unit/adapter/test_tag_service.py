@@ -16,11 +16,12 @@
 
 import unittest
 import tempfile
-import test_helper
+
 from pixelated.adapter.tag import Tag
 from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.tag_index import TagIndex
 from pixelated.adapter.tag_service import TagService
+from test.support import test_helper
 
 
 class TagServiceTest(unittest.TestCase):

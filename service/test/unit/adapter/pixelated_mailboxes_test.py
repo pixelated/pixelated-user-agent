@@ -15,13 +15,12 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
 
-from test.adapter import test_helper
+from test.support import test_helper
 from mockito import *
 import pixelated.adapter.soledad_querier
 
 querier = mock()
-global querier
-pixelated.adapter.soledad_querier.get_soledad_querier_instance = lambda x, y: querier
+when(pixelated.adapter.soledad_querier).get_soledad_querier_instance().thenReturn(querier)
 
 from pixelated.adapter.pixelated_mail import InputMail
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
