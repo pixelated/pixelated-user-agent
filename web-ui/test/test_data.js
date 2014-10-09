@@ -22,17 +22,19 @@ define(function() {
   var rawSentMail = {
     'header':{'to':'mariane_dach@davis.info', 'cc': 'duda@la.lu', 'from':'afton_braun@botsford.biz','subject':'Consectetur sit omnis veniam blanditiis.','date':'2014-06-17T11:56:53-03:00'},
     'ident':9359,
-    'tags':['sent','photography','sky'],
+    'tags':['photography','sky'],
     'status':['read'],
-    'body':'Illum eos nihil commodi voluptas. Velit consequatur odio quibusdam. Beatae aliquam hic quos.'
+    'body':'Illum eos nihil commodi voluptas. Velit consequatur odio quibusdam. Beatae aliquam hic quos.',
+    'mailbox': 'SENT'
   };
 
   var rawDraftMail = {
     'header':{'to':'mariane_dach@davis.info','from':'afton_braun@botsford.biz','subject':'Consectetur sit omnis veniam blanditiis.','date':'2014-06-17T11:56:53-03:00'},
     'ident':9360,
-    'tags':['drafts','photography','sky'],
+    'tags':['photography','sky'],
     'status':['read'],
-    'body':'Illum eos nihil commodi voluptas. Velit consequatur odio quibusdam. Beatae aliquam hic quos.'
+    'body':'Illum eos nihil commodi voluptas. Velit consequatur odio quibusdam. Beatae aliquam hic quos.',
+    'mailbox': 'DRAFTS'
   };
 
   var rawRecievedMail = {

@@ -277,6 +277,7 @@ class PixelatedMail:
             'header': {k.lower(): v for k, v in self.headers.items()},
             'ident': self.ident,
             'tags': list(self.tags),
+            'mailbox': self.mailbox_name,
             'status': statuses,
             'security_casing': self.security_casing,
             'body': self.body

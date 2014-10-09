@@ -15,33 +15,18 @@ describeMixin('mixins/with_mail_edit_base', function () {
   });
 
   describe('initialization', function() {
-    it('should enable send button when rendering with recipients', function() {
-      var enableSendButtonEvent = spyOnEvent(document, Pixelated.events.ui.sendbutton.enable);
+
+    it('should warn send button of existing recipients', function () {
+      var recipientsUpdatedEvent = spyOnEvent(document, Pixelated.events.ui.recipients.updated);
+
       this.component.render(function() {}, {
         recipients: { to: ['foobar@mail.com'], cc: [] }
       });
-      expect(enableSendButtonEvent).toHaveBeenTriggeredOn(document);
 
-      enableSendButtonEvent = spyOnEvent(document, Pixelated.events.ui.sendbutton.enable);
-      this.component.render(function() {}, {
-        recipients: { to: ['foobar@mail.com'], cc: undefined }
-      });
-      expect(enableSendButtonEvent).toHaveBeenTriggeredOn(document);
+      expect(recipientsUpdatedEvent).toHaveBeenTriggeredOnAndWith(document, { newRecipients: ['foobar@mail.com'], name: 'to'});
+      expect(recipientsUpdatedEvent).not.toHaveBeenTriggeredOnAndWith(document, { newRecipients: [], name: 'cc'});
     });
 
-    it('should not enable send button when rendering without recipients', function() {
-      var enableSendButtonEvent = spyOnEvent(document, Pixelated.events.ui.sendbutton.enable);
-      this.component.render(function() {}, {
-        recipients: { to: [], cc: [] }
-      });
-      expect(enableSendButtonEvent).not.toHaveBeenTriggeredOn(document);
-
-      enableSendButtonEvent = spyOnEvent(document, Pixelated.events.ui.sendbutton.enable);
-      this.component.render(function() {}, {
-        recipients: { to: undefined, cc: undefined }
-      });
-      expect(enableSendButtonEvent).not.toHaveBeenTriggeredOn(document);
-    });
   });
 
   describe('when the user is typing in subject or body', function() {

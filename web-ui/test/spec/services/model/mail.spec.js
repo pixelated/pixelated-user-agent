@@ -9,7 +9,8 @@ require(['services/model/mail'], function (Mail) {
       it('returns the "to" and "cc" addresses if the mail was sent', function () {
         var mail = Mail.create({
           header: { to: ['a@b.c', 'e@f.g'], cc: ['x@x.x'] },
-          tags: ['sent']
+          tags: [],
+          mailbox: 'SENT'
         });
 
         var addresses = mail.replyToAddress();

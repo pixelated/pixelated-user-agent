@@ -59,6 +59,7 @@ define(
       };
 
       function thereAreRecipientsToDisplay() {
+
         var allRecipients = _.chain(this.attr.recipientValues).
           values().
           flatten().
@@ -67,6 +68,20 @@ define(
 
         return !_.isEmpty(allRecipients);
       }
+
+      this.warnSendButtonOfRecipients = function () {
+        if (thereAreRecipientsToDisplay.call(this)) {
+          _.forOwn(this.attr.recipientValues, function (recipients, recipientsType) {
+            if (!_.isUndefined(recipients) && !_.isEmpty(recipients)) {
+              var recipientsUpdatedData = {
+                newRecipients: recipients,
+                name: recipientsType
+              };
+              this.trigger(document, events.ui.recipients.updated, recipientsUpdatedData);
+            }
+          }.bind(this));
+        }
+      };
 
       this.render = function(template, context) {
         this.$node.html(template(context));
@@ -81,9 +96,7 @@ define(
         this.on(this.select('trashButton'), 'click', this.trashMail);
         SendButton.attachTo(this.select('sendButton'));
 
-        if (thereAreRecipientsToDisplay.call(this)) {
-          this.trigger(document, events.ui.sendbutton.enable);
-        }
+        this.warnSendButtonOfRecipients();
       };
 
       this.enableAutoSave = function () {
@@ -172,7 +185,6 @@ define(
         return !_.isEmpty(_.flatten(_.values(this.attr.recipientValues)));
       };
 
-      // Validators and formatters
       function allRecipientsAreEmails(mail) {
         var allRecipients = mail.header.to.concat(mail.header.cc).concat(mail.header.bcc);
         return _.isEmpty(allRecipients) ? false : _.all(allRecipients, emailFormatChecker);
