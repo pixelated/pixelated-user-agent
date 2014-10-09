@@ -14,6 +14,31 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from selenium import webdriver
+from test.support.integration_helper import SoledadTestBase
+import time
+import pixelated.user_agent
+import multiprocessing
+
+
+def before_all(context):
+    context.soledad_test_base = SoledadTestBase()
+    context.soledad_test_base.setup_soledad()
+
+    context.mailboxes = context.soledad_test_base.pixelated_mailboxes
+    context.app = pixelated.user_agent.app
+    context.app.mail_service = context.soledad_test_base.mail_service
+
+    worker = lambda app, port: pixelated.user_agent.app.run(port=4567, use_reloader=False)
+    context._process = multiprocessing.Process(target=worker, args=(context.app, 4567))
+    context._process.start()
+
+    # we must wait the server start listening
+    time.sleep(1)
+
+
+def after_all(context):
+    context.soledad_test_base.teardown_soledad()
+    context._process.terminate()
 
 
 def before_feature(context, feature):
