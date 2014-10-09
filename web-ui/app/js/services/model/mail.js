@@ -23,11 +23,11 @@ define(['helpers/contenttype'],
   var asMail = (function () {
 
     function isSentMail() {
-      return this.mailbox == 'SENT';
+      return this.mailbox === 'SENT';
     }
 
     function isDraftMail() {
-      return  this.mailbox == 'DRAFTS';
+      return  this.mailbox === 'DRAFTS';
     }
 
     function normalize(recipients) {
