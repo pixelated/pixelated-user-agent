@@ -80,7 +80,7 @@ define(
         this.trigger(document, events.search.highlightResults, {where: '.subjectArea'});
         this.trigger(document, events.search.highlightResults, {where: '.msg-header .recipients'});
 
-        this.attachTagCompletion();
+        this.attachTagCompletion(this.attr.mail);
 
         this.select('tags').on('click', function (event) {
           this.removeTag($(event.target).data('tag'));

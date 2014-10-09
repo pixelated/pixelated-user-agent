@@ -26,9 +26,14 @@ define(
         this.trigger(document, events.mail.tags.update, {ident: mail.ident, tags: tags});
       };
 
-      this.attachTagCompletion = function() {
+      this.attachTagCompletion = function(mail) {
         if(!features.isEnabled('tags')) {
           return;
+        }
+
+        this.tagFilter = function (parsedResult) {
+            var filtered = _.filter(parsedResult, function (tag) {return ! _.contains(mail.tags, tag.name); });
+            return _.map(filtered, function(tag) { return {value: Handlebars.Utils.escapeExpression(tag.name)}; });
         }
 
         this.tagCompleter = new Bloodhound({
@@ -36,7 +41,7 @@ define(
           queryTokenizer: function(q) { return [q.trim()]; },
           remote: {
             url: '/tags?q=%QUERY',
-            filter: function(pr) { return _.map(pr, function(pp) { return {value: Handlebars.Utils.escapeExpression(pp.name)}; }); }
+            filter: this.tagFilter
           }
         });
 
