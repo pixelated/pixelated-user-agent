@@ -242,6 +242,9 @@ class PixelatedMail:
     def get_bcc(self):
         return self.headers['Bcc']
 
+    def get_date(self):
+        return self.headers['Date']
+
     def remove_all_tags(self):
         self.update_tags(set([]))
 

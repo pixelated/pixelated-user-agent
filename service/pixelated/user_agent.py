@@ -37,6 +37,7 @@ from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.tag_service import TagService
 from pixelated.adapter.draft_service import DraftService
+import dateutil.parser as dateparser
 
 static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "web-ui", "app"))
 
@@ -96,6 +97,8 @@ def update_draft():
 def mails():
     mail_ids = search_engine.search(request.args.get('q'))
     mails = mail_service.mails(mail_ids)
+
+    mails = sorted(mails, key=lambda mail: dateparser.parse(mail.get_date()), reverse=True)
 
     response = {
         "stats": {
