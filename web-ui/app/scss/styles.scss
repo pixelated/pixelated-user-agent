@@ -209,18 +209,20 @@ section {
       }
     }
     #search-trigger {
+      padding: 5px;
+      padding-left: 0;
       input {
         margin: 0;
         padding: 8px 30px;
-        color: #EEE;
-        background: lighten(#333, 10%);
+        color: $secondary;
+        background: white;
         border: none;
         transition: background-color 150ms ease-out;
         &:hover {
-          background: lighten(#333, 12%);
+          background: darken(white, 2%);
         }
         &:focus {
-          background: lighten(#333, 20%);
+          background: darken(white, 5%);
         }
       }
       &:before {
