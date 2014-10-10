@@ -236,9 +236,11 @@ section {
   }
 
   &#left-pane {
+    background-color: $secondary;
+    color: white;
     nav {
       padding-bottom: 25px;
-      border-right: 1px solid $contrast;
+      border-right: 1px solid lighten($secondary, 10%);
       ul#default-tag-list, #custom-tag-list {
         li {
           transition: background-color 150ms ease-out;
@@ -246,10 +248,12 @@ section {
           cursor: pointer;
           &:hover {
             background: #CCC;
+            color: $secondary;
           }
           &.selected {
             font-weight: bold;
             background: $contrast;
+            color: $secondary;
           }
         }
       }
@@ -302,12 +306,13 @@ section {
       }
 
       h3 {
+        color: white;
         text-transform: uppercase;
         font-size: 0.6em;
         padding: 5px;
         font-weight: 600;
         margin: 0 10px;
-        border-bottom: 1px dotted #DDD;
+        border-bottom: 1px dotted lighten($secondary, 10%);
       }
     }
   }
@@ -331,10 +336,10 @@ section {
 }
 
 .unread-count {
-  @include mail-count($error);
+  @include mail-count($secondary_callout);
 }
 .total-count {
-  @include mail-count($total_count_bg);
+  @include mail-count(#999);
 }
 
 
@@ -426,19 +431,23 @@ button {
   }
 }
 
+#menu {
+  padding-top: 55px;
+}
+
 .collapsed-nav {
   width: 50px;
   position: absolute;
   z-index: 2;
   height: 100vh;
-  background: #FFF;
-  border-right: 1px solid darken($contrast, 20%);
+  background: $secondary;
   .left-off-canvas-toggle {
+    color: white;
     text-align: center;
     display: block;
     left: 0;
     padding: 10px;
-    background: #FFF;
+    background: $secondary;
     top: 0;
     z-index: 10000;
     position: relative;
@@ -451,9 +460,11 @@ button {
       opacity: 0.8;
       &.selected {
         background: $contrast;
-        color: #212121;
         opacity: 1;
         cursor: default;
+        a {
+          color: $secondary;
+        }
       }
       @include searching(6px, 26px, #666, 0.9em);
       a {
@@ -461,11 +472,11 @@ button {
         position: relative;
         font-size: 1.4em;
         padding: 5px;
-        color: #555;
+        color: white;
         text-align: center;
         &:hover {
           background: darken($contrast, 10%);
-          color: #333;
+          color: $secondary;
           @include btn-transition;
         }
         &[title]:hover:after {
@@ -480,7 +491,7 @@ button {
         left: 0;
         border: 1px solid #FFF;
         position: absolute;
-        opacity: 0.88;
+        opacity: 0.95;
       }
       .total-count {
         background: #999;
