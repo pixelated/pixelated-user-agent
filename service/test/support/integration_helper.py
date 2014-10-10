@@ -114,7 +114,7 @@ class SoledadTestBase:
 
         # making sure soledad test folder is not there
         if (os.path.isdir(soledad_test_folder)):
-            os.rmdir(soledad_test_folder)
+            shutil.rmtree(soledad_test_folder)
 
         self.soledad = initialize_soledad(tempdir=soledad_test_folder)
         self.mail_address = "test@pixelated.org"
