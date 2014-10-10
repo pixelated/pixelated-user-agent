@@ -60,7 +60,7 @@ class SearchEngine(object):
         query = query.replace('in:all', '*')
         with self._index.searcher() as searcher:
             query = QueryParser('body', self._index.schema).parse(query)
-            results = searcher.search(query)
+            results = searcher.search(query, limit=100)
             return [mail['ident'] for mail in results]
 
     def remove_from_index(self, mail_id):
