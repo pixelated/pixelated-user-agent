@@ -80,7 +80,7 @@
       height: 75px;
       position: relative;
       padding: 12px 10px;
-      background: lighten($contrast, 2%);
+      background: $contrast;
       border-bottom: 1px solid white;
       cursor: pointer;
       font-weight: bold;
@@ -134,7 +134,6 @@
       }
 
       &.status-read {
-        background: $contrast;
         a {
           font-weight: normal;
           color: #555;
