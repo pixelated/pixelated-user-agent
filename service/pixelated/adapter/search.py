@@ -7,7 +7,7 @@ from whoosh.qparser import QueryParser
 class SearchEngine(object):
     __slots__ = '_index'
 
-    INDEX_FOLDER = '~/.leap/search_index'
+    INDEX_FOLDER = os.path.join(os.environ['HOME'], '.leap', 'search_index')
 
     def __init__(self):
         if not os.path.exists(self.INDEX_FOLDER):
