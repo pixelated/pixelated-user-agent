@@ -1,12 +1,17 @@
+import os
+import whoosh.index
 from whoosh.fields import *
-from whoosh.filedb.filestore import RamStorage
 from whoosh.qparser import QueryParser
 
 
 class SearchEngine(object):
     __slots__ = '_index'
 
+    INDEX_FOLDER = '~/.leap/search_index'
+
     def __init__(self):
+        if not os.path.exists(self.INDEX_FOLDER):
+            os.makedirs(self.INDEX_FOLDER)
         self._index = self._create_index()
 
     def _mail_schema(self):
@@ -21,12 +26,11 @@ class SearchEngine(object):
             tag=KEYWORD(stored=False, commas=True))
 
     def _create_index(self):
-        return RamStorage().create_index(self._mail_schema(), indexname='mails')
+        return whoosh.index.create_in(self.INDEX_FOLDER, self._mail_schema(), indexname='mails')
 
     def index_mail(self, mail):
-        writer = self._index.writer()
-        self._index_mail(writer, mail)
-        writer.commit()
+        with self._index.writer() as writer:
+            self._index_mail(writer, mail)
 
     def _index_mail(self, writer, mail):
         mdict = mail.as_dict()
@@ -43,16 +47,12 @@ class SearchEngine(object):
             'body': unicode(mdict['body']),
             'ident': unicode(mdict['ident'])
         }
-
         writer.update_document(**index_data)
 
     def index_mails(self, mails):
-        writer = self._index.writer()
-        try:
+        with self._index.writer() as writer:
             for mail in mails:
                 self._index_mail(writer, mail)
-        finally:
-            writer.commit()
 
     def search(self, query):
         query = query.replace('\"', '')

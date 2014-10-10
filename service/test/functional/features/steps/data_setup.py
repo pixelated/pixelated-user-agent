@@ -19,5 +19,5 @@ from test.support.integration_helper import MailBuilder
 
 @given('I have a mail in my inbox')
 def add_mail_impl(context):
-    mail = MailBuilder().build_input_mail()
-    context.mailboxes.inbox().add(mail)
+    input_mail = MailBuilder().build_input_mail()
+    context.soledad_test_base.add_mail_to_inbox(input_mail)

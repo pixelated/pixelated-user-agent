@@ -112,6 +112,10 @@ class SoledadTestBase:
     def setup_soledad(self):
         unstub()  # making sure all mocks from other tests are reset
 
+        # making sure soledad test folder is not there
+        if (os.path.isdir(soledad_test_folder)):
+            os.rmdir(soledad_test_folder)
+
         self.soledad = initialize_soledad(tempdir=soledad_test_folder)
         self.mail_address = "test@pixelated.org"
 
@@ -129,7 +133,10 @@ class SoledadTestBase:
         self.tag_service = TagService(self.tag_index)
         self.draft_service = DraftService(self.pixelated_mailboxes)
         self.mail_service = MailService(self.pixelated_mailboxes, self.mail_sender, self.tag_service)
+
+        SearchEngine.INDEX_FOLDER = soledad_test_folder + '/search_index'
         self.search_engine = SearchEngine()
+
         self.search_engine.index_mails(self.mail_service.all_mails())
 
         pixelated.user_agent.mail_service = self.mail_service
