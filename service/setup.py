@@ -84,15 +84,6 @@ setup(name='pixelated-user-agent',
           'gunicorn',
           'crochet'
       ],
-      tests_require=[
-          'PyHamcrest==1.8.0',
-          'behave==1.2.4',
-          'selenium==2.42.1',
-          'nose',
-          'mock',
-          'httmock',
-          'mockito'
-      ],
       entry_points={
           'console_scripts': [
               'pixelated-user-agent = pixelated.user_agent:setup'
