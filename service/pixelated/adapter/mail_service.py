@@ -54,6 +54,9 @@ class MailService:
     def mark_as_read(self, mail_id):
         return self.mail(mail_id).mark_as_read()
 
+    def mark_as_unread(self, mail_id):
+        return self.mail(mail_id).mark_as_unread()
+
     def tags_for_thread(self, thread):
         raise NotImplementedError()
 

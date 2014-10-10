@@ -37,6 +37,11 @@ class Status:
     def from_flags(cls, flags):
         return set(cls.from_flag(flag) for flag in flags if flag in cls.LEAP_FLAGS_STATUSES.keys())
 
+    @classmethod
+    def to_flags(cls, statuses):
+        statuses_to_flags = dict(zip(cls.LEAP_FLAGS_STATUSES.values(), cls.LEAP_FLAGS_STATUSES.keys()))
+        return [statuses_to_flags[status] for status in statuses]
+
     def __init__(self, name):
         self.name = name
         self.ident = name.__hash__()

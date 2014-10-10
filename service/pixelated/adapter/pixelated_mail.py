@@ -93,7 +93,7 @@ class InputMail:
         fd[fields.MULTIPART_KEY] = True
         fd[fields.RECENT_KEY] = True
         fd[fields.TYPE_KEY] = fields.TYPE_FLAGS_VAL
-        fd[fields.FLAGS_KEY] = ["\\Recent"]
+        fd[fields.FLAGS_KEY] = Status.to_flags([status.name for status in self.status])
         self._fd = fd
         return fd
 
@@ -258,6 +258,11 @@ class PixelatedMail:
 
     def mark_as_read(self):
         self.fdoc.content['flags'].append(Status.PixelatedStatus.SEEN)
+        self.save()
+        return self
+
+    def mark_as_unread(self):
+        self.fdoc.content['flags'].remove(Status.PixelatedStatus.SEEN)
         self.save()
         return self
 

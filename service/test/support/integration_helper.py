@@ -22,6 +22,7 @@ from mock import Mock
 import shutil
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.search import SearchEngine
+from pixelated.adapter.status import Status
 from pixelated.adapter.tag_index import TagIndex
 from pixelated.adapter.tag_service import TagService
 from pixelated.adapter.draft_service import DraftService
@@ -82,7 +83,8 @@ class MailBuilder:
                 'bcc': ['recipient@bcc.com'],
                 'subject': 'Hi! This the subject'
             },
-            'body': "Hello,\nThis is the body of this message\n\nRegards,\n\n--\nPixelated.\n"
+            'body': "Hello,\nThis is the body of this message\n\nRegards,\n\n--\nPixelated.\n",
+            'status': []
         }
 
     def with_body(self, body):
@@ -91,6 +93,10 @@ class MailBuilder:
 
     def with_subject(self, subject):
         self.mail['header']['subject'] = subject
+        return self
+
+    def with_status(self, status):
+        self.mail['status'].append(Status('read'))
         return self
 
     def with_ident(self, ident):
@@ -165,6 +171,9 @@ class SoledadTestBase:
 
     def mark_as_read(self, mail_ident):
         self.app.post('/mail/' + mail_ident + '/read', content_type="application/json")
+
+    def mark_as_unread(self, mail_ident):
+        self.app.post('/mail/' + mail_ident + '/unread', content_type="application/json")
 
     def add_mail_to_inbox(self, input_mail):
         mail = self.pixelated_mailboxes.inbox().add(input_mail)

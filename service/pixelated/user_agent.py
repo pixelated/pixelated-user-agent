@@ -166,6 +166,20 @@ def mark_mail_as_read(mail_id):
     return ""
 
 
+@app.route('/mail/<mail_id>/unread', methods=['POST'])
+def mark_mail_as_unread(mail_id):
+    mail_service.mark_as_unread(mail_id)
+    return ""
+
+
+@app.route('/mails/unread', methods=['POST'])
+def mark_many_mail_unread():
+    idents = json.loads(request.form['idents'])
+    for ident in idents:
+        mail_service.mark_as_unread(ident)
+    return ""
+
+
 @app.route('/contacts')
 def contacts():
     pass
