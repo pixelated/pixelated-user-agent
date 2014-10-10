@@ -47,7 +47,7 @@
       input[type=button] {
         margin: 2px;
         padding: 4px 10px;
-        background: lighten($contrast, 5%);
+        background: lighten($contrast, 70%);
         color: #333;
         text-transform: uppercase;
         font-weight: 400;
@@ -60,7 +60,7 @@
           opacity: 1;
         }
         &[disabled=disabled] {
-          opacity: 0.4;
+          opacity: 0.5;
           cursor: default;
         }
       }
@@ -188,7 +188,7 @@ section {
           margin-right: -5px;
           a {
             transition: background-color 150ms ease-out;
-            background: darken($top_pane, 10%);
+            background: lighten($top_pane, 10%);
             color: #FFF;
             font-size: 1.5em;
             display: block;
