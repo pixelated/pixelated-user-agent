@@ -49,22 +49,8 @@ class UserAgentTest(unittest.TestCase):
     def tearDown(self):
         unstub()
 
-    def test_create_or_send_draft_should_create_draft_if_mail_has_no_ident(self):
-        self.input_mail = self.draft()
-
-        self.app.post('/mails', data='{}', content_type="application/json")
-
-        verify(self.draft_service).create_draft(self.input_mail)
-
-    def test_create_or_send_draft_should_send_draft_if_mail_has_ident(self):
-        self.input_mail = self.draft()
-
-        self.app.post('/mails', data='{"ident":1}', content_type="application/json")
-
-        verify(self.mail_service).send(1, self.input_mail)
-
     def test_sending_mail_return_sent_mail_data_when_send_succeeds(self):
-        self.input_mail = self.draft()
+        self.input_mail = test_helper.input_mail()
         when(self.mail_service).send(1, self.input_mail).thenReturn(self.input_mail)
         self.input_mail.as_dict = lambda: {'header': {'from': 'a@a.a', 'to': 'b@b.b'},
                                            'ident': 1,
@@ -79,7 +65,7 @@ class UserAgentTest(unittest.TestCase):
         self.assertEqual(result.data, '{"status": [], "body": "email body", "ident": 1, "tags": [], "header": {"to": "b@b.b", "from": "a@a.a"}, "security_casing": {}}')
 
     def test_sending_mail_return_error_message_when_send_fails(self):
-        self.input_mail = self.draft()
+        self.input_mail = test_helper.input_mail()
 
         def send_that_throws_exception(id, mail):
             raise Exception('email sending failed', 'more information of error')
@@ -90,18 +76,6 @@ class UserAgentTest(unittest.TestCase):
 
         self.assertEqual(result.status_code, 500)
         self.assertEqual(result.data, '{"message": "email sending failed\\nmore information of error"}')
-
-    def test_update_draft(self):
-        self.input_mail = self.draft()
-
-        when(self.draft_service).update_draft(1, self.input_mail).thenReturn(self.input_mail)
-
-        self.app.put('/mails', data='{"ident":1}', content_type="application/json")
-
-        verify(self.draft_service).update_draft(1, self.input_mail)
-
-    def draft(self):
-        return test_helper.input_mail()
 
     def test_that_default_config_file_is_home_dot_pixelated(self):
         orig_config = pixelated.user_agent.app.config
