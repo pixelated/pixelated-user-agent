@@ -60,10 +60,8 @@ define(
       };
 
       this.saveMail = function(mail) {
-        var method = (mail.ident === '') ? 'POST' : 'PUT';
-
         return $.ajax(this.attr.mailsResource, {
-          type: method,
+          type: 'PUT',
           dataType: 'json',
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify(mail)
