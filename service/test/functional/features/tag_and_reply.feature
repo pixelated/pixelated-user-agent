@@ -16,10 +16,9 @@
 
 Feature: tagging and replying
 
-  @wip
   Scenario: User tags a mail, replies to it then checks that mail is in the right tag
+    Given I have a mail in my inbox
     When I open the first mail in the 'inbox'
-    Then that email has the 'inbox' tag
     When I add the tag 'website' to that mail
     Then I see that mail under the 'website' tag
     And I open the mail I previously tagged
