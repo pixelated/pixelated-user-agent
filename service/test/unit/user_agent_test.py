@@ -106,31 +106,3 @@ class UserAgentTest(unittest.TestCase):
             verify(pixelated.user_agent.app.config).from_pyfile('/tmp/some/config/file')
         finally:
             pixelated.user_agent.app.config = orig_config
-
-    def test_that_tags_returns_all_tags(self):
-        when(self.tag_service).all_tags().thenReturn(TagService.SPECIAL_TAGS)
-
-        response = self.app.get('/tags')
-
-        self.assertEqual(200, response.status_code)
-        expected = json.dumps([tag.as_dict() for tag in TagService.SPECIAL_TAGS])
-        self.assertEqual(expected, response.data)
-
-    def test_that_tags_are_filtered_by_query(self):
-        when(self.tag_service).all_tags().thenReturn(TagService.SPECIAL_TAGS)
-
-        response = self.app.get('/tags?q=dr')
-
-        self.assertEqual(200, response.status_code)
-        expected = json.dumps([Tag('drafts', True).as_dict()])
-        self.assertEqual(expected, response.data)
-
-    def test_that_default_tags_are_ignorable(self):
-        when(self.tag_service).all_tags().thenReturn(TagService.SPECIAL_TAGS)
-        when(self.tag_service).all_custom_tags().thenReturn([Tag('test')])
-
-        response = self.app.get('/tags?skipDefaultTags=true')
-
-        self.assertEqual(200, response.status_code)
-        expected = json.dumps([Tag('test').as_dict()])
-        self.assertEqual(expected, response.data)

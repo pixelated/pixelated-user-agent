@@ -32,33 +32,3 @@ class TagService:
             cls.instance = TagService()
         return cls.instance
 
-    def __init__(self, tag_index=TagIndex()):
-        self.tag_index = tag_index
-
-    def load_index(self, mails):
-        if self.tag_index.empty():
-            for mail in mails:
-                self.notify_tags_updated(mail.tags, [], mail.ident)
-        for tag in self.SPECIAL_TAGS:
-            self.tag_index.add(tag)
-
-    def notify_tags_updated(self, added_tags, removed_tags, mail_ident):
-        for removed_tag in removed_tags:
-            tag = self.tag_index.get(removed_tag)
-            if not tag:
-                continue
-            tag.decrement(mail_ident)
-            if tag.total == 0:
-                self.tag_index.remove(tag.name)
-            else:
-                self.tag_index.set(tag)
-        for added_tag in added_tags:
-            tag = self.tag_index.get(added_tag) or self.tag_index.add(Tag(added_tag))
-            tag.increment(mail_ident)
-            self.tag_index.set(tag)
-
-    def all_tags(self):
-        return self.tag_index.values().union(self.SPECIAL_TAGS)
-
-    def all_custom_tags(self):
-        return self.tag_index.values().difference(self.SPECIAL_TAGS)

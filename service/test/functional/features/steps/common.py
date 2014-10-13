@@ -66,6 +66,10 @@ def find_element_by_xpath(context, xpath):
     return context.browser.find_element_by_xpath(xpath)
 
 
+def find_element_by_id(context, id):
+    return context.browser.find_element_by_id(id)
+
+
 def find_element_by_css_selector(context, css_selector):
     return context.browser.find_element_by_css_selector(css_selector)
 

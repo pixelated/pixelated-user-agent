@@ -18,8 +18,6 @@ import unittest
 import os
 import pixelated.support.date
 from pixelated.adapter.pixelated_mail import PixelatedMail, InputMail
-from pixelated.adapter.tag_service import TagService
-from pixelated.adapter.tag_index import TagIndex
 from pixelated.adapter.tag import Tag
 from mockito import *
 from test.support import test_helper
@@ -71,17 +69,6 @@ class TestPixelatedMail(unittest.TestCase):
         mail.mark_as_not_recent()
 
         self.assertEquals(mail.fdoc.content['flags'], [])
-
-    def test_update_tags_notifies_tag_service(self):
-        db_path = '/tmp/test_update_tags_notifies_tag_service'
-        TagService.instance = TagService(TagIndex(db_path))
-
-        mail = PixelatedMail.from_soledad(*test_helper.leap_mail(), soledad_querier=self.querier)
-
-        mail.update_tags({'new_tag'})
-        self.assertIn(Tag('new_tag'), mail.tag_service.all_tags())
-
-        os.remove(db_path + '.db')
 
 
 class InputMailTest(unittest.TestCase):

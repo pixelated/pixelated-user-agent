@@ -25,7 +25,7 @@ class PixelatedMailboxTest(unittest.TestCase):
     def setUp(self):
         self.tag_service = mock()
         self.querier = mock()
-        self.mailbox = PixelatedMailbox('INBOX', self.querier, tag_service=self.tag_service)
+        self.mailbox = PixelatedMailbox('INBOX', self.querier)
 
     def test_remove_message_from_mailbox(self):
         mail = PixelatedMail.from_soledad(*test_helper.leap_mail(), soledad_querier=self.querier)

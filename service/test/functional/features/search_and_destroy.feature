@@ -14,15 +14,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-Feature: search html mail and destroy
+#Feature: search html mail and destroy
 
-  @wip
-  Scenario: User searches for a mail and deletes it
-    When I search for a mail with the words "this is a html mail"
-    When I open the first mail in the mail list
-    Then I see one or more mails in the search results
-    Then I see if the mail has html content
-    When I try to delete the first mail
-    # Then I learn that the mail was deleted
-    When I select the tag 'trash'
-    Then the deleted mail is there
+#  @wip
+#  Scenario: User searches for a mail and deletes it
+#    When I search for a mail with the words "this is a html mail"
+#    When I open the first mail in the mail list
+#    Then I see one or more mails in the search results
+#    Then I see if the mail has html content
+#    When I try to delete the first mail
+#    # Then I learn that the mail was deleted
+#    When I select the tag 'trash'
+#    Then the deleted mail is there

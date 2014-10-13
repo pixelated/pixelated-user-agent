@@ -19,7 +19,6 @@ from leap.mail.imap.fields import fields
 import leap.mail.walk as walk
 import dateutil.parser as dateparser
 from pixelated.adapter.status import Status
-from pixelated.adapter.tag_service import TagService
 import pixelated.support.date
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
@@ -152,9 +151,6 @@ class InputMail:
 
 class PixelatedMail:
 
-    def __init__(self, tag_service=TagService.get_instance()):
-        self.tag_service = tag_service
-
     @staticmethod
     def from_soledad(fdoc, hdoc, bdoc, soledad_querier=None):
         mail = PixelatedMail()
@@ -194,7 +190,11 @@ class PixelatedMail:
 
     @property
     def status(self):
-        return Status.from_flags(self.fdoc.content.get('flags'))
+        return Status.from_flags(self._flags)
+
+    @property
+    def _flags(self):
+        return self.fdoc.content.get('flags')
 
     @property
     def security_casing(self):
@@ -249,11 +249,7 @@ class PixelatedMail:
         self.update_tags(set([]))
 
     def update_tags(self, tags):
-        old_tags = self.tags
         self._persist_mail_tags(tags)
-        removed = old_tags.difference(tags)
-        added = tags.difference(old_tags)
-        self.tag_service.notify_tags_updated(added, removed, self.ident)
         return self.tags
 
     def mark_as_read(self):

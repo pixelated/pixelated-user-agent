@@ -35,7 +35,6 @@ from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.pixelated_mail import PixelatedMail, InputMail
 from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.adapter.search import SearchEngine
-from pixelated.adapter.tag_service import TagService
 from pixelated.adapter.draft_service import DraftService
 from pixelated.adapter.listener import MailboxListener
 
@@ -101,7 +100,6 @@ def update_draft():
 def mails():
     mail_ids = search_engine.search(request.args.get('q'))
     mails = mail_service.mails(mail_ids)
-
     mails = sorted(mails, key=lambda mail: dateparser.parse(mail.get_date()), reverse=True)
 
     response = {
@@ -135,16 +133,9 @@ def delete_mails():
 @app.route('/tags')
 def tags():
     query = request.args.get('q')
-    skipDefaultTags = request.args.get('skipDefaultTags')
-
-    all_tags = tag_service.all_custom_tags() if skipDefaultTags else tag_service.all_tags()
-
-    if query:
-        tags = [tag for tag in all_tags if bool(re.match(query, tag.name, re.IGNORECASE))]
-    else:
-        tags = all_tags
-
-    return respond_json([tag.as_dict() for tag in tags])
+    skip_default_tags = request.args.get('skipDefaultTags')
+    tags = search_engine.tags(query=query, skip_default_tags=skip_default_tags)
+    return respond_json(tags)
 
 
 @app.route('/mail/<mail_id>')
@@ -226,8 +217,6 @@ def start_user_agent(debug_enabled):
     search_engine.index_mails(mail_service.all_mails())
     global draft_service
     draft_service = DraftService(pixelated_mailboxes)
-    global tag_service
-    tag_service = TagService.get_instance()
 
     app.run(host=app.config['HOST'], debug=debug_enabled,
             port=app.config['PORT'], use_reloader=False)

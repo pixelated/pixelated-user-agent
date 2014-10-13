@@ -14,14 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from pixelated.adapter.tag_service import TagService
 from pixelated.adapter.soledad_querier import SoledadQuerier
 
 
 class PixelatedMailbox:
 
-    def __init__(self, mailbox_name, querier, tag_service=TagService.get_instance()):
-        self.tag_service = tag_service
+    def __init__(self, mailbox_name, querier):
         self.mailbox_name = mailbox_name
         self.mailbox_tag = mailbox_name.lower()
         self.querier = querier
