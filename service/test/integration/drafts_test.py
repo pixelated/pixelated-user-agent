@@ -25,18 +25,9 @@ class DraftsTest(unittest.TestCase, SoledadTestBase):
     def tearDown(self):
         self.teardown_soledad()
 
-    def test_post_creates_a_draft_when_data_has_no_ident(self):
-        mail = MailBuilder().with_subject('A new draft').build_json()
-
-        self.post_mail(mail)
-        mails = self.get_mails_by_tag('drafts')
-
-        self.assertEquals('A new draft', mails[0].subject)
-
-    def test_post_sends_mail_and_deletes_previous_draft_when_data_has_ident(self):
+    def test_post_sends_mail_and_deletes_previous_draft_if_it_exists(self):
         first_draft = MailBuilder().with_subject('First draft').build_json()
-        first_draft_response = self.post_mail(first_draft)
-        first_draft_ident = first_draft_response.ident
+        first_draft_ident = self.put_mail(first_draft)
 
         second_draft = MailBuilder().with_subject('Second draft').with_ident(first_draft_ident).build_json()
         self.post_mail(second_draft)
@@ -48,10 +39,27 @@ class DraftsTest(unittest.TestCase, SoledadTestBase):
         self.assertEquals('Second draft', sent_mails[0].subject)
         self.assertEquals(0, len(drafts))
 
-    def test_update_draft(self):
+    def test_post_sends_mail_even_when_draft_does_not_exist(self):
+        first_draft = MailBuilder().with_subject('First draft').build_json()
+        self.post_mail(first_draft)
+
+        sent_mails = self.get_mails_by_tag('sent')
+        drafts = self.get_mails_by_tag('drafts')
+
+        self.assertEquals(1, len(sent_mails))
+        self.assertEquals('First draft', sent_mails[0].subject)
+        self.assertEquals(0, len(drafts))
+
+    def test_put_creates_a_draft_if_it_does_not_exist(self):
+        mail = MailBuilder().with_subject('A new draft').build_json()
+        self.put_mail(mail)
+        mails = self.get_mails_by_tag('drafts')
+
+        self.assertEquals('A new draft', mails[0].subject)
+
+    def test_put_updates_draft_if_it_already_exists(self):
         draft = MailBuilder().with_subject('First draft').build_json()
-        create_draft_response = self.post_mail(draft)
-        draft_ident = create_draft_response.ident
+        draft_ident = self.put_mail(draft)
 
         updated_draft = MailBuilder().with_subject('First draft edited').with_ident(draft_ident).build_json()
         self.put_mail(updated_draft)

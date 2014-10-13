@@ -72,12 +72,10 @@ def send_mail():
         _mail = InputMail.from_dict(request.json)
         draft_id = request.json.get('ident')
         if draft_id:
-            _mail = mail_service.send(draft_id, _mail)
-            search_engine.index_mail(_mail)
             search_engine.remove_from_index(draft_id)
-        else:
-            _mail = draft_service.create_draft(_mail)
-            search_engine.index_mail(mail_service.mail(_mail.ident))
+        _mail = mail_service.send(draft_id, _mail)
+        search_engine.index_mail(_mail)
+
         return respond_json(_mail.as_dict())
     except Exception as error:
         return respond_json({'message': '\n'.join(list(error.args))}, status_code=500)
@@ -86,10 +84,14 @@ def send_mail():
 @app.route('/mails', methods=['PUT'])
 def update_draft():
     _mail = InputMail.from_dict(request.json)
-    new_revision = draft_service.update_draft(request.json['ident'], _mail)
-    ident = new_revision.ident
+    draft_id = request.json.get('ident')
+    if draft_id:
+        ident = draft_service.update_draft(draft_id, _mail).ident
+        search_engine.remove_from_index(draft_id)
+    else:
+        ident = draft_service.create_draft(_mail).ident
+
     search_engine.index_mail(mail_service.mail(ident))
-    search_engine.remove_from_index(request.json['ident'])
     return respond_json({'ident': ident})
 
 

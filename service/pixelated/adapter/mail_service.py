@@ -45,7 +45,8 @@ class MailService:
 
     def send(self, last_draft_ident, mail):
         self.mail_sender.sendmail(mail)
-        self.mailboxes.drafts().remove(last_draft_ident)
+        if last_draft_ident:
+            self.mailboxes.drafts().remove(last_draft_ident)
         return self.mailboxes.sent().add(mail)
 
     def thread(self, thread_id):
