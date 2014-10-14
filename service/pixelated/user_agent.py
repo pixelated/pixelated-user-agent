@@ -157,14 +157,14 @@ def mail_tags(mail_id):
 
 @app.route('/mail/<mail_id>/read', methods=['POST'])
 def mark_mail_as_read(mail_id):
-    mail_service.mark_as_read(mail_id)
+    mail = mail_service.mark_as_read(mail_id)
     search_engine.index_mail(mail)
     return ""
 
 
 @app.route('/mail/<mail_id>/unread', methods=['POST'])
 def mark_mail_as_unread(mail_id):
-    mail_service.mark_as_unread(mail_id)
+    mail = mail_service.mark_as_unread(mail_id)
     search_engine.index_mail(mail)
     return ""
 
