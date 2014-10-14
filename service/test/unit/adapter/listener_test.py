@@ -50,10 +50,10 @@ class MailboxListenerTest(unittest.TestCase):
 
         listener = MailboxListener('INBOX')
         listener.querier = querier
-        when(querier).get_idents_by_mailbox('INBOX').thenReturn({'ident1', 'ident2', 'missing_ident'})
+        when(querier).idents_by_mailbox('INBOX').thenReturn({'ident1', 'ident2', 'missing_ident'})
         querier.used_arguments = []
         querier.mails = lambda x: querier.used_arguments.append(x)
         listener.newMessages(10, 5)
 
-        verify(querier, times=1).get_idents_by_mailbox('INBOX')
+        verify(querier, times=1).idents_by_mailbox('INBOX')
         self.assertIn({'missing_ident'}, querier.used_arguments)
