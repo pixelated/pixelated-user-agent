@@ -44,3 +44,6 @@ class MailboxListener(object):
 
     def __hash__(self):
         return self.mailbox_name.__hash__()
+
+    def __repr__(self):
+        return 'MailboxListener: ' + self.mailbox_name
