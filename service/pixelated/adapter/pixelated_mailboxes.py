@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
 from pixelated.adapter.soledad_querier import SoledadQuerier
+from pixelated.adapter.listener import MailboxListener
 
 
 class PixelatedMailBoxes():
@@ -22,11 +23,14 @@ class PixelatedMailBoxes():
     def __init__(self, account):
         self.account = account
         self.querier = SoledadQuerier.get_instance()
+        for mailbox_name in account.mailboxes:
+            MailboxListener.listen(self.account, mailbox_name)
 
     def _create_or_get(self, mailbox_name):
         mailbox_name = mailbox_name.upper()
         if mailbox_name not in self.account.mailboxes:
             self.account.addMailbox(mailbox_name)
+        MailboxListener.listen(self.account, mailbox_name)
         return PixelatedMailbox.create(mailbox_name)
 
     def inbox(self):

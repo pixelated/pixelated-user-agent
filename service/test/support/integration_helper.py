@@ -34,9 +34,20 @@ from pixelated.adapter.soledad_querier import SoledadQuerier
 soledad_test_folder = "soledad-test"
 
 
+class FakeLeapMailboxWithListeners:
+    def __init__(self):
+        self.listeners = set()
+
+    def addListener(self, listener):
+        self.listeners.add(listener)
+
+
 class FakeAccount:
     def __init__(self):
         self.mailboxes = ['INBOX', 'DRAFTS', 'SENT', 'TRASH']
+
+    def getMailbox(self, name):
+        return FakeLeapMailboxWithListeners()
 
 
 def initialize_soledad(tempdir):

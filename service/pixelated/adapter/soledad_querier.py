@@ -88,6 +88,9 @@ class SoledadQuerier:
         self.soledad.delete_doc(_mail.hdoc)
         self.soledad.delete_doc(_mail.fdoc)
 
+    def get_idents_by_mailbox(self, mailbox_name):
+        return set(doc.content['chash'] for doc in self.soledad.get_from_index('by-type-and-mbox-and-deleted', 'flags', mailbox_name, '0'))
+
     def _next_uid_for_mailbox(self, mailbox_name):
         mails = self.all_mails_by_mailbox(mailbox_name)
         mails.sort(key=lambda x: x.uid, reverse=True)

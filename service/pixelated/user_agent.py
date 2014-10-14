@@ -37,6 +37,8 @@ from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.tag_service import TagService
 from pixelated.adapter.draft_service import DraftService
+from pixelated.adapter.listener import MailboxListener
+
 import dateutil.parser as dateparser
 
 static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "web-ui", "app"))
@@ -220,6 +222,7 @@ def start_user_agent(debug_enabled):
     mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender)
     global search_engine
     search_engine = SearchEngine()
+    MailboxListener.SEARCH_ENGINE = search_engine
     search_engine.index_mails(mail_service.all_mails())
     global draft_service
     draft_service = DraftService(pixelated_mailboxes)

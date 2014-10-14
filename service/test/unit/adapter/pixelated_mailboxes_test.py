@@ -31,6 +31,7 @@ class PixelatedMailboxesTest(unittest.TestCase):
     def setUp(self):
 
         self.account = mock()
+        self.account.mailboxes = []
         self.drafts_mailbox = mock()
         self.drafts_mailbox.mailbox_name = 'drafts'
         self.mailboxes = PixelatedMailBoxes(self.account)
