@@ -30,5 +30,5 @@ def impl(context, tag):
     wait_for_user_alert_to_disapear(context)
     click_first_element_with_class(context, 'left-off-canvas-toggle')
     context.browser.execute_script("window.scrollBy(0, -200)")
-    e = context.browser.find_element_by_xpath('//*[@id="tag-list"]/ul/li[contains(translate(., "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "%s")]' % tag)
+    e = wait_until_element_is_visible_by_locator(context, (By.XPATH, '//*[@id="tag-list"]/ul/li[contains(translate(., "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "%s")]' % tag))
     e.click()

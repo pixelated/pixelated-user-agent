@@ -68,8 +68,7 @@ def send_impl(context):
     context.execute_steps(u"when I open the first mail in the mail list")
     assert_that(is_not(page_has_css(context, '#send-button[disabled]')))
     click_button(context, 'Send')
-    sleep(1)
-    element_should_have_content(context, '#user-alerts', 'Your message was sent!')
+    wait_until_element_is_deleted(context, (By.ID, 'send-button'))
 
 
 def _enter_recipient(context, recipients_field, to_type):
