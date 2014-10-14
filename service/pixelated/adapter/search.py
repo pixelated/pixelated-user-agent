@@ -16,13 +16,13 @@ class SearchEngine(object):
             os.makedirs(self.INDEX_FOLDER)
         self._index = self._create_index()
 
-    def _add_to_tags(self, tags, seen, skip_default_tags):
+    def _add_to_tags(self, tags, seen, skip_default_tags, count_type):
         for tag, count in seen.iteritems():
             if skip_default_tags and tag in self.DEFAULT_TAGS:
                 continue
             if not tags.get(tag):
                 tags[tag] = {'ident': tag, 'name': tag, 'default': False, 'counts': {'total': 0, 'read': 0}, 'mails': []}
-            tags[tag]['counts']['read'] += count
+            tags[tag]['counts'][count_type] += count
 
     def _search_tag_groups(self, query):
         seen = None
@@ -44,11 +44,11 @@ class SearchEngine(object):
                 'ident': default_tag,
                 'name': default_tag,
                 'default': True,
-                 'counts': {
-                     'total': 0,
-                     'read': 0
-                 },
-                 'mails': []
+                'counts': {
+                    'total': 0,
+                    'read': 0
+                },
+                'mails': []
             }
         return tags
 
@@ -56,9 +56,9 @@ class SearchEngine(object):
         tags = {}
         if not skip_default_tags:
             tags = self._init_tags_defaults()
-        self._add_to_tags(tags, total, skip_default_tags)
+        self._add_to_tags(tags, total, skip_default_tags, count_type='total')
         if seen:
-            self._add_to_tags(tags, seen, skip_default_tags)
+            self._add_to_tags(tags, seen, skip_default_tags, count_type='read')
         return tags.values()
 
     def tags(self, query, skip_default_tags):

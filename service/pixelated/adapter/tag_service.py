@@ -31,4 +31,3 @@ class TagService:
         if not cls.instance:
             cls.instance = TagService()
         return cls.instance
-
