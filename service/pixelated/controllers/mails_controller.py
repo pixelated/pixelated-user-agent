@@ -87,7 +87,7 @@ class MailsController:
 
             return respond_json(_mail.as_dict())
         except Exception as error:
-            return respond_json({'message': '\n'.join(list(error.args))}, status_code=500)
+            return respond_json({'message': self._format_exception(error)}, status_code=422)
 
     def mail_tags(self, mail_id):
         new_tags = map(lambda tag: tag.lower(), request.get_json()['newtags'])
@@ -110,3 +110,7 @@ class MailsController:
 
         self._search_engine.index_mail(self._mail_service.mail(ident))
         return respond_json({'ident': ident})
+
+    def _format_exception(self, exception):
+        exception_info = map(str, list(exception.args))
+        return '\n'.join(exception_info)
