@@ -186,6 +186,9 @@ class SoledadTestBase:
     def mark_as_unread(self, mail_ident):
         self.app.post('/mail/' + mail_ident + '/unread', content_type="application/json")
 
+    def mark_many_as_unread(self, idents):
+        self.app.post('/mails/unread', data={'idents': json.dumps(idents)})
+
     def add_mail_to_inbox(self, input_mail):
         mail = self.pixelated_mailboxes.inbox().add(input_mail)
         self.search_engine.index_mail(mail)

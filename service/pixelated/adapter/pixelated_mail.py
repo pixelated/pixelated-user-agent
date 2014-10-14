@@ -262,8 +262,9 @@ class PixelatedMail:
         return self
 
     def mark_as_unread(self):
-        self.fdoc.content['flags'].remove(Status.PixelatedStatus.SEEN)
-        self.save()
+        if Status.PixelatedStatus.SEEN in self.fdoc.content['flags']:
+            self.fdoc.content['flags'].remove(Status.PixelatedStatus.SEEN)
+            self.save()
         return self
 
     def mark_as_not_recent(self):
