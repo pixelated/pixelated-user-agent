@@ -146,6 +146,7 @@ class SoledadTestBase:
         # setup app
         PixelatedMail.from_email_address = self.mail_address
         self.app = pixelated.user_agent.app.test_client()
+        pixelated.user_agent.DISABLED_FEATURES.append('autoReload')
         self.account = FakeAccount()
         self.pixelated_mailboxes = PixelatedMailBoxes(self.account)
         self.mail_sender = mock()

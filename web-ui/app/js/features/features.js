@@ -48,6 +48,9 @@ define([], function() {
     isEnabled: function (featureName) {
       return ! _.contains(getDisabledFeatures(), featureName);
     },
+    isAutoRefreshEnabled: function () {
+      return this.isEnabled('autoRefresh');
+    },
     isLogoutEnabled: function () {
       return _.has(getDispatcherFeatures(), 'logout');
     },

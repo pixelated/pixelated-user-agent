@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-define(['flight/lib/component', 'page/events'], function(defineComponent, events) {
+define(['flight/lib/component', 'page/events', 'features'], function(defineComponent, events, features) {
     'use strict';
 
     return defineComponent(refresher);
@@ -34,7 +34,9 @@ define(['flight/lib/component', 'page/events'], function(defineComponent, events
       };
 
       this.after('initialize', function () {
-        this.setupRefresher();
+        if (features.isAutoRefreshEnabled()) {
+          this.setupRefresher();
+        }
       });
     }
   }
