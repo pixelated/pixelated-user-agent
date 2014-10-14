@@ -24,17 +24,21 @@ def wait_until_element_is_invisible_by_locator(context, locator_tuple):
     wait = WebDriverWait(context.browser, 10)
     wait.until(EC.invisibility_of_element_located(locator_tuple))
 
+
 def wait_until_element_is_deleted(context, locator_tuple):
     wait = WebDriverWait(context.browser, 10)
     wait.until(lambda s: len(s.find_elements(locator_tuple[0], locator_tuple[1])) == 0)
 
+
 def wait_for_user_alert_to_disapear(context):
     wait_until_element_is_invisible_by_locator(context, (By.ID, 'user-alerts'))
+
 
 def wait_until_element_is_visible_by_locator(context, locator_tuple):
     wait = WebDriverWait(context.browser, 10)
     wait.until(EC.visibility_of_element_located(locator_tuple))
     return context.browser.find_element(locator_tuple[0], locator_tuple[1])
+
 
 def fill_by_xpath(context, xpath, text):
     field = context.browser.find_element_by_xpath(xpath)
