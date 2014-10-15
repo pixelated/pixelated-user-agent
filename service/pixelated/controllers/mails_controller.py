@@ -31,7 +31,7 @@ class MailsController:
     def mails(self, _request=request):
         mail_ids = self._search_engine.search(_request.args.get('q'))
         mails = self._mail_service.mails(mail_ids)
-        mails = sorted(mails, key=lambda mail: dateparser.parse(mail.get_date()), reverse=True)
+        mails = sorted(mails, key=lambda mail: dateparser.parse(mail.date), reverse=True)
 
         response = {
             "stats": {

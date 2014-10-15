@@ -98,7 +98,7 @@ class SearchEngine(object):
             'tag': u','.join(tags),
             'body': unicode(mdict['body']),
             'ident': unicode(mdict['ident']),
-            'flags': unicode(','.join(mail._flags))
+            'flags': unicode(','.join(mail.flags))
         }
 
         writer.update_document(**index_data)

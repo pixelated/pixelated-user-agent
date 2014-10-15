@@ -25,7 +25,37 @@ from email.MIMEText import MIMEText
 from pycryptopp.hash import sha256
 
 
-class InputMail:
+class Mail:
+
+    @property
+    def to(self):
+        return self.headers['To']
+
+    @property
+    def cc(self):
+        return self.headers['Cc']
+
+    @property
+    def bcc(self):
+        return self.headers['Bcc']
+
+    @property
+    def date(self):
+        return self.headers['Date']
+
+    def as_dict(self):
+        statuses = [status.name for status in self.status]
+        return {
+            'header': {k.lower(): v for k, v in self.headers.items()},
+            'ident': self.ident,
+            'tags': list(self.tags),
+            'status': statuses,
+            'security_casing': {},
+            'body': self.body
+        }
+
+
+class InputMail(Mail):
     FROM_EMAIL_ADDRESS = None
 
     def __init__(self):
@@ -35,17 +65,6 @@ class InputMail:
         self._bd = None
         self._mime = None
         self._chash = None
-
-    def as_dict(self):
-        statuses = [status.name for status in self.status]
-        return {
-            'header': self.headers,
-            'ident': self.ident,
-            'tags': list(self.tags),
-            'status': statuses,
-            'security_casing': {},
-            'body': self.body
-        }
 
     @property
     def _mime_multipart(self):
@@ -117,15 +136,6 @@ class InputMail:
     def _cdocs(self):
         return walk.get_raw_docs(self._mime_multipart, self._mime_multipart.walk())
 
-    def get_to(self):
-        return self.headers['To']
-
-    def get_cc(self):
-        return self.headers['Cc']
-
-    def get_bcc(self):
-        return self.headers['Bcc']
-
     def to_mime_multipart(self):
         mime_multipart = MIMEMultipart()
 
@@ -156,7 +166,7 @@ class InputMail:
         return input_mail
 
 
-class PixelatedMail:
+class PixelatedMail(Mail):
 
     @staticmethod
     def from_soledad(fdoc, hdoc, bdoc, soledad_querier=None):
@@ -197,10 +207,10 @@ class PixelatedMail:
 
     @property
     def status(self):
-        return Status.from_flags(self._flags)
+        return Status.from_flags(self.flags)
 
     @property
-    def _flags(self):
+    def flags(self):
         return self.fdoc.content.get('flags')
 
     @property
@@ -234,24 +244,6 @@ class PixelatedMail:
     def set_mailbox(self, mailbox_name):
         self.fdoc.content['mbox'] = mailbox_name
 
-    def set_recent(self):
-        self.fdoc.content['flags'].append("\\Recent")
-
-    def set_from(self, _from):
-        self.headers['From'] = [_from]
-
-    def get_to(self):
-        return self.headers['To']
-
-    def get_cc(self):
-        return self.headers['Cc']
-
-    def get_bcc(self):
-        return self.headers['Bcc']
-
-    def get_date(self):
-        return self.headers['Date']
-
     def remove_all_tags(self):
         self.update_tags(set([]))
 
@@ -282,15 +274,3 @@ class PixelatedMail:
 
     def has_tag(self, tag):
         return tag in self.tags
-
-    def as_dict(self):
-        statuses = [status.name for status in self.status]
-        return {
-            'header': {k.lower(): v for k, v in self.headers.items()},
-            'ident': self.ident,
-            'tags': list(self.tags),
-            'mailbox': self.mailbox_name,
-            'status': statuses,
-            'security_casing': self.security_casing,
-            'body': self.body
-        }

@@ -24,7 +24,7 @@ class PixelatedMailSender():
         self.smtp_client = smtp_client or smtplib.SMTP('localhost', 4650)
 
     def sendmail(self, mail):
-        recipients = flatten([mail.get_to(), mail.get_cc(), mail.get_bcc()])
+        recipients = flatten([mail.to, mail.cc, mail.bcc])
 
         self.smtp_client.sendmail(
             self.account_email_address,
