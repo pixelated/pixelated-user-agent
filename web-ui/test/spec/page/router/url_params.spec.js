@@ -65,6 +65,12 @@ require(['page/router/url_params'], function (urlParams) {
 
         expect(urlParams.getMailIdent()).toEqual('123');
       });
+
+      it('supports uppercase letters and numbers as mail id', function () {
+        document.location.hash = '/inbox/mail/123ASDADA';
+
+        expect(urlParams.getMailIdent()).toEqual('123ASDADA');
+      });
     });
   });
 

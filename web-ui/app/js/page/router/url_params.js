@@ -27,7 +27,7 @@ define([], function () {
 
   function hashTag(hash) {
     if (hasMailIdent(hash)) {
-      return /\/(.+)\/mail\/\d+$/.exec(getDocumentHash())[1];
+      return /\/(.+)\/mail\/[A-Z0-9]+$/.exec(getDocumentHash())[1];
     }
     return hash.substring(2);
   }
@@ -41,11 +41,11 @@ define([], function () {
   }
 
   function hasMailIdent() {
-    return getDocumentHash().match(/mail\/\d+$/);
+    return getDocumentHash().match(/mail\/[A-Z0-9]+$/);
   }
 
   function getMailIdent() {
-    return /mail\/(\d+)$/.exec(getDocumentHash())[1];
+    return /mail\/([A-Z0-9]+)$/.exec(getDocumentHash())[1];
   }
 
   return {
