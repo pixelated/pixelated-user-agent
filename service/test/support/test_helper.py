@@ -70,3 +70,9 @@ def input_mail():
     mail._chash = "123"
     mail.as_dict = lambda: None
     return mail
+
+
+class TestRequest:
+
+    def __init__(self, json):
+        self.json = json

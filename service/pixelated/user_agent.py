@@ -13,7 +13,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import json
 import argparse
 import getpass
 
@@ -21,8 +20,6 @@ import os
 import os.path
 import crochet
 from flask import Flask
-from flask import request
-from flask import Response
 from pixelated.adapter.pixelated_mail_sender import PixelatedMailSender
 from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
 import pixelated.reactor_manager as reactor_manager
@@ -31,12 +28,13 @@ from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.auth import LeapAuthenticator, LeapCredentials
 from pixelated.adapter.mail_service import MailService
-from pixelated.adapter.pixelated_mail import PixelatedMail, InputMail
+from pixelated.adapter.pixelated_mail import PixelatedMail
 from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.draft_service import DraftService
 from pixelated.adapter.listener import MailboxListener
-import dateutil.parser as dateparser
+from pixelated.controllers import *
+from pixelated.adapter.tag_service import TagService
 
 
 static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "web-ui", "app"))
@@ -66,131 +64,6 @@ def features():
     return respond_json({'disabled_features': DISABLED_FEATURES, 'dispatcher_features': disabled_features})
 
 
-@app.route('/mails', methods=['POST'])
-def send_mail():
-    try:
-        _mail = InputMail.from_dict(request.json)
-        draft_id = request.json.get('ident')
-        if draft_id:
-            search_engine.remove_from_index(draft_id)
-        _mail = mail_service.send(draft_id, _mail)
-        search_engine.index_mail(_mail)
-
-        return respond_json(_mail.as_dict())
-    except Exception as error:
-        return respond_json({'message': '\n'.join(list(error.args))}, status_code=500)
-
-
-@app.route('/mails', methods=['PUT'])
-def update_draft():
-    _mail = InputMail.from_dict(request.json)
-    draft_id = request.json.get('ident')
-    if draft_id:
-        ident = draft_service.update_draft(draft_id, _mail).ident
-        search_engine.remove_from_index(draft_id)
-    else:
-        ident = draft_service.create_draft(_mail).ident
-
-    search_engine.index_mail(mail_service.mail(ident))
-    return respond_json({'ident': ident})
-
-
-@app.route('/mails')
-def mails():
-    mail_ids = search_engine.search(request.args.get('q'))
-    mails = mail_service.mails(mail_ids)
-    mails = sorted(mails, key=lambda mail: dateparser.parse(mail.get_date()), reverse=True)
-
-    response = {
-        "stats": {
-            "total": len(mails),
-            "read": 0,
-            "starred": 0,
-            "replied": 0
-        },
-        "mails": [mail.as_dict() for mail in mails]
-    }
-
-    return respond_json(response)
-
-
-@app.route('/mail/<mail_id>', methods=['DELETE'])
-def delete_mail(mail_id):
-    trashed_mail = mail_service.delete_mail(mail_id)
-    search_engine.index_mail(trashed_mail)
-    return respond_json(None)
-
-
-@app.route('/mails', methods=['DELETE'])
-def delete_mails():
-    idents = json.loads(request.form['idents'])
-    for ident in idents:
-        mail_service.delete_mail(ident)
-    return respond_json(None)
-
-
-@app.route('/tags')
-def tags():
-    query = request.args.get('q')
-    skip_default_tags = request.args.get('skipDefaultTags')
-    tags = search_engine.tags(query=query, skip_default_tags=skip_default_tags)
-    return respond_json(tags)
-
-
-@app.route('/mail/<mail_id>')
-def mail(mail_id):
-    mail = mail_service.mail(mail_id)
-    return respond_json(mail.as_dict())
-
-
-@app.route('/mail/<mail_id>/tags', methods=['POST'])
-def mail_tags(mail_id):
-    new_tags = map(lambda tag: tag.lower(), request.get_json()['newtags'])
-    try:
-        tags = mail_service.update_tags(mail_id, new_tags)
-        search_engine.index_mail(mail_service.mail(mail_id))
-    except ValueError as ve:
-        return respond_json(ve.message, 403)
-    return respond_json(list(tags))
-
-
-@app.route('/mail/<mail_id>/read', methods=['POST'])
-def mark_mail_as_read(mail_id):
-    mail = mail_service.mark_as_read(mail_id)
-    search_engine.index_mail(mail)
-    return ""
-
-
-@app.route('/mail/<mail_id>/unread', methods=['POST'])
-def mark_mail_as_unread(mail_id):
-    mail = mail_service.mark_as_unread(mail_id)
-    search_engine.index_mail(mail)
-    return ""
-
-
-@app.route('/mails/unread', methods=['POST'])
-def mark_many_mail_unread():
-    idents = json.loads(request.form['idents'])
-    for ident in idents:
-        mail_service.mark_as_unread(ident)
-    return ""
-
-
-@app.route('/contacts')
-def contacts():
-    pass
-
-
-@app.route('/draft_reply_for/<mail_id>')
-def draft_reply_for(mail_id):
-    pass
-
-
-@app.route('/')
-def index():
-    return app.send_static_file('index.html')
-
-
 def register_new_user(username):
     server_name = app.config['LEAP_SERVER_NAME']
     certs_home = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "certificates"))
@@ -202,27 +75,51 @@ def register_new_user(username):
     session.nicknym.generate_openpgp_key()
 
 
+def _setup_routes(app, home_controller, mails_controller, tags_controller):
+    # home
+    app.add_url_rule('/', methods=['GET'], view_func=home_controller.home)
+    # mails
+    app.add_url_rule('/mails', methods=['GET'], view_func=mails_controller.mails)
+    app.add_url_rule('/mail/<mail_id>/read', methods=['POST'], view_func=mails_controller.mark_mail_as_read)
+    app.add_url_rule('/mail/<mail_id>/unread', methods=['POST'], view_func=mails_controller.mark_mail_as_unread)
+    app.add_url_rule('/mails/unread', methods=['POST'], view_func=mails_controller.mark_many_mail_unread)
+    app.add_url_rule('/mail/<mail_id>', methods=['GET'], view_func=mails_controller.mail)
+    app.add_url_rule('/mail/<mail_id>', methods=['DELETE'], view_func=mails_controller.delete_mail)
+    app.add_url_rule('/mails', methods=['DELETE'], view_func=mails_controller.delete_mails)
+    app.add_url_rule('/mails', methods=['POST'], view_func=mails_controller.send_mail)
+    app.add_url_rule('/mail/<mail_id>/tags', methods=['POST'], view_func=mails_controller.mail_tags)
+    app.add_url_rule('/mails', methods=['PUT'], view_func=mails_controller.update_draft)
+    # tags
+    app.add_url_rule('/tags', methods=['GET'], view_func=tags_controller.tags)
+
+
 def start_user_agent(debug_enabled):
-    leap_session = LeapSession.open(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'],
-                                    app.config['LEAP_SERVER_NAME'])
-    soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
+    with app.app_context():
+        leap_session = LeapSession.open(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'],
+                                        app.config['LEAP_SERVER_NAME'])
+        soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
 
-    PixelatedMail.from_email_address = leap_session.account_email()
-    pixelated_mailboxes = PixelatedMailBoxes(leap_session.account)
-    pixelated_mail_sender = PixelatedMailSender(leap_session.account_email())
-    from pixelated.adapter.tag_service import TagService
-    tag_service = TagService()
-    global mail_service
-    mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, tag_service, soledad_querier)
-    global search_engine
-    search_engine = SearchEngine()
-    MailboxListener.SEARCH_ENGINE = search_engine
-    search_engine.index_mails(mail_service.all_mails())
-    global draft_service
-    draft_service = DraftService(pixelated_mailboxes)
+        PixelatedMail.from_email_address = leap_session.account_email()
+        pixelated_mailboxes = PixelatedMailBoxes(leap_session.account, soledad_querier)
+        pixelated_mail_sender = PixelatedMailSender(leap_session.account_email())
 
-    app.run(host=app.config['HOST'], debug=debug_enabled,
-            port=app.config['PORT'], use_reloader=False)
+        tag_service = TagService()
+        mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, tag_service, soledad_querier)
+        search_engine = SearchEngine()
+        MailboxListener.SEARCH_ENGINE = search_engine
+        search_engine.index_mails(mail_service.all_mails())
+        draft_service = DraftService(pixelated_mailboxes)
+
+        home_controller = HomeController()
+        mails_controller = MailsController(mail_service=mail_service,
+                                           draft_service=draft_service,
+                                           search_engine=search_engine)
+        tags_controller = TagsController(search_engine=search_engine)
+
+        _setup_routes(app, home_controller, mails_controller, tags_controller)
+
+        app.run(host=app.config['HOST'], debug=debug_enabled,
+                port=app.config['PORT'], use_reloader=False)
 
 
 def setup():
@@ -233,7 +130,8 @@ def setup():
         parser.add_argument('--debug', action='store_true',
                             help='DEBUG mode.')
         parser.add_argument('--register', metavar='username', help='register user with name.')
-        parser.add_argument('-c', '--config', metavar='configfile', default=default_config_path, help='use specified config file. Default is ~/.pixelated.')
+        parser.add_argument('-c', '--config', metavar='configfile', default=default_config_path,
+                            help='use specified config file. Default is ~/.pixelated.')
 
         args = parser.parse_args()
         debug_enabled = args.debug or os.environ.get('DEBUG', False)
@@ -248,6 +146,7 @@ def setup():
             start_user_agent(debug_enabled)
     finally:
         reactor_manager.stop_reactor_on_exit()
+
 
 if __name__ == '__main__':
     setup()

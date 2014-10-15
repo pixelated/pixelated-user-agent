@@ -13,11 +13,10 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import json
 import shutil
 
 from leap.soledad.client import Soledad
-from mockito import mock, unstub
+from mockito import mock
 import os
 from mock import Mock
 from pixelated.adapter.mail_service import MailService
@@ -29,6 +28,7 @@ import pixelated.user_agent
 from pixelated.adapter.pixelated_mail import PixelatedMail, InputMail
 from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
 from pixelated.adapter.soledad_querier import SoledadQuerier
+from pixelated.controllers import *
 
 soledad_test_folder = "soledad-test"
 
@@ -50,6 +50,9 @@ class FakeAccount:
 
 
 def initialize_soledad(tempdir):
+    if os.path.isdir(soledad_test_folder):
+        shutil.rmtree(soledad_test_folder)
+
     uuid = "foobar-uuid"
     passphrase = u"verysecretpassphrase"
     secret_path = os.path.join(tempdir, "secret.gpg")
@@ -125,17 +128,18 @@ class MailBuilder:
 
 
 class SoledadTestBase:
+    def __init__(self):
+        pass
+
     def teardown_soledad(self):
-        self.soledad.close()
-        shutil.rmtree(soledad_test_folder)
+        pass
+
+    def _reset_routes(self, app):
+        static_files_route = app.view_functions['static']
+        disabled_features_route = app.view_functions['features']
+        app.view_functions = {'static': static_files_route, 'features': disabled_features_route}
 
     def setup_soledad(self):
-        unstub()  # making sure all mocks from other tests are reset
-
-        # making sure soledad test folder is not there
-        if (os.path.isdir(soledad_test_folder)):
-            shutil.rmtree(soledad_test_folder)
-
         self.soledad = initialize_soledad(tempdir=soledad_test_folder)
         self.mail_address = "test@pixelated.org"
 
@@ -144,54 +148,59 @@ class SoledadTestBase:
         pixelated.user_agent.DISABLED_FEATURES.append('autoReload')
         SearchEngine.INDEX_FOLDER = soledad_test_folder + '/search_index'
 
-        self.app = pixelated.user_agent.app.test_client()
+        self.client = pixelated.user_agent.app.test_client()
 
+        self._reset_routes(self.client.application)
         self.soledad_querier = SoledadQuerier(self.soledad)
         self.account = FakeAccount()
         self.pixelated_mailboxes = PixelatedMailBoxes(self.account, self.soledad_querier)
         self.mail_sender = mock()
         self.tag_service = TagService()
         self.draft_service = DraftService(self.pixelated_mailboxes)
-        self.mail_service = MailService(self.pixelated_mailboxes, self.mail_sender, self.tag_service, self.soledad_querier)
+        self.mail_service = MailService(self.pixelated_mailboxes, self.mail_sender, self.tag_service,
+                                        self.soledad_querier)
         self.search_engine = SearchEngine()
         self.search_engine.index_mails(self.mail_service.all_mails())
 
-        pixelated.user_agent.mail_service = self.mail_service
-        pixelated.user_agent.draft_service = self.draft_service
-        pixelated.user_agent.tag_service = self.tag_service
-        pixelated.user_agent.search_engine = self.search_engine
+        home_controller = HomeController()
+        mails_controller = MailsController(mail_service=self.mail_service,
+                                           draft_service=self.draft_service,
+                                           search_engine=self.search_engine)
+        tags_controller = TagsController(search_engine=self.search_engine)
+
+        pixelated.user_agent._setup_routes(self.client.application, home_controller, mails_controller, tags_controller)
 
     def get_mails_by_tag(self, tag):
-        response = json.loads(self.app.get("/mails?q=tag:" + tag).data)
+        response = json.loads(self.client.get("/mails?q=tag:" + tag).data)
         return [ResponseMail(m) for m in response['mails']]
 
     def post_mail(self, data):
-        response = json.loads(self.app.post('/mails', data=data, content_type="application/json").data)
+        response = json.loads(self.client.post('/mails', data=data, content_type="application/json").data)
         return ResponseMail(response)
 
     def put_mail(self, data):
-        response = json.loads(self.app.put('/mails', data=data, content_type="application/json").data)
+        response = json.loads(self.client.put('/mails', data=data, content_type="application/json").data)
         return response['ident']
 
     def post_tags(self, mail_ident, tags_json):
         return json.loads(
-            self.app.post('/mail/' + mail_ident + '/tags', data=tags_json, content_type="application/json").data)
+            self.client.post('/mail/' + mail_ident + '/tags', data=tags_json, content_type="application/json").data)
 
     def get_tags(self, query_string=""):
         return json.loads(
-            self.app.get('/tags' + query_string, content_type="application/json").data)
+            self.client.get('/tags' + query_string, content_type="application/json").data)
 
     def delete_mail(self, mail_ident):
-        self.app.delete('/mail/' + mail_ident)
+        self.client.delete('/mail/' + mail_ident)
 
     def mark_as_read(self, mail_ident):
-        self.app.post('/mail/' + mail_ident + '/read', content_type="application/json")
+        self.client.post('/mail/' + mail_ident + '/read', content_type="application/json")
 
     def mark_as_unread(self, mail_ident):
-        self.app.post('/mail/' + mail_ident + '/unread', content_type="application/json")
+        self.client.post('/mail/' + mail_ident + '/unread', content_type="application/json")
 
     def mark_many_as_unread(self, idents):
-        self.app.post('/mails/unread', data={'idents': json.dumps(idents)})
+        self.client.post('/mails/unread', data={'idents': json.dumps(idents)})
 
     def add_mail_to_inbox(self, input_mail):
         mail = self.pixelated_mailboxes.inbox().add(input_mail)
