@@ -21,7 +21,6 @@ import pixelated.user_agent
 from mockito import *
 import crochet
 import pixelated.reactor_manager as reactor_manager
-import test.support.test_helper as test_helper
 import pixelated.adapter.pixelated_mail
 import os
 

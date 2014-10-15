@@ -21,7 +21,6 @@ import os
 from mock import Mock
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.search import SearchEngine
-from pixelated.adapter.status import Status
 from pixelated.adapter.tag_service import TagService
 from pixelated.adapter.draft_service import DraftService
 import pixelated.user_agent
