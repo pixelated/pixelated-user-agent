@@ -46,10 +46,6 @@ class InputMail:
             'body': self.body
         }
 
-    @staticmethod
-    def from_dict(mail_dict):
-        return input_mail_from_dict(mail_dict)
-
     @property
     def _mime_multipart(self):
         if self._mime:
@@ -147,6 +143,16 @@ class InputMail:
         mime_multipart = self.to_mime_multipart()
         mime_multipart['From'] = PixelatedMail.from_email_address
         return mime_multipart.as_string()
+
+    @staticmethod
+    def from_dict(mail_dict):
+        input_mail = InputMail()
+        input_mail.headers = {key.capitalize(): value for key, value in mail_dict.get('header', {}).items()}
+        input_mail.headers['Date'] = pixelated.support.date.iso_now()
+        input_mail.body = mail_dict.get('body', '')
+        input_mail.tags = set(mail_dict.get('tags', []))
+        input_mail.status = set(mail_dict.get('status', []))
+        return input_mail
 
 
 class PixelatedMail:
@@ -287,13 +293,3 @@ class PixelatedMail:
             'security_casing': self.security_casing,
             'body': self.body
         }
-
-
-def input_mail_from_dict(mail_dict):
-    input_mail = InputMail()
-    input_mail.headers = {key.capitalize(): value for key, value in mail_dict.get('header', {}).items()}
-    input_mail.headers['Date'] = pixelated.support.date.iso_now()
-    input_mail.body = mail_dict.get('body', '')
-    input_mail.tags = set(mail_dict.get('tags', []))
-    input_mail.status = set(mail_dict.get('status', []))
-    return input_mail

@@ -41,7 +41,6 @@ class UserAgentTest(unittest.TestCase):
         pixelated.user_agent.draft_service = self.draft_service
         pixelated.user_agent.search_engine = self.search_engine
         self.input_mail = None
-        pixelated.adapter.pixelated_mail.input_mail_from_dict = lambda x: self.input_mail
 
     def tearDown(self):
         unstub()
