@@ -15,12 +15,9 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-import json
 import sys
 
 import pixelated.user_agent
-from pixelated.adapter.tag import Tag
-from pixelated.adapter.tag_service import TagService
 from mockito import *
 import crochet
 import pixelated.reactor_manager as reactor_manager

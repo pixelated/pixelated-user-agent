@@ -13,11 +13,11 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from time import sleep
+
 from selenium.webdriver.common.keys import Keys
-from behave import *
 from common import *
 from hamcrest import *
-from time import sleep
 
 
 @when('I search for a mail with the words "{search_term}"')

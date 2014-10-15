@@ -13,9 +13,10 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from mock import Mock
 from datetime import datetime
+
 from pixelated.adapter.pixelated_mail import InputMail
+
 
 LEAP_FLAGS = ['\\Seen',
               '\\Answered',

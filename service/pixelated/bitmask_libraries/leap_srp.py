@@ -15,12 +15,13 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import binascii
 import json
-import requests
 
+import requests
 from requests import Session
 from srp import User, srp, create_salted_verification_key
 from requests.exceptions import HTTPError, SSLError, Timeout
 from config import SYSTEM_CA_BUNDLE
+
 
 REGISTER_USER_LOGIN_KEY = 'user[login]'
 REGISTER_USER_VERIFIER_KEY = 'user[password_verifier]'

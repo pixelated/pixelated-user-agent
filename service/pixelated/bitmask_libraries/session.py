@@ -13,22 +13,23 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import os
 import errno
 import traceback
+import sys
+
+import os
 from leap.mail.imap.fetch import LeapIncomingMail
 from leap.mail.imap.account import SoledadBackedAccount
-import sys
 from leap.mail.imap.memorystore import MemoryStore
 from leap.mail.imap.soledadstore import SoledadStore
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
 from twisted.internet import reactor
 from .nicknym import NickNym
-
 from .auth import LeapAuthenticator, LeapCredentials
 from .soledad import SoledadSessionFactory, SoledadSession
 from .smtp import LeapSmtp
+
 
 SESSIONS = {}
 

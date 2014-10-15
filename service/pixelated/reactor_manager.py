@@ -16,8 +16,9 @@
 import signal
 import sys
 from threading import Thread
-from twisted.internet import reactor
 import logging
+
+from twisted.internet import reactor
 
 
 def signal_handler(signal, frame):

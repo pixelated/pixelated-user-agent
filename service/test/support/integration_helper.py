@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
+import shutil
 
 from leap.soledad.client import Soledad
 from mockito import mock, unstub
 import os
 from mock import Mock
-import shutil
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.status import Status
@@ -139,24 +139,21 @@ class SoledadTestBase:
         self.soledad = initialize_soledad(tempdir=soledad_test_folder)
         self.mail_address = "test@pixelated.org"
 
-        # resetting soledad querier
-        SoledadQuerier.reset()
-        SoledadQuerier.get_instance(soledad=self.soledad)
-
         # setup app
         PixelatedMail.from_email_address = self.mail_address
-        self.app = pixelated.user_agent.app.test_client()
         pixelated.user_agent.DISABLED_FEATURES.append('autoReload')
+        SearchEngine.INDEX_FOLDER = soledad_test_folder + '/search_index'
+
+        self.app = pixelated.user_agent.app.test_client()
+
+        self.soledad_querier = SoledadQuerier(self.soledad)
         self.account = FakeAccount()
-        self.pixelated_mailboxes = PixelatedMailBoxes(self.account)
+        self.pixelated_mailboxes = PixelatedMailBoxes(self.account, self.soledad_querier)
         self.mail_sender = mock()
         self.tag_service = TagService()
         self.draft_service = DraftService(self.pixelated_mailboxes)
-        self.mail_service = MailService(self.pixelated_mailboxes, self.mail_sender, self.tag_service)
-
-        SearchEngine.INDEX_FOLDER = soledad_test_folder + '/search_index'
+        self.mail_service = MailService(self.pixelated_mailboxes, self.mail_sender, self.tag_service, self.soledad_querier)
         self.search_engine = SearchEngine()
-
         self.search_engine.index_mails(self.mail_service.all_mails())
 
         pixelated.user_agent.mail_service = self.mail_service

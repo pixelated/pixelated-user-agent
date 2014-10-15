@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from pixelated.adapter.soledad_querier import SoledadQuerier
-
 
 class PixelatedMailbox:
 
@@ -51,5 +49,5 @@ class PixelatedMailbox:
         self.querier.remove_mail(mail)
 
     @classmethod
-    def create(cls, mailbox_name='INBOX'):
-        return PixelatedMailbox(mailbox_name, SoledadQuerier.get_instance())
+    def create(cls, mailbox_name, soledad_querier):
+        return PixelatedMailbox(mailbox_name, soledad_querier)

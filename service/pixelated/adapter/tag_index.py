@@ -16,6 +16,7 @@
 #
 import dbm
 import atexit
+
 import os
 from pixelated.adapter.tag import Tag
 

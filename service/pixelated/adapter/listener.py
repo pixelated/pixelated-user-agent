@@ -13,7 +13,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from pixelated.adapter.soledad_querier import SoledadQuerier
 
 
 class MailboxListener(object):
@@ -22,14 +21,14 @@ class MailboxListener(object):
     SEARCH_ENGINE = None
 
     @classmethod
-    def listen(cls, account, mailbox_name):
-        listener = MailboxListener(mailbox_name)
+    def listen(cls, account, mailbox_name, soledad_querier):
+        listener = MailboxListener(mailbox_name, soledad_querier)
         if listener not in account.getMailbox(mailbox_name).listeners:
             account.getMailbox(mailbox_name).addListener(listener)
 
-    def __init__(self, mailbox_name):
+    def __init__(self, mailbox_name, soledad_querier):
         self.mailbox_name = mailbox_name
-        self.querier = SoledadQuerier.get_instance()
+        self.querier = soledad_querier
 
     def newMessages(self, exists, recent):
         indexed_idents = set(self.SEARCH_ENGINE.search('tag:' + self.mailbox_name.lower()))

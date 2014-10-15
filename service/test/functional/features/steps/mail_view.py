@@ -13,12 +13,9 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import re
 from selenium.webdriver.common.keys import Keys
-from behave import *
 from common import *
 from hamcrest import *
-from time import sleep
 
 
 @then('I see that the subject reads \'{subject}\'')

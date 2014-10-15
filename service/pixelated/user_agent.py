@@ -19,7 +19,6 @@ import getpass
 
 import os
 import os.path
-import re
 import crochet
 from flask import Flask
 from flask import request
@@ -37,8 +36,8 @@ from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.draft_service import DraftService
 from pixelated.adapter.listener import MailboxListener
-
 import dateutil.parser as dateparser
+
 
 static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "web-ui", "app"))
 
@@ -206,13 +205,15 @@ def register_new_user(username):
 def start_user_agent(debug_enabled):
     leap_session = LeapSession.open(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'],
                                     app.config['LEAP_SERVER_NAME'])
-    SoledadQuerier.get_instance(soledad=leap_session.account._soledad)
+    soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
+
     PixelatedMail.from_email_address = leap_session.account_email()
     pixelated_mailboxes = PixelatedMailBoxes(leap_session.account)
     pixelated_mail_sender = PixelatedMailSender(leap_session.account_email())
-
+    from pixelated.adapter.tag_service import TagService
+    tag_service = TagService()
     global mail_service
-    mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender)
+    mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, tag_service, soledad_querier)
     global search_engine
     search_engine = SearchEngine()
     MailboxListener.SEARCH_ENGINE = search_engine

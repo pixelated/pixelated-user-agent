@@ -13,11 +13,12 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+import time
+import multiprocessing
+
 from selenium import webdriver
 from test.support.integration_helper import SoledadTestBase
-import time
 import pixelated.user_agent
-import multiprocessing
 
 
 def before_all(context):

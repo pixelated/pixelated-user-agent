@@ -17,7 +17,6 @@ import json
 
 from leap.common.certs import get_digest
 import requests
-
 from .certs import which_bundle
 
 

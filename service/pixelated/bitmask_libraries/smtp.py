@@ -17,7 +17,6 @@ import os
 import requests
 from .certs import which_bundle
 from leap.mail.smtp import setup_smtp_gateway
-import random
 
 
 class LeapSmtp(object):

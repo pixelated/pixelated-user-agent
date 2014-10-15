@@ -1,4 +1,5 @@
 import unittest
+
 from pixelated.adapter.pixelated_mail import InputMail
 from pixelated.adapter.draft_service import DraftService
 import test_helper

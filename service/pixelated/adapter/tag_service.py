@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.tag import Tag
-from pixelated.adapter.tag_index import TagIndex
 
 
 class TagService:
@@ -25,9 +24,3 @@ class TagService:
     @classmethod
     def extract_reserved(cls, tags):
         return {tag.name for tag in cls.SPECIAL_TAGS if tag.name in tags}
-
-    @classmethod
-    def get_instance(cls):
-        if not cls.instance:
-            cls.instance = TagService()
-        return cls.instance

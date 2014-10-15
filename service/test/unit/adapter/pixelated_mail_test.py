@@ -15,10 +15,8 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
 
-import os
 import pixelated.support.date
 from pixelated.adapter.pixelated_mail import PixelatedMail, InputMail
-from pixelated.adapter.tag import Tag
 from mockito import *
 from test.support import test_helper
 

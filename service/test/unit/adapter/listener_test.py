@@ -16,16 +16,12 @@
 import unittest
 
 from mockito import *
-import pixelated.adapter.soledad_querier
-
-querier = mock()
-when(pixelated.adapter.soledad_querier).get_soledad_querier_instance().thenReturn(querier)
-
 from pixelated.adapter.listener import MailboxListener
 
 
 class MailboxListenerTest(unittest.TestCase):
     def setUp(self):
+        self.querier = mock()
         self.account = mock()
         self.account.mailboxes = []
 
@@ -36,11 +32,11 @@ class MailboxListenerTest(unittest.TestCase):
         mailbox.listeners = set()
         when(mailbox).addListener = lambda x: mailbox.listeners.add(x)
 
-        self.assertNotIn(MailboxListener('INBOX'), mailbox.listeners)
+        self.assertNotIn(MailboxListener('INBOX', self.querier), mailbox.listeners)
 
-        MailboxListener.listen(self.account, 'INBOX')
+        MailboxListener.listen(self.account, 'INBOX', self.querier)
 
-        self.assertIn(MailboxListener('INBOX'), mailbox.listeners)
+        self.assertIn(MailboxListener('INBOX', self.querier), mailbox.listeners)
 
     def test_reindex_missing_idents(self):
         search_engine = mock()
@@ -48,12 +44,11 @@ class MailboxListenerTest(unittest.TestCase):
 
         MailboxListener.SEARCH_ENGINE = search_engine
 
-        listener = MailboxListener('INBOX')
-        listener.querier = querier
-        when(querier).idents_by_mailbox('INBOX').thenReturn({'ident1', 'ident2', 'missing_ident'})
-        querier.used_arguments = []
-        querier.mails = lambda x: querier.used_arguments.append(x)
+        listener = MailboxListener('INBOX', self.querier)
+        when(self.querier).idents_by_mailbox('INBOX').thenReturn({'ident1', 'ident2', 'missing_ident'})
+        self.querier.used_arguments = []
+        self.querier.mails = lambda x: self.querier.used_arguments.append(x)
         listener.newMessages(10, 5)
 
-        verify(querier, times=1).idents_by_mailbox('INBOX')
-        self.assertIn({'missing_ident'}, querier.used_arguments)
+        verify(self.querier, times=1).idents_by_mailbox('INBOX')
+        self.assertIn({'missing_ident'}, self.querier.used_arguments)

@@ -14,24 +14,23 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
-from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.adapter.listener import MailboxListener
 
 
 class PixelatedMailBoxes():
 
-    def __init__(self, account):
+    def __init__(self, account, soledad_querier):
         self.account = account
-        self.querier = SoledadQuerier.get_instance()
+        self.querier = soledad_querier
         for mailbox_name in account.mailboxes:
-            MailboxListener.listen(self.account, mailbox_name)
+            MailboxListener.listen(self.account, mailbox_name, soledad_querier)
 
     def _create_or_get(self, mailbox_name):
         mailbox_name = mailbox_name.upper()
         if mailbox_name not in self.account.mailboxes:
             self.account.addMailbox(mailbox_name)
-        MailboxListener.listen(self.account, mailbox_name)
-        return PixelatedMailbox.create(mailbox_name)
+        MailboxListener.listen(self.account, mailbox_name, self.querier)
+        return PixelatedMailbox.create(mailbox_name, self.querier)
 
     def inbox(self):
         return self._create_or_get('INBOX')
@@ -45,14 +44,12 @@ class PixelatedMailBoxes():
     def sent(self):
         return self._create_or_get('SENT')
 
-    @property
     def mailboxes(self):
-        return [PixelatedMailbox.create(leap_mailbox_name) for leap_mailbox_name in
-                self.account.mailboxes]
+        return [self._create_or_get(leap_mailbox_name) for leap_mailbox_name in self.account.mailboxes]
 
     def mails_by_tag(self, query_tags):
         mails = []
-        for mailbox in self.mailboxes:
+        for mailbox in self.mailboxes():
             mails.extend(mailbox.mails_by_tags(query_tags))
 
         return mails
@@ -65,7 +62,7 @@ class PixelatedMailBoxes():
         return mail
 
     def mail(self, mail_id):
-        for mailbox in self.mailboxes:
+        for mailbox in self.mailboxes():
             mail = mailbox.mail(mail_id)
             if mail:
                 return mail

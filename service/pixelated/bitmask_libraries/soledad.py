@@ -13,16 +13,14 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import json
-import os
 import errno
+
+import os
 from leap.keymanager import KeyManager
 from leap.soledad.client import Soledad
 from leap.soledad.common.crypto import WrongMac, UnknownMacMethod, MacMethods
-import requests
-import sys
-import time
 from .certs import which_bundle
+
 
 SOLEDAD_TIMEOUT = 120
 SOLEDAD_CERT = '/tmp/ca.crt'

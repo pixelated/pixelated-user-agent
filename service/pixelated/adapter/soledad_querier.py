@@ -16,28 +16,10 @@
 from pixelated.adapter.pixelated_mail import PixelatedMail
 
 
-def get_soledad_querier_instance(cls, soledad=None):
-    if not cls.instance:
-        if not soledad:
-            raise Exception("Need a soledad for the first time you call this")
-        cls.instance = SoledadQuerier(soledad)
-    return cls.instance
-
-
 class SoledadQuerier:
-
-    instance = None
 
     def __init__(self, soledad):
         self.soledad = soledad
-
-    @classmethod
-    def get_instance(cls, soledad=None):
-        return get_soledad_querier_instance(cls, soledad)
-
-    @classmethod
-    def reset(cls):
-        cls.instance = None
 
     def all_mails(self):
         fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in self.soledad.get_from_index('by-type', 'flags')]
