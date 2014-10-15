@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
 
-from pixelated.adapter.pixelated_mail import PixelatedMail
+from pixelated.adapter.mail import PixelatedMail
 from pixelated.adapter.pixelated_mail_sender import PixelatedMailSender
 from mockito import *
 from test.support import test_helper

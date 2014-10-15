@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import json
-from pixelated.adapter.pixelated_mail import InputMail
+from pixelated.adapter.mail import InputMail
 from pixelated.controllers import respond_json
 from flask import request
 import dateutil.parser as dateparser

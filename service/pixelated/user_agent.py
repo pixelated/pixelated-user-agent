@@ -28,7 +28,7 @@ from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.auth import LeapAuthenticator, LeapCredentials
 from pixelated.adapter.mail_service import MailService
-from pixelated.adapter.pixelated_mail import InputMail
+from pixelated.adapter.mail import InputMail
 from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.draft_service import DraftService

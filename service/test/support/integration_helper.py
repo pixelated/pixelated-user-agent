@@ -24,7 +24,7 @@ from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.tag_service import TagService
 from pixelated.adapter.draft_service import DraftService
 import pixelated.user_agent
-from pixelated.adapter.pixelated_mail import PixelatedMail, InputMail
+from pixelated.adapter.mail import PixelatedMail, InputMail
 from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
 from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.controllers import *
