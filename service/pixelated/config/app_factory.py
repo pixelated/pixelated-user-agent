@@ -16,6 +16,8 @@
 
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.mail import InputMail
+from pixelated.adapter.pixelated_mail_sender import PixelatedMailSender
+from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
 from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.draft_service import DraftService
