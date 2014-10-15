@@ -30,3 +30,4 @@ class FeaturesController:
         except KeyError:
             disabled_features = {}
         return respond_json({'disabled_features': self.DISABLED_FEATURES, 'dispatcher_features': disabled_features})
+

@@ -28,7 +28,6 @@ import os
 
 class UserAgentTest(unittest.TestCase):
 
-
     def test_that_default_config_file_is_home_dot_pixelated(self):
         orig_config = pixelated.user_agent.app.config
         try:
