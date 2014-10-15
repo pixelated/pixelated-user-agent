@@ -36,9 +36,7 @@ class Mailbox:
         return [mail for mail in self.mails() if len(mail.tags.intersection(tags)) > 0]
 
     def mail(self, mail_id):
-        for message in self.mails():
-            if message.ident == mail_id:
-                return message
+        return self.querier.mail(mail_id)
 
     def add(self, mail):
         return self.querier.create_mail(mail, self.mailbox_name)
