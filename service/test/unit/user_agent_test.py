@@ -28,22 +28,6 @@ import os
 
 class UserAgentTest(unittest.TestCase):
 
-    def setUp(self):
-        self.app = pixelated.user_agent.app.test_client()
-        self.mail_service = mock()
-        self.tag_service = mock()
-        self.draft_service = mock()
-        self.search_engine = mock()
-
-        pixelated.user_agent.DISABLED_FEATURES = []
-        pixelated.user_agent.mail_service = self.mail_service
-        pixelated.user_agent.tag_service = self.tag_service
-        pixelated.user_agent.draft_service = self.draft_service
-        pixelated.user_agent.search_engine = self.search_engine
-        self.input_mail = None
-
-    def tearDown(self):
-        unstub()
 
     def test_that_default_config_file_is_home_dot_pixelated(self):
         orig_config = pixelated.user_agent.app.config
