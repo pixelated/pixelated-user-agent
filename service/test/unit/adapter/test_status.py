@@ -22,12 +22,12 @@ class TestStatus(unittest.TestCase):
 
     def test_leap_seen_flag_is_translated_to_read_status(self):
         status = Status.from_flag('\\Seen')
-        self.assertEquals(Status('read'), status)
+        self.assertEquals('read', status)
 
     def test_leap_answered_flag_is_translated_to_replied_status(self):
         status = Status.from_flag('\\Answered')
-        self.assertEquals(Status('replied'), status)
+        self.assertEquals('replied', status)
 
     def test_bulk_conversion(self):
         statuses = Status.from_flags(['\\Answered', '\\Seen', '\\Recent', 'tag_a_custom'])
-        self.assertEquals(set([Status('read'), Status('replied'), Status('recent')]), statuses)
+        self.assertEquals(set(['read', 'replied', 'recent']), statuses)

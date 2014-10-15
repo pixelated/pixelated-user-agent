@@ -17,40 +17,26 @@
 
 class Status:
 
-    class PixelatedStatus:
-        SEEN = u'\\Seen'
-        ANSWERED = u'\\Answered'
-        DELETED = u'\\Deleted'
-        RECENT = u'\\Recent'
+    SEEN = u'\\Seen'
+    ANSWERED = u'\\Answered'
+    DELETED = u'\\Deleted'
+    RECENT = u'\\Recent'
 
-    LEAP_FLAGS_STATUSES = {
-        PixelatedStatus.SEEN: 'read',
-        PixelatedStatus.ANSWERED: 'replied',
-        PixelatedStatus.RECENT: 'recent'
+    FLAGS_TO_STATUSES = {
+        SEEN: 'read',
+        ANSWERED: 'replied',
+        RECENT: 'recent'
     }
 
-    @classmethod
-    def from_flag(cls, flag):
-        return Status(cls.LEAP_FLAGS_STATUSES[flag])
+    @staticmethod
+    def from_flag(flag):
+        return Status.FLAGS_TO_STATUSES[flag]
 
-    @classmethod
-    def from_flags(cls, flags):
-        return set(cls.from_flag(flag) for flag in flags if flag in cls.LEAP_FLAGS_STATUSES.keys())
+    @staticmethod
+    def from_flags(flags):
+        return set(Status.from_flag(flag) for flag in flags if flag in Status.FLAGS_TO_STATUSES.keys())
 
-    @classmethod
-    def to_flags(cls, statuses):
-        statuses_to_flags = dict(zip(cls.LEAP_FLAGS_STATUSES.values(), cls.LEAP_FLAGS_STATUSES.keys()))
+    @staticmethod
+    def to_flags(statuses):
+        statuses_to_flags = dict(zip(Status.FLAGS_TO_STATUSES.values(), Status.FLAGS_TO_STATUSES.keys()))
         return [statuses_to_flags[status] for status in statuses]
-
-    def __init__(self, name):
-        self.name = name
-        self.ident = name.__hash__()
-
-    def __eq__(self, other):
-        return self.name == other.name
-
-    def __hash__(self):
-        return self.name.__hash__()
-
-    def __repr__(self):
-        return self.name

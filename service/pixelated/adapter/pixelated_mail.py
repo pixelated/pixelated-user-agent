@@ -44,12 +44,11 @@ class Mail:
         return self.headers['Date']
 
     def as_dict(self):
-        statuses = [status.name for status in self.status]
         return {
             'header': {k.lower(): v for k, v in self.headers.items()},
             'ident': self.ident,
             'tags': list(self.tags),
-            'status': statuses,
+            'status': list(self.status),
             'security_casing': {},
             'body': self.body
         }
@@ -108,7 +107,7 @@ class InputMail(Mail):
         fd[fields.MULTIPART_KEY] = True
         fd[fields.RECENT_KEY] = True
         fd[fields.TYPE_KEY] = fields.TYPE_FLAGS_VAL
-        fd[fields.FLAGS_KEY] = Status.to_flags([status.name for status in self.status])
+        fd[fields.FLAGS_KEY] = Status.to_flags(self.status)
         self._fd = fd
         return fd
 
@@ -201,7 +200,6 @@ class PixelatedMail(Mail):
     def _get_date(self):
         date = self.hdoc.content.get('date', None)
         if not date:
-
             date = self.hdoc.content['received'].split(";")[-1].strip()
         return dateparser.parse(date).isoformat()
 
@@ -252,19 +250,19 @@ class PixelatedMail(Mail):
         return self.tags
 
     def mark_as_read(self):
-        self.fdoc.content['flags'].append(Status.PixelatedStatus.SEEN)
+        self.fdoc.content['flags'].append(Status.SEEN)
         self.save()
         return self
 
     def mark_as_unread(self):
-        if Status.PixelatedStatus.SEEN in self.fdoc.content['flags']:
-            self.fdoc.content['flags'].remove(Status.PixelatedStatus.SEEN)
+        if Status.SEEN in self.fdoc.content['flags']:
+            self.fdoc.content['flags'].remove(Status.SEEN)
             self.save()
         return self
 
     def mark_as_not_recent(self):
-        if Status.PixelatedStatus.RECENT in self.fdoc.content['flags']:
-            self.fdoc.content['flags'].remove(Status.PixelatedStatus.RECENT)
+        if Status.RECENT in self.fdoc.content['flags']:
+            self.fdoc.content['flags'].remove(Status.RECENT)
             self.save()
         return self
 

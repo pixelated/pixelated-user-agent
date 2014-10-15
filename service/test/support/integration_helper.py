@@ -113,7 +113,7 @@ class MailBuilder:
         return self
 
     def with_status(self, status):
-        self.mail['status'].append(Status('read'))
+        self.mail['status'].append('read')
         return self
 
     def with_ident(self, ident):
