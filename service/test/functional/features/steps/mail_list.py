@@ -42,7 +42,7 @@ def impl(context):
 
 @when('I open the first mail in the mail list')
 def impl(context):
-    elements = context.browser.find_elements_by_xpath('//*[@id="mail-list"]//a')
+    elements = wait_until_elements_are_visible_by_locator(context, (By.XPATH, '//*[@id="mail-list"]//a'))
     context.current_mail_id = elements[0].get_attribute('href').split('/')[-1]
     elements[0].click()
 

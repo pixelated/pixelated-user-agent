@@ -32,6 +32,7 @@ def impl(context, expected_body):
 
 @then('that email has the \'{tag}\' tag')
 def impl(context, tag):
+    wait_until_element_is_visible_by_locator(context, (By.CSS, '#mail-view .tagsArea .tag'))
     elements = find_elements_by_css_selector(context, '#mail-view .tagsArea .tag')
     tags = [e.text for e in elements]
     assert_that(tags, has_item(tag.upper()))
