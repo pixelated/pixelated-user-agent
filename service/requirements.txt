@@ -1,19 +1,19 @@
-Twisted==12.2.0
+Twisted==14.0.2
 flask==0.10.1
 scanner==0.0.5
 requests==2.3.0
-pytest==2.6.0
+pytest==2.6.3
 #requirements for bitmask libraries
-srp==1.0.4
+srp==1.0.5
 --allow-external dirspec
 --allow-unverified dirspec
 dirspec==13.10
 --allow-external u1db
 --allow-unverified u1db
-u1db==13.10
+u1db==13.09
 leap.keymanager==0.3.8
 leap.soledad.common==0.5.2
 leap.soledad.client==0.5.2
 leap.mail==0.3.9-1-gc1f9c92
 gunicorn==19.1.1
-whoosh==2.5.6
+whoosh==2.6.0
