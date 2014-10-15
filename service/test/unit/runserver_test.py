@@ -17,42 +17,43 @@
 import unittest
 import sys
 
-import pixelated.user_agent
+import pixelated.runserver
 from mockito import *
 import crochet
 import pixelated.config.reactor_manager as reactor_manager
-import pixelated.adapter.pixelated_mail
+import pixelated.adapter.mail
 import os
+import pixelated.config.app_factory as app_factory
 
 
-class UserAgentTest(unittest.TestCase):
+class RunserverTest(unittest.TestCase):
 
     def test_that_default_config_file_is_home_dot_pixelated(self):
-        orig_config = pixelated.user_agent.app.config
+        orig_config = pixelated.runserver.app.config
         try:
             when(crochet).setup().thenReturn(None)
             when(reactor_manager).start_reactor().thenReturn(None)
-            when(pixelated.user_agent).start_user_agent().thenReturn(None)
-            pixelated.user_agent.app.config = mock()
+            when(app_factory).create_app().thenReturn(None)
+            pixelated.runserver.app.config = mock()
 
             sys.argv = ['/tmp/does_not_exist']
-            pixelated.user_agent.setup()
+            pixelated.runserver.setup()
 
-            verify(pixelated.user_agent.app.config).from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
+            verify(pixelated.runserver.app.config).from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
         finally:
-            pixelated.user_agent.app.config = orig_config
+            pixelated.runserver.app.config = orig_config
 
     def test_that_config_file_can_be_specified_on_command_line(self):
-        orig_config = pixelated.user_agent.app.config
+        orig_config = pixelated.runserver.app.config
         try:
             when(crochet).setup().thenReturn(None)
             when(reactor_manager).start_reactor().thenReturn(None)
-            when(pixelated.user_agent).start_user_agent().thenReturn(None)
-            pixelated.user_agent.app.config = mock()
+            when(app_factory).create_app().thenReturn(None)
+            pixelated.runserver.app.config = mock()
 
             sys.argv = ['/tmp/does_not_exist', '--config', '/tmp/some/config/file']
-            pixelated.user_agent.setup()
+            pixelated.runserver.setup()
 
-            verify(pixelated.user_agent.app.config).from_pyfile('/tmp/some/config/file')
+            verify(pixelated.runserver.app.config).from_pyfile('/tmp/some/config/file')
         finally:
-            pixelated.user_agent.app.config = orig_config
+            pixelated.runserver.app.config = orig_config

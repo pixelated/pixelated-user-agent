@@ -15,14 +15,14 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 
-class MailboxListener(object):
+class MailboxIndexerListener(object):
     """ Listens for new mails, keeping the index updated """
 
     SEARCH_ENGINE = None
 
     @classmethod
     def listen(cls, account, mailbox_name, soledad_querier):
-        listener = MailboxListener(mailbox_name, soledad_querier)
+        listener = MailboxIndexerListener(mailbox_name, soledad_querier)
         if listener not in account.getMailbox(mailbox_name).listeners:
             account.getMailbox(mailbox_name).addListener(listener)
 

@@ -16,8 +16,8 @@
 import unittest
 
 from mockito import *
-from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
-from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
+from pixelated.adapter.mailbox import Mailbox
+from pixelated.adapter.mailboxes import Mailboxes
 
 
 class PixelatedMailboxesTest(unittest.TestCase):
@@ -28,7 +28,7 @@ class PixelatedMailboxesTest(unittest.TestCase):
         self.account.mailboxes = []
         self.drafts_mailbox = mock()
         self.drafts_mailbox.mailbox_name = 'drafts'
-        self.mailboxes = PixelatedMailBoxes(self.account, self.querier)
+        self.mailboxes = Mailboxes(self.account, self.querier)
         self.mailboxes.drafts = lambda: self.drafts_mailbox
 
     def test_search_for_tags(self):
@@ -37,7 +37,7 @@ class PixelatedMailboxesTest(unittest.TestCase):
 
         tags_to_search_for = {'tags': ['inbox', 'custom_tag']}
 
-        when(PixelatedMailbox).create('INBOX', self.querier).thenReturn(mailbox)
+        when(Mailbox).create('INBOX', self.querier).thenReturn(mailbox)
         when(mailbox).mails_by_tags(any(list)).thenReturn(["mail"])
 
         mails = self.mailboxes.mails_by_tag(tags_to_search_for['tags'])

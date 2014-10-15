@@ -25,7 +25,7 @@ from pixelated.adapter.tag_service import TagService
 from pixelated.adapter.draft_service import DraftService
 from pixelated.adapter.mail import PixelatedMail, InputMail
 import pixelated.runserver
-from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
+from pixelated.adapter.mailboxes import Mailboxes
 from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.controllers import *
 import pixelated.config.app_factory as app_factory
@@ -153,11 +153,11 @@ class SoledadTestBase:
         self._reset_routes(self.client.application)
         self.soledad_querier = SoledadQuerier(self.soledad)
         self.account = FakeAccount()
-        self.pixelated_mailboxes = PixelatedMailBoxes(self.account, self.soledad_querier)
+        self.mailboxes = Mailboxes(self.account, self.soledad_querier)
         self.mail_sender = mock()
         self.tag_service = TagService()
-        self.draft_service = DraftService(self.pixelated_mailboxes)
-        self.mail_service = MailService(self.pixelated_mailboxes, self.mail_sender, self.tag_service,
+        self.draft_service = DraftService(self.mailboxes)
+        self.mail_service = MailService(self.mailboxes, self.mail_sender, self.tag_service,
                                         self.soledad_querier)
         self.search_engine = SearchEngine()
         self.search_engine.index_mails(self.mail_service.all_mails())
@@ -206,7 +206,7 @@ class SoledadTestBase:
         self.client.post('/mails/unread', data={'idents': json.dumps(idents)})
 
     def add_mail_to_inbox(self, input_mail):
-        mail = self.pixelated_mailboxes.inbox().add(input_mail)
+        mail = self.mailboxes.inbox().add(input_mail)
         mail.update_tags(input_mail.tags)
         self.search_engine.index_mail(mail)
 

@@ -13,24 +13,24 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
-from pixelated.adapter.listener import MailboxListener
+from pixelated.adapter.mailbox import Mailbox
+from pixelated.adapter.mailbox_indexer_listener import MailboxIndexerListener
 
 
-class PixelatedMailBoxes():
+class Mailboxes():
 
     def __init__(self, account, soledad_querier):
         self.account = account
         self.querier = soledad_querier
         for mailbox_name in account.mailboxes:
-            MailboxListener.listen(self.account, mailbox_name, soledad_querier)
+            MailboxIndexerListener.listen(self.account, mailbox_name, soledad_querier)
 
     def _create_or_get(self, mailbox_name):
         mailbox_name = mailbox_name.upper()
         if mailbox_name not in self.account.mailboxes:
             self.account.addMailbox(mailbox_name)
-        MailboxListener.listen(self.account, mailbox_name, self.querier)
-        return PixelatedMailbox.create(mailbox_name, self.querier)
+        MailboxIndexerListener.listen(self.account, mailbox_name, self.querier)
+        return Mailbox.create(mailbox_name, self.querier)
 
     def inbox(self):
         return self._create_or_get('INBOX')

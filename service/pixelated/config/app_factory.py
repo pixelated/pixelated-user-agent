@@ -16,12 +16,12 @@
 
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.mail import InputMail
-from pixelated.adapter.pixelated_mail_sender import PixelatedMailSender
-from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
+from pixelated.adapter.mail_sender import MailSender
+from pixelated.adapter.mailboxes import Mailboxes
 from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.draft_service import DraftService
-from pixelated.adapter.listener import MailboxListener
+from pixelated.adapter.mailbox_indexer_listener import MailboxIndexerListener
 import pixelated.bitmask_libraries.session as LeapSession
 from pixelated.controllers import *
 from pixelated.adapter.tag_service import TagService
@@ -55,14 +55,14 @@ def create_app(debug_enabled, app):
                                         app.config['LEAP_SERVER_NAME'])
         tag_service = TagService()
         soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
-        pixelated_mailboxes = PixelatedMailBoxes(leap_session.account, soledad_querier)
-        pixelated_mail_sender = PixelatedMailSender(leap_session.account_email())
+        pixelated_mailboxes = Mailboxes(leap_session.account, soledad_querier)
+        pixelated_mail_sender = MailSender(leap_session.account_email())
         mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, tag_service, soledad_querier)
         search_engine = SearchEngine()
         search_engine.index_mails(mail_service.all_mails())
         draft_service = DraftService(pixelated_mailboxes)
 
-        MailboxListener.SEARCH_ENGINE = search_engine
+        MailboxIndexerListener.SEARCH_ENGINE = search_engine
         InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
 
         home_controller = HomeController()

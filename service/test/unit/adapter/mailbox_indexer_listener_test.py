@@ -16,7 +16,7 @@
 import unittest
 
 from mockito import *
-from pixelated.adapter.listener import MailboxListener
+from pixelated.adapter.mailbox_indexer_listener import MailboxIndexerListener
 
 
 class MailboxListenerTest(unittest.TestCase):
@@ -32,19 +32,19 @@ class MailboxListenerTest(unittest.TestCase):
         mailbox.listeners = set()
         when(mailbox).addListener = lambda x: mailbox.listeners.add(x)
 
-        self.assertNotIn(MailboxListener('INBOX', self.querier), mailbox.listeners)
+        self.assertNotIn(MailboxIndexerListener('INBOX', self.querier), mailbox.listeners)
 
-        MailboxListener.listen(self.account, 'INBOX', self.querier)
+        MailboxIndexerListener.listen(self.account, 'INBOX', self.querier)
 
-        self.assertIn(MailboxListener('INBOX', self.querier), mailbox.listeners)
+        self.assertIn(MailboxIndexerListener('INBOX', self.querier), mailbox.listeners)
 
     def test_reindex_missing_idents(self):
         search_engine = mock()
         when(search_engine).search('tag:inbox').thenReturn(['ident1', 'ident2'])
 
-        MailboxListener.SEARCH_ENGINE = search_engine
+        MailboxIndexerListener.SEARCH_ENGINE = search_engine
 
-        listener = MailboxListener('INBOX', self.querier)
+        listener = MailboxIndexerListener('INBOX', self.querier)
         when(self.querier).idents_by_mailbox('INBOX').thenReturn({'ident1', 'ident2', 'missing_ident'})
         self.querier.used_arguments = []
         self.querier.mails = lambda x: self.querier.used_arguments.append(x)

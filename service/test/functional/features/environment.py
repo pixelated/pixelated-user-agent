@@ -25,7 +25,7 @@ def before_all(context):
     context.soledad_test_base = SoledadTestBase()
     context.soledad_test_base.setup_soledad()
 
-    context.mailboxes = context.soledad_test_base.pixelated_mailboxes
+    context.mailboxes = context.soledad_test_base.mailboxes
     context.app = pixelated.runserver.app
     context.app.mail_service = context.soledad_test_base.mail_service
 

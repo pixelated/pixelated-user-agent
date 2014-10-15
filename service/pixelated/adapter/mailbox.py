@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 
-class PixelatedMailbox:
+class Mailbox:
 
     def __init__(self, mailbox_name, querier):
         self.mailbox_name = mailbox_name
@@ -50,4 +50,4 @@ class PixelatedMailbox:
 
     @classmethod
     def create(cls, mailbox_name, soledad_querier):
-        return PixelatedMailbox(mailbox_name, soledad_querier)
+        return Mailbox(mailbox_name, soledad_querier)

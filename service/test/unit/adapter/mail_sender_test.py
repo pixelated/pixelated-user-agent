@@ -16,16 +16,16 @@
 import unittest
 
 from pixelated.adapter.mail import PixelatedMail
-from pixelated.adapter.pixelated_mail_sender import PixelatedMailSender
+from pixelated.adapter.mail_sender import MailSender
 from mockito import *
 from test.support import test_helper
 
 
-class PixelatedMailSenderTest(unittest.TestCase):
+class MailSenderTest(unittest.TestCase):
     def setUp(self):
         self.mail_address = "pixelated@pixelated.org"
         self.smtp_client = mock()
-        self.mail_sender = PixelatedMailSender(self.mail_address, self.smtp_client)
+        self.mail_sender = MailSender(self.mail_address, self.smtp_client)
 
     def test_send_mail_sends_to_To_Cc_and_Bcc(self):
         headers = {

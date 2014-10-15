@@ -49,5 +49,5 @@ class TagsTest(unittest.TestCase, SoledadTestBase):
         response = self.post_tags(mail.ident, self._tags_json(['DRAFTS']))
         self.assertEquals("None of the following words can be used as tags: drafts", response)
 
-        mail = self.pixelated_mailboxes.inbox().mail(mail.ident)
+        mail = self.mailboxes.inbox().mail(mail.ident)
         self.assertNotIn('drafts', mail.tags)

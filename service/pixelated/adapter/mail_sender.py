@@ -13,24 +13,21 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import unittest
+import smtplib
 
-from pixelated.adapter.mail import PixelatedMail
-from pixelated.adapter.pixelated_mailbox import PixelatedMailbox
-from mockito import *
-from test.support import test_helper
+from pixelated.support.functional import flatten
 
 
-class PixelatedMailboxTest(unittest.TestCase):
-    def setUp(self):
-        self.tag_service = mock()
-        self.querier = mock()
-        self.mailbox = PixelatedMailbox('INBOX', self.querier)
+class MailSender():
+    def __init__(self, account_email_address, smtp_client=None):
+        self.account_email_address = account_email_address
+        self.smtp_client = smtp_client or smtplib.SMTP('localhost', 4650)
 
-    def test_remove_message_from_mailbox(self):
-        mail = PixelatedMail.from_soledad(*test_helper.leap_mail(), soledad_querier=self.querier)
-        when(self.querier).mail(1).thenReturn(mail)
+    def sendmail(self, mail):
+        recipients = flatten([mail.to, mail.cc, mail.bcc])
 
-        self.mailbox.remove(1)
-
-        verify(self.querier).remove_mail(mail)
+        self.smtp_client.sendmail(
+            self.account_email_address,
+            recipients,
+            mail.to_smtp_format()
+        )
