@@ -39,9 +39,19 @@ define(
         };
       }
 
-      function failure(on) {
+      function failure(on, context) {
         return function(xhr, status, error) {
-          on.trigger(events.ui.userAlerts.displayMessage, {message: 'Ops! something went wrong, try again later.'});
+          var contextMessage = '';
+
+          if (context) {
+            contextMessage = context + ': ';
+          }
+
+          if (xhr.responseJSON.message) {
+            on.trigger(document, events.ui.userAlerts.displayMessage, {message: contextMessage + xhr.responseJSON.message});
+          } else {
+            on.trigger(document, events.ui.userAlerts.displayMessage, {message: 'Ops! something went wrong, try again later.'});
+          }
         };
       }
 
@@ -56,7 +66,7 @@ define(
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify(data)
         }).done(successSendMail(this))
-          .fail(failure(this));
+          .fail(failure(this, 'Error sending mail'));
       };
 
       this.saveMail = function(mail) {
