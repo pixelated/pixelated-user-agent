@@ -75,7 +75,8 @@ class SearchEngine(object):
             subject=TEXT(stored=False),
             body=TEXT(stored=False),
             tag=KEYWORD(stored=False, commas=True),
-            flags=KEYWORD(stored=False, commas=True))
+            flags=KEYWORD(stored=False, commas=True),
+            raw=TEXT(stored=False))
 
     def _create_index(self):
         return whoosh.index.create_in(self.INDEX_FOLDER, self._mail_schema(), indexname='mails')
@@ -98,7 +99,8 @@ class SearchEngine(object):
             'tag': u','.join(tags),
             'body': unicode(mdict['body']),
             'ident': unicode(mdict['ident']),
-            'flags': unicode(','.join(mail.flags))
+            'flags': unicode(','.join(mail.flags)),
+            'raw': unicode(mail.raw)
         }
 
         writer.update_document(**index_data)
@@ -110,7 +112,7 @@ class SearchEngine(object):
 
     def _search_with_options(self, options, query):
         with self._index.searcher() as searcher:
-            query = QueryParser('body', self._index.schema).parse(query)
+            query = QueryParser('raw', self._index.schema).parse(query)
             results = searcher.search(query, **options)
         return results
 

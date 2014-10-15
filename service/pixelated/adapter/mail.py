@@ -43,6 +43,31 @@ class Mail:
     def date(self):
         return self.headers['Date']
 
+    @property
+    def status(self):
+        return Status.from_flags(self.flags)
+
+    @property
+    def flags(self):
+        return self.fdoc.content.get('flags')
+
+    @property
+    def _mime_multipart(self):
+        if self._mime:
+            return self._mime
+        mime = MIMEMultipart()
+        for key, value in self.headers.items():
+            mime[str(key)] = str(value)
+        mime.attach(MIMEText(self.body, 'plain'))
+        self._mime = mime
+        return mime
+
+    def raw(self):
+        return self._mime_multipart.as_string()
+
+    def _get_chash(self):
+        return sha256.SHA256(self.raw()).hexdigest()
+
     def as_dict(self):
         return {
             'header': {k.lower(): v for k, v in self.headers.items()},
@@ -66,29 +91,8 @@ class InputMail(Mail):
         self._chash = None
 
     @property
-    def _mime_multipart(self):
-        if self._mime:
-            return self._mime
-        mime = MIMEMultipart()
-        for key, value in self.headers.items():
-            mime[str(key)] = str(value)
-        mime.attach(MIMEText(self.body, 'plain'))
-        self._mime = mime
-        return mime
-
-    @property
     def ident(self):
         return self._get_chash()
-
-    def _raw(self):
-        if not self._raw_message:
-            self._raw_message = self._mime_multipart.as_string()
-        return self._raw_message
-
-    def _get_chash(self):
-        if not self._chash:
-            self._chash = sha256.SHA256(self._raw()).hexdigest()
-        return self._chash
 
     def _get_for_save(self, next_uid, mailbox):
         docs = [self._fdoc(next_uid, mailbox), self._hdoc()]
@@ -103,7 +107,7 @@ class InputMail(Mail):
         fd[fields.MBOX_KEY] = mailbox
         fd[fields.UID_KEY] = next_uid
         fd[fields.CONTENT_HASH_KEY] = self._get_chash()
-        fd[fields.SIZE_KEY] = len(self._raw())
+        fd[fields.SIZE_KEY] = len(self.raw())
         fd[fields.MULTIPART_KEY] = True
         fd[fields.RECENT_KEY] = True
         fd[fields.TYPE_KEY] = fields.TYPE_FLAGS_VAL
@@ -192,9 +196,7 @@ class PixelatedMail(Mail):
 
         for header in ['From', 'Subject']:
             _headers[header] = self.hdoc.content['headers'].get(header)
-
         _headers['Date'] = self._get_date()
-
         return _headers
 
     def _get_date(self):
@@ -202,14 +204,6 @@ class PixelatedMail(Mail):
         if not date:
             date = self.hdoc.content['received'].split(";")[-1].strip()
         return dateparser.parse(date).isoformat()
-
-    @property
-    def status(self):
-        return Status.from_flags(self.flags)
-
-    @property
-    def flags(self):
-        return self.fdoc.content.get('flags')
 
     @property
     def security_casing(self):
