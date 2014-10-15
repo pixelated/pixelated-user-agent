@@ -26,6 +26,7 @@ from pycryptopp.hash import sha256
 
 
 class InputMail:
+    FROM_EMAIL_ADDRESS = None
 
     def __init__(self):
         self._raw_message = None
@@ -141,7 +142,7 @@ class InputMail:
 
     def to_smtp_format(self):
         mime_multipart = self.to_mime_multipart()
-        mime_multipart['From'] = PixelatedMail.from_email_address
+        mime_multipart['From'] = InputMail.FROM_EMAIL_ADDRESS
         return mime_multipart.as_string()
 
     @staticmethod

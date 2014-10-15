@@ -111,7 +111,7 @@ class InputMailTest(unittest.TestCase):
         self.assertRegexpMatches(mime_multipart.as_string(), "\nEste \xe9 o corpo")
 
     def test_smtp_format(self):
-        PixelatedMail.from_email_address = 'pixelated@org'
+        InputMail.FROM_EMAIL_ADDRESS = 'pixelated@org'
 
         smtp_format = InputMail.from_dict(self.mail_dict()).to_smtp_format()
 

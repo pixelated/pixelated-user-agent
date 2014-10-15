@@ -136,8 +136,7 @@ class SoledadTestBase:
 
     def _reset_routes(self, app):
         static_files_route = app.view_functions['static']
-        disabled_features_route = app.view_functions['features']
-        app.view_functions = {'static': static_files_route, 'features': disabled_features_route}
+        app.view_functions = {'static': static_files_route}
 
     def setup_soledad(self):
         self.soledad = initialize_soledad(tempdir=soledad_test_folder)
@@ -145,7 +144,7 @@ class SoledadTestBase:
 
         # setup app
         PixelatedMail.from_email_address = self.mail_address
-        pixelated.user_agent.DISABLED_FEATURES.append('autoReload')
+
         SearchEngine.INDEX_FOLDER = soledad_test_folder + '/search_index'
 
         self.client = pixelated.user_agent.app.test_client()
@@ -162,13 +161,16 @@ class SoledadTestBase:
         self.search_engine = SearchEngine()
         self.search_engine.index_mails(self.mail_service.all_mails())
 
+        features_controller = FeaturesController()
+        features_controller.DISABLED_FEATURES.append('autoReload')
         home_controller = HomeController()
         mails_controller = MailsController(mail_service=self.mail_service,
                                            draft_service=self.draft_service,
                                            search_engine=self.search_engine)
         tags_controller = TagsController(search_engine=self.search_engine)
 
-        pixelated.user_agent._setup_routes(self.client.application, home_controller, mails_controller, tags_controller)
+        pixelated.user_agent._setup_routes(self.client.application, home_controller, mails_controller, tags_controller,
+                                           features_controller)
 
     def get_mails_by_tag(self, tag):
         response = json.loads(self.client.get("/mails?q=tag:" + tag).data)

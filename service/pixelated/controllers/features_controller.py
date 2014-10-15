@@ -14,17 +14,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-
-def respond_json(entity, status_code=200):
-    json_response = json.dumps(entity)
-    response = Response(response=json_response, mimetype="application/json")
-    response.status_code = status_code
-    return response
+from pixelated.controllers import respond_json
+import os
 
 
-import json
-from flask import Response
-from home_controller import HomeController
-from mails_controller import MailsController
-from tags_controller import TagsController
-from features_controller import FeaturesController
+class FeaturesController:
+    DISABLED_FEATURES = ['draftReply', 'signatureStatus', 'encryptionStatus', 'contacts']
+
+    def __init__(self):
+        pass
+
+    def features(self):
+        try:
+            disabled_features = {'logout': os.environ['DISPATCHER_LOGOUT_URL']}
+        except KeyError:
+            disabled_features = {}
+        return respond_json({'disabled_features': self.DISABLED_FEATURES, 'dispatcher_features': disabled_features})
