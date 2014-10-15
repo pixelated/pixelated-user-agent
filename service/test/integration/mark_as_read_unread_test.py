@@ -18,7 +18,7 @@ import unittest
 from test.support.integration_helper import MailBuilder, SoledadTestBase
 
 
-class MarkAsReadTest(unittest.TestCase, SoledadTestBase):
+class MarkAsReadUnreadTest(unittest.TestCase, SoledadTestBase):
 
     def setUp(self):
         self.setup_soledad()
