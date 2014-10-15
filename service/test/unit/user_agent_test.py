@@ -20,7 +20,7 @@ import sys
 import pixelated.user_agent
 from mockito import *
 import crochet
-import pixelated.reactor_manager as reactor_manager
+import pixelated.config.reactor_manager as reactor_manager
 import pixelated.adapter.pixelated_mail
 import os
 

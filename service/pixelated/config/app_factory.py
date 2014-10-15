@@ -13,48 +13,17 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import argparse
-import getpass
 
-import os
-import os.path
-import crochet
-from flask import Flask
-from pixelated.adapter.pixelated_mail_sender import PixelatedMailSender
-from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
-import pixelated.reactor_manager as reactor_manager
-import pixelated.bitmask_libraries.session as LeapSession
-from pixelated.bitmask_libraries.config import LeapConfig
-from pixelated.bitmask_libraries.provider import LeapProvider
-from pixelated.bitmask_libraries.auth import LeapAuthenticator, LeapCredentials
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.mail import InputMail
 from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.draft_service import DraftService
 from pixelated.adapter.listener import MailboxListener
+import pixelated.bitmask_libraries.session as LeapSession
 from pixelated.controllers import *
 from pixelated.adapter.tag_service import TagService
-
-
-static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "web-ui", "app"))
-# this is a workaround for packaging
-if not os.path.exists(static_folder):
-    static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))
-if not os.path.exists(static_folder):
-    static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
-
-app = Flask(__name__, static_url_path='', static_folder=static_folder)
-
-
-def register_new_user(username, server_name):
-    certs_home = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "certificates"))
-    config = LeapConfig(certs_home=certs_home)
-    provider = LeapProvider(server_name, config)
-    password = getpass.getpass('Please enter password for %s: ' % username)
-    LeapAuthenticator(provider).register(LeapCredentials(username, password))
-    session = LeapSession.open(username, password, server_name)
-    session.nicknym.generate_openpgp_key()
+import os
 
 
 def _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller):
@@ -77,7 +46,7 @@ def _setup_routes(app, home_controller, mails_controller, tags_controller, featu
     app.add_url_rule('/features', methods=['GET'], view_func=features_controller.features)
 
 
-def start_user_agent(debug_enabled, app):
+def create_app(debug_enabled, app):
 
     with app.app_context():
         leap_session = LeapSession.open(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'],
@@ -107,33 +76,11 @@ def start_user_agent(debug_enabled, app):
                 port=app.config['PORT'], use_reloader=False)
 
 
-def setup():
-    try:
-        default_config_path = os.path.join(os.environ['HOME'], '.pixelated')
-
-        parser = argparse.ArgumentParser(description='Pixelated user agent.')
-        parser.add_argument('--debug', action='store_true',
-                            help='DEBUG mode.')
-        parser.add_argument('--register', metavar='username', help='register user with name.')
-        parser.add_argument('-c', '--config', metavar='configfile', default=default_config_path,
-                            help='use specified config file. Default is ~/.pixelated.')
-
-        args = parser.parse_args()
-        debug_enabled = args.debug or os.environ.get('DEBUG', False)
-        reactor_manager.start_reactor(logging=debug_enabled)
-
-        crochet.setup()
-
-        app.config.from_pyfile(args.config)
-
-        if args.register:
-            server_name = app.config['LEAP_SERVER_NAME']
-            register_new_user(args.register, server_name)
-        else:
-            start_user_agent(debug_enabled, app)
-    finally:
-        reactor_manager.stop_reactor_on_exit()
-
-
-if __name__ == '__main__':
-    setup()
+def get_static_folder():
+    static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))
+    # this is a workaround for packaging
+    if not os.path.exists(static_folder):
+        static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "..", "web-ui", "app"))
+    if not os.path.exists(static_folder):
+        static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
+    return static_folder

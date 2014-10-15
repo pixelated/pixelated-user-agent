@@ -23,11 +23,13 @@ from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.tag_service import TagService
 from pixelated.adapter.draft_service import DraftService
-import pixelated.user_agent
 from pixelated.adapter.mail import PixelatedMail, InputMail
+import pixelated.runserver
 from pixelated.adapter.pixelated_mailboxes import PixelatedMailBoxes
 from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.controllers import *
+import pixelated.config.app_factory as app_factory
+
 
 soledad_test_folder = "soledad-test"
 
@@ -146,7 +148,7 @@ class SoledadTestBase:
 
         SearchEngine.INDEX_FOLDER = soledad_test_folder + '/search_index'
 
-        self.client = pixelated.user_agent.app.test_client()
+        self.client = pixelated.runserver.app.test_client()
 
         self._reset_routes(self.client.application)
         self.soledad_querier = SoledadQuerier(self.soledad)
@@ -168,8 +170,8 @@ class SoledadTestBase:
                                            search_engine=self.search_engine)
         tags_controller = TagsController(search_engine=self.search_engine)
 
-        pixelated.user_agent._setup_routes(self.client.application, home_controller, mails_controller, tags_controller,
-                                           features_controller)
+        app_factory._setup_routes(self.client.application, home_controller, mails_controller, tags_controller,
+                                  features_controller)
 
     def get_mails_by_tag(self, tag):
         response = json.loads(self.client.get("/mails?q=tag:" + tag).data)

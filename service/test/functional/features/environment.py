@@ -18,7 +18,7 @@ import multiprocessing
 
 from selenium import webdriver
 from test.support.integration_helper import SoledadTestBase
-import pixelated.user_agent
+import pixelated.runserver
 
 
 def before_all(context):
@@ -26,10 +26,10 @@ def before_all(context):
     context.soledad_test_base.setup_soledad()
 
     context.mailboxes = context.soledad_test_base.pixelated_mailboxes
-    context.app = pixelated.user_agent.app
+    context.app = pixelated.runserver.app
     context.app.mail_service = context.soledad_test_base.mail_service
 
-    worker = lambda app, port: pixelated.user_agent.app.run(port=4567, use_reloader=False)
+    worker = lambda app, port: pixelated.runserver.app.run(port=4567, use_reloader=False)
     context._process = multiprocessing.Process(target=worker, args=(context.app, 4567))
     context._process.start()
 

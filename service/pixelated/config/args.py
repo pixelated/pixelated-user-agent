@@ -14,18 +14,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+import argparse
 
-def respond_json(entity, status_code=200):
-    json_response = json.dumps(entity)
-    response = Response(response=json_response, mimetype="application/json")
-    response.status_code = status_code
-    return response
+import os
 
 
-import json
-
-from flask import Response
-from home_controller import HomeController
-from mails_controller import MailsController
-from tags_controller import TagsController
-from features_controller import FeaturesController
+def parse():
+    default_config_path = os.path.join(os.environ['HOME'], '.pixelated')
+    parser = argparse.ArgumentParser(description='Pixelated user agent.')
+    parser.add_argument('--debug', action='store_true',
+                        help='DEBUG mode.')
+    parser.add_argument('--register', metavar='username', help='register user with name.')
+    parser.add_argument('-c', '--config', metavar='configfile', default=default_config_path,
+                        help='use specified config file. Default is ~/.pixelated.')
+    args = parser.parse_args()
+    return args
