@@ -230,7 +230,7 @@ define(
       };
 
       this.nextPage = function () {
-        if (this.attr.currentPage < (this.attr.numPages - 1)) {
+        if (this.attr.currentPage < (this.attr.numPages)) {
           this.updateCurrentPageNumber(this.attr.currentPage + 1);
           this.refreshResults();
         }
@@ -263,18 +263,21 @@ define(
       this.after('initialize', function () {
         that = this;
 
-        this.on(events.mail.tags.update, this.updateTags);
-        this.on(events.mail.draftReply.want, this.wantDraftReplyForMail);
-        this.on(events.mail.want, this.fetchSingle);
-        this.on(events.mail.read, this.readMail);
-        this.on(events.mail.unread, this.unreadMail);
-        this.on(events.mail.delete, this.deleteMail);
-        this.on(events.mail.deleteMany, this.deleteManyMails);
-        this.on(events.search.perform, this.newSearch);
-        this.on(events.ui.mails.fetchByTag, this.fetchByTag);
-        this.on(events.ui.mails.refresh, this.refreshResults);
-        this.on(events.ui.page.previous, this.previousPage);
-        this.on(events.ui.page.next, this.nextPage);
+        if (features.isEnabled('tags')) {
+          this.on(events.mail.tags.update, this.updateTags);
+        }
+
+        this.on(document, events.mail.draftReply.want, this.wantDraftReplyForMail);
+        this.on(document, events.mail.want, this.fetchSingle);
+        this.on(document, events.mail.read, this.readMail);
+        this.on(document, events.mail.unread, this.unreadMail);
+        this.on(document, events.mail.delete, this.deleteMail);
+        this.on(document, events.mail.deleteMany, this.deleteManyMails);
+        this.on(document, events.search.perform, this.newSearch);
+        this.on(document, events.ui.mails.fetchByTag, this.fetchByTag);
+        this.on(document, events.ui.mails.refresh, this.refreshResults);
+        this.on(document, events.ui.page.previous, this.previousPage);
+        this.on(document, events.ui.page.next, this.nextPage);
       });
     }
   }

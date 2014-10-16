@@ -134,8 +134,9 @@ class SearchEngine(object):
         window = int(window)
 
         with self._index.searcher() as searcher:
-            results = searcher.search_page(query, page, pagelen=window)
-            return [mail['ident'] for mail in results]
+            tags_facet = sorting.FieldFacet('tag', allow_overlap=True, maptype=sorting.Count)
+            results = searcher.search_page(query, page, pagelen=window, groupedby=tags_facet)
+            return [mail['ident'] for mail in results], sum(results.results.groups().values())
 
     def prepare_query(self, query):
         query = (

@@ -29,13 +29,13 @@ class MailsController:
         self._search_engine = search_engine
 
     def mails(self, _request=request):
-        mail_ids = self._search_engine.search(_request.args.get('q'), _request.args.get('w'), _request.args.get('p'))
+        mail_ids, total = self._search_engine.search(_request.args.get('q'), _request.args.get('w'), _request.args.get('p'))
         mails = self._mail_service.mails(mail_ids)
         mails = sorted(mails, key=lambda mail: dateparser.parse(mail.date), reverse=True)
 
         response = {
             "stats": {
-                "total": len(mails),
+                "total": total,
                 "read": 0,
                 "starred": 0,
                 "replied": 0

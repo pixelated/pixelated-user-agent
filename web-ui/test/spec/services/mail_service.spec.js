@@ -238,8 +238,8 @@ describeComponent('services/mail_service', function () {
       expect(this.component.attr.currentPage).toEqual(2);
     });
 
-    it('won\'t change the page if it was already at the first page and trying to go to previous', function() {
-      this.component.attr.numPages = 10;
+    it('won\'t change the page if it is at the last mail when ui:page:next is fired', function() {
+      this.component.attr.numPages = 9;
       this.component.attr.currentPage = 9;
 
       this.component.trigger(Pixelated.events.ui.page.next);
