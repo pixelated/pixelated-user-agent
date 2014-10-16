@@ -18,16 +18,17 @@ import unittest
 from mockito import *
 from pixelated.controllers.mails_controller import MailsController
 
+
 class TestMailsController(unittest.TestCase):
 
     def setUp(self):
-        self.mail_service = mock() #MailService(pixelated_mailboxes, pixelated_mail_sender, tag_service, soledad_querier)
-        search_engine = mock() #SearchEngine()
-        draft_service = mock() #DraftService(pixelated_mailboxes)
+        self.mail_service = mock()
+        search_engine = mock()
+        draft_service = mock()
 
         self.mails_controller = MailsController(mail_service=self.mail_service,
-                                           draft_service=draft_service,
-                                           search_engine=search_engine)
+                                                draft_service=draft_service,
+                                                search_engine=search_engine)
 
         self.input_mail = mock()
         self.input_mail.json = {'header': {'from': 'a@a.a', 'to': 'b@b.b'},
@@ -36,6 +37,7 @@ class TestMailsController(unittest.TestCase):
                                 'status': [],
                                 'security_casing': {},
                                 'body': 'email body'}
+
     def tearDown(self):
         unstub()
 
@@ -63,4 +65,3 @@ class TestMailsController(unittest.TestCase):
 
     def _send_that_throws_exception(self, ident, mail):
         raise Exception('email sending failed', 'more information of error', 123, 'there was a code before this')
-
