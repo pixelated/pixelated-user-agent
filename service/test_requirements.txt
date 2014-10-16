@@ -1,7 +1,7 @@
 PyHamcrest==1.8.1
 behave==1.2.4
 selenium==2.43.0
-nose
-mock
-httmock
-mockito
+nose==1.3.2
+mock==1.0.1
+httmock==1.2.2
+mockito==0.5.2

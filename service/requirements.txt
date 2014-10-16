@@ -1,7 +1,6 @@
 Twisted==14.0.2
 flask==0.10.1
-scanner==0.0.5
-requests==2.3.0
+requests==2.4.3
 pytest==2.6.3
 #requirements for bitmask libraries
 srp==1.0.5

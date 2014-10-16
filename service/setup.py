@@ -19,6 +19,10 @@ import sys
 if 'develop' in sys.argv:
     sys.argv.append('--always-unzip')
 
+# next line is a fix to this error that occurs with nose > 1.1.2 and the debian
+# python: http://bugs.python.org/issue15881#msg170215
+import multiprocessing
+
 from setuptools import setup
 from collections import defaultdict
 import os
@@ -69,9 +73,9 @@ setup(name='pixelated-user-agent',
       packages=['pixelated', 'pixelated.adapter', 'pixelated.bitmask_libraries', 'pixelated.config', 'pixelated.certificates', 'pixelated.support', 'pixelated.controllers'],
       test_suite='nose.collector',
       install_requires=[
-          'Twisted',
-          'flask',
-          'requests',
+          'Twisted==14.0.2',
+          'flask==0.10.1',
+          'requests==2.4.3',
           'srp==1.0.5',
           'dirspec==13.10',
           'u1db==13.09',
@@ -80,8 +84,8 @@ setup(name='pixelated-user-agent',
           'leap.soledad.client==0.5.2',
           'leap.mail==0.3.9-1-gc1f9c92',
           'whoosh==2.6.0',
-          'gunicorn',
-          'crochet'
+          'gunicorn==19.1.1',
+          'crochet==1.3.0'
       ],
       entry_points={
           'console_scripts': [
