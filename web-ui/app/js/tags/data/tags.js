@@ -40,7 +40,7 @@ define(['flight/lib/component', 'page/events', 'mixins/with_feature_toggle'], fu
     function sendTagsBackTo(on, params) {
       return function(data) {
         data.push(DataTags.all);
-        on.trigger(params.caller, events.tags.received, {tags: data});
+        on.trigger(params.caller, events.tags.received, {tags: data, skipMailListRefresh: params.skipMailListRefresh});
       };
     }
 

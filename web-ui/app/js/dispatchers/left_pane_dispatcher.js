@@ -29,8 +29,8 @@ define(
     function leftPaneDispatcher() {
       var initialized = false;
 
-      this.refreshTagList = function () {
-        this.trigger(document, events.tags.want, { caller: this.$node });
+      this.refreshTagList = function (ev, data) {
+        this.trigger(document, events.tags.want, { caller: this.$node, skipMailListRefresh: data.skipMailListRefresh });
       };
 
       this.loadTags = function (ev, data) {
@@ -39,7 +39,7 @@ define(
 
       this.selectTag = function (ev, data) {
         var tag = (data && data.tag) || urlParams.getTag();
-        this.trigger(document, events.ui.tag.select, { tag: tag });
+        this.trigger(document, events.ui.tag.select, { tag: tag, skipMailListRefresh: data.skipMailListRefresh });
       };
 
       this.pushUrlState = function (ev, data) {
@@ -60,7 +60,7 @@ define(
         this.on(document, events.dispatchers.tags.refreshTagList, this.refreshTagList);
         this.on(document, events.ui.tags.loaded, this.selectTag);
         this.on(document, events.ui.tag.selected, this.pushUrlState);
-        this.trigger(document, events.tags.want, { caller: this.$node } );
+        this.trigger(document, events.tags.want, { caller: this.$node });
       });
     }
   }

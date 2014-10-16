@@ -166,11 +166,14 @@ describeComponent('mail_list/ui/mail_list', function () {
 
     });
 
-    it('should render all mails sent in ui:mails:show event', function () {
+    it('should render all mails sent in ui:mails:show event but shouldnt refresh the tags', function () {
+      var refreshTagListEvent = spyOnEvent(document, Pixelated.events.dispatchers.tags.refreshTagList);
+
       this.component.$node.trigger(Pixelated.events.mails.available, { mails: mailList });
 
       matchMail(mailList[0], this.component.$node);
       matchMail(mailList[1], this.component.$node);
+      expect(refreshTagListEvent).not.toHaveBeenTriggeredOn(document);
     });
 
     it('should select the current email when mails are available', function () {
@@ -256,6 +259,16 @@ describeComponent('mail_list/ui/mail_list', function () {
       this.component.trigger(Pixelated.events.mail.sent);
       expect(spyRefresh).toHaveBeenTriggeredOn(document);
       expect(spyScroll).toHaveBeenTriggeredOn(document);
+    });
+  });
+
+  describe('refreshing the mail list', function () {
+    it('also refreshes the tag list but skips the next mail list refresh', function () {
+      var tagListRefreshEvent = spyOnEvent(document, Pixelated.events.dispatchers.tags.refreshTagList);
+
+      $(document).trigger(Pixelated.events.mails.availableForRefresh, { mails: []});
+
+      expect(tagListRefreshEvent).toHaveBeenTriggeredOnAndWith(document, { skipMailListRefresh: true});
     });
   });
 

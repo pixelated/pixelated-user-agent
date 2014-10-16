@@ -100,6 +100,9 @@ define(
       };
 
       this.refreshMailList = function (ev, data) {
+        if (ev) { // triggered by the event, so we need to refresh the tag list
+          this.trigger(document, events.dispatchers.tags.refreshTagList, { skipMailListRefresh: true });
+        }
         resetMailList();
         renderMails(data.mails);
       };

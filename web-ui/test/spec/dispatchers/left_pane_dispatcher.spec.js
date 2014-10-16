@@ -47,7 +47,7 @@ describeComponent('dispatchers/left_pane_dispatcher', function () {
     it('asks for more tags when refreshTagList is fired', function () {
       var tagWantEvent = spyOnEvent(document, Pixelated.events.tags.want);
 
-      $(document).trigger(Pixelated.events.dispatchers.tags.refreshTagList);
+      $(document).trigger(Pixelated.events.dispatchers.tags.refreshTagList, {});
 
       expect(tagWantEvent).toHaveBeenTriggeredOn(document);
     });
@@ -63,7 +63,7 @@ describeComponent('dispatchers/left_pane_dispatcher', function () {
     it('on tags loaded selects the inbox tag if no data is provided', function () {
       var selectTagEvent = spyOnEvent(document, Pixelated.events.ui.tag.select);
 
-      $(document).trigger(Pixelated.events.ui.tags.loaded);
+      $(document).trigger(Pixelated.events.ui.tags.loaded, {});
 
       expect(selectTagEvent).toHaveBeenTriggeredOnAndWith(document, { tag: 'inbox' });
     });

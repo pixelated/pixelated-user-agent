@@ -92,10 +92,9 @@ define(
         }.bind(this));
       };
 
-
       this.loadTagList = function(ev, data) {
         this.renderTagList(_.sortBy(data.tags, tagOrder));
-        this.trigger(document, events.ui.tags.loaded, { tag: this.attr.currentTag });
+        this.trigger(document, events.ui.tags.loaded, { tag: this.attr.currentTag, skipMailListRefresh: data.skipMailListRefresh});
       };
 
       this.saveTag = function(ev, data) {
