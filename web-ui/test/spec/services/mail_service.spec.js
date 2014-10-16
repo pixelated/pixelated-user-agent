@@ -81,7 +81,8 @@ describeComponent('services/mail_service', function () {
 
   it('updates the tags of the desired message', function () {
     spyOn(this.component, 'refreshResults');
-    var spyAjax = spyOn($, 'ajax').andReturn({done: function(f) { f(); return {fail: function() {}};}});
+    var updateTagsReturnValue = { tags: ['website'], mailbox: 'inbox'}
+    var spyAjax = spyOn($, 'ajax').andReturn({done: function(f) { f(updateTagsReturnValue); return {fail: function() {}};}});
 
     var spyEvent = spyOnEvent(document, Pixelated.events.mail.tags.updated);
     var component = jasmine.createSpyObj('component',['successUpdateTags']);

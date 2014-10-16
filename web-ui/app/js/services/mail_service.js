@@ -58,7 +58,7 @@ define(
           data: JSON.stringify({newtags: data.tags})
         }).done(function (data) {
           that.refreshResults();
-          $(document).trigger(events.mail.tags.updated, { ident: ident, tags: data });
+          $(document).trigger(events.mail.tags.updated, { ident: ident, tags: data.tags });
         })
           .fail(function (resp) {
               var msg = i18n('Could not update mail tags');
@@ -263,10 +263,7 @@ define(
       this.after('initialize', function () {
         that = this;
 
-        if (features.isEnabled('tags')) {
-          this.on(events.mail.tags.update, this.updateTags);
-        }
-
+        this.on(events.mail.tags.update, this.updateTags);
         this.on(events.mail.draftReply.want, this.wantDraftReplyForMail);
         this.on(events.mail.want, this.fetchSingle);
         this.on(events.mail.read, this.readMail);

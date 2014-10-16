@@ -27,10 +27,6 @@ define(
       };
 
       this.attachTagCompletion = function(mail) {
-        if(!features.isEnabled('tags')) {
-          return;
-        }
-
         this.tagFilter = function (parsedResult) {
             var filtered = _.filter(parsedResult, function (tag) {return ! _.contains(mail.tags, tag.name); });
             return _.map(filtered, function(tag) { return {value: Handlebars.Utils.escapeExpression(tag.name)}; });
@@ -56,16 +52,14 @@ define(
         });
       };
 
-      this.createNewTag = function() {
-        if(features.isEnabled('createNewTag')) {
-          var tagsCopy = this.attr.mail.tags.slice();
-          tagsCopy.push(this.select('newTagInput').val());
-          this.tagCompleter.clear();
-          this.tagCompleter.clearPrefetchCache();
-          this.tagCompleter.clearRemoteCache();
-          this.updateTags(this.attr.mail, _.uniq(tagsCopy));
-          this.trigger(document, events.dispatchers.tags.refreshTagList);
-        }
+      this.createNewTag = function () {
+        var tagsCopy = this.attr.mail.tags.slice();
+        tagsCopy.push(this.select('newTagInput').val());
+        this.tagCompleter.clear();
+        this.tagCompleter.clearPrefetchCache();
+        this.tagCompleter.clearRemoteCache();
+        this.updateTags(this.attr.mail, _.uniq(tagsCopy));
+        this.trigger(document, events.dispatchers.tags.refreshTagList, { skipMailListRefresh: true });
       };
 
       this.after('displayMail', function () {
