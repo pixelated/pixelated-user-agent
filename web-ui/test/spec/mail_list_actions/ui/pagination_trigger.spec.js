@@ -21,6 +21,6 @@ describeComponent('mail_list_actions/ui/pagination_trigger', function () {
   it('re-renders with current page number when page changes', function () {
     this.component.trigger(document, Pixelated.events.ui.page.changed, {currentPage: 0});
 
-    expect(this.component.select('currentPage').text()).toBe('1');
+    expect(this.component.select('currentPage').text()).toBe('0');
   });
 });

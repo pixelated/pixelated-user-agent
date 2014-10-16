@@ -38,8 +38,8 @@ define(
         singleMailResource: '/mail',
         currentTag: '',
         lastQuery: '',
-        currentPage: 0,
-        numPages: 0,
+        currentPage: 1,
+        numPages: 1,
         w: 25
       });
 
@@ -150,7 +150,7 @@ define(
 
       this.fetchByTag = function (ev, data) {
         this.attr.currentTag = data.tag;
-        this.updateCurrentPageNumber(0);
+        this.updateCurrentPageNumber(1);
 
         this.fetchMail(compileQuery(data), this.attr.currentTag, false, data);
       };
@@ -223,7 +223,7 @@ define(
       };
 
       this.previousPage = function () {
-        if (this.attr.currentPage > 0) {
+        if (this.attr.currentPage > 1) {
           this.updateCurrentPageNumber(this.attr.currentPage - 1);
           this.refreshResults();
         }

@@ -46,7 +46,7 @@ define(
       };
 
       this.updatePageDisplay = function(event, data) {
-        this.renderWithPageNumber(data.currentPage + 1);
+        this.renderWithPageNumber(data.currentPage);
       };
 
       this.previousPage = function(event) {

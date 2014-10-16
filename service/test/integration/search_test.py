@@ -58,3 +58,33 @@ class SearchTest(unittest.TestCase, SoledadTestBase):
         all_tag_names = [t['name'] for t in all_tags]
         self.assertEqual(1, len(all_tag_names))
         self.assertTrue('sometag' in all_tag_names)
+
+    def test_search_mails_different_window(self):
+        input_mail = MailBuilder().build_input_mail()
+        input_mail2 = MailBuilder().build_input_mail()
+        self.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail2)
+
+        first_page = self.get_mails_by_tag('inbox', page=1, window=1)
+
+        self.assertEqual(len(first_page), 1)
+
+    def test_search_mails_with_multiple_pages(self):
+        input_mail = MailBuilder().build_input_mail()
+        input_mail2 = MailBuilder().build_input_mail()
+        self.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail2)
+
+        first_page = self.get_mails_by_tag('inbox', page=1, window=1)
+        second_page = self.get_mails_by_tag('inbox', page=2, window=1)
+
+        idents = [input_mail.ident, input_mail2.ident]
+
+        self.assertIn(first_page[0].ident, idents)
+        self.assertIn(second_page[0].ident, idents)
+
+    def test_page_zero_fetches_first_page(self):
+        input_mail = MailBuilder().build_input_mail()
+        self.add_mail_to_inbox(input_mail)
+        page = self.get_mails_by_tag('inbox', page=0, window=1)
+        self.assertEqual(page[0].ident, input_mail.ident)

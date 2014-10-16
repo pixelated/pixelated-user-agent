@@ -116,16 +116,17 @@ class SearchEngine(object):
             results = searcher.search(query, **options)
         return results
 
-    def search(self, query):
-        options = {'limit': 100}
+    def search(self, query, window, page):
+        page = int(page) if (page is not None and int(page) > 0) else 1
+        window = int(window) or 25
 
         query = query.replace('\"', '')
         query = query.replace('-in:', 'AND NOT tag:')
         query = query.replace('in:all', '*')
 
         with self._index.searcher() as searcher:
-            query = QueryParser('body', self._index.schema).parse(query)
-            results = searcher.search(query, **options)
+            query = QueryParser('raw', self._index.schema).parse(query)
+            results = searcher.search_page(query, page, pagelen=window)
             return [mail['ident'] for mail in results]
 
     def remove_from_index(self, mail_id):

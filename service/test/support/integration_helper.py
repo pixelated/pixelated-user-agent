@@ -173,8 +173,8 @@ class SoledadTestBase:
         app_factory._setup_routes(self.client.application, home_controller, mails_controller, tags_controller,
                                   features_controller)
 
-    def get_mails_by_tag(self, tag):
-        response = json.loads(self.client.get("/mails?q=tag:" + tag).data)
+    def get_mails_by_tag(self, tag, page=1, window=100):
+        response = json.loads(self.client.get("/mails?q=tag:%s&w=%s&p=%s" % (tag, window, page)).data)
         return [ResponseMail(m) for m in response['mails']]
 
     def post_mail(self, data):

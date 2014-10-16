@@ -210,21 +210,21 @@ describeComponent('services/mail_service', function () {
     });
 
     it('changes to the previous page and refetch email when ui:page:previous is fired', function() {
-      this.component.attr.currentPage = 1;
+      this.component.attr.currentPage = 2;
 
       this.component.trigger(Pixelated.events.ui.page.previous);
 
       expect(this.component.fetchMail).toHaveBeenCalled();
-      expect(this.component.attr.currentPage).toEqual(0);
+      expect(this.component.attr.currentPage).toEqual(1);
     });
 
     it('won\'t change the page if it was already at the first page and trying to go to previous', function() {
-      this.component.attr.currentPage = 0;
+      this.component.attr.currentPage = 1;
 
       this.component.trigger(Pixelated.events.ui.page.previous);
 
       expect(this.component.fetchMail).not.toHaveBeenCalled();
-      expect(this.component.attr.currentPage).toEqual(0);
+      expect(this.component.attr.currentPage).toEqual(1);
     });
 
     it('changes to the next page and refetch email when ui:page:next is fired', function() {
@@ -252,15 +252,15 @@ describeComponent('services/mail_service', function () {
       this.component.attr.numPages = 10;
       this.component.trigger(Pixelated.events.ui.page.next);
 
-      expect(pageChangedEvent).toHaveBeenTriggeredOnAndWith(document, {currentPage: 1, numPages: 10});
+      expect(pageChangedEvent).toHaveBeenTriggeredOnAndWith(document, {currentPage: 2, numPages: 10});
     });
 
     it('triggers pageChanged event when going to previous page', function() {
       this.component.attr.numPages = 10;
-      this.component.attr.currentPage = 1;
+      this.component.attr.currentPage = 2;
       this.component.trigger(Pixelated.events.ui.page.previous);
 
-      expect(pageChangedEvent).toHaveBeenTriggeredOnAndWith(document, {currentPage: 0, numPages: 10});
+      expect(pageChangedEvent).toHaveBeenTriggeredOnAndWith(document, {currentPage: 1, numPages: 10});
     });
 
     it('resets currentPage when fetching mails by tag', function() {
@@ -268,8 +268,8 @@ describeComponent('services/mail_service', function () {
       this.component.attr.currentPage = 999;
       this.component.trigger(Pixelated.events.ui.mails.fetchByTag, {tag: 'inbox'});
 
-      expect(this.component.attr.currentPage).toEqual(0);
-      expect(pageChangedEvent).toHaveBeenTriggeredOnAndWith(document, {currentPage: 0, numPages: 10});
+      expect(this.component.attr.currentPage).toEqual(1);
+      expect(pageChangedEvent).toHaveBeenTriggeredOnAndWith(document, {currentPage: 1, numPages: 10});
     });
 
     describe('total page numbers', function() {
