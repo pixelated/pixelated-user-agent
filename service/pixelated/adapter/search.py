@@ -116,9 +116,9 @@ class SearchEngine(object):
             results = searcher.search(query, **options)
         return results
 
-    def search(self, query, window, page):
-        page = int(page) if (page is not None and int(page) > 0) else 1
-        window = int(window) or 25
+    def search(self, query, window=25, page=1):
+        page = int(page) if int(page) > 1 else 1
+        window = int(window)
 
         query = query.replace('\"', '')
         query = query.replace('-in:', 'AND NOT tag:')
