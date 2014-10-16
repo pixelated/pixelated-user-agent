@@ -40,7 +40,7 @@ class MailboxListenerTest(unittest.TestCase):
 
     def test_reindex_missing_idents(self):
         search_engine = mock()
-        when(search_engine).search('tag:inbox').thenReturn(['ident1', 'ident2'])
+        when(search_engine).search('tag:inbox', all_mails=True).thenReturn(['ident1', 'ident2'])
 
         MailboxIndexerListener.SEARCH_ENGINE = search_engine
 

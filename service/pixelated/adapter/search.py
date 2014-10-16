@@ -116,18 +116,39 @@ class SearchEngine(object):
             results = searcher.search(query, **options)
         return results
 
-    def search(self, query, window=25, page=1):
+    def search(self, query, window=25, page=1, all_mails=False):
+        query = self.prepare_query(query)
+
+        if(all_mails):
+            return self._search_all_mails(query)
+        else:
+            return self._paginated_search_mails(query, window, page)
+
+
+    def _search_all_mails(self, query):
+        with self._index.searcher() as searcher:
+            results = searcher.search(query, limit=None)
+            return [mail['ident'] for mail in results]
+
+    def _paginated_search_mails(self, query, window, page):
         page = int(page) if int(page) > 1 else 1
         window = int(window)
 
-        query = query.replace('\"', '')
-        query = query.replace('-in:', 'AND NOT tag:')
-        query = query.replace('in:all', '*')
-
         with self._index.searcher() as searcher:
-            query = QueryParser('raw', self._index.schema).parse(query)
             results = searcher.search_page(query, page, pagelen=window)
             return [mail['ident'] for mail in results]
+
+
+    def prepare_query(self, query):
+        query = (
+            query
+            .replace('\"', '')
+            .replace('-in:', 'AND NOT tag:')
+            .replace('in:all', '*')
+        )
+        return QueryParser('raw', self._index.schema).parse(query)
+       
+                    
 
     def remove_from_index(self, mail_id):
         writer = self._index.writer()

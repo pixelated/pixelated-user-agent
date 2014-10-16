@@ -31,7 +31,7 @@ class MailboxIndexerListener(object):
         self.querier = soledad_querier
 
     def newMessages(self, exists, recent):
-        indexed_idents = set(self.SEARCH_ENGINE.search('tag:' + self.mailbox_name.lower()))
+        indexed_idents = set(self.SEARCH_ENGINE.search('tag:' + self.mailbox_name.lower(), all_mails=True))
         soledad_idents = self.querier.idents_by_mailbox(self.mailbox_name)
 
         missing_idents = soledad_idents.difference(indexed_idents)
