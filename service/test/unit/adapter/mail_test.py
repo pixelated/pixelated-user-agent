@@ -19,10 +19,10 @@ import pixelated.support.date
 from pixelated.adapter.mail import PixelatedMail, InputMail
 from mockito import *
 from test.support import test_helper
+import dateutil.parser as dateparser
 
 
 class TestPixelatedMail(unittest.TestCase):
-
     def setUp(self):
         self.querier = mock()
 
@@ -67,6 +67,28 @@ class TestPixelatedMail(unittest.TestCase):
         mail.mark_as_not_recent()
 
         self.assertEquals(mail.fdoc.content['flags'], [])
+
+    def test_as_dict(self):
+        fdoc, hdoc, bdoc = test_helper.leap_mail(flags=['\\Recent'])
+        hdoc.content['headers']['Subject'] = 'The subject'
+        hdoc.content['headers']['From'] = 'me@pixelated.org'
+
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier)
+
+        _dict = mail.as_dict()
+
+        self.assertEquals(_dict, {'body': 'body',
+                                  'header': {
+                                      'date': dateparser.parse(hdoc.content['date']).isoformat(),
+                                      'from': 'me@pixelated.org',
+                                      'subject': 'The subject'
+                                  },
+                                  'ident': 'chash',
+                                  'mailbox': 'inbox',
+                                  'security_casing': {},
+                                  'status': ['recent'],
+                                  'tags': []}
+        )
 
 
 class InputMailTest(unittest.TestCase):

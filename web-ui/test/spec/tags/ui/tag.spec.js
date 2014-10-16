@@ -4,7 +4,7 @@
 describeComponent('tags/ui/tag', function () {
   'use strict';
 
-  describe('inbox tag', function() {
+  describe('inbox tag', function () {
     beforeEach(function () {
       setupComponent('<li></li>', {
         tag: {
@@ -46,11 +46,42 @@ describeComponent('tags/ui/tag', function () {
       expect(tagSelectedEvent).toHaveBeenTriggeredOnAndWith(document, { tag: 'drafts'});
     });
 
-    it('increases the read count when there is an email read and the email has that tag', function () {
+    describe('increasing count read when email is read', function () {
+      it('doesnt update if mail.tags or mail.mailbox dont match the tag name', function () {
+        setupComponent('<li></li>', {
+          tag: { name: 'sometag', ident: '1', counts: { total: 100, read: 0 } }
+        });
+
+        $(document).trigger(Pixelated.events.mail.read, { tags: ['someothertag'], mailbox: 'inbox' });
+
+        expect(this.component.attr.tag.counts.read).toEqual(0);
+      });
+
+      it('looks at the mail mailbox attr for default tags', function () {
+        $(document).trigger(Pixelated.events.mail.read, { tags: [], mailbox: 'inbox' });
+
+        expect(this.component.attr.tag.counts.read).toEqual(1);
+        expect(this.$node.html()).toMatch('<span class="unread-count">99</span>');
+      });
+
+      it('looks at the mail tags for non default tags', function () {
+        setupComponent('<li></li>', {
+          tag: { name: 'tag', ident: '1', counts: { total: 100, read: 0 } }
+        });
+
+        $(document).trigger(Pixelated.events.mail.read, { tags: ['tag'], mailbox: 'inbox' });
+
+        expect(this.component.attr.tag.counts.read).toEqual(1);
+        expect(this.$node.html()).toMatch('<span class="unread-count">99</span>');
+      });
+    });
+
+    it('re-renders the tag shortcut linked to it when increasing the read count if there is a shortcut', function () {
+      this.component.attr.shortcut = jasmine.createSpyObj('shortcut', ['reRender']);
+
       $(document).trigger(Pixelated.events.mail.read, { tags: ['inbox'] });
 
-      expect(this.component.attr.tag.counts.read).toEqual(1);
-      expect(this.$node.html()).toMatch('<span class="unread-count">99</span>');
+      expect(this.component.attr.shortcut.reRender).toHaveBeenCalled();
     });
 
     it('doesnt increase the read count when the read email doesnt have the tag', function () {
@@ -89,7 +120,7 @@ describeComponent('tags/ui/tag', function () {
     });
   });
 
-  describe('all tag', function(){
+  describe('all tag', function () {
     beforeEach(function () {
       setupComponent('<li></li>', {
         tag: {
@@ -103,18 +134,18 @@ describeComponent('tags/ui/tag', function () {
       });
     });
 
-    it('adds searching class when user is doing a search', function(){
+    it('adds searching class when user is doing a search', function () {
       $(document).trigger(Pixelated.events.search.perform, {});
       expect(this.$node.attr('class')).toMatch('searching');
     });
 
-    it('removes searching class when user searches for empty string', function(){
+    it('removes searching class when user searches for empty string', function () {
       $(document).trigger(Pixelated.events.search.perform, {});
       $(document).trigger(Pixelated.events.search.empty);
       expect(this.$node.attr('class')).not.toMatch('searching');
     });
 
-    it('removes searching class when user clicks in any tag', function(){
+    it('removes searching class when user clicks in any tag', function () {
       $(document).trigger(Pixelated.events.search.perform, {});
       this.$node.click();
       expect(this.$node.attr('class')).not.toMatch('searching');
@@ -122,8 +153,8 @@ describeComponent('tags/ui/tag', function () {
 
   });
 
-  _.each(['sent', 'trash'], function(tag_name) {
-    describe(tag_name + ' tag', function() {
+  _.each(['sent', 'trash'], function (tag_name) {
+    describe(tag_name + ' tag', function () {
       beforeEach(function () {
         setupComponent('<li></li>', {
           tag: {

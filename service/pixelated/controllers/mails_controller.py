@@ -92,11 +92,12 @@ class MailsController:
     def mail_tags(self, mail_id):
         new_tags = map(lambda tag: tag.lower(), request.get_json()['newtags'])
         try:
-            tags = self._mail_service.update_tags(mail_id, new_tags)
-            self._search_engine.index_mail(self._mail_service.mail(mail_id))
+            self._mail_service.update_tags(mail_id, new_tags)
+            mail = self._mail_service.mail(mail_id)
+            self._search_engine.index_mail(mail)
         except ValueError as ve:
             return respond_json(ve.message, 403)
-        return respond_json(list(tags))
+        return respond_json(mail.as_dict())
 
     def update_draft(self):
         _mail = InputMail.from_dict(request.json)

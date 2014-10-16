@@ -55,7 +55,7 @@ define(
       });
 
       this.renderShortcut = function (tag, tagComponent) {
-        TagShortcut.appendedTo($('#tags-shortcuts'), { linkTo: tag, trigger: tagComponent});
+        return TagShortcut.appendedTo($('#tags-shortcuts'), { linkTo: tag, trigger: tagComponent});
       };
 
       function renderTag(tag, defaultList, customList) {
@@ -63,7 +63,7 @@ define(
 
         var tagComponent = Tag.appendedTo(list, {tag: tag});
         if (_.contains(_.keys(ORDER), tag.name)) {
-          this.renderShortcut(tag, tagComponent);
+          tagComponent.attr.shortcut = this.renderShortcut(tag, tagComponent);
         }
       }
 

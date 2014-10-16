@@ -51,7 +51,8 @@ define(
 
       function updateMailStatusToRead() {
         if (!_.contains(this.attr.mail.status, this.status.READ)) {
-          this.trigger(document, events.mail.read, { ident: this.attr.ident, tags: this.attr.mail.tags });
+          var mail_read_data = { ident: this.attr.ident, tags: this.attr.tags, mailbox: this.attr.mailbox };
+          this.trigger(document, events.mail.read, mail_read_data);
           this.attr.mail.status.push(this.status.READ);
           this.$node.addClass(viewHelpers.formatStatusClasses(this.attr.mail.status));
         }

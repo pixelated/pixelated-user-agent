@@ -35,7 +35,8 @@ class MailService:
         if len(reserved_words):
             raise ValueError('None of the following words can be used as tags: ' + ' '.join(reserved_words))
         mail = self.mail(mail_id)
-        return mail.update_tags(set(new_tags))
+        mail.update_tags(set(new_tags))
+        return mail
 
     def mail(self, mail_id):
         return self.mailboxes.mail(mail_id)

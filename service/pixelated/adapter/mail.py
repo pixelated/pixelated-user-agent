@@ -52,6 +52,10 @@ class Mail:
         return self.fdoc.content.get('flags')
 
     @property
+    def mailbox_name(self):
+        return self.fdoc.content.get('mbox')
+
+    @property
     def _mime_multipart(self):
         if self._mime:
             return self._mime
@@ -75,7 +79,8 @@ class Mail:
             'tags': list(self.tags),
             'status': list(self.status),
             'security_casing': {},
-            'body': self.body
+            'body': self.body,
+            'mailbox': self.mailbox_name.lower()
         }
 
 

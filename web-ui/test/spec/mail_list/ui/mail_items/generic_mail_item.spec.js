@@ -5,7 +5,8 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
 
   beforeEach(function () {
     mail = Pixelated.testData().parsedMail.simpleTextPlain;
-    mail.tags = ['inbox'];
+    mail.tags = [];
+    mail.mailbox = 'inbox';
 
     setupComponent('<li></li>', {
       mail: mail,
@@ -95,7 +96,7 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
 
           expect(this.component.attr.mail.status).toContain(this.component.status.READ);
           expect(this.$node.attr('class')).toMatch('status-read');
-          expect(mailReadEvent).toHaveBeenTriggeredOnAndWith(document, { ident: mail.ident, tags: ['inbox'] });
+          expect(mailReadEvent).toHaveBeenTriggeredOnAndWith(document, { ident: mail.ident, tags: [], mailbox: 'inbox' });
         });
 
       });
@@ -110,7 +111,8 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
 
       this.$node.find('a').click();
 
-      expect(mailReadEvent).toHaveBeenTriggeredOnAndWith(document, jasmine.objectContaining({ident: mail.ident}));
+      var expectedEventData = {ident: mail.ident};
+      expect(mailReadEvent).toHaveBeenTriggeredOnAndWith(document, jasmine.objectContaining(expectedEventData));
     });
 
     it('should not trigger mail:read event when clicking mail that is already read', function () {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014 ThoughtWorks, Inc.
- *
+   *
  * Pixelated is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -64,6 +64,7 @@ define(
       this.attr.ident = mail.ident;
       this.attr.statuses = viewHelper.formatStatusClasses(mail.status);
       this.attr.tags = mail.tags;
+      this.attr.mailbox = mail.mailbox;
       this.attr.header.formattedDate = this.formattedDate(mail.header.date);
     };
 

@@ -84,7 +84,8 @@ define(function() {
       date:'2014-06-04T14:41:13-03:00'
     },
     ident:1,
-    tags:['textplain','inbox'],
+    tags:['textplain'],
+    mailbox: ['inbox'],
     status:[],
     body: 'Hello Everyone',
     isSentMail: function() { return false; },

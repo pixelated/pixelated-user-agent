@@ -52,9 +52,13 @@ define(
       };
 
       this.decreaseReadCountIfMatchingTag = function (ev, data) {
-        if (_.contains(data.tags, this.attr.tag.name)) {
+        var mailbox_and_tags = _.flatten([data.tags, data.mailbox]);
+        if (_.contains(mailbox_and_tags, this.attr.tag.name)) {
           this.attr.tag.counts.read++;
           this.$node.html(this.viewFor(this.attr.tag, templates.tags.tagInner));
+          if (!_.isUndefined(this.attr.shortcut)) {
+            this.attr.shortcut.reRender();
+          }
         }
       };
 
