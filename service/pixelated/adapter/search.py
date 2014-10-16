@@ -124,7 +124,6 @@ class SearchEngine(object):
         else:
             return self._paginated_search_mails(query, window, page)
 
-
     def _search_all_mails(self, query):
         with self._index.searcher() as searcher:
             results = searcher.search(query, limit=None)
@@ -138,7 +137,6 @@ class SearchEngine(object):
             results = searcher.search_page(query, page, pagelen=window)
             return [mail['ident'] for mail in results]
 
-
     def prepare_query(self, query):
         query = (
             query
@@ -147,8 +145,6 @@ class SearchEngine(object):
             .replace('in:all', '*')
         )
         return QueryParser('raw', self._index.schema).parse(query)
-       
-                    
 
     def remove_from_index(self, mail_id):
         writer = self._index.writer()

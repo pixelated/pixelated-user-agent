@@ -87,8 +87,8 @@ class TestPixelatedMail(unittest.TestCase):
                                   'mailbox': 'inbox',
                                   'security_casing': {},
                                   'status': ['recent'],
-                                  'tags': []}
-        )
+                                  'tags': []
+                                  })
 
 
 class InputMailTest(unittest.TestCase):
