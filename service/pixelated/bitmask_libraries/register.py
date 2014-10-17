@@ -25,7 +25,7 @@ from pixelated.bitmask_libraries.auth import LeapAuthenticator, LeapCredentials
 
 
 def register_new_user(username, server_name):
-    certs_home = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "certificates"))
+    certs_home = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "certificates"))
     config = LeapConfig(certs_home=certs_home)
     provider = LeapProvider(server_name, config)
     password = getpass.getpass('Please enter password for %s: ' % username)
