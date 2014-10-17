@@ -111,7 +111,7 @@ class SearchTest(unittest.TestCase, SoledadTestBase):
 
     def test_order_by_date(self):
         input_mail = MailBuilder().with_date('2014-10-15T15:15').build_input_mail()
-        input_mail2 = MailBuilder().with_date('2014-10-15T15:14').build_input_mail()
+        input_mail2 = MailBuilder().with_date('2014-10-15T15:16').build_input_mail()
 
         self.add_mail_to_inbox(input_mail)
         self.add_mail_to_inbox(input_mail2)
