@@ -16,6 +16,7 @@
 import unittest
 
 from test.support.integration_helper import MailBuilder, SoledadTestBase
+from pixelated.adapter.status import Status
 
 
 class MarkAsReadUnreadTest(unittest.TestCase, SoledadTestBase):
@@ -39,7 +40,7 @@ class MarkAsReadUnreadTest(unittest.TestCase, SoledadTestBase):
         self.assertIn('read', mails[0].status)
 
     def test_mark_single_as_unread(self):
-        input_mail = MailBuilder().with_status('read').build_input_mail()
+        input_mail = MailBuilder().with_status([Status.SEEN]).build_input_mail()
 
         self.add_mail_to_inbox(input_mail)
 
@@ -49,8 +50,8 @@ class MarkAsReadUnreadTest(unittest.TestCase, SoledadTestBase):
         self.assertNotIn('read', mails[0].status)
 
     def test_mark_many_mails_as_unread(self):
-        input_mail = MailBuilder().with_status('read').build_input_mail()
-        input_mail2 = MailBuilder().with_status('read').build_input_mail()
+        input_mail = MailBuilder().with_status([Status.SEEN]).build_input_mail()
+        input_mail2 = MailBuilder().with_status([Status.SEEN]).build_input_mail()
 
         self.add_mail_to_inbox(input_mail)
         self.add_mail_to_inbox(input_mail2)
@@ -74,7 +75,30 @@ class MarkAsReadUnreadTest(unittest.TestCase, SoledadTestBase):
         self.assertNotIn('read', mails[0].status)
         self.assertNotIn('read', mails[1].status)
 
-        self.mark_many_as_read([input_mail.ident, input_mail2.ident])
+        response = self.mark_many_as_read([input_mail.ident, input_mail2.ident])
+        self.assertEquals(200, response.status_code)
+
+        mails = self.get_mails_by_tag('inbox')
+
+        self.assertIn('read', mails[0].status)
+        self.assertIn('read', mails[1].status)
+
+    def test_mark_mixed_status_as_read(self):
+        input_mail = MailBuilder().build_input_mail()
+        input_mail2 = MailBuilder().with_status([Status.SEEN]).build_input_mail()
+
+        self.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail2)
+
+        mails = self.get_mails_by_tag('inbox')
+
+        read_mails = filter(lambda x: 'read' in x.status, mails)
+        unread_mails = filter(lambda x: 'read' not in x.status, mails)
+        self.assertEquals(1, len(unread_mails))
+        self.assertEquals(1, len(read_mails))
+
+        response = self.mark_many_as_read([input_mail.ident, input_mail2.ident])
+        self.assertEquals(200, response.status_code)
 
         mails = self.get_mails_by_tag('inbox')
 

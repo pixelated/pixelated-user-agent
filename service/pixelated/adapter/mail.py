@@ -250,7 +250,7 @@ class PixelatedMail(Mail):
 
     def mark_as_read(self):
         if Status.SEEN in self.fdoc.content['flags']:
-            return
+            return self
         self.fdoc.content['flags'].append(Status.SEEN)
         self.save()
         return self
