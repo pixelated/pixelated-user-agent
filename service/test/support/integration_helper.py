@@ -117,6 +117,7 @@ class MailBuilder:
     def with_status(self, flags):
         for status in Status.from_flags(flags):
             self.mail['status'].append(status)
+        return self
 
     def with_date(self, date_string):
         self.mail['header']['date'] = date_string
