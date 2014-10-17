@@ -62,7 +62,8 @@ class MailsController:
     def mark_many_mail_unread(self):
         idents = json.loads(request.form['idents'])
         for ident in idents:
-            self._mail_service.mark_as_unread(ident)
+            mail = self._mail_service.mark_as_unread(ident)
+            self._search_engine.index_mail(mail)
         return ""
 
     def delete_mail(self, mail_id):
