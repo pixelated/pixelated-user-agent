@@ -23,4 +23,4 @@ def flatten(_list):
 def unique(_list):
     seen = set()
     seen_add = seen.add
-    return [ x for x in _list if not (x in seen or seen_add(x))]
+    return [x for x in _list if not (x in seen or seen_add(x))]

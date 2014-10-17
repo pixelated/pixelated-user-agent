@@ -35,7 +35,7 @@ class SearchEngine(object):
         self._index = self._create_index()
 
     def _add_to_tags(self, tags, group, skip_default_tags, count_type, query=None):
-        query_matcher = re.compile(query) if query else re.compile(".*")
+        query_matcher = re.compile(".*%s.*" % query.lower()) if query else re.compile(".*")
 
         for tag, count in group.iteritems():
 
@@ -111,7 +111,7 @@ class SearchEngine(object):
         header = mdict['header']
         tags = mdict.get('tags', [])
         tags.append(mail.mailbox_name.lower())
-       
+
         index_data = {
             'sender': unicode(header.get('from', '')),
             'subject': unicode(header.get('subject', '')),
@@ -140,11 +140,7 @@ class SearchEngine(object):
 
     def search(self, query, window=25, page=1, all_mails=False):
         query = self.prepare_query(query)
-
-        if(all_mails):
-            return self._search_all_mails(query)
-        else:
-            return self._paginated_search_mails(query, window, page)
+        return self._search_all_mails(query) if all_mails else self._paginated_search_mails(query, window, page)
 
     def _search_all_mails(self, query):
         with self._index.searcher() as searcher:
