@@ -36,6 +36,7 @@ def _setup_routes(app, home_controller, mails_controller, tags_controller, featu
     app.add_url_rule('/mail/<mail_id>/read', methods=['POST'], view_func=mails_controller.mark_mail_as_read)
     app.add_url_rule('/mail/<mail_id>/unread', methods=['POST'], view_func=mails_controller.mark_mail_as_unread)
     app.add_url_rule('/mails/unread', methods=['POST'], view_func=mails_controller.mark_many_mail_unread)
+    app.add_url_rule('/mails/read', methods=['POST'], view_func=mails_controller.mark_many_mail_read)
     app.add_url_rule('/mail/<mail_id>', methods=['GET'], view_func=mails_controller.mail)
     app.add_url_rule('/mail/<mail_id>', methods=['DELETE'], view_func=mails_controller.delete_mail)
     app.add_url_rule('/mails', methods=['DELETE'], view_func=mails_controller.delete_mails)

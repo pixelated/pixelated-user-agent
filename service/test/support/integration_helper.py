@@ -211,6 +211,9 @@ class SoledadTestBase:
     def mark_many_as_unread(self, idents):
         self.client.post('/mails/unread', data={'idents': json.dumps(idents)})
 
+    def mark_many_as_read(self, idents):
+        self.client.post('/mails/read', data={'idents': json.dumps(idents)})
+
     def add_mail_to_inbox(self, input_mail):
         mail = self.mailboxes.inbox().add(input_mail)
         mail.update_tags(input_mail.tags)

@@ -65,6 +65,13 @@ class MailsController:
             self._search_engine.index_mail(mail)
         return ""
 
+    def mark_many_mail_read(self):
+        idents = json.loads(request.form['idents'])
+        for ident in idents:
+            mail = self._mail_service.mark_as_read(ident)
+            self._search_engine.index_mail(mail)
+        return ""
+
     def delete_mail(self, mail_id):
         trashed_mail = self._mail_service.delete_mail(mail_id)
         self._search_engine.index_mail(trashed_mail)
