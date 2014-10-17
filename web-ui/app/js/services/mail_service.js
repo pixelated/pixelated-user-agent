@@ -50,23 +50,27 @@ define(
       };
 
       this.updateTags = function (ev, data) {
-        var that = this;
         var ident = data.ident;
+
+        var success = function (data) {
+          this.refreshResults();
+          $(document).trigger(events.mail.tags.updated, { ident: ident, tags: data.tags });
+        };
+
+        var failure = function (resp) {
+          var msg = i18n('Could not update mail tags');
+          if (resp.status === 403) {
+            msg = i18n('Invalid tag name');
+          }
+          this.trigger(document, events.ui.userAlerts.displayMessage, { message: msg });
+        };
+
         $.ajax('/mail/' + ident + '/tags', {
           type: 'POST',
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify({newtags: data.tags})
-        }).done(function (data) {
-          that.refreshResults();
-          $(document).trigger(events.mail.tags.updated, { ident: ident, tags: data.tags });
-        })
-          .fail(function (resp) {
-              var msg = i18n('Could not update mail tags');
-              if(resp.status === 403) {
-                msg = i18n('Invalid tag name');
-              }
-              that.trigger(document, events.ui.userAlerts.displayMessage, { message: msg });
-          });
+        }).done(success.bind(this)).fail(failure.bind(this));
+
       };
 
       this.readMail = function (ev, data) {
