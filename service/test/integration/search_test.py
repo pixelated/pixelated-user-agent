@@ -108,3 +108,14 @@ class SearchTest(unittest.TestCase, SoledadTestBase):
         for tag in tags_count:
             if tag['name'] == mailbox:
                 return tag['counts']
+
+    def test_order_by_date(self):
+        input_mail = MailBuilder().with_date('2014-10-15T15:15').build_input_mail()
+        input_mail2 = MailBuilder().with_date('2014-10-15T15:14').build_input_mail()
+
+        self.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail2)
+
+        results = self.get_mails_by_tag('inbox')
+        self.assertEqual(results[0].ident, input_mail2.ident)
+        self.assertEqual(results[1].ident, input_mail.ident)

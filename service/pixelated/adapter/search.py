@@ -21,6 +21,7 @@ from whoosh.fields import *
 from whoosh.qparser import QueryParser
 from whoosh import sorting
 from pixelated.support.functional import unique
+import dateutil.parser
 
 
 class SearchEngine(object):
@@ -94,6 +95,7 @@ class SearchEngine(object):
             cc=ID(stored=False),
             bcc=ID(stored=False),
             subject=TEXT(stored=False),
+            date=TEXT(stored=False, sortable=True),
             body=TEXT(stored=False),
             tag=KEYWORD(stored=True, commas=True),
             flags=KEYWORD(stored=True, commas=True),
@@ -115,6 +117,7 @@ class SearchEngine(object):
         index_data = {
             'sender': unicode(header.get('from', '')),
             'subject': unicode(header.get('subject', '')),
+            'date': unicode(header.get('date', '')),
             'to': unicode(header.get('to', '')),
             'cc': unicode(header.get('cc', '')),
             'bcc': unicode(header.get('bcc', '')),
@@ -144,8 +147,8 @@ class SearchEngine(object):
 
     def _search_all_mails(self, query):
         with self._index.searcher() as searcher:
-            results = searcher.search(query, limit=None)
-            return [mail['ident'] for mail in results]
+            results = searcher.search(query, sortedby='date', limit=None)
+            return {mail['ident'] for mail in results}
 
     def _paginated_search_mails(self, query, window, page):
         page = int(page) if int(page) > 1 else 1
@@ -153,8 +156,8 @@ class SearchEngine(object):
 
         with self._index.searcher() as searcher:
             tags_facet = sorting.FieldFacet('tag', allow_overlap=True, maptype=sorting.Count)
-            results = searcher.search_page(query, page, pagelen=window, groupedby=tags_facet)
-            return [mail['ident'] for mail in results], sum(results.results.groups().values())
+            results = searcher.search_page(query, page, pagelen=window, groupedby=tags_facet, sortedby='date')
+            return {mail['ident'] for mail in results}, sum(results.results.groups().values())
 
     def prepare_query(self, query):
         query = (
