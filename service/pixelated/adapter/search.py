@@ -1,8 +1,26 @@
+#
+# Copyright (c) 2014 ThoughtWorks, Inc.
+#
+# Pixelated is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Pixelated is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+
 import os
+from pixelated.adapter.status import Status
 import whoosh.index
 from whoosh.fields import *
 from whoosh.qparser import QueryParser
 from whoosh import sorting
+from pixelated.support.functional import unique
 
 
 class SearchEngine(object):
@@ -16,25 +34,27 @@ class SearchEngine(object):
             os.makedirs(self.INDEX_FOLDER)
         self._index = self._create_index()
 
-    def _add_to_tags(self, tags, seen, skip_default_tags, count_type):
-        for tag, count in seen.iteritems():
-            if skip_default_tags and tag in self.DEFAULT_TAGS:
+    def _add_to_tags(self, tags, group, skip_default_tags, count_type, query=None):
+        query_matcher = re.compile(query) if query else re.compile(".*")
+
+        for tag, count in group.iteritems():
+
+            if skip_default_tags and tag in self.DEFAULT_TAGS or not query_matcher.match(tag):
                 continue
+
             if not tags.get(tag):
                 tags[tag] = {'ident': tag, 'name': tag, 'default': False, 'counts': {'total': 0, 'read': 0}, 'mails': []}
             tags[tag]['counts'][count_type] += count
 
-    def _search_tag_groups(self, query):
+    def _search_tag_groups(self, is_filtering_tags):
         seen = None
-        query_string = (query + '*' if query else '*').lower()
         query_parser = QueryParser('tag', self._index.schema)
         options = {'limit': None, 'groupedby': sorting.FieldFacet('tag', allow_overlap=True), 'maptype': sorting.Count}
 
         with self._index.searcher() as searcher:
-            total = searcher.search(query_parser.parse(query_string), **options).groups()
-            if not query:
-                seen = searcher.search(query_parser.parse('* AND flags:\\Seen'), **options).groups()
-
+            total = searcher.search(query_parser.parse('*'), **options).groups()
+            if not is_filtering_tags:
+                seen = searcher.search(query_parser.parse("* AND flags:%s" % Status.SEEN), **options).groups()
         return seen, total
 
     def _init_tags_defaults(self):
@@ -52,18 +72,19 @@ class SearchEngine(object):
             }
         return tags
 
-    def _build_tags(self, seen, total, skip_default_tags):
+    def _build_tags(self, seen, total, skip_default_tags, query):
         tags = {}
         if not skip_default_tags:
             tags = self._init_tags_defaults()
-        self._add_to_tags(tags, total, skip_default_tags, count_type='total')
+        self._add_to_tags(tags, total, skip_default_tags, count_type='total', query=query)
         if seen:
             self._add_to_tags(tags, seen, skip_default_tags, count_type='read')
         return tags.values()
 
     def tags(self, query, skip_default_tags):
-        seen, total = self._search_tag_groups(query)
-        return self._build_tags(seen, total, skip_default_tags)
+        is_filtering_tags = True if query else False
+        seen, total = self._search_tag_groups(is_filtering_tags=is_filtering_tags)
+        return self._build_tags(seen, total, skip_default_tags, query)
 
     def _mail_schema(self):
         return Schema(
@@ -74,8 +95,8 @@ class SearchEngine(object):
             bcc=ID(stored=False),
             subject=TEXT(stored=False),
             body=TEXT(stored=False),
-            tag=KEYWORD(stored=False, commas=True),
-            flags=KEYWORD(stored=False, commas=True),
+            tag=KEYWORD(stored=True, commas=True),
+            flags=KEYWORD(stored=True, commas=True),
             raw=TEXT(stored=False))
 
     def _create_index(self):
@@ -90,16 +111,17 @@ class SearchEngine(object):
         header = mdict['header']
         tags = mdict.get('tags', [])
         tags.append(mail.mailbox_name.lower())
+       
         index_data = {
             'sender': unicode(header.get('from', '')),
             'subject': unicode(header.get('subject', '')),
             'to': unicode(header.get('to', '')),
             'cc': unicode(header.get('cc', '')),
             'bcc': unicode(header.get('bcc', '')),
-            'tag': u','.join(tags),
+            'tag': u','.join(unique(tags)),
             'body': unicode(mdict['body']),
             'ident': unicode(mdict['ident']),
-            'flags': unicode(','.join(mail.flags)),
+            'flags': unicode(','.join(unique(mail.flags))),
             'raw': unicode(mail.raw)
         }
 

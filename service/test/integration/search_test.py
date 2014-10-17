@@ -27,7 +27,7 @@ class SearchTest(unittest.TestCase, SoledadTestBase):
         self.teardown_soledad()
 
     def test_that_tags_returns_all_tags(self):
-        input_mail = MailBuilder().with_tags('important').build_input_mail()
+        input_mail = MailBuilder().with_tags(['important']).build_input_mail()
         self.add_mail_to_inbox(input_mail)
 
         all_tags = self.get_tags()
@@ -40,17 +40,19 @@ class SearchTest(unittest.TestCase, SoledadTestBase):
         self.assertTrue('important' in all_tag_names)
 
     def test_that_tags_are_filtered_by_query(self):
-        input_mail = MailBuilder().with_tags('mytag').build_input_mail()
+        input_mail = MailBuilder().with_tags(['ateu', 'atoa', 'atado', 'zuado']).build_input_mail()
         self.add_mail_to_inbox(input_mail)
 
-        all_tags = self.get_tags('?q=my&skipDefaultTags=true')
+        all_tags = self.get_tags('?q=at&skipDefaultTags=true')
 
         all_tag_names = [t['name'] for t in all_tags]
-        self.assertEqual(1, len(all_tag_names))
-        self.assertTrue('mytag' in all_tag_names)
+        self.assertEqual(3, len(all_tag_names))
+        self.assertTrue('ateu' in all_tag_names)
+        self.assertTrue('atoa' in all_tag_names)
+        self.assertTrue('atado' in all_tag_names)
 
     def test_that_default_tags_are_ignorable(self):
-        input_mail = MailBuilder().with_tags('sometag').build_input_mail()
+        input_mail = MailBuilder().with_tags(['sometag']).build_input_mail()
         self.add_mail_to_inbox(input_mail)
 
         all_tags = self.get_tags('?skipDefaultTags=true')
@@ -58,6 +60,19 @@ class SearchTest(unittest.TestCase, SoledadTestBase):
         all_tag_names = [t['name'] for t in all_tags]
         self.assertEqual(1, len(all_tag_names))
         self.assertTrue('sometag' in all_tag_names)
+
+    def test_tags_count(self):
+        self.add_multiple_to_mailbox(num=10, mailbox='inbox', flags=['\\Recent'])
+        self.add_multiple_to_mailbox(num=5, mailbox='inbox', flags=['\\Seen'])
+        self.add_multiple_to_mailbox(num=3, mailbox='inbox', flags=['\\Recent'], tags=['important', 'later'])
+        self.add_multiple_to_mailbox(num=1, mailbox='inbox', flags=['\\Seen'], tags=['important'])
+
+        tags_count = self.get_tags()
+
+        self.assertEqual(self.get_count(tags_count, 'inbox')['total'], 19)
+        self.assertEqual(self.get_count(tags_count, 'inbox')['read'], 6)
+        self.assertEqual(self.get_count(tags_count, 'important')['total'], 4)
+        self.assertEqual(self.get_count(tags_count, 'important')['read'], 1)
 
     def test_search_mails_different_window(self):
         input_mail = MailBuilder().build_input_mail()
@@ -68,7 +83,7 @@ class SearchTest(unittest.TestCase, SoledadTestBase):
         first_page = self.get_mails_by_tag('inbox', page=1, window=1)
 
         self.assertEqual(len(first_page), 1)
-
+        
     def test_search_mails_with_multiple_pages(self):
         input_mail = MailBuilder().build_input_mail()
         input_mail2 = MailBuilder().build_input_mail()
@@ -88,3 +103,9 @@ class SearchTest(unittest.TestCase, SoledadTestBase):
         self.add_mail_to_inbox(input_mail)
         page = self.get_mails_by_tag('inbox', page=0, window=1)
         self.assertEqual(page[0].ident, input_mail.ident)
+
+    def get_count(self, tags_count, mailbox):
+        for tag in tags_count:
+            if tag['name'] == mailbox:
+                return tag['counts']
+

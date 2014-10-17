@@ -116,7 +116,7 @@ class InputMail(Mail):
         fd[fields.MULTIPART_KEY] = True
         fd[fields.RECENT_KEY] = True
         fd[fields.TYPE_KEY] = fields.TYPE_FLAGS_VAL
-        fd[fields.FLAGS_KEY] = Status.to_flags(self.status)
+        fd[fields.FLAGS_KEY] = Status.to_flags(self._status)
         self._fd = fd
         return fd
 
@@ -170,7 +170,7 @@ class InputMail(Mail):
         input_mail.headers['Date'] = pixelated.support.date.iso_now()
         input_mail.body = mail_dict.get('body', '')
         input_mail.tags = set(mail_dict.get('tags', []))
-        input_mail.status = set(mail_dict.get('status', []))
+        input_mail._status = set(mail_dict.get('status', []))
         return input_mail
 
 
@@ -249,6 +249,8 @@ class PixelatedMail(Mail):
         return self.tags
 
     def mark_as_read(self):
+        if Status.SEEN in self.fdoc.content['flags']:
+            return
         self.fdoc.content['flags'].append(Status.SEEN)
         self.save()
         return self

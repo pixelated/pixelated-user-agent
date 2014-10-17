@@ -21,6 +21,7 @@ import os
 from mock import Mock
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.search import SearchEngine
+from pixelated.adapter.status import Status
 from pixelated.adapter.tag_service import TagService
 from pixelated.adapter.draft_service import DraftService
 from pixelated.adapter.mail import PixelatedMail, InputMail
@@ -105,7 +106,7 @@ class MailBuilder:
         self.mail['body'] = body
         return self
 
-    def with_tags(self, *tags):
+    def with_tags(self, tags):
         self.mail['tags'] = tags
         return self
 
@@ -113,8 +114,10 @@ class MailBuilder:
         self.mail['header']['subject'] = subject
         return self
 
-    def with_status(self, status):
-        self.mail['status'].append('read')
+    def with_status(self, flags):
+        for status in Status.from_flags(flags):
+            self.mail['status'].append(status)
+
         return self
 
     def with_ident(self, ident):
@@ -209,6 +212,13 @@ class SoledadTestBase:
         mail = self.mailboxes.inbox().add(input_mail)
         mail.update_tags(input_mail.tags)
         self.search_engine.index_mail(mail)
+
+    def add_multiple_to_mailbox(self, num, mailbox='', flags=[], tags=[]):
+        for _ in range(num):
+            input_mail = MailBuilder().with_status(flags).with_tags(tags).build_input_mail()
+            mail = self.mailboxes._create_or_get(mailbox).add(input_mail)
+            mail.update_tags(input_mail.tags)
+            self.search_engine.index_mail(mail)
 
 
 class ResponseMail:
