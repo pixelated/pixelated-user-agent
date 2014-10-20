@@ -97,6 +97,20 @@ class SoledadQuerier:
         fdocs_chash = [(result[0], ident) for result, ident in fdocs_chash if result]
         return self._build_mails_from_fdocs(fdocs_chash)
 
+    def _extract_parts(self, content, parts={'alternatives': [], 'attachments': []}):
+        if content['multi']:
+            for part_key in content['part_map'].keys():
+                self._extract_parts(content['part_map'][part_key], parts)
+        else:
+            bdoc = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', content['phash'])[0]
+            raw_content = bdoc.content['raw']
+            headers_dict = {elem[0]: elem[1] for elem in content['headers']}
+            group = 'attachments' if 'attachment' in headers_dict.get('Content-Disposition', '') else 'alternatives'
+            parts[group].append({'ctype': content['ctype'],
+                                 'headers': headers_dict,
+                                 'content': raw_content})
+        return parts
+
     def remove_mail(self, mail):
         _mail = self.mail(mail.ident)
         # FIX-ME: Must go through all the part_map phash to delete all the cdocs
