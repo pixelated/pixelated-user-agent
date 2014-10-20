@@ -67,9 +67,9 @@ class SoledadQuerier:
     def remove_mail(self, mail):
         _mail = self.mail(mail.ident)
         # FIX-ME: Must go through all the part_map phash to delete all the cdocs
-        self.soledad.delete_doc(_mail.bdoc)
-        self.soledad.delete_doc(_mail.hdoc)
         self.soledad.delete_doc(_mail.fdoc)
+        self.soledad.delete_doc(_mail.hdoc)
+        self.soledad.delete_doc(_mail.bdoc)
 
     def idents_by_mailbox(self, mailbox_name):
         return set(doc.content['chash'] for doc in self.soledad.get_from_index('by-type-and-mbox-and-deleted', 'flags', mailbox_name, '0'))

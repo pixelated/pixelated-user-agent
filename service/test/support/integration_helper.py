@@ -220,12 +220,14 @@ class SoledadTestBase:
         self.search_engine.index_mail(mail)
 
     def add_multiple_to_mailbox(self, num, mailbox='', flags=[], tags=[]):
+        mails = []
         for _ in range(num):
             input_mail = MailBuilder().with_status(flags).with_tags(tags).build_input_mail()
             mail = self.mailboxes._create_or_get(mailbox).add(input_mail)
+            mails.append(mail)
             mail.update_tags(input_mail.tags)
             self.search_engine.index_mail(mail)
-
+        return mails
 
 class ResponseMail:
     def __init__(self, mail_dict):

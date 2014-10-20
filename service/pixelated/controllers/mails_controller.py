@@ -70,8 +70,12 @@ class MailsController:
         return ""
 
     def delete_mail(self, mail_id):
-        trashed_mail = self._mail_service.delete_mail(mail_id)
-        self._search_engine.index_mail(trashed_mail)
+        mail = self._mail_service.mail(mail_id)
+        if mail.mailbox_name == 'TRASH':
+            self._mail_service.delete_permanent(mail_id)
+        else:
+            trashed_mail = self._mail_service.delete_mail(mail_id)
+            self._search_engine.index_mail(trashed_mail)
         return respond_json(None)
 
     def delete_mails(self):

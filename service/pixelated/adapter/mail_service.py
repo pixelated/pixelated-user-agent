@@ -68,6 +68,10 @@ class MailService:
     def delete_mail(self, mail_id):
         return self.mailboxes.move_to_trash(mail_id)
 
+    def delete_permanent(self, mail_id):
+        mail = self.mail(mail_id)
+        self.querier.remove_mail(mail)
+
     def save_draft(self, draft):
         raise NotImplementedError()
 
