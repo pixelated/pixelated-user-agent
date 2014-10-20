@@ -99,8 +99,7 @@ class SearchEngine(object):
             body=TEXT(stored=False),
             tag=KEYWORD(stored=True, commas=True),
             flags=KEYWORD(stored=True, commas=True),
-            raw=TEXT(stored=False),
-            deleted=BOOLEAN(stored=False))
+            raw=TEXT(stored=False))
 
     def _create_index(self):
         return whoosh.index.create_in(self.INDEX_FOLDER, self._mail_schema(), indexname='mails')
