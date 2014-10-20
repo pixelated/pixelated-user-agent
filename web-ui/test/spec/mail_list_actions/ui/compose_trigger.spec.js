@@ -2,7 +2,7 @@ describeComponent('mail_list_actions/ui/compose_trigger', function () {
   'use strict';
 
   beforeEach(function () {
-    setupComponent('<div></div>');
+    this.setupComponent('<div></div>');
   });
 
   it('triggers the enableComposebox event when clicked', function () {

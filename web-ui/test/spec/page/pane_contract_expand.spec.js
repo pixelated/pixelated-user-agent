@@ -23,7 +23,7 @@ describeComponent('page/pane_contract_expand', function () {
 
   describe('after initialization', function () {
     beforeEach(function () {
-      setupComponent(document);
+      this.setupComponent(document);
     });
 
     it('contracts middle pane and expands right pane on mail open', function () {
@@ -57,7 +57,7 @@ describeComponent('page/pane_contract_expand', function () {
 
   describe('on initialization', function () {
     it('expands middle pane and contracts right pane', function () {
-      setupComponent(document);
+      this.setupComponent(document);
 
       expect($('#middle-pane-container').attr('class')).toEqual(this.component.attr.MIDDLE_PANE_EXPAND_CLASSES);
       expect($('#right-pane').attr('class')).toEqual(this.component.attr.RIGHT_PANE_CONTRACT_CLASSES);

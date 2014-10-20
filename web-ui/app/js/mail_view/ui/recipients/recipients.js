@@ -74,7 +74,7 @@ define(
           exitInput: this.attr.input.$node
         });
 
-        this.attr.iterator.current().select();
+        this.attr.iterator.current().doSelect();
         this.attr.input.$node.blur();
         this.select('navigationHandler').focus();
       };

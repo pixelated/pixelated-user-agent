@@ -11,9 +11,9 @@ describeComponent('page/logout', function () {
     });
 
     it('should provide logout link if logout is enabled', function () {
-      spyOn(features, 'isLogoutEnabled').andReturn(true);
+      spyOn(features, 'isLogoutEnabled').and.returnValue(true);
 
-      setupComponent('<div id="logout"></div>', {});
+      this.setupComponent('<div id="logout"></div>', {});
 
       var logout_link = this.component.$node.find('a')[0];
       expect(logout_link).toExist();
@@ -21,9 +21,9 @@ describeComponent('page/logout', function () {
     });
 
     it('should not provide logout link if disabled', function() {
-      spyOn(features, 'isLogoutEnabled').andReturn(false);
+      spyOn(features, 'isLogoutEnabled').and.returnValue(false);
 
-      setupComponent('<div id="logout"></div>', {});
+      this.setupComponent('<div id="logout"></div>', {});
 
       var logout_link = this.component.$node.find('a')[0];
       expect(logout_link).not.toExist();

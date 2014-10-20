@@ -8,7 +8,7 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
     mail.tags = [];
     mail.mailbox = 'inbox';
 
-    setupComponent('<li></li>', {
+    this.setupComponent('<li></li>', {
       mail: mail,
       selected: false,
       tag: 'inbox'

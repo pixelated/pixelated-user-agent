@@ -31,15 +31,15 @@ define(['helpers/iterator'], function (Iterator) {
 
     this.moveLeft = function () {
       if (this.iterator.hasPrevious()) {
-        this.iterator.current().unselect();
-        this.iterator.previous().select();
+        this.iterator.current().doUnselect();
+        this.iterator.previous().doSelect();
       }
     };
 
     this.moveRight = function () {
-      this.iterator.current().unselect();
+      this.iterator.current().doUnselect();
       if (this.iterator.hasNext()) {
-        this.iterator.next().select();
+        this.iterator.next().doSelect();
       } else {
         this.input.focus();
       }
@@ -49,7 +49,7 @@ define(['helpers/iterator'], function (Iterator) {
       this.iterator.removeCurrent().destroy();
 
       if (this.iterator.hasElements()) {
-        this.iterator.current().select();
+        this.iterator.current().doSelect();
       } else {
         this.input.focus();
       }

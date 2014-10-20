@@ -2,7 +2,7 @@ describeComponent('mail_list_actions/ui/pagination_trigger', function () {
   'use strict';
 
   beforeEach(function () {
-    setupComponent();
+    this.setupComponent();
   });
 
   it('triggers the ui:page:previous event when the left arrow is clicked', function () {

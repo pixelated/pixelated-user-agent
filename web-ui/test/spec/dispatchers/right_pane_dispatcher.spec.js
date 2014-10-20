@@ -6,7 +6,7 @@ describeComponent('dispatchers/right_pane_dispatcher', function () {
 
   describe('after initialization', function () {
     beforeEach(function () {
-      setupComponent();
+      this.setupComponent();
     });
 
     it('listens to open compose box event and creates a compose box', function () {
@@ -80,7 +80,7 @@ describeComponent('dispatchers/right_pane_dispatcher', function () {
     it('opens the no message selected pane but doesnt push the state', function () {
       var pushStateEvent = spyOnEvent(document, Pixelated.events.router.pushState);
 
-      setupComponent();
+      this.setupComponent();
 
       expect(noMessageSelectedPane.attachTo).toHaveBeenCalled();
       expect(pushStateEvent).not.toHaveBeenTriggeredOn(document);

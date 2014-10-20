@@ -6,7 +6,7 @@ describeComponent('mail_list/ui/mail_list', function () {
   var mailList;
 
   beforeEach(function () {
-    setupComponent('<div id="mails"></div>', {
+    this.setupComponent('<div id="mails"></div>', {
       urlParams: {
         hasMailIdent: function () {
           return false;

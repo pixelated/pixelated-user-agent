@@ -7,7 +7,7 @@ describeMixin('mixins/with_mail_edit_base', function () {
   'use strict';
 
   beforeEach(function () {
-    setupComponent();
+    this.setupComponent();
     // Stubing mixing wrongly!!! 'deprecated' while waiting for draft component extraction
     this.component.buildMail = function (tag) {
       return { header: { to: ['a@smth.com'], from: 'b@smth.com', subject: 'Sbject' } };
@@ -34,28 +34,26 @@ describeMixin('mixins/with_mail_edit_base', function () {
       this.component.attr.saveDraftInterval = 10;
     });
 
-    it('saves the draft after the save draft interval number of seconds', function() {
+    it('saves the draft after the save draft interval number of seconds', function(done) {
       var saveDraftSpy = spyOnEvent(document, Pixelated.events.mail.saveDraft);
-      runs(function () {
-        this.component.monitorInput();
-        expect(saveDraftSpy).not.toHaveBeenTriggeredOn(document);
-      });
-      waits(10);
-      runs(function () {
+      this.component.monitorInput();
+      expect(saveDraftSpy).not.toHaveBeenTriggeredOn(document);
+
+      setTimeout(function () {
         expect(saveDraftSpy).toHaveBeenTriggeredOn(document);
-      });
+        done()
+      }, 10);
     });
 
-    it('does not save if mail is sent before the save draft interval number of seconds', function() {
+    it('does not save if mail is sent before the save draft interval number of seconds', function(done) {
       var saveDraftSpy = spyOnEvent(document, Pixelated.events.mail.saveDraft);
-      runs(function () {
-        this.component.monitorInput();
-        this.component.sendMail();
-      });
-      waits(10);
-      runs(function () {
+      this.component.monitorInput();
+      this.component.sendMail();
+
+      setTimeout(function () {
         expect(saveDraftSpy).not.toHaveBeenTriggeredOn(document);
-      });
+        done();
+      }, 10);
     });
   });
 

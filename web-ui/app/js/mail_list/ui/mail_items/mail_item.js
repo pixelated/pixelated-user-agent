@@ -22,19 +22,19 @@ define(
 
   function mailItem() {
     this.updateSelected = function (ev, data) {
-      if(data.ident === this.attr.ident) { this.select(); }
-      else { this.unselect(); }
+      if(data.ident === this.attr.ident) { this.doSelect(); }
+      else { this.doUnselect(); }
     };
 
     this.formattedDate = function (date) {
       return viewHelper.getFormattedDate(new Date(date));
     };
 
-    this.select = function () {
+    this.doSelect = function () {
       this.$node.addClass('selected');
     };
 
-    this.unselect = function () {
+    this.doUnselect = function () {
       this.$node.removeClass('selected');
     };
 
@@ -70,7 +70,7 @@ define(
 
     this.attachListeners = function () {
       this.on(this.$node.find('input[type=checkbox]'), 'change', this.triggerMailChecked);
-      this.on(document, events.ui.mails.cleanSelected, this.unselect);
+      this.on(document, events.ui.mails.cleanSelected, this.doUnselect);
       this.on(document, events.ui.mails.uncheckAll, this.uncheckCheckbox);
       this.on(document, events.ui.mails.checkAll, this.checkCheckbox);
     };

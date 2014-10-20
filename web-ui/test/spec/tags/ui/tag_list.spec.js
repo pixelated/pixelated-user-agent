@@ -14,7 +14,7 @@ describeComponent('tags/ui/tag_list', function () {
 
   describe('post initialization', function () {
     beforeEach(function () {
-      setupComponent();
+      this.setupComponent();
       tagsShortcutsContainer = $('<ul>', { id: 'tags-shortcuts' });
       $('body').append(tagsShortcutsContainer);
     });
@@ -74,7 +74,7 @@ describeComponent('tags/ui/tag_list', function () {
 
       $(document).trigger(Pixelated.events.ui.tagList.load, {tags: [] });
 
-      expect(tagsLoadedEvent).toHaveBeenTriggeredOnAndWith(document, { tag: undefined });
+      expect(tagsLoadedEvent).toHaveBeenTriggeredOnAndWith(document, jasmine.objectContaining({ tag: undefined }));
     });
 
     it('should save the current tag when a tag is selected', function () {

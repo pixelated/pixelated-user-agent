@@ -8,7 +8,7 @@ describeComponent('page/router', function () {
   describe('on router:pushState coming from a tag selection', function () {
     beforeEach(function () {
       fakeHistory = jasmine.createSpyObj('history', ['pushState']);
-      setupComponent({history: fakeHistory});
+      this.setupComponent({history: fakeHistory});
     });
 
     it('pushes the state with the tag and the url', function () {
@@ -41,7 +41,7 @@ describeComponent('page/router', function () {
 
     it('when popping a state with no tag should select tag from url', function () {
       var urlParams = require('page/router/url_params');
-      spyOn(urlParams, 'getTag').andReturn('tag');
+      spyOn(urlParams, 'getTag').and.returnValue('tag');
 
       var selectTagEvent = spyOnEvent(document, Pixelated.events.ui.tag.select);
 
@@ -52,7 +52,7 @@ describeComponent('page/router', function () {
 
     it('when popping a state triggers the displayNoMessage pane if required', function () {
       var urlParams = require('page/router/url_params');
-      spyOn(urlParams, 'getTag').andReturn('tag');
+      spyOn(urlParams, 'getTag').and.returnValue('tag');
 
       var displayNoMessageEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelectedWithoutPushState);
 

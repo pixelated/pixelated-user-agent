@@ -7,7 +7,7 @@ describeComponent('mail_view/ui/mail_actions', function () {
 
   beforeEach(function(){
     testData = Pixelated.testData();
-    setupComponent(testData);
+    this.setupComponent(testData.rawMail);
   });
 
   it('verifies if more actions list is hidden when rendering mail view', function() {
@@ -48,13 +48,12 @@ describeComponent('mail_view/ui/mail_actions', function () {
   });
 
   it('triggers a delete event when clicking on delete-button-top', function(){
-
     var deleteEvent = spyOnEvent(document, Pixelated.events.ui.mail.delete);
 
     this.component.select('viewMoreActions').click();
     this.component.select('deleteButtonTop').click();
 
-    expect(deleteEvent).toHaveBeenTriggeredOnAndWith(document, {mail: testData.mail});
+    expect(deleteEvent).toHaveBeenTriggeredOnAndWith(document, {mail: testData.rawMail.mail});
 
     var moreActionsComponent = this.component.select('moreActions');
     expect(moreActionsComponent.attr('style').trim()).toEqual('display: none;');

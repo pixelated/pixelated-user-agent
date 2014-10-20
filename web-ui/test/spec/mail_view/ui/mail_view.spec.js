@@ -11,13 +11,13 @@ describeComponent('mail_view/ui/mail_view', function () {
     mail = {ident: 1, header: { date: '12/12/12T12:12' }, tags: ['inbox']};
     testData = {mail: Pixelated.testData().parsedMail.simpleTextPlain};
     Pixelated.mockBloodhound();
-    setupComponent('<div></div>', {mail: mail});
+    this.setupComponent('<div></div>', {mail: mail});
   });
 
   it('triggers mail:want on ui:openMail', function () {
     var spyEvent = spyOnEvent(document, Pixelated.events.mail.want);
 
-    setupComponent('<div></div>', {ident: mail.ident });
+    this.setupComponent('<div></div>', {ident: mail.ident });
 
     expect(spyEvent).toHaveBeenTriggeredOn(document);
     expect(spyEvent.mostRecentCall.data.mail).toEqual(1);
@@ -137,25 +137,25 @@ describeComponent('mail_view/ui/mail_view', function () {
   });
 
   it('shows that mail is encrypted if it is', function() {
-    spyOn(this.component, 'checkEncrypted').andReturn('encrypted');
+    spyOn(this.component, 'checkEncrypted').and.returnValue('encrypted');
     this.component.displayMail({}, testData);
     expect(this.component.$node.find('.encrypted')).toExist();
   });
 
   it('shows that mail is signed if it is', function() {
-    spyOn(this.component, 'checkSigned').andReturn('signed');
+    spyOn(this.component, 'checkSigned').and.returnValue('signed');
     this.component.displayMail({}, testData);
     expect(this.component.$node.find('.signed')).toExist();
   });
 
   it('shows that mail is not encrypted if it isn\'t', function() {
-    spyOn(this.component, 'checkEncrypted').andReturn('not-encrypted');
+    spyOn(this.component, 'checkEncrypted').and.returnValue('not-encrypted');
     this.component.displayMail({}, testData);
     expect(this.component.$node.find('.not-encrypted')).toExist();
   });
 
   it('shows that mail is not signed if it isn\'t', function() {
-    spyOn(this.component, 'checkEncrypted').andReturn('not-signed');
+    spyOn(this.component, 'checkEncrypted').and.returnValue('not-signed');
     this.component.displayMail({}, testData);
     expect(this.component.$node.find('.not-signed')).toExist();
   });

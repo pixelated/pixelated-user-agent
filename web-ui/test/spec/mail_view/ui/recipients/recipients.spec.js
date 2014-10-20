@@ -6,21 +6,21 @@ describeComponent('mail_view/ui/recipients/recipients',function () {
 
   describe('initialization', function() {
     it('adds recipients', function() {
-      setupComponent({name: 'to', addresses: ['foobar@gmail.com'] });
+      this.setupComponent({name: 'to', addresses: ['foobar@gmail.com'] });
       expect(this.component.attr.recipients.length).toBe(1);
     });
 
     it('does not trigger recipients updated events on initialization', function() {
       recipientsUpdatedEvent = spyOnEvent(document, Pixelated.events.ui.recipients.updated);
 
-      setupComponent({name: 'to', addresses: ['foobar@gmail.com'] });
+      this.setupComponent({name: 'to', addresses: ['foobar@gmail.com'] });
       expect(recipientsUpdatedEvent).not.toHaveBeenTriggeredOn(document);
     });
   });
 
   describe('adding recipients from the ui', function() {
     beforeEach(function () {
-      setupComponent();
+      this.setupComponent();
       recipientsUpdatedEvent  = spyOnEvent(document, Pixelated.events.ui.recipients.updated);
       this.component.trigger(Pixelated.events.ui.recipients.entered, {name: 'to', addresses: ['foobar@gmail.com'] });
     });

@@ -6,7 +6,7 @@ describeComponent('mail_view/ui/send_button', function () {
 
   describe('send button', function () {
     beforeEach(function () {
-      setupComponent('<button />');
+      this.setupComponent('<button />');
     });
 
     describe('when it is disabled', function () {

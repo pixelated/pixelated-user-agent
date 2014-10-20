@@ -4,7 +4,7 @@ describeComponent('user_alerts/ui/user_alerts', function () {
   'use strict';
 
   beforeEach(function () {
-    setupComponent('<div id="userAlerts"></div>', { dismissTimeout: 100 });
+    this.setupComponent('<div id="userAlerts"></div>', { dismissTimeout: 100 });
   });
 
   it('should render message when ui:user_alerts:displayMessage is triggered', function () {

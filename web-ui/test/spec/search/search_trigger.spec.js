@@ -6,7 +6,7 @@ describeComponent('search/search_trigger', function () {
   var self;
 
   beforeEach(function () {
-    setupComponent();
+    this.setupComponent();
     self = this;
   });
 

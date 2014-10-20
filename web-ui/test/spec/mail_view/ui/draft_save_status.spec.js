@@ -3,7 +3,7 @@
 describeComponent('mail_view/ui/draft_save_status', function () {
   'use strict';
 
-  beforeEach(setupComponent);
+  beforeEach(this.setupComponent);
 
   it('should be empty on initialization', function() {
     expect(this.$node.text()).toBe('');

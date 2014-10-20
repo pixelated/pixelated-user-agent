@@ -7,7 +7,7 @@ describeComponent('dispatchers/left_pane_dispatcher', function () {
     it('asks for tags', function () {
       var tagWantEvent = spyOnEvent(document, Pixelated.events.tags.want);
 
-      setupComponent();
+      this.setupComponent();
 
       expect(tagWantEvent).toHaveBeenTriggeredOn(document);
       expect(tagWantEvent.mostRecentCall.data.caller[0]).toEqual(this.$node[0]);
@@ -16,7 +16,7 @@ describeComponent('dispatchers/left_pane_dispatcher', function () {
 
   describe('after initialization', function () {
     beforeEach(function () {
-      setupComponent();
+      this.setupComponent();
     });
 
     it('pushes the url state when a tag is selected but not for the first tag', function () {

@@ -7,7 +7,7 @@ describeComponent('services/delete_service', function () {
   var i18n;
 
   beforeEach( function () {
-    setupComponent();
+    this.setupComponent();
     i18n = require('views/i18n');
   });
 

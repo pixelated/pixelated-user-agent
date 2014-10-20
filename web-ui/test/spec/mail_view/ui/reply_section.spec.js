@@ -5,7 +5,7 @@ describeComponent('mail_view/ui/reply_section', function () {
   'use strict';
 
   beforeEach(function () {
-    setupComponent();
+    this.setupComponent();
   });
 
   describe('clicking reply buttons', function() {

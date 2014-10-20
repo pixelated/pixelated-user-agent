@@ -40,11 +40,11 @@ define(
         this.teardown();
       };
 
-      this.select = function () {
+      this.doSelect = function () {
         this.$node.find('.recipient-value').addClass('selected');
       };
 
-      this.unselect = function () {
+      this.doUnselect = function () {
         this.$node.find('.recipient-value').removeClass('selected');
       };
     }

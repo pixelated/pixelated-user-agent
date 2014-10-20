@@ -46,8 +46,8 @@ describeComponent('tags/ui/tag_shortcut', function () {
     var shortcutAddedAfterEmptyingParent = TagShortcut.appendedTo(parent, { linkTo: { name: 'inbox', counts: { total: 15 }}, trigger: component });
     // by now shorcut is not in the DOM anymore but shortcutAddedAfterEmptyingParent is
 
-    spyOn(shortcut, 'teardown').andCallThrough();
-    spyOn(shortcutAddedAfterEmptyingParent, 'teardown').andCallThrough();
+    spyOn(shortcut, 'teardown').and.callThrough();
+    spyOn(shortcutAddedAfterEmptyingParent, 'teardown').and.callThrough();
 
     $(document).trigger(Pixelated.events.tags.shortcuts.teardown);
 

@@ -6,7 +6,7 @@ describeComponent('tags/ui/tag', function () {
 
   describe('inbox tag', function () {
     beforeEach(function () {
-      setupComponent('<li></li>', {
+      this.setupComponent('<li></li>', {
         tag: {
           name: 'inbox',
           ident: '1',
@@ -48,7 +48,7 @@ describeComponent('tags/ui/tag', function () {
 
     describe('increasing count read when email is read', function () {
       it('doesnt update if mail.tags or mail.mailbox dont match the tag name', function () {
-        setupComponent('<li></li>', {
+        this.setupComponent('<li></li>', {
           tag: { name: 'sometag', ident: '1', counts: { total: 100, read: 0 } }
         });
 
@@ -65,7 +65,7 @@ describeComponent('tags/ui/tag', function () {
       });
 
       it('looks at the mail tags for non default tags', function () {
-        setupComponent('<li></li>', {
+        this.setupComponent('<li></li>', {
           tag: { name: 'tag', ident: '1', counts: { total: 100, read: 0 } }
         });
 
@@ -101,7 +101,7 @@ describeComponent('tags/ui/tag', function () {
   describe('drafts tag', function () {
     var containerFordrafts;
     beforeEach(function () {
-      setupComponent('<li></li>', {
+      this.setupComponent('<li></li>', {
         tag: {
           name: 'drafts',
           ident: '42',
@@ -122,7 +122,7 @@ describeComponent('tags/ui/tag', function () {
 
   describe('all tag', function () {
     beforeEach(function () {
-      setupComponent('<li></li>', {
+      this.setupComponent('<li></li>', {
         tag: {
           name: 'all',
           ident: '45',
@@ -156,7 +156,7 @@ describeComponent('tags/ui/tag', function () {
   _.each(['sent', 'trash'], function (tag_name) {
     describe(tag_name + ' tag', function () {
       beforeEach(function () {
-        setupComponent('<li></li>', {
+        this.setupComponent('<li></li>', {
           tag: {
             name: tag_name,
             ident: '42',

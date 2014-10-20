@@ -14,7 +14,7 @@ describeComponent('mail_view/ui/forward_box', function () {
 
   it('should have a subject of Fwd: <original_message>', function() {
     testMail.header.subject = 'Very interesting';
-    setupComponent({ mail: testMail });
+    this.setupComponent({ mail: testMail });
 
     expect(this.component.select('subjectDisplay').text()).toEqual('Fwd: '+ testMail.header.subject);
   });
@@ -23,25 +23,25 @@ describeComponent('mail_view/ui/forward_box', function () {
     var Recipients = require('mail_view/ui/recipients/recipients');
     spyOn(Recipients, 'attachTo');
 
-    setupComponent({ mail: testMail });
+    this.setupComponent({ mail: testMail });
 
-    expect(Recipients.attachTo.calls[0].args[1]).toEqual({name: 'to', addresses: []});
-    expect(Recipients.attachTo.calls[1].args[1]).toEqual({name: 'cc', addresses: []});
-    expect(Recipients.attachTo.calls[2].args[1]).toEqual({name: 'bcc', addresses: []});
+    expect(Recipients.attachTo.calls.all()[0].args[1]).toEqual({name: 'to', addresses: []});
+    expect(Recipients.attachTo.calls.all()[1].args[1]).toEqual({name: 'cc', addresses: []});
+    expect(Recipients.attachTo.calls.all()[2].args[1]).toEqual({name: 'bcc', addresses: []});
   });
 
   it('should populate body text area with quote of email being forwarded', function() {
     var viewHelper = require('helpers/view_helper');
-    spyOn(viewHelper, 'quoteMail').andReturn('quoted email');
+    spyOn(viewHelper, 'quoteMail').and.returnValue('quoted email');
 
-    setupComponent({ mail: testMail });
+    this.setupComponent({ mail: testMail });
 
     expect(viewHelper.quoteMail).toHaveBeenCalledWith(testMail);
     expect(this.component.select('bodyBox').val()).toBe('quoted email');
   });
 
   it('should show subject field when clicking on subject display', function() {
-    setupComponent({ mail: testMail });
+    this.setupComponent({ mail: testMail });
 
     this.component.select('subjectDisplay').click();
 
@@ -61,7 +61,7 @@ describeComponent('mail_view/ui/forward_box', function () {
     testMail.header.sender = 'original_sender';
     testMail.header.to = 'original_to@email.com';
 
-    setupComponent({ mail: testMail });
+    this.setupComponent({ mail: testMail });
 
     this.component.attr.recipientValues.to.push('forward_to@email.com');
     $(document).trigger(Pixelated.events.ui.mail.send);
@@ -83,7 +83,7 @@ describeComponent('mail_view/ui/forward_box', function () {
 
   it('triggers openMail when email is sent', function() {
     var eventSpy = spyOnEvent(document, Pixelated.events.ui.mail.open);
-    setupComponent({ mail: testMail });
+    this.setupComponent({ mail: testMail });
     $(document).trigger(Pixelated.events.mail.sent, {ident: testMail.ident});
     expect(eventSpy).toHaveBeenTriggeredOnAndWith(document, {ident: testMail.ident});
   });

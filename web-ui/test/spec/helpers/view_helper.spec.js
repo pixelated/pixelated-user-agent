@@ -76,7 +76,7 @@ define(['helpers/view_helper'], function (viewHelper) {
 
       viewHelper.moveCaretToEndOfText();
 
-      expect(window.setTimeout.calls[0].args[1]).toEqual(1);
+      expect(window.setTimeout.calls.all()[0].args[1]).toEqual(1);
     });
   });
 });

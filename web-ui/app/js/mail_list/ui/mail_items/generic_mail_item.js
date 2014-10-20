@@ -102,7 +102,7 @@ define(
           this.checkCheckbox();
         }
 
-        this.on(document, events.ui.composeBox.newMessage, this.unselect);
+        this.on(document, events.ui.composeBox.newMessage, this.doUnselect);
         this.on(document, events.ui.mail.open, this.openMail);
         this.on(document, events.ui.mail.updateSelected, this.updateSelected);
         this.on(document, events.mails.teardown, this.teardown);

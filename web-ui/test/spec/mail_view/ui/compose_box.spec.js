@@ -5,7 +5,7 @@ describeComponent('mail_view/ui/compose_box', function () {
   'use strict';
   beforeEach(function () {
     Pixelated.mockBloodhound();
-    setupComponent('<div style="display:none"></div>');
+    this.setupComponent('<div style="display:none"></div>');
   });
 
 

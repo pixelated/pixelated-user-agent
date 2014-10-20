@@ -4,7 +4,7 @@ describeComponent('dispatchers/middle_pane_dispatcher', function () {
   'use strict';
 
   beforeEach(function() {
-    setupComponent('<div><div id="middle-pane" style="height: 200px; overflow-y: scroll;"><div style="height: 400px"></div></div></div>');
+    this.setupComponent('<div><div id="middle-pane" style="height: 200px; overflow-y: scroll;"><div style="height: 400px"></div></div></div>');
   });
 
   it ('listens to refresh mail list event', function() {

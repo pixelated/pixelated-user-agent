@@ -7,7 +7,7 @@ describeMixin('mail_list/ui/mail_items/mail_item', function () {
     var mail = Pixelated.testData().parsedMail.simpleTextPlain;
     mail.tags = ['inbox'];
 
-    setupComponent('<li><input type="checkbox"></input></li>', {
+    this.setupComponent('<li><input type="checkbox"></input></li>', {
       mail: mail,
       selected: false,
       tag: 'inbox'

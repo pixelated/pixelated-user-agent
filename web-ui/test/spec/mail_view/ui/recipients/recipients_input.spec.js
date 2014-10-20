@@ -2,7 +2,7 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
   'use strict';
 
   beforeEach(function () {
-    setupComponent({name: 'to'});
+    this.setupComponent({name: 'to'});
   });
 
   describe('keys that finish address input', function () {
@@ -42,7 +42,7 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
         this.$node.trigger(enterAddressKeyPressEvent);
         expect(enterAddressKeyPressEvent.preventDefault).toHaveBeenCalled();
 
-        enterAddressKeyPressEvent.preventDefault.reset();
+        enterAddressKeyPressEvent.preventDefault.calls.reset();
         this.$node.val('anything');
         this.$node.trigger(enterAddressKeyPressEvent);
         expect(enterAddressKeyPressEvent.preventDefault).toHaveBeenCalled();

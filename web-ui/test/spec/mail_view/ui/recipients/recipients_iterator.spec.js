@@ -15,7 +15,7 @@ define(['mail_view/ui/recipients/recipients_iterator'], function (RecipientsIter
   }
 
   function resetMock(m) {
-    m.destroy.reset();m.select.reset();m.unselect.reset();
+    m.destroy.calls.reset();m.select.calls.reset();m.unselect.calls.reset();
   }
 
   beforeEach(function () {

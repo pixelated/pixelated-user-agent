@@ -9,7 +9,7 @@ describeComponent('mail_view/ui/reply_box', function () {
     attrs = {
       mail: Pixelated.testData().parsedMail.simpleTextPlain
     };
-    setupComponent(attrs);
+    this.setupComponent(attrs);
     i18n = require('views/i18n');
   });
 
@@ -35,7 +35,7 @@ describeComponent('mail_view/ui/reply_box', function () {
     it('should use the from field when Reply-To header does not exist', function() {
       attrs.mail.header.reply_to = undefined;
 
-      setupComponent(attrs);
+      this.setupComponent(attrs);
 
       expect(this.component.attr.recipientValues.to).toEqual([attrs.mail.header.from]);
     });
@@ -43,7 +43,7 @@ describeComponent('mail_view/ui/reply_box', function () {
     it('should have a subject of Re: <original_message>', function() {
       attrs.mail.header.subject = 'Very interesting';
 
-      setupComponent(attrs);
+      this.setupComponent(attrs);
 
       expect(this.component.select('subjectDisplay').text()).toEqual(i18n('Re: ')+ attrs.mail.header.subject);
     });
@@ -52,7 +52,7 @@ describeComponent('mail_view/ui/reply_box', function () {
       var mailSendEvent = spyOnEvent(document, Pixelated.events.mail.send);
 
       attrs.mail.header.message_id = '12345';
-      setupComponent(attrs);
+      this.setupComponent(attrs);
 
       $(document).trigger(Pixelated.events.ui.mail.send);
 
@@ -66,7 +66,7 @@ describeComponent('mail_view/ui/reply_box', function () {
       var mailSendEvent = spyOnEvent(document, Pixelated.events.mail.send);
       attrs.mail.header.list_id = 'somelist';
 
-      setupComponent(attrs);
+      this.setupComponent(attrs);
       $(document).trigger(Pixelated.events.ui.mail.send);
 
       expect(mailSendEvent.mostRecentCall.data.header).toEqual(jasmine.objectContaining({
@@ -76,9 +76,9 @@ describeComponent('mail_view/ui/reply_box', function () {
 
     it('populates body text area with quote of email being replied', function() {
       var viewHelper = require('helpers/view_helper');
-      spyOn(viewHelper, 'quoteMail').andReturn('quoted email');
+      spyOn(viewHelper, 'quoteMail').and.returnValue('quoted email');
 
-      setupComponent(attrs);
+      this.setupComponent(attrs);
 
       expect(viewHelper.quoteMail).toHaveBeenCalledWith(attrs.mail);
       expect(this.component.select('bodyBox').val()).toBe('quoted email');
