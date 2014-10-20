@@ -2,7 +2,7 @@ import unittest
 
 from pixelated.adapter.mail import InputMail
 from pixelated.adapter.draft_service import DraftService
-import test_helper
+import test.support.test_helper as test_helper
 from mockito import *
 
 
@@ -21,7 +21,7 @@ class DraftServiceTest(unittest.TestCase):
         verify(self.drafts_mailbox).add(mail)
 
     def test_update_draft(self):
-        mail = test_helper.input_mail()
+        mail = InputMail.from_dict(test_helper.mail_dict())
         when(self.drafts_mailbox).add(mail).thenReturn(mail)
 
         self.draft_service.update_draft(mail.ident, mail)
