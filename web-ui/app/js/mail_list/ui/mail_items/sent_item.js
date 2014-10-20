@@ -55,7 +55,7 @@ define(
         var mailItemHtml = templates.mails.sent(this.attr);
         this.$node.html(mailItemHtml);
         this.$node.addClass(this.attr.statuses);
-        if(this.attr.selected) { this.select(); }
+        if(this.attr.selected) { this.doSelect(); }
         this.on(this.$node.find('a'), 'click', this.triggerOpenMail);
       };
 
@@ -68,7 +68,7 @@ define(
           this.checkCheckbox();
         }
 
-        this.on(document, events.ui.composeBox.newMessage, this.unselect);
+        this.on(document, events.ui.composeBox.newMessage, this.doUnselect);
         this.on(document, events.ui.mail.open, this.openMail);
         this.on(document, events.ui.mail.updateSelected, this.updateSelected);
         this.on(document, events.mails.teardown, this.teardown);

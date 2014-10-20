@@ -4,7 +4,7 @@ define(['mail_view/ui/recipients/recipients_iterator'], function (RecipientsIter
   'use strict';
 
   function createRecipient() {
-    return jasmine.createSpyObj('recipient', ['select', 'unselect', 'destroy']);
+    return jasmine.createSpyObj('recipient', ['doSelect', 'doUnselect', 'destroy']);
   }
 
   var recipientsIterator,
@@ -15,7 +15,7 @@ define(['mail_view/ui/recipients/recipients_iterator'], function (RecipientsIter
   }
 
   function resetMock(m) {
-    m.destroy.calls.reset();m.select.calls.reset();m.unselect.calls.reset();
+    m.destroy.calls.reset();m.doSelect.calls.reset();m.doUnselect.calls.reset();
   }
 
   beforeEach(function () {
@@ -29,8 +29,8 @@ define(['mail_view/ui/recipients/recipients_iterator'], function (RecipientsIter
       recipientsIterator = createIterator(elements);
       recipientsIterator.moveLeft();
 
-      expect(elements[0].select).toHaveBeenCalled();
-      expect(elements[1].unselect).toHaveBeenCalled();
+      expect(elements[0].doSelect).toHaveBeenCalled();
+      expect(elements[1].doUnselect).toHaveBeenCalled();
     });
 
     it('doesnt do anything if there are no elements in the left', function () {
@@ -41,10 +41,10 @@ define(['mail_view/ui/recipients/recipients_iterator'], function (RecipientsIter
 
       recipientsIterator.moveLeft();
 
-      expect(elements[0].select).not.toHaveBeenCalled();
-      expect(elements[0].unselect).not.toHaveBeenCalled();
-      expect(elements[1].select).not.toHaveBeenCalled();
-      expect(elements[1].unselect).not.toHaveBeenCalled();
+      expect(elements[0].doSelect).not.toHaveBeenCalled();
+      expect(elements[0].doUnselect).not.toHaveBeenCalled();
+      expect(elements[1].doSelect).not.toHaveBeenCalled();
+      expect(elements[1].doUnselect).not.toHaveBeenCalled();
     });
 
   });
@@ -58,8 +58,8 @@ define(['mail_view/ui/recipients/recipients_iterator'], function (RecipientsIter
 
       recipientsIterator.moveRight();
 
-      expect(elements[0].unselect).toHaveBeenCalled();
-      expect(elements[1].select).toHaveBeenCalled();
+      expect(elements[0].doUnselect).toHaveBeenCalled();
+      expect(elements[1].doSelect).toHaveBeenCalled();
     });
 
     it('unselects current element and focus on exit input if there are no elements on the right', function () {
@@ -69,7 +69,7 @@ define(['mail_view/ui/recipients/recipients_iterator'], function (RecipientsIter
       recipientsIterator = createIterator(elements);
       recipientsIterator.moveRight();
 
-      expect(elements[1].unselect).toHaveBeenCalled();
+      expect(elements[1].doUnselect).toHaveBeenCalled();
       expect(exitInput.focus).toHaveBeenCalled();
     });
   });
@@ -84,7 +84,7 @@ define(['mail_view/ui/recipients/recipients_iterator'], function (RecipientsIter
       recipientsIterator.deleteCurrent();
 
       expect(toBeDeleted.destroy).toHaveBeenCalled();
-      expect(elements[0].select).toHaveBeenCalled();
+      expect(elements[0].doSelect).toHaveBeenCalled();
     });
 
     it('focus on the input if there are no more elements', function () {
