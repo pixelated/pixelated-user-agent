@@ -75,7 +75,10 @@ define(
         if (data.ident) {
           self.attr.currentMailIdent = data.ident;
         }
+
         self.attr.currentTag = data.tag || self.attr.currentTag;
+
+	  self.updateCheckAllCheckbox();
       }
 
       function renderMails(mails) {
@@ -132,16 +135,24 @@ define(
       };
 
       this.respondWithCheckedMails = function (ev, caller) {
-        this.trigger(caller, events.ui.mail.hereChecked, { checkedMails : this.attr.checkedMails });
+        this.trigger(caller, events.ui.mail.hereChecked, { checkedMails : this.checkedMailsForCurrentTag()});
       };
 
       this.updateCheckAllCheckbox = function () {
-        if (_.keys(this.attr.checkedMails).length > 0) {
+        if (this.checkedMailsForCurrentTag().length > 0) {
           this.trigger(document, events.ui.mails.hasMailsChecked, true);
         } else {
           this.trigger(document, events.ui.mails.hasMailsChecked, false);
         }
       };
+
+	this.checkedMailsForCurrentTag = function() {
+	    var checkedMailsForCurrentTag =  _.filter(self.attr.checkedMails, function(mail) {
+		  return _.contains(mail.tags, self.attr.currentTag);
+	    });
+	    
+	    return checkedMailsForCurrentTag.length > 0 ? checkedMailsForCurrentTag : {};
+	}
 
       this.addToSelectedMails = function (ev, data) {
         this.attr.checkedMails[data.mail.ident] = data.mail;

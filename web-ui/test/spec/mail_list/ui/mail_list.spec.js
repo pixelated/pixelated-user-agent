@@ -70,17 +70,18 @@ describeComponent('mail_list/ui/mail_list', function () {
       expect(this.component.attr.checkedMails).toEqual(checkedMails);
     });
 
-    it('returns the list of checked mails to whomever requests them', function () {
+    it('returns the list of checked mails based on the current tag to whomever requests them', function () {
       var caller = {};
-      this.component.attr.checkedMails = {'1': {}};
+      this.component.attr.checkedMails = mailList;
+	this.component.attr.currentTag = 'inbox';
       var mailHereCheckedEvent = spyOnEvent(caller, Pixelated.events.ui.mail.hereChecked);
 
       $(document).trigger(Pixelated.events.ui.mail.wantChecked, caller);
 
-      expect(mailHereCheckedEvent).toHaveBeenTriggeredOnAndWith(caller, { checkedMails: {'1': {} }});
+      expect(mailHereCheckedEvent).toHaveBeenTriggeredOnAndWith(caller, { checkedMails: mailList });
     });
 
-    it('returns an empty list to whomever requests the checked mails if there are no checked mails', function () {
+    it('returns an empty list to whomever requests the checked mails if there are no checked mails with the current tag', function () {
       var caller = {};
       var mailHereCheckedEvent = spyOnEvent(caller, Pixelated.events.ui.mail.hereChecked);
 
@@ -101,8 +102,18 @@ describeComponent('mail_list/ui/mail_list', function () {
       expect(this.component.attr.checkedMails).toEqual({'2': {}, '3': {} });
     });
 
-    it('checks the check all checkbox if at least one mail is checked', function () {
+    it ('does not check the all checkbox if no mail checked has the current tag', function () {
+	  var setCheckAllCheckboxEvent = spyOnEvent(document, Pixelated.events.ui.mails.hasMailsChecked);
+	  this.component.attr.currentTag = 'inbox';
+
+	  $(document).trigger(Pixelated.events.ui.mail.checked, {mail : {'1' : {tags: ['different']}}});
+
+	  expect(setCheckAllCheckboxEvent).toHaveBeenTriggeredOnAndWith(document, false);
+    });
+
+    it('checks the check all checkbox if at least one mail is checked with the current tag', function () {
       var setCheckAllCheckboxEvent = spyOnEvent(document, Pixelated.events.ui.mails.hasMailsChecked);
+	this.component.attr.currentTag = 'inbox';
 
       $(document).trigger(Pixelated.events.ui.mail.checked, {mail: mailList[0]});
 
