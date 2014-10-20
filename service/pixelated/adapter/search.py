@@ -151,8 +151,8 @@ class SearchEngine(object):
             return unique([mail['ident'] for mail in results])
 
     def _paginated_search_mails(self, query, window, page):
-        page = int(page) if int(page) > 1 else 1
-        window = int(window)
+        page = int(page) if page is not None and int(page) > 1 else 1
+        window = int(window) if window is not None else 25
 
         with self._index.searcher() as searcher:
             tags_facet = sorting.FieldFacet('tag', allow_overlap=True, maptype=sorting.Count)
