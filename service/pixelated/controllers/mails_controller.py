@@ -35,9 +35,6 @@ class MailsController:
         response = {
             "stats": {
                 "total": total,
-                "read": 0,
-                "starred": 0,
-                "replied": 0
             },
             "mails": [mail.as_dict() for mail in mails]
         }
