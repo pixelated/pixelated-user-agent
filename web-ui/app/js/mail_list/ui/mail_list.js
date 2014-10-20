@@ -56,7 +56,7 @@ define(
       }
 
       function triggerMailOpenForPopState(data) {
-        if(data.mailIdent) {
+        if (data.mailIdent) {
           self.trigger(document, openMailEventFor(data.tag), { ident: data.mailIdent });
         }
       }
@@ -78,7 +78,7 @@ define(
 
         self.attr.currentTag = data.tag || self.attr.currentTag;
 
-	  self.updateCheckAllCheckbox();
+        self.updateCheckAllCheckbox();
       }
 
       function renderMails(mails) {
@@ -90,7 +90,7 @@ define(
 
       }
 
-      this.triggerScrollReset = function() {
+      this.triggerScrollReset = function () {
         this.trigger(document, events.dispatchers.middlePane.resetScroll);
       };
 
@@ -111,21 +111,21 @@ define(
       };
 
       this.updateSelected = function (ev, data) {
-        if(data.ident !== this.attr.currentMailIdent){
+        if (data.ident !== this.attr.currentMailIdent) {
           this.uncheckCurrentMail();
           this.attr.currentMailIdent = data.ident;
         }
         this.checkCurrentMail();
       };
 
-      this.checkCurrentMail = function() {
-        $('#mail-'+this.attr.currentMailIdent+' input:checkbox')
+      this.checkCurrentMail = function () {
+        $('#mail-' + this.attr.currentMailIdent + ' input:checkbox')
           .attr('checked', true)
           .trigger('change');
       };
 
-      this.uncheckCurrentMail = function() {
-        $('#mail-'+this.attr.currentMailIdent+' input:checkbox')
+      this.uncheckCurrentMail = function () {
+        $('#mail-' + this.attr.currentMailIdent + ' input:checkbox')
           .attr('checked', false)
           .trigger('change');
       };
@@ -135,7 +135,7 @@ define(
       };
 
       this.respondWithCheckedMails = function (ev, caller) {
-        this.trigger(caller, events.ui.mail.hereChecked, { checkedMails : this.checkedMailsForCurrentTag()});
+        this.trigger(caller, events.ui.mail.hereChecked, { checkedMails: this.checkedMailsForCurrentTag()});
       };
 
       this.updateCheckAllCheckbox = function () {
@@ -146,13 +146,13 @@ define(
         }
       };
 
-	this.checkedMailsForCurrentTag = function() {
-	    var checkedMailsForCurrentTag =  _.filter(self.attr.checkedMails, function(mail) {
-		  return _.contains(mail.tags, self.attr.currentTag);
-	    });
-	    
-	    return checkedMailsForCurrentTag.length > 0 ? checkedMailsForCurrentTag : {};
-	}
+      this.checkedMailsForCurrentTag = function () {
+        var checkedMailsForCurrentTag = _.filter(self.attr.checkedMails, function (mail) {
+          return  mail.mailbox == self.attr.currentTag || _.contains(mail.tags, self.attr.currentTag);
+        });
+
+        return checkedMailsForCurrentTag.length > 0 ? checkedMailsForCurrentTag : {};
+      };
 
       this.addToSelectedMails = function (ev, data) {
         this.attr.checkedMails[data.mail.ident] = data.mail;
@@ -161,7 +161,7 @@ define(
 
       this.removeFromSelectedMails = function (ev, data) {
         if (data.mails) {
-          _.each(data.mails, function(mail) {
+          _.each(data.mails, function (mail) {
             delete this.attr.checkedMails[mail.ident];
           }, this);
         } else {
@@ -176,13 +176,13 @@ define(
       };
 
       this.refreshAfterSaveDraft = function () {
-        if(this.attr.currentTag === 'drafts') {
+        if (this.attr.currentTag === 'drafts') {
           this.refreshWithScroll();
         }
       };
 
       this.refreshAfterMailSent = function () {
-        if(this.attr.currentTag === 'drafts' || this.attr.currentTag === 'sent') {
+        if (this.attr.currentTag === 'drafts' || this.attr.currentTag === 'sent') {
           this.refreshWithScroll();
         }
       };
@@ -204,7 +204,7 @@ define(
         this.on(document, events.ui.mail.unchecked, this.removeFromSelectedMails);
 
         this.openMailFromUrl = utils.once(function () {
-          if(shouldSelectEmailFromUrlMailIdent()) {
+          if (shouldSelectEmailFromUrlMailIdent()) {
             selectMailBasedOnUrlMailIdent();
           }
         });
