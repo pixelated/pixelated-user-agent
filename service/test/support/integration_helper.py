@@ -229,6 +229,7 @@ class SoledadTestBase:
             self.search_engine.index_mail(mail)
         return mails
 
+
 class ResponseMail:
     def __init__(self, mail_dict):
         self.mail_dict = mail_dict
