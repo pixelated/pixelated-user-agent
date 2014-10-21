@@ -136,7 +136,7 @@ class InputMail(Mail):
         hd[fields.SUBJECT_KEY] = self.headers.get('Subject')
         hd[fields.TYPE_KEY] = fields.TYPE_HEADERS_VAL
         hd[fields.BODY_KEY] = self._get_body_phash()
-        hd[fields.PARTS_MAP_KEY] = walk.walk_msg_tree(walk.get_parts(self._mime_multipart), body_phash=self._get_body_phash())
+        hd[fields.PARTS_MAP_KEY] = walk.walk_msg_tree(walk.get_parts(self._mime_multipart), body_phash=self._get_body_phash())['part_map']
 
         self._hd = hd
         return hd
