@@ -17,7 +17,6 @@ from pixelated.controllers import respond_json
 
 
 class SyncInfoController:
-
     def __init__(self):
         self.current = 0
         self.total = 0
@@ -25,7 +24,7 @@ class SyncInfoController:
     def _get_progress(self):
         if self.total == 0:
             return 0
-        return self.current/float(self.total)
+        return self.current / float(self.total)
 
     def set_sync_info(self, soledad_sync_status):
         self.current, self.total = map(int, soledad_sync_status.content.split('/'))
