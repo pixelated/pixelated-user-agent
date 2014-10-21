@@ -21,6 +21,12 @@ class SoledadQuerier:
     def __init__(self, soledad):
         self.soledad = soledad
 
+    def remove_inbox_duplicates(self):
+        inboxes = [d for d in self.soledad.get_from_index('by-type', 'mbox') if d.content['mbox'] == 'INBOX']
+        sorted(inboxes, key=lambda x: x.content['lastuid'], reverse=True)
+        inboxes_to_remove = inboxes[1:len(inboxes)]
+        [self.soledad.delete_doc(inbox) for inbox in inboxes_to_remove]
+
     def all_mails(self):
         fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in self.soledad.get_from_index('by-type', 'flags')]
         if len(fdocs_chash) == 0:
@@ -60,6 +66,7 @@ class SoledadQuerier:
         return PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self)
 
     def mails(self, idents):
+        self.remove_inbox_duplicates()
         fdocs_chash = [(self.soledad.get_from_index('by-type-and-contenthash', 'flags', ident), ident) for ident in idents]
         fdocs_chash = [(result[0], ident) for result, ident in fdocs_chash if result]
         return self._build_mails_from_fdocs(fdocs_chash)

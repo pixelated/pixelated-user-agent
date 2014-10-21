@@ -26,6 +26,18 @@ import pixelated.bitmask_libraries.session as LeapSession
 from pixelated.controllers import *
 from pixelated.adapter.tag_service import TagService
 import os
+from leap.common.events import (
+    register,
+    events_pb2 as proto
+)
+
+
+def init_index_and_delete_duplicate_inboxes(querier, search_engine, mail_service):
+    def wrapper(*args, **kwargs):
+        querier.remove_inbox_duplicates()
+        search_engine.index_mails(mail_service.all_mails())
+
+    return wrapper
 
 
 def _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller):
@@ -50,18 +62,19 @@ def _setup_routes(app, home_controller, mails_controller, tags_controller, featu
 
 
 def create_app(debug_enabled, app):
-
     with app.app_context():
-        leap_session = LeapSession.open(app.config['LEAP_USERNAME'], app.config['LEAP_PASSWORD'],
+        leap_session = LeapSession.open(app.config['LEAP_USERNAME'],
+                                        app.config['LEAP_PASSWORD'],
                                         app.config['LEAP_SERVER_NAME'])
         tag_service = TagService()
+        search_engine = SearchEngine()
+        pixelated_mail_sender = MailSender(leap_session.account_email())
+
         soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
         pixelated_mailboxes = Mailboxes(leap_session.account, soledad_querier)
-        pixelated_mail_sender = MailSender(leap_session.account_email())
-        mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, tag_service, soledad_querier)
-        search_engine = SearchEngine()
-        search_engine.index_mails(mail_service.all_mails())
+
         draft_service = DraftService(pixelated_mailboxes)
+        mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, tag_service, soledad_querier)
 
         MailboxIndexerListener.SEARCH_ENGINE = search_engine
         InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
@@ -73,6 +86,11 @@ def create_app(debug_enabled, app):
                                            search_engine=search_engine)
         tags_controller = TagsController(search_engine=search_engine)
 
+        register(signal=proto.SOLEDAD_DONE_DATA_SYNC,
+                 callback=init_index_and_delete_duplicate_inboxes(querier=soledad_querier,
+                                                                  search_engine=search_engine,
+                                                                  mail_service=mail_service))
+
         _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller)
 
         app.run(host=app.config['HOST'], debug=debug_enabled,
@@ -83,7 +101,8 @@ def get_static_folder():
     static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))
     # this is a workaround for packaging
     if not os.path.exists(static_folder):
-        static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "..", "web-ui", "app"))
+        static_folder = os.path.abspath(
+            os.path.join(os.path.abspath(__file__), "..", "..", "..", "..", "web-ui", "app"))
     if not os.path.exists(static_folder):
         static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
     return static_folder

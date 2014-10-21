@@ -18,10 +18,12 @@ import os
 import os.path
 import crochet
 from flask import Flask
+from leap.common.events import server as events_server
 from pixelated.config import app_factory
 import pixelated.config.args as input_args
 import pixelated.bitmask_libraries.register as leap_register
 import pixelated.config.reactor_manager as reactor_manager
+import pixelated.support.ext_protobuf  # monkey patch for protobuf in OSX
 
 
 app = Flask(__name__, static_url_path='', static_folder=app_factory.get_static_folder())
@@ -33,6 +35,8 @@ def setup():
         debug_enabled = args.debug or os.environ.get('DEBUG', False)
         reactor_manager.start_reactor(logging=debug_enabled)
         crochet.setup()
+
+        events_server.ensure_server(port=8090)
 
         app.config.from_pyfile(args.config)
 
