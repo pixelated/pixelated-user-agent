@@ -66,7 +66,6 @@ class SoledadQuerier:
         return PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self)
 
     def mails(self, idents):
-        self.remove_inbox_duplicates()
         fdocs_chash = [(self.soledad.get_from_index('by-type-and-contenthash', 'flags', ident), ident) for ident in idents]
         fdocs_chash = [(result[0], ident) for result, ident in fdocs_chash if result]
         return self._build_mails_from_fdocs(fdocs_chash)
