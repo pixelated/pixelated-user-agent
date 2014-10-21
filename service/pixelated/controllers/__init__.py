@@ -29,3 +29,4 @@ from home_controller import HomeController
 from mails_controller import MailsController
 from tags_controller import TagsController
 from features_controller import FeaturesController
+from sync_info_controller import SyncInfoController

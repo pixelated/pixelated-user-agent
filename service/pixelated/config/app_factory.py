@@ -30,6 +30,7 @@ from leap.common.events import (
     register,
     events_pb2 as proto
 )
+from pixelated.controllers import sync_info_controller
 
 
 def init_index_and_delete_duplicate_inboxes(querier, search_engine, mail_service):
@@ -40,7 +41,7 @@ def init_index_and_delete_duplicate_inboxes(querier, search_engine, mail_service
     return wrapper
 
 
-def _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller):
+def _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller, sync_info_controller):
     # home
     app.add_url_rule('/', methods=['GET'], view_func=home_controller.home)
     # mails
@@ -59,6 +60,8 @@ def _setup_routes(app, home_controller, mails_controller, tags_controller, featu
     app.add_url_rule('/tags', methods=['GET'], view_func=tags_controller.tags)
     # features
     app.add_url_rule('/features', methods=['GET'], view_func=features_controller.features)
+    # sync info
+    app.add_url_rule('/sync_info', methods=['GET'], view_func=sync_info_controller.sync_info)
 
 
 def create_app(debug_enabled, app):
@@ -85,13 +88,15 @@ def create_app(debug_enabled, app):
                                            draft_service=draft_service,
                                            search_engine=search_engine)
         tags_controller = TagsController(search_engine=search_engine)
+        sync_info_controller = SyncInfoController()
 
+        register(signal=proto.SOLEDAD_SYNC_RECEIVE_STATUS, callback=sync_info_controller.set_sync_info)
         register(signal=proto.SOLEDAD_DONE_DATA_SYNC,
                  callback=init_index_and_delete_duplicate_inboxes(querier=soledad_querier,
                                                                   search_engine=search_engine,
                                                                   mail_service=mail_service))
 
-        _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller)
+        _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller, sync_info_controller)
 
         app.run(host=app.config['HOST'], debug=debug_enabled,
                 port=app.config['PORT'], use_reloader=False)
