@@ -18,7 +18,6 @@ import json
 from pixelated.adapter.mail import InputMail
 from pixelated.controllers import respond_json
 from flask import request
-import dateutil.parser as dateparser
 
 
 class MailsController:
