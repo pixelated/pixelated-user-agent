@@ -20,6 +20,7 @@ define(
     'mail_list_actions/ui/mail_list_actions',
     'user_alerts/ui/user_alerts',
     'mail_list/ui/mail_list',
+    'mail_list/ui/mail_syncing_progress_bar',
     'mail_view/ui/no_message_selected_pane',
     'mail_view/ui/mail_view',
     'mail_view/ui/mail_actions',
@@ -48,6 +49,7 @@ define(
     mailListActions,
     userAlerts,
     mailList,
+    mailSyncingProgressBar,
     noMessageSelectedPane,
     mailView,
     mailViewActions,
@@ -78,6 +80,7 @@ define(
       userAlerts.attachTo('#user-alerts');
 
       mailList.attachTo('#mail-list');
+      mailSyncingProgressBar.attachTo('#mail-syncing-progress-bar');
       mailListActions.attachTo('#list-actions');
 
       searchTrigger.attachTo('#search-trigger');
