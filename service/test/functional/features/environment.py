@@ -19,6 +19,7 @@ import multiprocessing
 from selenium import webdriver
 from test.support.integration_helper import SoledadTestBase
 import pixelated.runserver
+import logging
 
 
 def before_all(context):
@@ -28,6 +29,7 @@ def before_all(context):
     context.mailboxes = context.soledad_test_base.mailboxes
     context.app = pixelated.runserver.app
     context.app.mail_service = context.soledad_test_base.mail_service
+    logging.disable('INFO')
 
     worker = lambda app, port: pixelated.runserver.app.run(port=4567, use_reloader=False)
     context._process = multiprocessing.Process(target=worker, args=(context.app, 4567))
