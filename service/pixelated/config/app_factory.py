@@ -23,9 +23,12 @@ from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.draft_service import DraftService
 from pixelated.adapter.mailbox_indexer_listener import MailboxIndexerListener
 import pixelated.bitmask_libraries.session as LeapSession
+from pixelated.bitmask_libraries.leap_srp import LeapAuthException
+from requests.exceptions import ConnectionError
 from pixelated.controllers import *
 from pixelated.adapter.tag_service import TagService
 import os
+import sys
 from leap.common.events import (
     register,
     events_pb2 as proto
@@ -73,9 +76,17 @@ def _setup_routes(app, home_controller, mails_controller, tags_controller, featu
 
 def create_app(debug_enabled, app):
     with app.app_context():
-        leap_session = LeapSession.open(app.config['LEAP_USERNAME'],
+        try:
+            leap_session = LeapSession.open(app.config['LEAP_USERNAME'],
                                         app.config['LEAP_PASSWORD'],
                                         app.config['LEAP_SERVER_NAME'])
+        except ConnectionError, error:
+            print("Can't connect to the requested provider")
+            sys.exit(1)
+        except LeapAuthException:
+            print("Couldn't authenticate with the credentials provided")
+            sys.exit(1)
+
         tag_service = TagService()
         search_engine = SearchEngine()
         pixelated_mail_sender = MailSender(leap_session.account_email())
