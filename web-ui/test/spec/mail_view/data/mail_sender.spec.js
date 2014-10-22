@@ -14,13 +14,13 @@ describeComponent('mail_view/data/mail_sender', function () {
 
   it('sends mail data with a POST to the server when asked to send email', function() {
     var mailSentEventSpy = spyOnEvent(document, Pixelated.events.mail.sent);
-    var g;
+    var deferred = $.Deferred();
 
-    spyOn($, 'ajax').and.returnValue({done: function(f) { g = f; return {fail: function(){}};}});
+    spyOn($, 'ajax').and.returnValue(deferred);
 
     this.component.trigger(Pixelated.events.mail.send, mail);
 
-    g();
+    deferred.resolve();
 
     expect(mailSentEventSpy).toHaveBeenTriggeredOn(document);
 
@@ -32,14 +32,14 @@ describeComponent('mail_view/data/mail_sender', function () {
 
   it('save draft data with a PUT to the server', function() {
     var draftSavedEventSpy = spyOnEvent(document, Pixelated.events.mail.draftSaved);
-    var g;
+    var deferred = $.Deferred();
 
-    spyOn($, 'ajax').and.returnValue({done: function(f) { g = f; return {fail: function(){}};}});
+    spyOn($, 'ajax').and.returnValue(deferred);
 
     mail.ident = 0;
     this.component.trigger(Pixelated.events.mail.saveDraft, mail);
 
-    g();
+    deferred.resolve();
 
     expect(draftSavedEventSpy).toHaveBeenTriggeredOn(document);
 

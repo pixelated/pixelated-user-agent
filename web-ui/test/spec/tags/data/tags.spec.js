@@ -8,7 +8,7 @@ describeComponent('tags/data/tags', function () {
   });
 
   it('asks the server for tags when receiving the tags:want event', function() {
-    spyOn($, 'ajax').and.returnValue({done: function() {}});
+    spyOn($, 'ajax').and.returnValue($.Deferred());
 
     this.component.trigger(Pixelated.events.tags.want);
 
@@ -16,25 +16,30 @@ describeComponent('tags/data/tags', function () {
   });
 
   it('triggers an event on the initial sender after receiving tags', function() {
-    var f;
-    spyOn($, 'ajax').and.returnValue({done: function(d) { f = d; }});
+    var deferred = $.Deferred();
+
+    spyOn($, 'ajax').and.returnValue(deferred);
     var me = {};
     var eventSpy = spyOnEvent(me, Pixelated.events.tags.received);
 
     this.component.trigger(Pixelated.events.tags.want, { caller: me});
 
-    f(['foo', 'bar', 'quux/bar']);
+    deferred.resolve(['foo', 'bar', 'quux/bar']);
+
     expect(eventSpy).toHaveBeenTriggeredOn(me);
   });
 
   it('triggers an event containing the returned tags', function() {
-    var f;
-    spyOn($, 'ajax').and.returnValue({done: function(d) { f = d; }});
+    var tags = ['foo', 'bar', 'quux/bar'];
+    var deferred = $.Deferred();
+
+    spyOn($, 'ajax').and.returnValue(deferred);
     var me = {};
     var eventSpy = spyOnEvent(me, Pixelated.events.tags.received);
     this.component.trigger(Pixelated.events.tags.want, { caller: me });
-    var tags = ['foo', 'bar', 'quux/bar'];
-    f(tags);
+
+    deferred.resolve(tags);
+
     tags.push(this.component.all);
     expect(eventSpy.mostRecentCall.data).toEqual(jasmine.objectContaining({tags: tags}));
   });
