@@ -23,6 +23,7 @@ if 'develop' in sys.argv:
 # python: http://bugs.python.org/issue15881#msg170215
 import multiprocessing
 
+import setuptools
 from setuptools import setup
 from collections import defaultdict
 import os
