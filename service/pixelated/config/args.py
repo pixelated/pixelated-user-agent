@@ -27,6 +27,6 @@ def parse():
     parser.add_argument('--port', type=int, default=3333, help='the port to run the user agent on')
     parser.add_argument('-c', '--config', metavar='configfile', default=None, help='use specified file for credentials (for test purposes only)')
     parser.add_argument('--register', metavar=('provider', 'username'),
-            nargs=2, help='register a new username on the desired provider')
+                        nargs=2, help='register a new username on the desired provider')
     args = parser.parse_args()
     return args
