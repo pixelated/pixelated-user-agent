@@ -41,7 +41,7 @@ describeMixin('mixins/with_mail_edit_base', function () {
 
       setTimeout(function () {
         expect(saveDraftSpy).toHaveBeenTriggeredOn(document);
-        done()
+        done();
       }, 10);
     });
 

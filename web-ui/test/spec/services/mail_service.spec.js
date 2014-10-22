@@ -89,7 +89,7 @@ describeComponent('services/mail_service', function () {
 
   it('updates the tags of the desired message', function () {
     spyOn(this.component, 'refreshResults');
-    var updateTagsReturnValue = { tags: ['website'], mailbox: 'inbox'}
+    var updateTagsReturnValue = { tags: ['website'], mailbox: 'inbox'};
     var deferred = $.Deferred();
     var spyAjax = spyOn($, 'ajax').and.returnValue(deferred);
 
