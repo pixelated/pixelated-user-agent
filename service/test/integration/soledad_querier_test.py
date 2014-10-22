@@ -17,7 +17,7 @@
 import copy
 import unittest
 import time
-from test.support.integration_helper import SoledadTestBase
+from test.support.integration_helper import SoledadTestBase, MailBuilder
 from leap.mail.imap.fields import WithMsgFields
 
 
@@ -55,3 +55,14 @@ class SoledadQuerierTest(unittest.TestCase, SoledadTestBase, WithMsgFields):
         inboxes = self._get_mailboxes_from_soledad('INBOX')
         self.assertEqual(1, len(inboxes))
         self.assertEqual(3, inboxes[0].content['lastuid'])
+
+    def test_all_mails_skips_incomplete_mails(self):
+        self.add_multiple_to_mailbox(1, 'INBOX')
+        self.add_multiple_to_mailbox(1, 'SENT')
+
+        # creating incomplete mail, we will only save the fdoc
+        fdoc, hdoc, bdoc = MailBuilder().build_input_mail().get_for_save(2, 'INBOX')
+
+        self.soledad.create_doc(fdoc)
+        mails = self.soledad_querier.all_mails()
+        self.assertEqual(2, len(mails))  # mail is incomplete since it only has fdoc

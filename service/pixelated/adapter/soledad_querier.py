@@ -62,9 +62,15 @@ class SoledadQuerier:
         if len(fdocs_chash) == 0:
             return []
 
-        fdocs_hdocs = [(f[0], self.soledad.get_from_index('by-type-and-contenthash', 'head', f[1])[0]) for f in fdocs_chash]
-        fdocs_hdocs_phash = [(f[0], f[1], f[1].content.get('body')) for f in fdocs_hdocs]
-        fdocs_hdocs_bdocs = [(f[0], f[1], self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', f[2])[0]) for f in fdocs_hdocs_phash]
+        fdocs_hdocs = []
+        for fdoc, chash in fdocs_chash:
+            hdoc = self.soledad.get_from_index('by-type-and-contenthash', 'head', chash)
+            if len(hdoc) == 0:
+                continue
+            fdocs_hdocs.append((fdoc, hdoc[0]))
+
+        fdocs_hdocs_bodyphash = [(f[0], f[1], f[1].content.get('body')) for f in fdocs_hdocs]
+        fdocs_hdocs_bdocs = [(f[0], f[1], self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', f[2])[0]) for f in fdocs_hdocs_bodyphash]
         return [PixelatedMail.from_soledad(*raw_mail, soledad_querier=self) for raw_mail in fdocs_hdocs_bdocs]
 
     def save_mail(self, mail):
@@ -77,7 +83,7 @@ class SoledadQuerier:
         mbox = [m for m in self.soledad.get_from_index('by-type', 'mbox') if m.content['mbox'] == 'INBOX'][0]
 
         uid = mbox.content['lastuid'] + 1
-        new_docs = [self.soledad.create_doc(doc) for doc in mail._get_for_save(next_uid=uid, mailbox=mailbox_name)]
+        new_docs = [self.soledad.create_doc(doc) for doc in mail.get_for_save(next_uid=uid, mailbox=mailbox_name)]
         mbox.content['lastuid'] = uid
 
         self.soledad.put_doc(mbox)

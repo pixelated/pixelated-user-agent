@@ -99,7 +99,7 @@ class InputMail(Mail):
     def ident(self):
         return self._get_chash()
 
-    def _get_for_save(self, next_uid, mailbox):
+    def get_for_save(self, next_uid, mailbox):
         docs = [self._fdoc(next_uid, mailbox), self._hdoc()]
         docs.extend([m for m in self._cdocs()])
         return docs
