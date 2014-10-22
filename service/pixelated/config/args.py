@@ -16,8 +16,6 @@
 
 import argparse
 
-import os
-
 
 def parse():
     parser = argparse.ArgumentParser(description='Pixelated user agent.')
