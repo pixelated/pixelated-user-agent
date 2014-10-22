@@ -21,11 +21,34 @@ class SoledadQuerier:
     def __init__(self, soledad):
         self.soledad = soledad
 
-    def remove_inbox_duplicates(self):
-        inboxes = [d for d in self.soledad.get_from_index('by-type', 'mbox') if d.content['mbox'] == 'INBOX']
-        sorted(inboxes, key=lambda x: x.content['lastuid'], reverse=True)
-        inboxes_to_remove = inboxes[1:len(inboxes)]
-        [self.soledad.delete_doc(inbox) for inbox in inboxes_to_remove]
+    def _remove_many(self, docs):
+        [self.soledad.delete_doc(doc) for doc in docs]
+
+    def _remove_dup_inboxes(self, mailbox_name):
+        mailboxes = [d for d in self.soledad.get_from_index('by-type', 'mbox') if d.content['mbox'] == mailbox_name]
+        if len(mailboxes) == 0:
+            return
+        sorted(mailboxes, key=lambda x: x.content['lastuid'], reverse=True)
+        mailboxes_to_remove = mailboxes[1:len(mailboxes)]
+        self._remove_many(mailboxes_to_remove)
+
+    def _remove_dup_recent(self, mailbox_name):
+        rct = [d for d in self.soledad.get_from_index('by-type', 'rct') if d.content['mbox'] == mailbox_name]
+        if len(rct) == 0:
+            return
+        sorted(rct, key=lambda x: len(x.content['rct']), reverse=True)
+        rct_to_remove = rct[1:len(rct)]
+        self._remove_many(rct_to_remove)
+
+    def remove_duplicates(self):
+        for mailbox in ['INBOX', 'DRAFTS', 'SENT', 'TRASH']:
+            self._remove_dup_inboxes(mailbox)
+            self._remove_dup_recent(mailbox)
+
+    def mark_all_as_not_recent(self):
+        rct = self.soledad.get_from_index('by-type', 'rct')[0]
+        rct.content['rct'] = []
+        self.soledad.put_doc(rct)
 
     def all_mails(self):
         fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in self.soledad.get_from_index('by-type', 'flags')]
