@@ -129,10 +129,12 @@ class SearchEngine(object):
 
         writer.update_document(**index_data)
 
-    def index_mails(self, mails):
+    def index_mails(self, mails, callback=None):
         with self._index.writer() as writer:
             for mail in mails:
                 self._index_mail(writer, mail)
+        if callback:
+            callback()
 
     def _search_with_options(self, options, query):
         with self._index.searcher() as searcher:
