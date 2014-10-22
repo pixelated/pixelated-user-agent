@@ -55,7 +55,7 @@ def setup():
             if args.dispatcher:
                 raise Exception('Dispatcher mode not implemented yet')
             elif args.config is not None:
-                config_file = os.path.abspath(args.config)
+                config_file = os.path.abspath(os.path.expanduser(args.config))
                 app.config.from_pyfile(config_file)
             else:
                 provider, user, password = credentials_prompt.run()
