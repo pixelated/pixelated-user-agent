@@ -78,8 +78,8 @@ def create_app(debug_enabled, app):
     with app.app_context():
         try:
             leap_session = LeapSession.open(app.config['LEAP_USERNAME'],
-                                        app.config['LEAP_PASSWORD'],
-                                        app.config['LEAP_SERVER_NAME'])
+                                            app.config['LEAP_PASSWORD'],
+                                            app.config['LEAP_SERVER_NAME'])
         except ConnectionError, error:
             print("Can't connect to the requested provider")
             sys.exit(1)
