@@ -30,7 +30,7 @@ class LeapSmtp(object):
         self._hostname, self._port = self._discover_smtp_server()
         self._smtp_port = None
         self._smtp_service = None
-        print('Running on port %d' % self.TWISTED_PORT)
+        print('SMTP server running on port %d' % self.TWISTED_PORT)
 
     def smtp_info(self):
         return ('localhost', self.TWISTED_PORT)
