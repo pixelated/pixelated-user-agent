@@ -97,15 +97,14 @@ def create_app(debug_enabled, app):
         tags_controller = TagsController(search_engine=search_engine)
         sync_info_controller = SyncInfoController()
 
-
         register(signal=proto.SOLEDAD_SYNC_RECEIVE_STATUS,
                  callback=update_info_sync_and_index_partial(sync_info_controller=sync_info_controller,
                                                              search_engine=search_engine,
                                                              mail_service=mail_service))
         register(signal=proto.SOLEDAD_DONE_DATA_SYNC,
                  callback=init_index_and_remove_dupes(querier=soledad_querier,
-                                                                  search_engine=search_engine,
-                                                                  mail_service=mail_service))
+                                                      search_engine=search_engine,
+                                                      mail_service=mail_service))
 
         _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller,
                       sync_info_controller)
