@@ -43,7 +43,7 @@ def setup():
 
         events_server.ensure_server(port=8090)
 
-        app.config.from_pyfile(args.config)
+        app.config.update({'HOST': args.host, 'PORT': args.port})
 
         if args.register:
             server_name = app.config['LEAP_SERVER_NAME']

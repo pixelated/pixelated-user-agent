@@ -28,28 +28,14 @@ import pixelated.config.app_factory as app_factory
 
 class RunserverTest(unittest.TestCase):
 
-    def test_that_default_config_file_is_home_dot_pixelated(self):
-        orig_config = pixelated.runserver.app.config
-        try:
-            when(crochet).setup().thenReturn(None)
-            when(reactor_manager).start_reactor().thenReturn(None)
-            when(app_factory).create_app().thenReturn(None)
-            pixelated.runserver.app.config = mock()
-
-            sys.argv = ['/tmp/does_not_exist']
-            pixelated.runserver.setup()
-
-            verify(pixelated.runserver.app.config).from_pyfile(os.path.join(os.environ['HOME'], '.pixelated'))
-        finally:
-            pixelated.runserver.app.config = orig_config
-
     def test_that_config_file_can_be_specified_on_command_line(self):
         orig_config = pixelated.runserver.app.config
         try:
             when(crochet).setup().thenReturn(None)
             when(reactor_manager).start_reactor().thenReturn(None)
             when(app_factory).create_app().thenReturn(None)
-            pixelated.runserver.app.config = mock()
+            pixelated.runserver.app.config = mock(dict)
+            pixelated.runserver.app.config.__setitem__ = mock()
 
             sys.argv = ['/tmp/does_not_exist', '--config', '/tmp/some/config/file']
             pixelated.runserver.setup()
