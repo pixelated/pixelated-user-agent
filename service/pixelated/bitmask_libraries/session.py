@@ -44,7 +44,6 @@ def open(username, password, server_name):
 
         return session
     except:
-        traceback.print_exc(file=sys.stdout)
         raise
 
 
