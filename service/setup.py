@@ -74,6 +74,7 @@ setup(name='pixelated-user-agent',
       packages=['pixelated', 'pixelated.adapter', 'pixelated.bitmask_libraries', 'pixelated.config', 'pixelated.certificates', 'pixelated.support', 'pixelated.controllers'],
       test_suite='nose.collector',
       install_requires=[
+          'pyasn1==0.1.7',
           'Twisted==14.0.2',
           'service-identity==14.0.0',
           'flask==0.10.1',

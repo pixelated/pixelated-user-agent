@@ -1,3 +1,4 @@
+pyasn1==0.1.7
 Twisted==14.0.2
 service-identity==14.0.0
 flask==0.10.1
