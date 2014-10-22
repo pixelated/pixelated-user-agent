@@ -48,10 +48,9 @@ def setup():
         app.config.update({'HOST': args.host, 'PORT': args.port})
 
         if args.register:
-            server_name = app.config['LEAP_SERVER_NAME']
-            leap_register.register_new_user(args.register, server_name)
+            server_name, username = args.register
+            leap_register.register_new_user(username, server_name)
         else:
-
             if args.dispatcher:
                 raise Exception('Dispatcher mode not implemented yet')
             elif args.config is not None:
