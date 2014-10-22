@@ -84,7 +84,7 @@ define(['helpers/contenttype'],
       headerLines = lines.slice(0, endOfHeaders);
 
       headers = _.map(headerLines, function (headerLine) {
-        return headerLine.split(': ');
+        return _.map(headerLine.split(':'), function(elem){return elem.trim()});
       });
 
       return _.object(headers);
