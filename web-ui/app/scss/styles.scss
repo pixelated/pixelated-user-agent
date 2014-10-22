@@ -148,6 +148,7 @@
       }
       &.selected {
         background: #FFF;
+        z-index: 3;
         a {
           color: #333;
         }
