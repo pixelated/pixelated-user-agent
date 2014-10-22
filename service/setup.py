@@ -74,6 +74,7 @@ setup(name='pixelated-user-agent',
       test_suite='nose.collector',
       install_requires=[
           'Twisted==14.0.2',
+          'service-identity==14.0.0',
           'flask==0.10.1',
           'requests==2.4.3',
           'srp==1.0.5',
