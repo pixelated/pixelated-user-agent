@@ -18,7 +18,7 @@ import shutil
 from leap.soledad.client import Soledad
 from mockito import mock
 import os
-from mock import Mock
+from mock import Mock, MagicMock
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.status import Status
@@ -30,25 +30,10 @@ from pixelated.adapter.mailboxes import Mailboxes
 from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.controllers import *
 import pixelated.config.app_factory as app_factory
+from leap.mail.imap.account import SoledadBackedAccount
 
 
 soledad_test_folder = "soledad-test"
-
-
-class FakeLeapMailboxWithListeners:
-    def __init__(self):
-        self.listeners = set()
-
-    def addListener(self, listener):
-        self.listeners.add(listener)
-
-
-class FakeAccount:
-    def __init__(self):
-        self.mailboxes = ['INBOX', 'DRAFTS', 'SENT', 'TRASH']
-
-    def getMailbox(self, name):
-        return FakeLeapMailboxWithListeners()
 
 
 def initialize_soledad(tempdir):
@@ -80,12 +65,12 @@ def initialize_soledad(tempdir):
         local_db_path,
         server_url,
         cert_file)
-
-    from leap.mail.imap.fields import fields
-
-    for name, expression in fields.INDEXES.items():
-        _soledad.create_index(name, *expression)
-
+    #
+    # from leap.mail.imap.fields import fields
+    #
+    # for name, expression in fields.INDEXES.items():
+    #     _soledad.create_index(name, *expression)
+    #
     return _soledad
 
 
@@ -158,7 +143,8 @@ class SoledadTestBase:
 
         self._reset_routes(self.client.application)
         self.soledad_querier = SoledadQuerier(self.soledad)
-        self.account = FakeAccount()
+
+        self.account = SoledadBackedAccount('test', self.soledad, MagicMock())
         self.mailboxes = Mailboxes(self.account, self.soledad_querier)
         self.mail_sender = mock()
         self.tag_service = TagService()

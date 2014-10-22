@@ -28,16 +28,14 @@ class SoledadQuerier:
         mailboxes = [d for d in self.soledad.get_from_index('by-type', 'mbox') if d.content['mbox'] == mailbox_name]
         if len(mailboxes) == 0:
             return
-        sorted(mailboxes, key=lambda x: x.content['lastuid'], reverse=True)
-        mailboxes_to_remove = mailboxes[1:len(mailboxes)]
+        mailboxes_to_remove = sorted(mailboxes, key=lambda x: x.content['created'])[1:len(mailboxes)]
         self._remove_many(mailboxes_to_remove)
 
     def _remove_dup_recent(self, mailbox_name):
         rct = [d for d in self.soledad.get_from_index('by-type', 'rct') if d.content['mbox'] == mailbox_name]
         if len(rct) == 0:
             return
-        sorted(rct, key=lambda x: len(x.content['rct']), reverse=True)
-        rct_to_remove = rct[1:len(rct)]
+        rct_to_remove = sorted(rct, key=lambda x: len(x.content['rct']), reverse=True)[1:len(rct)]
         self._remove_many(rct_to_remove)
 
     def remove_duplicates(self):
@@ -76,9 +74,15 @@ class SoledadQuerier:
         self._update_index([mail.fdoc, mail.hdoc])
 
     def create_mail(self, mail, mailbox_name):
-        uid = self._next_uid_for_mailbox(mailbox_name)
+        mbox = [m for m in self.soledad.get_from_index('by-type', 'mbox') if m.content['mbox'] == 'INBOX'][0]
+
+        uid = mbox.content['lastuid'] + 1
         new_docs = [self.soledad.create_doc(doc) for doc in mail._get_for_save(next_uid=uid, mailbox=mailbox_name)]
+        mbox.content['lastuid'] = uid
+
+        self.soledad.put_doc(mbox)
         self._update_index(new_docs)
+
         return self.mail(mail.ident)
 
     def mail(self, ident):
@@ -102,13 +106,6 @@ class SoledadQuerier:
 
     def idents_by_mailbox(self, mailbox_name):
         return set(doc.content['chash'] for doc in self.soledad.get_from_index('by-type-and-mbox-and-deleted', 'flags', mailbox_name, '0'))
-
-    def _next_uid_for_mailbox(self, mailbox_name):
-        mails = self.all_mails_by_mailbox(mailbox_name)
-        mails.sort(key=lambda x: x.uid, reverse=True)
-        if len(mails) == 0:
-            return 1
-        return mails[0].uid + 1
 
     def _update_index(self, docs):
         db = self.soledad._db
