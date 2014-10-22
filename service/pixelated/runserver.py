@@ -15,12 +15,14 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 import os.path
 import crochet
 from flask import Flask
 from leap.common.events import server as events_server
 from pixelated.config import app_factory
 import pixelated.config.args as input_args
+import pixelated.config.credentials_prompt as credentials_prompt
 import pixelated.bitmask_libraries.register as leap_register
 import pixelated.config.reactor_manager as reactor_manager
 import pixelated.support.ext_protobuf  # monkey patch for protobuf in OSX
@@ -49,6 +51,18 @@ def setup():
             server_name = app.config['LEAP_SERVER_NAME']
             leap_register.register_new_user(args.register, server_name)
         else:
+
+            if args.dispatcher:
+                raise Exception('Dispatcher mode not implemented yet')
+            elif args.config is not None:
+                config_file = os.path.abspath(args.config)
+                app.config.from_pyfile(config_file)
+            else:
+                provider, user, password = credentials_prompt.run()
+                app.config['LEAP_SERVER_NAME'] = provider
+                app.config['LEAP_USERNAME'] = user
+                app.config['LEAP_PASSWORD'] = password
+
             app_factory.create_app(debug_enabled, app)
     finally:
         reactor_manager.stop_reactor_on_exit()
