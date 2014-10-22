@@ -28,6 +28,11 @@ import pixelated.support.ext_protobuf  # monkey patch for protobuf in OSX
 
 app = Flask(__name__, static_url_path='', static_folder=app_factory.get_static_folder())
 
+import logging
+logging.basicConfig()
+logger = logging.getLogger('werkzeug')
+logger.setLevel(logging.INFO)
+
 
 def setup():
     try:
