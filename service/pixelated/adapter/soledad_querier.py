@@ -44,9 +44,10 @@ class SoledadQuerier:
             self._remove_dup_recent(mailbox)
 
     def mark_all_as_not_recent(self):
-        rct = self.soledad.get_from_index('by-type', 'rct')[0]
-        rct.content['rct'] = []
-        self.soledad.put_doc(rct)
+        for mailbox in ['INBOX', 'DRAFTS', 'SENT', 'TRASH']:
+            rct = self.soledad.get_from_index('by-type-and-mbox', 'rct', mailbox)[0]
+            rct.content['rct'] = []
+            self.soledad.put_doc(rct)
 
     def all_mails(self):
         fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in self.soledad.get_from_index('by-type', 'flags')]
