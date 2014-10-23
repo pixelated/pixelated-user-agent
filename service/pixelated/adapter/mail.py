@@ -155,7 +155,11 @@ class InputMail(Mail):
             mime_multipart['Subject'] = self.headers['Subject']
 
         mime_multipart['Date'] = self.headers['Date']
-        mime_multipart.attach(MIMEText(self.body, 'plain'))
+        if type(self.body) is list:
+            for part in self.body:
+                mime_multipart.attach(MIMEText(part['raw'], part['content-type']))
+        else:
+            mime_multipart.attach(MIMEText(self.body, 'plain'))
         return mime_multipart
 
     def to_smtp_format(self):
