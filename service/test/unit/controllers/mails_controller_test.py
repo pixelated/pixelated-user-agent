@@ -23,12 +23,12 @@ class TestMailsController(unittest.TestCase):
 
     def setUp(self):
         self.mail_service = mock()
-        search_engine = mock()
+        self.search_engine = mock()
         draft_service = mock()
 
         self.mails_controller = MailsController(mail_service=self.mail_service,
                                                 draft_service=draft_service,
-                                                search_engine=search_engine)
+                                                search_engine=self.search_engine)
 
         self.input_mail = mock()
         self.input_mail.json = {'header': {'from': 'a@a.a', 'to': 'b@b.b'},
@@ -56,6 +56,36 @@ class TestMailsController(unittest.TestCase):
 
         self.assertEqual(result.status_code, 422)
         self.assertEqual(result.data, '{"message": "email sending failed\\nmore information of error\\n123\\nthere was a code before this"}')
+
+    def test_fetching_mail_gets_mail_from_mail_service(self):
+        mail = mock()
+        mail.as_dict = lambda: {'ident': 1, 'body': 'le mail body'}
+        when(self.mail_service).mail(1).thenReturn(mail)
+
+        response = self.mails_controller.mail(1)
+
+        verify(self.mail_service).mail(1)
+        self.assertEqual(response.data, '{"body": "le mail body", "ident": 1}')
+
+    def test_marking_mail_as_read_set_mail_as_read_on_the_service(self):
+        mail = mock()
+        when(self.mail_service).mark_as_read(1).thenReturn(mail)
+        when(self.search_engine).index_mail(mail).thenReturn(None)
+
+        self.mails_controller.mark_mail_as_read(1)
+
+        verify(self.mail_service).mark_as_read(1)
+        verify(self.search_engine).index_mail(mail)
+
+    def test_marking_mail_as_unread_set_mail_as_unread_on_the_service(self):
+        mail = mock()
+        when(self.mail_service).mark_as_unread(1).thenReturn(mail)
+        when(self.search_engine).index_mail(mail).thenReturn(None)
+
+        self.mails_controller.mark_mail_as_unread(1)
+
+        verify(self.mail_service).mark_as_unread(1)
+        verify(self.search_engine).index_mail(mail)
 
     def _successfuly_send_mail(self, ident, mail):
         sent_mail = mock()
