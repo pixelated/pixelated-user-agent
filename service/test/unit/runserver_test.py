@@ -21,7 +21,6 @@ import pixelated.runserver
 from mockito import *
 import pixelated.config.reactor_manager as reactor_manager
 import pixelated.adapter.mail
-import os
 import pixelated.config.app_factory as app_factory
 
 

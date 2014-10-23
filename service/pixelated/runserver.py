@@ -25,6 +25,7 @@ import pixelated.config.credentials_prompt as credentials_prompt
 import pixelated.bitmask_libraries.register as leap_register
 import pixelated.config.reactor_manager as reactor_manager
 import pixelated.support.ext_protobuf  # monkey patch for protobuf in OSX
+import pixelated.support.ext_sqlcipher # monkey patch for sqlcipher in debian
 from twisted.internet import error
 
 
