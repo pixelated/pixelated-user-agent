@@ -38,15 +38,16 @@ from leap.common.events import (
 def init_index_and_remove_dupes(querier, search_engine, mail_service):
     def wrapper(*args, **kwargs):
         querier.remove_duplicates()
-        search_engine.index_mails(mail_service.all_mails(), callback=querier.mark_all_as_not_recent)
+        search_engine.index_mails(mails=mail_service.all_mails(),
+                                  callback=querier.mark_all_as_not_recent)
 
     return wrapper
 
 
 def update_info_sync_and_index_partial(sync_info_controller, search_engine, mail_service):
     def wrapper(soledad_sync_data):
-        sync_info_controller.set_sync_info(soledad_sync_data)
-        search_engine.index_mails(mail_service.all_mails())
+        sync_info_controller.set_sync_info(soledad_sync_data=soledad_sync_data)
+        search_engine.index_mails(mails=mail_service.all_mails())
 
     return wrapper
 
@@ -74,18 +75,23 @@ def _setup_routes(app, home_controller, mails_controller, tags_controller, featu
     app.add_url_rule('/sync_info', methods=['GET'], view_func=sync_info_controller.sync_info)
 
 
+def init_leap_session(app):
+    try:
+        leap_session = LeapSession.open(app.config['LEAP_USERNAME'],
+                                        app.config['LEAP_PASSWORD'],
+                                        app.config['LEAP_SERVER_NAME'])
+    except ConnectionError, error:
+        print("Can't connect to the requested provider")
+        sys.exit(1)
+    except LeapAuthException:
+        print("Couldn't authenticate with the credentials provided")
+        sys.exit(1)
+    return leap_session
+
+
 def create_app(debug_enabled, app):
     with app.app_context():
-        try:
-            leap_session = LeapSession.open(app.config['LEAP_USERNAME'],
-                                            app.config['LEAP_PASSWORD'],
-                                            app.config['LEAP_SERVER_NAME'])
-        except ConnectionError, error:
-            print("Can't connect to the requested provider")
-            sys.exit(1)
-        except LeapAuthException:
-            print("Couldn't authenticate with the credentials provided")
-            sys.exit(1)
+        leap_session = init_leap_session(app)
 
         tag_service = TagService()
         search_engine = SearchEngine()
