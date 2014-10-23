@@ -71,7 +71,7 @@ class SoledadQuerierTest(unittest.TestCase, SoledadTestBase, WithMsgFields):
         self.assertEqual(0, len(mails))
 
         # now the mail is complete
-        self.soledad.put_doc(bdoc)
+        self.soledad.create_doc(bdoc)
 
         mails = self.soledad_querier.all_mails()
         self.assertEqual(1, len(mails))
