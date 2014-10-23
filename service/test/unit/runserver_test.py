@@ -19,7 +19,6 @@ import sys
 
 import pixelated.runserver
 from mockito import *
-import crochet
 import pixelated.config.reactor_manager as reactor_manager
 import pixelated.adapter.mail
 import os
@@ -31,7 +30,6 @@ class RunserverTest(unittest.TestCase):
     def test_that_config_file_can_be_specified_on_command_line(self):
         orig_config = pixelated.runserver.app.config
         try:
-            when(crochet).setup().thenReturn(None)
             when(reactor_manager).start_reactor().thenReturn(None)
             when(app_factory).create_app().thenReturn(None)
             pixelated.runserver.app.config = mock(dict)

@@ -88,7 +88,6 @@ setup(name='pixelated-user-agent',
           'leap.mail==0.3.9-1-gc1f9c92',
           'whoosh==2.6.0',
           'gunicorn==19.1.1',
-          'crochet==1.3.0'
       ],
       entry_points={
           'console_scripts': [
