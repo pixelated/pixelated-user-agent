@@ -57,12 +57,21 @@ class SoledadQuerierTest(unittest.TestCase, SoledadTestBase, WithMsgFields):
         self.assertEqual(3, inboxes[0].content['lastuid'])
 
     def test_all_mails_skips_incomplete_mails(self):
-        self.add_multiple_to_mailbox(1, 'INBOX')
-        self.add_multiple_to_mailbox(1, 'SENT')
-
         # creating incomplete mail, we will only save the fdoc
-        fdoc, hdoc, bdoc = MailBuilder().build_input_mail().get_for_save(2, 'INBOX')
-
+        fdoc, hdoc, bdoc = MailBuilder().build_input_mail().get_for_save(1, 'INBOX')
         self.soledad.create_doc(fdoc)
+
         mails = self.soledad_querier.all_mails()
-        self.assertEqual(2, len(mails))  # mail is incomplete since it only has fdoc
+        self.assertEqual(0, len(mails))  # mail is incomplete since it only has fdoc
+
+        # adding the hdoc still doesn't complete the mail
+        self.soledad.create_doc(hdoc)
+
+        mails = self.soledad_querier.all_mails()
+        self.assertEqual(0, len(mails))
+
+        # now the mail is complete
+        self.soledad.put_doc(bdoc)
+
+        mails = self.soledad_querier.all_mails()
+        self.assertEqual(1, len(mails))

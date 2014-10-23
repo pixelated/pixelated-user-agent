@@ -25,14 +25,14 @@ class SoledadQuerier:
         [self.soledad.delete_doc(doc) for doc in docs]
 
     def _remove_dup_inboxes(self, mailbox_name):
-        mailboxes = [d for d in self.soledad.get_from_index('by-type', 'mbox') if d.content['mbox'] == mailbox_name]
+        mailboxes = self.soledad.get_from_index('by-type-and-mbox', 'mbox', mailbox_name)
         if len(mailboxes) == 0:
             return
         mailboxes_to_remove = sorted(mailboxes, key=lambda x: x.content['created'])[1:len(mailboxes)]
         self._remove_many(mailboxes_to_remove)
 
     def _remove_dup_recent(self, mailbox_name):
-        rct = [d for d in self.soledad.get_from_index('by-type', 'rct') if d.content['mbox'] == mailbox_name]
+        rct = self.soledad.get_from_index('by-type-and-mbox', 'rct', mailbox_name)
         if len(rct) == 0:
             return
         rct_to_remove = sorted(rct, key=lambda x: len(x.content['rct']), reverse=True)[1:len(rct)]
@@ -45,7 +45,10 @@ class SoledadQuerier:
 
     def mark_all_as_not_recent(self):
         for mailbox in ['INBOX', 'DRAFTS', 'SENT', 'TRASH']:
-            rct = self.soledad.get_from_index('by-type-and-mbox', 'rct', mailbox)[0]
+            rct = self.soledad.get_from_index('by-type-and-mbox', 'rct', mailbox)
+            if len(rct) == 0:
+                return
+            rct = rct[0]
             rct.content['rct'] = []
             self.soledad.put_doc(rct)
 
@@ -71,7 +74,13 @@ class SoledadQuerier:
             fdocs_hdocs.append((fdoc, hdoc[0]))
 
         fdocs_hdocs_bodyphash = [(f[0], f[1], f[1].content.get('body')) for f in fdocs_hdocs]
-        fdocs_hdocs_bdocs = [(f[0], f[1], self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', f[2])[0]) for f in fdocs_hdocs_bodyphash]
+        fdocs_hdocs_bdocs = []
+        for fdoc, hdoc, body_phash in fdocs_hdocs_bodyphash:
+            bdoc = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', body_phash)
+            if len(bdoc) == 0:
+                continue
+            fdocs_hdocs_bdocs.append((fdoc, hdoc, bdoc[0]))
+
         return [PixelatedMail.from_soledad(*raw_mail, soledad_querier=self) for raw_mail in fdocs_hdocs_bdocs]
 
     def save_mail(self, mail):
