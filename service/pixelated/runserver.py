@@ -15,9 +15,8 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
 import os.path
-import crochet
+import logging
 from flask import Flask
 from leap.common.events import server as events_server
 from pixelated.config import app_factory
@@ -30,11 +29,6 @@ import pixelated.support.ext_protobuf  # monkey patch for protobuf in OSX
 
 app = Flask(__name__, static_url_path='', static_folder=app_factory.get_static_folder())
 
-import logging
-logging.basicConfig()
-logger = logging.getLogger('werkzeug')
-logger.setLevel(logging.INFO)
-
 
 def setup():
     try:
@@ -43,7 +37,11 @@ def setup():
         reactor_manager.start_reactor(logging=debug_enabled)
         crochet.setup()
 
-        events_server.ensure_server(port=8090)
+    debug_enabled = args.debug or os.environ.get('DEBUG', False)
+    if(not debug_enabled):
+        logging.basicConfig()
+        logger = logging.getLogger('werkzeug')
+        logger.setLevel(logging.INFO)
 
         app.config.update({'HOST': args.host, 'PORT': args.port})
 
