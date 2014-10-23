@@ -75,3 +75,11 @@ class SoledadQuerierTest(unittest.TestCase, SoledadTestBase, WithMsgFields):
 
         mails = self.soledad_querier.all_mails()
         self.assertEqual(1, len(mails))
+
+    def test_get_mails_by_chash(self):
+        mails = self.add_multiple_to_mailbox(3, 'INBOX')
+        chashes = [mail.ident for mail in mails]
+
+        fetched_mails = self.soledad_querier.mails(chashes)
+
+        self.assertEquals([m.as_dict() for m in fetched_mails], [m.as_dict() for m in mails])
