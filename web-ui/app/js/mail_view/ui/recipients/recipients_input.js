@@ -71,7 +71,7 @@ define([
             filter: extractContactNames
           }
         });
-        if(features.isEnabled('contacts')) {
+        if (features.isEnabled('contacts')) {
           emailCompleter.initialize();
         }
         return emailCompleter;
@@ -104,21 +104,21 @@ define([
         if (isEnterAddressKey(keyPressed)) {
           this.tokenizeRecipient(event);
 
-          if((keyPressed !== 9 /* tab */)) {
+          if ((keyPressed !== 9 /* tab */)) {
             event.preventDefault();
           }
         }
 
       };
 
-	this.tokenizeRecipient = function (event) {
-	    if (_.isEmpty(this.$node.val())) {
-		  return;
-	    }
+      this.tokenizeRecipient = function (event) {
+        if (_.isEmpty(this.$node.val())) {
+          return;
+        }
 
-	    this.recipientSelected(null, {value: this.$node.val() });
-	    event.preventDefault();
-	}
+        this.recipientSelected(null, {value: this.$node.val() });
+        event.preventDefault();
+      };
 
       this.recipientSelected = function (event, data) {
         var value = (data && data.value) || this.$node.val();
