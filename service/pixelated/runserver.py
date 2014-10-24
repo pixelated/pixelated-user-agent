@@ -26,6 +26,7 @@ import pixelated.bitmask_libraries.register as leap_register
 import pixelated.config.reactor_manager as reactor_manager
 import pixelated.support.ext_protobuf  # monkey patch for protobuf in OSX
 import pixelated.support.ext_sqlcipher  # monkey patch for sqlcipher in debian
+from pixelated.bitmask_libraries.leap_srp import LeapAuthException
 from twisted.internet import error
 
 
@@ -46,8 +47,12 @@ def setup():
     events_server.ensure_server(port=8090)
 
     if args.register:
-        server_name, username = args.register
-        leap_register.register_new_user(username, server_name)
+        try:
+            server_name, username = args.register
+            leap_register.register_new_user(username, server_name)
+        except LeapAuthException:
+            print('User already exists')
+            exit(1)
     else:
         if args.dispatcher:
             raise Exception('Dispatcher mode not implemented yet')
