@@ -99,4 +99,17 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
     });
   });
 
+  describe('on blur', function() {
+    it('tokenizes recipient email if there is an input val', function() {
+      var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
+      var blurEvent = $.Event('blur'); 
+	spyOn(blurEvent, 'preventDefault');
+
+	this.$node.val('a@b.c');
+	this.$node.trigger(blurEvent);
+
+	expect(blurEvent.preventDefault).toHaveBeenCalled();
+	expect(addressEnteredEvent).toHaveBeenTriggeredOnAndWith(this, {name: 'to', address: 'a@b.c'});
+    })
+  });
 });
