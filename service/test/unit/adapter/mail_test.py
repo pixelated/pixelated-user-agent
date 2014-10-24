@@ -90,6 +90,18 @@ class TestPixelatedMail(unittest.TestCase):
                                   'tags': []
                                   })
 
+    def test_alternatives_body(self):
+        parts = {'alternatives': [], 'attachments': []}
+        parts['alternatives'].append({'content': 'blablabla', 'headers': {'Content-Type': 'text/plain'}})
+        parts['alternatives'].append({'content': '<p>blablabla</p>', 'headers': {'Content-Type': 'text/html'}})
+
+        mail = PixelatedMail.from_soledad(None, None, None, None, parts=parts)
+
+        self.assertRegexpMatches(mail.body, '^--' + mail.boundary + '\n.*')
+        self.assertRegexpMatches(mail.body, '\nContent-Type: text/html\n\n<p>blablabla</p>\n')
+        self.assertRegexpMatches(mail.body, '\nContent-Type: text/plain\n\nblablabla\n')
+        self.assertRegexpMatches(mail.body, '.*--' + mail.boundary + '--$')
+
 
 class InputMailTest(unittest.TestCase):
     mail_dict = lambda x: {

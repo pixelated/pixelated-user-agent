@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
+from uuid import uuid4
 
 from leap.mail.imap.fields import fields
 import leap.mail.walk as walk
@@ -181,8 +182,10 @@ class InputMail(Mail):
 class PixelatedMail(Mail):
 
     @staticmethod
-    def from_soledad(fdoc, hdoc, bdoc, soledad_querier=None):
+    def from_soledad(fdoc, hdoc, bdoc, soledad_querier=None, parts=None):
         mail = PixelatedMail()
+        mail.parts = parts
+        mail.boundary = str(uuid4()).replace('-', '')
         mail.bdoc = bdoc
         mail.fdoc = fdoc
         mail.hdoc = hdoc
@@ -191,7 +194,19 @@ class PixelatedMail(Mail):
 
     @property
     def body(self):
-        return self.bdoc.content['raw']
+        if self.parts and len(self.parts['alternatives']) > 1:
+            body = ''
+            for alternative in self.parts['alternatives']:
+                body += "--%(boundary)s\n"
+                for header, value in alternative['headers'].items():
+                    body += "%s: %s\n" % (header, value)
+                body += '\n'
+                body += alternative['content']
+                body += '\n'
+            body += '--%(boundary)s--'
+            return body % {'boundary': self.boundary}
+        else:
+            return self.bdoc.content['raw']
 
     @property
     def headers(self):
@@ -206,6 +221,8 @@ class PixelatedMail(Mail):
         for header in ['From', 'Subject']:
             _headers[header] = self.hdoc.content['headers'].get(header)
         _headers['Date'] = self._get_date()
+        if self.parts and len(self.parts['alternatives']) > 1:
+            _headers['content_type'] = 'multipart/alternative; boundary="%s"' % self.boundary
         return _headers
 
     def _get_date(self):

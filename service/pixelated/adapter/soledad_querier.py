@@ -105,9 +105,10 @@ class SoledadQuerier:
     def mail(self, ident):
         fdoc = self.soledad.get_from_index('by-type-and-contenthash', 'flags', ident)[0]
         hdoc = self.soledad.get_from_index('by-type-and-contenthash', 'head', ident)[0]
+        parts = self._extract_parts(hdoc.content)
         bdoc = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', hdoc.content['body'])[0]
 
-        return PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self)
+        return PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self, parts=parts)
 
     def mails(self, idents):
         fdocs_chash = [(self.soledad.get_from_index('by-type-and-contenthash', 'flags', ident), ident) for ident in idents]
