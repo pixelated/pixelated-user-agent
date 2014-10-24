@@ -21,12 +21,13 @@ require(['services/model/mail'], function (Mail) {
 
     describe('parsing', function () {
       describe('a single email', function () {
-        var sentMail, draftMail, recievedMail, recievedMailWithCC;
+        var sentMail, draftMail, recievedMail, recievedMailWithCC, rawMailWithMultipleTo;
         beforeEach(function () {
           sentMail = Mail.create(Pixelated.testData().rawMail.sent);
           draftMail = Mail.create(Pixelated.testData().rawMail.draft);
           recievedMail = Mail.create(Pixelated.testData().rawMail.recieved);
           recievedMailWithCC = Mail.create(Pixelated.testData().rawMail.recievedWithCC);
+          rawMailWithMultipleTo = Mail.create(Pixelated.testData().rawMail.rawMailWithMultipleTo);
         });
 
         it('correctly identifies a sent mail', function () {
@@ -56,7 +57,13 @@ require(['services/model/mail'], function (Mail) {
 
         it('reply to all should include all email addresses in the header', function () {
           expect(recievedMailWithCC.replyToAllAddress()).toEqual({
-            to: ['cleve_jaskolski@schimmelhirthe.net', 'stanford@sipes.com'],
+            to: ['cleve_jaskolski@schimmelhirthe.net'],
+            cc: ['mariane_dach@davis.info']
+          });
+        });
+        it('reply to all should include all email addresses in the header even for multiple to addresses', function () {
+          expect(rawMailWithMultipleTo.replyToAllAddress()).toEqual({
+            to: ['cleve_jaskolski@schimmelhirthe.net', 'someoneelse@some-other-domain.tld'],
             cc: ['mariane_dach@davis.info']
           });
         });

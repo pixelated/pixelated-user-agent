@@ -71,7 +71,7 @@ define(['helpers/contenttype'],
 
     function replyToAllAddress() {
       return {
-        to: normalize([this.header.reply_to, this.header.from, this.header.to]),
+        to: normalize([this.header.reply_to, this.header.from]),
         cc: normalize(this.header.cc)
       };
     }

@@ -53,6 +53,14 @@ define(function() {
     'body':'Sed est neque tempore. Alias officiis pariatur ullam porro corporis. Tempore eum quia placeat. Sapiente fuga cum.'
   };
 
+  var rawMailWithMultipleTo = {
+    'header':{'to':['stanford@sipes.com', 'someoneelse@some-other-domain.tld'],'from':'cleve_jaskolski@schimmelhirthe.net','cc':'mariane_dach@davis.info','subject':'Cumque pariatur vel consequuntur deleniti ex.','date':'2014-06-17T05:40:29-03:00'},
+    'ident':242,
+    'tags':['garden','instalovers','popularpic'],
+    'status':['read'],
+    'body':'Sed est neque tempore. Alias officiis pariatur ullam porro corporis. Tempore eum quia placeat. Sapiente fuga cum.'
+  };
+
   var rawMultipartMail = {
     header: {
       to:'multipart@multipart.info',
@@ -158,6 +166,7 @@ define(function() {
       draft: rawDraftMail,
       recieved: rawRecievedMail,
       recievedWithCC: rawRecievedWithCCMail,
+      rawMailWithMultipleTo: rawMailWithMultipleTo,
       multipart: rawMultipartMail
     },
     parsedMail: {
