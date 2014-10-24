@@ -37,7 +37,7 @@ def setup():
     app.config.update({'HOST': args.host, 'PORT': args.port})
 
     debug_enabled = args.debug or os.environ.get('DEBUG', False)
-    if (not debug_enabled):
+    if not debug_enabled:
         logging.basicConfig()
         logger = logging.getLogger('werkzeug')
         logger.setLevel(logging.INFO)

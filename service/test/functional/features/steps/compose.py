@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from time import sleep
 
-from behave import given, when
+from behave import given, when, then
 from common import *
 from hamcrest import *
 
