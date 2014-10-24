@@ -102,16 +102,23 @@ define([
         }
 
         if (isEnterAddressKey(keyPressed)) {
-          if (!_.isEmpty(this.$node.val())) {
-            this.recipientSelected(null, { value: this.$node.val() });
-            event.preventDefault();
-          }
+          this.tokenizeRecipient(event);
+
           if((keyPressed !== 9 /* tab */)) {
             event.preventDefault();
           }
         }
 
       };
+
+	this.tokenizeRecipient = function (event) {
+	    if (_.isEmpty(this.$node.val())) {
+		  return;
+	    }
+
+	    this.recipientSelected(null, {value: this.$node.val() });
+	    event.preventDefault();
+	}
 
       this.recipientSelected = function (event, data) {
         var value = (data && data.value) || this.$node.val();
@@ -141,11 +148,11 @@ define([
         this.trigger(document, toTrigger, { name: this.attr.name });
       };
 
-
       this.after('initialize', function () {
         self = this;
         this.init();
         this.on('typeahead:selected typeahead:autocompleted', this.recipientSelected);
+        this.on(this.$node, 'blur', this.tokenizeRecipient);
         this.on(this.$node, 'keydown', this.processSpecialKey);
         this.on(this.$node, 'keyup', this.warnSendButtonOfInputState);
 
