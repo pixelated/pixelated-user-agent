@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.mail import PixelatedMail
+import re
 
 
 class SoledadQuerier:
@@ -113,19 +114,32 @@ class SoledadQuerier:
         fdocs_chash = [(result[0], ident) for result, ident in fdocs_chash if result]
         return self._build_mails_from_fdocs(fdocs_chash)
 
-    def _extract_parts(self, content, parts={'alternatives': [], 'attachments': []}):
-        if content['multi']:
-            for part_key in content['part_map'].keys():
-                self._extract_parts(content['part_map'][part_key], parts)
+    def _extract_parts(self, hdoc, parts=None):
+        if not parts:
+            parts = {'alternatives': [], 'attachments': []}
+
+        if hdoc['multi']:
+            for part_key in hdoc['part_map'].keys():
+                self._extract_parts(hdoc['part_map'][part_key], parts)
         else:
-            bdoc = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', content['phash'])[0]
-            raw_content = bdoc.content['raw']
-            headers_dict = {elem[0]: elem[1] for elem in content['headers']}
-            group = 'attachments' if 'attachment' in headers_dict.get('Content-Disposition', '') else 'alternatives'
-            parts[group].append({'ctype': content['ctype'],
-                                 'headers': headers_dict,
-                                 'content': raw_content})
+            headers_dict = {elem[0]: elem[1] for elem in hdoc['headers']}
+            if 'attachment' in headers_dict.get('Content-Disposition', ''):
+                parts['attachments'].append(self._extract_attachment(hdoc, headers_dict))
+            else:
+                parts['alternatives'].append(self._extract_alternative(hdoc, headers_dict))
         return parts
+
+    def _extract_alternative(self, hdoc, headers_dict):
+        bdoc = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', hdoc['phash'])[0]
+        raw_content = bdoc.content['raw']
+        return {'headers': headers_dict, 'content': raw_content}
+
+    def _extract_attachment(self, hdoc, headers_dict):
+        content_disposition = headers_dict['Content-Disposition']
+        match = re.compile('.*name=\"(.*)\".*').match(content_disposition)
+        if match:
+            filename = match.group(1)
+        return {'headers': headers_dict, 'ident': hdoc['phash'], 'name': filename}
 
     def remove_mail(self, mail):
         _mail = self.mail(mail.ident)

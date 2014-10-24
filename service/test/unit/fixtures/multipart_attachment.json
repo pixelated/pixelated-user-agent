@@ -1,0 +1,72 @@
+{
+    "part_map": {
+        "1": {
+            "part_map": {
+                "1": {
+                    "multi": false,
+                    "ctype": "text/plain",
+                    "headers": [
+                        ["Content-Type", "text/plain; charset=UTF-8"]
+                    ],
+                    "parts": 1,
+                    "phash": "F5CA138AD4C2FF22A2A0069AD992AF6D1CE838BE95D83EC0C94C84A4D177B0E3",
+                    "size": 239
+                },
+                "2": {
+                    "multi": false,
+                    "ctype": "text/html",
+                    "headers": [
+                        ["Content-Type", "text/html; charset=UTF-8"],
+                        ["Content-Transfer-Encoding", "quoted-printable"]
+                    ],
+                    "parts": 1,
+                    "phash": "05FCAD251EF9A40F9CE4E6204EE92CD70C1406DCA4C044A1F080D70807C19602",
+                    "size": 1563
+                }
+            },
+            "headers": {
+                "Content-Type": "multipart/alternative; boundary=089e013cc32c0eabc30505762597"
+            },
+            "multi": true
+        },
+        "2": {
+            "part_map": {},
+            "multi": false,
+            "ctype": "application/pdf",
+            "headers": [
+                ["Content-Type", "application/pdf; name=\"poupanca_externa.pdf\""],
+                ["Content-Disposition", "attachment; filename=\"poupanca_externa.pdf\""],
+                ["Content-Transfer-Encoding", "base64"],
+                ["X-Attachment-Id", "f_i1apvb460"]
+            ],
+            "parts": 1,
+            "phash": "3FDC3B88FAA30EEF90B24A8DFB84723E2BCC729852EA84A0F996EE9FCF790C07",
+            "size": 155902
+        }
+    },
+    "body": "F5CA138AD4C2FF22A2A0069AD992AF6D1CE838BE95D83EC0C94C84A4D177B0E3",
+    "multi": true,
+    "msgid": null,
+    "headers": {
+        "X-Leap-Provenance": "Wed, 15 Oct 2014 13:31:16 -0000; pubkey=\"3002B5701A80DA27\"",
+        "Received": "from mail-ie0-f179.google.com (exprod5og122.obsmtp.com [64.18.0.192])\n by leap.example.wazokazi.is (Postfix) with SMTP id 9F785C30B6\n for <galinhapintadinha@example.wazokazi.is>;\n Wed, 15 Oct 2014 13:31:13 +0000 (UTC)\nReceived: from mail-ie0-f179.google.com ([209.85.223.179]) (using TLSv1) by\n exprod5ob122.postini.com ([64.18.4.12]) with SMTP\n ID DSNKVD53H0MWVU5CNN5tKSRiZVSRcuBu62zm@postini.com;\n Wed, 15 Oct 2014 06:31:13 PDT\nReceived: by mail-ie0-f179.google.com with SMTP id ar1so1145815iec.24\n for <galinhapintadinha@example.wazokazi.is>;\n Wed, 15 Oct 2014 06:31:09 -0700 (PDT)\nReceived: by 10.107.3.150 with HTTP; Wed, 15 Oct 2014 06:31:09 -0700 (PDT)",
+        "Delivered-To": "5b9e2531e8dcb62b2c44903e277abadd@leap.example.wazokazi.is",
+        "From": "Patrick Maia <pmaia@thoughtworks.com>",
+        "Return-Path": "<pmaia@thoughtworks.com>",
+        "MIME-Version": "1.0",
+        "X-Received": "by 10.50.3.97 with SMTP id b1mr14507020igb.22.1413379869847;\n Wed, 15 Oct 2014 06:31:09 -0700 (PDT)\nX-Received: by 10.50.3.97 with SMTP id b1mr14506964igb.22.1413379869492; Wed,\n 15 Oct 2014 06:31:09 -0700 (PDT)",
+        "X-Gm-Message-State": "ALoCoQlkFl9YhK1yfElaE8QLOCVR6fbPXmXmykD+5yoQ27UOMANsN/pYwM47XuwfYSVGFaVGBSQ/lZyRrBkEfo26F9/fmORiZQTcX4PJy4AB4V26PjkaNVN3f9+MmdLqwCSPORzSLndO5m6ka8wZ696swJFD9xfvyDplFeYkFswOzmsZ0OIfA9Q=",
+        "X-Google-DKIM-Signature": "v=1; a=rsa-sha256; c=relaxed/relaxed;\n d=1e100.net; s=20130820;\n h=x-gm-message-state:mime-version:date:message-id:subject:from:to\n :content-type;\n bh=F1xEoZJIdNfwQ48f3B80gOTPIwsxR00N3oQQXB1K9pQ=;\n b=azQ5cmMiujAfxjd/4XEhke/D1y99clZRGrLZKA2iWU8e2Ggj3HF9WHwccU6eioTrUo\n i39DbOGQ3qTQVTJD583+ZUcnFlKMmtFvOVmnssIgZKoEIWr+JQVuvwlwlCdgaNqupzjo\n +bsyEpnsDSeiHMg5MfcQaxHrn7ul+OEfNpIz6S3qEpZs6mt6A6Tdl1eGMBneZUUl/ILp\n ++CKa/22noDcq6D1Sh2zjWrHVs5bKO2v7tmbukcqGtfXOhHengteemA1U9IcoLOYyNrQ\n V8ChobywTrA1LUYfdR+UYAlvdBKvN1EeYqLgGforEa5fEsWqxjqhQOMKQ8FHI/CxaVqy\n dsMg==",
+        "X-Original-To": "galinhapintadinha@example.wazokazi.is",
+        "To": "galinhapintadinha@example.wazokazi.is",
+        "Date": "Wed, 15 Oct 2014 10:31:09 -0300",
+        "Message-ID": "<CAAqS+9J=Y7wMxBfSWwejpXss1MRKVYGpnkEU2Zvs-2x3mnM4XA@mail.gmail.com>",
+        "Content-Type": "multipart/mixed; boundary=089e013cc32c0eabc80505762599",
+        "X-Leap-Signature": "could not verify",
+        "Subject": "multipart email"
+    },
+    "chash": "2EBCB2A180867255179DF1FE0F4BC74BE649765D582B24974E0E4450DE18DD4B",
+    "date": "Wed, 15 Oct 2014 10:31:09 -0300",
+    "type": "head",
+    "subject": "multipart email"
+}
