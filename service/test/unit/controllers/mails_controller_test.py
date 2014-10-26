@@ -19,6 +19,7 @@ from mockito import *
 from pixelated.controllers.mails_controller import MailsController
 
 
+
 class TestMailsController(unittest.TestCase):
 
     def setUp(self):
@@ -87,11 +88,35 @@ class TestMailsController(unittest.TestCase):
         verify(self.mail_service).mark_as_unread(1)
         verify(self.search_engine).index_mail(mail)
 
+    def test_delete_permanently_when_mail_in_trash(self):
+        mail = mock()
+        mail.mailbox_name ='TRASH'
+        when(self.mail_service).mail(1).thenReturn(mail)
+        self.mails_controller.delete_mail(1)
+
+        verify(self.mail_service).delete_permanent(1)
+
+    def test_move_message_to_trash(self):
+        mail = mock()
+        mail.mailbox_name ='INBOX'
+        when(self.mail_service).mail(1).thenReturn(mail)
+        when(self.mails_controller).delete_mail(1).thenReturn(mail)
+        when(self.search_engine).index_mail(mail)
+
+        verify(self.search_engine).index_mail(mail)
+
     def _successfuly_send_mail(self, ident, mail):
         sent_mail = mock()
+        mail.mailbox_name ='TRASH'
         sent_mail.as_dict = lambda: self.input_mail.json
 
         return sent_mail
 
     def _send_that_throws_exception(self, ident, mail):
         raise Exception('email sending failed', 'more information of error', 123, 'there was a code before this')
+
+
+
+
+    
+
