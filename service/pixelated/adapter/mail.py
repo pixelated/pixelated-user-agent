@@ -197,14 +197,14 @@ class PixelatedMail(Mail):
         if self.parts and len(self.parts['alternatives']) > 1:
             body = ''
             for alternative in self.parts['alternatives']:
-                body += "--%(boundary)s\n"
+                body += '--' + self.boundary + '\n'
                 for header, value in alternative['headers'].items():
-                    body += "%s: %s\n" % (header, value)
+                    body += '%s: %s\n' % (header, value)
                 body += '\n'
                 body += alternative['content']
                 body += '\n'
-            body += '--%(boundary)s--'
-            return body % {'boundary': self.boundary}
+            body += '--' + self.boundary + '--'
+            return body
         else:
             return self.bdoc.content['raw']
 

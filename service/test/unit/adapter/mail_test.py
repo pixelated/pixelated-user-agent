@@ -102,6 +102,15 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertRegexpMatches(mail.body, '\nContent-Type: text/plain\n\nblablabla\n')
         self.assertRegexpMatches(mail.body, '.*--' + mail.boundary + '--$')
 
+    def test_percent_character_is_allowed_on_body(self):
+        parts = {'alternatives': [], 'attachments': []}
+        parts['alternatives'].append({'content': '100% happy with percentage symbol', 'headers': {'Content-Type': 'text/plain'}})
+        parts['alternatives'].append({'content': '<p>100% happy with percentage symbol</p>', 'headers': {'Content-Type': 'text/html'}})
+
+        mail = PixelatedMail.from_soledad(None, None, None, None, parts=parts)
+
+        self.assertRegexpMatches(mail.body, '([\s\S]*100%){2}')
+
 
 class InputMailTest(unittest.TestCase):
     mail_dict = lambda x: {
