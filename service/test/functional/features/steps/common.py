@@ -16,7 +16,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from hamcrest import *
 
 
@@ -25,8 +25,8 @@ def wait_until_element_is_invisible_by_locator(context, locator_tuple):
     wait.until(EC.invisibility_of_element_located(locator_tuple))
 
 
-def wait_until_element_is_deleted(context, locator_tuple):
-    wait = WebDriverWait(context.browser, 10)
+def wait_until_element_is_deleted(context, locator_tuple, timeout=10):
+    wait = WebDriverWait(context.browser, timeout)
     wait.until(lambda s: len(s.find_elements(locator_tuple[0], locator_tuple[1])) == 0)
 
 
@@ -64,28 +64,28 @@ def page_has_css(context, css):
     try:
         find_element_by_css_selector(context, css)
         return True
-    except NoSuchElementException:
+    except TimeoutException:
         return False
 
 
 def find_element_by_xpath(context, xpath):
-    return context.browser.find_element_by_xpath(xpath)
+    return wait_until_element_is_visible_by_locator(context, (By.XPATH, xpath))
 
 
 def find_element_by_id(context, id):
-    return context.browser.find_element_by_id(id)
+    return wait_until_element_is_visible_by_locator(context, (By.ID, id))
 
 
 def find_element_by_css_selector(context, css_selector):
-    return context.browser.find_element_by_css_selector(css_selector)
+    return wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, css_selector))
 
 
 def find_elements_by_css_selector(context, css_selector):
-    return context.browser.find_elements_by_css_selector(css_selector)
+    return wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, css_selector))
 
 
 def find_element_containing_text(context, text, element_type='*'):
-    return context.browser.find_element_by_xpath("//%s[contains(.,'%s')]" % (element_type, text))
+    return find_element_by_xpath(context, "//%s[contains(.,'%s')]" % (element_type, text))
 
 
 def element_should_have_content(context, css_selector, content):

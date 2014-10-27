@@ -66,7 +66,7 @@ def send_impl(context):
     context.execute_steps(u"when I open the first mail in the mail list")
     assert_that(is_not(page_has_css(context, '#send-button[disabled]')))
     click_button(context, 'Send')
-    wait_until_element_is_deleted(context, (By.ID, 'send-button'))
+    wait_until_element_is_deleted(context, (By.ID, 'send-button'), timeout=120)
 
 
 def _enter_recipient(context, recipients_field, to_type):
