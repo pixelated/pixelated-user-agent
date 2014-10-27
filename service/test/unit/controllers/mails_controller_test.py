@@ -19,9 +19,7 @@ from mockito import *
 from pixelated.controllers.mails_controller import MailsController
 
 
-
 class TestMailsController(unittest.TestCase):
-
     def setUp(self):
         self.mail_service = mock()
         self.search_engine = mock()
@@ -48,7 +46,8 @@ class TestMailsController(unittest.TestCase):
         result = self.mails_controller.send_mail(self.input_mail)
 
         self.assertEqual(result.status_code, 200)
-        self.assertEqual(result.data, '{"status": [], "body": "email body", "ident": 1, "tags": [], "header": {"to": "b@b.b", "from": "a@a.a"}, "security_casing": {}}')
+        self.assertEqual(result.data,
+                         '{"status": [], "body": "email body", "ident": 1, "tags": [], "header": {"to": "b@b.b", "from": "a@a.a"}, "security_casing": {}}')
 
     def test_sending_mail_return_error_message_when_send_fails(self):
         self.mail_service.send = self._send_that_throws_exception
@@ -56,7 +55,8 @@ class TestMailsController(unittest.TestCase):
         result = self.mails_controller.send_mail(self.input_mail)
 
         self.assertEqual(result.status_code, 422)
-        self.assertEqual(result.data, '{"message": "email sending failed\\nmore information of error\\n123\\nthere was a code before this"}')
+        self.assertEqual(result.data,
+                         '{"message": "email sending failed\\nmore information of error\\n123\\nthere was a code before this"}')
 
     def test_fetching_mail_gets_mail_from_mail_service(self):
         mail = mock()
@@ -90,7 +90,7 @@ class TestMailsController(unittest.TestCase):
 
     def test_delete_permanently_when_mail_in_trash(self):
         mail = mock()
-        mail.mailbox_name ='TRASH'
+        mail.mailbox_name = 'TRASH'
         when(self.mail_service).mail(1).thenReturn(mail)
         self.mails_controller.delete_mail(1)
 
@@ -98,7 +98,7 @@ class TestMailsController(unittest.TestCase):
 
     def test_move_message_to_trash(self):
         mail = mock()
-        mail.mailbox_name ='INBOX'
+        mail.mailbox_name = 'INBOX'
         when(self.mail_service).mail(1).thenReturn(mail)
         when(self.mails_controller).delete_mail(1).thenReturn(mail)
         when(self.search_engine).index_mail(mail)
@@ -107,16 +107,10 @@ class TestMailsController(unittest.TestCase):
 
     def _successfuly_send_mail(self, ident, mail):
         sent_mail = mock()
-        mail.mailbox_name ='TRASH'
+        mail.mailbox_name = 'TRASH'
         sent_mail.as_dict = lambda: self.input_mail.json
 
         return sent_mail
 
     def _send_that_throws_exception(self, ident, mail):
         raise Exception('email sending failed', 'more information of error', 123, 'there was a code before this')
-
-
-
-
-    
-
