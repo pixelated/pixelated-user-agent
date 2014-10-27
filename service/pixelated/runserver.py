@@ -63,6 +63,7 @@ def setup_debugger(enabled):
         logging.basicConfig()
         logger = logging.getLogger('werkzeug')
         logger.setLevel(logging.INFO)
+    return debug_enabled
 
 
 def configuration_setup(app, config):
