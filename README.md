@@ -19,6 +19,10 @@ The User Agent is composed of 2 components:
 
 Dependencies are: node, npm, ruby, bundle, virtualenv, git
 
+On Debian/Ubuntu systems you need:
+
+    sudo apt-get install nodejs npm ruby bundler virtualenv git
+
 Once you have that, run:
 
 ```
