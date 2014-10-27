@@ -52,3 +52,15 @@ class SoledadQuerierTest(unittest.TestCase):
             self.assertIn('headers', attachment)
             self.assertIn('ident', attachment)
             self.assertIn('name', attachment)
+
+    def test_extract_part_without_headers(self):
+        soledad = mock()
+        bdoc = mock()
+        bdoc.content = {'raw': 'esse papo seu ta qualquer coisa'}
+        when(soledad).get_from_index('by-type-and-payloadhash', 'cnt', any(unicode)).thenReturn([bdoc])
+        hdoc = {'multi': True, 'part_map': {'1': {'multi': False, 'phash': u'0400BEBACAFE'}}}
+        querier = SoledadQuerier(soledad)
+
+        parts = querier._extract_parts(hdoc)
+
+        self.assertEquals(bdoc.content['raw'], parts['alternatives'][0]['content'])
