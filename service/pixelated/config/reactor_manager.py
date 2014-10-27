@@ -22,11 +22,6 @@ import logging
 from twisted.internet import reactor
 
 
-def signal_handler(signal, frame):
-        stop_reactor_on_exit()
-        sys.exit(0)
-
-
 def start_reactor(logging=False):
     if logging:
         enable_logging()
@@ -44,8 +39,6 @@ def stop_reactor_on_exit():
     reactor.callFromThread(reactor.stop)
     global REACTOR_THREAD
     REACTOR_THREAD = None
-
-signal.signal(signal.SIGINT, signal_handler)
 
 
 def enable_logging():

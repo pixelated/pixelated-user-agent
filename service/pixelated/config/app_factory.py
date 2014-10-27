@@ -89,7 +89,7 @@ def init_leap_session(app):
     return leap_session
 
 
-def create_app(debug_enabled, app):
+def create_app(app, debug_enabled):
     with app.app_context():
         leap_session = init_leap_session(app)
 
