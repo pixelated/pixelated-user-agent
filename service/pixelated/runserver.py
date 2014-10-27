@@ -56,12 +56,14 @@ def register(username, server_name):
     except LeapAuthException:
         print('User already exists')
 
+
 def setup_debugger(enabled):
     debug_enabled = enabled or os.environ.get('DEBUG', False)
     if not debug_enabled:
         logging.basicConfig()
         logger = logging.getLogger('werkzeug')
         logger.setLevel(logging.INFO)
+
 
 def configuration_setup(app, config):
     if config is not None:
@@ -72,6 +74,7 @@ def configuration_setup(app, config):
         app.config['LEAP_SERVER_NAME'] = provider
         app.config['LEAP_USERNAME'] = user
         app.config['LEAP_PASSWORD'] = password
+
 
 def start_services(app, debug):
     reactor_manager.start_reactor(logging=debug)
