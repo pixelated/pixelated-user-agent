@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 import logging
 from flask import Flask
 from leap.common.events import server as events_server
@@ -29,6 +30,7 @@ import pixelated.support.ext_sqlcipher  # monkey patch for sqlcipher in debian
 
 
 app = Flask(__name__, static_url_path='', static_folder=app_factory.get_static_folder())
+credentials_pipe = os.path.join('/', 'data', 'credentials-fifo')
 
 
 def setup():
@@ -42,10 +44,13 @@ def setup():
             register(*args.register[::-1])
         else:
             if args.dispatcher:
-                raise Exception('Dispatcher mode not implemented yet')
+                provider, user, password = fetch_credentials_from_dispatcher()
+                app.config['LEAP_SERVER_NAME'] = provider
+                app.config['LEAP_USERNAME'] = user
+                app.config['LEAP_PASSWORD'] = password
             else:
-                configuration_setup(app, args.config)
-            start_services(app, debugger)
+                configuration_setup(args.config)
+            start_services(debugger)
     finally:
         reactor_manager.stop_reactor_on_exit()
 
@@ -57,6 +62,17 @@ def register(username, server_name):
         print('User already exists')
 
 
+def fetch_credentials_from_dispatcher():
+    if not os.path.exists(credentials_pipe):
+        print('The credentials pipe doesn\'t exist')
+        sys.exit(1)
+    with open(credentials_pipe, 'r') as cred_file:
+        provider = cred_file.read()
+        username = cred_file.read()
+        password = cred_file.read()
+    return provider, username, password
+
+
 def setup_debugger(enabled):
     debug_enabled = enabled or os.environ.get('DEBUG', False)
     if not debug_enabled:
@@ -66,7 +82,7 @@ def setup_debugger(enabled):
     return debug_enabled
 
 
-def configuration_setup(app, config):
+def configuration_setup(config):
     if config is not None:
         config_file = os.path.abspath(os.path.expanduser(config))
         app.config.from_pyfile(config_file)
@@ -77,7 +93,7 @@ def configuration_setup(app, config):
         app.config['LEAP_PASSWORD'] = password
 
 
-def start_services(app, debug):
+def start_services(debug):
     reactor_manager.start_reactor(logging=debug)
     events_server.ensure_server(port=8090)
     app_factory.create_app(app, debug)
