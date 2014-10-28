@@ -6,7 +6,7 @@ describeComponent('mail_view/ui/send_button', function () {
 
   describe('send button', function () {
     beforeEach(function () {
-      this.setupComponent('<button />');
+      this.setupComponent('<button>Send</button>');
     });
 
     describe('when it is disabled', function () {
@@ -73,6 +73,15 @@ describeComponent('mail_view/ui/send_button', function () {
         this.$node.click();
 
         expect(doCompleteInputEvent).toHaveBeenTriggeredOn(document);
+      });
+
+      it('disables the button after clicking', function () {
+        expect(this.$node.text()).toBe('Send');
+
+        this.$node.click();
+
+        expect(this.$node.text()).toBe('Sending...');
+        expect(this.$node.prop('disabled')).toBeTruthy();
       });
     });
 

@@ -78,6 +78,9 @@ define([
         }.bind(this)));
 
         this.trigger(document, events.ui.recipients.doCompleteInput);
+        this.disableButton();
+        this.$node.text('Sending...');
+
       };
 
       this.after('initialize', function () {
