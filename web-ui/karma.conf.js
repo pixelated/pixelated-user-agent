@@ -54,7 +54,7 @@ module.exports = function (config) {
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress'],
+    reporters: ['progress', 'junit'],
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
@@ -81,6 +81,11 @@ module.exports = function (config) {
     // Karma will report all the tests that are slower than given time limit (in
     // ms).
     reportSlowerThan: 500,
+
+    junitReporter: {
+      outputFile: 'test-results.xml',
+      suite: ''
+    }
 
   });
 };
