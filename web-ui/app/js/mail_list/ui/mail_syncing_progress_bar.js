@@ -46,13 +46,18 @@ define(
       };
 
       this.doUpdate = function () {
-        $.getJSON('/sync_info', function (data) {
-          if (data.is_syncing) {
-            this.updateProgressBar(data.count);
-          } else {
+        $.getJSON('/sync_info')
+          .success(function (data) {
+            if (data.is_syncing) {
+              this.updateProgressBar(data.count);
+            } else {
+              this.resetProgressBar();
+            }
+          }.bind(this))
+          .error(function () {
+            clearInterval(this.attr.poolIntervalId);
             this.resetProgressBar();
-          }
-        }.bind(this));
+          }.bind(this));
       };
 
       this.checkForMailSyncing = function () {
@@ -64,7 +69,7 @@ define(
 
       this.after('initialize', function () {
         this.checkForMailSyncing();
-        setInterval(this.checkForMailSyncing.bind(this), 20000);
+        this.attr.poolIntervalId = setInterval(this.checkForMailSyncing.bind(this), 20000);
       });
     }
   }
