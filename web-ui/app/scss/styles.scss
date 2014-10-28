@@ -104,15 +104,19 @@
         }
       }
       .subject-and-tags {
-        display: inline-block;
+        display: block;
         width: 90%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         @include tags;
         ul.tags {
-          display: inline-block;
+          display: block;
+          line-height: 1.2;
+          margin: -3px 0 0 0;
           li {
+            background-color: #DDD;
+            color: black; 
             display: inline-block;
             height: auto;
             font-weight: 400;
