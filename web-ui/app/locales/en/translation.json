@@ -53,6 +53,7 @@
     "signed signature-unknown": "Sender and/or message cannot be trusted.",
     "not-signed": "Sender could not be securely identified.",
     "send-button": "Send",
+    "sending-mail": "Sending...",
     "draft-button": "Save Draft",
     "trash-button": "Trash it",
     "Search..." : "Search...",

@@ -20,9 +20,10 @@
 define([
     'flight/lib/component',
     'flight/lib/utils',
-    'page/events'
+    'page/events',
+    'helpers/view_helper'
   ],
-  function (defineComponent, utils, events) {
+  function (defineComponent, utils, events, viewHelper) {
 
     return defineComponent(sendButton);
 
@@ -79,13 +80,14 @@ define([
 
         this.trigger(document, events.ui.recipients.doCompleteInput);
         this.disableButton();
-        this.$node.text('Sending...');
+        this.$node.text(viewHelper.i18n('sending-mail'));
 
       };
 
       this.after('initialize', function () {
         this.attr.recipients = {};
         this.attr.inputHasMail = {};
+        this.$node.html(viewHelper.i18n('send-button'));
 
         this.on(document, events.ui.recipients.inputHasMail, this.inputHasMail);
         this.on(document, events.ui.recipients.inputHasNoMail, this.inputHasNoMail);
