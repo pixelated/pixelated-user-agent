@@ -27,7 +27,6 @@ from pycryptopp.hash import sha256
 
 
 class Mail:
-
     @property
     def to(self):
         return self.headers['To']
@@ -137,7 +136,8 @@ class InputMail(Mail):
         hd[fields.SUBJECT_KEY] = self.headers.get('Subject')
         hd[fields.TYPE_KEY] = fields.TYPE_HEADERS_VAL
         hd[fields.BODY_KEY] = self._get_body_phash()
-        hd[fields.PARTS_MAP_KEY] = walk.walk_msg_tree(walk.get_parts(self._mime_multipart), body_phash=self._get_body_phash())['part_map']
+        hd[fields.PARTS_MAP_KEY] = \
+        walk.walk_msg_tree(walk.get_parts(self._mime_multipart), body_phash=self._get_body_phash())['part_map']
 
         self._hd = hd
         return hd
@@ -172,15 +172,22 @@ class InputMail(Mail):
     def from_dict(mail_dict):
         input_mail = InputMail()
         input_mail.headers = {key.capitalize(): value for key, value in mail_dict.get('header', {}).items()}
+
+        # XXX this is overriding the property in PixelatedMail
         input_mail.headers['Date'] = pixelated.support.date.iso_now()
+
+        # XXX this is overriding the property in PixelatedMail
         input_mail.body = mail_dict.get('body', '')
+
+        # XXX this is overriding the property in the PixelatedMail
         input_mail.tags = set(mail_dict.get('tags', []))
+
         input_mail._status = set(mail_dict.get('status', []))
         return input_mail
 
 
 class PixelatedMail(Mail):
-
+    
     @staticmethod
     def from_soledad(fdoc, hdoc, bdoc, soledad_querier=None, parts=None):
         mail = PixelatedMail()
