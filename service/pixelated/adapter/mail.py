@@ -66,11 +66,12 @@ class Mail:
         self._mime = mime
         return mime
 
+    @property
     def raw(self):
         return self._mime_multipart.as_string()
 
     def _get_chash(self):
-        return sha256.SHA256(self.raw()).hexdigest()
+        return sha256.SHA256(self.raw).hexdigest()
 
     def as_dict(self):
         return {
@@ -92,8 +93,8 @@ class InputMail(Mail):
         self._fd = None
         self._hd = None
         self._bd = None
-        self._mime = None
         self._chash = None
+        self._mime = None
 
     @property
     def ident(self):
@@ -112,7 +113,7 @@ class InputMail(Mail):
         fd[fields.MBOX_KEY] = mailbox
         fd[fields.UID_KEY] = next_uid
         fd[fields.CONTENT_HASH_KEY] = self._get_chash()
-        fd[fields.SIZE_KEY] = len(self.raw())
+        fd[fields.SIZE_KEY] = len(self.raw)
         fd[fields.MULTIPART_KEY] = True
         fd[fields.RECENT_KEY] = True
         fd[fields.TYPE_KEY] = fields.TYPE_FLAGS_VAL
@@ -196,6 +197,7 @@ class PixelatedMail(Mail):
         mail.fdoc = fdoc
         mail.hdoc = hdoc
         mail.querier = soledad_querier
+        mail._mime = None
         return mail
 
     @property
