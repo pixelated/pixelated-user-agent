@@ -52,7 +52,7 @@ def update_info_sync_and_index_partial(sync_info_controller, search_engine, mail
     return wrapper
 
 
-def _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller, sync_info_controller):
+def _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller, sync_info_controller, attachments_controller):
     # home
     app.add_url_rule('/', methods=['GET'], view_func=home_controller.home)
     # mails
@@ -73,6 +73,8 @@ def _setup_routes(app, home_controller, mails_controller, tags_controller, featu
     app.add_url_rule('/features', methods=['GET'], view_func=features_controller.features)
     # sync info
     app.add_url_rule('/sync_info', methods=['GET'], view_func=sync_info_controller.sync_info)
+    # attachments
+    app.add_url_rule('/attachment/<attachment_id>', methods=['GET'], view_func=attachments_controller.attachment)
 
 
 def init_leap_session(app):
@@ -113,6 +115,7 @@ def create_app(app, debug_enabled):
                                            search_engine=search_engine)
         tags_controller = TagsController(search_engine=search_engine)
         sync_info_controller = SyncInfoController()
+        attachments_controller = AttachmentsController(soledad_querier)
 
         register(signal=proto.SOLEDAD_SYNC_RECEIVE_STATUS,
                  callback=update_info_sync_and_index_partial(sync_info_controller=sync_info_controller,
@@ -124,7 +127,7 @@ def create_app(app, debug_enabled):
                                                       mail_service=mail_service))
 
         _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller,
-                      sync_info_controller)
+                      sync_info_controller, attachments_controller)
 
         app.run(host=app.config['HOST'], debug=debug_enabled,
                 port=app.config['PORT'], use_reloader=False)

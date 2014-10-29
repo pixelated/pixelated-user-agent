@@ -14,20 +14,25 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+from flask import send_file
+from flask import request
 
-def respond_json(entity, status_code=200):
-    json_response = json.dumps(entity)
-    response = Response(response=json_response, mimetype="application/json")
-    response.status_code = status_code
-    return response
+import io
+import re
 
 
-import json
+class AttachmentsController:
 
-from flask import Response
-from home_controller import HomeController
-from mails_controller import MailsController
-from tags_controller import TagsController
-from features_controller import FeaturesController
-from sync_info_controller import SyncInfoController
-from attachments_controller import AttachmentsController
+    def __init__(self, querier):
+        self.querier = querier
+
+    def attachment(self, attachment_id):
+        encoding = request.args.get('encoding', '')
+        attachment = self.querier.attachment(attachment_id, encoding)
+        response = send_file(io.BytesIO(attachment['content']),
+                             mimetype=self._extract_mimetype(attachment['content-type']))
+        return response
+
+    def _extract_mimetype(self, content_type):
+        match = re.compile('([A-Za-z-]+\/[A-Za-z-]+)').search(content_type)
+        return match.group(1)

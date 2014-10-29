@@ -162,9 +162,10 @@ class SoledadTestBase:
                                            search_engine=self.search_engine)
         tags_controller = TagsController(search_engine=self.search_engine)
         sync_info_controller = SyncInfoController()
+        attachments_controller = AttachmentsController(self.soledad_querier)
 
         app_factory._setup_routes(self.client.application, home_controller, mails_controller, tags_controller,
-                                  features_controller, sync_info_controller)
+                                  features_controller, sync_info_controller, attachments_controller)
 
     def get_mails_by_tag(self, tag, page=1, window=100):
         response = json.loads(self.client.get("/mails?q=tag:%s&w=%s&p=%s" % (tag, window, page)).data)
