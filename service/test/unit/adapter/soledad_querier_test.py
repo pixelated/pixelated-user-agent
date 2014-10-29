@@ -18,6 +18,8 @@ from pixelated.adapter.soledad_querier import SoledadQuerier
 from mockito import mock, when, any
 import json
 import os
+import base64
+import quopri
 
 
 class SoledadQuerierTest(unittest.TestCase):
@@ -64,3 +66,25 @@ class SoledadQuerierTest(unittest.TestCase):
         parts = querier._extract_parts(hdoc)
 
         self.assertEquals(bdoc.content['raw'], parts['alternatives'][0]['content'])
+
+    def test_attachment_base64(self):
+        soledad = mock()
+        bdoc = mock()
+        bdoc.content = {'raw': base64.encodestring('esse papo seu ta qualquer coisa'), 'content-type': 'text/plain'}
+        when(soledad).get_from_index('by-type-and-payloadhash', 'cnt', any(unicode)).thenReturn([bdoc])
+        querier = SoledadQuerier(soledad)
+
+        attachment = querier.attachment(u'0400BEBACAFE', 'base64')
+
+        self.assertEquals('esse papo seu ta qualquer coisa', attachment['content'])
+
+    def test_attachment_quoted_printable(self):
+        soledad = mock()
+        bdoc = mock()
+        bdoc.content = {'raw': quopri.encodestring('esse papo seu ta qualquer coisa'), 'content-type': 'text/plain'}
+        when(soledad).get_from_index('by-type-and-payloadhash', 'cnt', any(unicode)).thenReturn([bdoc])
+        querier = SoledadQuerier(soledad)
+
+        attachment = querier.attachment(u'0400BEBACAFE', 'quoted-printable')
+
+        self.assertEquals('esse papo seu ta qualquer coisa', attachment['content'])

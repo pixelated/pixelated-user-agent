@@ -15,6 +15,8 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.mail import PixelatedMail
 import re
+import base64
+import quopri
 
 
 class SoledadQuerier:
@@ -110,6 +112,20 @@ class SoledadQuerier:
 
         return PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self, parts=parts)
 
+    def attachment(self, ident, encoding):
+        bdoc = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', ident)[0]
+        return {'content': self._try_decode(bdoc.content['raw'], encoding),
+                'content-type': bdoc.content['content-type']}
+
+    def _try_decode(self, raw, encoding):
+        encoding = encoding.lower()
+        if encoding == 'base64':
+            return base64.decodestring(raw)
+        elif encoding == 'quoted-printable':
+            return quopri.decodestring(raw)
+        else:
+            return str(raw)
+
     def mails(self, idents):
         fdocs_chash = [(self.soledad.get_from_index('by-type-and-contenthash', 'flags', ident), ident) for ident in idents]
         fdocs_chash = [(result[0], ident) for result, ident in fdocs_chash if result]
@@ -137,7 +153,8 @@ class SoledadQuerier:
 
     def _extract_attachment(self, hdoc, headers_dict):
         content_disposition = headers_dict['Content-Disposition']
-        match = re.compile('.*name=\"(.*)\".*').match(content_disposition)
+        match = re.compile('.*name=\"(.*)\".*').search(content_disposition)
+        filename = ''
         if match:
             filename = match.group(1)
         return {'headers': headers_dict, 'ident': hdoc['phash'], 'name': filename}
