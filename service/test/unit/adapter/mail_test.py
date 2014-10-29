@@ -87,7 +87,8 @@ class TestPixelatedMail(unittest.TestCase):
                                   'mailbox': 'inbox',
                                   'security_casing': {},
                                   'status': ['recent'],
-                                  'tags': []
+                                  'tags': [],
+                                  'attachments': []
                                   })
 
     def test_alternatives_body(self):

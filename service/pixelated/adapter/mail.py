@@ -81,7 +81,8 @@ class Mail:
             'status': list(self.status),
             'security_casing': {},
             'body': self.body,
-            'mailbox': self.mailbox_name.lower()
+            'mailbox': self.mailbox_name.lower(),
+            'attachments': self.parts['attachments'] if self.parts else []
         }
 
 
