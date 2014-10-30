@@ -136,7 +136,7 @@ class SoledadQuerier:
             parts = {'alternatives': [], 'attachments': []}
 
         if hdoc['multi']:
-            for part_key in hdoc['part_map'].keys():
+            for part_key in hdoc.get('part_map', {}).keys():
                 self._extract_parts(hdoc['part_map'][part_key], parts)
         else:
             headers_dict = {elem[0]: elem[1] for elem in hdoc.get('headers', [])}

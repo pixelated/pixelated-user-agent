@@ -67,6 +67,21 @@ class SoledadQuerierTest(unittest.TestCase):
 
         self.assertEquals(bdoc.content['raw'], parts['alternatives'][0]['content'])
 
+    def test_extract_handles_missing_part_map(self):
+        soledad = mock()
+        hdoc = {u'multi': True,
+                u'ctype': u'message/delivery-status',
+                u'headers': [[u'Content-Description', u'Delivery report'], [u'Content-Type', u'message/delivery-status']],
+                u'parts': 2,
+                u'phash': None,
+                u'size': 554}
+        querier = SoledadQuerier(soledad)
+
+        parts = querier._extract_parts(hdoc)
+
+        self.assertEquals(0, len(parts['alternatives']))
+        self.assertEquals(0, len(parts['attachments']))
+
     def test_attachment_base64(self):
         soledad = mock()
         bdoc = mock()
