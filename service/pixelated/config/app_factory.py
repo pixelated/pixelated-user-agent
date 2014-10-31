@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-
+from twisted.internet import reactor
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.mail import InputMail
 from pixelated.adapter.mail_sender import MailSender
@@ -33,6 +33,7 @@ from leap.common.events import (
     register,
     events_pb2 as proto
 )
+from twisted.web.server import Site
 
 
 def init_index_and_remove_dupes(querier, search_engine, mail_service):
@@ -53,28 +54,28 @@ def update_info_sync_and_index_partial(sync_info_controller, search_engine, mail
 
 
 def _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller, sync_info_controller, attachments_controller):
-    # home
-    app.add_url_rule('/', methods=['GET'], view_func=home_controller.home)
     # mails
-    app.add_url_rule('/mails', methods=['GET'], view_func=mails_controller.mails)
-    app.add_url_rule('/mail/<mail_id>/read', methods=['POST'], view_func=mails_controller.mark_mail_as_read)
-    app.add_url_rule('/mail/<mail_id>/unread', methods=['POST'], view_func=mails_controller.mark_mail_as_unread)
-    app.add_url_rule('/mails/unread', methods=['POST'], view_func=mails_controller.mark_many_mail_unread)
-    app.add_url_rule('/mails/read', methods=['POST'], view_func=mails_controller.mark_many_mail_read)
-    app.add_url_rule('/mail/<mail_id>', methods=['GET'], view_func=mails_controller.mail)
-    app.add_url_rule('/mail/<mail_id>', methods=['DELETE'], view_func=mails_controller.delete_mail)
-    app.add_url_rule('/mails', methods=['DELETE'], view_func=mails_controller.delete_mails)
-    app.add_url_rule('/mails', methods=['POST'], view_func=mails_controller.send_mail)
-    app.add_url_rule('/mail/<mail_id>/tags', methods=['POST'], view_func=mails_controller.mail_tags)
-    app.add_url_rule('/mails', methods=['PUT'], view_func=mails_controller.update_draft)
+    app.route('/mails', methods=['GET'])(mails_controller.mails)
+    app.route('/mail/<mail_id>/read', methods=['POST'])(mails_controller.mark_mail_as_read)
+    app.route('/mail/<mail_id>/unread', methods=['POST'])(mails_controller.mark_mail_as_unread)
+    app.route('/mails/unread', methods=['POST'])(mails_controller.mark_many_mail_unread)
+    app.route('/mails/read', methods=['POST'])(mails_controller.mark_many_mail_read)
+    app.route('/mail/<mail_id>', methods=['GET'])(mails_controller.mail)
+    app.route('/mail/<mail_id>', methods=['DELETE'])(mails_controller.delete_mail)
+    app.route('/mails', methods=['DELETE'])(mails_controller.delete_mails)
+    app.route('/mails', methods=['POST'])(mails_controller.send_mail)
+    app.route('/mail/<mail_id>/tags', methods=['POST'])(mails_controller.mail_tags)
+    app.route('/mails', methods=['PUT'])(mails_controller.update_draft)
     # tags
-    app.add_url_rule('/tags', methods=['GET'], view_func=tags_controller.tags)
+    app.route('/tags', methods=['GET'])(tags_controller.tags)
     # features
-    app.add_url_rule('/features', methods=['GET'], view_func=features_controller.features)
+    app.route('/features', methods=['GET'])(features_controller.features)
     # sync info
-    app.add_url_rule('/sync_info', methods=['GET'], view_func=sync_info_controller.sync_info)
+    app.route('/sync_info', methods=['GET'])(sync_info_controller.sync_info)
     # attachments
-    app.add_url_rule('/attachment/<attachment_id>', methods=['GET'], view_func=attachments_controller.attachment)
+    app.route('/attachment/<attachment_id>', methods=['GET'])(attachments_controller.attachment)
+    # static
+    app.route('/', methods=['GET'], branch=True)(home_controller.home)
 
 
 def init_leap_session(app):
@@ -91,46 +92,51 @@ def init_leap_session(app):
     return leap_session
 
 
-def create_app(app, debug_enabled):
-    with app.app_context():
-        leap_session = init_leap_session(app)
+def init_app(app):
+    leap_session = init_leap_session(app)
 
-        tag_service = TagService()
-        search_engine = SearchEngine()
-        pixelated_mail_sender = MailSender(leap_session.account_email())
+    tag_service = TagService()
+    search_engine = SearchEngine()
+    pixelated_mail_sender = MailSender(leap_session.account_email())
 
-        soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
-        pixelated_mailboxes = Mailboxes(leap_session.account, soledad_querier)
+    soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
+    pixelated_mailboxes = Mailboxes(leap_session.account, soledad_querier)
+    draft_service = DraftService(pixelated_mailboxes)
+    mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, tag_service, soledad_querier)
 
-        draft_service = DraftService(pixelated_mailboxes)
-        mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, tag_service, soledad_querier)
+    MailboxIndexerListener.SEARCH_ENGINE = search_engine
+    InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
 
-        MailboxIndexerListener.SEARCH_ENGINE = search_engine
-        InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
+    home_controller = HomeController()
+    features_controller = FeaturesController()
+    mails_controller = MailsController(mail_service=mail_service,
+                                       draft_service=draft_service,
+                                       search_engine=search_engine)
+    tags_controller = TagsController(search_engine=search_engine)
+    sync_info_controller = SyncInfoController()
+    attachments_controller = AttachmentsController(soledad_querier)
 
-        home_controller = HomeController()
-        features_controller = FeaturesController()
-        mails_controller = MailsController(mail_service=mail_service,
-                                           draft_service=draft_service,
-                                           search_engine=search_engine)
-        tags_controller = TagsController(search_engine=search_engine)
-        sync_info_controller = SyncInfoController()
-        attachments_controller = AttachmentsController(soledad_querier)
+    register(signal=proto.SOLEDAD_SYNC_RECEIVE_STATUS,
+             callback=update_info_sync_and_index_partial(sync_info_controller=sync_info_controller,
+                                                         search_engine=search_engine,
+                                                         mail_service=mail_service))
+    register(signal=proto.SOLEDAD_DONE_DATA_SYNC,
+             callback=init_index_and_remove_dupes(querier=soledad_querier,
+                                                  search_engine=search_engine,
+                                                  mail_service=mail_service))
 
-        register(signal=proto.SOLEDAD_SYNC_RECEIVE_STATUS,
-                 callback=update_info_sync_and_index_partial(sync_info_controller=sync_info_controller,
-                                                             search_engine=search_engine,
-                                                             mail_service=mail_service))
-        register(signal=proto.SOLEDAD_DONE_DATA_SYNC,
-                 callback=init_index_and_remove_dupes(querier=soledad_querier,
-                                                      search_engine=search_engine,
-                                                      mail_service=mail_service))
+    _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller,
+                  sync_info_controller, attachments_controller)
 
-        _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller,
-                      sync_info_controller, attachments_controller)
 
-        app.run(host=app.config['HOST'], debug=debug_enabled,
-                port=app.config['PORT'], use_reloader=False)
+def create_app(app):
+    from twisted.python import log
+    import sys
+    log.startLogging(sys.stdout)
+
+    reactor.listenTCP(3333, Site(app.resource()), interface='localhost')
+    reactor.callWhenRunning(lambda: init_app(app))
+    reactor.run()
 
 
 def get_static_folder():

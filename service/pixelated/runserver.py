@@ -17,42 +17,42 @@
 import os
 import sys
 import logging
-from flask import Flask
+
+from klein import Klein
+
+klein_app = Klein()
+
+import ConfigParser
 from leap.common.events import server as events_server
 from pixelated.config import app_factory
 import pixelated.config.args as input_args
 import pixelated.bitmask_libraries.register as leap_register
 from pixelated.bitmask_libraries.leap_srp import LeapAuthException
 import pixelated.config.credentials_prompt as credentials_prompt
-import pixelated.config.reactor_manager as reactor_manager
 import pixelated.support.ext_protobuf  # monkey patch for protobuf in OSX
 import pixelated.support.ext_sqlcipher  # monkey patch for sqlcipher in debian
 
 
-app = Flask(__name__, static_url_path='', static_folder=app_factory.get_static_folder())
+app = Klein()
+app.config = {}
 credentials_pipe = os.path.join('/', 'data', 'credentials-fifo')
 
 
 def setup():
-    try:
-        args = input_args.parse()
-        app.config.update({'HOST': args.host, 'PORT': args.port})
+    args = input_args.parse()
+    setup_debugger(args.debug)
 
-        debugger = setup_debugger(args.debug)
-
-        if args.register:
-            register(*args.register[::-1])
+    if args.register:
+        register(*args.register[::-1])
+    else:
+        if args.dispatcher:
+            provider, user, password = fetch_credentials_from_dispatcher()
+            app.config['LEAP_SERVER_NAME'] = provider
+            app.config['LEAP_USERNAME'] = user
+            app.config['LEAP_PASSWORD'] = password
         else:
-            if args.dispatcher:
-                provider, user, password = fetch_credentials_from_dispatcher()
-                app.config['LEAP_SERVER_NAME'] = provider
-                app.config['LEAP_USERNAME'] = user
-                app.config['LEAP_PASSWORD'] = password
-            else:
-                configuration_setup(args.config)
-            start_services(debugger)
-    finally:
-        reactor_manager.stop_reactor_on_exit()
+            configuration_setup(args.config)
+        start_services()
 
 
 def register(username, server_name):
@@ -75,28 +75,47 @@ def fetch_credentials_from_dispatcher():
 
 def setup_debugger(enabled):
     debug_enabled = enabled or os.environ.get('DEBUG', False)
-    if not debug_enabled:
-        logging.basicConfig()
-        logger = logging.getLogger('werkzeug')
-        logger.setLevel(logging.INFO)
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                        datefmt='%m-%d %H:%M',
+                        filename='/tmp/leap.log',
+                        filemode='w')  # define a Handler which writes INFO messages or higher to the sys.stderr
+    console = logging.StreamHandler()
+    console.setLevel(logging.DEBUG)
+    # set a format which is simpler for console use
+    formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
+    # tell the handler to use this format
+    console.setFormatter(formatter)
+    # add the handler to the root logger
+    logging.getLogger('').addHandler(console)
+
     return debug_enabled
 
 
-def configuration_setup(config):
-    if config is not None:
-        config_file = os.path.abspath(os.path.expanduser(config))
-        app.config.from_pyfile(config_file)
-    else:
-        provider, user, password = credentials_prompt.run()
-        app.config['LEAP_SERVER_NAME'] = provider
-        app.config['LEAP_USERNAME'] = user
-        app.config['LEAP_PASSWORD'] = password
+def parse_config_from_file(config_file):
+    config_parser = ConfigParser.ConfigParser()
+    config_file = os.path.abspath(os.path.expanduser(config_file))
+    config_parser.read(config_file)
+    provider, user, password = \
+        config_parser.get('pixelated', 'leap_server_name'), \
+        config_parser.get('pixelated', 'leap_username'), \
+        config_parser.get('pixelated', 'leap_password')
+
+    # TODO: add error messages in case one of the parameters are empty
+    return provider, user, password
 
 
-def start_services(debug):
-    reactor_manager.start_reactor(logging=debug)
+def configuration_setup(config_file):
+    provider, user, password = parse_config_from_file(config_file) if config_file else credentials_prompt.run()
+
+    app.config['LEAP_SERVER_NAME'] = provider
+    app.config['LEAP_USERNAME'] = user
+    app.config['LEAP_PASSWORD'] = password
+
+
+def start_services():
     events_server.ensure_server(port=8090)
-    app_factory.create_app(app, debug)
+    app_factory.create_app(app)
 
 
 if __name__ == '__main__':

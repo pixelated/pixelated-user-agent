@@ -13,14 +13,30 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+import os
 
-from flask import current_app
+from twisted.web.static import File
 
 
 class HomeController:
-
     def __init__(self):
+        self.static_folder = self._get_static_folder()
         pass
 
-    def home(self):
-        return current_app.send_static_file('index.html')
+    def _get_static_folder(self):
+
+        static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))
+        # this is a workaround for packaging
+        if not os.path.exists(static_folder):
+            static_folder = os.path.abspath(
+                os.path.join(os.path.abspath(__file__), "..", "..", "..", "..", "web-ui", "app"))
+        if not os.path.exists(static_folder):
+            static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
+        return static_folder
+
+    def home(self, request):
+        request_type = request.requestHeaders.getRawHeaders('accept')[0].split(',')[0]
+        response_type = request_type if request_type else "text/html"
+
+        request.setHeader('Content-Type', response_type)
+        return File('%s/' % self.static_folder, defaultType=response_type)

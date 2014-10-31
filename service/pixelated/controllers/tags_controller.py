@@ -23,8 +23,8 @@ class TagsController:
     def __init__(self, search_engine):
         self._search_engine = search_engine
 
-    def tags(self):
-        query = request.args.get('q')
+    def tags(self, request):
+        query = request.args.get('q', [''])[0]
         skip_default_tags = request.args.get('skipDefaultTags')
         tags = self._search_engine.tags(query=query, skip_default_tags=skip_default_tags)
-        return respond_json(tags)
+        return respond_json(tags, request)

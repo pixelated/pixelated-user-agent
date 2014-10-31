@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
+from mock import MagicMock
 from pixelated.controllers import SyncInfoController
 from mockito import *
 import json
@@ -22,6 +23,7 @@ import json
 class SyncInfoControllerTest(unittest.TestCase):
 
     def setUp(self):
+        self.dummy_request = MagicMock()
         self.controller = SyncInfoController()
 
     def _set_count(self, current, total):
@@ -30,7 +32,7 @@ class SyncInfoControllerTest(unittest.TestCase):
         self.controller.set_sync_info(soledad_sync_data)
 
     def get_sync_info(self):
-        return json.loads(self.controller.sync_info().data)
+        return json.loads(self.controller.sync_info(self.dummy_request))
 
     def test_is_not_syncing_if_total_is_equal_to_current(self):
         self._set_count(total=0, current=0)

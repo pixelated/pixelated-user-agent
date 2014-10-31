@@ -43,7 +43,7 @@ class SearchTest(unittest.TestCase, SoledadTestBase):
         input_mail = MailBuilder().with_tags(['ateu', 'catoa', 'luat', 'zuado']).build_input_mail()
         self.add_mail_to_inbox(input_mail)
 
-        all_tags = self.get_tags('?q=at&skipDefaultTags=true')
+        all_tags = self.get_tags(q=["at"], skipDefaultTags=["true"])
 
         all_tag_names = [t['name'] for t in all_tags]
         self.assertEqual(3, len(all_tag_names))
@@ -55,7 +55,7 @@ class SearchTest(unittest.TestCase, SoledadTestBase):
         input_mail = MailBuilder().with_tags(['sometag']).build_input_mail()
         self.add_mail_to_inbox(input_mail)
 
-        all_tags = self.get_tags('?skipDefaultTags=true')
+        all_tags = self.get_tags(skipDefaultTags=["true"])
 
         all_tag_names = [t['name'] for t in all_tags]
         self.assertEqual(1, len(all_tag_names))

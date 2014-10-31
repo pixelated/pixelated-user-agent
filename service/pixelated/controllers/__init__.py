@@ -15,16 +15,15 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 
-def respond_json(entity, status_code=200):
+def respond_json(entity, request, status_code=200):
     json_response = json.dumps(entity)
-    response = Response(response=json_response, mimetype="application/json")
-    response.status_code = status_code
-    return response
+    request.responseHeaders.addRawHeader(b"content-type", b"application/json")
+    request.code = status_code
+    return json_response
 
 
 import json
 
-from flask import Response
 from home_controller import HomeController
 from mails_controller import MailsController
 from tags_controller import TagsController

@@ -17,7 +17,6 @@
 import json
 from pixelated.adapter.mail import InputMail
 from pixelated.controllers import respond_json
-from flask import request
 
 
 class MailsController:
@@ -27,8 +26,8 @@ class MailsController:
         self._draft_service = draft_service
         self._search_engine = search_engine
 
-    def mails(self, _request=request):
-        mail_ids, total = self._search_engine.search(_request.args.get('q'), _request.args.get('w'), _request.args.get('p'))
+    def mails(self, request):
+        mail_ids, total = self._search_engine.search(request.args.get('q')[0], request.args.get('w')[0], request.args.get('p')[0])
         mails = self._mail_service.mails(mail_ids)
 
         response = {
@@ -38,77 +37,83 @@ class MailsController:
             "mails": [mail.as_dict() for mail in mails]
         }
 
-        return respond_json(response)
+        return json.dumps(response)
 
-    def mail(self, mail_id):
+    def mail(self, request, mail_id):
         mail = self._mail_service.mail(mail_id)
-        return respond_json(mail.as_dict())
+        return respond_json(mail.as_dict(), request)
 
-    def mark_mail_as_read(self, mail_id):
+    def mark_mail_as_read(self, request, mail_id):
         mail = self._mail_service.mark_as_read(mail_id)
         self._search_engine.index_mail(mail)
         return ""
 
-    def mark_mail_as_unread(self, mail_id):
+    def mark_mail_as_unread(self, request, mail_id):
         mail = self._mail_service.mark_as_unread(mail_id)
         self._search_engine.index_mail(mail)
         return ""
 
-    def mark_many_mail_unread(self):
-        idents = json.loads(request.form['idents'])
+    def mark_many_mail_unread(self, request):
+        content_dict = json.load(request.content)
+        idents = content_dict.get('idents')
         for ident in idents:
             mail = self._mail_service.mark_as_unread(ident)
             self._search_engine.index_mail(mail)
         return ""
 
-    def mark_many_mail_read(self):
-        idents = json.loads(request.form['idents'])
+    def mark_many_mail_read(self, request):
+        content_dict = json.load(request.content)
+        idents = content_dict.get('idents')
         for ident in idents:
             mail = self._mail_service.mark_as_read(ident)
             self._search_engine.index_mail(mail)
         return ""
 
-    def delete_mail(self, mail_id):
+    def delete_mail(self, request, mail_id):
         mail = self._mail_service.mail(mail_id)
         if mail.mailbox_name == 'TRASH':
             self._mail_service.delete_permanent(mail_id)
         else:
             trashed_mail = self._mail_service.delete_mail(mail_id)
             self._search_engine.index_mail(trashed_mail)
-        return respond_json(None)
+        return respond_json(None, request)
 
-    def delete_mails(self):
+    def delete_mails(self, request):
         idents = json.loads(request.form['idents'])
         for ident in idents:
             self.delete_mail(ident)
-        return respond_json(None)
+        return respond_json(None, request)
 
-    def send_mail(self, _request=request):
+    def send_mail(self, request):
         try:
-            _mail = InputMail.from_dict(_request.json)
-            draft_id = _request.json.get('ident')
+            content_dict = json.loads(request.content.read())
+            _mail = InputMail.from_dict(content_dict)
+            draft_id = content_dict.get('ident')
             if draft_id:
                 self._search_engine.remove_from_index(draft_id)
             _mail = self._mail_service.send(draft_id, _mail)
             self._search_engine.index_mail(_mail)
 
-            return respond_json(_mail.as_dict())
+            return respond_json(_mail.as_dict(), request)
         except Exception as error:
-            return respond_json({'message': self._format_exception(error)}, status_code=422)
+            return respond_json({'message': self._format_exception(error)}, request, status_code=422)
 
-    def mail_tags(self, mail_id):
-        new_tags = map(lambda tag: tag.lower(), request.get_json()['newtags'])
+    def mail_tags(self, request, mail_id):
+        content_dict = json.loads(request.content.read())
+        new_tags = map(lambda tag: tag.lower(), content_dict['newtags'])
         try:
             self._mail_service.update_tags(mail_id, new_tags)
             mail = self._mail_service.mail(mail_id)
             self._search_engine.index_mail(mail)
         except ValueError as ve:
-            return respond_json(ve.message, 403)
-        return respond_json(mail.as_dict())
+            return respond_json(ve.message, request, 403)
+        return respond_json(mail.as_dict(), request)
 
-    def update_draft(self):
-        _mail = InputMail.from_dict(request.json)
-        draft_id = request.json.get('ident')
+    def update_draft(self, request):
+        content_dict = json.loads(request.content.read())
+
+        _mail = InputMail.from_dict(content_dict)
+        draft_id = content_dict.get('ident')
         if draft_id:
             ident = self._draft_service.update_draft(draft_id, _mail).ident
             self._search_engine.remove_from_index(draft_id)
@@ -116,7 +121,7 @@ class MailsController:
             ident = self._draft_service.create_draft(_mail).ident
 
         self._search_engine.index_mail(self._mail_service.mail(ident))
-        return respond_json({'ident': ident})
+        return respond_json({'ident': ident}, request)
 
     def _format_exception(self, exception):
         exception_info = map(str, list(exception.args))

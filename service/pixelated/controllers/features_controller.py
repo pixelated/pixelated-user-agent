@@ -24,9 +24,9 @@ class FeaturesController:
     def __init__(self):
         pass
 
-    def features(self):
+    def features(self, request):
         try:
             disabled_features = {'logout': os.environ['DISPATCHER_LOGOUT_URL']}
         except KeyError:
             disabled_features = {}
-        return respond_json({'disabled_features': self.DISABLED_FEATURES, 'dispatcher_features': disabled_features})
+        return respond_json({'disabled_features': self.DISABLED_FEATURES, 'dispatcher_features': disabled_features}, request)

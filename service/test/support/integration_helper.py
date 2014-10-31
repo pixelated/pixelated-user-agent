@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import shutil
+from klein.resource import KleinResource
 
 from leap.soledad.client import Soledad
 from mockito import mock
@@ -31,6 +32,7 @@ from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.controllers import *
 import pixelated.config.app_factory as app_factory
 from leap.mail.imap.account import SoledadBackedAccount
+from klein.test_resource import requestMock, _render
 
 
 soledad_test_folder = "soledad-test"
@@ -52,6 +54,7 @@ def initialize_soledad(tempdir):
         put_doc = Mock()
         lock = Mock(return_value=('atoken', 300))
         unlock = Mock(return_value=True)
+        close = Mock()
 
         def __call__(self):
             return self
@@ -69,7 +72,7 @@ def initialize_soledad(tempdir):
     # from leap.mail.imap.fields import fields
     #
     # for name, expression in fields.INDEXES.items():
-    #     _soledad.create_index(name, *expression)
+    # _soledad.create_index(name, *expression)
     #
     return _soledad
 
@@ -126,10 +129,6 @@ class SoledadTestBase:
     def teardown_soledad(self):
         pass
 
-    def _reset_routes(self, app):
-        static_files_route = app.view_functions['static']
-        app.view_functions = {'static': static_files_route}
-
     def setup_soledad(self):
         self.soledad = initialize_soledad(tempdir=soledad_test_folder)
         self.mail_address = "test@pixelated.org"
@@ -139,9 +138,8 @@ class SoledadTestBase:
 
         SearchEngine.INDEX_FOLDER = soledad_test_folder + '/search_index'
 
-        self.client = pixelated.runserver.app.test_client()
+        self.app = pixelated.runserver.app
 
-        self._reset_routes(self.client.application)
         self.soledad_querier = SoledadQuerier(self.soledad)
 
         self.account = SoledadBackedAccount('test', self.soledad, MagicMock())
@@ -164,43 +162,69 @@ class SoledadTestBase:
         sync_info_controller = SyncInfoController()
         attachments_controller = AttachmentsController(self.soledad_querier)
 
-        app_factory._setup_routes(self.client.application, home_controller, mails_controller, tags_controller,
+        app_factory._setup_routes(self.app, home_controller, mails_controller, tags_controller,
                                   features_controller, sync_info_controller, attachments_controller)
+        self.resource = KleinResource(self.app)
 
     def get_mails_by_tag(self, tag, page=1, window=100):
-        response = json.loads(self.client.get("/mails?q=tag:%s&w=%s&p=%s" % (tag, window, page)).data)
+        request = requestMock(path="/mails")
+        request.args = {
+            'q': ['tag:%s' % tag],
+            'w': [str(window)],
+            'p': [str(page)]
+        }
+        _render(self.resource, request)
+        response = json.loads(request.getWrittenData())
         return [ResponseMail(m) for m in response['mails']]
 
     def post_mail(self, data):
-        response = json.loads(self.client.post('/mails', data=data, content_type="application/json").data)
+        request = requestMock(path='/mails', method="POST", body=data, headers={'Content-Type': ['application/json']})
+        _render(self.resource, request)
+        response = json.loads(request.getWrittenData())
         return ResponseMail(response)
 
     def put_mail(self, data):
-        response = json.loads(self.client.put('/mails', data=data, content_type="application/json").data)
+        request = requestMock('/mails', method="PUT", body=data, headers={'Content-Type': ['application/json']})
+        _render(self.resource, request)
+        response = json.loads(request.getWrittenData())
         return response['ident']
 
     def post_tags(self, mail_ident, tags_json):
-        return json.loads(
-            self.client.post('/mail/' + mail_ident + '/tags', data=tags_json, content_type="application/json").data)
+        request = requestMock('/mail/' + mail_ident + '/tags', method="POST", body=tags_json,
+                              headers={'Content-Type': ['application/json']})
+        _render(self.resource, request)
+        return json.loads(request.getWrittenData())
 
-    def get_tags(self, query_string=""):
-        return json.loads(
-            self.client.get('/tags' + query_string, content_type="application/json").data)
+    def get_tags(self, **kwargs):
+        request = requestMock('/tags')
+        request.args = kwargs
+        _render(self.resource, request)
+        return json.loads(request.getWrittenData())
 
     def delete_mail(self, mail_ident):
-        self.client.delete('/mail/' + mail_ident)
+        request = requestMock(path='/mail/' + mail_ident, method="DELETE")
+        _render(self.resource, request)
+        return request
 
     def mark_as_read(self, mail_ident):
-        self.client.post('/mail/' + mail_ident + '/read', content_type="application/json")
+        request = requestMock('/mail/' + mail_ident + '/read', method="POST", headers={'Content-Type': ['application/json']})
+        _render(self.resource, request)
+        return request
 
     def mark_as_unread(self, mail_ident):
-        self.client.post('/mail/' + mail_ident + '/unread', content_type="application/json")
+        request = requestMock('/mail/' + mail_ident + '/unread', method="POST", headers={'Content-Type': ['application/json']})
+        _render(self.resource, request)
+        return request
 
     def mark_many_as_unread(self, idents):
-        self.client.post('/mails/unread', data={'idents': json.dumps(idents)})
+        request = requestMock('/mails/unread', method="POST", body=json.dumps({'idents': idents}), headers={'Content-Type': ['application/json']})
+        _render(self.resource, request)
+        return request
 
     def mark_many_as_read(self, idents):
-        return self.client.post('/mails/read', data={'idents': json.dumps(idents)})
+        request = requestMock('/mails/read', method="POST", body=json.dumps({'idents': idents}), headers={'Content-Type': ['application/json']})
+        _render(self.resource, request)
+        return request
 
     def add_mail_to_inbox(self, input_mail):
         mail = self.mailboxes.inbox().add(input_mail)

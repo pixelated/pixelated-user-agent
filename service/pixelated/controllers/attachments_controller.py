@@ -26,8 +26,8 @@ class AttachmentsController:
     def __init__(self, querier):
         self.querier = querier
 
-    def attachment(self, attachment_id):
-        encoding = request.args.get('encoding', '')
+    def attachment(self, request, attachment_id):
+        encoding = request.args.get('encoding', [''])[0]
         attachment = self.querier.attachment(attachment_id, encoding)
         response = send_file(io.BytesIO(attachment['content']),
                              mimetype=self._extract_mimetype(attachment['content-type']))

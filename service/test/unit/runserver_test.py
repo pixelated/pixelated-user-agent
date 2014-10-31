@@ -21,28 +21,29 @@ import thread
 
 import pixelated.runserver
 from mockito import *
-import pixelated.config.reactor_manager as reactor_manager
 import pixelated.config.app_factory as app_factory
+from leap.common.events import server as events_server
 
 
 class RunserverTest(unittest.TestCase):
 
     def setUp(self):
-        when(reactor_manager).start_reactor().thenReturn(None)
+        events_server.ensure_server = lambda port=None: None
         when(app_factory).create_app().thenReturn(None)
 
     def test_that_config_file_can_be_specified_on_command_line(self):
-        orig_config = pixelated.runserver.app.config
-        try:
-            pixelated.runserver.app.config = mock(dict)
-            pixelated.runserver.app.config.__setitem__ = mock()
+        self.config_file_loaded = None
 
-            sys.argv = ['/tmp/does_not_exist', '--config', '/tmp/some/config/file']
-            pixelated.runserver.setup()
+        def _mock_parse_config_from_file(config_file):
+            self.config_file_loaded = config_file
+            return 1, 2, 3
 
-            verify(pixelated.runserver.app.config).from_pyfile('/tmp/some/config/file')
-        finally:
-            pixelated.runserver.app.config = orig_config
+        pixelated.runserver.parse_config_from_file = _mock_parse_config_from_file
+        sys.argv = ['pixelated-user-agent', '--config', 'pixelated.cfg']
+
+        pixelated.runserver.setup()
+
+        self.assertEquals('pixelated.cfg', self.config_file_loaded)
 
     def test_that_organization_switch_reads_the_credentials_from_pipe(self):
         fifo_path = '/tmp/credentials-pipe'

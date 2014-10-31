@@ -33,7 +33,7 @@ def before_all(context):
     pixelated.controllers.features_controller.FeaturesController.DISABLED_FEATURES.append('autoRefresh')
     logging.disable('INFO')
 
-    worker = lambda app, port: pixelated.runserver.app.run(port=4567, use_reloader=False)
+    worker = lambda app, port: pixelated.runserver.app.run(host='localhost', port=4567)
     context._process = multiprocessing.Process(target=worker, args=(context.app, 4567))
     context._process.start()
 

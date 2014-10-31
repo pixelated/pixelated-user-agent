@@ -29,7 +29,7 @@ class SyncInfoController:
     def set_sync_info(self, soledad_sync_status):
         self.current, self.total = map(int, soledad_sync_status.content.split('/'))
 
-    def sync_info(self):
+    def sync_info(self, request):
         _sync_info = {
             'is_syncing': self.current != self.total,
             'count': {
@@ -38,4 +38,4 @@ class SyncInfoController:
                 'progress': self._get_progress()
             }
         }
-        return respond_json(_sync_info)
+        return respond_json(_sync_info, request)

@@ -13,21 +13,26 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import smtplib
+from StringIO import StringIO
+from twisted.internet.defer import Deferred
+from twisted.mail.smtp import SMTPSenderFactory
 
+from twisted.internet import reactor
 from pixelated.support.functional import flatten
 
 
 class MailSender():
     def __init__(self, account_email_address, smtp_client=None):
         self.account_email_address = account_email_address
-        self.smtp_client = smtp_client or smtplib.SMTP('localhost', 4650)
 
     def sendmail(self, mail):
         recipients = flatten([mail.to, mail.cc, mail.bcc])
 
-        self.smtp_client.sendmail(
-            self.account_email_address,
-            recipients,
-            mail.to_smtp_format()
-        )
+        resultDeferred = Deferred()
+        senderFactory = SMTPSenderFactory(
+            fromEmail=self.account_email_address,
+            toEmail=recipients,
+            file=StringIO(mail.to_smtp_format()),
+            deferred=resultDeferred)
+
+        return reactor.connectTCP('localhost', 4650, senderFactory)
