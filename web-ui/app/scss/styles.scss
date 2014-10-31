@@ -28,7 +28,7 @@
     margin: 0;
     border-top: 1px solid #FFF;
     border-bottom: 2px solid lighten($top_pane, 30%);
-    background: $top_pane;
+    background: darken($top_pane, 5%);
     clear: both;
     overflow: hidden;
     z-index: 1;
