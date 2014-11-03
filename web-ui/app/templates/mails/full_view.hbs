@@ -68,6 +68,14 @@
           <p>{{ this }}</p>
       {{/each }}
     </div>
+
+    {{#if attachments}}
+      <div class="attachmentsArea column large-12">
+        {{#each attachments }}
+          <a href="/attachment/{{ this.ident }}?encoding={{ this.encoding }}" target="_blank">{{ this.name }}</a>
+        {{/each }}
+      </div>
+    {{/if}}
 </div>
 <script>
     (function () {

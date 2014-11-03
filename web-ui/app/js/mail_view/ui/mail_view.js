@@ -64,6 +64,10 @@ define(
           encrypted = this.checkEncrypted(data.mail);
         }
 
+        var attachments = _.map(data.mail.attachments, function(a){ 
+            return { 'encoding': a.headers['Content-Transfer-Encoding'], 'name': a.name, 'ident': a.ident };
+        });
+
         this.$node.html(templates.mails.fullView({
           header: data.mail.header,
           body: [],
@@ -72,7 +76,8 @@ define(
           tags: data.mail.tags,
           encryptionStatus: encrypted,
           signatureStatus: signed,
-          features: features
+          features: features,
+          attachments: attachments
         }));
 
         this.$node.find('.bodyArea').html(viewHelpers.formatMailBody(data.mail));
@@ -196,6 +201,7 @@ define(
       this.fetchMailToShow = function () {
         this.trigger(events.mail.want, {mail: this.attr.ident, caller: this});
       };
+
 
       this.after('initialize', function () {
         this.on(this, events.mail.here, this.displayMail);
