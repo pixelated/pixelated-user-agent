@@ -47,6 +47,10 @@ class Mail:
             self.security_casing = {}
             self.status = self._get_status()
             self.draft_reply_for = -1
+            self.attachments = [{'headers': {'Content-Type': 'application/pdf',
+                                             'Content-Transfer-Encoding': 'base64'},
+                                 'ident': 'BEBACAFE04090',
+                                 'name': 'mydoc.pdf'}]
 
     def _get_body(self, message):
         if message.is_multipart():
