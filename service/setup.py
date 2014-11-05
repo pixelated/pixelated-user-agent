@@ -77,7 +77,6 @@ setup(name='pixelated-user-agent',
           'pyasn1==0.1.7',
           'Twisted==14.0.2',
           'service-identity==14.0.0',
-          'flask==0.10.1',
           'klein==0.2.3',
           'requests==2.4.3',
           'srp==1.0.5',
@@ -87,8 +86,7 @@ setup(name='pixelated-user-agent',
           'leap.soledad.common>=0.6',
           'leap.soledad.client>=0.6',
           'leap.mail==0.3.9-1-gc1f9c92',
-          'whoosh==2.6.0',
-          'gunicorn==19.1.1',
+          'whoosh==2.6.0'
       ],
       entry_points={
           'console_scripts': [
