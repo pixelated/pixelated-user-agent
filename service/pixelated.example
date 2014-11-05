@@ -1,7 +1,7 @@
-# Modify this file and move it to ~/.pixelated
-
-HOST="127.0.0.1"
+# modify this file and start the app with --config=<path for this file>
+[pixelated]
+HOST=127.0.0.1
 PORT=3333
-LEAP_USERNAME="your_username"
-LEAP_PASSWORD="your_password"
-LEAP_SERVER_NAME="your.leapprovider.org"
+LEAP_USERNAME=your_username
+LEAP_PASSWORD=your_password
+LEAP_SERVER_NAME=your.leapprovider.org
