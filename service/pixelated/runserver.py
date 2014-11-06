@@ -19,10 +19,13 @@ import sys
 import logging
 import json
 from klein import Klein
+from twisted.python.log import ILogObserver
 
 klein_app = Klein()
 
 import ConfigParser
+from twisted.python import log
+import sys
 from leap.common.events import server as events_server
 from pixelated.config import app_factory
 import pixelated.config.args as input_args
@@ -71,19 +74,20 @@ def fetch_credentials_from_dispatcher(filename):
 
 def setup_debugger(enabled):
     debug_enabled = enabled or os.environ.get('DEBUG', False)
-    logging.basicConfig(level=logging.DEBUG,
-                        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                        datefmt='%m-%d %H:%M',
-                        filename='/tmp/leap.log',
-                        filemode='w')  # define a Handler which writes INFO messages or higher to the sys.stderr
-    console = logging.StreamHandler()
-    console.setLevel(logging.DEBUG)
-    # set a format which is simpler for console use
-    formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
-    # tell the handler to use this format
-    console.setFormatter(formatter)
-    # add the handler to the root logger
-    logging.getLogger('').addHandler(console)
+    log.startLogging(sys.stdout)
+
+    if debug_enabled:
+        logging.basicConfig(level=logging.DEBUG,
+                            format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                            datefmt='%m-%d %H:%M',
+                            filename='/tmp/leap.log',
+                            filemode='w')  # define a Handler which writes INFO messages or higher to the sys.stderr
+
+        console = logging.StreamHandler()
+        console.setLevel(logging.DEBUG)
+        formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
+        console.setFormatter(formatter)
+        logging.getLogger('').addHandler(console)
 
     return debug_enabled
 

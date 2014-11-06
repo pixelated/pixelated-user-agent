@@ -33,7 +33,9 @@ from leap.common.events import (
     register,
     events_pb2 as proto
 )
+from twisted.web.iweb import IAccessLogFormatter
 from twisted.web.server import Site
+from zope.interface import provider
 
 
 def init_index_and_remove_dupes(querier, search_engine, mail_service):
@@ -130,10 +132,6 @@ def init_app(app):
 
 
 def create_app(app):
-    from twisted.python import log
-    import sys
-    log.startLogging(sys.stdout)
-
     reactor.listenTCP(3333, Site(app.resource()), interface='localhost')
     reactor.callWhenRunning(lambda: init_app(app))
     reactor.run()
