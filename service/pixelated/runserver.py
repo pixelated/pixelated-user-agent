@@ -54,7 +54,7 @@ def setup():
             app.config['LEAP_PASSWORD'] = config['password']
         else:
             configuration_setup(args.config)
-        start_services()
+        start_services(args.host)
 
 
 def register(username, server_name):
@@ -113,9 +113,9 @@ def configuration_setup(config_file):
     app.config['LEAP_PASSWORD'] = password
 
 
-def start_services():
+def start_services(bind_address):
     events_server.ensure_server(port=8090)
-    app_factory.create_app(app)
+    app_factory.create_app(app, bind_address)
 
 
 if __name__ == '__main__':
