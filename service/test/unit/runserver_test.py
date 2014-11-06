@@ -18,6 +18,7 @@ import unittest
 import sys
 import os
 import thread
+import json
 
 import pixelated.runserver
 from mockito import *
@@ -51,12 +52,9 @@ class RunserverTest(unittest.TestCase):
             os.remove(fifo_path)
         test_fifo = os.mkfifo('/tmp/credentials-pipe')
         thread.start_new_thread(self.spin_up_fifo, (fifo_path,))
-        sys.argv = ['tmp/does_not_exist', '--dispatcher']
-        pixelated.runserver.credentials_pipe = fifo_path
+        sys.argv = ['tmp/does_not_exist', '--dispatcher', fifo_path]
         pixelated.runserver.setup()
 
     def spin_up_fifo(self, test_fifo):
         with open(test_fifo, 'w') as fifo:
-            fifo.write('test_provider')
-            fifo.write('test_user')
-            fifo.write('test_password')
+            fifo.write(json.dumps({'leap_provider_hostname': 'test_provider', 'user': 'test_user', 'password': 'test_password'}))

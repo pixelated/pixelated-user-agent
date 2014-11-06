@@ -17,7 +17,7 @@
 import os
 import sys
 import logging
-
+import json
 from klein import Klein
 
 klein_app = Klein()
@@ -35,7 +35,6 @@ import pixelated.support.ext_sqlcipher  # monkey patch for sqlcipher in debian
 
 app = Klein()
 app.config = {}
-credentials_pipe = os.path.join('/', 'data', 'credentials-fifo')
 
 
 def setup():
@@ -46,10 +45,10 @@ def setup():
         register(*args.register[::-1])
     else:
         if args.dispatcher:
-            provider, user, password = fetch_credentials_from_dispatcher()
-            app.config['LEAP_SERVER_NAME'] = provider
-            app.config['LEAP_USERNAME'] = user
-            app.config['LEAP_PASSWORD'] = password
+            config = fetch_credentials_from_dispatcher(args.dispatcher)
+            app.config['LEAP_SERVER_NAME'] = config['leap_provider_hostname']
+            app.config['LEAP_USERNAME'] = config['user']
+            app.config['LEAP_PASSWORD'] = config['password']
         else:
             configuration_setup(args.config)
         start_services()
@@ -62,15 +61,12 @@ def register(username, server_name):
         print('User already exists')
 
 
-def fetch_credentials_from_dispatcher():
-    if not os.path.exists(credentials_pipe):
+def fetch_credentials_from_dispatcher(filename):
+    if not os.path.exists(filename):
         print('The credentials pipe doesn\'t exist')
         sys.exit(1)
-    with open(credentials_pipe, 'r') as cred_file:
-        provider = cred_file.read()
-        username = cred_file.read()
-        password = cred_file.read()
-    return provider, username, password
+    with open(filename, 'r') as fifo:
+        return json.loads(fifo.read())
 
 
 def setup_debugger(enabled):

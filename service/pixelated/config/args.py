@@ -20,7 +20,7 @@ import argparse
 def parse():
     parser = argparse.ArgumentParser(description='Pixelated user agent.')
     parser.add_argument('--debug', action='store_true', help='DEBUG mode.')
-    parser.add_argument('--dispatcher', action='store_true', help='run in organization mode, the credentials will be received from the dispatcher this way')
+    parser.add_argument('--dispatcher', help='run in organization mode, the credentials will be read from specified file', metavar='file')
     parser.add_argument('--host', default='127.0.0.1', help='the host to run the user agent on')
     parser.add_argument('--port', type=int, default=3333, help='the port to run the user agent on')
     parser.add_argument('-c', '--config', metavar='configfile', default=None, help='use specified file for credentials (for test purposes only)')
