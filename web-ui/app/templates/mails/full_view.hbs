@@ -70,10 +70,17 @@
     </div>
 
     {{#if attachments}}
-      <div class="attachmentsArea column large-12">
-        {{#each attachments }}
-          <a href="/attachment/{{ this.ident }}?encoding={{ this.encoding }}" target="_blank">{{ this.name }}</a>
-        {{/each }}
+      <div class="attachmentsAreaWrap">
+        <div class="attachmentsArea column large-12">
+        <p><strong>Attachments</strong></p>
+          <ul>
+          {{#each attachments }}
+            <li>
+              <a href="/attachment/{{ this.ident }}?encoding={{ this.encoding }}" target="_blank">{{ this.name }}</a>
+            </li>
+          {{/each }}
+          </ul>
+        </div>
       </div>
     {{/if}}
 </div>
