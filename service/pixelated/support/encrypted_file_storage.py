@@ -1,10 +1,7 @@
-from StringIO import StringIO
 import io
-import sys
-import errno
 import os
 
-from whoosh.filedb.filestore import FileStorage, ReadOnlyError
+from whoosh.filedb.filestore import FileStorage
 
 from whoosh.filedb.structfile import StructFile, BufferFile
 from cryptography.fernet import Fernet
@@ -61,5 +58,3 @@ class EncryptedFileStorage(FileStorage):
         decrypted = self._decrypt(file_content)
         f = BufferFile(buffer(decrypted), name=name, onclose=onclose)
         return f
-
-
