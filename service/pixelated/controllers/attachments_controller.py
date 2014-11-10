@@ -19,6 +19,7 @@ from flask import request
 
 import io
 import re
+from twisted.web.server import NOT_DONE_YET
 
 
 class AttachmentsController:
@@ -29,9 +30,10 @@ class AttachmentsController:
     def attachment(self, request, attachment_id):
         encoding = request.args.get('encoding', [''])[0]
         attachment = self.querier.attachment(attachment_id, encoding)
-        response = send_file(io.BytesIO(attachment['content']),
-                             mimetype=self._extract_mimetype(attachment['content-type']))
-        return response
+        request.setRawHeader('Content-Type', self._extract_mimetype(attachment['content-type']))
+        request.write(io.BytesIO(attachment['content']))
+
+        return NOT_DONE_YET
 
     def _extract_mimetype(self, content_type):
         match = re.compile('([A-Za-z-]+\/[A-Za-z-]+)').search(content_type)

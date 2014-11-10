@@ -13,10 +13,11 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from pixelated.support.encrypted_file_storage import EncryptedFileStorage
 
 import os
 from pixelated.adapter.status import Status
-import whoosh.index
+from whoosh.index import FileIndex
 from whoosh.fields import *
 from whoosh.qparser import QueryParser
 from whoosh import sorting
@@ -25,12 +26,11 @@ from pixelated.support.date import milliseconds
 
 
 class SearchEngine(object):
-    __slots__ = '_index'
-
     INDEX_FOLDER = os.path.join(os.environ['HOME'], '.leap', 'search_index')
     DEFAULT_TAGS = ['inbox', 'sent', 'drafts', 'trash']
 
-    def __init__(self):
+    def __init__(self, soledad_querier):
+        self.soledad_querier = soledad_querier
         if not os.path.exists(self.INDEX_FOLDER):
             os.makedirs(self.INDEX_FOLDER)
         self._index = self._create_index()
@@ -102,7 +102,9 @@ class SearchEngine(object):
             raw=TEXT(stored=False))
 
     def _create_index(self):
-        return whoosh.index.create_in(self.INDEX_FOLDER, self._mail_schema(), indexname='mails')
+        masterkey = self.soledad_querier.get_index_masterkey
+        storage = EncryptedFileStorage(self.INDEX_FOLDER, masterkey)
+        return FileIndex.create(storage, self._mail_schema(), indexname='mails')
 
     def index_mail(self, mail):
         with self._index.writer() as writer:

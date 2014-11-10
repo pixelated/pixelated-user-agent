@@ -96,12 +96,12 @@ def init_leap_session(app):
 
 def init_app(app):
     leap_session = init_leap_session(app)
+    soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
 
     tag_service = TagService()
-    search_engine = SearchEngine()
+    search_engine = SearchEngine(soledad_querier)
     pixelated_mail_sender = MailSender(leap_session.account_email())
 
-    soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
     pixelated_mailboxes = Mailboxes(leap_session.account, soledad_querier)
     draft_service = DraftService(pixelated_mailboxes)
     mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, tag_service, soledad_querier)

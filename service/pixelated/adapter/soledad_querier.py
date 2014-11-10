@@ -13,16 +13,27 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from pixelated.adapter.mail import PixelatedMail
-import re
 import base64
 import quopri
+
+from cryptography.fernet import Fernet
+from pixelated.adapter.mail import PixelatedMail
+import re
 
 
 class SoledadQuerier:
 
     def __init__(self, soledad):
         self.soledad = soledad
+
+    @property
+    def get_index_masterkey(self):
+        index_key = self.soledad.get_from_index('by-type', 'index_key')
+        if len(index_key) == 0:
+            index_key = Fernet.generate_key()
+            self.soledad.create_doc(dict(type='index_key', value=index_key))
+            return index_key
+        return str(index_key[0].content['value'])
 
     def _remove_many(self, docs):
         [self.soledad.delete_doc(doc) for doc in docs]
