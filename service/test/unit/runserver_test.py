@@ -20,6 +20,7 @@ import os
 import thread
 import json
 
+import pixelated.config.app_factory
 import pixelated.runserver
 from mockito import *
 import pixelated.config.app_factory as app_factory
@@ -31,6 +32,9 @@ class RunserverTest(unittest.TestCase):
     def setUp(self):
         events_server.ensure_server = lambda port=None: None
         when(app_factory).create_app().thenReturn(None)
+
+    def tearDown(self):
+        unstub()
 
     def test_that_config_file_can_be_specified_on_command_line(self):
         self.config_file_loaded = None
@@ -54,6 +58,15 @@ class RunserverTest(unittest.TestCase):
         thread.start_new_thread(self.spin_up_fifo, (fifo_path,))
         sys.argv = ['tmp/does_not_exist', '--dispatcher', fifo_path]
         pixelated.runserver.setup()
+
+    def test_start_services_provides_port(self):
+        bind_address = '127.0.0.1'
+        bind_port = 12345
+        when(app_factory).create_app(any(), bind_address, bind_port).thenReturn(None)
+
+        pixelated.runserver.start_services(bind_address, bind_port)
+
+        verify(app_factory).create_app(any(), bind_address, bind_port)
 
     def spin_up_fifo(self, test_fifo):
         with open(test_fifo, 'w') as fifo:

@@ -131,8 +131,9 @@ def init_app(app):
                   sync_info_controller, attachments_controller)
 
 
-def create_app(app, bind_address):
-    reactor.listenTCP(3333, Site(app.resource()), interface=bind_address)
+def create_app(app, bind_address, bind_port):
+    print type(reactor.listenTCP)
+    reactor.listenTCP(bind_port, Site(app.resource()), interface=bind_address)
     reactor.callWhenRunning(lambda: init_app(app))
     reactor.run()
 
