@@ -23,8 +23,8 @@ class EncryptedFileStorage(FileStorage):
             file_struct.seek(0)
             content = file_struct.file.read()
             encrypted_content = self.f.encrypt(content)
-            _file = open(self._fpath(name), 'w+b')
-            _file.write(encrypted_content)
+            with open(self._fpath(name), 'w+b') as _f:
+                _f.write(encrypted_content)
 
         return self._open_file(name, onclose=onclose)
 
@@ -33,8 +33,8 @@ class EncryptedFileStorage(FileStorage):
             file_struct.seek(0)
             content = file_struct.file.read()
             encrypted_content = self.f.encrypt(content)
-            _file = open(self._fpath(name), 'w+b')
-            _file.write(encrypted_content)
+            with open(self._fpath(name), 'w+b') as _f:
+                _f.write(encrypted_content)
 
         f = StructFile(io.BytesIO(), name=name, onclose=onclose)
         f.is_real = False
