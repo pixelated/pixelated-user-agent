@@ -11,7 +11,7 @@ class CertsTest(unittest.TestCase):
     def test_that_which_bundle_returns_byte_string(self, mock_isfile):
         mock_isfile.return_value = True
         config = MagicMock(ca_cert_bundle=AUTO_DETECT_CA_BUNDLE, certs_home='/some/path')
-        provider = MagicMock(server_name='test.leap.net', config=config)
+        provider = MagicMock(server_name=u'test.leap.net', config=config)
 
         bundle = which_bundle(provider)
 

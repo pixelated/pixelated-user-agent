@@ -21,7 +21,7 @@ from .config import AUTO_DETECT_CA_BUNDLE
 
 
 def which_bundle(provider):
-    return LeapCertificate(provider).auto_detect_ca_bundle()
+    return str(LeapCertificate(provider).auto_detect_ca_bundle())
 
 
 class LeapCertificate(object):
