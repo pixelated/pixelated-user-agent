@@ -183,6 +183,14 @@ class SoledadTestBase:
         response = json.loads(request.getWrittenData())
         return ResponseMail(response)
 
+    def get_attachment(self, ident, encoding):
+        request = requestMock(path='/attachment/' + ident)
+        request.args = {
+            'encoding': encoding
+        }
+        _render(self.resource, request)
+        return request.getWrittenData()
+
     def put_mail(self, data):
         request = requestMock('/mails', method="PUT", body=data, headers={'Content-Type': ['application/json']})
         _render(self.resource, request)
@@ -225,6 +233,9 @@ class SoledadTestBase:
         request = requestMock('/mails/read', method="POST", body=json.dumps({'idents': idents}), headers={'Content-Type': ['application/json']})
         _render(self.resource, request)
         return request
+
+    def add_document_to_soledad(self, _dict):
+        self.soledad_querier.soledad.create_doc(_dict)
 
     def add_mail_to_inbox(self, input_mail):
         mail = self.mailboxes.inbox().add(input_mail)
