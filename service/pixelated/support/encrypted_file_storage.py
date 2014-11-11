@@ -26,8 +26,7 @@ class EncryptedFileStorage(FileStorage):
     def temp_storage(self, name=None):
         name = name or "%s.tmp" % random_name()
         path = os.path.join(self.folder, name)
-        tempstore = EncryptedFileStorage(path, self.masterkey)
-        return tempstore.create()
+        return EncryptedFileStorage(path, self.masterkey).create()
 
     def file_length(self, name):
         f = self._open_encrypted_file(name)
@@ -36,19 +35,15 @@ class EncryptedFileStorage(FileStorage):
         return length
 
     def _encrypt_index_on_close(self, name):
-        def wrapper(file_struct):
-            file_struct.seek(0)
-            content = file_struct.file.read()
+        def wrapper(struct_file):
+            struct_file.seek(0)
+            content = struct_file.file.read()
             encrypted_content = self.f.encrypt(content)
-            with open(self._fpath(name), 'w+b') as _f:
-                _f.write(encrypted_content)
+            with open(self._fpath(name), 'w+b') as f:
+                f.write(encrypted_content)
         return wrapper
-
-    def _decrypt(self, file_content):
-        return self.f.decrypt(file_content) if len(file_content) else file_content
 
     def _open_encrypted_file(self, name, onclose=lambda x: None):
         file_content = open(self._fpath(name), "rb").read()
-        decrypted = self._decrypt(file_content)
-        f = BufferFile(buffer(decrypted), name=name, onclose=onclose)
-        return f
+        decrypted = self.f.decrypt(file_content)
+        return BufferFile(buffer(decrypted), name=name, onclose=onclose)
