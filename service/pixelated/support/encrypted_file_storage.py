@@ -45,4 +45,5 @@ class EncryptedFileStorage(FileStorage):
     def _open_encrypted_file(self, name, onclose=lambda x: None):
         file_content = open(self._fpath(name), "rb").read()
         decrypted = self.f.decrypt(file_content)
+        self.length_cache[name] = len(decrypted)
         return BufferFile(buffer(decrypted), name=name, onclose=onclose)
