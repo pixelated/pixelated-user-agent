@@ -13,6 +13,7 @@ class EncryptedFileStorage(FileStorage):
         self.masterkey = masterkey
         self.f = Fernet(masterkey)
         self._tmp_storage = self.temp_storage
+        self.length_cache = {}
         FileStorage.__init__(self, path, supports_mmap=False)
 
     def open_file(self, name, **kwargs):
@@ -29,15 +30,13 @@ class EncryptedFileStorage(FileStorage):
         return EncryptedFileStorage(path, self.masterkey).create()
 
     def file_length(self, name):
-        f = self._open_encrypted_file(name)
-        length = len(f.file.read())
-        f.close()
-        return length
+        return self.length_cache[name]
 
     def _encrypt_index_on_close(self, name):
         def wrapper(struct_file):
             struct_file.seek(0)
             content = struct_file.file.read()
+            self.length_cache[name] = len(content)
             encrypted_content = self.f.encrypt(content)
             with open(self._fpath(name), 'w+b') as f:
                 f.write(encrypted_content)
