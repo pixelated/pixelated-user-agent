@@ -18,6 +18,7 @@ import random
 import calendar
 from dateutil import parser
 
+
 class Mail:
 
     NOW = calendar.timegm(
@@ -39,6 +40,14 @@ class Mail:
         return mail
 
     def __init__(self, mbox_mail=None, ident=None):
+        attachments = [{'headers': {'Content-Type': 'application/pdf',
+                                    'Content-Transfer-Encoding': 'base64'},
+                        'ident': 'BEBACAFE04090',
+                        'name': 'mydoc.pdf'},
+                       {'headers': {'Content-Type': 'application/pdf',
+                                    'Content-Transfer-Encoding': 'base64'},
+                        'ident': 'BEBACAFE04091',
+                        'name': 'Party Pictures.jpg'}]
         if mbox_mail:
             self.header = self._get_headers(mbox_mail)
             self.ident = ident
@@ -47,10 +56,7 @@ class Mail:
             self.security_casing = {}
             self.status = self._get_status()
             self.draft_reply_for = -1
-            self.attachments = [{'headers': {'Content-Type': 'application/pdf',
-                                             'Content-Transfer-Encoding': 'base64'},
-                                 'ident': 'BEBACAFE04090',
-                                 'name': 'mydoc.pdf'}]
+            self.attachments = attachments
 
     def _get_body(self, message):
         if message.is_multipart():
@@ -88,7 +94,7 @@ class Mail:
         mbox_date = mbox_mail.get('Date')
 
         if not mbox_date:  # means we are still using the mailsets - important for functional tests
-           return random_date
+            return random_date
         return parser.parse(mbox_mail['Date']).isoformat()
 
     def _get_tags(self, mbox_mail):
