@@ -95,7 +95,7 @@ def impl(context):
 @then('I choose to trash')
 def impl(context):
     context.browser.execute_script("$('button#view-more-actions').click()")
-    click_button(context, 'Trash this message', 'span')
+    click_button(context, 'Delete this message', 'span')
 
 
 @then('I see the mail has a cc and a bcc recipient')
