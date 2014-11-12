@@ -3,9 +3,7 @@
 </span>
 <span>
     <a href="/#/{{ tag }}/mail/{{ ident }}">
-        <span class="received-date">{{ header.formattedDate }}
-          <br><i class="fa fa-paperclip  icon-flip-horizontal" style="right:5px;position:absolute;font-size:initial;margin: 5px 5px 0 0;"></i>
-        </span>
+        <span class="received-date">{{ header.formattedDate }}</span>
 
         <div class="from">{{#if header.from }}{{ header.from }}{{else}}{{t "you"}}{{/if}}</div>
         <div class="subject-and-tags">
