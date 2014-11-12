@@ -16,7 +16,6 @@
 
 import io
 import re
-
 from twisted.protocols.basic import FileSender
 from twisted.python.log import err
 
@@ -27,11 +26,12 @@ class AttachmentsController:
         self.querier = querier
 
     def attachment(self, request, attachment_id):
-        encoding = request.args.get('encoding')
+        encoding = request.args.get('encoding', [None])[0]
+        filename = request.args.get('filename', [attachment_id])[0]
         attachment = self.querier.attachment(attachment_id, encoding)
 
-        content_type = self._extract_mimetype(attachment['content-type'])
-        request.setHeader('Content-Type', content_type)
+        request.setHeader(b'Content-Type', b'application/force-download')
+        request.setHeader(b'Content-Disposition', bytes('attachment; filename=' + filename))
         bytes_io = io.BytesIO(attachment['content'])
         d = FileSender().beginFileTransfer(bytes_io, request)
 

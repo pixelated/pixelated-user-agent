@@ -73,7 +73,7 @@
           <ul>
           {{#each attachments }}
             <li>
-              <a href="/attachment/{{ this.ident }}?encoding={{ this.encoding }}" target="_blank">{{ this.name }}</a>
+              <a href="/attachment/{{ this.ident }}?encoding={{ this.encoding }}&filename={{ this.name }}">{{ this.name }}</a>
             </li>
           {{/each }}
           </ul>

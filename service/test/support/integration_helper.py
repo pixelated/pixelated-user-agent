@@ -186,7 +186,7 @@ class SoledadTestBase:
     def get_attachment(self, ident, encoding):
         request = requestMock(path='/attachment/' + ident)
         request.args = {
-            'encoding': encoding
+            'encoding': [encoding]
         }
         _render(self.resource, request)
         return request.getWrittenData()
