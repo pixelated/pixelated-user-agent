@@ -96,7 +96,7 @@ class TestPixelatedMail(unittest.TestCase):
         parts['alternatives'].append({'content': 'blablabla', 'headers': {'Content-Type': 'text/plain'}})
         parts['alternatives'].append({'content': '<p>blablabla</p>', 'headers': {'Content-Type': 'text/html'}})
 
-        mail = PixelatedMail.from_soledad(None, None, None, None, parts=parts)
+        mail = PixelatedMail.from_soledad(None, None, None, parts=parts, soledad_querier=None)
 
         self.assertRegexpMatches(mail.body, '^--' + mail.boundary + '\n.*')
         self.assertRegexpMatches(mail.body, '\nContent-Type: text/html\n\n<p>blablabla</p>\n')
@@ -108,7 +108,7 @@ class TestPixelatedMail(unittest.TestCase):
         parts['alternatives'].append({'content': '100% happy with percentage symbol', 'headers': {'Content-Type': 'text/plain'}})
         parts['alternatives'].append({'content': '<p>100% happy with percentage symbol</p>', 'headers': {'Content-Type': 'text/html'}})
 
-        mail = PixelatedMail.from_soledad(None, None, None, None, parts=parts)
+        mail = PixelatedMail.from_soledad(None, None, None, parts=parts, soledad_querier=None)
 
         self.assertRegexpMatches(mail.body, '([\s\S]*100%){2}')
 

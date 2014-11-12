@@ -88,14 +88,15 @@ class SoledadQuerier:
             fdocs_hdocs.append((fdoc, hdoc[0]))
 
         fdocs_hdocs_bodyphash = [(f[0], f[1], f[1].content.get('body')) for f in fdocs_hdocs]
-        fdocs_hdocs_bdocs = []
+        fdocs_hdocs_bdocs_parts = []
         for fdoc, hdoc, body_phash in fdocs_hdocs_bodyphash:
             bdoc = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', body_phash)
             if len(bdoc) == 0:
                 continue
-            fdocs_hdocs_bdocs.append((fdoc, hdoc, bdoc[0]))
+            parts = self._extract_parts(hdoc.content)
+            fdocs_hdocs_bdocs_parts.append((fdoc, hdoc, bdoc[0], parts))
 
-        return [PixelatedMail.from_soledad(*raw_mail, soledad_querier=self) for raw_mail in fdocs_hdocs_bdocs]
+        return [PixelatedMail.from_soledad(*raw_mail, soledad_querier=self) for raw_mail in fdocs_hdocs_bdocs_parts]
 
     def save_mail(self, mail):
         # XXX update only what has to be updated
@@ -121,7 +122,7 @@ class SoledadQuerier:
         parts = self._extract_parts(hdoc.content)
         bdoc = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', hdoc.content['body'])[0]
 
-        return PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self, parts=parts)
+        return PixelatedMail.from_soledad(fdoc, hdoc, bdoc, parts=parts, soledad_querier=self)
 
     def attachment(self, ident, encoding):
         bdoc = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', ident)[0]

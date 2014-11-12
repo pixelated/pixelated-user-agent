@@ -190,7 +190,7 @@ class InputMail(Mail):
 
 class PixelatedMail(Mail):
     @staticmethod
-    def from_soledad(fdoc, hdoc, bdoc, soledad_querier=None, parts=None):
+    def from_soledad(fdoc, hdoc, bdoc, parts=None, soledad_querier=None):
         mail = PixelatedMail()
         mail.parts = parts
         mail.boundary = str(uuid4()).replace('-', '')
