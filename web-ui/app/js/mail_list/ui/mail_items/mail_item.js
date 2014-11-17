@@ -64,6 +64,7 @@ define(
       this.attr.ident = mail.ident;
       this.attr.statuses = viewHelper.formatStatusClasses(mail.status);
       this.attr.tags = mail.tags;
+      this.attr.attachments = mail.attachments;
       this.attr.mailbox = mail.mailbox;
       this.attr.header.formattedDate = this.formattedDate(mail.header.date);
     };
