@@ -225,7 +225,7 @@ describeComponent('mail_list/ui/mail_list', function () {
       expect(node.html()).toMatch('id="mail-' + mail.ident + '"');
       expect(node.html()).toMatch('<div class="subject-and-tags">');
       expect(node.html()).toMatch('<div class="from">' + mail.header.from + '</div>');
-      expect(node.html()).toMatch('<span class="received-date">' + mail.header.formattedDate + '</span>');
+      expect(node.html()).toMatch('<span class="received-date">' + mail.header.formattedDate);
     }
 
     function matchSelectedMail(mail, node) {
