@@ -33,6 +33,16 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
         expect(addressEnteredEvent).not.toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: '' });
       });
 
+      it('wont add address if shift key is pressed together: ' + keycode[1], function () {
+        var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
+
+        var enterAddressKeyPressEvent = $.Event('keydown', { which: keycode[0], shiftKey: true });
+        this.$node.val('a@b.c');
+        this.$node.trigger(enterAddressKeyPressEvent);
+
+        expect(addressEnteredEvent).not.toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: 'a@b.c' });
+      });
+
       it('prevents event default regardless on input val when key is ' + keycode[1], function () {
         var enterAddressKeyPressEvent = $.Event('keydown', { which: keycode[0] });
         spyOn(enterAddressKeyPressEvent, 'preventDefault');

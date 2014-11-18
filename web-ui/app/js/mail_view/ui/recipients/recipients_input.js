@@ -100,7 +100,7 @@ define([
           return;
         }
 
-        if (isEnterAddressKey(keyPressed)) {
+        if (!event.shiftKey && isEnterAddressKey(keyPressed)) {
           this.tokenizeRecipient(event);
 
           if ((keyPressed !== 9 /* tab */)) {
