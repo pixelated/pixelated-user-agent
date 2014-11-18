@@ -10,7 +10,6 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
     _.each([
       [186, 'semicolon'],
       [188, 'comma'],
-      [32, 'space']
 
     ], function (keycode) {
 
@@ -75,6 +74,21 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
 
         expect(tabKeyPressEvent.preventDefault).not.toHaveBeenCalled();
         expect(addressEnteredEvent).not.toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: ''});
+      });
+    });
+
+    describe('when space is pressed', function () {
+      it('address input should not finish', function () {
+        var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
+
+        var spaceKeyPressEvent = $.Event('keydown', { which: 32});
+        spyOn(spaceKeyPressEvent, 'preventDefault');
+
+        this.$node.val('a@b.c');
+        this.$node.trigger(spaceKeyPressEvent);
+
+        expect(spaceKeyPressEvent.preventDefault).not.toHaveBeenCalled();
+        expect(addressEnteredEvent).not.toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: 'a@b.c' });
       });
     });
   });

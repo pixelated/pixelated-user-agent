@@ -34,7 +34,6 @@ define([
           9: 'tab',
           186: 'semicolon',
           188: 'comma',
-          32: 'space',
           13: 'enter',
           27: 'esc'
         },
