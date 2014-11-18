@@ -17,25 +17,19 @@ import time
 import multiprocessing
 
 from selenium import webdriver
-from test.support.integration_helper import SoledadTestBase
-import pixelated.runserver
 import logging
+from test.support.integration_helper import setup_test_app
+
+logging.disable('INFO')
 import pixelated.controllers.features_controller
 
 
 def before_all(context):
-    context.soledad_test_base = SoledadTestBase()
-    context.soledad_test_base.setup_soledad()
-
-    context.mailboxes = context.soledad_test_base.mailboxes
-    context.app = pixelated.runserver.app
-    context.app.mail_service = context.soledad_test_base.mail_service
     pixelated.controllers.features_controller.FeaturesController.DISABLED_FEATURES.append('autoRefresh')
-    logging.disable('INFO')
+    setup_test_app(context)
 
-    worker = lambda app, port: pixelated.runserver.app.run(host='localhost', port=4567,
-                                                           logFile=open('/tmp/behave-tests.log', 'w'))
-    context._process = multiprocessing.Process(target=worker, args=(context.app, 4567))
+    worker = lambda: context.app.run(host='localhost', port=4567, logFile=open('/tmp/behave-tests.log', 'w'))
+    context._process = multiprocessing.Process(target=worker)
     context._process.start()
 
     # we must wait the server start listening
@@ -43,7 +37,6 @@ def before_all(context):
 
 
 def after_all(context):
-    context.soledad_test_base.teardown_soledad()
     context._process.terminate()
 
 

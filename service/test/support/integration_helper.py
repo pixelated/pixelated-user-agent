@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import shutil
 
+
 from klein.resource import KleinResource
 from leap.soledad.client import Soledad
 from mockito import mock
@@ -33,8 +34,7 @@ from pixelated.controllers import *
 import pixelated.config.app_factory as app_factory
 from leap.mail.imap.account import SoledadBackedAccount
 from klein.test_resource import requestMock, _render
-from nose.twistedtools import stop_reactor, threaded_reactor
-from twisted.internet.error import ReactorNotRestartable
+import unittest
 
 soledad_test_folder = "soledad-test"
 
@@ -117,52 +117,80 @@ class MailBuilder:
         return InputMail.from_dict(self.mail)
 
 
-import unittest
+def add_document_to_soledad(self, _dict):
+    self.soledad_querier.soledad.create_doc(_dict)
+
+
+def add_mail_to_inbox(self, input_mail):
+    mail = self.mailboxes.inbox().add(input_mail)
+    mail.update_tags(input_mail.tags)
+    self.search_engine.index_mail(mail)
+
+
+def add_multiple_to_mailbox(self, num, mailbox='', flags=[], tags=[]):
+    mails = []
+    for _ in range(num):
+        input_mail = MailBuilder().with_status(flags).with_tags(tags).build_input_mail()
+        mail = self.mailboxes._create_or_get(mailbox).add(input_mail)
+        mails.append(mail)
+        mail.update_tags(input_mail.tags)
+        self.search_engine.index_mail(mail)
+    return mails
+
+
+def setup_test_app(self):
+    from functools import partial
+    self.add_document_to_soledad = partial(add_document_to_soledad, self)
+    self.add_mail_to_inbox = partial(add_mail_to_inbox, self)
+    self.add_multiple_to_mailbox = partial(add_multiple_to_mailbox, self)
+
+    self.soledad = initialize_soledad(tempdir=soledad_test_folder)
+    self.mail_address = "test@pixelated.org"
+
+    # setup app
+    PixelatedMail.from_email_address = self.mail_address
+
+    SearchEngine.INDEX_FOLDER = soledad_test_folder + '/search_index'
+
+    self.app = pixelated.runserver.app
+
+    self.soledad_querier = SoledadQuerier(self.soledad)
+    self.soledad_querier.get_index_masterkey = lambda: '_yg2oG_5ELM8_-sQYcsxI37WesI0dOtZQXpwAqjvhR4='
+
+    self.account = SoledadBackedAccount('test', self.soledad, MagicMock())
+    self.mailboxes = Mailboxes(self.account, self.soledad_querier)
+    self.mail_sender = mock()
+    self.tag_service = TagService()
+    self.draft_service = DraftService(self.mailboxes)
+    self.mail_service = MailService(self.mailboxes, self.mail_sender, self.tag_service,
+                                    self.soledad_querier)
+    self.search_engine = SearchEngine(self.soledad_querier)
+    self.search_engine.index_mails(self.mail_service.all_mails())
+
+    features_controller = FeaturesController()
+    features_controller.DISABLED_FEATURES.append('autoReload')
+    home_controller = HomeController()
+    mails_controller = MailsController(mail_service=self.mail_service,
+                                       draft_service=self.draft_service,
+                                       search_engine=self.search_engine)
+    tags_controller = TagsController(search_engine=self.search_engine)
+    sync_info_controller = SyncInfoController()
+    attachments_controller = AttachmentsController(self.soledad_querier)
+
+    app_factory._setup_routes(self.app, home_controller, mails_controller, tags_controller,
+                              features_controller, sync_info_controller, attachments_controller)
+    self.resource = KleinResource(self.app)
 
 
 class SoledadTestBase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        from nose.twistedtools import threaded_reactor
         threaded_reactor()
 
     def setUp(self):
-        self.soledad = initialize_soledad(tempdir=soledad_test_folder)
-        self.mail_address = "test@pixelated.org"
-
-        # setup app
-        PixelatedMail.from_email_address = self.mail_address
-
-        SearchEngine.INDEX_FOLDER = soledad_test_folder + '/search_index'
-
-        self.app = pixelated.runserver.app
-
-        self.soledad_querier = SoledadQuerier(self.soledad)
-        self.soledad_querier.get_index_masterkey = lambda: '_yg2oG_5ELM8_-sQYcsxI37WesI0dOtZQXpwAqjvhR4='
-
-        self.account = SoledadBackedAccount('test', self.soledad, MagicMock())
-        self.mailboxes = Mailboxes(self.account, self.soledad_querier)
-        self.mail_sender = mock()
-        self.tag_service = TagService()
-        self.draft_service = DraftService(self.mailboxes)
-        self.mail_service = MailService(self.mailboxes, self.mail_sender, self.tag_service,
-                                        self.soledad_querier)
-        self.search_engine = SearchEngine(self.soledad_querier)
-        self.search_engine.index_mails(self.mail_service.all_mails())
-
-        features_controller = FeaturesController()
-        features_controller.DISABLED_FEATURES.append('autoReload')
-        home_controller = HomeController()
-        mails_controller = MailsController(mail_service=self.mail_service,
-                                           draft_service=self.draft_service,
-                                           search_engine=self.search_engine)
-        tags_controller = TagsController(search_engine=self.search_engine)
-        sync_info_controller = SyncInfoController()
-        attachments_controller = AttachmentsController(self.soledad_querier)
-
-        app_factory._setup_routes(self.app, home_controller, mails_controller, tags_controller,
-                                  features_controller, sync_info_controller, attachments_controller)
-        self.resource = KleinResource(self.app)
+        setup_test_app(self)
 
     def get_mails_by_tag(self, tag, page=1, window=100):
         request = requestMock(path="/mails")
@@ -232,24 +260,6 @@ class SoledadTestBase(unittest.TestCase):
         request = requestMock('/mails/read', method="POST", body=json.dumps({'idents': idents}), headers={'Content-Type': ['application/json']})
         _render(self.resource, request)
         return request
-
-    def add_document_to_soledad(self, _dict):
-        self.soledad_querier.soledad.create_doc(_dict)
-
-    def add_mail_to_inbox(self, input_mail):
-        mail = self.mailboxes.inbox().add(input_mail)
-        mail.update_tags(input_mail.tags)
-        self.search_engine.index_mail(mail)
-
-    def add_multiple_to_mailbox(self, num, mailbox='', flags=[], tags=[]):
-        mails = []
-        for _ in range(num):
-            input_mail = MailBuilder().with_status(flags).with_tags(tags).build_input_mail()
-            mail = self.mailboxes._create_or_get(mailbox).add(input_mail)
-            mails.append(mail)
-            mail.update_tags(input_mail.tags)
-            self.search_engine.index_mail(mail)
-        return mails
 
 
 class ResponseMail:
