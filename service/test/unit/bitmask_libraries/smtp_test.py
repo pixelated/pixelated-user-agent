@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import os
+import sys
 from mock import MagicMock, patch
 from abstract_leap_test import AbstractLeapTest
 from pixelated.bitmask_libraries.smtp import LeapSmtp
