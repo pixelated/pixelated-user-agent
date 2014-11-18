@@ -19,13 +19,13 @@ import unittest
 from test.support.integration_helper import MailBuilder, SoledadTestBase
 
 
-class TagsTest(unittest.TestCase, SoledadTestBase):
+class TagsTest(SoledadTestBase):
 
     def setUp(self):
-        self.setup_soledad()
+        SoledadTestBase.setUp(self)
 
     def tearDown(self):
-        self.teardown_soledad()
+        SoledadTestBase.tearDown(self)
 
     def _tags_json(self, tags):
         return json.dumps({'newtags': tags})

@@ -102,7 +102,7 @@ class SearchEngine(object):
             raw=TEXT(stored=False))
 
     def _create_index(self):
-        masterkey = self.soledad_querier.get_index_masterkey
+        masterkey = self.soledad_querier.get_index_masterkey()
         storage = EncryptedFileStorage(self.INDEX_FOLDER, masterkey)
         return FileIndex.create(storage, self._mail_schema(), indexname='mails')
 

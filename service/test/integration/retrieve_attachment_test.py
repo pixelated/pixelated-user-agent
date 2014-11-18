@@ -18,13 +18,13 @@ import unittest
 from test.support.integration_helper import SoledadTestBase
 
 
-class RetrieveAttachmentTest(unittest.TestCase, SoledadTestBase):
+class RetrieveAttachmentTest(SoledadTestBase):
 
     def setUp(self):
-        self.setup_soledad()
+        SoledadTestBase.setUp(self)
 
     def tearDown(self):
-        self.teardown_soledad()
+        SoledadTestBase.tearDown(self)
 
     def test_attachment_content_is_retrieved(self):
         ident = 'F4E99C1CEC4D300A4223A96CCABBE0304BDBC31C550A5A03E207A5E4C3C71A22'

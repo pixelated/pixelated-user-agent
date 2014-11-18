@@ -22,6 +22,13 @@ def respond_json(entity, request, status_code=200):
     return json_response
 
 
+def respond_json_deferred(entity, request, status_code=200):
+    json_response = json.dumps(entity)
+    request.responseHeaders.addRawHeader(b"content-type", b"application/json")
+    request.code = status_code
+    request.write(json_response)
+    request.finish()
+
 import json
 
 from home_controller import HomeController

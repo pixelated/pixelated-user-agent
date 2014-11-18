@@ -1,3 +1,9 @@
 #!/bin/bash
 
-python setup.py $*
+if [ "$1" == 'test' ] 
+then
+        nosetests --nocapture test/unit
+        nosetests --nocapture test/integration
+else
+        python setup.py $*
+fi

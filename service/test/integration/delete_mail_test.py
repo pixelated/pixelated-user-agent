@@ -18,13 +18,13 @@ import unittest
 from test.support.integration_helper import MailBuilder, SoledadTestBase
 
 
-class DeleteMailTest(unittest.TestCase, SoledadTestBase):
+class DeleteMailTest(SoledadTestBase):
 
     def setUp(self):
-        self.setup_soledad()
+        SoledadTestBase.setUp(self)
 
     def tearDown(self):
-        self.teardown_soledad()
+        SoledadTestBase.tearDown(self)
 
     def test_move_mail_to_trash_when_deleting(self):
         input_mail = MailBuilder().with_subject('Mail with tags').build_input_mail()

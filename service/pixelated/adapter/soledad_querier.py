@@ -26,7 +26,6 @@ class SoledadQuerier:
     def __init__(self, soledad):
         self.soledad = soledad
 
-    @property
     def get_index_masterkey(self):
         index_key = self.soledad.get_from_index('by-type', 'index_key')
         if len(index_key) == 0:

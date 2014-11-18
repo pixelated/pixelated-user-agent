@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import shutil
-from klein.resource import KleinResource
 
+from klein.resource import KleinResource
 from leap.soledad.client import Soledad
 from mockito import mock
 import os
@@ -33,7 +33,8 @@ from pixelated.controllers import *
 import pixelated.config.app_factory as app_factory
 from leap.mail.imap.account import SoledadBackedAccount
 from klein.test_resource import requestMock, _render
-
+from nose.twistedtools import stop_reactor, threaded_reactor
+from twisted.internet.error import ReactorNotRestartable
 
 soledad_test_folder = "soledad-test"
 
@@ -68,12 +69,6 @@ def initialize_soledad(tempdir):
         local_db_path,
         server_url,
         cert_file)
-    #
-    # from leap.mail.imap.fields import fields
-    #
-    # for name, expression in fields.INDEXES.items():
-    # _soledad.create_index(name, *expression)
-    #
     return _soledad
 
 
@@ -122,14 +117,16 @@ class MailBuilder:
         return InputMail.from_dict(self.mail)
 
 
-class SoledadTestBase:
-    def __init__(self):
-        pass
+import unittest
 
-    def teardown_soledad(self):
-        pass
 
-    def setup_soledad(self):
+class SoledadTestBase(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        threaded_reactor()
+
+    def setUp(self):
         self.soledad = initialize_soledad(tempdir=soledad_test_folder)
         self.mail_address = "test@pixelated.org"
 
@@ -141,6 +138,7 @@ class SoledadTestBase:
         self.app = pixelated.runserver.app
 
         self.soledad_querier = SoledadQuerier(self.soledad)
+        self.soledad_querier.get_index_masterkey = lambda: '_yg2oG_5ELM8_-sQYcsxI37WesI0dOtZQXpwAqjvhR4='
 
         self.account = SoledadBackedAccount('test', self.soledad, MagicMock())
         self.mailboxes = Mailboxes(self.account, self.soledad_querier)
@@ -206,8 +204,9 @@ class SoledadTestBase:
     def get_tags(self, **kwargs):
         request = requestMock('/tags')
         request.args = kwargs
-        _render(self.resource, request)
-        return json.loads(request.getWrittenData())
+        d = _render(self.resource, request)
+        d.addCallback(lambda _: json.loads(request.getWrittenData()))
+        return d
 
     def delete_mail(self, mail_ident):
         request = requestMock(path='/mail/' + mail_ident, method="DELETE")

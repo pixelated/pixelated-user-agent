@@ -13,66 +13,80 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import unittest
 
+from nose.twistedtools import deferred
 from test.support.integration_helper import MailBuilder, SoledadTestBase
 
 
-class SearchTest(unittest.TestCase, SoledadTestBase):
+class SearchTest(SoledadTestBase):
 
     def setUp(self):
-        self.setup_soledad()
+        SoledadTestBase.setUp(self)
 
-    def tearDown(self):
-        self.teardown_soledad()
-
+    @deferred(timeout=5)
     def test_that_tags_returns_all_tags(self):
         input_mail = MailBuilder().with_tags(['important']).build_input_mail()
         self.add_mail_to_inbox(input_mail)
 
-        all_tags = self.get_tags()
+        d = self.get_tags()
 
-        all_tag_names = [t['name'] for t in all_tags]
-        self.assertTrue('inbox' in all_tag_names)
-        self.assertTrue('sent' in all_tag_names)
-        self.assertTrue('trash' in all_tag_names)
-        self.assertTrue('drafts' in all_tag_names)
-        self.assertTrue('important' in all_tag_names)
+        def _assert(all_tags):
+            all_tag_names = [t['name'] for t in all_tags]
+            self.assertTrue('inbox' in all_tag_names)
+            self.assertTrue('sent' in all_tag_names)
+            self.assertTrue('trash' in all_tag_names)
+            self.assertTrue('drafts' in all_tag_names)
+            self.assertTrue('important' in all_tag_names)
+        d.addCallback(_assert)
+        return d
 
+    @deferred(timeout=5)
     def test_that_tags_are_filtered_by_query(self):
         input_mail = MailBuilder().with_tags(['ateu', 'catoa', 'luat', 'zuado']).build_input_mail()
         self.add_mail_to_inbox(input_mail)
 
-        all_tags = self.get_tags(q=["at"], skipDefaultTags=["true"])
+        d = self.get_tags(q=["at"], skipDefaultTags=["true"])
 
-        all_tag_names = [t['name'] for t in all_tags]
-        self.assertEqual(3, len(all_tag_names))
-        self.assertTrue('ateu' in all_tag_names)
-        self.assertTrue('catoa' in all_tag_names)
-        self.assertTrue('luat' in all_tag_names)
+        def _assert(all_tags):
+            all_tag_names = [t['name'] for t in all_tags]
+            self.assertEqual(3, len(all_tag_names))
+            self.assertTrue('ateu' in all_tag_names)
+            self.assertTrue('catoa' in all_tag_names)
+            self.assertTrue('luat' in all_tag_names)
 
+        d.addCallback(_assert)
+        return d
+
+    @deferred(timeout=5)
     def test_that_default_tags_are_ignorable(self):
         input_mail = MailBuilder().with_tags(['sometag']).build_input_mail()
         self.add_mail_to_inbox(input_mail)
 
-        all_tags = self.get_tags(skipDefaultTags=["true"])
+        d = self.get_tags(skipDefaultTags=["true"])
 
-        all_tag_names = [t['name'] for t in all_tags]
-        self.assertEqual(1, len(all_tag_names))
-        self.assertTrue('sometag' in all_tag_names)
+        def _assert(all_tags):
+            all_tag_names = [t['name'] for t in all_tags]
+            self.assertEqual(1, len(all_tag_names))
+            self.assertTrue('sometag' in all_tag_names)
+        d.addCallback(_assert)
+        return d
 
+    @deferred(timeout=5)
     def test_tags_count(self):
         self.add_multiple_to_mailbox(num=10, mailbox='inbox', flags=['\\Recent'])
         self.add_multiple_to_mailbox(num=5, mailbox='inbox', flags=['\\Seen'])
         self.add_multiple_to_mailbox(num=3, mailbox='inbox', flags=['\\Recent'], tags=['important', 'later'])
         self.add_multiple_to_mailbox(num=1, mailbox='inbox', flags=['\\Seen'], tags=['important'])
 
-        tags_count = self.get_tags()
+        d = self.get_tags()
 
-        self.assertEqual(self.get_count(tags_count, 'inbox')['total'], 19)
-        self.assertEqual(self.get_count(tags_count, 'inbox')['read'], 6)
-        self.assertEqual(self.get_count(tags_count, 'important')['total'], 4)
-        self.assertEqual(self.get_count(tags_count, 'important')['read'], 1)
+        def _assert(tags_count):
+            self.assertEqual(self.get_count(tags_count, 'inbox')['total'], 19)
+            self.assertEqual(self.get_count(tags_count, 'inbox')['read'], 6)
+            self.assertEqual(self.get_count(tags_count, 'important')['total'], 4)
+            self.assertEqual(self.get_count(tags_count, 'important')['read'], 1)
+        d.addCallback(_assert)
+        return d
 
     def test_search_mails_different_window(self):
         input_mail = MailBuilder().build_input_mail()

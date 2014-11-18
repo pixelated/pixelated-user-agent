@@ -19,13 +19,13 @@ from test.support.integration_helper import MailBuilder, SoledadTestBase
 from pixelated.adapter.status import Status
 
 
-class MarkAsReadUnreadTest(unittest.TestCase, SoledadTestBase):
+class MarkAsReadUnreadTest(SoledadTestBase):
 
     def setUp(self):
-        self.setup_soledad()
+        SoledadTestBase.setUp(self)
 
     def tearDown(self):
-        self.teardown_soledad()
+        SoledadTestBase.tearDown(self)
 
     def test_mark_single_as_read(self):
         input_mail = MailBuilder().build_input_mail()

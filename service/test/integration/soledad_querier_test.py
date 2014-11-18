@@ -21,13 +21,13 @@ from test.support.integration_helper import SoledadTestBase, MailBuilder
 from leap.mail.imap.fields import WithMsgFields
 
 
-class SoledadQuerierTest(unittest.TestCase, SoledadTestBase, WithMsgFields):
+class SoledadQuerierTest(SoledadTestBase, WithMsgFields):
 
     def setUp(self):
-        self.setup_soledad()
+        SoledadTestBase.setUp(self)
 
     def tearDown(self):
-        self.teardown_soledad()
+        SoledadTestBase.tearDown(self)
 
     def _get_empty_mailbox(self):
         return copy.deepcopy(self.EMPTY_MBOX)

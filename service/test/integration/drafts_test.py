@@ -18,13 +18,13 @@ import unittest
 from test.support.integration_helper import MailBuilder, SoledadTestBase
 
 
-class DraftsTest(unittest.TestCase, SoledadTestBase):
+class DraftsTest(SoledadTestBase):
 
     def setUp(self):
-        self.setup_soledad()
+        SoledadTestBase.setUp(self)
 
     def tearDown(self):
-        self.teardown_soledad()
+        SoledadTestBase.tearDown(self)
 
     def test_post_sends_mail_and_deletes_previous_draft_if_it_exists(self):
         # creates one draft
