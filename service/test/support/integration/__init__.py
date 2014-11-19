@@ -16,4 +16,3 @@
 from .app_test_client import AppTestClient
 from .model import MailBuilder, ResponseMail
 from .soledad_test_base import SoledadTestBase
-
