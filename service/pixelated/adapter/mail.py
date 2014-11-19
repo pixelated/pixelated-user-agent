@@ -329,3 +329,13 @@ class PixelatedMail(Mail):
             'mailbox': self.mailbox_name.lower(),
             'attachments': self.parts['attachments'] if self.parts else []
         }
+
+    def to_reply_template(self):
+        template = self.as_dict()
+        recipients = template['header']['to'][0]
+        for recipient in recipients:
+            if recipient == InputMail.FROM_EMAIL_ADDRESS:
+                recipients.remove(recipient)
+        template['header']['to'][0] = recipients
+        template['header']['subject'] = 'Re: %s' % template['header']['subject']
+        return template

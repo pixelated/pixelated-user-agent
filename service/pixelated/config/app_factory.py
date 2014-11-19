@@ -62,13 +62,40 @@ def update_info_sync_and_index_partial(sync_info_controller, search_engine, mail
     return wrapper
 
 
+def _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller, sync_info_controller,
+                  attachments_controller):
+    # mails
+    app.route('/mails', methods=['GET'])(mails_controller.mails)
+    app.route('/mail/<mail_id>/read', methods=['POST'])(mails_controller.mark_mail_as_read)
+    app.route('/mail/<mail_id>/unread', methods=['POST'])(mails_controller.mark_mail_as_unread)
+    app.route('/mails/unread', methods=['POST'])(mails_controller.mark_many_mail_unread)
+    app.route('/mails/read', methods=['POST'])(mails_controller.mark_many_mail_read)
+    app.route('/mail/<mail_id>', methods=['GET'])(mails_controller.mail)
+    app.route('/mail/<mail_id>/reply_all_template', methods=['GET'])(mails_controller.reply_all_template)
+    app.route('/mail/<mail_id>', methods=['DELETE'])(mails_controller.delete_mail)
+    app.route('/mails', methods=['DELETE'])(mails_controller.delete_mails)
+    app.route('/mails', methods=['POST'])(mails_controller.send_mail)
+    app.route('/mail/<mail_id>/tags', methods=['POST'])(mails_controller.mail_tags)
+    app.route('/mails', methods=['PUT'])(mails_controller.update_draft)
+    # tags
+    app.route('/tags', methods=['GET'])(tags_controller.tags)
+    # features
+    app.route('/features', methods=['GET'])(features_controller.features)
+    # sync info
+    app.route('/sync_info', methods=['GET'])(sync_info_controller.sync_info)
+    # attachments
+    app.route('/attachment/<attachment_id>', methods=['GET'])(attachments_controller.attachment)
+    # static
+    app.route('/', methods=['GET'], branch=True)(home_controller.home)
+
+
 def init_leap_session(app):
     try:
         leap_session = LeapSession.open(app.config['LEAP_USERNAME'],
                                         app.config['LEAP_PASSWORD'],
                                         app.config['LEAP_SERVER_NAME'])
-    except ConnectionError:
-        print("Can't connect to the requested provider")
+    except ConnectionError, error:
+        print("Can't connect to the requested provider", error)
         sys.exit(1)
     except LeapAuthException, e:
         print("Couldn't authenticate with the credentials provided %s" % e.message)

@@ -83,3 +83,7 @@ class MailService:
 
     def drafts(self):
         raise NotImplementedError()
+
+    def reply_all_template(self, mail_id):
+        mail = self.mail(mail_id)
+        return mail.to_reply_template()
