@@ -183,6 +183,9 @@ def setup_test_app(self):
 
 
 class SoledadTestBase(unittest.TestCase):
+    # these are so long because our CI is so slow at the moment.
+    DEFERRED_TIMEOUT = 120
+    DEFERRED_TIMEOUT_LONG = 300
 
     @classmethod
     def setUpClass(cls):
