@@ -13,9 +13,8 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import unittest
 
-from test.support.integration_helper import SoledadTestBase
+from test.support.integration.soledad_test_base import SoledadTestBase
 
 
 class RetrieveAttachmentTest(SoledadTestBase):
@@ -35,7 +34,7 @@ class RetrieveAttachmentTest(SoledadTestBase):
                            'phash': ident,
                            'content-type': 'text/plain; charset=US-ASCII; name="attachment_pequeno.txt"'}
 
-        self.add_document_to_soledad(attachment_dict)
+        self.client.add_document_to_soledad(attachment_dict)
 
         attachment = self.get_attachment(ident, 'base64')
 

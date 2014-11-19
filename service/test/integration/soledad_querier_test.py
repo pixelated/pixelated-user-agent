@@ -15,9 +15,9 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import copy
-import unittest
 import time
-from test.support.integration_helper import SoledadTestBase, MailBuilder
+
+from test.support.integration import *
 from leap.mail.imap.fields import WithMsgFields
 
 
@@ -25,6 +25,8 @@ class SoledadQuerierTest(SoledadTestBase, WithMsgFields):
 
     def setUp(self):
         SoledadTestBase.setUp(self)
+        self.soledad = self.client.soledad
+        self.soledad_querier = self.client.soledad_querier
 
     def tearDown(self):
         SoledadTestBase.tearDown(self)
@@ -42,7 +44,7 @@ class SoledadQuerierTest(SoledadTestBase, WithMsgFields):
         return [m for m in self.soledad.get_from_index('by-type', 'mbox') if m.content['mbox'] == mailbox_name]
 
     def test_remove_dup_mailboxes_keeps_the_one_with_the_highest_last_uid(self):
-        self.add_multiple_to_mailbox(3, 'INBOX')  # by now we already have one inbox with 3 mails
+        self.client.add_multiple_to_mailbox(3, 'INBOX')  # by now we already have one inbox with 3 mails
         self._create_mailbox('INBOX')  # now we have a duplicate
 
         # make sure we have two
@@ -77,7 +79,7 @@ class SoledadQuerierTest(SoledadTestBase, WithMsgFields):
         self.assertEqual(1, len(mails))
 
     def test_get_mails_by_chash(self):
-        mails = self.add_multiple_to_mailbox(3, 'INBOX')
+        mails = self.client.add_multiple_to_mailbox(3, 'INBOX')
         chashes = [mail.ident for mail in mails]
 
         fetched_mails = self.soledad_querier.mails(chashes)

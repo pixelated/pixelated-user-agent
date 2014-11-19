@@ -14,9 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
-import unittest
 
-from test.support.integration_helper import MailBuilder, SoledadTestBase
+from test.support.integration import *
 
 
 class TagsTest(SoledadTestBase):
@@ -32,7 +31,7 @@ class TagsTest(SoledadTestBase):
 
     def test_add_tag_to_an_inbox_mail_and_query(self):
         mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        self.add_mail_to_inbox(mail)
+        self.client.add_mail_to_inbox(mail)
 
         self.post_tags(mail.ident, self._tags_json(['IMPORTANT']))
 
@@ -44,10 +43,10 @@ class TagsTest(SoledadTestBase):
 
     def test_addition_of_reserved_tags_is_not_allowed(self):
         mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        self.add_mail_to_inbox(mail)
+        self.client.add_mail_to_inbox(mail)
 
         response = self.post_tags(mail.ident, self._tags_json(['DRAFTS']))
         self.assertEquals("None of the following words can be used as tags: drafts", response)
 
-        mail = self.mailboxes.inbox().mail(mail.ident)
+        mail = self.client.mailboxes.inbox().mail(mail.ident)
         self.assertNotIn('drafts', mail.tags)

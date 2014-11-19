@@ -15,20 +15,19 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import time
 import multiprocessing
-
-from selenium import webdriver
 import logging
-from test.support.integration_helper import setup_test_app
-
-logging.disable('INFO')
-import pixelated.controllers.features_controller
+from test.support.integration import AppTestClient
+from selenium import webdriver
+import pixelated
 
 
 def before_all(context):
     pixelated.controllers.features_controller.FeaturesController.DISABLED_FEATURES.append('autoRefresh')
-    setup_test_app(context)
+    client = AppTestClient()
+    context.client = client
+    logging.disable('INFO')
 
-    worker = lambda: context.app.run(host='localhost', port=4567, logFile=open('/tmp/behave-tests.log', 'w'))
+    worker = lambda: client.app.run(host='localhost', port=4567, logFile=open('/tmp/behave-tests.log', 'w'))
     context._process = multiprocessing.Process(target=worker)
     context._process.start()
 

@@ -13,10 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from test.support.integration import MailBuilder
+from .app_test_client import AppTestClient
+from .model import MailBuilder, ResponseMail
+from .soledad_test_base import SoledadTestBase
 
-
-@given('I have a mail in my inbox')
-def add_mail_impl(context):
-    input_mail = MailBuilder().build_input_mail()
-    context.client.add_mail_to_inbox(input_mail)
