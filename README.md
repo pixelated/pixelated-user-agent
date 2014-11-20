@@ -6,74 +6,62 @@ This contains the Pixelated User Agent, which is composed of a web UI written as
 >**The Pixelated User Agent is still in early development state!**
 
 >Some things may not yet work the way you expect it to.
->Setting up the service (as opposed to the fake service or inbox-app) is still rather troublesome and so far it only serves limited functionality.
-
+>Setting up the service is still rather troublesome and so far it only serves limited functionality.
 
 
 # Running it
-The User Agent is composed of 2 components:
-- The Web Ui, which is the the HTML, CSS and JS files served to the browser; and
-- The Service component, which is the web service that serves the Web Ui to the browser, provides the REST API which the the Web Ui uses, and integrates with the LEAP or Pixelated provider.
+The User Agent has 2 components:
+* The Web Ui, which is the the HTML, CSS and JS files served to the browser;
+* The Service component, which is the web service that serves the Web UI to the browser, provides the REST API which the the Web Ui uses, and integrates with the LEAP or Pixelated provider.
 
 ## Quickstart
 
 Dependencies are: node, npm, ruby, bundle, virtualenv, git
 
-On Debian/Ubuntu systems you need:
+* To install the dependencies on debian/ubuntu you need to run `sudo apt-get install nodejs npm ruby bundler virtualenv git`
 
-    sudo apt-get install nodejs npm ruby bundler virtualenv git
+* Next step is cloning the repository with `git clone https://github.com/pixelated-project/pixelated-user-agent.git`
 
-Once you have that, clone the repo and run inside:
+* Enter the folder `pixelated-user-agent`
 
-```
-/bin/bash install-pixelated.sh
-```
+* Run the setup `./install_pixelated.sh`
+
+* After it finishes, you can activate the virtualenv with `source service/.virtualenv/bin/activate`
+
+* The user agent will be available with the command `pixelated-user-agent`, running it you will be prompted for the credentials and the user agent will be started at localhost:3333
 
 _____________
 
-## Web Ui
-The Web Ui needs to generate the templates and CSS to be served. For that, you need (from inside `./web-ui`) to run the command `./go build` at least once after downloading the code. From here on, you can run `./go watch` to auto-generate the resources as they are changed.
-
 ## Service
 
-## Fake Service
-This is a Fake Service used for testing the Web Ui. It works as the real service, but mocking the connection to the LEAP/Pixelated provider with a predefined dataset of emails.
+* Enter the `service` folder
 
-To run the Fake Service, run the command `./go server:start` on the terminal. `./go server:restart` restarts the service.
+* Create the virtualenv with `virtualenv .virtualenv` 
 
-# Setting things up
-Before being able to run the Service (the Fake or real), you must first set this components up by installing their dependencies.
+* Activate it with `source .virtualenv/bin/activate`
+
+* Run the setup with `python setup.py develop --always-unzip`
+
+* Then, to run use `pixelated-user-agent` on the command line
+
+> You need an account in a Leap provider with support for email to test pixelated,
+> if you don't have one yet, you can register with the following command
+pixelated-user-agent --register your.provider.org desired_account
 
 ## Web Ui
-From inside `./web-ui`:
+
+* Enter the `web-ui` folder
+
+* Run:
 ```
 $ bundle install
 $ npm install
 $ bower install
 ```
-If you don't have `bower` installed globaly, change the third line to `$ ./node_modules/bower/bin/bower install`
 
-## Service
+If you don't have `bower` installed globally, change the third line to `$ ./node_modules/bower/bin/bower install`
 
-## Fake Service
-From inside `./fake-service`
-```
-$ virtualenv .virtualenv
-$ source .virtualenv/bin/activate
-$ pip install -r requirements.txt
-$ ./go
-```
-
-If you want to see random emails on the fake service, run it like this
-```
-$ env AUTOLOAD=True ./go
-```
-
-If you want to control the emails you'll see on the fake service, edit the mailset.csv.example file
-and run the following command while the server is running
-```
-$ curl --data-binary @mailset.csv.example http://localhost:4567/control/mailset/csv/load
-```
+The Web Ui needs to generate the templates and CSS to be served. For that, you need (from inside `./web-ui`) to run the command `./go build` at least once after downloading the code. From here on, you can run `./go watch` to auto-generate the resources as they are changed.
 
 
 And that's it.

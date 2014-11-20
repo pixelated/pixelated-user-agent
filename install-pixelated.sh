@@ -48,14 +48,14 @@ cat <<EOF
 
 ###############
 
-## You will need an account in a LEAP provider. You may find some at http://bitmask.net/
+## You will need an account in a LEAP provider with mail support. You may find some at http://bitmask.net/
 
-## Once you have it, modify the service/pixelated.example file and move it to ~/.pixelated
-
-## You might also need to add your LEAP provider ssl certificate to the pixelated/certificates folder, named as your provider domain name (in case it uses TLS):
-##      - example: your.leapprovider.org.crt
+## You might also need to add your LEAP provider ssl certificate to pixelated manually for now, with the following steps:
+## The easiest way to find this is accessing https://your.provider.org/ca.crt
+## Rename the certificate based on your provider domain name like this `your.leapprovider.org.crt`
+## Put it in services/pixelated/certificates/
 
 ## Once you are done, just run:
-##        pixelated-user-agent
+##     pixelated-user-agent
 
 EOF
