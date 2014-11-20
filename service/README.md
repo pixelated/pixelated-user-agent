@@ -74,6 +74,12 @@ your.leapprovider.org.crt
 ./go develop --always-unzip
 ```
 
+* You need to reinstall gnupg for now
+
+```
+pip uninstall -y gnupg; pip install gnupg
+```
+
 * To run tests:
 
 ```
