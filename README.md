@@ -23,10 +23,10 @@ On Debian/Ubuntu systems you need:
 
     sudo apt-get install nodejs npm ruby bundler virtualenv git
 
-Once you have that, run:
+Once you have that, clone the repo and run inside:
 
 ```
-curl https://raw.githubusercontent.com/pixelated-project/pixelated-user-agent/master/install-pixelated.sh | /bin/bash
+/bin/bash install-pixelated.sh
 ```
 
 _____________

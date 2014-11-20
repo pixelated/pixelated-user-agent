@@ -26,16 +26,13 @@ function check_installed() {
 }
 
 for dependency in node npm ruby bundle virtualenv git gpg; do
-        check_installed $dependency     
+        check_installed $dependency
 done
 
-# clone repo
-git clone https://github.com/pixelated-project/pixelated-user-agent
-
 # install web-ui dependencies
-cd pixelated-user-agent/web-ui
+cd web-ui
 npm install
-node_modules/bower/bin/bower install
+node_modules/bower/bin/bower install --config.interactive=false
 bundle install
 LC_ALL=en_US.UTF-8 ./go build
 
@@ -44,6 +41,7 @@ cd ../service
 virtualenv .virtualenv
 source .virtualenv/bin/activate
 ./go develop --always-unzip
+pip uninstall -y gnupg; pip install gnupg
 
 # print usage
 cat <<EOF
