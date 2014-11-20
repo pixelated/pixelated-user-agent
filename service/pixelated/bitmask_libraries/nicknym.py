@@ -29,6 +29,7 @@ class NickNym(object):
 
     def generate_openpgp_key(self):
         if not self._key_exists(self._email):
+            print "Generating keys - this could take a while..."
             self._gen_key()
             self._send_key_to_leap()
 

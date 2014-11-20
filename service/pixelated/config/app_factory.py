@@ -37,7 +37,8 @@ from leap.common.events import (
 )
 from twisted.web.server import Site
 
-CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK=12345
+CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK = 12345
+
 
 def init_index_and_remove_dupes(querier, search_engine, mail_service):
     def wrapper(*args, **kwargs):
@@ -56,7 +57,8 @@ def update_info_sync_and_index_partial(sync_info_controller, search_engine, mail
     return wrapper
 
 
-def _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller, sync_info_controller, attachments_controller):
+def _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller, sync_info_controller,
+                  attachments_controller):
     # mails
     app.route('/mails', methods=['GET'])(mails_controller.mails)
     app.route('/mail/<mail_id>/read', methods=['POST'])(mails_controller.mark_mail_as_read)
@@ -101,7 +103,6 @@ def look_for_user_key_and_create_if_cant_find(leap_session):
         unregister(proto.SOLEDAD_DONE_DATA_SYNC, uid=CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK)
 
     return wrapper
-
 
 
 def init_app(app):
