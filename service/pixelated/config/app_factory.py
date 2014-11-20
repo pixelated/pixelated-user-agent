@@ -132,7 +132,6 @@ def init_app(app):
 
 
 def create_app(app, bind_address, bind_port):
-    print type(reactor.listenTCP)
     reactor.listenTCP(bind_port, Site(app.resource()), interface=bind_address)
     reactor.callWhenRunning(lambda: init_app(app))
     reactor.run()
