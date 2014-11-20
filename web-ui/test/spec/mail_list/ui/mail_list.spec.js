@@ -6,6 +6,8 @@ describeComponent('mail_list/ui/mail_list', function () {
   var mailList;
 
   beforeEach(function () {
+    var customMatchers = require('test/custom_matchers');
+    jasmine.addMatchers(customMatchers);
     this.setupComponent('<div id="mails"></div>', {
       urlParams: {
         hasMailIdent: function () {
@@ -103,17 +105,17 @@ describeComponent('mail_list/ui/mail_list', function () {
     });
 
     it ('does not check the all checkbox if no mail checked has the current tag', function () {
-	  var setCheckAllCheckboxEvent = spyOnEvent(document, Pixelated.events.ui.mails.hasMailsChecked);
-	  this.component.attr.currentTag = 'inbox';
+      var setCheckAllCheckboxEvent = spyOnEvent(document, Pixelated.events.ui.mails.hasMailsChecked);
+      this.component.attr.currentTag = 'inbox';
 
-	  $(document).trigger(Pixelated.events.ui.mail.checked, {mail : {'1' : {tags: ['different']}}});
+      $(document).trigger(Pixelated.events.ui.mail.checked, {mail : {'1' : {tags: ['different']}}});
 
-	  expect(setCheckAllCheckboxEvent).toHaveBeenTriggeredOnAndWith(document, false);
+      expect(setCheckAllCheckboxEvent).toHaveBeenTriggeredOnAndWith(document, false);
     });
 
     it('checks the check all checkbox if at least one mail is checked with the current tag', function () {
       var setCheckAllCheckboxEvent = spyOnEvent(document, Pixelated.events.ui.mails.hasMailsChecked);
-	this.component.attr.currentTag = 'inbox';
+      this.component.attr.currentTag = 'inbox';
 
       $(document).trigger(Pixelated.events.ui.mail.checked, {mail: mailList[0]});
 
@@ -171,8 +173,8 @@ describeComponent('mail_list/ui/mail_list', function () {
       it('renders the new mails', function () {
         this.component.$node.trigger(Pixelated.events.mails.availableForRefresh, { mails: mailList });
 
-        matchMail(mailList[0], this.component.$node);
-        matchMail(mailList[1], this.component.$node);
+        expect(mailList[0]).toBeRenderedIn(this.component.$node);
+        expect(mailList[1]).toBeRenderedIn(this.component.$node);
       });
 
     });
@@ -182,8 +184,8 @@ describeComponent('mail_list/ui/mail_list', function () {
 
       this.component.$node.trigger(Pixelated.events.mails.available, { mails: mailList });
 
-      matchMail(mailList[0], this.component.$node);
-      matchMail(mailList[1], this.component.$node);
+      expect(mailList[0]).toBeRenderedIn(this.component.$node);
+      expect(mailList[1]).toBeRenderedIn(this.component.$node);
       expect(refreshTagListEvent).not.toHaveBeenTriggeredOn(document);
     });
 
@@ -192,8 +194,8 @@ describeComponent('mail_list/ui/mail_list', function () {
 
       this.component.trigger(Pixelated.events.mails.available, { mails: mailList });
 
-      matchSelectedMail(mailList[0], this.component.$node);
-      matchMail(mailList[1], this.component.$node);
+      expect(mailList[0]).toBeRenderedSelectedIn(this.component.$node);
+      expect(mailList[1]).toBeRenderedIn(this.component.$node);
     });
 
     it('should keep the mail checked when it was previously checked (so refresh works)', function () {
@@ -220,17 +222,6 @@ describeComponent('mail_list/ui/mail_list', function () {
 
       expect(this.component.attr.currentMailIdent).toEqual('');
     });
-
-    function matchMail(mail, node) {
-      expect(node.html()).toMatch('id="mail-' + mail.ident + '"');
-      expect(node.html()).toMatch('<div class="subject-and-tags">');
-      expect(node.html()).toMatch('<div class="from">' + mail.header.from + '</div>');
-      expect(node.html()).toMatch('<span class="received-date">' + mail.header.formattedDate);
-    }
-
-    function matchSelectedMail(mail, node) {
-      expect(node.html()).toMatch(['id="mail-', mail.ident, '" class="selected"'].join(''));
-    }
   });
 
   describe('when saving a draft', function () {

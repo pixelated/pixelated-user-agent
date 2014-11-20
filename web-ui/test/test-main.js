@@ -36,7 +36,7 @@ requirejs.config({
   deps: tests,
 
   callback: function () {
-    require(['page/events','test/test_data', 'views/i18n', 'monkey_patching/array', 'views/recipientListFormatter'], function (events, testData, i18n, mp, recipientListFormatter) {
+    require(['page/events','test/test_data', 'views/i18n', 'monkey_patching/array', 'views/recipientListFormatter', 'test/custom_matchers'], function (events, testData, i18n, mp, recipientListFormatter, customMatchers) {
       window.Pixelated = window.Pixelated || {};
       window.Pixelated.events = events;
       window.Pixelated.testData = testData;
