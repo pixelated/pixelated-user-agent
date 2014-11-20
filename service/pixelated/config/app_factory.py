@@ -13,6 +13,8 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+import sys
+
 from twisted.internet import reactor
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.mail import InputMail
@@ -28,15 +30,14 @@ from requests.exceptions import ConnectionError
 from pixelated.controllers import *
 from pixelated.adapter.tag_service import TagService
 import os
-import sys
 from leap.common.events import (
     register,
+    unregister,
     events_pb2 as proto
 )
-from twisted.web.iweb import IAccessLogFormatter
 from twisted.web.server import Site
-from zope.interface import provider
 
+CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK=12345
 
 def init_index_and_remove_dupes(querier, search_engine, mail_service):
     def wrapper(*args, **kwargs):
@@ -94,6 +95,15 @@ def init_leap_session(app):
     return leap_session
 
 
+def look_for_user_key_and_create_if_cant_find(leap_session):
+    def wrapper(*args, **kwargs):
+        leap_session.nicknym.generate_openpgp_key()
+        unregister(proto.SOLEDAD_DONE_DATA_SYNC, uid=CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK)
+
+    return wrapper
+
+
+
 def init_app(app):
     leap_session = init_leap_session(app)
     soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
@@ -126,6 +136,9 @@ def init_app(app):
              callback=init_index_and_remove_dupes(querier=soledad_querier,
                                                   search_engine=search_engine,
                                                   mail_service=mail_service))
+
+    register(signal=proto.SOLEDAD_DONE_DATA_SYNC, uid=CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK,
+             callback=look_for_user_key_and_create_if_cant_find(leap_session))
 
     _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller,
                   sync_info_controller, attachments_controller)
