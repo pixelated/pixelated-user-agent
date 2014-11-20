@@ -81,3 +81,7 @@ class SoledadTestBase(unittest.TestCase):
     def mark_many_as_read(self, idents):
         res, req = self.client.post('/mails/read', json.dumps({'idents': idents}))
         return req
+
+    def get_contacts(self, query):
+        res, req = self.client.get('/contacts', get_args={'q': query})
+        return res

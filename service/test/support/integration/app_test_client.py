@@ -17,6 +17,7 @@ import json
 import multiprocessing
 import shutil
 import time
+from pixelated.config.routes import setup_routes
 
 from klein.test_resource import requestMock, _render
 from leap.mail.imap.account import SoledadBackedAccount
@@ -30,7 +31,7 @@ from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.adapter.tag_service import TagService
 from pixelated.config import app_factory
 from pixelated.controllers import FeaturesController, HomeController, MailsController, TagsController, \
-    SyncInfoController, AttachmentsController
+    SyncInfoController, AttachmentsController, ContactsController
 import pixelated.runserver
 from pixelated.adapter.mail import PixelatedMail
 from pixelated.adapter.search import SearchEngine
@@ -70,11 +71,12 @@ class AppTestClient:
                                            draft_service=self.draft_service,
                                            search_engine=self.search_engine)
         tags_controller = TagsController(search_engine=self.search_engine)
+        contacts_controller = ContactsController(search_engine=self.search_engine)
         sync_info_controller = SyncInfoController()
         attachments_controller = AttachmentsController(self.soledad_querier)
 
-        app_factory._setup_routes(self.app, home_controller, mails_controller, tags_controller,
-                                  features_controller, sync_info_controller, attachments_controller)
+        setup_routes(self.app, home_controller, mails_controller, tags_controller,
+                                  features_controller, sync_info_controller, attachments_controller, contacts_controller)
 
     def _render(self, request, as_json=True):
         def get_request_written_data(_=None):

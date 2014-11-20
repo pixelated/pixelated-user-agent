@@ -16,6 +16,7 @@
 import sys
 
 from twisted.internet import reactor
+from pixelated.config.routes import setup_routes
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.mail import InputMail
 from pixelated.adapter.mail_sender import MailSender
@@ -55,32 +56,6 @@ def update_info_sync_and_index_partial(sync_info_controller, search_engine, mail
         search_engine.index_mails(mails=mail_service.all_mails())
 
     return wrapper
-
-
-def _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller, sync_info_controller,
-                  attachments_controller):
-    # mails
-    app.route('/mails', methods=['GET'])(mails_controller.mails)
-    app.route('/mail/<mail_id>/read', methods=['POST'])(mails_controller.mark_mail_as_read)
-    app.route('/mail/<mail_id>/unread', methods=['POST'])(mails_controller.mark_mail_as_unread)
-    app.route('/mails/unread', methods=['POST'])(mails_controller.mark_many_mail_unread)
-    app.route('/mails/read', methods=['POST'])(mails_controller.mark_many_mail_read)
-    app.route('/mail/<mail_id>', methods=['GET'])(mails_controller.mail)
-    app.route('/mail/<mail_id>', methods=['DELETE'])(mails_controller.delete_mail)
-    app.route('/mails', methods=['DELETE'])(mails_controller.delete_mails)
-    app.route('/mails', methods=['POST'])(mails_controller.send_mail)
-    app.route('/mail/<mail_id>/tags', methods=['POST'])(mails_controller.mail_tags)
-    app.route('/mails', methods=['PUT'])(mails_controller.update_draft)
-    # tags
-    app.route('/tags', methods=['GET'])(tags_controller.tags)
-    # features
-    app.route('/features', methods=['GET'])(features_controller.features)
-    # sync info
-    app.route('/sync_info', methods=['GET'])(sync_info_controller.sync_info)
-    # attachments
-    app.route('/attachment/<attachment_id>', methods=['GET'])(attachments_controller.attachment)
-    # static
-    app.route('/', methods=['GET'], branch=True)(home_controller.home)
 
 
 def init_leap_session(app):
@@ -126,6 +101,7 @@ def init_app(app):
                                        draft_service=draft_service,
                                        search_engine=search_engine)
     tags_controller = TagsController(search_engine=search_engine)
+    contacts_controller = ContactsController(search_engine=search_engine)
     sync_info_controller = SyncInfoController()
     attachments_controller = AttachmentsController(soledad_querier)
 
@@ -141,8 +117,8 @@ def init_app(app):
     register(signal=proto.SOLEDAD_DONE_DATA_SYNC, uid=CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK,
              callback=look_for_user_key_and_create_if_cant_find(leap_session))
 
-    _setup_routes(app, home_controller, mails_controller, tags_controller, features_controller,
-                  sync_info_controller, attachments_controller)
+    setup_routes(app, home_controller, mails_controller, tags_controller, features_controller,
+                 sync_info_controller, attachments_controller, contacts_controller)
 
 
 def create_app(app, bind_address, bind_port):

@@ -44,17 +44,7 @@ define([
         self;
 
       var extractContactNames = function (response) {
-        return _.flatten(response.contacts, function (contact) {
-          var filterCriteria = contact.name ?
-            function (e) {
-              return { value: contact.name + ' <' + e + '>' };
-            } :
-            function (e) {
-              return { value: e };
-            };
-
-          return _.map(contact.addresses, filterCriteria);
-        });
+          return _.map(response, function(a) { return { value: a } });
       };
 
       function createEmailCompleter() {
@@ -70,9 +60,7 @@ define([
             filter: extractContactNames
           }
         });
-        if (features.isEnabled('contacts')) {
-          emailCompleter.initialize();
-        }
+        emailCompleter.initialize();
         return emailCompleter;
       }
 

@@ -13,10 +13,12 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+
 from pixelated.support.encrypted_file_storage import EncryptedFileStorage
 
 import os
 from pixelated.adapter.status import Status
+from pixelated.support.functional import flatten
 from whoosh.index import FileIndex
 from whoosh.fields import *
 from whoosh.qparser import QueryParser
@@ -44,7 +46,8 @@ class SearchEngine(object):
                 continue
 
             if not tags.get(tag):
-                tags[tag] = {'ident': tag, 'name': tag, 'default': False, 'counts': {'total': 0, 'read': 0}, 'mails': []}
+                tags[tag] = {'ident': tag, 'name': tag, 'default': False, 'counts': {'total': 0, 'read': 0},
+                             'mails': []}
             tags[tag]['counts'][count_type] += count
 
     def _search_tag_groups(self, is_filtering_tags):
@@ -91,9 +94,9 @@ class SearchEngine(object):
         return Schema(
             ident=ID(stored=True, unique=True),
             sender=ID(stored=False),
-            to=ID(stored=False),
-            cc=ID(stored=False),
-            bcc=ID(stored=False),
+            to=KEYWORD(stored=False, commas=True),
+            cc=KEYWORD(stored=False, commas=True),
+            bcc=KEYWORD(stored=False, commas=True),
             subject=TEXT(stored=False),
             date=NUMERIC(stored=False, sortable=True, bits=64, signed=False),
             body=TEXT(stored=False),
@@ -119,9 +122,9 @@ class SearchEngine(object):
             'sender': unicode(header.get('from', '')),
             'subject': unicode(header.get('subject', '')),
             'date': milliseconds(header.get('date', '')),
-            'to': unicode(header.get('to', '')),
-            'cc': unicode(header.get('cc', '')),
-            'bcc': unicode(header.get('bcc', '')),
+            'to': u','.join(header.get('to', [''])),
+            'cc': u','.join(header.get('cc', [''])),
+            'bcc': u','.join(header.get('bcc', [''])),
             'tag': u','.join(unique(tags)),
             'body': unicode(mdict['body']),
             'ident': unicode(mdict['ident']),
@@ -179,3 +182,20 @@ class SearchEngine(object):
             writer.delete_by_term('ident', mail_id)
         finally:
             writer.commit()
+
+    def contacts(self, query):
+        if query:
+            to = QueryParser('to', self._index.schema)
+            cc = QueryParser('cc', self._index.schema)
+            bcc = QueryParser('bcc', self._index.schema)
+            with self._index.searcher() as searcher:
+                to = searcher.search(to.parse("*%s*" % query), limit=None,
+                                     groupedby=sorting.FieldFacet('to', allow_overlap=True)).groups()
+                cc = searcher.search(cc.parse("*%s*" % query), limit=None,
+                                     groupedby=sorting.FieldFacet('cc', allow_overlap=True)).groups()
+                bcc = searcher.search(bcc.parse("*%s*" % query), limit=None,
+                                      groupedby=sorting.FieldFacet('bcc', allow_overlap=True)).groups()
+                return flatten([to, cc, bcc])
+
+        return []
+
