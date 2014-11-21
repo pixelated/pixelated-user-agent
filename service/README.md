@@ -60,3 +60,9 @@ pip uninstall -y gnupg; pip install gnupg
 ```
 pixelated-user-agent
 ```
+
+* For development purposes you can also copy the pixelated.example file and fill in your credentials,
+  that way you avoid having to enter your test credentials everytime:
+```
+pixelated-user-agent --config=<config_file_path>
+```
