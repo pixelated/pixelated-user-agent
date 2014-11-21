@@ -14,7 +14,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
+import multiprocessing
 import shutil
+import time
 
 from klein.test_resource import requestMock, _render
 from leap.mail.imap.account import SoledadBackedAccount
@@ -86,6 +88,13 @@ class AppTestClient:
         else:
             d.addCallback(get_request_written_data)
             return d, request
+
+    def run_on_a_thread(self, logfile='/tmp/app_test_client.log', port=4567, host='localhost'):
+        worker = lambda: self.app.run(host=host, port=port, logFile=open(logfile, 'w'))
+        process = multiprocessing.Process(target=worker)
+        process.start()
+        time.sleep(1)  # just let it start
+        return lambda: process.terminate()
 
     def get(self, path, get_args, as_json=True):
         request = requestMock(path)

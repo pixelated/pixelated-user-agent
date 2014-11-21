@@ -18,25 +18,20 @@ import multiprocessing
 import logging
 from test.support.integration import AppTestClient
 from selenium import webdriver
+from pixelated.controllers.features_controller import FeaturesController
 import pixelated
 
 
 def before_all(context):
-    pixelated.controllers.features_controller.FeaturesController.DISABLED_FEATURES.append('autoRefresh')
-    client = AppTestClient()
-    context.client = client
     logging.disable('INFO')
-
-    worker = lambda: client.app.run(host='localhost', port=4567, logFile=open('/tmp/behave-tests.log', 'w'))
-    context._process = multiprocessing.Process(target=worker)
-    context._process.start()
-
-    # we must wait the server start listening
-    time.sleep(1)
+    client = AppTestClient()
+    FeaturesController.DISABLED_FEATURES.append('autoRefresh')
+    context.client = client
+    context.call_to_terminate = client.run_on_a_thread(logfile='/tmp/behave-tests.log')
 
 
 def after_all(context):
-    context._process.terminate()
+    context.call_to_terminate()
 
 
 def before_feature(context, feature):
