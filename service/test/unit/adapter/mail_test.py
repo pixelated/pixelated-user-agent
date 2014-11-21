@@ -112,6 +112,20 @@ class TestPixelatedMail(unittest.TestCase):
 
         self.assertRegexpMatches(mail.body, '([\s\S]*100%){2}')
 
+    def test_clean_line_breaks_on_address_headers(self):
+        fdoc, hdoc, bdoc = test_helper.leap_mail(flags=['\\Recent'])
+        hdoc.content['headers']['To'] = 'One <one@mail.com>,\nTwo <two@mail.com>, Normal <normal@mail.com>,\nalone@mail.com'
+        hdoc.content['headers']['Bcc'] = hdoc.content['headers']['To']
+        hdoc.content['headers']['Cc'] = hdoc.content['headers']['To']
+
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier)
+
+        for header_label in ['To', 'Cc', 'Bcc']:
+            for address in mail.headers[header_label]:
+                self.assertNotIn('\n', address)
+                self.assertNotIn(',', address)
+            self.assertEquals(4, len(mail.headers[header_label]))
+
 
 class InputMailTest(unittest.TestCase):
     mail_dict = lambda x: {

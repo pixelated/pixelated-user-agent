@@ -225,7 +225,8 @@ class PixelatedMail(Mail):
             header_value = self.hdoc.content['headers'].get(header)
             if not header_value:
                 continue
-            _headers[header] = header_value if type(header_value) is list else header_value.split(', ')
+            _headers[header] = header_value if type(header_value) is list else header_value.split(',')
+            _headers[header] = map(lambda x: x.strip(), _headers[header])
 
         for header in ['From', 'Subject']:
             _headers[header] = self.hdoc.content['headers'].get(header)
