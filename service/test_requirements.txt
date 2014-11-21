@@ -5,3 +5,4 @@ nose==1.3.4
 mock==1.0.1
 httmock==1.2.2
 mockito==0.5.2
+funkload==1.16.1
