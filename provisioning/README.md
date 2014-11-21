@@ -14,7 +14,6 @@ Activate virtualenv and run Pixelated server
 ```sh
 $ cd /vagrant/service
 $ source .virtualenv/bin/activate
-$ pixelated-user-agent --register example.wazokazi.is <your username>
 $ pixelated-user-agent --host 0.0.0.0
 ```
 
