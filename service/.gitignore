@@ -1,3 +1,4 @@
 .virtualenv/
 soledad-test/
 build/
+test/perf/**/results
