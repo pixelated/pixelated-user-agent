@@ -44,7 +44,7 @@ define([
         self;
 
       var extractContactNames = function (response) {
-          return _.map(response, function(a) { return { value: a } });
+          return _.map(response, function(a) { return { value: a }; });
       };
 
       function createEmailCompleter() {
