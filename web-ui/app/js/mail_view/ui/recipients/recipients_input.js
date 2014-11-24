@@ -99,7 +99,7 @@ define([
       };
 
       this.tokenizeRecipient = function (event) {
-        if (_.isEmpty(this.$node.val())) {
+        if (_.isEmpty(this.$node.val().trim())) {
           return;
         }
 
@@ -109,8 +109,12 @@ define([
 
       this.recipientSelected = function (event, data) {
         var value = (data && data.value) || this.$node.val();
-
-        this.trigger(this.$node, events.ui.recipients.entered, { name: this.attr.name, address: value });
+        var that = this;
+        _.each(value.split(/[,;]/), function(address) {
+            if (!_.isEmpty(address.trim())) {
+                that.trigger(that.$node, events.ui.recipients.entered, { name: that.attr.name, address: address.trim() });
+            }
+        });
         reset(this.$node);
       };
 
