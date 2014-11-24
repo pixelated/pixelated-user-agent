@@ -76,7 +76,7 @@ class AppTestClient:
         attachments_controller = AttachmentsController(self.soledad_querier)
 
         setup_routes(self.app, home_controller, mails_controller, tags_controller,
-                                  features_controller, sync_info_controller, attachments_controller, contacts_controller)
+                     features_controller, sync_info_controller, attachments_controller, contacts_controller)
 
     def _render(self, request, as_json=True):
         def get_request_written_data(_=None):

@@ -198,4 +198,3 @@ class SearchEngine(object):
                 return flatten([to, cc, bcc])
 
         return []
-
