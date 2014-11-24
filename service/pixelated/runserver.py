@@ -52,6 +52,11 @@ def setup():
             app.config['LEAP_SERVER_NAME'] = config['leap_provider_hostname']
             app.config['LEAP_USERNAME'] = config['user']
             app.config['LEAP_PASSWORD'] = config['password']
+        elif args.dispatcher_stdin:
+            config = fetch_credentials_from_dispatcher_stdin()
+            app.config['LEAP_SERVER_NAME'] = config['leap_provider_hostname']
+            app.config['LEAP_USERNAME'] = config['user']
+            app.config['LEAP_PASSWORD'] = config['password']
         else:
             configuration_setup(args.config)
         start_services(args.host, args.port)
@@ -70,6 +75,10 @@ def fetch_credentials_from_dispatcher(filename):
         sys.exit(1)
     with open(filename, 'r') as fifo:
         return json.loads(fifo.read())
+
+
+def fetch_credentials_from_dispatcher_stdin():
+    return json.loads(sys.stdin.read())
 
 
 def setup_debugger(enabled):

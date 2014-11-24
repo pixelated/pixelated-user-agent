@@ -59,6 +59,22 @@ class RunserverTest(unittest.TestCase):
         sys.argv = ['tmp/does_not_exist', '--dispatcher', fifo_path]
         pixelated.runserver.setup()
 
+    def test_that_organization_switch_reads_the_credentials_from_stdin(self):
+        data = json.dumps({'leap_provider_hostname': 'test_provider', 'user': 'test_user', 'password': 'test_password'})
+        orig_stdin = sys.stdin
+        try:
+            sys.stdin = Mock()
+            when(sys.stdin).read().thenReturn(data)
+
+            sys.argv = ['tmp/does_not_exist', '--dispatcher-stdin']
+            pixelated.runserver.setup()
+
+            self.assertEquals('test_provider', pixelated.runserver.app.config['LEAP_SERVER_NAME'])
+            self.assertEquals('test_user', pixelated.runserver.app.config['LEAP_USERNAME'])
+            self.assertEquals('test_password', pixelated.runserver.app.config['LEAP_PASSWORD'])
+        finally:
+            sys.stdin = orig_stdin
+
     def test_start_services_provides_port(self):
         bind_address = '127.0.0.1'
         bind_port = 12345
