@@ -22,5 +22,5 @@ then
 fi
 
 mkdir -p results
-fl-run-bench test_Mails.py Mails.test_mails
-LC_ALL=en_US.ascii fl-build-report --html results/mails-bench.xml
+fl-run-bench test_Tags.py Tags.test_mails
+LC_ALL=en_US.ascii fl-build-report --html results/tags-bench.xml

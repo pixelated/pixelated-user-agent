@@ -1,4 +1,3 @@
-#!/bin/bash
 #
 # Copyright (c) 2014 ThoughtWorks, Inc.
 #
@@ -14,13 +13,3 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-
-if ! which gnuplot
-then
-    echo "You must install gnuplot to run perf tests"
-    exit 1
-fi
-
-mkdir -p results
-fl-run-bench test_Mails.py Mails.test_mails
-LC_ALL=en_US.ascii fl-build-report --html results/mails-bench.xml
