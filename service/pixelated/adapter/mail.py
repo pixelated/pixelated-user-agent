@@ -79,7 +79,7 @@ class Mail:
             'ident': self.ident,
             'tags': list(self.tags),
             'status': list(self.status),
-            'security_casing': {},
+            'security_casing': self.security_casing,
             'body': self.body,
             'mailbox': self.mailbox_name.lower(),
             'attachments': self.parts['attachments'] if self.parts else []
@@ -243,7 +243,10 @@ class PixelatedMail(Mail):
 
     @property
     def security_casing(self):
-        return {}
+        casing = {"imprints": []}
+        if self.signed:
+            casing["imprints"].append({"state": "valid", "seal": {"validity": "valid"}})
+        return casing
 
     @property
     def tags(self):
@@ -304,3 +307,10 @@ class PixelatedMail(Mail):
 
     def has_tag(self, tag):
         return tag in self.tags
+
+    @property
+    def signed(self):
+        return self.hdoc.content["headers"].get("X-Leap-Signature", "").startswith("valid")
+
+    def encrypt(self):
+        pass
