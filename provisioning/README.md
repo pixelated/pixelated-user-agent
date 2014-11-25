@@ -10,8 +10,9 @@ $ vagrant up
 ```
 
 # Running the server
-Activate virtualenv and run Pixelated server:
+Enter the vagrant box, activate virtualenv and run Pixelated server:
 ```sh
+$ vagrant ssh
 $ cd /vagrant/service
 $ source .virtualenv/bin/activate
 $ pixelated-user-agent --host 0.0.0.0
