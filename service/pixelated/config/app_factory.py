@@ -15,7 +15,11 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import sys
 
+from OpenSSL import SSL
 from twisted.internet import reactor
+from twisted.internet import ssl
+from twisted.web import resource
+from twisted.web.util import redirectTo
 from pixelated.config.routes import setup_routes
 from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.mail import InputMail
@@ -62,7 +66,7 @@ def init_leap_session(app):
         leap_session = LeapSession.open(app.config['LEAP_USERNAME'],
                                         app.config['LEAP_PASSWORD'],
                                         app.config['LEAP_SERVER_NAME'])
-    except ConnectionError, error:
+    except ConnectionError:
         print("Can't connect to the requested provider")
         sys.exit(1)
     except LeapAuthException, e:
@@ -120,7 +124,36 @@ def init_app(app):
                  sync_info_controller, attachments_controller, contacts_controller)
 
 
-def create_app(app, bind_address, bind_port):
-    reactor.listenTCP(bind_port, Site(app.resource()), interface=bind_address)
+def create_app(app, args):
+
+    if args.sslkey and args.sslcert:
+        listen_with_ssl(app, args)
+    else:
+        listen_without_ssl(app, args)
     reactor.callWhenRunning(lambda: init_app(app))
     reactor.run()
+
+
+def listen_without_ssl(app, args):
+    reactor.listenTCP(args.port, Site(app.resource()), interface=args.host)
+
+
+def listen_with_ssl(app, args):
+    sslContext = ssl.DefaultOpenSSLContextFactory(privateKeyFileName=args.sslkey,
+                                                  certificateFileName=args.sslcert,
+                                                  sslmethod=SSL.TLSv1_METHOD)
+    reactor.listenSSL(args.ssl_port, Site(app.resource()), sslContext, interface=args.host)
+    reactor.listenTCP(args.port, Site(RedirectToSSL(args.ssl_port)))
+
+    return reactor
+
+
+class RedirectToSSL(resource.Resource):
+    isLeaf = True
+
+    def __init__(self, ssl_port):
+        self.ssl_port = ssl_port
+
+    def render_GET(self, request):
+        host = request.getHost().host
+        return redirectTo("https://%s:%s" % (host, self.ssl_port), request)

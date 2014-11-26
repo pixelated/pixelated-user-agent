@@ -19,13 +19,11 @@ import sys
 import logging
 import json
 from klein import Klein
-from twisted.python.log import ILogObserver
 
 klein_app = Klein()
 
 import ConfigParser
 from twisted.python import log
-import sys
 from leap.common.events import server as events_server
 from pixelated.config import app_factory
 import pixelated.config.args as input_args
@@ -59,7 +57,7 @@ def setup():
             app.config['LEAP_PASSWORD'] = config['password']
         else:
             configuration_setup(args.config)
-        start_services(args.host, args.port)
+        start_services(args)
 
 
 def register(username, server_name):
@@ -122,9 +120,9 @@ def configuration_setup(config_file):
     app.config['LEAP_PASSWORD'] = password
 
 
-def start_services(bind_address, bind_port):
+def start_services(args):
     events_server.ensure_server(port=8090)
-    app_factory.create_app(app, bind_address, bind_port)
+    app_factory.create_app(app, args)
 
 
 if __name__ == '__main__':

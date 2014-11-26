@@ -75,14 +75,13 @@ class RunserverTest(unittest.TestCase):
         finally:
             sys.stdin = orig_stdin
 
-    def test_start_services_provides_port(self):
-        bind_address = '127.0.0.1'
-        bind_port = 12345
-        when(app_factory).create_app(any(), bind_address, bind_port).thenReturn(None)
+    def test_start_services_pass_args_through(self):
+        args = {}
+        when(app_factory).create_app(any(), args).thenReturn(None)
 
-        pixelated.runserver.start_services(bind_address, bind_port)
+        pixelated.runserver.start_services(args)
 
-        verify(app_factory).create_app(any(), bind_address, bind_port)
+        verify(app_factory).create_app(any(),args)
 
     def spin_up_fifo(self, test_fifo):
         with open(test_fifo, 'w') as fifo:
