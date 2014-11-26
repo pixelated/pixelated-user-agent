@@ -35,16 +35,13 @@ SESSIONS = {}
 
 
 def open(username, password, server_name):
-    try:
-        certs_home = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "certificates"))
+    certs_home = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "certificates"))
 
-        config = LeapConfig(certs_home=certs_home)
-        provider = LeapProvider(server_name, config)
-        session = LeapSessionFactory(provider).create(LeapCredentials(username, password))
+    config = LeapConfig(certs_home=certs_home)
+    provider = LeapProvider(server_name, config)
+    session = LeapSessionFactory(provider).create(LeapCredentials(username, password))
 
-        return session
-    except:
-        raise
+    return session
 
 
 class LeapSession(object):
