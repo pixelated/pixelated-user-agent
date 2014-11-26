@@ -85,7 +85,7 @@ class TestPixelatedMail(unittest.TestCase):
                                   },
                                   'ident': 'chash',
                                   'mailbox': 'inbox',
-                                  'security_casing': {'imprints': []},
+                                  'security_casing': {'imprints': [], 'locks': []},
                                   'status': ['recent'],
                                   'tags': [],
                                   'attachments': []

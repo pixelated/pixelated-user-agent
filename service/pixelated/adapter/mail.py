@@ -243,9 +243,13 @@ class PixelatedMail(Mail):
 
     @property
     def security_casing(self):
-        casing = {"imprints": []}
+        casing = {"imprints": [], "locks": []}
         if self.signed:
             casing["imprints"].append({"state": "valid", "seal": {"validity": "valid"}})
+
+        if self.encrypted:
+            casing["locks"].append({"state": "valid"})
+
         return casing
 
     @property
@@ -312,5 +316,6 @@ class PixelatedMail(Mail):
     def signed(self):
         return self.hdoc.content["headers"].get("X-Leap-Signature", "").startswith("valid")
 
-    def encrypt(self):
-        pass
+    @property
+    def encrypted(self):
+        return self.hdoc.content["headers"].get("OpenPGP", None) is not None

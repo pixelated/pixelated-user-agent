@@ -19,7 +19,7 @@ import os
 
 
 class FeaturesController:
-    DISABLED_FEATURES = ['draftReply', 'encryptionStatus']
+    DISABLED_FEATURES = ['draftReply']
 
     def __init__(self):
         pass
