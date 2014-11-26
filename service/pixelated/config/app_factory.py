@@ -30,7 +30,6 @@ from pixelated.bitmask_libraries.leap_srp import LeapAuthException
 from requests.exceptions import ConnectionError
 from pixelated.controllers import *
 from pixelated.adapter.tag_service import TagService
-import os
 from leap.common.events import (
     register,
     unregister,
@@ -125,14 +124,3 @@ def create_app(app, bind_address, bind_port):
     reactor.listenTCP(bind_port, Site(app.resource()), interface=bind_address)
     reactor.callWhenRunning(lambda: init_app(app))
     reactor.run()
-
-
-def get_static_folder():
-    static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))
-    # this is a workaround for packaging
-    if not os.path.exists(static_folder):
-        static_folder = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), "..", "..", "..", "..", "web-ui", "app"))
-    if not os.path.exists(static_folder):
-        static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
-    return static_folder
