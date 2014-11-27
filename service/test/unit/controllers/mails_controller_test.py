@@ -122,7 +122,6 @@ class TestMailsController(unittest.TestCase):
 
     def _successfuly_send_mail(self, ident, mail):
         sent_mail = mock()
-        sent_mail.mailbox_name = 'TRASH'
         sent_mail.as_dict = lambda: self.input_mail.json
 
         return sent_mail

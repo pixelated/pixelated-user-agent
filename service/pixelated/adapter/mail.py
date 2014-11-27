@@ -214,7 +214,11 @@ class PixelatedMail(Mail):
 
     @property
     def headers(self):
-        _headers = {}
+        _headers = {
+            'To': [],
+            'Cc': [],
+            'Bcc': []
+        }
         hdoc_headers = self.hdoc.content['headers']
 
         for header in ['To', 'Cc', 'Bcc']:
@@ -320,10 +324,13 @@ class PixelatedMail(Mail):
 
     def as_dict(self):
         dict_mail = super(PixelatedMail, self).as_dict()
-        recipients = dict_mail['header']['to'][0]
-        for recipient in recipients:
-            if recipient == InputMail.FROM_EMAIL_ADDRESS:
-                recipients.remove(recipient)
-        dict_mail['header']['to'][0] = recipients
-        dict_mail['header']['subject'] = 'Re: %s' % dict_mail['header']['subject']
+        dict_mail['replying'] = {'single': None, 'all': {'to-field': [], 'cc-field': []}}
+
+        recipients = [recipient for recipient in self.headers['To'] if recipient != InputMail.FROM_EMAIL_ADDRESS]
+        recipients.append(self.headers['From'])
+        ccs = [cc for cc in self.headers['Cc'] if cc != InputMail.FROM_EMAIL_ADDRESS]
+
+        dict_mail['replying']['single'] = self.headers['From']
+        dict_mail['replying']['all']['to-field'] = recipients
+        dict_mail['replying']['all']['cc-field'] = ccs
         return dict_mail
