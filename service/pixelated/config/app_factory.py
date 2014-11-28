@@ -16,6 +16,7 @@
 import sys
 
 from OpenSSL import SSL
+from OpenSSL import crypto
 from twisted.internet import reactor
 from twisted.internet import ssl
 from twisted.web import resource
@@ -139,10 +140,16 @@ def listen_without_ssl(app, args):
 
 
 def listen_with_ssl(app, args):
-    sslContext = ssl.DefaultOpenSSLContextFactory(privateKeyFileName=args.sslkey,
-                                                  certificateFileName=args.sslcert,
-                                                  sslmethod=SSL.TLSv1_METHOD)
-    reactor.listenSSL(args.ssl_port, Site(app.resource()), sslContext, interface=args.host)
+    pkey, cert = None, None
+    with open(args.sslkey) as keyfile:
+        pkey = crypto.load_privatekey(crypto.FILETYPE_PEM, keyfile.read())
+    with open(args.sslcert) as certfile:
+        cert = crypto.load_certificate(crypto.FILETYPE_PEM, certfile.read())
+
+    acceptable = ssl.AcceptableCiphers.fromOpenSSLCipherString('ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:!RC4:HIGH:!MD5:!aNULL:!EDH')
+    options = ssl.CertificateOptions(privateKey=pkey, certificate=cert, method=SSL.TLSv1_2_METHOD, acceptableCiphers=acceptable)
+
+    reactor.listenSSL(args.ssl_port, Site(app.resource()), options, interface=args.host)
     reactor.listenTCP(args.port, Site(RedirectToSSL(args.ssl_port)))
 
     return reactor
