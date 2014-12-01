@@ -81,7 +81,7 @@ class RunserverTest(unittest.TestCase):
 
         pixelated.runserver.start_services(args)
 
-        verify(app_factory).create_app(any(),args)
+        verify(app_factory).create_app(any(), args)
 
     def spin_up_fifo(self, test_fifo):
         with open(test_fifo, 'w') as fifo:
