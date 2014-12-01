@@ -16,6 +16,13 @@ define(function() {
     security_casing: {
       locks: [],
       imprints: []
+    },
+    replying: {
+      single: 'laurel@hamil.info',
+      all: {
+        'to-field': ['laurel@hamil.info'],
+        'cc-field': []
+      }
     }
   };
 
@@ -25,7 +32,15 @@ define(function() {
     'tags':['photography','sky'],
     'status':['read'],
     'body':'Illum eos nihil commodi voluptas. Velit consequatur odio quibusdam. Beatae aliquam hic quos.',
-    'mailbox': 'SENT'
+    'mailbox': 'SENT',
+    replying: {
+      single: 'laurel@hamil.info',
+      all: {
+        'to-field': ['mariane_dach@davis.info'],
+        'cc-field': ['duda@la.lu']
+      }
+    }
+
   };
 
   var rawDraftMail = {
@@ -34,7 +49,15 @@ define(function() {
     'tags':['photography','sky'],
     'status':['read'],
     'body':'Illum eos nihil commodi voluptas. Velit consequatur odio quibusdam. Beatae aliquam hic quos.',
-    'mailbox': 'DRAFTS'
+    'mailbox': 'DRAFTS',
+    replying: {
+      single: 'afton_braun@botsford.biz',
+      all: {
+        'to-field': ['afton_braun@botsford.biz'],
+        'cc-field': []
+      }
+    }
+
   };
 
   var rawRecievedMail = {
@@ -42,7 +65,15 @@ define(function() {
     'ident':242,
     'tags':['garden','instalovers','popularpic'],
     'status':['read'],
-    'body':'Sed est neque tempore. Alias officiis pariatur ullam porro corporis. Tempore eum quia placeat. Sapiente fuga cum.'
+    'body':'Sed est neque tempore. Alias officiis pariatur ullam porro corporis. Tempore eum quia placeat. Sapiente fuga cum.',
+    replying: {
+      single: 'afton_braun@botsford.biz',
+      all: {
+        'to-field': ['cleve_jaskolski@schimmelhirthe.net', 'afton_braun@botsford.biz'],
+        'cc-field': []
+      }
+    }
+
   };
 
   var rawRecievedWithCCMail = {
@@ -50,7 +81,15 @@ define(function() {
     'ident':242,
     'tags':['garden','instalovers','popularpic'],
     'status':['read'],
-    'body':'Sed est neque tempore. Alias officiis pariatur ullam porro corporis. Tempore eum quia placeat. Sapiente fuga cum.'
+    'body':'Sed est neque tempore. Alias officiis pariatur ullam porro corporis. Tempore eum quia placeat. Sapiente fuga cum.',
+    replying: {
+      single: 'cleve_jaskolski@schimmelhirthe.net',
+      all: {
+        'to-field': ['cleve_jaskolski@schimmelhirthe.net'],
+        'cc-field': ['mariane_dach@davis.info']
+      }
+    }
+
   };
 
   var rawMailWithMultipleTo = {
@@ -58,7 +97,15 @@ define(function() {
     'ident':242,
     'tags':['garden','instalovers','popularpic'],
     'status':['read'],
-    'body':'Sed est neque tempore. Alias officiis pariatur ullam porro corporis. Tempore eum quia placeat. Sapiente fuga cum.'
+    'body':'Sed est neque tempore. Alias officiis pariatur ullam porro corporis. Tempore eum quia placeat. Sapiente fuga cum.',
+    replying: {
+      single: 'cleve_jaskolski@schimmelhirthe.net',
+      all: {
+        'to-field': ['cleve_jaskolski@schimmelhirthe.net', 'someoneelse@some-other-domain.tld'],
+        'cc-field': ['mariane_dach@davis.info']
+      }
+    }
+
   };
 
   var rawMultipartMail = {
@@ -81,7 +128,15 @@ define(function() {
           'Content-Transfer-Encoding: quoted-printable\n' +
           '\n' +
           '<p><b>Hello everyone!</b></p>\n' +
-          '--asdfghjkl--\n'
+          '--asdfghjkl--\n',
+    replying: {
+      single: 'laurel@hamil.info',
+      all: {
+        'to-field': ['laurel@hamil.info'],
+        'cc-field': []
+      }
+    }
+
   };
 
   var simpleTextPlainMail = {
