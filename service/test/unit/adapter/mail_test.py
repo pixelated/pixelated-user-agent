@@ -103,6 +103,25 @@ class TestPixelatedMail(unittest.TestCase):
                                       }
                                   }})
 
+    def test_use_reply_to_address_for_replying(self):
+        fdoc, hdoc, bdoc = test_helper.leap_mail(flags=['\\Recent'])
+        hdoc.content['headers']['Subject'] = 'The subject'
+        hdoc.content['headers']['From'] = 'someone@pixelated.org'
+        hdoc.content['headers']['Reply-To'] = 'reply-to-this-address@pixelated.org'
+        hdoc.content['headers']['To'] = 'me@pixelated.org, \nalice@pixelated.org'
+
+        InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
+
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier)
+
+        _dict = mail.as_dict()
+
+        self.assertEquals(_dict['replying'], {'single': 'reply-to-this-address@pixelated.org',
+                                              'all': {
+                                                  'to-field': ['alice@pixelated.org', 'reply-to-this-address@pixelated.org'],
+                                                  'cc-field': []
+                                              }})
+
     def test_alternatives_body(self):
         parts = {'alternatives': [], 'attachments': []}
         parts['alternatives'].append({'content': 'blablabla', 'headers': {'Content-Type': 'text/plain'}})
