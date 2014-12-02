@@ -41,7 +41,6 @@ cd ../service
 virtualenv .virtualenv
 source .virtualenv/bin/activate
 ./go develop --always-unzip
-pip uninstall -y gnupg; pip install gnupg
 
 # print usage
 cat <<EOF
@@ -52,7 +51,7 @@ cat <<EOF
 
 ## You might also need to add your LEAP provider ssl certificate to pixelated manually for now, with the following steps:
 ## The easiest way to find this is accessing https://your.provider.org/ca.crt
-## Rename the certificate based on your provider domain name like this `your.leapprovider.org.crt`
+## Rename the certificate based on your provider domain name like this 'your.leapprovider.org.crt'
 ## Put it in services/pixelated/certificates/
 
 ## Once you are done, just run:
