@@ -69,10 +69,11 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEquals(mail.fdoc.content['flags'], [])
 
     def test_as_dict(self):
-        fdoc, hdoc, bdoc = test_helper.leap_mail(flags=['\\Recent'])
-        hdoc.content['headers']['Subject'] = 'The subject'
-        hdoc.content['headers']['From'] = 'someone@pixelated.org'
-        hdoc.content['headers']['To'] = 'me@pixelated.org'
+        headers = {'Subject': 'The subject',
+                   'From': 'someone@pixelated.org',
+                   'To': 'me@pixelated.org'}
+        fdoc, hdoc, bdoc = test_helper.leap_mail(flags=['\\Recent'],
+                                                 extra_headers=headers)
 
         InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
 
@@ -104,11 +105,12 @@ class TestPixelatedMail(unittest.TestCase):
                                   }})
 
     def test_use_reply_to_address_for_replying(self):
-        fdoc, hdoc, bdoc = test_helper.leap_mail(flags=['\\Recent'])
-        hdoc.content['headers']['Subject'] = 'The subject'
-        hdoc.content['headers']['From'] = 'someone@pixelated.org'
-        hdoc.content['headers']['Reply-To'] = 'reply-to-this-address@pixelated.org'
-        hdoc.content['headers']['To'] = 'me@pixelated.org, \nalice@pixelated.org'
+        headers = {'Subject': 'The subject',
+                   'From': 'someone@pixelated.org',
+                   'Reply-To': 'reply-to-this-address@pixelated.org',
+                   'To': 'me@pixelated.org, \nalice@pixelated.org'}
+        fdoc, hdoc, bdoc = test_helper.leap_mail(flags=['\\Recent'],
+                                                 extra_headers=headers)
 
         InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
 
@@ -144,10 +146,12 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertRegexpMatches(mail.body, '([\s\S]*100%){2}')
 
     def test_clean_line_breaks_on_address_headers(self):
-        fdoc, hdoc, bdoc = test_helper.leap_mail(flags=['\\Recent'])
-        hdoc.content['headers']['To'] = 'One <one@mail.com>,\nTwo <two@mail.com>, Normal <normal@mail.com>,\nalone@mail.com'
-        hdoc.content['headers']['Bcc'] = hdoc.content['headers']['To']
-        hdoc.content['headers']['Cc'] = hdoc.content['headers']['To']
+        many_recipients = 'One <one@mail.com>,\nTwo <two@mail.com>, Normal <normal@mail.com>,\nalone@mail.com'
+        headers = {'Cc': many_recipients,
+                   'Bcc': many_recipients,
+                   'To': many_recipients}
+        fdoc, hdoc, bdoc = test_helper.leap_mail(flags=['\\Recent'],
+                                                 extra_headers=headers)
 
         mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier)
 
