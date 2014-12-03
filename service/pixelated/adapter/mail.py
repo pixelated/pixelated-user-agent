@@ -22,8 +22,10 @@ import dateutil.parser as dateparser
 from pixelated.adapter.status import Status
 import pixelated.support.date
 from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
+from email.mime.text import MIMEText
 from pycryptopp.hash import sha256
+import re
+
 
 class Mail(object):
     @property
@@ -61,9 +63,15 @@ class Mail(object):
         mime = MIMEMultipart()
         for key, value in self.headers.items():
             mime[str(key)] = str(value)
-        mime.attach(MIMEText(self.body, 'plain'))
+        mime.attach(MIMEText(self.body, 'plain', self._charset()))
         self._mime = mime
         return mime
+
+    def _charset(self):
+        if 'content_type' in self.headers and 'charset' in self.headers['content_type']:
+            return re.compile('.*charset=(.*)').match(self.headers['content_type']).group(1)
+        else:
+            return 'us-ascii'
 
     @property
     def raw(self):
@@ -207,19 +215,22 @@ class PixelatedMail(Mail):
     @property
     def headers(self):
         _headers = {}
+        hdoc_headers = self.hdoc.content['headers']
 
         for header in ['To', 'Cc', 'Bcc']:
-            header_value = self.hdoc.content['headers'].get(header)
+            header_value = hdoc_headers.get(header)
             if not header_value:
                 continue
             _headers[header] = header_value if type(header_value) is list else header_value.split(',')
             _headers[header] = map(lambda x: x.strip(), _headers[header])
 
         for header in ['From', 'Subject']:
-            _headers[header] = self.hdoc.content['headers'].get(header)
+            _headers[header] = hdoc_headers.get(header)
         _headers['Date'] = self._get_date()
         if self.parts and len(self.parts['alternatives']) > 1:
             _headers['content_type'] = 'multipart/alternative; boundary="%s"' % self.boundary
+        elif self.hdoc.content['headers'].get('Content-Type'):
+            _headers['content_type'] = hdoc_headers.get('Content-Type')
         return _headers
 
     def _get_date(self):

@@ -126,6 +126,14 @@ class TestPixelatedMail(unittest.TestCase):
                 self.assertNotIn(',', address)
             self.assertEquals(4, len(mail.headers[header_label]))
 
+    def test_content_type_is_read_from_headers_for_plain_mail_when_converted_to_raw(self):
+        fdoc, hdoc, bdoc = test_helper.leap_mail(flags=['\\Recent'], body=u'some umlaut \xc3', extra_headers={'Content-Type': 'text/plain; charset=ISO-8859-1'})
+        hdoc.content['headers']['Subject'] = 'The subject'
+        hdoc.content['headers']['From'] = 'me@pixelated.org'
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier)
+
+        mail.raw
+
 
 class InputMailTest(unittest.TestCase):
     mail_dict = lambda x: {
