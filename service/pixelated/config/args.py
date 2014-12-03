@@ -24,7 +24,6 @@ def parse():
     parser.add_argument('--dispatcher-stdin', help='run in organization mode, the credentials will be read from stdin', default=False, action='store_true', dest='dispatcher_stdin')
     parser.add_argument('--host', default='127.0.0.1', help='the host to run the user agent on')
     parser.add_argument('--port', type=int, default=3333, help='the port to run the user agent on')
-    parser.add_argument('--ssl-port', type=int, default=3433, help='the port to run the user agent with SSL support')
     parser.add_argument('-c', '--config', metavar='<configfile>', default=None, help='use specified file for credentials (for test purposes only)')
     parser.add_argument('-sk', '--sslkey', metavar='<server.key>', default=None, help='use specified file for SSL key')
     parser.add_argument('-sc', '--sslcert', metavar='<server.pem>', default=None, help='use specified file for SSL certificate')

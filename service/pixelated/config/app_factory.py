@@ -176,8 +176,7 @@ def listen_with_ssl(app, args):
     acceptable = ssl.AcceptableCiphers.fromOpenSSLCipherString('ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:!RC4:HIGH:!MD5:!aNULL:!EDH')
     options = ssl.CertificateOptions(privateKey=pkey, certificate=cert, method=SSL.TLSv1_2_METHOD, acceptableCiphers=acceptable)
 
-    reactor.listenSSL(args.ssl_port, Site(app.resource()), options, interface=args.host)
-    reactor.listenTCP(args.port, Site(RedirectToSSL(args.ssl_port)))
+    reactor.listenSSL(args.port, Site(app.resource()), options, interface=args.host)
 
     return reactor
 
