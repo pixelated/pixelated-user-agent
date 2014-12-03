@@ -329,7 +329,14 @@ class PixelatedMail(Mail):
         return self.hdoc.content["headers"].get("OpenPGP", None) is not None
 
     def as_dict(self):
-        dict_mail = super(PixelatedMail, self).as_dict()
+        dict_mail = {'header': {k.lower(): v for k, v in self.headers.items()},
+                     'ident': self.ident,
+                     'tags': list(self.tags),
+                     'status': list(self.status),
+                     'security_casing': self.security_casing,
+                     'body': self.body,
+                     'mailbox': self.mailbox_name.lower(),
+                     'attachments': self.parts['attachments'] if self.parts else []}
         dict_mail['replying'] = {'single': None, 'all': {'to-field': [], 'cc-field': []}}
 
         sender_mail = self.headers.get('Reply-To', self.headers['From'])
