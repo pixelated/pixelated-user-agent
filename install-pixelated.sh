@@ -16,6 +16,13 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 # test dependencies
+
+
+if [ ! $USERNAME ]
+then
+  export USERNAME=`whoami`
+fi
+
 function check_installed() {
         which $1
         if [ $? -ne 0 ]; then
@@ -31,9 +38,10 @@ done
 
 # install web-ui dependencies
 cd web-ui
+UIPATH=`pwd`
 npm install
-node_modules/bower/bin/bower install --config.interactive=false
-bundle install
+su - $USERNAME -c "(cd $UIPATH; node_modules/bower/bin/bower install --config.interactive=false)"
+su - $USERNAME -c "(cd $UIPATH; bundle install)"
 LC_ALL=en_US.UTF-8 ./go build
 
 # install service dependencies

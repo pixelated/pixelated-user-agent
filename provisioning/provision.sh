@@ -10,4 +10,4 @@ sudo /etc/init.d/rng-tools start
 
 cd /vagrant
 
-./install-pixelated.sh
+USERNAME=vagrant ./install-pixelated.sh
