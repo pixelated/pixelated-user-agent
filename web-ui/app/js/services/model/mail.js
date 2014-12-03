@@ -30,15 +30,6 @@ define(['helpers/contenttype'],
       return  this.mailbox === 'DRAFTS';
     }
 
-    function normalize(recipients) {
-      return _.chain([recipients])
-        .flatten()
-        .filter(function (r) {
-          return !_.isUndefined(r) && !_.isEmpty(r);
-        })
-        .value();
-    }
-
     function isInTrash() {
       return _.contains(this.tags, 'trash');
     }
@@ -47,32 +38,17 @@ define(['helpers/contenttype'],
       this.draft_reply_for = ident;
     }
 
-    function recipients(){
-      return {
-        to: normalize(this.header.to),
-        cc: normalize(this.header.cc)
-      };
-    }
-
     function replyToAddress() {
-      var recipients;
-
-      if (this.isSentMail()) {
-        recipients = this.recipients();
-      } else {
-        recipients = {
-          to: normalize(this.header.reply_to || this.header.from),
-          cc: []
-        };
-      }
-
-      return recipients;
+      return {
+        to: [this.replying.single],
+        cc: []
+      };
     }
 
     function replyToAllAddress() {
       return {
-        to: normalize([this.header.reply_to, this.header.from, this.header.to]),
-        cc: normalize(this.header.cc)
+        to: this.replying.all['to-field'],
+        cc: this.replying.all['cc-field']
       };
     }
 
@@ -142,7 +118,6 @@ define(['helpers/contenttype'],
       this.setDraftReplyFor = setDraftReplyFor;
       this.replyToAddress = replyToAddress;
       this.replyToAllAddress = replyToAllAddress;
-      this.recipients = recipients;
       this.getMailMediaType = getMailMediaType;
       this.isMailMultipartAlternative = isMailMultipartAlternative;
       this.getMailMultiParts = getMailMultiParts;

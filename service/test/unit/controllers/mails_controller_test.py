@@ -113,9 +113,15 @@ class TestMailsController(unittest.TestCase):
 
         verify(self.mail_service).delete_permanent(1)
 
+    def test_reply_all_returns_template(self):
+        when(self.mail_service).reply_all_template(1).thenReturn(self.input_mail.json)
+
+        self.mails_controller.reply_all_template(self.dummy_request, 1)
+
+        verify(self.mail_service).reply_all_template(1)
+
     def _successfuly_send_mail(self, ident, mail):
         sent_mail = mock()
-        sent_mail.mailbox_name = 'TRASH'
         sent_mail.as_dict = lambda: self.input_mail.json
 
         return sent_mail

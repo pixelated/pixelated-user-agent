@@ -2,31 +2,17 @@
 
 require(['services/model/mail'], function (Mail) {
   'use strict';
-  var testData;
 
   describe('services/model/mail', function () {
-    describe('reply addresses', function () {
-      it('returns the "to" and "cc" addresses if the mail was sent', function () {
-        var mail = Mail.create({
-          header: { to: ['a@b.c', 'e@f.g'], cc: ['x@x.x'] },
-          tags: [],
-          mailbox: 'SENT'
-        });
-
-        var addresses = mail.replyToAddress();
-
-        expect(addresses).toEqual({ to: ['a@b.c', 'e@f.g'], cc: ['x@x.x']});
-      });
-    });
-
     describe('parsing', function () {
       describe('a single email', function () {
-        var sentMail, draftMail, recievedMail, recievedMailWithCC;
+        var sentMail, draftMail, recievedMail, recievedMailWithCC, rawMailWithMultipleTo;
         beforeEach(function () {
           sentMail = Mail.create(Pixelated.testData().rawMail.sent);
           draftMail = Mail.create(Pixelated.testData().rawMail.draft);
           recievedMail = Mail.create(Pixelated.testData().rawMail.recieved);
           recievedMailWithCC = Mail.create(Pixelated.testData().rawMail.recievedWithCC);
+          rawMailWithMultipleTo = Mail.create(Pixelated.testData().rawMail.rawMailWithMultipleTo);
         });
 
         it('correctly identifies a sent mail', function () {
@@ -40,25 +26,6 @@ require(['services/model/mail'], function (Mail) {
         it('correctly identifies a recieved mail', function () {
           expect(recievedMail.isSentMail()).toBe(false);
           expect(recievedMail.isDraftMail()).toBe(false);
-        });
-
-        it('reply to of a sent mail should be original recipient', function () {
-          expect(sentMail.replyToAddress()).toEqual({to: ['mariane_dach@davis.info'], cc: ['duda@la.lu']});
-        });
-
-        it('reply to of a mail should be the reply_to field if existent', function () {
-          expect(recievedMail.replyToAddress()).toEqual({to: ['afton_braun@botsford.biz'], cc: [] });
-        });
-
-        it('reply to of a mail should be the from field if no reply_to present', function () {
-          expect(recievedMailWithCC.replyToAddress()).toEqual({to: ['cleve_jaskolski@schimmelhirthe.net'], cc: []});
-        });
-
-        it('reply to all should include all email addresses in the header', function () {
-          expect(recievedMailWithCC.replyToAllAddress()).toEqual({
-            to: ['cleve_jaskolski@schimmelhirthe.net', 'stanford@sipes.com'],
-            cc: ['mariane_dach@davis.info']
-          });
         });
       });
 

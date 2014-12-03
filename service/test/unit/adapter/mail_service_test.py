@@ -49,3 +49,11 @@ class TestMailService(unittest.TestCase):
         self.mail_service.delete_mail(1)
 
         verify(self.mailboxes).move_to_trash(1)
+
+    def test_reply_all_template(self):
+        mail = mock()
+        when(self.mail_service).mail(1).thenReturn(mail)
+
+        self.mail_service.reply_all_template(1)
+
+        verify(mail).to_reply_template()

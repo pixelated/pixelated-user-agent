@@ -214,7 +214,11 @@ class PixelatedMail(Mail):
 
     @property
     def headers(self):
-        _headers = {}
+        _headers = {
+            'To': [],
+            'Cc': [],
+            'Bcc': []
+        }
         hdoc_headers = self.hdoc.content['headers']
 
         for header in ['To', 'Cc', 'Bcc']:
@@ -226,11 +230,17 @@ class PixelatedMail(Mail):
 
         for header in ['From', 'Subject']:
             _headers[header] = hdoc_headers.get(header)
+
         _headers['Date'] = self._get_date()
+
         if self.parts and len(self.parts['alternatives']) > 1:
             _headers['content_type'] = 'multipart/alternative; boundary="%s"' % self.boundary
         elif self.hdoc.content['headers'].get('Content-Type'):
             _headers['content_type'] = hdoc_headers.get('Content-Type')
+
+        if hdoc_headers.get('Reply-To'):
+            _headers['Reply-To'] = hdoc_headers.get('Reply-To')
+
         return _headers
 
     def _get_date(self):
@@ -319,13 +329,23 @@ class PixelatedMail(Mail):
         return self.hdoc.content["headers"].get("OpenPGP", None) is not None
 
     def as_dict(self):
-        return {
-            'header': {k.lower(): v for k, v in self.headers.items()},
-            'ident': self.ident,
-            'tags': list(self.tags),
-            'status': list(self.status),
-            'security_casing': self.security_casing,
-            'body': self.body,
-            'mailbox': self.mailbox_name.lower(),
-            'attachments': self.parts['attachments'] if self.parts else []
-        }
+        dict_mail = {'header': {k.lower(): v for k, v in self.headers.items()},
+                     'ident': self.ident,
+                     'tags': list(self.tags),
+                     'status': list(self.status),
+                     'security_casing': self.security_casing,
+                     'body': self.body,
+                     'mailbox': self.mailbox_name.lower(),
+                     'attachments': self.parts['attachments'] if self.parts else []}
+        dict_mail['replying'] = {'single': None, 'all': {'to-field': [], 'cc-field': []}}
+
+        sender_mail = self.headers.get('Reply-To', self.headers['From'])
+
+        recipients = [recipient for recipient in self.headers['To'] if recipient != InputMail.FROM_EMAIL_ADDRESS]
+        recipients.append(sender_mail)
+        ccs = [cc for cc in self.headers['Cc'] if cc != InputMail.FROM_EMAIL_ADDRESS]
+
+        dict_mail['replying']['single'] = sender_mail
+        dict_mail['replying']['all']['to-field'] = recipients
+        dict_mail['replying']['all']['cc-field'] = ccs
+        return dict_mail
