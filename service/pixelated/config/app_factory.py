@@ -153,7 +153,6 @@ def init_app(app):
 
 
 def create_app(app, args):
-
     if args.sslkey and args.sslcert:
         listen_with_ssl(app, args)
     else:
@@ -166,17 +165,20 @@ def listen_without_ssl(app, args):
     reactor.listenTCP(args.port, Site(app.resource()), interface=args.host)
 
 
-def listen_with_ssl(app, args):
-    pkey, cert = None, None
+def _ssl_options(args):
     with open(args.sslkey) as keyfile:
         pkey = crypto.load_privatekey(crypto.FILETYPE_PEM, keyfile.read())
     with open(args.sslcert) as certfile:
         cert = crypto.load_certificate(crypto.FILETYPE_PEM, certfile.read())
+    acceptable = ssl.AcceptableCiphers.fromOpenSSLCipherString(
+        u'ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:!RC4:HIGH:!MD5:!aNULL:!EDH')
+    options = ssl.CertificateOptions(privateKey=pkey, certificate=cert, method=SSL.TLSv1_2_METHOD,
+                                     acceptableCiphers=acceptable)
+    return options
 
-    acceptable = ssl.AcceptableCiphers.fromOpenSSLCipherString('ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:!RC4:HIGH:!MD5:!aNULL:!EDH')
-    options = ssl.CertificateOptions(privateKey=pkey, certificate=cert, method=SSL.TLSv1_2_METHOD, acceptableCiphers=acceptable)
 
-    reactor.listenSSL(args.port, Site(app.resource()), options, interface=args.host)
+def listen_with_ssl(app, args):
+    reactor.listenSSL(args.port, Site(app.resource()), _ssl_options(args), interface=args.host)
 
     return reactor
 
