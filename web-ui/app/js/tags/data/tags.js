@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-define(['flight/lib/component', 'page/events', 'mixins/with_feature_toggle'], function (defineComponent, events, withFeatureToggle) {
+define(['flight/lib/component', 'page/events', 'helpers/monitored_ajax', 'mixins/with_feature_toggle'], function (defineComponent, events, monitoredAjax,  withFeatureToggle) {
   'use strict';
 
   var DataTags = defineComponent(dataTags, withFeatureToggle('tags', function() {
@@ -49,7 +49,7 @@ define(['flight/lib/component', 'page/events', 'mixins/with_feature_toggle'], fu
     });
 
     this.fetchTags = function(event, params) {
-      $.ajax(this.attr.tagsResource)
+      monitoredAjax(this, this.attr.tagsResource)
         .done(sendTagsBackTo(this, params));
     };
 

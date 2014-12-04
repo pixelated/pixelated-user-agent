@@ -19,9 +19,10 @@ define(
     'flight/lib/component',
     'mail_view/data/mail_builder',
     'page/events',
+    'helpers/monitored_ajax',
     'features'
   ],
-  function (defineComponent, mailBuilder, events, features) {
+  function (defineComponent, mailBuilder, events, monitoredAjax, features) {
     'use strict';
 
     return defineComponent(mailSender);
@@ -60,7 +61,7 @@ define(
       });
 
       this.sendMail = function(event, data) {
-        $.ajax(this.attr.mailsResource, {
+        monitoredAjax(this, this.attr.mailsResource, {
           type: 'POST',
           dataType: 'json',
           contentType: 'application/json; charset=utf-8',
@@ -70,7 +71,7 @@ define(
       };
 
       this.saveMail = function(mail) {
-        return $.ajax(this.attr.mailsResource, {
+        return monitoredAjax(this, this.attr.mailsResource, {
           type: 'PUT',
           dataType: 'json',
           contentType: 'application/json; charset=utf-8',

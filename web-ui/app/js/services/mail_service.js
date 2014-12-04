@@ -22,9 +22,10 @@ define(
     'flight/lib/component',
     'views/i18n',
     'services/model/mail',
+    'helpers/monitored_ajax',
     'page/events',
     'features'
-  ], function (defineComponent, i18n, Mail, events, features) {
+  ], function (defineComponent, i18n, Mail, monitoredAjax, events, features) {
 
     'use strict';
 
@@ -65,7 +66,7 @@ define(
           this.trigger(document, events.ui.userAlerts.displayMessage, { message: msg });
         };
 
-        $.ajax('/mail/' + ident + '/tags', {
+        monitoredAjax(this, '/mail/' + ident + '/tags', {
           type: 'POST',
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify({newtags: data.tags})
@@ -79,12 +80,12 @@ define(
           mailIdents = _.map(data.checkedMails, function (mail) {
             return mail.ident;
           });
-          $.ajax('/mails/read', {
+          monitoredAjax(this, '/mails/read', {
             type: 'POST',
             data: {idents: JSON.stringify(mailIdents)}
           }).done(this.triggerMailsRead(data.checkedMails));
         } else {
-          $.ajax('/mail/' + data.ident + '/read', {type: 'POST'});
+          monitoredAjax(this, '/mail/' + data.ident + '/read', {type: 'POST'});
         }
       };
 
@@ -94,12 +95,12 @@ define(
           mailIdents = _.map(data.checkedMails, function (mail) {
             return mail.ident;
           });
-          $.ajax('/mails/unread', {
+          monitoredAjax(this, '/mails/unread', {
             type: 'POST',
             data: {idents: JSON.stringify(mailIdents)}
           }).done(this.triggerMailsRead(data.checkedMails));
         } else {
-          $.ajax('/mail/' + data.ident + '/read', {type: 'POST'});
+          monitoredAjax(this, '/mail/' + data.ident + '/read', {type: 'POST'});
         }
       };
 
@@ -124,7 +125,7 @@ define(
       };
 
       this.deleteMail = function (ev, data) {
-        $.ajax('/mail/' + data.mail.ident,
+        monitoredAjax(this, '/mail/' + data.mail.ident,
           {type: 'DELETE'})
           .done(this.triggerDeleted(data))
           .fail(this.errorMessage(i18n('Could not delete email')));
@@ -136,7 +137,7 @@ define(
           return mail.ident;
         });
 
-        $.ajax('/mails', {
+        monitoredAjax(this, '/mails', {
           type: 'DELETE',
           data: {idents: JSON.stringify(mailIdents)}
         }).done(this.triggerDeleted(dataToDelete))
@@ -197,14 +198,15 @@ define(
         var w = this.attr.w;
         var url = this.attr.mailsResource + '?q=' + escaped(this.excludeTrashedEmailsForDraftsAndSent(query)) + '&p=' + p + '&w=' + w;
         this.attr.lastQuery = this.excludeTrashedEmailsForDraftsAndSent(query);
-        $.ajax(url, { dataType: 'json' })
+        monitoredAjax(this, url, { dataType: 'json' })
           .done(function (data) {
             this.attr.numPages = Math.ceil(data.stats.total / this.attr.w);
             var eventToTrigger = fromRefresh ? events.mails.availableForRefresh : events.mails.available;
             this.trigger(document, eventToTrigger, _.merge(_.merge({tag: tag }, eventData), this.parseMails(data)));
           }.bind(this))
           .fail(function () {
-            this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n('Could not fetch messages') });
+            //this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n('Could not fetch messages') });
+	    console.log("this fail has been called, too")
           }.bind(this));
       };
 
@@ -215,7 +217,7 @@ define(
       this.fetchSingle = function (event, data) {
         var fetchUrl = createSingleMailUrl(this.attr.singleMailResource, data.mail);
 
-        $.ajax(fetchUrl, { dataType: 'json' })
+        monitoredAjax(this, fetchUrl, { dataType: 'json' })
           .done(function (mail) {
             if (_.isNull(mail)) {
               this.trigger(data.caller, events.mail.notFound);
@@ -254,7 +256,7 @@ define(
           return;
         }
 
-        $.ajax('/draft_reply_for/' + data.ident, { dataType: 'json' })
+        monitoredAjax(this, '/draft_reply_for/' + data.ident, { dataType: 'json' })
           .done(function (mail) {
             if (_.isNull(mail)) {
               this.trigger(document, events.mail.draftReply.notFound);

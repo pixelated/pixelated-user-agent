@@ -16,7 +16,7 @@
  */
 /* global _ */
 'use strict';
-define([], function() {
+define(['helpers/monitored_ajax'], function(monitoredAjax) {
   var cachedDisabledFeatures;
   var cachedDispatcherFeatures;
 
@@ -32,7 +32,7 @@ define([], function() {
 
   function fetchFeatures() {
     var features;
-    $.ajax('/features', {
+    monitoredAjax(this, '/features', {
       async: false,
       success: function (results){
 	features = results;

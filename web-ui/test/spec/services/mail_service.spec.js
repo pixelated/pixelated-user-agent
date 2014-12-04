@@ -13,7 +13,8 @@ describeComponent('services/mail_service', function () {
   } );
 
   it('marks the desired message as read', function () {
-    var readRequest = spyOn($, 'ajax').and.returnValue({});
+    var deferred = $.Deferred()
+    var readRequest = spyOn($, 'ajax').and.returnValue(deferred);
 
     this.component.trigger(Pixelated.events.mail.read, {ident: 1});
 
