@@ -101,6 +101,7 @@ define(function () {
       here: 'mail:here',
       want: 'mail:want',
       send: 'mail:send',
+      send_failed: 'mail:send_failed',
       sent: 'mail:sent',
       read: 'mail:read',
       unread: 'mail:unread',

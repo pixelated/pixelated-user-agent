@@ -84,6 +84,11 @@ define([
 
       };
 
+      this.forceEnableButton = function () {
+        this.enableButton();
+        this.$node.html(viewHelper.i18n('send-button'));
+      }
+
       this.after('initialize', function () {
         this.attr.recipients = {};
         this.attr.inputHasMail = {};
@@ -97,6 +102,7 @@ define([
 
         this.on(document, events.dispatchers.rightPane.clear, this.teardown);
         this.on(document, events.ui.sendbutton.enable, this.enableButton);
+        this.on(document, events.mail.send_failed, this.forceEnableButton);
 
         this.disableButton();
       });

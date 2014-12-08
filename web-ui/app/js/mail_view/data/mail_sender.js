@@ -48,11 +48,12 @@ define(
             contextMessage = context + ': ';
           }
 
-          if (xhr.responseJSON.message) {
+          if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
             on.trigger(document, events.ui.userAlerts.displayMessage, {message: contextMessage + xhr.responseJSON.message});
           } else {
             on.trigger(document, events.ui.userAlerts.displayMessage, {message: 'Ops! something went wrong, try again later.'});
           }
+          on.trigger(document, events.mail.send_failed, {xhr: xhr, error:error});
         };
       }
 
