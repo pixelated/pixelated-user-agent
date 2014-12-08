@@ -98,10 +98,8 @@ class SoledadQuerier:
         return [PixelatedMail.from_soledad(*raw_mail, soledad_querier=self) for raw_mail in fdocs_hdocs_bdocs_parts]
 
     def save_mail(self, mail):
-        # XXX update only what has to be updated
         self.soledad.put_doc(mail.fdoc)
-        self.soledad.put_doc(mail.hdoc)
-        self._update_index([mail.fdoc, mail.hdoc])
+        self._update_index([mail.fdoc])
 
     def create_mail(self, mail, mailbox_name):
         mbox = [m for m in self.soledad.get_from_index('by-type', 'mbox') if m.content['mbox'] == 'INBOX'][0]

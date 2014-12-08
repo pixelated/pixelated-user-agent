@@ -262,7 +262,7 @@ class PixelatedMail(Mail):
 
     @property
     def tags(self):
-        _tags = self.hdoc.content['headers'].get('X-Tags', '[]')
+        _tags = self.fdoc.content.get('tags', '[]')
         return set(_tags) if type(_tags) is list or type(_tags) is set else set(json.loads(_tags))
 
     @property
@@ -314,7 +314,7 @@ class PixelatedMail(Mail):
         return self
 
     def _persist_mail_tags(self, current_tags):
-        self.hdoc.content['headers']['X-Tags'] = json.dumps(list(current_tags))
+        self.fdoc.content['tags'] = json.dumps(list(current_tags))
         self.save()
 
     def has_tag(self, tag):
