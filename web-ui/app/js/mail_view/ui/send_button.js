@@ -87,7 +87,7 @@ define([
       this.forceEnableButton = function () {
         this.enableButton();
         this.$node.html(viewHelper.i18n('send-button'));
-      }
+      };
 
       this.after('initialize', function () {
         this.attr.recipients = {};

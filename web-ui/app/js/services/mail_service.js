@@ -205,8 +205,7 @@ define(
             this.trigger(document, eventToTrigger, _.merge(_.merge({tag: tag }, eventData), this.parseMails(data)));
           }.bind(this))
           .fail(function () {
-            //this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n('Could not fetch messages') });
-	    console.log("this fail has been called, too")
+            this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n('Could not fetch messages') });
           }.bind(this));
       };
 
