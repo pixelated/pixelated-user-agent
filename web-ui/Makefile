@@ -17,7 +17,6 @@
 DESTDIR=target
 
 compile:
-	bundle install --path=~/pixelated-gems
 	npm install
 	node_modules/bower/bin/bower install
 	./go package

@@ -2,7 +2,7 @@ sudo apt-get update
 sudo apt-get install -y git nodejs-legacy npm python-setuptools python-dev libffi-dev g++ rng-tools
 sudo easy_install pip
 sudo pip install virtualenv
-sudo gem install bundler
+sudo gem install compass
 
 sudo echo "HRNGDEVICE=/dev/urandom" >> /etc/default/rng-tools
 

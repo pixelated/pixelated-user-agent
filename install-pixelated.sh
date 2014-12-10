@@ -32,16 +32,16 @@ function check_installed() {
         fi
 }
 
-for dependency in node npm ruby bundle virtualenv git gpg; do
+for dependency in node npm ruby virtualenv git gpg; do
         check_installed $dependency
 done
+gem install compass
 
 # install web-ui dependencies
 cd web-ui
 UIPATH=`pwd`
 npm install
 su - $USERNAME -c "(cd $UIPATH; node_modules/bower/bin/bower install --config.interactive=false)"
-su - $USERNAME -c "(cd $UIPATH; bundle install)"
 LC_ALL=en_US.UTF-8 ./go build
 
 # install service dependencies
