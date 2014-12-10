@@ -20,7 +20,7 @@
   "scripts": {
     "test": "npm run clean && npm run handlebars && node_modules/karma/bin/karma start --single-run --browsers PhantomJS $GRUNT_OPTS",
     "watch-test": "node_modules/karma/bin/karma start",
-    "handlebars": "handlebars app/templates/**/*.hbs > app/js/generated/hbs/templates.js --namespace=window.Pixelated --root .",
+    "handlebars": "mkdir -p app/js/generated/hbs/ && handlebars app/templates/**/*.hbs > app/js/generated/hbs/templates.js --namespace=window.Pixelated --root .",
     "compass": "compass compile",
     "build": "npm run clean && npm run handlebars && npm run compass",
     "jshint": "node_modules/.bin/jshint --config=.jshintrc `find app -name '*.js' | grep -v -e 'lib' -e 'bower' -e 'generated'`",
