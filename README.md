@@ -30,7 +30,7 @@ Dependencies are: node, npm, ruby, bundle, virtualenv, git
 
 * The user agent will be available with the command `pixelated-user-agent`, running it you will be prompted for the credentials and the user agent will be started at localhost:3333
 
-_____________
+---
 
 ## Service
 
@@ -65,3 +65,25 @@ The Web Ui needs to generate the templates and CSS to be served. For that, you n
 
 
 And that's it.
+
+---
+
+## Installing the debian package
+
+The debian package is currently only available in our [repository](http://packages.pixelated-project.org/debian/). To use it you have to add it to your sources list:
+
+```shell
+
+echo "deb http://packages.pixelated-project.org/debian wheezy-snapshots main" >> /etc/apt/sources.list
+echo "deb http://packages.pixelated-project.org/debian wheezy-backports main" >> /etc/apt/sources.list
+echo "deb http://packages.pixelated-project.org/debian wheezy main" >> /etc/apt/sources.list
+
+apt-key adv --keyserver pool.sks-keyservers.net --recv-key 287A1542472DC0E3
+
+apt-get update
+
+apt-get install pixelated-user-agent
+```
+
+**Warning:** Currently there are some challenges with the dependencies. To make the user agent work see instructions used to build the docker image: [Dockerfile](provisioning/Dockerfile).
+
