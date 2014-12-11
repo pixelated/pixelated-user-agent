@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import datetime
-import dateutil.parser
 
+import dateutil.parser
 from dateutil.tz import tzlocal
 
 

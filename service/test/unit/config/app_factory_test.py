@@ -1,7 +1,7 @@
 import unittest
+
 from mock import patch, MagicMock, ANY
 import pixelated
-
 from pixelated.config.app_factory import create_app
 
 

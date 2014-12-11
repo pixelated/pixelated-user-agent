@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import io
+
 import re
 from twisted.protocols.basic import FileSender
 from twisted.python.log import err

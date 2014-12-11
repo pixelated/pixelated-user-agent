@@ -16,10 +16,10 @@
 
 import unittest
 import sys
-import os
 import thread
 import json
 
+import os
 import pixelated.config.app_factory
 import pixelated.runserver
 from mockito import *

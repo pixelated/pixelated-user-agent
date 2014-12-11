@@ -16,7 +16,6 @@
 import unittest
 
 from funkload.FunkLoadTestCase import FunkLoadTestCase
-
 from test.support.integration import AppTestClient
 
 

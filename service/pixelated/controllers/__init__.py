@@ -29,6 +29,7 @@ def respond_json_deferred(entity, request, status_code=200):
     request.write(json_response)
     request.finish()
 
+
 import json
 
 from home_controller import HomeController

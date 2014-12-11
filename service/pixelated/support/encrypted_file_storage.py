@@ -15,10 +15,9 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import io
+
 import os
-
 from whoosh.filedb.filestore import FileStorage
-
 from whoosh.filedb.structfile import StructFile, BufferFile
 from cryptography.fernet import Fernet
 from whoosh.util import random_name

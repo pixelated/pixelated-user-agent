@@ -14,10 +14,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
+import json
+
 from mock import MagicMock
 from pixelated.controllers import SyncInfoController
 from mockito import *
-import json
 
 
 class SyncInfoControllerTest(unittest.TestCase):

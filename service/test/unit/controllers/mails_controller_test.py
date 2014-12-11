@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
-
 import unittest
+
 from klein.test_resource import requestMock
 from mock import MagicMock
 from mockito import *

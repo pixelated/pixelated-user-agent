@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 from uuid import uuid4
+from email.mime.text import MIMEText
 
 from leap.mail.imap.fields import fields
 import leap.mail.walk as walk
@@ -22,7 +23,6 @@ import dateutil.parser as dateparser
 from pixelated.adapter.status import Status
 import pixelated.support.date
 from email.MIMEMultipart import MIMEMultipart
-from email.mime.text import MIMEText
 from pycryptopp.hash import sha256
 import re
 

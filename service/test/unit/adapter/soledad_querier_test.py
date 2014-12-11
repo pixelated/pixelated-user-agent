@@ -14,12 +14,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
-from pixelated.adapter.soledad_querier import SoledadQuerier
-from mockito import mock, when, any
 import json
-import os
 import base64
 import quopri
+
+from pixelated.adapter.soledad_querier import SoledadQuerier
+from mockito import mock, when, any
+import os
 
 
 class SoledadQuerierTest(unittest.TestCase):

@@ -13,13 +13,11 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import time
-import multiprocessing
 import logging
+
 from test.support.integration import AppTestClient
 from selenium import webdriver
 from pixelated.controllers.features_controller import FeaturesController
-import pixelated
 
 
 def before_all(context):

@@ -15,8 +15,10 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import print_function
-import protobuf.socketrpc.server
 from sys import platform as _platform
+
+import protobuf.socketrpc.server
+
 
 
 # protobuf throws a lot of 'Socket is not connected' exceptions on OSX but they are not an issue.

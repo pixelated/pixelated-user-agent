@@ -17,8 +17,8 @@ import json
 import multiprocessing
 import shutil
 import time
-from pixelated.config.routes import setup_routes
 
+from pixelated.config.routes import setup_routes
 from klein.test_resource import requestMock, _render
 from leap.mail.imap.account import SoledadBackedAccount
 from leap.soledad.client import Soledad
@@ -29,7 +29,6 @@ from pixelated.adapter.mail_service import MailService
 from pixelated.adapter.mailboxes import Mailboxes
 from pixelated.adapter.soledad_querier import SoledadQuerier
 from pixelated.adapter.tag_service import TagService
-from pixelated.config import app_factory
 from pixelated.controllers import FeaturesController, HomeController, MailsController, TagsController, \
     SyncInfoController, AttachmentsController, ContactsController
 import pixelated.runserver
