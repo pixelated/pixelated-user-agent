@@ -120,6 +120,10 @@ define(
       this.checkSigned = function(mail) {
         if(_.isEmpty(mail.security_casing.imprints)) { return 'not-signed'; }
 
+        if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'no_signature_information'; })) {
+          return '';
+        }
+
         var status = ['signed'];
 
         if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'from_revoked'; })) {

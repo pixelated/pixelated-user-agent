@@ -92,7 +92,7 @@ class TestPixelatedMail(unittest.TestCase):
                                   },
                                   'ident': 'chash',
                                   'mailbox': 'inbox',
-                                  'security_casing': {'imprints': [], 'locks': []},
+                                  'security_casing': {'imprints': [{'state': 'no_signature_information'}], 'locks': []},
                                   'status': ['recent'],
                                   'tags': [],
                                   'attachments': [],

@@ -254,6 +254,8 @@ class PixelatedMail(Mail):
         casing = {"imprints": [], "locks": []}
         if self.signed:
             casing["imprints"].append({"state": "valid", "seal": {"validity": "valid"}})
+        elif self.signed is None:
+            casing["imprints"].append({"state": "no_signature_information"})
 
         if self.encrypted:
             casing["locks"].append({"state": "valid"})
@@ -322,7 +324,11 @@ class PixelatedMail(Mail):
 
     @property
     def signed(self):
-        return self.hdoc.content["headers"].get("X-Leap-Signature", "").startswith("valid")
+        signature = self.hdoc.content["headers"].get("X-Leap-Signature", None)
+        if signature is None:
+            return None
+        else:
+            return signature.startswith("valid")
 
     @property
     def encrypted(self):
