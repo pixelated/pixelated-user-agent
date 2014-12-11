@@ -19,8 +19,6 @@ from sys import platform as _platform
 
 import protobuf.socketrpc.server
 
-
-
 # protobuf throws a lot of 'Socket is not connected' exceptions on OSX but they are not an issue.
 # refer too https://code.google.com/p/protobuf-socket-rpc/issues/detail?id=10 and
 # or https://leap.se/code/issues/2187

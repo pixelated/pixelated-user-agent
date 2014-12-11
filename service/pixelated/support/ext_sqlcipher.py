@@ -18,8 +18,6 @@ from sys import platform as _platform
 
 import leap.soledad.client.sqlcipher
 
-
-
 # WAL is breaking for the debian sqlcipher package so we need to disable it
 # refer to https://leap.se/code/issues/5562
 if _platform == 'linux2':
