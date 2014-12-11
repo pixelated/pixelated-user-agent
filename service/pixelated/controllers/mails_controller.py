@@ -80,9 +80,9 @@ class MailsController:
         return respond_json(None, request)
 
     def delete_mails(self, request):
-        idents = json.loads(request.form['idents'])
+        idents = json.loads(request.content.read())['idents']
         for ident in idents:
-            self.delete_mail(ident)
+            self.delete_mail(request, ident)
         return respond_json(None, request)
 
     def send_mail(self, request):

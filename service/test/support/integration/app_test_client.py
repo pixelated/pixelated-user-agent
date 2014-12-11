@@ -110,8 +110,8 @@ class AppTestClient:
         request = requestMock(path=path, method="PUT", body=body, headers={'Content-Type': ['application/json']})
         return self._render(request)
 
-    def delete(self, path):
-        request = requestMock(path=path, method="DELETE")
+    def delete(self, path, body=""):
+        request = requestMock(path=path, body=body, headers={'Content-Type': ['application/json']}, method="DELETE")
         return self._render(request)
 
     def add_document_to_soledad(self, _dict):

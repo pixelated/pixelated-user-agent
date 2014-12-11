@@ -66,6 +66,10 @@ class SoledadTestBase(unittest.TestCase):
         res, req = self.client.delete("/mail/%s" % mail_ident)
         return req
 
+    def delete_mails(self, idents):
+        res, req = self.client.delete("/mails", json.dumps({'idents': idents}))
+        return req
+
     def mark_as_read(self, mail_ident):
         res, req = self.client.post("/mail/%s/read" % mail_ident)
         return req

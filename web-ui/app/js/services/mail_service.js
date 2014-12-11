@@ -139,7 +139,9 @@ define(
 
         monitoredAjax(this, '/mails', {
           type: 'DELETE',
-          data: {idents: JSON.stringify(mailIdents)}
+          dataType: 'json',
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify({idents: mailIdents})
         }).done(this.triggerDeleted(dataToDelete))
           .fail(this.errorMessage(i18n('Could not delete emails')));
       };
