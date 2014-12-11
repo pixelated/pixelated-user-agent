@@ -111,16 +111,11 @@ define([
         var value = (data && data.value) || this.$node.val();
         var that = this;
         _.each(value.split(/[,;]/), function(address) {
-            if(that.isValidEmailAddress(address.trim())) {
+            if (!_.isEmpty(address.trim())) {
                 that.trigger(that.$node, events.ui.recipients.entered, { name: that.attr.name, address: address.trim() });
             }
         });
         reset(this.$node);
-      };
-
-      this.isValidEmailAddress = function(address) {
-        // valid emails are in the format: 'user@domain.smt' or 'User <user@domain.smt>'
-        return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}|[A-Z ]+<[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}>$/i.test(address);
       };
 
       this.init = function () {

@@ -13,24 +13,14 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
 
     ], function (keycode) {
 
-      it('adds the address if its a valid emails address: ' + keycode[1], function () {
+      it(': ' + keycode[1], function () {
         var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
 
         var enterAddressKeyPressEvent = $.Event('keydown', { which: keycode[0] });
-        this.$node.val('a@b.com');
+        this.$node.val('a@b.c');
         this.$node.trigger(enterAddressKeyPressEvent);
 
-        expect(addressEnteredEvent).toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: 'a@b.com' });
-      });
-
-      it('adds the address if its a valid formatted emails address: ' + keycode[1], function () {
-        var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
-
-        var enterAddressKeyPressEvent = $.Event('keydown', { which: keycode[0] });
-        this.$node.val('My dear friend <a@b.com>');
-        this.$node.trigger(enterAddressKeyPressEvent);
-
-        expect(addressEnteredEvent).toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: 'My dear friend <a@b.com>' });
+        expect(addressEnteredEvent).toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: 'a@b.c' });
       });
 
       it('wont add address if val is empty: ' + keycode[1], function () {
@@ -41,26 +31,6 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
         this.$node.trigger(enterAddressKeyPressEvent);
 
         expect(addressEnteredEvent).not.toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: '' });
-      });
-
-      it('wont add address if val is not a valid email address: ' + keycode[1], function () {
-        var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
-
-        var enterAddressKeyPressEvent = $.Event('keydown', { which: keycode[0] });
-        this.$node.val('abacate');
-        this.$node.trigger(enterAddressKeyPressEvent);
-
-        expect(addressEnteredEvent).not.toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: 'abacate' });
-      });
-
-      it('wont add address if val is not a valid formatted email address: ' + keycode[1], function () {
-        var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
-
-        var enterAddressKeyPressEvent = $.Event('keydown', { which: keycode[0] });
-        this.$node.val('abacate <coisa>');
-        this.$node.trigger(enterAddressKeyPressEvent);
-
-        expect(addressEnteredEvent).not.toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: 'abacate <coisa>' });
       });
 
       it('wont add address if shift key is pressed together: ' + keycode[1], function () {
@@ -96,11 +66,11 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
         var tabKeyPressEvent = $.Event('keydown', { which: 9});
         spyOn(tabKeyPressEvent, 'preventDefault');
 
-        this.$node.val('a@b.com');
+        this.$node.val('a@b.c');
         this.$node.trigger(tabKeyPressEvent);
 
         expect(tabKeyPressEvent.preventDefault).toHaveBeenCalled();
-        expect(addressEnteredEvent).toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: 'a@b.com'});
+        expect(addressEnteredEvent).toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: 'a@b.c'});
       });
 
       it('doesnt enter an address and doesnt prevent event default if input val is empty (so tab moves it to the next input)', function () {
@@ -159,15 +129,15 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
       var blurEvent = $.Event('blur'); 
 	  spyOn(blurEvent, 'preventDefault');
 
-	  this.$node.val('a@b.com, Friend <friend@domain.com>; d@e.fr  , , , , , , , ,');
+	  this.$node.val('a@b.c, Friend <friend@domain.com>; d@e.f  , , , , , , , ,');
 	  this.$node.trigger(blurEvent);
 
 	  expect(blurEvent.preventDefault).toHaveBeenCalled();
       expect(addressEnteredEvent.callCount).toEqual(3);
 
-      expect(addressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'a@b.com'});
+      expect(addressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'a@b.c'});
       expect(addressEnteredEvent.calls[1].data).toEqual({name: 'to', address: 'Friend <friend@domain.com>'});
-      expect(addressEnteredEvent.calls[2].data).toEqual({name: 'to', address: 'd@e.fr'});
+      expect(addressEnteredEvent.calls[2].data).toEqual({name: 'to', address: 'd@e.f'});
     })
   });
 });
