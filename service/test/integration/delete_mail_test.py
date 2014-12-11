@@ -46,3 +46,20 @@ class DeleteMailTest(SoledadTestBase):
         trash_mails = self.get_mails_by_tag('trash')
 
         self.assertEqual(0, len(trash_mails))
+
+    def test_move_mail_to_trash_when_delete_multiple(self):
+        mails = self.client.add_multiple_to_mailbox(5, 'inbox')
+        mail_idents = [m.ident for m in mails]
+
+        self.delete_mails(mail_idents)
+
+        inbox = self.get_mails_by_tag('inbox')
+        self.assertEquals(0, len(inbox))
+
+    def test_delete_permanently_when_mails_are_in_trash(self):
+        mails = self.client.add_multiple_to_mailbox(5, 'trash')
+        self.delete_mails([m.ident for m in mails])
+
+        trash = self.get_mails_by_tag('trash')
+
+        self.assertEquals(0, len(trash))
