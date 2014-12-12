@@ -22,6 +22,7 @@ from pixelated.support.functional import flatten
 from whoosh.index import FileIndex
 from whoosh.fields import *
 from whoosh.qparser import QueryParser
+from whoosh.query import Term
 from whoosh import sorting
 from pixelated.support.functional import unique
 from pixelated.support.date import milliseconds
@@ -184,16 +185,18 @@ class SearchEngine(object):
             writer.commit()
 
     def contacts(self, query):
+        restrict_q = Term("tag", "drafts") | Term("tag", "trash")
+
         if query:
             to = QueryParser('to', self._index.schema)
             cc = QueryParser('cc', self._index.schema)
             bcc = QueryParser('bcc', self._index.schema)
             with self._index.searcher() as searcher:
-                to = searcher.search(to.parse("*%s*" % query), limit=None,
+                to = searcher.search(to.parse("*%s*" % query), limit=None, mask=restrict_q,
                                      groupedby=sorting.FieldFacet('to', allow_overlap=True)).groups()
-                cc = searcher.search(cc.parse("*%s*" % query), limit=None,
+                cc = searcher.search(cc.parse("*%s*" % query), limit=None, mask=restrict_q,
                                      groupedby=sorting.FieldFacet('cc', allow_overlap=True)).groups()
-                bcc = searcher.search(bcc.parse("*%s*" % query), limit=None,
+                bcc = searcher.search(bcc.parse("*%s*" % query), limit=None, mask=restrict_q,
                                       groupedby=sorting.FieldFacet('bcc', allow_overlap=True)).groups()
                 return flatten([to, cc, bcc])
 
