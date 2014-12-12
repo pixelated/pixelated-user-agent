@@ -44,6 +44,18 @@ class MailBuilder:
         self.mail['header']['subject'] = subject
         return self
 
+    def with_to(self, to):
+        self.mail['header']['to'] = to
+        return self
+
+    def with_cc(self, cc):
+        self.mail['header']['cc'] = cc
+        return self
+
+    def with_bcc(self, bcc):
+        self.mail['header']['bcc'] = bcc
+        return self
+
     def with_status(self, flags):
         for status in Status.from_flags(flags):
             self.mail['status'].append(status)
