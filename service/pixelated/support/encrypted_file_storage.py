@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import io
+from hashlib import sha512
 
 import os
 from whoosh.filedb.filestore import FileStorage
@@ -45,13 +46,16 @@ class EncryptedFileStorage(FileStorage):
         return EncryptedFileStorage(path, self.masterkey).create()
 
     def file_length(self, name):
-        return self.length_cache[name]
+        return self.length_cache[name][0]
 
     def _encrypt_index_on_close(self, name):
         def wrapper(struct_file):
             struct_file.seek(0)
             content = struct_file.file.read()
-            self.length_cache[name] = len(content)
+            file_hash = sha512(content).digest()
+            if name in self.length_cache and file_hash == self.length_cache[name][1]:
+                return
+            self.length_cache[name] = (len(content), file_hash)
             encrypted_content = self.f.encrypt(content)
             with open(self._fpath(name), 'w+b') as f:
                 f.write(encrypted_content)
@@ -60,5 +64,5 @@ class EncryptedFileStorage(FileStorage):
     def _open_encrypted_file(self, name, onclose=lambda x: None):
         file_content = open(self._fpath(name), "rb").read()
         decrypted = self.f.decrypt(file_content)
-        self.length_cache[name] = len(decrypted)
+        self.length_cache[name] = (len(decrypted), sha512(decrypted).digest())
         return BufferFile(buffer(decrypted), name=name, onclose=onclose)
