@@ -6,12 +6,12 @@ require(['services/model/mail'], function (Mail) {
   describe('services/model/mail', function () {
     describe('parsing', function () {
       describe('a single email', function () {
-        var sentMail, draftMail, recievedMail, recievedMailWithCC, rawMailWithMultipleTo;
+        var sentMail, draftMail, receivedMail, receivedMailWithCC, rawMailWithMultipleTo;
         beforeEach(function () {
           sentMail = Mail.create(Pixelated.testData().rawMail.sent);
           draftMail = Mail.create(Pixelated.testData().rawMail.draft);
-          recievedMail = Mail.create(Pixelated.testData().rawMail.recieved);
-          recievedMailWithCC = Mail.create(Pixelated.testData().rawMail.recievedWithCC);
+          receivedMail = Mail.create(Pixelated.testData().rawMail.received);
+          receivedMailWithCC = Mail.create(Pixelated.testData().rawMail.receivedWithCC);
           rawMailWithMultipleTo = Mail.create(Pixelated.testData().rawMail.rawMailWithMultipleTo);
         });
 
@@ -23,9 +23,9 @@ require(['services/model/mail'], function (Mail) {
           expect(draftMail.isDraftMail()).toBe(true);
         });
 
-        it('correctly identifies a recieved mail', function () {
-          expect(recievedMail.isSentMail()).toBe(false);
-          expect(recievedMail.isDraftMail()).toBe(false);
+        it('correctly identifies a received mail', function () {
+          expect(receivedMail.isSentMail()).toBe(false);
+          expect(receivedMail.isDraftMail()).toBe(false);
         });
       });
 

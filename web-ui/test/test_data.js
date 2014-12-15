@@ -60,7 +60,7 @@ define(function() {
 
   };
 
-  var rawRecievedMail = {
+  var rawReceivedMail = {
     'header':{'to':'stanford@sipes.com','from':'cleve_jaskolski@schimmelhirthe.net','reply_to':'afton_braun@botsford.biz','subject':'Cumque pariatur vel consequuntur deleniti ex.','date':'2014-06-17T05:40:29-03:00'},
     'ident':242,
     'tags':['garden','instalovers','popularpic'],
@@ -76,7 +76,7 @@ define(function() {
 
   };
 
-  var rawRecievedWithCCMail = {
+  var rawReceivedWithCCMail = {
     'header':{'to':'stanford@sipes.com','from':'cleve_jaskolski@schimmelhirthe.net','cc':'mariane_dach@davis.info','subject':'Cumque pariatur vel consequuntur deleniti ex.','date':'2014-06-17T05:40:29-03:00'},
     'ident':242,
     'tags':['garden','instalovers','popularpic'],
@@ -219,8 +219,8 @@ define(function() {
       mail: rawMail,
       sent: rawSentMail,
       draft: rawDraftMail,
-      recieved: rawRecievedMail,
-      recievedWithCC: rawRecievedWithCCMail,
+      received: rawReceivedMail,
+      receivedWithCC: rawReceivedWithCCMail,
       rawMailWithMultipleTo: rawMailWithMultipleTo,
       multipart: rawMultipartMail
     },
