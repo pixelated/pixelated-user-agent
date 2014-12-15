@@ -11,7 +11,8 @@
     "font-awesome": "4.2.0",
     "quoted-printable": "0.2.1",
     "typeahead.js": "~0.10.5",
-    "jasmine-flight": "~3.0.0"
+    "jasmine-flight": "~3.0.0",
+    "utf8": "~2.0.0"
   },
   "devDependencies": {
     "handlebars": "2.0.0",

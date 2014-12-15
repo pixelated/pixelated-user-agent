@@ -37,7 +37,8 @@ requirejs.config({
     'foundation': 'js/foundation',
     'i18next': 'bower_components/i18next/i18next.amd',
     'quoted-printable': 'bower_components/quoted-printable',
-    'features': 'js/features/features'
+    'features': 'js/features/features',
+    'utf8': 'bower_components/utf8'
   }
 });
 

@@ -28,6 +28,7 @@ requirejs.config({
     'monkey_patching': 'app/js/monkey_patching',
     'i18next': 'app/bower_components/i18next/i18next.amd',
     'quoted-printable': 'app/bower_components/quoted-printable',
+    'utf8': 'app/bower_components/utf8',
     'test': 'test',
     'features': 'test/features'
   },

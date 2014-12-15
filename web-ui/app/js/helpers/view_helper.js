@@ -19,9 +19,10 @@ define(
     'helpers/contenttype',
     'lib/html_whitelister',
     'views/i18n',
-    'quoted-printable/quoted-printable'
+    'quoted-printable/quoted-printable',
+    'utf8/utf8'
   ],
-  function(contentType, htmlWhitelister, i18n_lib, quotedPrintable) {
+  function(contentType, htmlWhitelister, i18n_lib, quotedPrintable, utf8) {
   'use strict';
 
   function formatStatusClasses(ss) {
@@ -52,7 +53,7 @@ define(
     var body;
 
     if (isQuotedPrintableBodyPart(bodyPart)) {
-      body = quotedPrintable.decode(bodyPart.body);
+      body = utf8.decode(quotedPrintable.decode(bodyPart.body));
     } else if (bodyPart.body) {
       body = bodyPart.body;
     } else {

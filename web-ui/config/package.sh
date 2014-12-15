@@ -38,6 +38,7 @@ cat \
 app/bower_components/modernizr/modernizr.js \
 app/bower_components/lodash/dist/lodash.js \
 app/bower_components/jquery/dist/jquery.js \
+app/bower_components/utf8/utf8.js
 app/js/lib/highlightRegex.js \
 app/bower_components/handlebars/handlebars.min.js \
 app/bower_components/typeahead.js/dist/typeahead.bundle.min.js \
