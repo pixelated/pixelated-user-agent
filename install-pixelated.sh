@@ -32,10 +32,9 @@ function check_installed() {
         fi
 }
 
-for dependency in node npm ruby virtualenv git gpg; do
+for dependency in node npm ruby virtualenv git gpg compass; do
         check_installed $dependency
 done
-gem install compass
 
 # install web-ui dependencies
 cd web-ui
