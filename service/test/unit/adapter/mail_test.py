@@ -20,7 +20,7 @@ from pixelated.adapter.mail import PixelatedMail, InputMail
 from mockito import *
 from test.support import test_helper
 import dateutil.parser as dateparser
-
+import base64
 
 class TestPixelatedMail(unittest.TestCase):
     def setUp(self):
@@ -170,6 +170,17 @@ class TestPixelatedMail(unittest.TestCase):
         mail.raw
 
 
+    def test_that_body_understands_base64(self):
+        body = "bl\xe1"
+        encoded_body = base64.b64encode(body)
+
+        fdoc, hdoc, bdoc = test_helper.leap_mail()
+        parts = {'alternatives': []}
+        parts['alternatives'].append({'content': encoded_body, 'headers': {'Content-Transfer-Encoding': 'base64'}})
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier, parts=parts)
+
+        self.assertEquals(body, mail.body)
+
 class InputMailTest(unittest.TestCase):
     mail_dict = lambda x: {
         'body': 'Este \xe9 o corpo',
@@ -222,7 +233,7 @@ class InputMailTest(unittest.TestCase):
         self.assertRegexpMatches(mime_multipart.as_string(), "\nBcc: bcc@pixelated.org, anotherbcc@pixelated.org\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nDate: date now\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nSubject: Oi\n")
-        self.assertRegexpMatches(mime_multipart.as_string(), "\nEste \xe9 o corpo")
+        self.assertRegexpMatches(mime_multipart.as_string(), base64.b64encode(self.mail_dict()['body']))
 
     def test_smtp_format(self):
         InputMail.FROM_EMAIL_ADDRESS = 'pixelated@org'

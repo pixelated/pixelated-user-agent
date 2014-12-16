@@ -25,6 +25,7 @@ import pixelated.support.date
 from email.MIMEMultipart import MIMEMultipart
 from pycryptopp.hash import sha256
 import re
+import base64
 
 
 class Mail(object):
@@ -71,7 +72,7 @@ class Mail(object):
         if 'content_type' in self.headers and 'charset' in self.headers['content_type']:
             return re.compile('.*charset=(.*)').match(self.headers['content_type']).group(1)
         else:
-            return 'us-ascii'
+            return 'utf-8'
 
     @property
     def raw(self):
@@ -157,7 +158,7 @@ class InputMail(Mail):
             for part in self.body:
                 mime_multipart.attach(MIMEText(part['raw'], part['content-type']))
         else:
-            mime_multipart.attach(MIMEText(self.body, 'plain'))
+            mime_multipart.attach(MIMEText(self.body, 'plain', 'utf-8'))
         return mime_multipart
 
     def to_smtp_format(self):
@@ -210,7 +211,10 @@ class PixelatedMail(Mail):
             body += '--' + self.boundary + '--'
             return body
         else:
-            return self.bdoc.content['raw']
+            if self.parts and self.parts['alternatives'][0]['headers']['Content-Transfer-Encoding'] == 'base64':
+                return base64.b64decode(self.parts['alternatives'][0]['content'])
+            else:
+                return self.bdoc.content['raw']
 
     @property
     def headers(self):
