@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-# builds the pixelated-user-agent using the debian packages
 
 FROM debian:testing
 
@@ -37,12 +36,15 @@ RUN apt-key adv --keyserver pool.sks-keyservers.net --recv-key 1E34A1828E207901 
 RUN apt-get update -y --force-yes
 
 # Install pip for taskthread dependency (no backport yet)
-RUN apt-get install python-pip
+RUN apt-get install python-pip python-all-dev libssl-dev
 RUN pip install taskthread
 
 RUN apt-get install -y --force-yes --allow-unauthenticated soledad-client=0.6.1~509f76c soledad-common=0.6.1~509f76c
 # Install Pixelated User Agent
 RUN apt-get install -y --force-yes pixelated-user-agent
 
-EXPOSE 4567
+# reinstall pysqlcipher from pip
+RUN rm -rf /usr/lib/python2.7/dist-packages/pysqlcipher*
+RUN pip install pysqlcipher
 
+EXPOSE 4567
