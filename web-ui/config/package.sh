@@ -15,6 +15,9 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 # prepare files for .deb package
+
+set -e
+
 export PIXELATED_BUILD='package'
 
 mkdir -p dist
