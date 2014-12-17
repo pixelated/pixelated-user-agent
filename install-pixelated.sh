@@ -62,7 +62,10 @@ cat <<EOF
 ## Rename the certificate based on your provider domain name like this 'your.leapprovider.org.crt'
 ## Put it in services/pixelated/certificates/
 
-## Once you are done, just run:
-##     pixelated-user-agent
+## Once you are done, activate your virtual environment by running:
+## source service/.virtualenv/bin/activate
+
+## The User agent will be available on localhost:3333 after running
+## pixelated-user-agent
 
 EOF
