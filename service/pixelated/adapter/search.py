@@ -22,6 +22,7 @@ from pixelated.support.functional import flatten
 from whoosh.index import FileIndex
 from whoosh.fields import *
 from whoosh.qparser import QueryParser
+from whoosh.qparser import MultifieldParser
 from whoosh.query import Term
 from whoosh import sorting
 from pixelated.support.functional import unique
@@ -175,7 +176,7 @@ class SearchEngine(object):
             .replace('-in:', 'AND NOT tag:')
             .replace('in:all', '*')
         )
-        return QueryParser('raw', self._index.schema).parse(query)
+        return MultifieldParser(['raw', 'body'], self._index.schema).parse(query)
 
     def remove_from_index(self, mail_id):
         writer = self._index.writer()

@@ -133,3 +133,12 @@ class SearchTest(SoledadTestBase):
         results = self.get_mails_by_tag('inbox')
         self.assertEqual(results[0].ident, input_mail2.ident)
         self.assertEqual(results[1].ident, input_mail.ident)
+
+    def test_search_base64_body(self):
+        body = u'bl\xe1'
+        input_mail = MailBuilder().with_body(body.encode('utf-8')).build_input_mail()
+        self.client.add_mail_to_inbox(input_mail)
+        results = self.search(body)
+
+        self.assertGreater(len(results), 0, 'No results returned from search')
+        self.assertEquals(results[0].ident, input_mail.ident )

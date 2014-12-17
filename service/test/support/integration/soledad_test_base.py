@@ -35,8 +35,12 @@ class SoledadTestBase(unittest.TestCase):
         self.client = AppTestClient()
 
     def get_mails_by_tag(self, tag, page=1, window=100):
+        tags = 'tag:%s' % tag
+        return self.search(tags, page, window)
+
+    def search(self, query, page=1, window=100):
         res, req = self.client.get("/mails", {
-            'q': ['tag:%s' % tag],
+            'q': [query],
             'w': [str(window)],
             'p': [str(page)]
         })
