@@ -141,4 +141,4 @@ class SearchTest(SoledadTestBase):
         results = self.search(body)
 
         self.assertGreater(len(results), 0, 'No results returned from search')
-        self.assertEquals(results[0].ident, input_mail.ident )
+        self.assertEquals(results[0].ident, input_mail.ident)
