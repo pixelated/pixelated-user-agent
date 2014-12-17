@@ -171,8 +171,8 @@ class TestPixelatedMail(unittest.TestCase):
         mail.raw
 
     def test_that_body_understands_base64(self):
-        body = "bl\xe1"
-        encoded_body = base64.b64encode(body)
+        body = u'bl\xe1'
+        encoded_body = unicode(base64.b64encode(body.encode('utf-8')))
 
         fdoc, hdoc, bdoc = test_helper.leap_mail()
         parts = {'alternatives': []}

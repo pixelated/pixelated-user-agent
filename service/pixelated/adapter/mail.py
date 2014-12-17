@@ -211,8 +211,8 @@ class PixelatedMail(Mail):
             body += '--' + self.boundary + '--'
             return body
         else:
-            if self.parts and self.parts['alternatives'][0]['headers']['Content-Transfer-Encoding'] == 'base64':
-                return base64.b64decode(self.parts['alternatives'][0]['content'])
+            if self.parts and self.parts['alternatives'][0]['headers'].get('Content-Transfer-Encoding', '') == 'base64':
+                return unicode(base64.b64decode(self.parts['alternatives'][0]['content']), 'utf-8')
             else:
                 return self.bdoc.content['raw']
 
