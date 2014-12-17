@@ -19,10 +19,22 @@
   baseUrl: '../app',
   wrap: true,
   almond: true,
-  optimize: 'none',
+  optimize: 'uglify',
   mainConfigFile: '../app/js/main.js',
-  out: '../.tmp/app.concatenated.js',
-  include: ['js/main'],
-  name: 'bower_components/almond/almond'
+  out: '../dist/app.min.js',
+  include: [
+    'bower_components/modernizr/modernizr',
+    'bower_components/lodash/dist/lodash',
+    'bower_components/jquery/dist/jquery',
+    'js/lib/highlightRegex',
+    'bower_components/handlebars/handlebars.min',
+    'bower_components/typeahead.js/dist/typeahead.bundle.min',
+    'bower_components/foundation/js/foundation',
+    'bower_components/foundation/js/foundation/foundation.reveal',
+    'bower_components/foundation/js/foundation/foundation.offcanvas',
+    'js/main'
+  ],
+  name:'bower_components/almond/almond',
+
 })
 
