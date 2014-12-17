@@ -22,6 +22,7 @@ from test.support import test_helper
 import dateutil.parser as dateparser
 import base64
 
+
 class TestPixelatedMail(unittest.TestCase):
     def setUp(self):
         self.querier = mock()
@@ -169,7 +170,6 @@ class TestPixelatedMail(unittest.TestCase):
 
         mail.raw
 
-
     def test_that_body_understands_base64(self):
         body = "bl\xe1"
         encoded_body = base64.b64encode(body)
@@ -180,6 +180,7 @@ class TestPixelatedMail(unittest.TestCase):
         mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier, parts=parts)
 
         self.assertEquals(body, mail.body)
+
 
 class InputMailTest(unittest.TestCase):
     mail_dict = lambda x: {
