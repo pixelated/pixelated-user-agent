@@ -38,24 +38,25 @@ define(
 
     function tagShortcut() {
 
-      this.renderTemplate = function (linkTo) {
+      this.renderTemplate = function (tag, currentTag) {
         var model = {
-          tagName: linkTo.name,
-          displayBadge: this.displayBadge(linkTo),
-          badgeType: this.badgeType(linkTo),
-          count: this.badgeType(linkTo) === 'total' ? linkTo.counts.total : (linkTo.counts.total - linkTo.counts.read),
-          icon: iconFor[linkTo.name]
+          tagName: tag.name,
+          displayBadge: this.displayBadge(tag),
+          badgeType: this.badgeType(tag),
+          count: this.badgeType(tag) === 'total' ? tag.counts.total : (tag.counts.total - tag.counts.read),
+          icon: iconFor[tag.name],
+          selected: tag.name === currentTag ? 'selected' : ''
         };
         return templates.tags.shortcut(model);
       };
 
       this.renderAndAttach = function (parent, options) {
-        parent.append(this.renderTemplate(options.linkTo));
+        parent.append(this.renderTemplate(options.tag, options.currentTag));
         this.initialize(parent.children().last(), options);
       };
 
       this.reRender = function () {
-        this.$node.html(this.renderTemplate(this.attr.linkTo));
+        this.$node.html(this.renderTemplate(this.attr.tag, this.attr.currentTag));
       };
 
       var iconFor = {
@@ -64,23 +65,6 @@ define(
         'drafts': 'pencil',
         'trash': 'trash-o',
         'all': 'archive'
-      };
-
-      this.selectTag = function (ev, data) {
-        if (data.tag === this.attr.linkTo.name) {
-          this.doSelect();
-        }
-        else {
-          this.doUnselect();
-        }
-      };
-
-      this.doUnselect = function () {
-        this.$node.removeClass('selected');
-      };
-
-      this.doSelect = function () {
-        this.$node.addClass('selected');
       };
 
       this.doTeardown = function () {
@@ -93,7 +77,6 @@ define(
         this.on('click', function () {
           this.attr.trigger.triggerSelect();
         });
-        this.on(document, events.ui.tag.select, this.selectTag);
         this.on(document, events.tags.shortcuts.teardown, this.doTeardown);
       });
 

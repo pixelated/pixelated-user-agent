@@ -24,12 +24,14 @@ define(
     'services/model/mail',
     'helpers/monitored_ajax',
     'page/events',
-    'features'
-  ], function (defineComponent, i18n, Mail, monitoredAjax, events, features) {
+    'features',
+    'mixins/with_auto_refresh',
+    'page/router/url_params'
+  ], function (defineComponent, i18n, Mail, monitoredAjax, events, features, withAutoRefresh, urlParams) {
 
     'use strict';
 
-    return defineComponent(mailService);
+    return defineComponent(mailService, withAutoRefresh('refreshMails'));
 
     function mailService() {
       var that;
@@ -41,7 +43,7 @@ define(
         lastQuery: '',
         currentPage: 1,
         numPages: 1,
-        w: 25
+        pageSize: 25
       });
 
       this.errorMessage = function (msg) {
@@ -54,7 +56,7 @@ define(
         var ident = data.ident;
 
         var success = function (data) {
-          this.refreshResults();
+          this.refreshMails();
           $(document).trigger(events.mail.tags.updated, { ident: ident, tags: data.tags });
         };
 
@@ -106,7 +108,7 @@ define(
 
       this.triggerMailsRead = function (mails) {
         return _.bind(function () {
-          this.refreshResults();
+          this.refreshMails();
           this.trigger(document, events.ui.mail.unchecked, { mails: mails });
           this.trigger(document, events.ui.mails.hasMailsChecked, false);
         }, this);
@@ -116,7 +118,7 @@ define(
         return _.bind(function () {
           var mails = dataToDelete.mails || [dataToDelete.mail];
 
-          this.refreshResults();
+          this.refreshMails();
           this.trigger(document, events.ui.userAlerts.displayMessage, { message: dataToDelete.successMessage});
           this.trigger(document, events.ui.mail.unchecked, { mails: mails });
           this.trigger(document, events.ui.mails.hasMailsChecked, false);
@@ -157,20 +159,16 @@ define(
 
       this.fetchByTag = function (ev, data) {
         this.attr.currentTag = data.tag;
+        this.attr.lastQuery = compileQuery(data);
         this.updateCurrentPageNumber(1);
 
-        this.fetchMail(compileQuery(data), this.attr.currentTag, false, data);
-      };
-
-      this.refreshResults = function (ev, data) {
-        var query = this.attr.lastQuery;
-        this.fetchMail(query, this.attr.currentTag, true);
+        this.refreshMails();
       };
 
       this.newSearch = function (ev, data) {
-        var query = data.query;
+        this.attr.lastQuery = data.query;
         this.attr.currentTag = 'all';
-        this.fetchMail(query, 'all');
+        this.refreshMails();
       };
 
       this.mailFromJSON = function (mail) {
@@ -190,21 +188,19 @@ define(
       this.excludeTrashedEmailsForDraftsAndSent = function (query) {
         if (query === 'tag:"drafts"' || query === 'tag:"sent"') {
           return query + ' -in:"trash"';
-        } else {
-          return query;
         }
+        return query;
       };
 
-      this.fetchMail = function (query, tag, fromRefresh, eventData) {
-        var p = this.attr.currentPage;
-        var w = this.attr.w;
-        var url = this.attr.mailsResource + '?q=' + escaped(this.excludeTrashedEmailsForDraftsAndSent(query)) + '&p=' + p + '&w=' + w;
-        this.attr.lastQuery = this.excludeTrashedEmailsForDraftsAndSent(query);
+      this.refreshMails = function () {
+        var url = this.attr.mailsResource + '?q=' + escaped(this.attr.lastQuery) + '&p=' + this.attr.currentPage + '&w=' + this.attr.pageSize;
+
+        this.attr.lastQuery = this.excludeTrashedEmailsForDraftsAndSent(this.attr.lastQuery);
+
         monitoredAjax(this, url, { dataType: 'json' })
           .done(function (data) {
-            this.attr.numPages = Math.ceil(data.stats.total / this.attr.w);
-            var eventToTrigger = fromRefresh ? events.mails.availableForRefresh : events.mails.available;
-            this.trigger(document, eventToTrigger, _.merge(_.merge({tag: tag }, eventData), this.parseMails(data)));
+            this.attr.numPages = Math.ceil(data.stats.total / this.attr.pageSize);
+            this.trigger(document, events.mails.available, _.merge(_.merge({tag: this.attr.currentTag }), this.parseMails(data)));
           }.bind(this))
           .fail(function () {
             this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n('Could not fetch messages') });
@@ -232,14 +228,14 @@ define(
       this.previousPage = function () {
         if (this.attr.currentPage > 1) {
           this.updateCurrentPageNumber(this.attr.currentPage - 1);
-          this.refreshResults();
+          this.refreshMails();
         }
       };
 
       this.nextPage = function () {
         if (this.attr.currentPage < (this.attr.numPages)) {
           this.updateCurrentPageNumber(this.attr.currentPage + 1);
-          this.refreshResults();
+          this.refreshMails();
         }
       };
 
@@ -281,10 +277,13 @@ define(
         this.on(document, events.mail.delete, this.deleteMail);
         this.on(document, events.mail.deleteMany, this.deleteManyMails);
         this.on(document, events.search.perform, this.newSearch);
-        this.on(document, events.ui.mails.fetchByTag, this.fetchByTag);
-        this.on(document, events.ui.mails.refresh, this.refreshResults);
+        this.on(document, events.ui.tag.selected, this.fetchByTag);
+        this.on(document, events.ui.tag.select, this.fetchByTag);
+        this.on(document, events.ui.mails.refresh, this.refreshMails);
         this.on(document, events.ui.page.previous, this.previousPage);
         this.on(document, events.ui.page.next, this.nextPage);
+
+        this.fetchByTag(null, {tag: urlParams.getTag()});
       });
     }
   }

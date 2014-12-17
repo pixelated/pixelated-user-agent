@@ -32,6 +32,7 @@ define(
 
     this.doSelect = function () {
       this.$node.addClass('selected');
+      this.checkCheckbox();
     };
 
     this.doUnselect = function () {
@@ -72,6 +73,7 @@ define(
     this.attachListeners = function () {
       this.on(this.$node.find('input[type=checkbox]'), 'change', this.triggerMailChecked);
       this.on(document, events.ui.mails.cleanSelected, this.doUnselect);
+      this.on(document, events.ui.tag.select, this.doUnselect);
       this.on(document, events.ui.mails.uncheckAll, this.uncheckCheckbox);
       this.on(document, events.ui.mails.checkAll, this.checkCheckbox);
     };

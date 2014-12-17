@@ -39,15 +39,16 @@ define(
     return Tag;
 
     function tag() {
-    
-      this.viewFor = function (tag, template) {
+
+      this.viewFor = function (tag, template, currentTag) {
         return template({
           tagName: tag.default ? i18n('tags.' + tag.name) : tag.name,
           ident: this.hashIdent(tag.ident),
           count: this.badgeType(tag) === 'total' ? tag.counts.total : (tag.counts.total - tag.counts.read),
           displayBadge: this.displayBadge(tag),
           badgeType: this.badgeType(tag),
-          icon: tag.icon
+          icon: tag.icon,
+          selected: tag.name === currentTag ? 'selected' : ''
         });
       };
 
@@ -55,7 +56,7 @@ define(
         var mailbox_and_tags = _.flatten([data.tags, data.mailbox]);
         if (_.contains(mailbox_and_tags, this.attr.tag.name)) {
           this.attr.tag.counts.read++;
-          this.$node.html(this.viewFor(this.attr.tag, templates.tags.tagInner));
+          this.$node.html(this.viewFor(this.attr.tag, templates.tags.tagInner, this.attr.currentTag));
           if (!_.isUndefined(this.attr.shortcut)) {
             this.attr.shortcut.reRender();
           }
@@ -64,23 +65,6 @@ define(
 
       this.triggerSelect = function () {
         this.trigger(document, events.ui.tag.select, { tag: this.attr.tag.name });
-        this.trigger(document, events.search.empty);
-      };
-
-      this.selectTag = function (ev, data) {
-        if(data.tag === this.attr.tag.name) { this.doSelect(data); }
-        else { this.doUnselect(); }
-      };
-
-      this.doUnselect = function () {
-        this.attr.selected = false;
-        this.$node.removeClass('selected');
-      };
-
-      this.doSelect = function (data) {
-        this.attr.selected = true;
-        this.$node.addClass('selected');
-        this.trigger(document, events.ui.tag.selected, data);
       };
 
       this.addSearchingClass = function() {
@@ -112,14 +96,13 @@ define(
 
       this.after('initialize', function () {
         this.on('click', this.triggerSelect);
-        this.on(document, events.ui.tag.select, this.selectTag);
         this.on(document, events.mail.read, this.decreaseReadCountIfMatchingTag);
         this.on(document, events.search.perform, this.addSearchingClass);
         this.on(document, events.search.empty, this.removeSearchingClass);
       });
 
       this.renderAndAttach = function (parent, data) {
-        var rendered = this.viewFor(data.tag, templates.tags.tag);
+        var rendered = this.viewFor(data.tag, templates.tags.tag, data.currentTag);
         parent.append(rendered);
         this.initialize('#tag-' + this.hashIdent(data.tag.ident), data);
         this.on(parent, events.tags.teardown, this.teardown);

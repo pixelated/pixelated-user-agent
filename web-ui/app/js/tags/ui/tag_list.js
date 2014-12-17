@@ -20,10 +20,11 @@ define(
     'tags/ui/tag',
     'views/templates',
     'page/events',
-    'tags/ui/tag_shortcut'
+    'tags/ui/tag_shortcut',
+    'page/router/url_params'
   ],
 
-  function(defineComponent, Tag, templates, events, TagShortcut) {
+  function(defineComponent, Tag, templates, events, TagShortcut, urlParams) {
     'use strict';
 
     var ICON_FOR = {
@@ -55,13 +56,13 @@ define(
       });
 
       this.renderShortcut = function (tag, tagComponent) {
-        return TagShortcut.appendedTo($('#tags-shortcuts'), { linkTo: tag, trigger: tagComponent});
+        return TagShortcut.appendedTo($('#tags-shortcuts'), { tag: tag, trigger: tagComponent, currentTag: this.getCurrentTag()});
       };
 
       function renderTag(tag, defaultList, customList) {
         var list = tag.default ? defaultList : customList;
 
-        var tagComponent = Tag.appendedTo(list, {tag: tag});
+        var tagComponent = Tag.appendedTo(list, {tag: tag, currentTag: this.getCurrentTag()});
         if (_.contains(_.keys(ORDER), tag.name)) {
           tagComponent.attr.shortcut = this.renderShortcut(tag, tagComponent);
         }
@@ -84,20 +85,23 @@ define(
         var defaultList = this.select('defaultTagList');
         var customList = this.select('customTagList');
 
-        resetTagList.bind(this, [defaultList, customList]).call();
+        resetTagList.call(this, [defaultList, customList]);
         this.resetShortcuts();
 
         tags.forEach(function (tag) {
-          renderTag.bind(this, tag, defaultList, customList).call();
+          renderTag.call(this, tag, defaultList, customList);
         }.bind(this));
       };
 
-      this.loadTagList = function(ev, data) {
+      this.displayTags = function(ev, data) {
         this.renderTagList(_.sortBy(data.tags, tagOrder));
-        this.trigger(document, events.ui.tags.loaded, { tag: this.attr.currentTag, skipMailListRefresh: data.skipMailListRefresh});
       };
 
-      this.saveTag = function(ev, data) {
+      this.getCurrentTag = function () {
+        return this.attr.currentTag || urlParams.getTag();
+      };
+
+      this.updateCurrentTag = function(ev, data) {
         this.attr.currentTag = data.tag;
       };
 
@@ -106,8 +110,8 @@ define(
       };
 
       this.after('initialize', function() {
-        this.on(document, events.ui.tagList.load, this.loadTagList);
-        this.on(document, events.ui.tag.selected, this.saveTag);
+        this.on(document, events.tags.received, this.displayTags);
+        this.on(document, events.ui.tag.select, this.updateCurrentTag);
         this.renderTagListTemplate();
       });
     }

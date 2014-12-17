@@ -121,23 +121,11 @@ define(
       };
 
       this.respondWithCheckedMails = function (ev, caller) {
-        this.trigger(caller, events.ui.mail.hereChecked, { checkedMails: this.checkedMailsForCurrentTag()});
+        this.trigger(caller, events.ui.mail.hereChecked, {checkedMails: self.attr.checkedMails});
       };
 
       this.updateCheckAllCheckbox = function () {
-        if (this.checkedMailsForCurrentTag().length > 0) {
-          this.trigger(document, events.ui.mails.hasMailsChecked, true);
-        } else {
-          this.trigger(document, events.ui.mails.hasMailsChecked, false);
-        }
-      };
-
-      this.checkedMailsForCurrentTag = function () {
-        var checkedMailsForCurrentTag = _.filter(self.attr.checkedMails, function (mail) {
-          return  self.attr.currentTag === 'all' || mail.mailbox === self.attr.currentTag || _.contains(mail.tags, self.attr.currentTag);
-        });
-
-        return checkedMailsForCurrentTag.length > 0 ? checkedMailsForCurrentTag : {};
+        this.trigger(document, events.ui.mails.hasMailsChecked, {hasMailsChecked: this.attr.checkedMails.length > 0});
       };
 
       this.addToSelectedMails = function (ev, data) {
@@ -177,6 +165,7 @@ define(
         self = this;
 
         this.on(document, events.ui.mails.cleanSelected, this.cleanSelected);
+        this.on(document, events.ui.tag.select, this.cleanSelected);
 
         this.on(document, events.mails.available, this.showMails);
         this.on(document, events.mails.availableForRefresh, this.refreshMailList);

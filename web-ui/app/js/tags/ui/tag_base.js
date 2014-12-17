@@ -34,6 +34,33 @@ define(['views/i18n', 'page/events'], function(i18n, events) {
       return _.include(TOTAL_BADGE, tag.name) ? 'total' : 'unread';
     };
 
+    this.doUnselect = function () {
+      this.$node.removeClass('selected');
+    };
+
+    this.doSelect = function () {
+      this.$node.addClass('selected');
+    };
+
+    this.selectTag = function (ev, data) {
+      this.attr.currentTag = data.tag;
+      if (data.tag === this.attr.tag.name) {
+        this.doSelect();
+      }
+      else {
+        this.doUnselect();
+      }
+    };
+
+    this.selectTagAll = function () {
+      this.selectTag(null, {tag: 'all'});
+    };
+
+    this.after('initialize', function () {
+      this.on(document, events.ui.tag.select, this.selectTag);
+      this.on(document, events.search.perform, this.selectTagAll);
+      this.on(document, events.search.empty, this.selectTagAll);
+    });
   }
 
   return tagBase;

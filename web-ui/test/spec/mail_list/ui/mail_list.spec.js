@@ -83,17 +83,6 @@ describeComponent('mail_list/ui/mail_list', function () {
       expect(mailHereCheckedEvent).toHaveBeenTriggeredOnAndWith(caller, { checkedMails: mailList });
     });
 
-    it('returns every checked mail when the curent tag is "all"', function () {
-      var caller = {};
-      this.component.attr.checkedMails = mailList;
-      this.component.attr.currentTag = 'all';
-      var mailHereCheckedEvent = spyOnEvent(caller, Pixelated.events.ui.mail.hereChecked);
-
-      $(document).trigger(Pixelated.events.ui.mail.wantChecked, caller);
-
-      expect(mailHereCheckedEvent).toHaveBeenTriggeredOnAndWith(caller, { checkedMails: mailList });
-    });
-
     it('returns an empty list to whomever requests the checked mails if there are no checked mails with the current tag', function () {
       var caller = {};
       var mailHereCheckedEvent = spyOnEvent(caller, Pixelated.events.ui.mail.hereChecked);

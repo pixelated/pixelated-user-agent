@@ -46,16 +46,14 @@ define(
         var value = input.val();
         input.blur();
         if(!_.isEmpty(value)){
-          this.trigger(document, events.ui.tag.select, { tag: 'all', skipMailListRefresh: true });
           this.trigger(document, events.search.perform, { query: value });
         } else {
-          this.trigger(document, events.ui.tag.select, { tag: 'all'});
           this.trigger(document, events.search.empty);
         }
       };
 
-      this.clearInput = function(event, data) {
-        if (!data.skipMailListRefresh) { this.select('input').val(''); }
+      this.clearInput = function() {
+        this.select('input').val('');
       };
 
       this.showOnlySearchTerms = function(event){
@@ -77,6 +75,7 @@ define(
         this.on(this.select('input'), 'focus', this.showOnlySearchTerms);
         this.on(this.select('input'), 'blur', this.showSearchTermsAndPlaceHolder);
         this.on(document, events.ui.tag.selected, this.clearInput);
+        this.on(document, events.ui.tag.select, this.clearInput);
       });
     }
   }
