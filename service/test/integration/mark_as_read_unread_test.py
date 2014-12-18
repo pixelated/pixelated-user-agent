@@ -33,7 +33,7 @@ class MarkAsReadUnreadTest(SoledadTestBase):
         mails = self.get_mails_by_tag('inbox')
         self.assertNotIn('read', mails[0].status)
 
-        self.mark_as_read(input_mail.ident)
+        self.mark_many_as_read([input_mail.ident])
 
         mails = self.get_mails_by_tag('inbox')
         self.assertIn('read', mails[0].status)
@@ -42,7 +42,7 @@ class MarkAsReadUnreadTest(SoledadTestBase):
         input_mail = MailBuilder().with_status([Status.SEEN]).build_input_mail()
         self.client.add_mail_to_inbox(input_mail)
 
-        self.mark_as_unread(input_mail.ident)
+        self.mark_many_as_unread([input_mail.ident])
         mail = self.get_mails_by_tag('inbox')[0]
 
         self.assertNotIn('read', mail.status)

@@ -41,7 +41,7 @@ class DeleteMailTest(SoledadTestBase):
 
     def test_delete_mail_when_trashing_mail_from_trash_mailbox(self):
         mails = self.client.add_multiple_to_mailbox(1, 'trash')
-        self.delete_mail(mails[0].ident)
+        self.delete_mails([mails[0].ident])
 
         trash_mails = self.get_mails_by_tag('trash')
 

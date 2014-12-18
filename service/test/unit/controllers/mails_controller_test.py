@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 import unittest
+from io import BytesIO
 
 from klein.test_resource import requestMock
 from mock import MagicMock
@@ -77,22 +78,24 @@ class TestMailsController(unittest.TestCase):
 
     def test_marking_mail_as_read_set_mail_as_read_on_the_service(self):
         mail = mock()
-        when(self.mail_service).mark_as_read(1).thenReturn(mail)
+        when(self.mail_service).mark_as_read("1").thenReturn(mail)
         when(self.search_engine).index_mail(mail).thenReturn(None)
+        self.dummy_request.content = BytesIO('{"idents":["1"]}')
 
-        self.mails_controller.mark_mail_as_read(None, 1)
+        self.mails_controller.mark_many_mail_read(self.dummy_request)
 
-        verify(self.mail_service).mark_as_read(1)
+        verify(self.mail_service).mark_as_read(u'1')
         verify(self.search_engine).index_mail(mail)
 
     def test_marking_mail_as_unread_set_mail_as_unread_on_the_service(self):
         mail = mock()
-        when(self.mail_service).mark_as_unread(1).thenReturn(mail)
+        when(self.mail_service).mark_as_unread("1").thenReturn(mail)
         when(self.search_engine).index_mail(mail).thenReturn(None)
+        self.dummy_request.content = BytesIO('{"idents":["1"]}')
 
-        self.mails_controller.mark_mail_as_unread(None, 1)
+        self.mails_controller.mark_many_mail_unread(self.dummy_request)
 
-        verify(self.mail_service).mark_as_unread(1)
+        verify(self.mail_service).mark_as_unread(u'1')
         verify(self.search_engine).index_mail(mail)
 
     def test_move_message_to_trash(self):

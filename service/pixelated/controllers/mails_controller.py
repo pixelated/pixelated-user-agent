@@ -44,16 +44,6 @@ class MailsController:
         mail = self._mail_service.mail(mail_id)
         return respond_json(mail.as_dict(), request)
 
-    def mark_mail_as_read(self, request, mail_id):
-        mail = self._mail_service.mark_as_read(mail_id)
-        self._search_engine.index_mail(mail)
-        return ""
-
-    def mark_mail_as_unread(self, request, mail_id):
-        mail = self._mail_service.mark_as_unread(mail_id)
-        self._search_engine.index_mail(mail)
-        return ""
-
     def mark_many_mail_unread(self, request):
         content_dict = json.load(request.content)
         idents = content_dict.get('idents')

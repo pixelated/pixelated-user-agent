@@ -80,13 +80,13 @@ define(
           mailIdents = _.map(data.checkedMails, function (mail) {
             return mail.ident;
           });
-          monitoredAjax(this, '/mails/read', {
-            type: 'POST',
-            data: {idents: JSON.stringify(mailIdents)}
-          }).done(this.triggerMailsRead(data.checkedMails));
         } else {
-          monitoredAjax(this, '/mail/' + data.ident + '/read', {type: 'POST'});
+          mailIdents = [data.ident];
         }
+        monitoredAjax(this, '/mails/read', {
+          type: 'POST',
+          data: JSON.stringify({idents: mailIdents})
+        }).done(this.triggerMailsRead(data.checkedMails));
       };
 
       this.unreadMail = function (ev, data) {
@@ -95,13 +95,13 @@ define(
           mailIdents = _.map(data.checkedMails, function (mail) {
             return mail.ident;
           });
-          monitoredAjax(this, '/mails/unread', {
-            type: 'POST',
-            data: {idents: JSON.stringify(mailIdents)}
-          }).done(this.triggerMailsRead(data.checkedMails));
         } else {
-          monitoredAjax(this, '/mail/' + data.ident + '/read', {type: 'POST'});
+          mailIdents = [data.ident];
         }
+        monitoredAjax(this, '/mails/unread', {
+          type: 'POST',
+          data: JSON.stringify({idents: mailIdents})
+        }).done(this.triggerMailsRead(data.checkedMails));
       };
 
       this.triggerMailsRead = function (mails) {
@@ -137,8 +137,8 @@ define(
           return mail.ident;
         });
 
-        monitoredAjax(this, '/mails', {
-          type: 'DELETE',
+        monitoredAjax(this, '/mails/delete', {
+          type: 'POST',
           dataType: 'json',
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify({idents: mailIdents})

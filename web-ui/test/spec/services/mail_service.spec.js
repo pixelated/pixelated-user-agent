@@ -18,7 +18,8 @@ describeComponent('services/mail_service', function () {
 
     this.component.trigger(Pixelated.events.mail.read, {ident: 1});
 
-    expect(readRequest.calls.mostRecent().args[0]).toEqual('/mail/1/read');
+    expect(readRequest.calls.mostRecent().args[0]).toEqual('/mails/read');
+    expect(readRequest.calls.mostRecent().args[1].data).toEqual('{"idents":[1]}');
   });
 
   describe('when marks many emails as read', function () {
@@ -42,7 +43,7 @@ describeComponent('services/mail_service', function () {
 
     it('makes the correct request to the backend', function () {
       expect(readRequest.calls.mostRecent().args[0]).toEqual('/mails/read');
-      expect(readRequest.calls.mostRecent().args[1].data).toEqual({idents: '[1,2]'});
+      expect(readRequest.calls.mostRecent().args[1].data).toEqual('{"idents":[1,2]}')
     });
 
     it('will trigger that a message has been deleted when it is done deleting', function() {
