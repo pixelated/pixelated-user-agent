@@ -25,7 +25,7 @@ define(
 
     function monitoredAjax(on, url, config) {
       if (config) {
-        config.timeout = 5*1000;
+        config.timeout = 60*1000;
       }
       return $.ajax(url, config).fail(function(xmlhttprequest, textstatus, message) {
         var msg = '';
