@@ -77,9 +77,9 @@ The debian package is currently only available in our [repository](http://packag
 
 ```shell
 
-echo "deb http://packages.pixelated-project.org/debian wheezy-snapshots main" >> /etc/apt/sources.list
-echo "deb http://packages.pixelated-project.org/debian wheezy-backports main" >> /etc/apt/sources.list
-echo "deb http://packages.pixelated-project.org/debian wheezy main" >> /etc/apt/sources.list
+echo "deb http://packages.pixelated-project.org/debian wheezy-snapshots main" > /etc/apt/sources.list.d/pixelated.list
+echo "deb http://packages.pixelated-project.org/debian wheezy-backports main" >> /etc/apt/sources.list.d/pixelated.list
+echo "deb http://packages.pixelated-project.org/debian wheezy main" >> /etc/apt/sources.list.d/pixelated.list
 
 apt-key adv --keyserver pool.sks-keyservers.net --recv-key 287A1542472DC0E3
 
