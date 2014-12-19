@@ -134,7 +134,7 @@ define(
 
       this.checkedMailsForCurrentTag = function () {
         var checkedMailsForCurrentTag = _.filter(self.attr.checkedMails, function (mail) {
-          return  mail.mailbox === self.attr.currentTag || _.contains(mail.tags, self.attr.currentTag);
+          return  self.attr.currentTag === 'all' || mail.mailbox === self.attr.currentTag || _.contains(mail.tags, self.attr.currentTag);
         });
 
         return checkedMailsForCurrentTag.length > 0 ? checkedMailsForCurrentTag : {};
