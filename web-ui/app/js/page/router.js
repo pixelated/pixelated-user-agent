@@ -38,14 +38,14 @@ define(['flight/lib/component', 'page/events', 'page/router/url_params'], functi
       };
     }
 
-    this.smailPushState = function (ev, data) {
+    this.pushState = function (ev, data) {
       if (!data.fromPopState) {
         var nextState = createState(data, this.attr.history.state);
         this.attr.history.pushState(nextState, '', createHash(nextState));
       }
     };
 
-    this.smailPopState = function (ev) {
+    this.popState = function (ev) {
       var state = ev.state || {};
 
       this.trigger(document, events.ui.tag.select, {
@@ -60,8 +60,8 @@ define(['flight/lib/component', 'page/events', 'page/router/url_params'], functi
     };
 
     this.after('initialize', function () {
-      this.on(document, events.router.pushState, this.smailPushState);
-      window.onpopstate = this.smailPopState.bind(this);
+      this.on(document, events.router.pushState, this.pushState);
+      window.onpopstate = this.popState.bind(this);
     });
   });
 });

@@ -45,7 +45,7 @@ describeComponent('page/router', function () {
 
       var selectTagEvent = spyOnEvent(document, Pixelated.events.ui.tag.select);
 
-      this.component.smailPopState({ state: {tag: undefined} });
+      this.component.popState({ state: {tag: undefined} });
 
       expect(selectTagEvent).toHaveBeenTriggeredOnAndWith(document, jasmine.objectContaining({ tag: 'tag'}));
     });
@@ -56,11 +56,11 @@ describeComponent('page/router', function () {
 
       var displayNoMessageEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelectedWithoutPushState);
 
-      this.component.smailPopState({ state: {tag: undefined, isDisplayNoMessageSelected: false} });
+      this.component.popState({ state: {tag: undefined, isDisplayNoMessageSelected: false} });
 
       expect(displayNoMessageEvent).not.toHaveBeenTriggeredOn(document);
 
-      this.component.smailPopState({ state: {tag: undefined, isDisplayNoMessageSelected: true} });
+      this.component.popState({ state: {tag: undefined, isDisplayNoMessageSelected: true} });
 
       expect(displayNoMessageEvent).toHaveBeenTriggeredOn(document);
     });
