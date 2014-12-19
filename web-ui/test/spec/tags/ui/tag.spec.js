@@ -20,14 +20,12 @@ describeComponent('tags/ui/tag', function () {
 
     it('selects the tag on click', function () {
       var tagSelectEvent = spyOnEvent(document, Pixelated.events.ui.tag.select);
-      var cleanSelectedEvent = spyOnEvent(document, Pixelated.events.ui.mails.cleanSelected);
 
       this.component.$node.click();
 
       expect(this.component.attr.selected).toBeTruthy();
       expect(this.$node.attr('class')).toMatch('selected');
       expect(tagSelectEvent).toHaveBeenTriggeredOnAndWith(document, { tag: 'inbox' });
-      expect(cleanSelectedEvent).toHaveBeenTriggeredOn(document);
     });
 
     it('should remove selected class when selecting a different tag', function () {

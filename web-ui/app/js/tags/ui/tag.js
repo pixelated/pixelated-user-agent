@@ -80,7 +80,6 @@ define(
       this.doSelect = function (data) {
         this.attr.selected = true;
         this.$node.addClass('selected');
-        this.trigger(document, events.ui.mails.cleanSelected);
         this.trigger(document, events.ui.tag.selected, data);
       };
 

@@ -112,22 +112,8 @@ define(
 
       this.updateSelected = function (ev, data) {
         if (data.ident !== this.attr.currentMailIdent) {
-          this.uncheckCurrentMail();
           this.attr.currentMailIdent = data.ident;
         }
-        this.checkCurrentMail();
-      };
-
-      this.checkCurrentMail = function () {
-        $('#mail-' + this.attr.currentMailIdent + ' input:checkbox')
-          .attr('checked', true)
-          .trigger('change');
-      };
-
-      this.uncheckCurrentMail = function () {
-        $('#mail-' + this.attr.currentMailIdent + ' input:checkbox')
-          .attr('checked', false)
-          .trigger('change');
       };
 
       this.cleanSelected = function () {
