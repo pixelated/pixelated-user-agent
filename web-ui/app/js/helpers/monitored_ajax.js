@@ -16,36 +16,43 @@
  */
 /*global _ */
 
-define(
-  ['page/events',
-   'views/i18n'],
-  function(events, i18n) {
-    
-    'use strict';
+define(['page/events', 'views/i18n'], function (events, i18n) {
 
-    function monitoredAjax(on, url, config) {
-      if (config) {
-        config.timeout = 60*1000;
+  'use strict';
+
+  var messages = {
+    timeout: 'a timeout occurred',
+    error: 'problems talking to server',
+    parseerror: 'got invalid response from server'
+  };
+
+  function monitoredAjax(on, url, config) {
+    config = config || {};
+    config.timeout = 60 * 1000;
+
+    var originalBeforeSend = config.beforeSend;
+    config.beforeSend = function () {
+      $('#loading').show();
+      if (originalBeforeSend) {
+        originalBeforeSend();
       }
-      return $.ajax(url, config).fail(function(xmlhttprequest, textstatus, message) {
-        var msg = '';
-        switch (textstatus) {
-          case 'timeout':
-            msg = 'a timeout occurred';
-            break;
-          case 'error':
-            msg = 'problems talking to server';
-            break;
-          case 'parseerror':
-            msg = 'got invalid response from server';
-            break;
-          default:
-            msg = 'unexpected problem while talking to server';
-        }
-        on.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n(msg) });
-      }.bind(this));  
-    }
+    };
 
-    return monitoredAjax;
+    var originalComplete = config.complete;
+    config.complete = function () {
+      $('#loading').hide();
+      if (originalComplete) {
+        originalComplete();
+      }
+    };
+
+    return $.ajax(url, config).fail(function (xmlhttprequest, textstatus, message) {
+      var msg = messages[textstatus] || 'unexpected problem while talking to server';
+      on.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n(msg) });
+    }.bind(this));
+
   }
-);
+
+  return monitoredAjax;
+
+});
