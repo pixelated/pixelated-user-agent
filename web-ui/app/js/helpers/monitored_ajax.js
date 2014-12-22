@@ -40,7 +40,7 @@ define(['page/events', 'views/i18n'], function (events, i18n) {
 
     var originalComplete = config.complete;
     config.complete = function () {
-      $('#loading').hide();
+      $('#loading').fadeOut(500);
       if (originalComplete) {
         originalComplete();
       }
