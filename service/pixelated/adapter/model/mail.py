@@ -26,6 +26,7 @@ from email.MIMEMultipart import MIMEMultipart
 from pycryptopp.hash import sha256
 import re
 import base64
+from pixelated.support.functional import compact
 
 
 class Mail(object):
@@ -230,7 +231,7 @@ class PixelatedMail(Mail):
             if not header_value:
                 continue
             _headers[header] = header_value if type(header_value) is list else header_value.split(',')
-            _headers[header] = map(lambda x: x.strip(), _headers[header])
+            _headers[header] = map(lambda x: x.strip(), compact(_headers[header]))
 
         for header in ['From', 'Subject']:
             _headers[header] = hdoc_headers.get(header)
