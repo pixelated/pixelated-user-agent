@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
 
-from pixelated.adapter.mail_service import MailService
+from pixelated.adapter.services.mail_service import MailService
 from mockito import *
 
 

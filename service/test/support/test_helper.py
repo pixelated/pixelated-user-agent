@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from datetime import datetime
 
-from pixelated.adapter.mail import InputMail
+from pixelated.adapter.model.mail import InputMail
 
 
 LEAP_FLAGS = ['\\Seen',

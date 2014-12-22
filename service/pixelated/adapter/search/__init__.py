@@ -17,7 +17,7 @@
 from pixelated.support.encrypted_file_storage import EncryptedFileStorage
 
 import os
-from pixelated.adapter.status import Status
+from pixelated.adapter.model.status import Status
 from pixelated.support.functional import flatten
 from whoosh.index import FileIndex
 from whoosh.fields import *

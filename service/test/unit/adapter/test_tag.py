@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
 
-from pixelated.adapter.tag import Tag
+from pixelated.adapter.model.tag import Tag
 
 
 class TestTag(unittest.TestCase):

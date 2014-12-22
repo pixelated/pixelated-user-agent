@@ -13,14 +13,3 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from pixelated.adapter.tag import Tag
-
-
-class TagService:
-
-    instance = None
-    SPECIAL_TAGS = {Tag('inbox', True), Tag('sent', True), Tag('drafts', True), Tag('trash', True)}
-
-    @classmethod
-    def extract_reserved(cls, tags):
-        return {tag.name for tag in cls.SPECIAL_TAGS if tag.name in tags}

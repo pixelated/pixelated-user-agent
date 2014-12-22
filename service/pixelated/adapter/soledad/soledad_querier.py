@@ -17,7 +17,7 @@ import base64
 import quopri
 
 from cryptography.fernet import Fernet
-from pixelated.adapter.mail import PixelatedMail
+from pixelated.adapter.model.mail import PixelatedMail
 import re
 
 
@@ -25,36 +25,6 @@ class SoledadQuerier:
 
     def __init__(self, soledad):
         self.soledad = soledad
-
-    def get_index_masterkey(self):
-        index_key = self.soledad.get_from_index('by-type', 'index_key')
-        if len(index_key) == 0:
-            index_key = Fernet.generate_key()
-            self.soledad.create_doc(dict(type='index_key', value=index_key))
-            return index_key
-        return str(index_key[0].content['value'])
-
-    def _remove_many(self, docs):
-        [self.soledad.delete_doc(doc) for doc in docs]
-
-    def _remove_dup_inboxes(self, mailbox_name):
-        mailboxes = self.soledad.get_from_index('by-type-and-mbox', 'mbox', mailbox_name)
-        if len(mailboxes) == 0:
-            return
-        mailboxes_to_remove = sorted(mailboxes, key=lambda x: x.content['created'])[1:len(mailboxes)]
-        self._remove_many(mailboxes_to_remove)
-
-    def _remove_dup_recent(self, mailbox_name):
-        rct = self.soledad.get_from_index('by-type-and-mbox', 'rct', mailbox_name)
-        if len(rct) == 0:
-            return
-        rct_to_remove = sorted(rct, key=lambda x: len(x.content['rct']), reverse=True)[1:len(rct)]
-        self._remove_many(rct_to_remove)
-
-    def remove_duplicates(self):
-        for mailbox in ['INBOX', 'DRAFTS', 'SENT', 'TRASH']:
-            self._remove_dup_inboxes(mailbox)
-            self._remove_dup_recent(mailbox)
 
     def mark_all_as_not_recent(self):
         for mailbox in ['INBOX', 'DRAFTS', 'SENT', 'TRASH']:
@@ -121,6 +91,34 @@ class SoledadQuerier:
 
         return PixelatedMail.from_soledad(fdoc, hdoc, bdoc, parts=parts, soledad_querier=self)
 
+    def mails(self, idents):
+        fdocs_chash = [(self.soledad.get_from_index('by-type-and-contenthash', 'flags', ident), ident) for ident in idents]
+        fdocs_chash = [(result[0], ident) for result, ident in fdocs_chash if result]
+        return self._build_mails_from_fdocs(fdocs_chash)
+
+    def remove_mail(self, mail):
+        _mail = self.mail(mail.ident)
+        # FIX-ME: Must go through all the part_map phash to delete all the cdocs
+        self.soledad.delete_doc(_mail.fdoc)
+        self.soledad.delete_doc(_mail.hdoc)
+        self.soledad.delete_doc(_mail.bdoc)
+
+    def idents_by_mailbox(self, mailbox_name):
+        return set(doc.content['chash'] for doc in self.soledad.get_from_index('by-type-and-mbox-and-deleted', 'flags', mailbox_name, '0'))
+
+    def _update_index(self, docs):
+        db = self.soledad._db
+
+        indexed_fields = db._get_indexed_fields()
+        if indexed_fields:
+            # It is expected that len(indexed_fields) is shorter than
+            # len(raw_doc)
+            getters = [(field, db._parse_index_definition(field))
+                       for field in indexed_fields]
+            for doc in docs:
+                db._update_indexes(doc.doc_id, doc.content, getters, db._db_handle)
+
+    # Attachments
     def attachment(self, ident, encoding):
         bdoc = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', ident)[0]
         return {'content': self._try_decode(bdoc.content['raw'], encoding),
@@ -134,11 +132,6 @@ class SoledadQuerier:
             return quopri.decodestring(raw)
         else:
             return str(raw)
-
-    def mails(self, idents):
-        fdocs_chash = [(self.soledad.get_from_index('by-type-and-contenthash', 'flags', ident), ident) for ident in idents]
-        fdocs_chash = [(result[0], ident) for result, ident in fdocs_chash if result]
-        return self._build_mails_from_fdocs(fdocs_chash)
 
     def _extract_parts(self, hdoc, parts=None):
         if not parts:
@@ -168,24 +161,34 @@ class SoledadQuerier:
             filename = match.group(1)
         return {'headers': headers_dict, 'ident': hdoc['phash'], 'name': filename}
 
-    def remove_mail(self, mail):
-        _mail = self.mail(mail.ident)
-        # FIX-ME: Must go through all the part_map phash to delete all the cdocs
-        self.soledad.delete_doc(_mail.fdoc)
-        self.soledad.delete_doc(_mail.hdoc)
-        self.soledad.delete_doc(_mail.bdoc)
+    # Removing duplicates
+    def remove_duplicates(self):
+        for mailbox in ['INBOX', 'DRAFTS', 'SENT', 'TRASH']:
+            self._remove_dup_inboxes(mailbox)
+            self._remove_dup_recent(mailbox)
 
-    def idents_by_mailbox(self, mailbox_name):
-        return set(doc.content['chash'] for doc in self.soledad.get_from_index('by-type-and-mbox-and-deleted', 'flags', mailbox_name, '0'))
+    def _remove_many(self, docs):
+        [self.soledad.delete_doc(doc) for doc in docs]
 
-    def _update_index(self, docs):
-        db = self.soledad._db
+    def _remove_dup_inboxes(self, mailbox_name):
+        mailboxes = self.soledad.get_from_index('by-type-and-mbox', 'mbox', mailbox_name)
+        if len(mailboxes) == 0:
+            return
+        mailboxes_to_remove = sorted(mailboxes, key=lambda x: x.content['created'])[1:len(mailboxes)]
+        self._remove_many(mailboxes_to_remove)
 
-        indexed_fields = db._get_indexed_fields()
-        if indexed_fields:
-            # It is expected that len(indexed_fields) is shorter than
-            # len(raw_doc)
-            getters = [(field, db._parse_index_definition(field))
-                       for field in indexed_fields]
-            for doc in docs:
-                db._update_indexes(doc.doc_id, doc.content, getters, db._db_handle)
+    def _remove_dup_recent(self, mailbox_name):
+        rct = self.soledad.get_from_index('by-type-and-mbox', 'rct', mailbox_name)
+        if len(rct) == 0:
+            return
+        rct_to_remove = sorted(rct, key=lambda x: len(x.content['rct']), reverse=True)[1:len(rct)]
+        self._remove_many(rct_to_remove)
+
+    # Search Index encryption key get/create
+    def get_index_masterkey(self):
+        index_key = self.soledad.get_from_index('by-type', 'index_key')
+        if len(index_key) == 0:
+            index_key = Fernet.generate_key()
+            self.soledad.create_doc(dict(type='index_key', value=index_key))
+            return index_key
+        return str(index_key[0].content['value'])

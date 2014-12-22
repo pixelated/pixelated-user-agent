@@ -18,7 +18,7 @@ import json
 import base64
 import quopri
 
-from pixelated.adapter.soledad_querier import SoledadQuerier
+from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
 from mockito import mock, when, any
 import os
 

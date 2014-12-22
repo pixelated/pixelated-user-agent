@@ -13,8 +13,8 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from pixelated.adapter.mailbox import Mailbox
-from pixelated.adapter.mailbox_indexer_listener import MailboxIndexerListener
+from pixelated.adapter.services.mailbox import Mailbox
+from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerListener
 
 
 class Mailboxes():

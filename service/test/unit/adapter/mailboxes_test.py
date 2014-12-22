@@ -16,8 +16,8 @@
 import unittest
 
 from mockito import *
-from pixelated.adapter.mailbox import Mailbox
-from pixelated.adapter.mailboxes import Mailboxes
+from pixelated.adapter.services.mailbox import Mailbox
+from pixelated.adapter.services.mailboxes import Mailboxes
 
 
 class PixelatedMailboxesTest(unittest.TestCase):

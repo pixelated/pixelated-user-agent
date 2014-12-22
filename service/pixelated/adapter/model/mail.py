@@ -20,7 +20,7 @@ from email.mime.text import MIMEText
 from leap.mail.imap.fields import fields
 import leap.mail.walk as walk
 import dateutil.parser as dateparser
-from pixelated.adapter.status import Status
+from pixelated.adapter.model.status import Status
 import pixelated.support.date
 from email.MIMEMultipart import MIMEMultipart
 from pycryptopp.hash import sha256

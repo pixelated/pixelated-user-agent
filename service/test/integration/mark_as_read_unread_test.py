@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 from test.support.integration import *
-from pixelated.adapter.status import Status
+from pixelated.adapter.model.status import Status
 
 
 class MarkAsReadUnreadTest(SoledadTestBase):

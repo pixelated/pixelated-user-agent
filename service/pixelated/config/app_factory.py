@@ -22,19 +22,19 @@ from twisted.internet import ssl
 from twisted.web import resource
 from twisted.web.util import redirectTo
 from pixelated.config.routes import setup_routes
-from pixelated.adapter.mail_service import MailService
-from pixelated.adapter.mail import InputMail
-from pixelated.adapter.mail_sender import MailSender
-from pixelated.adapter.mailboxes import Mailboxes
-from pixelated.adapter.soledad_querier import SoledadQuerier
+from pixelated.adapter.services.mail_service import MailService
+from pixelated.adapter.model.mail import InputMail
+from pixelated.adapter.services.mail_sender import MailSender
+from pixelated.adapter.services.mailboxes import Mailboxes
+from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
 from pixelated.adapter.search import SearchEngine
-from pixelated.adapter.draft_service import DraftService
-from pixelated.adapter.mailbox_indexer_listener import MailboxIndexerListener
+from pixelated.adapter.services.draft_service import DraftService
+from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerListener
 import pixelated.bitmask_libraries.session as LeapSession
 from pixelated.bitmask_libraries.leap_srp import LeapAuthException
 from requests.exceptions import ConnectionError
 from pixelated.controllers import *
-from pixelated.adapter.tag_service import TagService
+from pixelated.adapter.services.tag_service import TagService
 from leap.common.events import (
     register,
     unregister,

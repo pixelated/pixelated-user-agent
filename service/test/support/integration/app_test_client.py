@@ -24,15 +24,15 @@ from leap.mail.imap.account import SoledadBackedAccount
 from leap.soledad.client import Soledad
 from mock import MagicMock, Mock
 import os
-from pixelated.adapter.draft_service import DraftService
-from pixelated.adapter.mail_service import MailService
-from pixelated.adapter.mailboxes import Mailboxes
-from pixelated.adapter.soledad_querier import SoledadQuerier
-from pixelated.adapter.tag_service import TagService
+from pixelated.adapter.services.draft_service import DraftService
+from pixelated.adapter.services.mail_service import MailService
+from pixelated.adapter.services.mailboxes import Mailboxes
+from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
+from pixelated.adapter.services.tag_service import TagService
 from pixelated.controllers import FeaturesController, HomeController, MailsController, TagsController, \
     SyncInfoController, AttachmentsController, ContactsController
 import pixelated.runserver
-from pixelated.adapter.mail import PixelatedMail
+from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.search import SearchEngine
 from test.support.integration.model import MailBuilder
 

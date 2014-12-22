@@ -15,8 +15,8 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 
-from pixelated.adapter.mail import InputMail
-from pixelated.adapter.status import Status
+from pixelated.adapter.model.mail import InputMail
+from pixelated.adapter.model.status import Status
 
 
 class MailBuilder:

@@ -16,6 +16,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+
 if 'develop' in sys.argv:
     sys.argv.append('--always-unzip')
 
@@ -64,6 +65,7 @@ def data_files():
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+
 setup(name='pixelated-user-agent',
       version='0.1',
       description='API to serve the pixelated front-end requests',
@@ -71,7 +73,20 @@ setup(name='pixelated-user-agent',
       author='Thoughtworks',
       author_email='pixelated-team@thoughtworks.com',
       url='http://pixelated-project.github.io',
-      packages=['pixelated', 'pixelated.adapter', 'pixelated.bitmask_libraries', 'pixelated.config', 'pixelated.certificates', 'pixelated.support', 'pixelated.controllers'],
+      packages=[
+          'pixelated',
+          'pixelated.adapter',
+          'pixelated.adapter.listeners',
+          'pixelated.adapter.model',
+          'pixelated.adapter.search',
+          'pixelated.adapter.services',
+          'pixelated.adapter.soledad',
+          'pixelated.bitmask_libraries',
+          'pixelated.config',
+          'pixelated.certificates',
+          'pixelated.support',
+          'pixelated.controllers'
+      ],
       test_suite='nose.collector',
       install_requires=[
           'pyasn1==0.1.7',
@@ -96,4 +111,4 @@ setup(name='pixelated-user-agent',
       },
       data_files=data_files(),
       include_package_data=True
-      )
+)

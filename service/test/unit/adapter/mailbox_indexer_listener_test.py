@@ -16,7 +16,7 @@
 import unittest
 
 from mockito import *
-from pixelated.adapter.mailbox_indexer_listener import MailboxIndexerListener
+from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerListener
 
 
 class MailboxListenerTest(unittest.TestCase):

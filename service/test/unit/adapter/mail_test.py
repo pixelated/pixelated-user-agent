@@ -16,7 +16,7 @@
 import unittest
 
 import pixelated.support.date
-from pixelated.adapter.mail import PixelatedMail, InputMail
+from pixelated.adapter.model.mail import PixelatedMail, InputMail
 from mockito import *
 from test.support import test_helper
 import dateutil.parser as dateparser

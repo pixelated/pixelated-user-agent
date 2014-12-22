@@ -16,7 +16,7 @@
 
 import json
 
-from pixelated.adapter.mail import InputMail
+from pixelated.adapter.model.mail import InputMail
 from pixelated.controllers import respond_json
 
 

@@ -1,7 +1,7 @@
 import unittest
 
-from pixelated.adapter.mail import InputMail
-from pixelated.adapter.draft_service import DraftService
+from pixelated.adapter.model.mail import InputMail
+from pixelated.adapter.services.draft_service import DraftService
 import test.support.test_helper as test_helper
 from mockito import *
 

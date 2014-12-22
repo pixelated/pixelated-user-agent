@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
 
-from pixelated.adapter.status import Status
+from pixelated.adapter.model.status import Status
 
 
 class TestStatus(unittest.TestCase):
