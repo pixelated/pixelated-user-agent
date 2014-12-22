@@ -31,7 +31,7 @@ define(['helpers/contenttype'],
     }
 
     function isInTrash() {
-      return _.contains(this.tags, 'trash');
+      return this.mailbox.toLowerCase() === 'trash';
     }
 
     function setDraftReplyFor(ident) {

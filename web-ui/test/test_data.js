@@ -40,7 +40,6 @@ define(function() {
         'cc-field': ['duda@la.lu']
       }
     }
-
   };
 
   var rawDraftMail = {
@@ -57,7 +56,22 @@ define(function() {
         'cc-field': []
       }
     }
+  };
 
+  var rawMailInTrash = {
+    'header':{'to':'mariane_dach@davis.info','from':'afton_braun@botsford.biz','subject':'Consectetur sit omnis veniam blanditiis.','date':'2014-06-17T11:56:53-03:00'},
+    'ident':9360,
+    'tags':['photography','sky'],
+    'status':['read'],
+    'body':'Illum eos nihil commodi voluptas. Velit consequatur odio quibusdam. Beatae aliquam hic quos.',
+    'mailbox': 'TRASH',
+    replying: {
+      single: 'afton_braun@botsford.biz',
+      all: {
+        'to-field': ['afton_braun@botsford.biz'],
+        'cc-field': []
+      }
+    }
   };
 
   var rawReceivedMail = {
@@ -219,6 +233,7 @@ define(function() {
       mail: rawMail,
       sent: rawSentMail,
       draft: rawDraftMail,
+      trash: rawMailInTrash,
       received: rawReceivedMail,
       receivedWithCC: rawReceivedWithCCMail,
       rawMailWithMultipleTo: rawMailWithMultipleTo,
