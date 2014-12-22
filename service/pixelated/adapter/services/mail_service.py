@@ -47,23 +47,11 @@ class MailService:
             self.mailboxes.drafts().remove(last_draft_ident)
         return self.mailboxes.sent().add(mail)
 
-    def thread(self, thread_id):
-        raise NotImplementedError()
-
     def mark_as_read(self, mail_id):
         return self.mail(mail_id).mark_as_read()
 
     def mark_as_unread(self, mail_id):
         return self.mail(mail_id).mark_as_unread()
-
-    def tags_for_thread(self, thread):
-        raise NotImplementedError()
-
-    def add_tag_to_thread(self, thread_id, tag):
-        raise NotImplementedError()
-
-    def remove_tag_from_thread(self, thread_id, tag):
-        raise NotImplementedError()
 
     def delete_mail(self, mail_id):
         return self.mailboxes.move_to_trash(mail_id)
@@ -71,18 +59,6 @@ class MailService:
     def delete_permanent(self, mail_id):
         mail = self.mail(mail_id)
         self.querier.remove_mail(mail)
-
-    def save_draft(self, draft):
-        raise NotImplementedError()
-
-    def draft_reply_for(self, mail_id):
-        raise NotImplementedError()
-
-    def all_contacts(self, query):
-        raise NotImplementedError()
-
-    def drafts(self):
-        raise NotImplementedError()
 
     def reply_all_template(self, mail_id):
         mail = self.mail(mail_id)
