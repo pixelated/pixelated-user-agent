@@ -25,7 +25,7 @@ Dependencies are: node, npm, compass (ruby), virtualenv, git
     * `sudo gem install compass`
 * MacOS:
     Using brew will get you there faster:
-    * `brew install node ruby gnupg`
+    * `brew install node ruby phantomjs gnupg`
     * `sudo gem install compass`
     * `sudo easy_install virtualenv`
 
