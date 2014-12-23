@@ -16,12 +16,20 @@ The User Agent has 2 components:
 
 ## Quickstart
 
+### Installing dependencies for development:
 Dependencies are: node, npm, compass (ruby), virtualenv, git
 
-* To install the dependencies on debian/ubuntu you need to run:
+* debian/ubuntu:
     * `sudo apt-get update`
     * `sudo apt-get install git nodejs-legacy npm python-dev python-virtualenv libffi-dev g++ ruby-dev`
     * `sudo gem install compass`
+* MacOS:
+    Using brew will get you there faster:
+    * `brew install node ruby gnupg`
+    * `sudo gem install compass`
+    * `sudo easy_install virtualenv`
+
+### Installing the app and running in development mode
 
 * Next step is cloning the repository with `git clone https://github.com/pixelated-project/pixelated-user-agent.git`
 
