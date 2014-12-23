@@ -48,6 +48,7 @@ class { 'install_pixelated' :
 
 class install_pixelated {
   exec { 'install-pixelated':
+    environment => 'USERNAME=vagrant',
     command => '/bin/bash /vagrant/install-pixelated.sh',
     cwd => '/vagrant',
     user => 'vagrant',

@@ -17,6 +17,7 @@
 
 # test dependencies
 
+set -e
 
 if [ ! $USERNAME ]
 then
