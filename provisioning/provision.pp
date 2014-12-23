@@ -50,7 +50,8 @@ class install_pixelated {
   exec { 'install-pixelated':
     command => '/bin/bash /vagrant/install-pixelated.sh',
     cwd => '/vagrant',
-    user => 'vagrant'
+    user => 'vagrant',
+    timeout => 0
   }
 }
 
