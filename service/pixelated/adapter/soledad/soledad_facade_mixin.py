@@ -23,17 +23,20 @@ class SoledadDbFacadeMixin(object):
     def get_all_flags_by_mbox(self, mbox):
         return self.soledad.get_from_index('by-type-and-mbox', 'flags', mbox)
 
-    def get_all_headers_by_chash(self, chash):
-        return self.soledad.get_from_index('by-type-and-contenthash', 'head', chash)
-
     def get_content_by_phash(self, phash):
-        return self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', phash)
+        content = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', phash)
+        if len(content):
+            return content[0]
 
     def get_flags_by_chash(self, chash):
-        return self.soledad.get_from_index('by-type-and-contenthash', 'flags', chash)[0]
+        flags = self.soledad.get_from_index('by-type-and-contenthash', 'flags', chash)
+        if len(flags):
+            return flags[0]
 
     def get_header_by_chash(self, chash):
-        return self.soledad.get_from_index('by-type-and-contenthash', 'head', chash)[0]
+        header = self.soledad.get_from_index('by-type-and-contenthash', 'head', chash)
+        if len(header):
+            return header[0]
 
     def get_recent_by_mbox(self, mbox):
         return self.soledad.get_from_index('by-type-and-mbox', 'rct', mbox)

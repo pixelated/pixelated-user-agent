@@ -48,6 +48,10 @@ define(
             contextMessage = context + ': ';
           }
 
+          if (xhr.status === 422) {
+            return; // ignore the fact that it failed to save the draft - it will succeed eventually
+          }
+
           if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
             on.trigger(document, events.ui.userAlerts.displayMessage, {message: contextMessage + xhr.responseJSON.message});
           } else {
@@ -66,7 +70,7 @@ define(
           type: 'POST',
           dataType: 'json',
           contentType: 'application/json; charset=utf-8',
-          data: JSON.stringify(data)
+          data: JSON.stringify(data),
         }).done(successSendMail(this))
           .fail(failure(this, 'Error sending mail'));
       };
@@ -76,7 +80,9 @@ define(
           type: 'PUT',
           dataType: 'json',
           contentType: 'application/json; charset=utf-8',
-          data: JSON.stringify(mail)
+          data: JSON.stringify(mail),
+          skipLoadingWarning: true,
+          skipErrorMessage: true
         });
       };
 

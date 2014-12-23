@@ -28,7 +28,7 @@ class DraftsTest(SoledadTestBase):
     def test_post_sends_mail_and_deletes_previous_draft_if_it_exists(self):
         # creates one draft
         first_draft = MailBuilder().with_subject('First draft').build_json()
-        first_draft_ident = self.put_mail(first_draft)
+        first_draft_ident = self.put_mail(first_draft)[0]['ident']
 
         # sends an updated version of the draft
         second_draft = MailBuilder().with_subject('Second draft').with_ident(first_draft_ident).build_json()
@@ -64,7 +64,7 @@ class DraftsTest(SoledadTestBase):
 
     def test_put_updates_draft_if_it_already_exists(self):
         draft = MailBuilder().with_subject('First draft').build_json()
-        draft_ident = self.put_mail(draft)
+        draft_ident = self.put_mail(draft)[0]['ident']
 
         updated_draft = MailBuilder().with_subject('First draft edited').with_ident(draft_ident).build_json()
         self.put_mail(updated_draft)
@@ -73,3 +73,12 @@ class DraftsTest(SoledadTestBase):
 
         self.assertEquals(1, len(drafts))
         self.assertEquals('First draft edited', drafts[0].subject)
+
+    def test_respond_unprocessable_entity_if_draft_to_remove_doesnt_exist(self):
+        draft = MailBuilder().with_subject('First draft').build_json()
+        self.put_mail(draft)
+
+        updated_draft = MailBuilder().with_subject('First draft edited').with_ident('NOTFOUND').build_json()
+        _, request = self.put_mail(updated_draft)
+
+        self.assertEquals(422, request.code)

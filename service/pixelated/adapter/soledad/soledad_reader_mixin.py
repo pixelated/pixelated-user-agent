@@ -34,26 +34,29 @@ class SoledadReaderMixin(SoledadDbFacadeMixin, object):
 
         fdocs_hdocs = []
         for fdoc, chash in fdocs_chash:
-            hdoc = self.get_all_headers_by_chash(chash)
-            if len(hdoc) == 0:
+            hdoc = self.get_header_by_chash(chash)
+            if not hdoc:
                 continue
-            fdocs_hdocs.append((fdoc, hdoc[0]))
+            fdocs_hdocs.append((fdoc, hdoc))
 
         fdocs_hdocs_bodyphash = [(f[0], f[1], f[1].content.get('body')) for f in fdocs_hdocs]
         fdocs_hdocs_bdocs_parts = []
         for fdoc, hdoc, body_phash in fdocs_hdocs_bodyphash:
             bdoc = self.get_content_by_phash(body_phash)
-            if len(bdoc) == 0:
+            if not bdoc:
                 continue
             parts = self._extract_parts(hdoc.content)
-            fdocs_hdocs_bdocs_parts.append((fdoc, hdoc, bdoc[0], parts))
+            fdocs_hdocs_bdocs_parts.append((fdoc, hdoc, bdoc, parts))
 
         return [PixelatedMail.from_soledad(*raw_mail, soledad_querier=self) for raw_mail in fdocs_hdocs_bdocs_parts]
+
+    def mail_exists(self, ident):
+        return self.get_flags_by_chash(ident)
 
     def mail(self, ident):
         fdoc = self.get_flags_by_chash(ident)
         hdoc = self.get_header_by_chash(ident)
-        bdoc = self.get_content_by_phash(hdoc.content['body'])[0]
+        bdoc = self.get_content_by_phash(hdoc.content['body'])
         parts = self._extract_parts(hdoc.content)
 
         return PixelatedMail.from_soledad(fdoc, hdoc, bdoc, parts=parts, soledad_querier=self)
@@ -65,7 +68,7 @@ class SoledadReaderMixin(SoledadDbFacadeMixin, object):
         return self._build_mails_from_fdocs(fdocs_chash)
 
     def attachment(self, attachment_ident, encoding):
-        bdoc = self.get_content_by_phash(attachment_ident)[0]
+        bdoc = self.get_content_by_phash(attachment_ident)
         return {'content': self._try_decode(bdoc.content['raw'], encoding),
                 'content-type': bdoc.content['content-type']}
 
@@ -94,7 +97,7 @@ class SoledadReaderMixin(SoledadDbFacadeMixin, object):
         return parts
 
     def _extract_alternative(self, hdoc, headers_dict):
-        bdoc = self.get_content_by_phash(hdoc['phash'])[0]
+        bdoc = self.get_content_by_phash(hdoc['phash'])
         raw_content = bdoc.content['raw']
         return {'headers': headers_dict, 'content': raw_content}
 

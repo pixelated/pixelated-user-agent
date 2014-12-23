@@ -56,7 +56,7 @@ class SoledadTestBase(unittest.TestCase):
 
     def put_mail(self, data):
         res, req = self.client.put('/mails', data)
-        return res['ident']
+        return res, req
 
     def post_tags(self, mail_ident, tags_json):
         res, req = self.client.post("/mail/%s/tags" % mail_ident, tags_json)

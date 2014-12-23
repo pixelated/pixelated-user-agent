@@ -41,6 +41,9 @@ class MailService:
     def mail(self, mail_id):
         return self.mailboxes.mail(mail_id)
 
+    def mail_exists(self, mail_id):
+        return not(not(self.querier.get_header_by_chash(mail_id)))
+
     def send(self, last_draft_ident, mail):
         self.mail_sender.sendmail(mail)
         if last_draft_ident:

@@ -15,6 +15,8 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import json
+import random
+import time
 
 from pixelated.adapter.model.mail import InputMail
 from pixelated.controllers import respond_json
@@ -105,11 +107,15 @@ class MailsController:
         return respond_json(mail.as_dict(), request)
 
     def update_draft(self, request):
+        if bool(random.getrandbits(1)):
+            time.sleep(3)
         content_dict = json.loads(request.content.read())
         _mail = InputMail.from_dict(content_dict)
         draft_id = content_dict.get('ident')
 
         if draft_id:
+            if not self._mail_service.mail_exists(draft_id):
+                return respond_json("", request, status_code=422)
             pixelated_mail = self._draft_service.update_draft(draft_id, _mail)
             self._search_engine.remove_from_index(draft_id)
         else:

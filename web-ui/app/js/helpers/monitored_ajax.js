@@ -32,7 +32,9 @@ define(['page/events', 'views/i18n'], function (events, i18n) {
 
     var originalBeforeSend = config.beforeSend;
     config.beforeSend = function () {
-      $('#loading').show();
+      if (!config.skipLoadingWarning) {
+        $('#loading').show();
+      }
       if (originalBeforeSend) {
         originalBeforeSend();
       }
@@ -40,15 +42,19 @@ define(['page/events', 'views/i18n'], function (events, i18n) {
 
     var originalComplete = config.complete;
     config.complete = function () {
-      $('#loading').fadeOut(500);
+      if (!config.skipLoadingWarning) {
+        $('#loading').fadeOut(500);
+      }
       if (originalComplete) {
         originalComplete();
       }
     };
 
     return $.ajax(url, config).fail(function (xmlhttprequest, textstatus, message) {
-      var msg = messages[textstatus] || 'unexpected problem while talking to server';
-      on.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n(msg) });
+      if (!config.skipErrorMessage) {
+        var msg = messages[textstatus] || 'unexpected problem while talking to server';
+        on.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n(msg) });
+      }
     }.bind(this));
 
   }
