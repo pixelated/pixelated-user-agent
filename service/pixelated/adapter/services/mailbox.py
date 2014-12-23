@@ -22,19 +22,6 @@ class Mailbox:
         self.mailbox_tag = mailbox_name.lower()
         self.querier = querier
 
-    def mails(self):
-        _mails = self.querier.all_mails_by_mailbox(self.mailbox_name)
-
-        result = []
-        for mail in _mails:
-            result.append(mail)
-        return result
-
-    def mails_by_tags(self, tags):
-        if 'all' in tags or self.mailbox_tag in tags:
-            return self.mails()
-        return [mail for mail in self.mails() if len(mail.tags.intersection(tags)) > 0]
-
     def mail(self, mail_id):
         return self.querier.mail(mail_id)
 

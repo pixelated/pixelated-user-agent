@@ -28,10 +28,6 @@ class SoledadReaderMixin(SoledadDbFacadeMixin, object):
             return []
         return self._build_mails_from_fdocs(fdocs_chash)
 
-    def all_mails_by_mailbox(self, mailbox_name):
-        fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in self.get_all_flags_by_mbox(mailbox_name)]
-        return self._build_mails_from_fdocs(fdocs_chash)
-
     def _build_mails_from_fdocs(self, fdocs_chash):
         if len(fdocs_chash) == 0:
             return []
