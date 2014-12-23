@@ -4,7 +4,7 @@ The following instructions describe how to setup a Vagrant box for development. 
 
 # Vagrant setup
 
-Create and provision Vagrant box
+Create and provision Vagrant box (from inside the user-agent repository)
 ```sh
 $ vagrant up
 ```
