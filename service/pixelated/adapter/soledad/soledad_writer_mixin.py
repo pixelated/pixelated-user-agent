@@ -48,7 +48,7 @@ class SoledadWriterMixin(SoledadDbFacadeMixin, object):
         self.put_doc(mbox)
 
         self._update_index(new_docs)
-        return self.mail(mail.ident) # PixelatedMail.from_soledad(fdoc, hdoc, bdoc, parts=None, soledad_querier=self)
+        return self.mail(mail.ident)  # PixelatedMail.from_soledad(fdoc, hdoc, bdoc, parts=None, soledad_querier=self)
 
     def remove_mail(self, mail):
         # FIX-ME: Must go through all the part_map phash to delete all the cdocs

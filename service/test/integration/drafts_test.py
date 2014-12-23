@@ -73,4 +73,3 @@ class DraftsTest(SoledadTestBase):
 
         self.assertEquals(1, len(drafts))
         self.assertEquals('First draft edited', drafts[0].subject)
-

@@ -58,4 +58,3 @@ class SoledadDbFacadeMixin(object):
 
     def get_search_index_masterkey(self):
         return self.soledad.get_from_index('by-type', 'index_key')
-
