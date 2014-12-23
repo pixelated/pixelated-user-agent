@@ -65,7 +65,6 @@ pixelated-user-agent --register your.provider.org desired_account
 
 * Run:
 ```
-$ bundle install
 $ npm install
 $ bower install
 ```
