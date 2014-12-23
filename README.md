@@ -51,7 +51,10 @@ Dependencies are: node, npm, compass (ruby), virtualenv, git
 
 * Activate it with `source .virtualenv/bin/activate`
 
-* Run the setup with `python setup.py develop --always-unzip`
+* Install the dependencies with `pip install -r requirements.txt`
+    * Install the test dependencies with `pip install -r test_requirements.txt` 
+
+* Run the setup with `python setup.py develop`
 
 * Then, to run use `pixelated-user-agent` on the command line
 

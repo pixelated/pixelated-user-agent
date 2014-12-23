@@ -100,8 +100,8 @@ setup(name='pixelated-user-agent',
           'dirspec==13.10',
           'u1db==13.09',
           'leap.keymanager==0.3.8',
-          'leap.soledad.common>=0.6',
-          'leap.soledad.client>=0.6',
+          'leap.soledad.common==0.6.0-26-g509f76c'.
+          'leap.soledad.client==0.6.0-26-g509f76c',
           'leap.mail==0.3.9-1-gc1f9c92',
           'whoosh==2.6.0'
       ],

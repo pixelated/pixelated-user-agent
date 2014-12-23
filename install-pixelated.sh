@@ -47,7 +47,8 @@ LC_ALL=en_US.UTF-8 ./go build
 cd ../service
 virtualenv .virtualenv
 source .virtualenv/bin/activate
-./go develop --always-unzip
+pip install -r requirements.txt
+./go develop
 
 # print usage
 cat <<EOF
