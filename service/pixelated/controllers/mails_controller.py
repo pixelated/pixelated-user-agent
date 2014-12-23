@@ -60,19 +60,23 @@ class MailsController:
             self._search_engine.index_mail(mail)
         return ""
 
-    def delete_mail(self, request, mail_id):
+    def _delete_mail(self, mail_id):
         mail = self._mail_service.mail(mail_id)
         if mail.mailbox_name == 'TRASH':
             self._mail_service.delete_permanent(mail_id)
+            self._search_engine.remove_from_index(mail_id)
         else:
             trashed_mail = self._mail_service.delete_mail(mail_id)
             self._search_engine.index_mail(trashed_mail)
+
+    def delete_mail(self, request, mail_id):
+        self._delete_mail(mail_id)
         return respond_json(None, request)
 
     def delete_mails(self, request):
         idents = json.loads(request.content.read())['idents']
         for ident in idents:
-            self.delete_mail(request, ident)
+            self._delete_mail(ident)
         return respond_json(None, request)
 
     def send_mail(self, request):
@@ -102,17 +106,16 @@ class MailsController:
 
     def update_draft(self, request):
         content_dict = json.loads(request.content.read())
-
         _mail = InputMail.from_dict(content_dict)
         draft_id = content_dict.get('ident')
+
         if draft_id:
-            ident = self._draft_service.update_draft(draft_id, _mail).ident
+            pixelated_mail = self._draft_service.update_draft(draft_id, _mail)
             self._search_engine.remove_from_index(draft_id)
         else:
-            ident = self._draft_service.create_draft(_mail).ident
-
-        self._search_engine.index_mail(self._mail_service.mail(ident))
-        return respond_json({'ident': ident}, request)
+            pixelated_mail = self._draft_service.create_draft(_mail)
+        self._search_engine.index_mail(pixelated_mail)
+        return respond_json({'ident': pixelated_mail.ident}, request)
 
     def reply_all_template(self, request, mail_id):
         mail = self._mail_service.reply_all_template(mail_id)

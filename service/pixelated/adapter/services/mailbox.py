@@ -43,6 +43,9 @@ class Mailbox:
 
     def remove(self, ident):
         mail = self.querier.mail(ident)
+        self.remove_mail(mail)
+
+    def remove_mail(self, mail):
         mail.remove_all_tags()
         self.querier.remove_mail(mail)
 

@@ -26,6 +26,7 @@ class SoledadQuerierTest(SoledadTestBase, WithMsgFields):
     def setUp(self):
         SoledadTestBase.setUp(self)
         self.soledad = self.client.soledad
+        self.maxDiff = None
         self.soledad_querier = self.client.soledad_querier
 
     def tearDown(self):

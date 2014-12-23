@@ -13,22 +13,16 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from pixelated.adapter.soledad.soledad_facade_mixin import SoledadDbFacadeMixin
+from cryptography.fernet import Fernet
 
 
-class DraftService(object):
-    __slots__ = '_mailboxes'
+class SoledadSearchIndexMasterkeyRetrievalMixin(SoledadDbFacadeMixin, object):
 
-    def __init__(self, mailboxes):
-        self._mailboxes = mailboxes
-
-    def create_draft(self, input_mail):
-        pixelated_mail = self._drafts().add(input_mail)
-        return pixelated_mail
-
-    def update_draft(self, ident, input_mail):
-        pixelated_mail = self.create_draft(input_mail)
-        self._drafts().remove(ident)
-        return pixelated_mail
-
-    def _drafts(self):
-        return self._mailboxes.drafts()
+    def get_index_masterkey(self):
+        index_key = self.get_search_index_masterkey()
+        if len(index_key) == 0:
+            index_key = Fernet.generate_key()
+            self.create_doc(dict(type='index_key', value=index_key))
+            return index_key
+        return str(index_key[0].content['value'])
