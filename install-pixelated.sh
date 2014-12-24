@@ -41,7 +41,7 @@ done
 cd web-ui
 UIPATH=`pwd`
 npm install
-su - $USERNAME -c "(cd $UIPATH; node_modules/bower/bin/bower install --config.interactive=false)"
+node_modules/bower/bin/bower install --config.interactive=false --allow-root
 LC_ALL=en_US.UTF-8 ./go build
 
 # install service dependencies
@@ -50,7 +50,7 @@ virtualenv .virtualenv
 source .virtualenv/bin/activate
 pip install -r requirements.txt
 # having trouble with enum from pip right now
-pip uninstall enum
+pip uninstall -y enum
 easy_install enum
 ./go develop
 
