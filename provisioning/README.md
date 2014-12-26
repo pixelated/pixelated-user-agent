@@ -1,6 +1,6 @@
  Setup for developers
 =====================
-The following instructions describe how to setup a Vagrant box for development. You need to have Vagrant installed on your system.
+The following instructions describe how to setup a Vagrant box for development. You need to have Vagrant installed on your system (tested using Vagrant 1.7.1).
 
 # Vagrant setup
 
