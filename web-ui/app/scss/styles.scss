@@ -378,8 +378,6 @@ section {
   }
 }
 
-
-
 .buttons-group {
   clear: both;
   margin: 20px 0 0;
@@ -446,10 +444,6 @@ button {
   }
 }
 
-#menu {
-  padding-top: 55px;
-}
-
 .collapsed-nav {
   width: 50px;
   position: absolute;
@@ -466,9 +460,16 @@ button {
     top: 0;
     z-index: 10000;
     position: relative;
+
+    img {
+      padding-top: 1px;
+    }
+
+    .toggle {
+      padding-top: 20px;
+    }
   }
   ul.shortcuts {
-    margin-top: 10px;
     li {
       position: relative;
       margin-bottom: 5px;
