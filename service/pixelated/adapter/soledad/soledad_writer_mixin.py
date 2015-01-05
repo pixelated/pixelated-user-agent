@@ -33,7 +33,7 @@ class SoledadWriterMixin(SoledadDbFacadeMixin, object):
         self._update_index([mail.fdoc])
 
     def create_mail(self, mail, mailbox_name):
-        mbox = [m for m in self.get_all_mbox() if m.content['mbox'] == 'INBOX'][0]
+        mbox = self.get_mbox(mailbox_name)[0]
         uid = mbox.content['lastuid'] + 1
 
         new_docs = [self.create_doc(doc) for doc in mail.get_for_save(next_uid=uid, mailbox=mailbox_name)]
