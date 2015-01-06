@@ -39,7 +39,7 @@ class MailService:
         return mail
 
     def mail(self, mail_id):
-        return self.mailboxes.mail(mail_id)
+        return self.querier.mail(mail_id)
 
     def mail_exists(self, mail_id):
         return not(not(self.querier.get_header_by_chash(mail_id)))

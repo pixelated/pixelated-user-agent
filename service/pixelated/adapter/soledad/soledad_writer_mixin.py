@@ -30,40 +30,20 @@ class SoledadWriterMixin(SoledadDbFacadeMixin, object):
 
     def save_mail(self, mail):
         self.put_doc(mail.fdoc)
-        self._update_index([mail.fdoc])
 
     def create_mail(self, mail, mailbox_name):
         mbox = self.get_mbox(mailbox_name)[0]
         uid = mbox.content['lastuid'] + 1
 
-        new_docs = [self.create_doc(doc) for doc in mail.get_for_save(next_uid=uid, mailbox=mailbox_name)]
-        fdoc, hdoc, cdocs = new_docs[0], new_docs[1], new_docs[2:len(new_docs)]
-        bdoc_index = None
-        for i, val in enumerate(cdocs):
-            if val.content['phash'] == hdoc.content['body']:
-                bdoc_index = i
-        bdoc = cdocs.pop(bdoc_index)
+        [self.create_doc(doc) for doc in mail.get_for_save(next_uid=uid, mailbox=mailbox_name)]
 
         mbox.content['lastuid'] = uid
         self.put_doc(mbox)
 
-        self._update_index(new_docs)
-        return self.mail(mail.ident)  # PixelatedMail.from_soledad(fdoc, hdoc, bdoc, parts=None, soledad_querier=self)
+        return self.mail(mail.ident)
 
     def remove_mail(self, mail):
         # FIX-ME: Must go through all the part_map phash to delete all the cdocs
         self.delete_doc(mail.fdoc)
         self.delete_doc(mail.hdoc)
         self.delete_doc(mail.bdoc)
-
-    def _update_index(self, docs):
-        db = self.soledad._db
-
-        indexed_fields = db._get_indexed_fields()
-        if indexed_fields:
-            # It is expected that len(indexed_fields) is shorter than
-            # len(raw_doc)
-            getters = [(field, db._parse_index_definition(field))
-                       for field in indexed_fields]
-            for doc in docs:
-                db._update_indexes(doc.doc_id, doc.content, getters, db._db_handle)

@@ -38,7 +38,7 @@ from test.support.integration.model import MailBuilder
 
 
 class AppTestClient:
-    def __init__(self, soledad_test_folder='soledad-test'):
+    def __init__(self, soledad_test_folder='soledad-test/test'):
 
         self.soledad = initialize_soledad(tempdir=soledad_test_folder)
         self.mail_address = "test@pixelated.org"

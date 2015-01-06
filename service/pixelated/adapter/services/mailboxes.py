@@ -47,13 +47,6 @@ class Mailboxes():
     def mailboxes(self):
         return [self._create_or_get(leap_mailbox_name) for leap_mailbox_name in self.account.mailboxes]
 
-    def mails_by_tag(self, query_tags):
-        mails = []
-        for mailbox in self.mailboxes():
-            mails.extend(mailbox.mails_by_tags(query_tags))
-
-        return mails
-
     def move_to_trash(self, mail_id):
         mail = self.querier.mail(mail_id)
         mail.remove_all_tags()
@@ -62,7 +55,4 @@ class Mailboxes():
         return mail
 
     def mail(self, mail_id):
-        for mailbox in self.mailboxes():
-            mail = mailbox.mail(mail_id)
-            if mail:
-                return mail
+        return self.querier.mail(mail_id)
