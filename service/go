@@ -8,7 +8,6 @@ function setuppy {
 
 function setupjs {
         cd ../web-ui
-        ./go clean
         LC_ALL=en_US.UTF-8 ./go build
         cd -
 }
