@@ -85,23 +85,6 @@ setup(name='pixelated-user-agent',
           'pixelated.controllers'
       ],
       test_suite='nose.collector',
-      # install_requires=[
-      #     'cryptography==0.6.1',
-      #     'pyasn1==0.1.7',
-      #     'gnupg==1.4.0',
-      #     'Twisted==14.0.2',
-      #     'service-identity==14.0.0',
-      #     'klein==0.2.3',
-      #     'requests==2.5.0',
-      #     'srp==1.0.5',
-      #     'dirspec==13.10',
-      #     'u1db==13.09',
-      #     'leap.keymanager==0.3.8',
-      #     'leap.soledad.common==0.6.0-26-g509f76c'.
-      #     'leap.soledad.client==0.6.0-26-g509f76c',
-      #     'leap.mail==0.3.9-1-gc1f9c92',
-      #     'whoosh==2.6.0'
-      # ],
       entry_points={
           'console_scripts': [
               'pixelated-user-agent = pixelated.runserver:setup'
