@@ -201,7 +201,7 @@ describeComponent('services/mail_service', function () {
 
     this.component.trigger(Pixelated.events.ui.mails.fetchByTag, {tag: 'new tag'});
 
-    expect($.ajax.calls.mostRecent().args[0]).toContain(encodeURI('tag:"new tag"'));
+    expect($.ajax.calls.mostRecent().args[0]).toContain(encodeURIComponent('tag:"new tag"'));
   });
 
   it('sends the previous tag when mails:refresh is called without a tag (this happens when the refresher calls it)', function () {

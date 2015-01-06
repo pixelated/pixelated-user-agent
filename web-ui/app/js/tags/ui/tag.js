@@ -43,7 +43,7 @@ define(
       this.viewFor = function (tag, template) {
         return template({
           tagName: tag.default ? i18n('tags.' + tag.name) : tag.name,
-          ident: tag.ident,
+          ident: this.hashIdent(tag.ident),
           count: this.badgeType(tag) === 'total' ? tag.counts.total : (tag.counts.total - tag.counts.read),
           displayBadge: this.displayBadge(tag),
           badgeType: this.badgeType(tag),
@@ -89,6 +89,21 @@ define(
         }
       };
 
+      this.hashIdent = function(ident) {
+        if (typeof ident === 'undefined') {
+          return '';
+        }
+        if (typeof ident === 'number') {
+          return ident;
+        }
+        if (ident.match(/^[a-zA-Z0-9 ]+$/)) {
+          return ident;
+        }
+
+        /*jslint bitwise: true */
+        return Math.abs(String(ident).split('').reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a;},0));
+      };
+
       this.removeSearchingClass = function() {
         if (this.attr.tag.name === 'all'){
           this.$node.removeClass('searching');
@@ -106,7 +121,7 @@ define(
       this.renderAndAttach = function (parent, data) {
         var rendered = this.viewFor(data.tag, templates.tags.tag);
         parent.append(rendered);
-        this.initialize('#tag-' + data.tag.ident, data);
+        this.initialize('#tag-' + this.hashIdent(data.tag.ident), data);
         this.on(parent, events.tags.teardown, this.teardown);
       };
     }

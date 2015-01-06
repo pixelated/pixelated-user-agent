@@ -184,7 +184,7 @@ define(
       };
 
       function escaped(s) {
-        return encodeURI(s);
+        return encodeURIComponent(s);
       }
 
       this.excludeTrashedEmailsForDraftsAndSent = function (query) {
