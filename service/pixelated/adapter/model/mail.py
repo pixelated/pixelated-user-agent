@@ -93,6 +93,9 @@ class InputMail(Mail):
         self._bd = None
         self._chash = None
         self._mime = None
+        self.headers = {}
+        self.body = ''
+        self._status = []
 
     @property
     def ident(self):
@@ -126,13 +129,17 @@ class InputMail(Mail):
         if self._hd:
             return self._hd
 
+        # InputMail does not have a from header but we need it when persisted into soledad.
+        headers = self.headers.copy()
+        headers['From'] = InputMail.FROM_EMAIL_ADDRESS
+
         hd = {}
-        hd[fields.HEADERS_KEY] = self.headers
-        hd[fields.DATE_KEY] = self.headers['Date']
+        hd[fields.HEADERS_KEY] = headers
+        hd[fields.DATE_KEY] = headers['Date']
         hd[fields.CONTENT_HASH_KEY] = self._get_chash()
         hd[fields.MSGID_KEY] = ''
         hd[fields.MULTIPART_KEY] = True
-        hd[fields.SUBJECT_KEY] = self.headers.get('Subject')
+        hd[fields.SUBJECT_KEY] = headers.get('Subject')
         hd[fields.TYPE_KEY] = fields.TYPE_HEADERS_VAL
         hd[fields.BODY_KEY] = self._get_body_phash()
         hd[fields.PARTS_MAP_KEY] = \
@@ -350,7 +357,10 @@ class PixelatedMail(Mail):
                      'attachments': self.parts['attachments'] if self.parts else []}
         dict_mail['replying'] = {'single': None, 'all': {'to-field': [], 'cc-field': []}}
 
-        sender_mail = self.headers.get('Reply-To', self.headers['From'])
+        sender_mail = self.headers.get('Reply-To', self.headers.get('From'))
+        # Issue #215: Fix for existing mails without any from address.
+        if sender_mail is None:
+            sender_mail = InputMail.FROM_EMAIL_ADDRESS
 
         recipients = [recipient for recipient in self.headers['To'] if recipient != InputMail.FROM_EMAIL_ADDRESS]
         recipients.append(sender_mail)

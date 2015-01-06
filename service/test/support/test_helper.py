@@ -43,9 +43,12 @@ def mail_dict():
     }
 
 
-class TestDoc:
+class TestDoc(object):
     def __init__(self, content):
         self.content = content
+
+    def __getitem__(self, key):
+        return self.content[key]
 
 
 def leap_mail(uid=0, flags=LEAP_FLAGS, headers=None, extra_headers={}, mbox='INBOX', body='body',

@@ -21,6 +21,8 @@ from mockito import *
 from test.support import test_helper
 import dateutil.parser as dateparser
 import base64
+from leap.mail.imap.fields import fields
+from datetime import datetime
 
 
 class TestPixelatedMail(unittest.TestCase):
@@ -68,6 +70,17 @@ class TestPixelatedMail(unittest.TestCase):
         mail.mark_as_not_recent()
 
         self.assertEquals(mail.fdoc.content['flags'], [])
+
+    def test_get_for_save_adds_from(self):
+        InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
+        headers = {'Subject': 'The subject',
+                   'Date': str(datetime.now()),
+                   'To': 'me@pixelated.org'}
+
+        input_mail = InputMail()
+        input_mail.headers = headers
+
+        self.assertEqual('me@pixelated.org', input_mail.get_for_save(1, 'SENT')[1][fields.HEADERS_KEY]['From'])
 
     def test_as_dict(self):
         headers = {'Subject': 'The subject',
