@@ -125,7 +125,7 @@ define(
       };
 
       this.updateCheckAllCheckbox = function () {
-        this.trigger(document, events.ui.mails.hasMailsChecked, {hasMailsChecked: this.attr.checkedMails.length > 0});
+        this.trigger(document, events.ui.mails.hasMailsChecked, {hasMailsChecked: _.keys(this.attr.checkedMails).length > 0});
       };
 
       this.addToSelectedMails = function (ev, data) {

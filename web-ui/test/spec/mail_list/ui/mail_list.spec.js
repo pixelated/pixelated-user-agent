@@ -104,22 +104,13 @@ describeComponent('mail_list/ui/mail_list', function () {
       expect(this.component.attr.checkedMails).toEqual({'2': {}, '3': {} });
     });
 
-    it ('does not check the all checkbox if no mail checked has the current tag', function () {
-      var setCheckAllCheckboxEvent = spyOnEvent(document, Pixelated.events.ui.mails.hasMailsChecked);
-      this.component.attr.currentTag = 'inbox';
-
-      $(document).trigger(Pixelated.events.ui.mail.checked, {mail : {'1' : {tags: ['different']}}});
-
-      expect(setCheckAllCheckboxEvent).toHaveBeenTriggeredOnAndWith(document, false);
-    });
-
     it('checks the check all checkbox if at least one mail is checked with the current tag', function () {
       var setCheckAllCheckboxEvent = spyOnEvent(document, Pixelated.events.ui.mails.hasMailsChecked);
       this.component.attr.currentTag = 'inbox';
 
       $(document).trigger(Pixelated.events.ui.mail.checked, {mail: mailList[0]});
 
-      expect(setCheckAllCheckboxEvent).toHaveBeenTriggeredOnAndWith(document, true);
+      expect(setCheckAllCheckboxEvent).toHaveBeenTriggeredOnAndWith(document, {hasMailsChecked: true});
     });
 
     it('unchecks the check all checkbox if no mail is left checked', function () {
@@ -129,7 +120,7 @@ describeComponent('mail_list/ui/mail_list', function () {
 
       $(document).trigger(Pixelated.events.ui.mail.unchecked, {mail: {ident: '1'}});
 
-      expect(setCheckAllCheckboxEvent).toHaveBeenTriggeredOnAndWith(document, false);
+      expect(setCheckAllCheckboxEvent).toHaveBeenTriggeredOnAndWith(document, {hasMailsChecked: false});
     });
   });
 

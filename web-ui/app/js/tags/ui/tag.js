@@ -65,6 +65,8 @@ define(
 
       this.triggerSelect = function () {
         this.trigger(document, events.ui.tag.select, { tag: this.attr.tag.name });
+
+        this.removeSearchingClass();
       };
 
       this.addSearchingClass = function() {

@@ -9,6 +9,9 @@ define([], function() {
     },
     getLogoutUrl: function() {
       return '/test/logout/url';
+    },
+    isAutoRefreshEnabled: function() {
+      return true;
     }
   };
 });

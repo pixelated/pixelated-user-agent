@@ -22,28 +22,6 @@ describeComponent('search/search_trigger', function () {
     expect(spy).toHaveBeenTriggeredOnAndWith(document, { query: 'tanana' });
   });
 
-  it('should select the "all" tag when submit occurs but should skip mail list refresh', function  (){
-    var tagSelectEvent = spyOnEvent(document, Pixelated.events.ui.tag.select);
-
-    submitSearch('tanana');
-
-    expect(tagSelectEvent).toHaveBeenTriggeredOnAndWith(document, {
-      tag: 'all',
-      skipMailListRefresh: true
-    });
-  });
-
-  it('should select the "all" tag when an empty submit occurs and shoud refresh mail list', function() {
-    var tagSelectEvent = spyOnEvent(document, Pixelated.events.ui.tag.select);
-    var emptySearchEvent = spyOnEvent(document, Pixelated.events.search.empty);
-
-    submitSearch('');
-
-    expect(emptySearchEvent).toHaveBeenTriggeredOn(document);
-    expect(tagSelectEvent).toHaveBeenTriggeredOnAndWith(document, { tag: 'all'});
-
-  });
-
   it('should clear input when selecting a new tag', function(){
     submitSearch('tanana');
     $(document).trigger(Pixelated.events.ui.tag.selected, { tag: 'inbox'});
