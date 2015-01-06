@@ -1,9 +1,30 @@
 #!/bin/bash
 
-if [ "$1" == 'test' ] 
-then
+function setuppy {
+        pip install -r requirements.txt
+        pip install -r test_requirements.txt
+        python setup.py develop
+}
+
+function setupjs {
+        cd ../web-ui
+        ./go clean
+        LC_ALL=en_US.UTF-8 ./go build
+        cd -
+}
+
+if [ "$1" == 'test' ]; then 
         nosetests --nocapture test/unit
         nosetests --nocapture test/integration
+elif [ "$1" == 'setuppy' ]; then
+        setuppy
+elif [ "$1" == 'setupjs' ]; then
+        setupjs
+elif [ "$1" == 'setup' ]; then
+        setupjs
+        setuppy
+elif [ "$1" == 'start' ]; then
+        /usr/bin/env pixelated-user-agent "${@:2}"
 else
         python setup.py $*
 fi
