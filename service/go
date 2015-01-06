@@ -14,8 +14,8 @@ function setupjs {
 }
 
 if [ "$1" == 'test' ]; then 
-        nosetests --nocapture test/unit
-        nosetests --nocapture test/integration
+        nosetests "${@:2}" test/unit
+        nosetests "${@:2}" test/integration
 elif [ "$1" == 'setuppy' ]; then
         setuppy
 elif [ "$1" == 'setupjs' ]; then
