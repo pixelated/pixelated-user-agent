@@ -62,7 +62,3 @@ class MailService:
     def delete_permanent(self, mail_id):
         mail = self.mail(mail_id)
         self.querier.remove_mail(mail)
-
-    def reply_all_template(self, mail_id):
-        mail = self.mail(mail_id)
-        return mail.to_reply_template()

@@ -119,10 +119,6 @@ class MailsController:
         self._search_engine.index_mail(pixelated_mail)
         return respond_json({'ident': pixelated_mail.ident}, request)
 
-    def reply_all_template(self, request, mail_id):
-        mail = self._mail_service.reply_all_template(mail_id)
-        return respond_json(mail, request)
-
     def _format_exception(self, exception):
         exception_info = map(str, list(exception.args))
         return '\n'.join(exception_info)
