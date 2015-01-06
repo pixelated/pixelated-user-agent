@@ -19,7 +19,7 @@ from pixelated.adapter.model.tag import Tag
 class TagService:
 
     instance = None
-    SPECIAL_TAGS = {Tag('inbox', True), Tag('sent', True), Tag('drafts', True), Tag('trash', True)}
+    SPECIAL_TAGS = {Tag('inbox', True), Tag('sent', True), Tag('drafts', True), Tag('trash', True), Tag('ALL', True)}
 
     @classmethod
     def extract_reserved(cls, tags):

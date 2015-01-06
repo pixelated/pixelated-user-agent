@@ -16,6 +16,7 @@
 import json
 
 from test.support.integration import *
+from pixelated.adapter.services.tag_service import TagService
 
 
 class TagsTest(SoledadTestBase):
@@ -45,8 +46,9 @@ class TagsTest(SoledadTestBase):
         mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
         self.client.add_mail_to_inbox(mail)
 
-        response = self.post_tags(mail.ident, self._tags_json(['DRAFTS']))
-        self.assertEquals("None of the following words can be used as tags: drafts", response)
+        for tag in TagService.SPECIAL_TAGS:
+            response = self.post_tags(mail.ident, self._tags_json([tag.name.upper()]))
+            self.assertEquals("None of the following words can be used as tags: %s" % tag.name, response)
 
         mail = self.client.mailboxes.inbox().mail(mail.ident)
         self.assertNotIn('drafts', mail.tags)

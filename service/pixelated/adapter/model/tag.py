@@ -17,7 +17,7 @@
 import json
 
 
-class Tag:
+class Tag(object):
 
     @classmethod
     def from_dict(cls, tag_dict):
