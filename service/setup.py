@@ -17,9 +17,6 @@
 
 import sys
 
-if 'develop' in sys.argv:
-    sys.argv.append('--always-unzip')
-
 # next line is a fix to this error that occurs with nose > 1.1.2 and the debian
 # python: http://bugs.python.org/issue15881#msg170215
 import multiprocessing
