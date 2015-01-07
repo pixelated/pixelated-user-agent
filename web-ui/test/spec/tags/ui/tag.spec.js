@@ -23,7 +23,6 @@ describeComponent('tags/ui/tag', function () {
 
       this.component.$node.click();
 
-      expect(this.component.attr.selected).toBeTruthy();
       expect(this.$node.attr('class')).toMatch('selected');
       expect(tagSelectEvent).toHaveBeenTriggeredOnAndWith(document, { tag: 'inbox' });
     });
@@ -94,6 +93,18 @@ describeComponent('tags/ui/tag', function () {
       $(document).trigger(Pixelated.events.mail.read, { tags: ['inbox']});
       expect(this.$node.html()).not.toMatch('"unread-count"');
     });
+
+    it('should not be selected when a search is performed', function() {
+      this.component.trigger(document, Pixelated.events.search.perform);
+
+      expect(this.component.$node).not.toHaveClass('selected');
+    });
+
+    it('should not be selected when the search is cleared', function() {
+      this.component.trigger(document, Pixelated.events.search.empty);
+
+      expect(this.component.$node).not.toHaveClass('selected');
+    });
   });
 
   describe('drafts tag', function () {
@@ -149,6 +160,17 @@ describeComponent('tags/ui/tag', function () {
       expect(this.$node.attr('class')).not.toMatch('searching');
     });
 
+    it('should be selected when a search is performed', function() {
+      this.component.trigger(document, Pixelated.events.search.perform);
+
+      expect(this.component.$node).toHaveClass('selected');
+    });
+
+    it('should be selected when the search is cleared', function() {
+      this.component.trigger(document, Pixelated.events.search.empty);
+
+      expect(this.component.$node).toHaveClass('selected');
+    });
   });
 
   _.each(['sent', 'trash'], function (tag_name) {

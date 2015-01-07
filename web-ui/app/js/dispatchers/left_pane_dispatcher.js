@@ -47,19 +47,14 @@ define(
           this.trigger(document, events.router.pushState, data);
         }
         initialized = true;
-
-        if (data.skipMailListRefresh) {
-          return;
-        }
-
-        this.trigger(document, events.ui.mails.fetchByTag, data);
       };
 
       this.after('initialize', function () {
-        this.on(this.$node, events.tags.received, this.loadTags);
+        //this.on(this.$node, events.tags.received, this.loadTags);
         this.on(document, events.dispatchers.tags.refreshTagList, this.refreshTagList);
         this.on(document, events.ui.tags.loaded, this.selectTag);
         this.on(document, events.ui.tag.selected, this.pushUrlState);
+        this.on(document, events.ui.tag.select, this.pushUrlState);
         this.trigger(document, events.tags.want, { caller: this.$node });
       });
     }

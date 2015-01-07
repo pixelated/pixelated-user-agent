@@ -212,6 +212,7 @@ define(
         this.on(document, events.ui.mail.send, this.sendMail);
 
         this.on(document, events.ui.tag.selected, this.saveTag);
+        this.on(document, events.ui.tag.select, this.saveTag);
       });
     }
 

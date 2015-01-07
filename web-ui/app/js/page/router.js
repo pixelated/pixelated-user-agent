@@ -34,6 +34,7 @@ define(['flight/lib/component', 'page/events', 'page/router/url_params'], functi
       return {
         tag: data.tag || (previousState && previousState.tag) || urlParams.defaultTag(),
         mailIdent: data.mailIdent,
+        query: data.query,
         isDisplayNoMessageSelected: !!data.isDisplayNoMessageSelected
       };
     }
@@ -61,6 +62,9 @@ define(['flight/lib/component', 'page/events', 'page/router/url_params'], functi
 
     this.after('initialize', function () {
       this.on(document, events.router.pushState, this.pushState);
+      this.on(document, events.ui.tag.select, this.pushState);
+      this.on(document, events.search.perform, this.pushState);
+      this.on(document, events.search.empty, this.pushState);
       window.onpopstate = this.popState.bind(this);
     });
   });

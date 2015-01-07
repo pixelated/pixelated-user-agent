@@ -12,7 +12,7 @@ describeComponent('tags/ui/tag_shortcut', function () {
     component = jasmine.createSpyObj('tagComponent', ['triggerSelect']);
     parent = $('<ul>');
     $('body').append(parent);
-    shortcut = TagShortcut.appendedTo(parent, { linkTo: { name: 'inbox', counts: { total: 15 }}, trigger: component });
+    shortcut = TagShortcut.appendedTo(parent, { tag: { name: 'inbox', counts: { total: 15 }}, trigger: component });
   });
 
   afterEach(function () {
@@ -43,7 +43,7 @@ describeComponent('tags/ui/tag_shortcut', function () {
 
   it('teardown shortcuts on event but only if they are not in the DOM', function () {
     parent.empty();
-    var shortcutAddedAfterEmptyingParent = TagShortcut.appendedTo(parent, { linkTo: { name: 'inbox', counts: { total: 15 }}, trigger: component });
+    var shortcutAddedAfterEmptyingParent = TagShortcut.appendedTo(parent, { tag: { name: 'inbox', counts: { total: 15 }}, trigger: component });
     // by now shorcut is not in the DOM anymore but shortcutAddedAfterEmptyingParent is
 
     spyOn(shortcut, 'teardown').and.callThrough();

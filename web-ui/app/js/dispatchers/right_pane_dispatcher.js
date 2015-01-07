@@ -101,6 +101,7 @@ define(
         this.on(document, events.dispatchers.rightPane.openNoMessageSelected, this.openNoMessageSelectedPane);
         this.on(document, events.dispatchers.rightPane.selectTag, this.selectTag);
         this.on(document, events.ui.tag.selected, this.saveTag);
+        this.on(document, events.ui.tag.select, this.saveTag);
         this.on(document, events.dispatchers.rightPane.openNoMessageSelectedWithoutPushState, this.initializeNoMessageSelectedPane);
         this.initializeNoMessageSelectedPane();
       });

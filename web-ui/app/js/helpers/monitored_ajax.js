@@ -56,7 +56,6 @@ define(['page/events', 'views/i18n'], function (events, i18n) {
         on.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n(msg) });
       }
     }.bind(this));
-
   }
 
   return monitoredAjax;

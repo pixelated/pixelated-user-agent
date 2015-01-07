@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-define(['flight/lib/component', 'page/events', 'helpers/monitored_ajax', 'mixins/with_feature_toggle'], function (defineComponent, events, monitoredAjax,  withFeatureToggle) {
+define(['flight/lib/component', 'page/events', 'helpers/monitored_ajax', 'mixins/with_feature_toggle', 'mixins/with_auto_refresh'], function (defineComponent, events, monitoredAjax,  withFeatureToggle, withAutoRefresh) {
   'use strict';
 
   var DataTags = defineComponent(dataTags, withFeatureToggle('tags', function() {
     $(document).trigger(events.ui.mails.refresh);
-  }));
+  }), withAutoRefresh('refreshTags'));
 
   DataTags.all = {
     name: 'all',
@@ -34,13 +34,11 @@ define(['flight/lib/component', 'page/events', 'helpers/monitored_ajax', 'mixins
     }
   };
 
-  return DataTags;
-
   function dataTags() {
     function sendTagsBackTo(on, params) {
       return function(data) {
         data.push(DataTags.all);
-        on.trigger(params.caller, events.tags.received, {tags: data, skipMailListRefresh: params.skipMailListRefresh});
+        on.trigger(params.caller, events.tags.received, {tags: data});
       };
     }
 
@@ -53,8 +51,14 @@ define(['flight/lib/component', 'page/events', 'helpers/monitored_ajax', 'mixins
         .done(sendTagsBackTo(this, params));
     };
 
+    this.refreshTags = function() {
+      this.fetchTags(null, {caller: document});
+    };
+
     this.after('initialize', function () {
       this.on(document, events.tags.want, this.fetchTags);
     });
   }
+
+  return DataTags;
 });
