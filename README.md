@@ -16,6 +16,21 @@ The User Agent has 2 components:
 
 ## Quickstart
 
+### Using Vagrant
+
+to install from source: 
+
+    vagrant up
+
+or 
+
+    vagrant up source
+
+to install using the pixelated prvidede debian packages:
+
+    vagrant up deb 
+
+
 ### Installing dependencies for development:
 Dependencies are: node, npm, compass (ruby), virtualenv, git
 
