@@ -194,6 +194,7 @@ class TestPixelatedMail(unittest.TestCase):
                 self.content = {'raw': raw}
         return FakeBDoc(raw)
 
+
 class InputMailTest(unittest.TestCase):
     mail_dict = lambda x: {
         'body': 'Este \xe9 o corpo',
