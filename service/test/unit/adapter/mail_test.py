@@ -95,7 +95,10 @@ class TestPixelatedMail(unittest.TestCase):
 
         _dict = mail.as_dict()
 
-        self.assertEquals(_dict, {'body': 'body',
+        self.maxDiff = None
+
+        self.assertEquals(_dict, {'htmlBody': None,
+                                  'textPlainBody': 'body',
                                   'header': {
                                       'date': dateparser.parse(hdoc.content['date']).isoformat(),
                                       'from': 'someone@pixelated.org',
@@ -143,21 +146,20 @@ class TestPixelatedMail(unittest.TestCase):
         parts['alternatives'].append({'content': 'blablabla', 'headers': {'Content-Type': 'text/plain'}})
         parts['alternatives'].append({'content': '<p>blablabla</p>', 'headers': {'Content-Type': 'text/html'}})
 
-        mail = PixelatedMail.from_soledad(None, None, None, parts=parts, soledad_querier=None)
+        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw='blablabla'), parts=parts, soledad_querier=None)
 
-        self.assertRegexpMatches(mail.body, '^--' + mail.boundary + '\n.*')
-        self.assertRegexpMatches(mail.body, '\nContent-Type: text/html\n\n<p>blablabla</p>\n')
-        self.assertRegexpMatches(mail.body, '\nContent-Type: text/plain\n\nblablabla\n')
-        self.assertRegexpMatches(mail.body, '.*--' + mail.boundary + '--$')
+        self.assertRegexpMatches(mail.html_body, '^<p>blablabla</p>$')
+        self.assertRegexpMatches(mail.text_plain_body, '^blablabla$')
 
     def test_percent_character_is_allowed_on_body(self):
         parts = {'alternatives': [], 'attachments': []}
         parts['alternatives'].append({'content': '100% happy with percentage symbol', 'headers': {'Content-Type': 'text/plain'}})
         parts['alternatives'].append({'content': '<p>100% happy with percentage symbol</p>', 'headers': {'Content-Type': 'text/html'}})
 
-        mail = PixelatedMail.from_soledad(None, None, None, parts=parts, soledad_querier=None)
+        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw="100% happy with percentage symbol"), parts=parts, soledad_querier=None)
 
-        self.assertRegexpMatches(mail.body, '([\s\S]*100%){2}')
+        self.assertRegexpMatches(mail.text_plain_body, '([\s\S]*100%)')
+        self.assertRegexpMatches(mail.html_body, '([\s\S]*100%)')
 
     def test_clean_line_breaks_on_address_headers(self):
         many_recipients = 'One <one@mail.com>,\nTwo <two@mail.com>, Normal <normal@mail.com>,\nalone@mail.com'
@@ -175,25 +177,22 @@ class TestPixelatedMail(unittest.TestCase):
                 self.assertNotIn(',', address)
             self.assertEquals(4, len(mail.headers[header_label]))
 
-    def test_content_type_is_read_from_headers_for_plain_mail_when_converted_to_raw(self):
-        fdoc, hdoc, bdoc = test_helper.leap_mail(flags=['\\Recent'], body=u'some umlaut \xc3', extra_headers={'Content-Type': 'text/plain; charset=ISO-8859-1'})
-        hdoc.content['headers']['Subject'] = 'The subject'
-        hdoc.content['headers']['From'] = 'me@pixelated.org'
-        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier)
-
-        mail.raw
-
     def test_that_body_understands_base64(self):
         body = u'bl\xe1'
-        encoded_body = unicode(base64.b64encode(body.encode('utf-8')))
+        encoded_body = unicode(body.encode('utf-8').encode('base64'))
 
         fdoc, hdoc, bdoc = test_helper.leap_mail()
         parts = {'alternatives': []}
         parts['alternatives'].append({'content': encoded_body, 'headers': {'Content-Transfer-Encoding': 'base64'}})
         mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier, parts=parts)
 
-        self.assertEquals(body, mail.body)
+        self.assertEquals(body, mail.text_plain_body)
 
+    def _create_bdoc(self, raw):
+        class FakeBDoc:
+            def __init__(self, raw):
+                self.content = {'raw': raw}
+        return FakeBDoc(raw)
 
 class InputMailTest(unittest.TestCase):
     mail_dict = lambda x: {

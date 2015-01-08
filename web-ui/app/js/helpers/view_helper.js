@@ -31,52 +31,17 @@ define(
     }).join(' ');
   }
 
-  function addParagraphsToPlainText(plainTextBodyPart) {
-    return _.map(plainTextBodyPart.split('\n'), function (paragraph) {
+  function addParagraphsToPlainText(textPlainBody) {
+    return _.map(textPlainBody.split('\n'), function (paragraph) {
       return '<p>' + paragraph + '</p>';
     }).join('');
   }
 
-  function isQuotedPrintableBodyPart (bodyPart) {
-    return bodyPart.headers &&
-      bodyPart.headers['Content-Transfer-Encoding'] &&
-      bodyPart.headers['Content-Transfer-Encoding'] === 'quoted-printable';
-  }
-
-  function getHtmlContentType (mail) {
-    return _.find(mail.availableBodyPartsContentType(), function (contentType) {
-      return contentType.indexOf('text/html') >= 0;
-    });
-  }
-
-  function getSanitizedAndDecodedMailBody (bodyPart) {
-    var body;
-
-    if (isQuotedPrintableBodyPart(bodyPart)) {
-      body = utf8.decode(quotedPrintable.decode(bodyPart.body));
-    } else if (bodyPart.body) {
-      body = bodyPart.body;
-    } else {
-      body = bodyPart;
-    }
-
-    return htmlWhitelister.sanitize(body, htmlWhitelister.tagPolicy);
-  }
-
   function formatMailBody (mail) {
-    if (mail.isMailMultipartAlternative()) {
-      var htmlContentType;
-
-      htmlContentType = getHtmlContentType(mail);
-
-      if (htmlContentType) {
-        return $(getSanitizedAndDecodedMailBody(mail.getMailPartByContentType(htmlContentType)));
-      }
-
-      return $(getSanitizedAndDecodedMailBody(addParagraphsToPlainText(mail.getMailMultiParts[0])));
-    }
-
-    return $(getSanitizedAndDecodedMailBody(addParagraphsToPlainText(mail.body)));
+    var body = mail.htmlBodyPart ?
+                htmlWhitelister.sanitize(mail.htmlBody, htmlWhitelister.tagPolicy) :
+                addParagraphsToPlainText(mail.textPlainBody)
+    return $(body)
   }
 
   function moveCaretToEnd(el) {
@@ -125,7 +90,7 @@ define(
   }
 
   function quoteMail(mail) {
-    var quotedLines = _.map(mail.body.split('\n'), function (line) {
+    var quotedLines = _.map(mail.textPlainBody.split('\n'), function (line) {
       return '> ' + line;
     });
 

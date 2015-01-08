@@ -12,7 +12,7 @@ define(function() {
     ident:2048,
     tags:['gang_family','garden','nailartaddicts','inbox'],
     status:[],
-    body: 'Porro quam minus. Doloribus odio vel. Placeat alias sed est assumenda qui esse. Tenetur tempora deserunt est consequatur ducimus laborum. Velit dolor voluptatibus.\n\nRerum repellendus tempore. Aliquam dolores laudantium amet et dolor voluptas. Quod eos magni mollitia et ex. Corrupti quis reprehenderit quasi. Quam cum nobis voluptas accusamus quisquam ut asperiores.\n\nFacilis dicta mollitia non molestiae. Eligendi perspiciatis aut qui eos qui. Laborum cumque odit velit nobis. Cumque quo impedit dignissimos quia.',
+    textPlainBody: 'Porro quam minus. Doloribus odio vel. Placeat alias sed est assumenda qui esse. Tenetur tempora deserunt est consequatur ducimus laborum. Velit dolor voluptatibus.\n\nRerum repellendus tempore. Aliquam dolores laudantium amet et dolor voluptas. Quod eos magni mollitia et ex. Corrupti quis reprehenderit quasi. Quam cum nobis voluptas accusamus quisquam ut asperiores.\n\nFacilis dicta mollitia non molestiae. Eligendi perspiciatis aut qui eos qui. Laborum cumque odit velit nobis. Cumque quo impedit dignissimos quia.',
     security_casing: {
       locks: [],
       imprints: []
@@ -31,7 +31,7 @@ define(function() {
     'ident':9359,
     'tags':['photography','sky'],
     'status':['read'],
-    'body':'Illum eos nihil commodi voluptas. Velit consequatur odio quibusdam. Beatae aliquam hic quos.',
+    textPlainBody:'Illum eos nihil commodi voluptas. Velit consequatur odio quibusdam. Beatae aliquam hic quos.',
     'mailbox': 'SENT',
     replying: {
       single: 'laurel@hamil.info',
@@ -47,7 +47,7 @@ define(function() {
     'ident':9360,
     'tags':['photography','sky'],
     'status':['read'],
-    'body':'Illum eos nihil commodi voluptas. Velit consequatur odio quibusdam. Beatae aliquam hic quos.',
+    textPlainBody:'Illum eos nihil commodi voluptas. Velit consequatur odio quibusdam. Beatae aliquam hic quos.',
     'mailbox': 'DRAFTS',
     replying: {
       single: 'afton_braun@botsford.biz',
@@ -63,7 +63,7 @@ define(function() {
     'ident':9360,
     'tags':['photography','sky'],
     'status':['read'],
-    'body':'Illum eos nihil commodi voluptas. Velit consequatur odio quibusdam. Beatae aliquam hic quos.',
+    textPlainBody:'Illum eos nihil commodi voluptas. Velit consequatur odio quibusdam. Beatae aliquam hic quos.',
     'mailbox': 'TRASH',
     replying: {
       single: 'afton_braun@botsford.biz',
@@ -79,7 +79,7 @@ define(function() {
     'ident':242,
     'tags':['garden','instalovers','popularpic'],
     'status':['read'],
-    'body':'Sed est neque tempore. Alias officiis pariatur ullam porro corporis. Tempore eum quia placeat. Sapiente fuga cum.',
+    textPlainBody: 'Sed est neque tempore. Alias officiis pariatur ullam porro corporis. Tempore eum quia placeat. Sapiente fuga cum.',
     replying: {
       single: 'afton_braun@botsford.biz',
       all: {
@@ -96,6 +96,7 @@ define(function() {
     'tags':['garden','instalovers','popularpic'],
     'status':['read'],
     'body':'Sed est neque tempore. Alias officiis pariatur ullam porro corporis. Tempore eum quia placeat. Sapiente fuga cum.',
+    textPlainBody: 'body',
     replying: {
       single: 'cleve_jaskolski@schimmelhirthe.net',
       all: {
@@ -111,43 +112,12 @@ define(function() {
     'ident':242,
     'tags':['garden','instalovers','popularpic'],
     'status':['read'],
-    'body':'Sed est neque tempore. Alias officiis pariatur ullam porro corporis. Tempore eum quia placeat. Sapiente fuga cum.',
+    textPlainBody:'Sed est neque tempore. Alias officiis pariatur ullam porro corporis. Tempore eum quia placeat. Sapiente fuga cum.',
     replying: {
       single: 'cleve_jaskolski@schimmelhirthe.net',
       all: {
         'to-field': ['cleve_jaskolski@schimmelhirthe.net', 'someoneelse@some-other-domain.tld'],
         'cc-field': ['mariane_dach@davis.info']
-      }
-    }
-
-  };
-
-  var rawMultipartMail = {
-    header: {
-      to:'multipart@multipart.info',
-      from:'laurel@hamill.info',
-      subject:'multipart email with text/plain and text/html',
-      content_type: 'multipart/alternative; boundary=asdfghjkl',
-      date:'2014-06-04T14:41:13-03:00'
-    },
-    ident: 11,
-    tags:['multipart','inbox'],
-    status:[],
-    body: '--asdfghjkl\n' +
-          'Content-Type: text/plain;\n' +
-          '\n' +
-          'Hello everyone!\n' +
-          '--asdfghjkl\n' +
-          'Content-Type: text/html;\n' +
-          'Content-Transfer-Encoding: quoted-printable\n' +
-          '\n' +
-          '<p><b>Hello everyone!</b></p>\n' +
-          '--asdfghjkl--\n',
-    replying: {
-      single: 'laurel@hamil.info',
-      all: {
-        'to-field': ['laurel@hamil.info'],
-        'cc-field': []
       }
     }
 
@@ -164,7 +134,7 @@ define(function() {
     tags:['textplain'],
     mailbox: ['inbox'],
     status:[],
-    body: 'Hello Everyone',
+    textPlainBody: 'Hello Everyone',
     isSentMail: function() { return false; },
     isDraftMail: function() { return false; },
     replyToAddress: function() { return { to: ['laurel@hamill.info'], cc: [] }; },
@@ -185,7 +155,8 @@ define(function() {
     ident:2,
     tags:['html','noencoding','inbox'],
     status:[],
-    body: '--asdfghjkl\nContent-Type: text/html; charset=utf8\n\n<DOCTYPE html>\n<body> <div> <p>Hello everyone!</p> </div> </body>\n--asdfghjkl--\n',
+    textPlainBody: 'Hello everyone!',
+    htmlBody: '<DOCTYPE html>\n<body> <div> <p>Hello everyone!</p> </div> </body>',
     isSentMail: function() { return false; },
     isDraftMail: function() { return false; },
     replyToAddress: function() { return { to: ['laurel@hamill.info'], cc: [] }; },
@@ -200,34 +171,6 @@ define(function() {
     }
   };
 
-  var htmlQuotedPrintableMail = {
-    header: {
-      to:'jed_waelchi@cummerata.info',
-      from:'laurel@hamill.info',
-      subject:'Velit aut tempora animi ut nulla esse.',
-      content_type: 'multipart/alternative; boundary=asdfghjkl',
-      date:'2014-06-04T14:41:13-03:00'
-    },
-    ident:3,
-    tags:['html','quotedprintable','inbox'],
-    status:[],
-    body: '--asdfghjkl\nContent-Type: text/html; charset=utf8\nContent-Transfer-Encoding: quoted-printable\n\n<DOCTYPE html>\n<body> <div style=3D"border: 5px;"> <p>Hello everyone!</p> </div> </body>\n--asdfghjkl--\n',
-    isSentMail: function() { return false; },
-    isDraftMail: function() { return false; },
-    replyToAddress: function() { return { to: ['laurel@hamill.info'], cc: [] }; },
-    replyToAllAddress: function() { return { to: ['laurel@hamill.info'], cc: [] }; },
-    isMailMultipartAlternative: function () { return true; },
-    availableBodyPartsContentType: function () { return ['text/html']; },
-    getMailPartByContentType: function () {
-      return {
-        headers: {
-          'Content-Type': 'text/html; charset=utf-8',
-          'Content-Transfer-Encoding': 'quoted-printable'},
-        body: '<!DOCTYPE html> <body> <div> <p style=3D"border: 5px;">Hello everyone!</p> </div> </body>'
-      };
-    }
-  };
-
   var testData = {
     rawMail: {
       mail: rawMail,
@@ -236,13 +179,11 @@ define(function() {
       trash: rawMailInTrash,
       received: rawReceivedMail,
       receivedWithCC: rawReceivedWithCCMail,
-      rawMailWithMultipleTo: rawMailWithMultipleTo,
-      multipart: rawMultipartMail
+      rawMailWithMultipleTo: rawMailWithMultipleTo
     },
     parsedMail: {
       simpleTextPlain: simpleTextPlainMail,
-      html: htmlNoEncodingMail,
-      htmlQuotedPrintable: htmlQuotedPrintableMail
+      html: htmlNoEncodingMail
     }
   };
 

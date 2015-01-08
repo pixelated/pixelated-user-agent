@@ -11,7 +11,7 @@ define(['helpers/view_helper'], function (viewHelper) {
 
     describe('quote email', function() {
       it('should add > to body text', function() {
-        testData.rawMail.mail.body = 'First Line\nSecond Line';
+        testData.rawMail.mail.textPlainBody = 'First Line\nSecond Line';
 
         var quotedMail = viewHelper.quoteMail(testData.rawMail.mail);
 
@@ -55,20 +55,10 @@ define(['helpers/view_helper'], function (viewHelper) {
       });
     });
 
-    it('formats the body of a multipart email', function () {
-      expect(viewHelper.formatMailBody(testData.parsedMail.html)).toContainHtml('<p>Hello everyone!</p>');
-    });
-
     it('formats the body of a plain text email', function () {
       var formatedMail = $('<div></div>');
       formatedMail.html(viewHelper.formatMailBody(testData.parsedMail.simpleTextPlain));
-      expect(formatedMail).toContainHtml('<p>Hello Everyone</p>');
-    });
-
-    it('decodes a quoted-printable email body', function () {
-      var result = viewHelper.formatMailBody(testData.parsedMail.htmlQuotedPrintable);
-
-      expect(result).toContainHtml('<p style="border: 5px;">Hello everyone!</p>');
+      expect(formatedMail).toContainHtml('<p>HNello Everyone</p>');
     });
 
     it('move caret to the end of text after 1ms', function () {

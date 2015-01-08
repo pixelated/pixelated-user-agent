@@ -25,7 +25,6 @@ import pixelated.support.date
 from email.MIMEMultipart import MIMEMultipart
 from pycryptopp.hash import sha256
 import re
-import base64
 from pixelated.support.functional import compact
 
 
@@ -65,7 +64,13 @@ class Mail(object):
         mime = MIMEMultipart()
         for key, value in self.headers.items():
             mime[str(key)] = str(value)
-        mime.attach(MIMEText(self.body, 'plain', self._charset()))
+
+        try:
+            body_to_use = self.body
+        except AttributeError:
+            body_to_use = self.text_plain_body
+
+        mime.attach(MIMEText(body_to_use, 'plain', self._charset()))
         self._mime = mime
         return mime
 
@@ -193,6 +198,7 @@ class InputMail(Mail):
 
 
 class PixelatedMail(Mail):
+
     @staticmethod
     def from_soledad(fdoc, hdoc, bdoc, parts=None, soledad_querier=None):
         mail = PixelatedMail()
@@ -205,24 +211,33 @@ class PixelatedMail(Mail):
         mail._mime = None
         return mail
 
+    def _decode_part(self, part):
+        encoding = part['headers'].get('Content-Transfer-Encoding', '')
+
+        decoding_map = {
+            'quoted-printable': lambda content: unicode(content.decode('quopri')),
+            'base64': lambda content: content.decode('base64').decode('utf-8')
+        }
+        if encoding:
+            return decoding_map[encoding](part['content'])
+        return part['content']
+
     @property
-    def body(self):
-        if self.parts and len(self.parts['alternatives']) > 1:
-            body = ''
-            for alternative in self.parts['alternatives']:
-                body += '--' + self.boundary + '\n'
-                for header, value in alternative['headers'].items():
-                    body += '%s: %s\n' % (header, value)
-                body += '\n'
-                body += alternative['content']
-                body += '\n'
-            body += '--' + self.boundary + '--'
-            return body
+    def alternatives(self):
+        return self.parts.get('alternatives')
+
+    @property
+    def text_plain_body(self):
+        if self.parts and len(self.alternatives) == 1:
+            return self._decode_part(self.alternatives[0])
         else:
-            if self.parts and self.parts['alternatives'][0]['headers'].get('Content-Transfer-Encoding', '') == 'base64':
-                return unicode(base64.b64decode(self.parts['alternatives'][0]['content']), 'utf-8')
-            else:
-                return self.bdoc.content['raw']
+            return self.bdoc.content['raw']  # plain
+
+    @property
+    def html_body(self):
+        if self.parts and len(self.alternatives) > 1:
+            html_part = [e for e in self.alternatives if re.match('text/html', e['headers']['Content-Type'])][0]
+            return self._decode_part(html_part)
 
     @property
     def headers(self):
@@ -352,7 +367,8 @@ class PixelatedMail(Mail):
                      'tags': list(self.tags),
                      'status': list(self.status),
                      'security_casing': self.security_casing,
-                     'body': self.body,
+                     'textPlainBody': self.text_plain_body,
+                     'htmlBody': self.html_body,
                      'mailbox': self.mailbox_name.lower(),
                      'attachments': self.parts['attachments'] if self.parts else []}
         dict_mail['replying'] = {'single': None, 'all': {'to-field': [], 'cc-field': []}}

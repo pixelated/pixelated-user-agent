@@ -128,7 +128,7 @@ class SearchEngine(object):
             'cc': u','.join(header.get('cc', [''])),
             'bcc': u','.join(header.get('bcc', [''])),
             'tag': u','.join(unique(tags)),
-            'body': unicode(mdict['body']),
+            'body': unicode(mdict['textPlainBody']),
             'ident': unicode(mdict['ident']),
             'flags': unicode(','.join(unique(mail.flags))),
             'raw': unicode(mail.raw)
