@@ -58,7 +58,7 @@ define(['helpers/view_helper'], function (viewHelper) {
     it('formats the body of a plain text email', function () {
       var formatedMail = $('<div></div>');
       formatedMail.html(viewHelper.formatMailBody(testData.parsedMail.simpleTextPlain));
-      expect(formatedMail).toContainHtml('<p>HNello Everyone</p>');
+      expect(formatedMail).toContainHtml('<p>Hello Everyone</p>');
     });
 
     it('move caret to the end of text after 1ms', function () {
