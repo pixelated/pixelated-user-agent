@@ -12,9 +12,28 @@ function setupjs {
         cd -
 }
 
-if [ "$1" == 'test' ]; then 
-        nosetests "${@:2}" test/unit
+function runIntegrationTests {
         nosetests "${@:2}" test/integration
+}
+
+function runUnitTests {
+        nosetests "${@:2}" test/unit
+}
+
+function runPep8 {
+        pep8 pixelated test --ignore=E501
+}
+
+if [ "$2" == 'test' ]; then
+        runPep8
+        runUnitTests
+        runIntegrationTests
+elif [ "$1" == 'unit' ]; then
+        runUnitTests
+elif [ "$1" == 'integration' ]; then
+        runIntegrationTests
+elif [ "$1" == 'pep8' ]; then
+        runPep8
 elif [ "$1" == 'setuppy' ]; then
         setuppy
 elif [ "$1" == 'setupjs' ]; then
