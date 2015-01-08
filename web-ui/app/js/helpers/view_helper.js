@@ -40,8 +40,8 @@ define(
   function formatMailBody (mail) {
     var body = mail.htmlBodyPart ?
                 htmlWhitelister.sanitize(mail.htmlBody, htmlWhitelister.tagPolicy) :
-                addParagraphsToPlainText(mail.textPlainBody)
-    return $(body)
+                addParagraphsToPlainText(mail.textPlainBody);
+    return $(body);
   }
 
   function moveCaretToEnd(el) {
