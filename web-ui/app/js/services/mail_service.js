@@ -58,6 +58,7 @@ define(
         var success = function (data) {
           this.refreshMails();
           $(document).trigger(events.mail.tags.updated, { ident: ident, tags: data.tags });
+          $(document).trigger(events.dispatchers.tags.refreshTagList, { skipMailListRefresh: true });
         };
 
         var failure = function (resp) {

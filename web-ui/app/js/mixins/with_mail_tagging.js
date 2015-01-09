@@ -59,7 +59,6 @@ define(
         this.tagCompleter.clearPrefetchCache();
         this.tagCompleter.clearRemoteCache();
         this.updateTags(this.attr.mail, _.uniq(tagsCopy));
-        this.trigger(document, events.dispatchers.tags.refreshTagList, { skipMailListRefresh: true });
       };
 
       this.after('displayMail', function () {

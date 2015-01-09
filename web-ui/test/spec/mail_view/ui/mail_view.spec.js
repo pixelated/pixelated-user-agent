@@ -181,7 +181,6 @@ describeComponent('mail_view/ui/mail_view', function () {
     var tags = testData.mail.tags.slice();
     tags.push('Test');
 
-    expect(tagListRefreshEvent).toHaveBeenTriggeredOn(document);
     expect(tagsUpdateEvent).toHaveBeenTriggeredOnAndWith(document, { ident: testData.mail.ident, tags: tags});
   });
 

@@ -91,6 +91,7 @@ describeComponent('services/mail_service', function () {
 
   it('updates the tags of the desired message', function () {
     spyOn(this.component, 'refreshMails');
+    var tagListRefreshEvent = spyOnEvent(document, Pixelated.events.dispatchers.tags.refreshTagList);
     var updateTagsReturnValue = { tags: ['website'], mailbox: 'inbox'};
     var deferred = $.Deferred();
     var spyAjax = spyOn($, 'ajax').and.returnValue(deferred);
@@ -106,6 +107,7 @@ describeComponent('services/mail_service', function () {
     expect(spyAjax.calls.all()[0].args[0]).toEqual('/mail/1/tags');
     expect(spyAjax.calls.all()[0].args[1].data).toEqual(JSON.stringify({ newtags: email1.tags } ));
     expect(this.component.refreshMails).toHaveBeenCalled();
+    expect(tagListRefreshEvent).toHaveBeenTriggeredOn(document);
   });
 
   it('triggers an error message when it can\'t update the tags', function () {
