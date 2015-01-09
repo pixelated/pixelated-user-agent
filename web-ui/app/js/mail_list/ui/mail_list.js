@@ -30,9 +30,7 @@ define(
 
     return defineComponent(mailList);
 
-    function mailList() {
-      var self;
-
+    function mailList () {
       var openMailEventFor = function (tag) {
         return tag === 'drafts' ? events.dispatchers.rightPane.openDraft : events.ui.mail.open;
       };
@@ -45,60 +43,59 @@ define(
         checkedMails: {}
       });
 
-      function appendMail(mail) {
-        var isChecked = mail.ident in self.attr.checkedMails;
-        MailItemFactory.createAndAttach(self.$node, mail, self.attr.currentMailIdent, self.attr.currentTag, isChecked);
-      }
+      this.appendMail = function (mail) {
+        var isChecked = mail.ident in this.attr.checkedMails;
+        MailItemFactory.createAndAttach(this.$node, mail, this.attr.currentMailIdent, this.attr.currentTag, isChecked);
+      };
 
-      function resetMailList() {
-        self.trigger(document, events.mails.teardown);
-        self.$node.empty();
-      }
+      this.resetMailList = function () {
+        this.trigger(document, events.mails.teardown);
+        this.$node.empty();
+      };
 
-      function triggerMailOpenForPopState(data) {
+      this.triggerMailOpenForPopState = function (data) {
         if (data.mailIdent) {
-          self.trigger(document, openMailEventFor(data.tag), { ident: data.mailIdent });
+          this.trigger(document, openMailEventFor(data.tag), { ident: data.mailIdent });
         }
-      }
+      };
 
-      function shouldSelectEmailFromUrlMailIdent() {
-        return self.attr.urlParams.hasMailIdent();
-      }
+      this.shouldSelectEmailFromUrlMailIdent = function () {
+        return this.attr.urlParams.hasMailIdent();
+      };
 
-      function selectMailBasedOnUrlMailIdent() {
-        var mailIdent = self.attr.urlParams.getMailIdent();
-        self.trigger(document, openMailEventFor(self.attr.currentTag), { ident: mailIdent });
-        self.trigger(document, events.router.pushState, { tag: self.attr.currentTag, mailIdent: mailIdent });
-      }
+      this.selectMailBasedOnUrlMailIdent = function () {
+        var mailIdent = this.attr.urlParams.getMailIdent();
+        this.trigger(document, openMailEventFor(this.attr.currentTag), { ident: mailIdent });
+        this.trigger(document, events.router.pushState, { tag: this.attr.currentTag, mailIdent: mailIdent });
+      };
 
-      function updateCurrentTagAndMail(data) {
+      this.updateCurrentTagAndMail = function (data) {
         if (data.ident) {
-          self.attr.currentMailIdent = data.ident;
+          this.attr.currentMailIdent = data.ident;
         }
 
-        self.attr.currentTag = data.tag || self.attr.currentTag;
+        this.attr.currentTag = data.tag || this.attr.currentTag;
 
-        self.updateCheckAllCheckbox();
-      }
+        this.updateCheckAllCheckbox();
+      };
 
-      function renderMails(mails) {
-        _.each(mails, appendMail);
-        self.trigger(document, events.search.highlightResults, {where: '#mail-list'});
-        self.trigger(document, events.search.highlightResults, {where: '.bodyArea'});
-        self.trigger(document, events.search.highlightResults, {where: '.subjectArea'});
-        self.trigger(document, events.search.highlightResults, {where: '.msg-header .recipients'});
-
-      }
+      this.renderMails = function (mails) {
+        _.each(mails, this.appendMail, this);
+        this.trigger(document, events.search.highlightResults, {where: '#mail-list'});
+        this.trigger(document, events.search.highlightResults, {where: '.bodyArea'});
+        this.trigger(document, events.search.highlightResults, {where: '.subjectArea'});
+        this.trigger(document, events.search.highlightResults, {where: '.msg-header .recipients'});
+      };
 
       this.triggerScrollReset = function () {
         this.trigger(document, events.dispatchers.middlePane.resetScroll);
       };
 
       this.showMails = function (event, data) {
-        updateCurrentTagAndMail(data);
+        this.updateCurrentTagAndMail(data);
         this.refreshMailList(null, data);
         this.triggerScrollReset();
-        triggerMailOpenForPopState(data);
+        this.triggerMailOpenForPopState(data);
         this.openMailFromUrl();
       };
 
@@ -106,8 +103,8 @@ define(
         if (ev) { // triggered by the event, so we need to refresh the tag list
           this.trigger(document, events.dispatchers.tags.refreshTagList, { skipMailListRefresh: true });
         }
-        resetMailList();
-        renderMails(data.mails);
+        this.resetMailList();
+        this.renderMails(data.mails);
       };
 
       this.updateSelected = function (ev, data) {
@@ -121,7 +118,7 @@ define(
       };
 
       this.respondWithCheckedMails = function (ev, caller) {
-        this.trigger(caller, events.ui.mail.hereChecked, {checkedMails: self.attr.checkedMails});
+        this.trigger(caller, events.ui.mail.hereChecked, {checkedMails: this.attr.checkedMails});
       };
 
       this.updateCheckAllCheckbox = function () {
@@ -162,8 +159,6 @@ define(
       };
 
       this.after('initialize', function () {
-        self = this;
-
         this.on(document, events.ui.mails.cleanSelected, this.cleanSelected);
         this.on(document, events.ui.tag.select, this.cleanSelected);
 
@@ -179,8 +174,8 @@ define(
         this.on(document, events.ui.mail.unchecked, this.removeFromSelectedMails);
 
         this.openMailFromUrl = utils.once(function () {
-          if (shouldSelectEmailFromUrlMailIdent()) {
-            selectMailBasedOnUrlMailIdent();
+          if (this.shouldSelectEmailFromUrlMailIdent()) {
+            this.selectMailBasedOnUrlMailIdent();
           }
         });
 
