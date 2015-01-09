@@ -32,7 +32,7 @@ define(
   }
 
   function addParagraphsToPlainText(textPlainBody) {
-    return textPlainBody.replace(/^(.*?)$/mg, "<p>$1</p>");
+    return textPlainBody.replace(/^(.*?)$/mg, '<p>$1</p>');
   }
 
   function formatMailBody (mail) {
