@@ -37,7 +37,7 @@ describeComponent('mail_view/ui/draft_box', function () {
       expect(this.component.render).toHaveBeenCalledWith(templates.compose.box, {
         recipients: { to: mail.header.to, cc: mail.header.cc, bcc: mail.header.bcc },
         subject: mail.header.subject,
-        body: mail.body
+        body: mail.textPlainBody
       });
     });
 

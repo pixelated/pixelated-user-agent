@@ -53,6 +53,7 @@ define(
 
       this.renderDraftBox = function(ev, data) {
         var mail = data.mail;
+        var body = mail.textPlainBody;
         this.attr.ident = mail.ident;
 
         this.render(templates.compose.box, {
@@ -62,7 +63,7 @@ define(
             bcc: mail.header.bcc
           },
           subject: mail.header.subject,
-          body: mail.body
+          body: body
         });
 
         this.select('recipientsFields').show();
