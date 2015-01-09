@@ -32,9 +32,7 @@ define(
   }
 
   function addParagraphsToPlainText(textPlainBody) {
-    return _.map(textPlainBody.split('\n'), function (paragraph) {
-      return '<p>' + paragraph + '</p>';
-    }).join('');
+    return textPlainBody.replace(/^(.*?)$/mg, "<p>$1</p>")
   }
 
   function formatMailBody (mail) {
