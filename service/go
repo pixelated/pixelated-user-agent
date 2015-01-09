@@ -24,7 +24,7 @@ function runPep8 {
         pep8 pixelated test --ignore=E501
 }
 
-if [ "$2" == 'test' ]; then
+if [ "$1" == 'test' ]; then
         runPep8
         runUnitTests
         runIntegrationTests

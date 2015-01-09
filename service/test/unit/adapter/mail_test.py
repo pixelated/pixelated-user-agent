@@ -151,6 +151,16 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertRegexpMatches(mail.html_body, '^<p>blablabla</p>$')
         self.assertRegexpMatches(mail.text_plain_body, '^blablabla$')
 
+    def test_html_is_none_if_multiple_alternatives_have_no_html_part(self):
+        parts = {
+            'attachments': [],
+            'alternatives': [
+                {'content': u'content', 'headers': {u'Content-Type': u'text/plain; charset=us-ascii'}},
+                {'content': u'', 'headers': {u'Some info': u'info'}}]}
+
+        mail = PixelatedMail.from_soledad(None, None, None, parts=parts, soledad_querier=None)
+        self.assertIsNone(mail.html_body)
+
     def test_percent_character_is_allowed_on_body(self):
         parts = {'alternatives': [], 'attachments': []}
         parts['alternatives'].append({'content': '100% happy with percentage symbol', 'headers': {'Content-Type': 'text/plain'}})

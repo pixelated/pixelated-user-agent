@@ -236,8 +236,9 @@ class PixelatedMail(Mail):
     @property
     def html_body(self):
         if self.parts and len(self.alternatives) > 1:
-            html_part = [e for e in self.alternatives if re.match('text/html', e['headers']['Content-Type'])][0]
-            return self._decode_part(html_part)
+            html_parts = [e for e in self.alternatives if re.match('text/html', e['headers'].get('Content-Type', ''))]
+            if len(html_parts):
+                return self._decode_part(html_parts[0])
 
     @property
     def headers(self):
