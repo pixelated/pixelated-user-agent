@@ -90,11 +90,7 @@ define(
   }
 
   function quoteMail(mail) {
-    var quotedLines = _.map(mail.textPlainBody.split('\n'), function (line) {
-      return '> ' + line;
-    });
-
-    return '\n\n' + quotedLines.join('\n');
+    return '\n\n' + mail.textPlainBody.replace(/^/mg, '> ');
   }
 
   function i18n(text) {
