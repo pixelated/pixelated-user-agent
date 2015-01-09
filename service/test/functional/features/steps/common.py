@@ -112,3 +112,11 @@ def mail_subject(context):
 def reply_subject(context):
     e = find_element_by_css_selector(context, '#reply-subject')
     return e.text
+
+
+def get_console_log(context):
+    logs = context.browser.get_log('browser')
+    for entry in logs:
+        msg = entry['message']
+        if not (msg.startswith('x  off') or msg.startswith('<- on')):
+            print entry['message']
