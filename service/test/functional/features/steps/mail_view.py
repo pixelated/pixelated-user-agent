@@ -40,9 +40,11 @@ def impl(context, tag):
 
 @when('I add the tag \'{tag}\' to that mail')
 def impl(context, tag):
-    context.browser.execute_script("$('#new-tag-button').click();")
-    context.browser.execute_script("$('#new-tag-input').val('%s');" % tag)
-    e = find_element_by_css_selector(context, '#new-tag-input')
+    b = wait_until_element_is_visible_by_locator(context, (By.ID, 'new-tag-button'))
+    b.click()
+
+    e = wait_until_element_is_visible_by_locator(context, (By.ID, 'new-tag-input'))
+    e.send_keys(tag)
     e.send_keys(Keys.ENTER)
 
 
