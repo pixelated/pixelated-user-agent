@@ -46,6 +46,7 @@ LC_ALL=en_US.UTF-8 ./go build
 
 # install service dependencies
 cd ../service
+rm -rf .virtualenv
 virtualenv .virtualenv
 source .virtualenv/bin/activate
 pip install -r requirements.txt
