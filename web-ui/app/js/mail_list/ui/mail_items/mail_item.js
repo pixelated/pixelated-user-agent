@@ -64,7 +64,6 @@ define(
 
     this.render = function () {
       this.attr.tagsForListView = _.without(this.attr.tags, this.attr.tag);
-      debugger;
       var mailItemHtml = templates.mails[this.attr.templateType](this.attr);
       this.$node.html(mailItemHtml);
       this.$node.addClass(this.attr.statuses);

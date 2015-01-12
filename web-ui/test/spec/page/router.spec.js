@@ -1,5 +1,3 @@
-/*global Pixelated */
-/*global jasmine */
 describeComponent('page/router', function () {
   'use strict';
 

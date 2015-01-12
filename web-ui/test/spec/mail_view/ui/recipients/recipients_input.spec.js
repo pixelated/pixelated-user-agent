@@ -126,18 +126,18 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
   describe('on blur', function() {
     it('tokenizes and sanitize recipient email if there is an input val', function() {
       var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
-      var blurEvent = $.Event('blur'); 
-	  spyOn(blurEvent, 'preventDefault');
+      var blurEvent = $.Event('blur');
+      spyOn(blurEvent, 'preventDefault');
 
-	  this.$node.val('a@b.c, Friend <friend@domain.com>; d@e.f  , , , , , , , ,');
-	  this.$node.trigger(blurEvent);
+      this.$node.val('a@b.c, Friend <friend@domain.com>; d@e.f  , , , , , , , ,');
+      this.$node.trigger(blurEvent);
 
-	  expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(blurEvent.preventDefault).toHaveBeenCalled();
       expect(addressEnteredEvent.callCount).toEqual(3);
 
       expect(addressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'a@b.c'});
       expect(addressEnteredEvent.calls[1].data).toEqual({name: 'to', address: 'Friend <friend@domain.com>'});
       expect(addressEnteredEvent.calls[2].data).toEqual({name: 'to', address: 'd@e.f'});
-    })
+    });
   });
 });

@@ -3,7 +3,7 @@ define([], function() {
   function toBeRenderedInMatcher () {
     return {
       compare: function (mail, node) {
-        var result = {}, subject, tags, from, date, messages = [], notMessages = [];
+        var result = {}, equals = {}, subject, tags, from, date, messages = [], notMessages = [];
 
         subject = node.find('#mail-' + mail.ident + ' .subject-and-tags')[0];
         tags = _.map(node.find('#mail-' + mail.ident + ' .subject-and-tags .tag'), function (tag) { return tag.textContent; });
@@ -11,36 +11,38 @@ define([], function() {
         from = node.find('#mail-' + mail.ident + ' .from');
 
         if (subject && subject.textContent.trim() === mail.header.subject) {
-          result.pass = true;
+          equals.subject = true;
           notMessages.push('not to be rendered with subject ' + mail.header.subject);
         } else {
-          result.pass = false;
+          equals.subject = false;
           messages.push('to be rendered with subject ' + mail.header.subject + ', but was rendered with subject ' + subject.textContent.trim());
         }
 
         if (tags && tags.join(', ') === mail.tags.join(', ')) {
-          result.pass &= true;
+          equals.tags = true;
           notMessages.push('not to be rendered with tags ' + mail.tags.join(', '));
         } else {
-          result.pass |= false;
-          messages.push('to be rendered with tags ' + mail.tags.join(', ') + ', but was rendered with subject ' + tags.join(', '));
+          equals.tags = false;
+          messages.push('to be rendered with tags ' + mail.tags.join(', ') + ', but was rendered with tags ' + tags.join(', '));
         }
 
         if (date && date.text().trim() === mail.header.date.split('T')[0]) {
-          result.pass &= true;
+          equals.date = true;
           notMessages.push('not to be rendered with date ' + mail.header.date.split('T')[0]);
         } else {
-          result.pass |= false;
+          equals.date = false;
           messages.push('to be rendered with date ' + mail.header.date.split('T')[0] + ', but was rendered with date ' + date.text().trim());
         }
 
         if (from && from.text().trim() === mail.header.from) {
-          result.pass &= true;
+          equals.from = true;
           notMessages.push('not to be rendered with from ' + mail.header.from);
         } else {
-          result.pass |= false;
+          equals.from = false;
           messages.push('to be rendered with from ' + mail.header.from + ', but was rendered with from ' + from.text().trim());
         }
+
+        result.pass = equals.subject && equals.tags && equals.date && equals.from;
 
         if (result.pass) {
           result.message = 'Expected mail ' + mail.ident + ' ' + notMessages.join(', ');

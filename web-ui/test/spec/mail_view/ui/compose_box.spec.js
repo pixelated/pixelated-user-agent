@@ -1,6 +1,3 @@
-/*global jasmine */
-/*global Pixelated */
-
 describeComponent('mail_view/ui/compose_box', function () {
   'use strict';
   beforeEach(function () {

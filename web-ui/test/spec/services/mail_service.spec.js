@@ -1,5 +1,3 @@
-/*global jasmine */
-/*global Pixelated */
 'use strict';
 
 describeComponent('services/mail_service', function () {
@@ -43,7 +41,7 @@ describeComponent('services/mail_service', function () {
 
     it('makes the correct request to the backend', function () {
       expect(readRequest.calls.mostRecent().args[0]).toEqual('/mails/read');
-      expect(readRequest.calls.mostRecent().args[1].data).toEqual('{"idents":[1,2]}')
+      expect(readRequest.calls.mostRecent().args[1].data).toEqual('{"idents":[1,2]}');
     });
 
     it('will trigger that a message has been deleted when it is done deleting', function() {

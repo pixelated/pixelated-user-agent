@@ -1,6 +1,3 @@
-/*global jasmine */
-/*global Pixelated */
-
 describeComponent('search/search_trigger', function () {
   'use strict';
   var self;

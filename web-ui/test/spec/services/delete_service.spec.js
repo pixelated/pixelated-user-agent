@@ -1,6 +1,3 @@
-/*global jasmine */
-/*global Pixelated */
-
 describeComponent('services/delete_service', function () {
   'use strict';
 

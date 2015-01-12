@@ -19,20 +19,19 @@
   "trailing": true,
   "undef": false,
   "validthis": true,
+  "jasmine": true,
   "predef": [
     "$",
     "jQuery",
-    "before",
-    "beforeEach",
     "define",
-    "describe",
     "describeComponent",
     "describeMixin",
-    "expect",
-    "it",
     "requirejs",
     "setupComponent",
-    "spyOn",
-    "spyOnEvent"
+    "spyOnEvent",
+    "_",
+    "Pixelated",
+    "Handlebars",
+    "Bloodhound"
   ]
 }

@@ -1,8 +1,3 @@
-/*global Pixelated */
-/*global jasmine */
-/*global runs */
-/*global waits */
-
 describeMixin('mixins/with_mail_edit_base', function () {
   'use strict';
 

@@ -1,5 +1,3 @@
-/*global Pixelated */
-
 describeComponent('dispatchers/left_pane_dispatcher', function () {
   'use strict';
 

@@ -1,5 +1,3 @@
-/*global Pixelated */
-
 require(['services/model/mail'], function (Mail) {
   'use strict';
 

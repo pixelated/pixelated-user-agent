@@ -25,7 +25,7 @@
     "handlebars": "mkdir -p app/js/generated/hbs/ && handlebars app/templates/**/*.hbs > app/js/generated/hbs/templates.js --namespace=window.Pixelated --root .",
     "compass": "compass compile",
     "build": "npm run clean && npm run handlebars && npm run compass",
-    "jshint": "node_modules/.bin/jshint --config=.jshintrc `find app -name '*.js' | grep -v -e 'lib' -e 'bower' -e 'generated'`",
+    "jshint": "node_modules/.bin/jshint --config=.jshintrc app && node_modules/.bin/jshint --config=.jshintrc test",
     "clean": "rm -rf .tmp/ dist/**/* app/js/generated/hbs/* app/css/*",
     "buildmain": "node_modules/requirejs/bin/r.js -o config/buildoptions.js",
     "package": "/bin/bash config/package.sh",

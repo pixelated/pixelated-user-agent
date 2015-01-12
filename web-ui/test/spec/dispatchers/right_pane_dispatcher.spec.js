@@ -1,6 +1,3 @@
-/*global Pixelated */
-/*global jasmine */
-
 describeComponent('dispatchers/right_pane_dispatcher', function () {
   'use strict';
 

@@ -1,5 +1,3 @@
-/*global Pixelated */
-
 describeMixin('mail_list/ui/mail_items/mail_item', function () {
   'use strict';
 

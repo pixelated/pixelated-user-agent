@@ -1,5 +1,3 @@
-/*global Pixelated */
-
 describeComponent('mail_view/data/mail_sender', function () {
   'use strict';
 

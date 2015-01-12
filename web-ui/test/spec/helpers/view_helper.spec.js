@@ -1,5 +1,3 @@
-/*global Pixelated */
-
 define(['helpers/view_helper'], function (viewHelper) {
   'use strict';
 

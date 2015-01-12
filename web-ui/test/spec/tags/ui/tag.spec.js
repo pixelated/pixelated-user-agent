@@ -1,5 +1,3 @@
-/*global Pixelated */
-/*global _ */
 
 describeComponent('tags/ui/tag', function () {
   'use strict';

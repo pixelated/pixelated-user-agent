@@ -1,5 +1,3 @@
-/*global Pixelated */
-
 describeComponent('page/logout', function () {
   'use strict';
 

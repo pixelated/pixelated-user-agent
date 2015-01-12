@@ -1,5 +1,3 @@
-/*global Pixelated */
-
 describeComponent('mail_view/ui/mail_view', function () {
   'use strict';
 

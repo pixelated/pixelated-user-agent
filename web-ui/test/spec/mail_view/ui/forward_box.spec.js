@@ -1,6 +1,3 @@
-/*global jasmine */
-/*global Pixelated */
-
 describeComponent('mail_view/ui/forward_box', function () {
   'use strict';
 

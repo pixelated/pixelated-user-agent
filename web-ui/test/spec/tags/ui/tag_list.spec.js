@@ -1,7 +1,3 @@
-/* global _ */
-/* global Pixelated */
-/* global jasmine */
-
 describeComponent('tags/ui/tag_list', function () {
   'use strict';
   var tagsShortcutsContainer;

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-/*global _ */
 
 define(['flight/lib/component', 'page/events', 'views/i18n'], function (defineComponent, events, i18n) {
   'use strict';

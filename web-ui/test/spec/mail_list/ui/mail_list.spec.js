@@ -1,5 +1,3 @@
-/*global Pixelated */
-
 describeComponent('mail_list/ui/mail_list', function () {
   'use strict';
 
@@ -136,7 +134,6 @@ describeComponent('mail_list/ui/mail_list', function () {
     it('should open draft in popstate event if tag is Drafts', function () {
       var openDraftEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openDraft);
 
-      debugger;
       this.component.$node.trigger(Pixelated.events.mails.available, { mails: mailList, mailIdent: '30', tag: 'drafts' });
 
       expect(openDraftEvent).toHaveBeenTriggeredOnAndWith(document, { ident: '30'});

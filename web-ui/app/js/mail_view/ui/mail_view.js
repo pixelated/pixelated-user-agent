@@ -14,12 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-/*global Pixelated */
-/*global _ */
-/*global Bloodhound */
 
 'use strict';
-
 define(
   [
     'flight/lib/component',
@@ -64,7 +60,7 @@ define(
           encrypted = this.checkEncrypted(data.mail);
         }
 
-        var attachments = _.map(data.mail.attachments, function(a){ 
+        var attachments = _.map(data.mail.attachments, function(a){
             return { 'encoding': a.headers['Content-Transfer-Encoding'], 'name': a.name, 'ident': a.ident };
         });
 

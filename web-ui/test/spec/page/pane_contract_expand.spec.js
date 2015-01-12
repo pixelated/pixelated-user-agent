@@ -1,6 +1,3 @@
-/*global Pixelated */
-/*global afterEach */
-
 'use strict';
 
 describeComponent('page/pane_contract_expand', function () {
