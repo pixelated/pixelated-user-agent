@@ -51,7 +51,7 @@ class AppTestClient:
         self.app = pixelated.runserver.app
 
         self.soledad_querier = SoledadQuerier(self.soledad)
-        self.soledad_querier.get_index_masterkey = lambda: '_yg2oG_5ELM8_-sQYcsxI37WesI0dOtZQXpwAqjvhR4='
+        self.soledad_querier.get_index_masterkey = lambda: 'h\xbcpC\xb1\xafc\x92\xf3\xa1v\x1fa\x9dlA\x1a\xf7\xcf\xf2\nG\xad4\xb8m\x01\xf5\xa0\xa9\xd8\xca'
 
         self.account = SoledadBackedAccount('test', self.soledad, MagicMock())
         self.mailboxes = Mailboxes(self.account, self.soledad_querier)

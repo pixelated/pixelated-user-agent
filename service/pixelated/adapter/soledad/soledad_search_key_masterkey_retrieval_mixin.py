@@ -14,7 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.soledad.soledad_facade_mixin import SoledadDbFacadeMixin
-from cryptography.fernet import Fernet
+import nacl.secret
+import nacl.utils
 
 
 class SoledadSearchIndexMasterkeyRetrievalMixin(SoledadDbFacadeMixin, object):
@@ -22,7 +23,7 @@ class SoledadSearchIndexMasterkeyRetrievalMixin(SoledadDbFacadeMixin, object):
     def get_index_masterkey(self):
         index_key = self.get_search_index_masterkey()
         if len(index_key) == 0:
-            index_key = Fernet.generate_key()
+            index_key = nacl.utils.random(nacl.secret.SecretBox.KEY_SIZE)
             self.create_doc(dict(type='index_key', value=index_key))
             return index_key
         return str(index_key[0].content['value'])
