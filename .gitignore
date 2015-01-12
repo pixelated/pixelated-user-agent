@@ -28,3 +28,5 @@ env/
 .vagrant/
 __pycache__/
 .virtualenv
+# custom config file that can be used with the useragent
+pixelated.cfg
