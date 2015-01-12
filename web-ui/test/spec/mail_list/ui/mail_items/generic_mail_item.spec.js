@@ -11,7 +11,8 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
     this.setupComponent('<li></li>', {
       mail: mail,
       selected: false,
-      tag: 'inbox'
+      tag: 'inbox',
+      templateType: 'single'
     });
   });
 

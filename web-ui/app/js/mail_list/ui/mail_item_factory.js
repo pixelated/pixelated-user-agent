@@ -30,6 +30,11 @@ define(
       'sent': SentItem
     };
 
+    var TEMPLATE_TYPE = {
+      'drafts': 'sent',
+      'sent': 'sent'
+    };
+
     var createAndAttach = function (nodeToAttachTo, mail, currentMailIdent, currentTag, isChecked) {
       var mailItemContainer = $('<li>', { id: 'mail-' + mail.ident});
       nodeToAttachTo.append(mailItemContainer);
@@ -44,7 +49,8 @@ define(
         mail: mail,
         selected: mail.ident === currentMailIdent,
         tag: currentTag,
-        isChecked: isChecked
+        isChecked: isChecked,
+        templateType: TEMPLATE_TYPE[currentTag] || 'single'
       });
 
     };

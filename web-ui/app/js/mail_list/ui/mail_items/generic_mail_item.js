@@ -19,13 +19,12 @@
 define(
   [
     'flight/lib/component',
-    'views/templates',
     'helpers/view_helper',
     'mail_list/ui/mail_items/mail_item',
     'page/events'
   ],
 
-  function (defineComponent, templates, viewHelpers, mailItem, events) {
+  function (defineComponent, viewHelpers, mailItem, events) {
     'use strict';
 
     return defineComponent(genericMailItem, mailItem);
@@ -84,17 +83,9 @@ define(
         }
       };
 
-      this.render = function () {
-        this.attr.tagsForListView = _.without(this.attr.tags, this.attr.tag);
-        var mailItemHtml = templates.mails.single(this.attr);
-        this.$node.html(mailItemHtml);
-        this.$node.addClass(this.attr.statuses);
-        if(this.attr.selected) { this.doSelect(); }
-        this.on(this.$node.find('a'), 'click', this.triggerOpenMail);
-      };
-
       this.after('initialize', function () {
         this.initializeAttributes();
+        this.attr.tagsForListView = _.without(this.attr.tags, this.attr.tag);
         this.render();
         this.attachListeners();
 

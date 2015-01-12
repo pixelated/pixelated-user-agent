@@ -17,8 +17,12 @@
 'use strict';
 
 define(
-  ['helpers/view_helper',
-  'page/events'], function (viewHelper, events) {
+  [
+    'helpers/view_helper',
+    'views/templates',
+    'page/events'
+  ],
+  function (viewHelper, templates, events) {
 
   function mailItem() {
     this.updateSelected = function (ev, data) {
@@ -56,6 +60,16 @@ define(
     this.uncheckCheckbox = function () {
       this.checkboxElement().prop('checked', false);
       this.triggerMailChecked({'target': {'checked': false}});
+    };
+
+    this.render = function () {
+      this.attr.tagsForListView = _.without(this.attr.tags, this.attr.tag);
+      debugger;
+      var mailItemHtml = templates.mails[this.attr.templateType](this.attr);
+      this.$node.html(mailItemHtml);
+      this.$node.addClass(this.attr.statuses);
+      if(this.attr.selected) { this.doSelect(); }
+      this.on(this.$node.find('a'), 'click', this.triggerOpenMail);
     };
 
     this.initializeAttributes = function () {
