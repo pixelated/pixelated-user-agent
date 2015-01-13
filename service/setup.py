@@ -86,7 +86,7 @@ setup(name='pixelated-user-agent',
       ],
       test_suite='nose.collector',
       install_requires=[
-           'cryptography==0.6.1',
+           'pynacl==0.2.3',
            'pyasn1==0.1.7',
            'gnupg==1.4.0',
            'Twisted==14.0.2',
