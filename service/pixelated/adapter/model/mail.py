@@ -76,9 +76,15 @@ class Mail(object):
 
     def _charset(self):
         if 'content_type' in self.headers and 'charset' in self.headers['content_type']:
-            return re.compile('.*charset=(.*)').match(self.headers['content_type']).group(1)
+            return self._parse_charset_heade(self.headers['content_type'])
         else:
             return 'utf-8'
+
+    def _parse_charset_header(self, charset_header, default_charset='utf-8'):
+        try:
+            return re.compile('.*charset=(.*)').match(charset_header).group(1)
+        except:
+            return default_charset
 
     @property
     def raw(self):
@@ -213,14 +219,16 @@ class PixelatedMail(Mail):
 
     def _decode_part(self, part):
         encoding = part['headers'].get('Content-Transfer-Encoding', '')
+        content_type = self._parse_charset_header(part['headers'].get('Content-Type'))
 
         decoding_map = {
-            'quoted-printable': lambda content: unicode(content.decode('quopri')),
-            'base64': lambda content: content.decode('base64').decode('utf-8')
+            'quoted-printable': lambda content, content_type: unicode(content.decode('quopri'), content_type),
+            'base64': lambda content, content_type: content.decode('base64').decode('utf-8')
         }
         if encoding:
-            return decoding_map[encoding](part['content'])
-        return part['content']
+            return decoding_map[encoding](part['content'], content_type)
+        else:
+            return part['content']
 
     @property
     def alternatives(self):
@@ -228,7 +236,7 @@ class PixelatedMail(Mail):
 
     @property
     def text_plain_body(self):
-        if self.parts and len(self.alternatives) == 1:
+        if self.parts and len(self.alternatives) >= 1:
             return self._decode_part(self.alternatives[0])
         else:
             return self.bdoc.content['raw']  # plain
