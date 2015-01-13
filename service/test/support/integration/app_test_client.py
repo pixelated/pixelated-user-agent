@@ -162,5 +162,6 @@ def initialize_soledad(tempdir):
         secret_path,
         local_db_path,
         server_url,
-        cert_file)
+        cert_file,
+        defer_encryption=False)
     return _soledad
