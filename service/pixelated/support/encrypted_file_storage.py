@@ -20,15 +20,15 @@ from hashlib import sha512
 import os
 from whoosh.filedb.filestore import FileStorage
 from whoosh.filedb.structfile import StructFile, BufferFile
-from nacl.secret import SecretBox
-import nacl.utils
+from leap.soledad.client.crypto import encrypt_sym
+from leap.soledad.client.crypto import decrypt_sym
+from leap.soledad.client.crypto import EncryptionMethods
 from whoosh.util import random_name
 
 
 class EncryptedFileStorage(FileStorage):
     def __init__(self, path, masterkey=None):
         self.masterkey = masterkey
-        self.secret_box = SecretBox(masterkey)
         self._tmp_storage = self.temp_storage
         self.length_cache = {}
         FileStorage.__init__(self, path, supports_mmap=False)
@@ -49,10 +49,6 @@ class EncryptedFileStorage(FileStorage):
     def file_length(self, name):
         return self.length_cache[name][0]
 
-    @property
-    def _nonce(self):
-        return nacl.utils.random(SecretBox.NONCE_SIZE)
-
     def _encrypt_index_on_close(self, name):
         def wrapper(struct_file):
             struct_file.seek(0)
@@ -61,13 +57,13 @@ class EncryptedFileStorage(FileStorage):
             if name in self.length_cache and file_hash == self.length_cache[name][1]:
                 return
             self.length_cache[name] = (len(content), file_hash)
-            encrypted_content = self.secret_box.encrypt(content, self._nonce)
+            encrypted_content = ''.join(encrypt_sym(content, self.masterkey, EncryptionMethods.XSALSA20))
             with open(self._fpath(name), 'w+b') as f:
                 f.write(encrypted_content)
         return wrapper
 
     def _open_encrypted_file(self, name, onclose=lambda x: None):
         file_content = open(self._fpath(name), "rb").read()
-        decrypted = self.secret_box.decrypt(file_content)
+        decrypted = decrypt_sym(file_content[33:], self.masterkey, EncryptionMethods.XSALSA20, iv=file_content[:33])
         self.length_cache[name] = (len(decrypted), sha512(decrypted).digest())
         return BufferFile(buffer(decrypted), name=name, onclose=onclose)

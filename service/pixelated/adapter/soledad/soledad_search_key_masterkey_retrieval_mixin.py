@@ -14,8 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.soledad.soledad_facade_mixin import SoledadDbFacadeMixin
-import nacl.secret
-import nacl.utils
+import os
 import base64
 
 
@@ -26,7 +25,7 @@ class SoledadSearchIndexMasterkeyRetrievalMixin(SoledadDbFacadeMixin, object):
         index_key_doc = result[0] if result else None
 
         if not index_key_doc:
-            new_index_key = nacl.utils.random(nacl.secret.SecretBox.KEY_SIZE)
+            new_index_key = os.urandom(32)
             self.create_doc(dict(type='index_key', value=base64.encodestring(new_index_key)))
             return new_index_key
         return base64.decodestring(index_key_doc.content['value'])
