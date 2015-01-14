@@ -40,7 +40,7 @@ class SoledadSessionTest(AbstractLeapTest):
         init_mock.assert_called_with(self.uuid, 'any-passphrase', '%s/soledad/%s.secret' % (self.leap_home, self.uuid),
                                      '%s/soledad/%s.db' % (self.leap_home, self.uuid),
                                      'https://couch1.some-server.test:1234/user-%s' % self.uuid,
-                                     '/some/path/to/ca_cert', self.token)
+                                     '/some/path/to/ca_cert', self.token, defer_encryption=False)
 
     def test_that_sync_is_called(self, soledad_mock):
             instance = soledad_mock.return_value
