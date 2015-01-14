@@ -27,6 +27,8 @@ from whoosh.query import Term
 from whoosh import sorting
 from pixelated.support.functional import unique
 from pixelated.support.date import milliseconds
+from threading import Lock
+import traceback
 
 
 class SearchEngine(object):
@@ -38,6 +40,7 @@ class SearchEngine(object):
         if not os.path.exists(self.INDEX_FOLDER):
             os.makedirs(self.INDEX_FOLDER)
         self._index = self._create_index()
+        self._write_lock = Lock()
 
     def _add_to_tags(self, tags, group, skip_default_tags, count_type, query=None):
         query_matcher = re.compile(".*%s.*" % query.lower()) if query else re.compile(".*")
@@ -137,11 +140,16 @@ class SearchEngine(object):
         writer.update_document(**index_data)
 
     def index_mails(self, mails, callback=None):
-        with self._index.writer() as writer:
-            for mail in mails:
-                self._index_mail(writer, mail)
-        if callback:
-            callback()
+        try:
+            with self._write_lock:
+                with self._index.writer() as writer:
+                    for mail in mails:
+                        self._index_mail(writer, mail)
+            if callback:
+                callback()
+        except Exception, e:
+            traceback.print_exc(e)
+            raise
 
     def _search_with_options(self, options, query):
         with self._index.searcher() as searcher:
@@ -179,11 +187,12 @@ class SearchEngine(object):
         return MultifieldParser(['raw', 'body'], self._index.schema).parse(query)
 
     def remove_from_index(self, mail_id):
-        writer = self._index.writer()
-        try:
-            writer.delete_by_term('ident', mail_id)
-        finally:
-            writer.commit()
+        with self._write_lock:
+            writer = self._index.writer()
+            try:
+                writer.delete_by_term('ident', mail_id)
+            finally:
+                writer.commit()
 
     def contacts(self, query):
         restrict_q = Term("tag", "drafts") | Term("tag", "trash")
