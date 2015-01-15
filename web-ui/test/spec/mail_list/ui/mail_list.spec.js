@@ -108,7 +108,7 @@ describeComponent('mail_list/ui/mail_list', function () {
 
       $(document).trigger(Pixelated.events.ui.mail.checked, {mail: mailList[0]});
 
-      expect(setCheckAllCheckboxEvent).toHaveBeenTriggeredOnAndWith(document, {hasMailsChecked: true});
+      expect(setCheckAllCheckboxEvent).toHaveBeenTriggeredOnAndWith(document, true);
     });
 
     it('unchecks the check all checkbox if no mail is left checked', function () {
@@ -118,7 +118,7 @@ describeComponent('mail_list/ui/mail_list', function () {
 
       $(document).trigger(Pixelated.events.ui.mail.unchecked, {mail: {ident: '1'}});
 
-      expect(setCheckAllCheckboxEvent).toHaveBeenTriggeredOnAndWith(document, {hasMailsChecked: false});
+      expect(setCheckAllCheckboxEvent).toHaveBeenTriggeredOnAndWith(document, false);
     });
   });
 

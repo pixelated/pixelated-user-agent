@@ -121,15 +121,15 @@ define(
       };
 
       this.updateCheckAllCheckbox = function () {
-        this.trigger(document, events.ui.mails.hasMailsChecked, {hasMailsChecked: _.keys(this.attr.checkedMails).length > 0});
+        this.trigger(document, events.ui.mails.hasMailsChecked, _.keys(this.attr.checkedMails).length > 0);
       };
 
-      this.addToSelectedMails = function (ev, data) {
+      this.addToCheckedMails = function (ev, data) {
         this.attr.checkedMails[data.mail.ident] = data.mail;
         this.updateCheckAllCheckbox();
       };
 
-      this.removeFromSelectedMails = function (ev, data) {
+      this.removeFromCheckedMails = function (ev, data) {
         if (data.mails) {
           _.each(data.mails, function (mail) {
             delete this.attr.checkedMails[mail.ident];
@@ -169,8 +169,8 @@ define(
 
         this.on(document, events.ui.mail.updateSelected, this.updateSelected);
         this.on(document, events.ui.mail.wantChecked, this.respondWithCheckedMails);
-        this.on(document, events.ui.mail.checked, this.addToSelectedMails);
-        this.on(document, events.ui.mail.unchecked, this.removeFromSelectedMails);
+        this.on(document, events.ui.mail.checked, this.addToCheckedMails);
+        this.on(document, events.ui.mail.unchecked, this.removeFromCheckedMails);
 
         this.openMailFromUrl = utils.once(function () {
           if (this.shouldSelectEmailFromUrlMailIdent()) {

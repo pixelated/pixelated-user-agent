@@ -108,8 +108,7 @@ define(
       this.triggerMailsRead = function (mails) {
         return _.bind(function () {
           this.refreshMails();
-          this.trigger(document, events.ui.mail.unchecked, { mails: mails });
-          this.trigger(document, events.ui.mails.hasMailsChecked, false);
+          this.trigger(document, events.ui.mails.uncheckAll);
         }, this);
       };
 
@@ -119,8 +118,7 @@ define(
 
           this.refreshMails();
           this.trigger(document, events.ui.userAlerts.displayMessage, { message: dataToDelete.successMessage});
-          this.trigger(document, events.ui.mail.unchecked, { mails: mails });
-          this.trigger(document, events.ui.mails.hasMailsChecked, false);
+          this.trigger(document, events.ui.mails.uncheckAll);
           this.trigger(document, events.mail.deleted, { mails: mails });
         }, this);
       };

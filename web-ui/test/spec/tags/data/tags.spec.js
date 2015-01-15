@@ -3,7 +3,11 @@
 describeComponent('tags/data/tags', function () {
   'use strict';
 
-  beforeEach(function () {
+  var features;
+
+  beforeEach( function () {
+    features = require('features');
+    spyOn(features, 'isAutoRefreshEnabled').and.returnValue(false);
     this.setupComponent();
   });
 

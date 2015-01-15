@@ -36,7 +36,6 @@ define(
 
     this.doSelect = function () {
       this.$node.addClass('selected');
-      this.checkCheckbox();
     };
 
     this.doUnselect = function () {

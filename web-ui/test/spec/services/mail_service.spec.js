@@ -3,9 +3,13 @@
 describeComponent('services/mail_service', function () {
 
   var email1, i18n;
+  var features;
 
   beforeEach( function () {
+    features = require('features');
+    spyOn(features, 'isAutoRefreshEnabled').and.returnValue(false);
     this.setupComponent();
+
     email1 = Pixelated.testData().parsedMail.simpleTextPlain;
     i18n = require('views/i18n');
   } );
@@ -21,7 +25,7 @@ describeComponent('services/mail_service', function () {
   });
 
   describe('when marks many emails as read', function () {
-    var readRequest, checkedMails, uncheckedEmailsEvent, setCheckAllEvent, deferred;
+    var readRequest, checkedMails, uncheckAllEvent, deferred;
 
     beforeEach(function () {
       checkedMails = {
@@ -32,8 +36,7 @@ describeComponent('services/mail_service', function () {
       deferred = $.Deferred();
       readRequest = spyOn($, 'ajax').and.returnValue(deferred);
 
-      uncheckedEmailsEvent = spyOnEvent(document, Pixelated.events.ui.mail.unchecked);
-      setCheckAllEvent = spyOnEvent(document, Pixelated.events.ui.mails.hasMailsChecked);
+      uncheckAllEvent = spyOnEvent(document, Pixelated.events.ui.mails.uncheckAll);
       spyOn(this.component, 'refreshMails');
 
       this.component.trigger(Pixelated.events.mail.read, {checkedMails: checkedMails});
@@ -49,14 +52,9 @@ describeComponent('services/mail_service', function () {
       expect(this.component.refreshMails).toHaveBeenCalled();
     });
 
-    it('unchecks read emails', function () {
-      deferred.resolve(checkedMails);
-      expect(uncheckedEmailsEvent).toHaveBeenTriggeredOnAndWith(document, {mails: checkedMails});
-    });
-
     it('clears the check all checkbox', function () {
       deferred.resolve(checkedMails);
-      expect(setCheckAllEvent).toHaveBeenTriggeredOnAndWith(document, false);
+      expect(uncheckAllEvent).toHaveBeenTriggeredOn(document);
     });
   });
 
@@ -133,12 +131,11 @@ describeComponent('services/mail_service', function () {
   });
 
   describe('when successfuly deletes an email', function () {
-    var displayMessageEvent, uncheckedEmailsEvent, setCheckAllEvent, mailsDeletedEvent;
+    var displayMessageEvent, uncheckAllEvent, mailsDeletedEvent;
 
     beforeEach(function () {
       displayMessageEvent = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
-      uncheckedEmailsEvent = spyOnEvent(document, Pixelated.events.ui.mail.unchecked);
-      setCheckAllEvent = spyOnEvent(document, Pixelated.events.ui.mails.hasMailsChecked);
+      uncheckAllEvent = spyOnEvent(document, Pixelated.events.ui.mails.uncheckAll);
       mailsDeletedEvent = spyOnEvent(document, Pixelated.events.mail.deleted);
       spyOn(this.component, 'refreshMails');
 
@@ -156,16 +153,12 @@ describeComponent('services/mail_service', function () {
       expect(displayMessageEvent).toHaveBeenTriggeredOnAndWith(document, {message: 'A success message'});
     });
 
-    it('unchecks deleted emails', function () {
-      expect(uncheckedEmailsEvent).toHaveBeenTriggeredOnAndWith(document, { mails: {1: 'email 1', 2: 'email 2'} });
-    });
-
     it('tells about deleted emails', function () {
       expect(mailsDeletedEvent).toHaveBeenTriggeredOnAndWith(document, { mails: {1: 'email 1', 2: 'email 2'} });
     });
 
-    it('clears the check all checkbox', function () {
-      expect(setCheckAllEvent).toHaveBeenTriggeredOnAndWith(document, false);
+    it('unchecks all checked mails', function () {
+      expect(uncheckAllEvent).toHaveBeenTriggeredOn(document);
     });
   });
 
