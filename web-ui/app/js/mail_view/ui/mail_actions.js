@@ -45,7 +45,7 @@ define(
         this.select('moreActions').hide();
 
         this.on(this.select('replyButtonTop'), 'click', function () {
-          this.trigger(document, events.ui.replyBox.showReply);
+          this.trigger(document, events.ui.replyBox.showReply)
         }.bind(this));
 
         this.on(this.select('replyAllButtonTop'), 'click', function () {
