@@ -450,6 +450,16 @@ button {
   z-index: 2;
   height: 100vh;
   background: $secondary;
+
+  .left-off-canvas-logo {
+    text-align: center;
+    padding: 10px;
+    display: block;
+    img {
+      padding-top: 1px;
+    }
+ }
+
   .left-off-canvas-toggle {
     color: white;
     text-align: center;
@@ -460,14 +470,6 @@ button {
     top: 0;
     z-index: 10000;
     position: relative;
-
-    img {
-      padding-top: 1px;
-    }
-
-    .toggle {
-      padding-top: 20px;
-    }
   }
   ul.shortcuts {
     li {
