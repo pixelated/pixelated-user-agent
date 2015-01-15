@@ -51,17 +51,18 @@ class EncryptedFileStorage(FileStorage):
     def file_length(self, name):
         return self.length_cache[name][0]
 
-    def gen_mac(self, ciphertext):
-        return hmac.new(self.signkey, ciphertext, sha256).digest()
+    def gen_mac(self, iv, ciphertext):
+        verifiable_payload = ''.join((iv, ciphertext))
+        return hmac.new(self.signkey, verifiable_payload, sha256).digest()
 
     def encrypt(self, content):
         iv, ciphertext = encrypt_sym(content, self.masterkey, EncryptionMethods.XSALSA20)
-        mac = self.gen_mac(ciphertext)
+        mac = self.gen_mac(iv, ciphertext)
         return ''.join((mac, iv, ciphertext))
 
     def decrypt(self, payload):
         payload_mac, iv, ciphertext = payload[:32], payload[32:65], payload[65:]
-        generated_mac = self.gen_mac(ciphertext)
+        generated_mac = self.gen_mac(iv, ciphertext)
         if sha256(payload_mac).digest() != sha256(generated_mac).digest():
             raise Exception("EncryptedFileStorage  - Error opening file. Wrong MAC")
         return decrypt_sym(ciphertext, self.masterkey, EncryptionMethods.XSALSA20, iv=iv)
