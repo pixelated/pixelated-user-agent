@@ -11,7 +11,7 @@ X-Python-Version: >= 2.7
 
 Package: pixelated-user-agent
 Architecture: all
-Depends: python (>= 2.7), python (<< 2.8), leap-keymanager, soledad-common, soledad-client, leap-mail, python-srp, python-dirspec, python-u1db, python-whoosh, python-sqlcipher, python-klein, python-flask, python-service-identity
+Depends: python (>= 2.7), python (<< 2.8), leap-keymanager, soledad-common, soledad-client, leap-mail, python-srp, python-dirspec, python-u1db, python-whoosh, python-sqlcipher, python-klein, python-flask
 Description: API to serve the pixelated front-end requests
  Pixelated User Agent Service
  ============================
