@@ -49,11 +49,8 @@ cd ../service
 rm -rf .virtualenv
 virtualenv .virtualenv
 source .virtualenv/bin/activate
-pip install -r requirements.txt
-# having trouble with enum from pip right now
-pip uninstall -y enum
-easy_install enum
-./go develop
+./go setup
+pip uninstall -y enum34
 
 # print usage
 cat <<EOF
