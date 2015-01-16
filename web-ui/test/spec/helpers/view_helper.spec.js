@@ -53,10 +53,20 @@ define(['helpers/view_helper'], function (viewHelper) {
       });
     });
 
-    it('formats the body of a plain text email', function () {
-      var formatedMail = $('<div></div>');
-      formatedMail.html(viewHelper.formatMailBody(testData.parsedMail.simpleTextPlain));
-      expect(formatedMail).toContainHtml('<p>Hello Everyone</p>');
+    it('each line of plain text mail gets a new paragraph', function () {
+      var formattedMail = $('<div></div>');
+      formattedMail.html(viewHelper.formatMailBody(testData.parsedMail.simpleTextPlain));
+      expect(formattedMail).toContainHtml('<p>Hello Everyone</p>');
+    });
+
+
+    it('escape html in plain text body', function () {
+      var formattedMail = $('<div></div>');
+      var mail = testData.parsedMail.simpleTextPlain;
+      mail.textPlainBody = '<font color="red">This is some text!</font>'
+      formattedMail.html(viewHelper.formatMailBody(mail));
+      expect(formattedMail.text()).toBe('<font color="red">This is some text!</font>')
+
     });
 
     it('move caret to the end of text after 1ms', function () {
