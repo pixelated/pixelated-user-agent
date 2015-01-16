@@ -33,7 +33,7 @@ define(['helpers/view_helper'], function (viewHelper) {
 
         var res = viewHelper.getFormattedDate(dtest);
 
-        // This expectation is weird for the month - JS Dates have date numbers be zero-indexed, thus the discrepency
+        // This expectation is weird for the month - JS Dates have date numbers be zero-indexed, thus the discrepancy
         // Specifically, the 2 in the constructor DOES match the 3 in the expectation below.
         expect(res).toEqual('2013-03-13');
       });
