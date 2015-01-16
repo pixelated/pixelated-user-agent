@@ -25,7 +25,7 @@ class SoledadSearchIndexMasterkeyRetrievalMixin(SoledadDbFacadeMixin, object):
         index_key_doc = result[0] if result else None
 
         if not index_key_doc:
-            new_index_key = os.urandom(32)
+            new_index_key = os.urandom(64)  # 32 for encryption, 32 for hmac
             self.create_doc(dict(type='index_key', value=base64.encodestring(new_index_key)))
             return new_index_key
         return base64.decodestring(index_key_doc.content['value'])

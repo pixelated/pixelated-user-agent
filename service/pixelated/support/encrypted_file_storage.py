@@ -15,9 +15,10 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import io
-from hashlib import sha512
+from hashlib import sha256
 
 import os
+import hmac
 from whoosh.filedb.filestore import FileStorage
 from whoosh.filedb.structfile import StructFile, BufferFile
 from leap.soledad.client.crypto import encrypt_sym
@@ -28,7 +29,8 @@ from whoosh.util import random_name
 
 class EncryptedFileStorage(FileStorage):
     def __init__(self, path, masterkey=None):
-        self.masterkey = masterkey
+        self.masterkey = masterkey[:32]
+        self.signkey = masterkey[32:]
         self._tmp_storage = self.temp_storage
         self.length_cache = {}
         FileStorage.__init__(self, path, supports_mmap=False)
@@ -49,21 +51,37 @@ class EncryptedFileStorage(FileStorage):
     def file_length(self, name):
         return self.length_cache[name][0]
 
+    def gen_mac(self, iv, ciphertext):
+        verifiable_payload = ''.join((iv, ciphertext))
+        return hmac.new(self.signkey, verifiable_payload, sha256).digest()
+
+    def encrypt(self, content):
+        iv, ciphertext = encrypt_sym(content, self.masterkey, EncryptionMethods.XSALSA20)
+        mac = self.gen_mac(iv, ciphertext)
+        return ''.join((mac, iv, ciphertext))
+
+    def decrypt(self, payload):
+        payload_mac, iv, ciphertext = payload[:32], payload[32:65], payload[65:]
+        generated_mac = self.gen_mac(iv, ciphertext)
+        if sha256(payload_mac).digest() != sha256(generated_mac).digest():
+            raise Exception("EncryptedFileStorage  - Error opening file. Wrong MAC")
+        return decrypt_sym(ciphertext, self.masterkey, EncryptionMethods.XSALSA20, iv=iv)
+
     def _encrypt_index_on_close(self, name):
         def wrapper(struct_file):
             struct_file.seek(0)
             content = struct_file.file.read()
-            file_hash = sha512(content).digest()
+            file_hash = sha256(content).digest()
             if name in self.length_cache and file_hash == self.length_cache[name][1]:
                 return
             self.length_cache[name] = (len(content), file_hash)
-            encrypted_content = ''.join(encrypt_sym(content, self.masterkey, EncryptionMethods.XSALSA20))
+            encrypted_content = self.encrypt(content)
             with open(self._fpath(name), 'w+b') as f:
                 f.write(encrypted_content)
         return wrapper
 
     def _open_encrypted_file(self, name, onclose=lambda x: None):
         file_content = open(self._fpath(name), "rb").read()
-        decrypted = decrypt_sym(file_content[33:], self.masterkey, EncryptionMethods.XSALSA20, iv=file_content[:33])
-        self.length_cache[name] = (len(decrypted), sha512(decrypted).digest())
+        decrypted = self.decrypt(file_content)
+        self.length_cache[name] = (len(decrypted), sha256(decrypted).digest())
         return BufferFile(buffer(decrypted), name=name, onclose=onclose)
