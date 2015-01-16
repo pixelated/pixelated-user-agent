@@ -35,30 +35,30 @@ define(
     return textPlainBody.replace(/^(.*?)$/mg, '<p>$1</p>');
   }
 
-  function escapeHtmlTags (body) {
+  function escapeHtmlTags(body) {
 
     var escapeIndex = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
       '"': '&quot;',
-      "'":'&#39;',
-      "/": '&#x2f;'
+      '\'':'&#39;',
+      '/': '&#x2f;'
 
     };
 
     return body.replace(/["'<>\/&]/g, function(char){
         return escapeIndex[char];
-    } )
+   });
 
   }
 
-  function escapeHtmlAndAddParagraphs (body) {
+  function escapeHtmlAndAddParagraphs(body) {
     var escapedBody = escapeHtmlTags(body);
     return addParagraphsToPlainText(escapedBody);
   }
 
-  function formatMailBody (mail) {
+  function formatMailBody(mail) {
     var body = mail.htmlBodyPart ?
                 htmlWhitelister.sanitize(mail.htmlBody, htmlWhitelister.tagPolicy) :
                 escapeHtmlAndAddParagraphs(mail.textPlainBody);

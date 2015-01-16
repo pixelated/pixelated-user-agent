@@ -63,9 +63,9 @@ define(['helpers/view_helper'], function (viewHelper) {
     it('escape html in plain text body', function () {
       var formattedMail = $('<div></div>');
       var mail = testData.parsedMail.simpleTextPlain;
-      mail.textPlainBody = '<font color="red">This is some text!</font>'
+      mail.textPlainBody = '<font color="red">This is some text!</font>';
       formattedMail.html(viewHelper.formatMailBody(mail));
-      expect(formattedMail.text()).toBe('<font color="red">This is some text!</font>')
+      expect(formattedMail.text()).toBe('<font color="red">This is some text!</font>');
 
     });
 
