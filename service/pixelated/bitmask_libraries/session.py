@@ -29,15 +29,16 @@ from .nicknym import NickNym
 from .auth import LeapAuthenticator, LeapCredentials
 from .soledad import SoledadSessionFactory, SoledadSession
 from .smtp import LeapSmtp
+from .config import DEFAULT_LEAP_HOME
 
 
 SESSIONS = {}
 
 
-def open(username, password, server_name):
+def open(username, password, server_name, leap_home=DEFAULT_LEAP_HOME):
     certs_home = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "certificates"))
 
-    config = LeapConfig(certs_home=certs_home)
+    config = LeapConfig(leap_home=leap_home, certs_home=certs_home)
     provider = LeapProvider(server_name, config)
     session = LeapSessionFactory(provider).create(LeapCredentials(username, password))
 

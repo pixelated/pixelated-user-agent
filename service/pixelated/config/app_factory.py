@@ -62,11 +62,12 @@ def update_info_sync_and_index_partial(sync_info_controller, search_engine, mail
     return wrapper
 
 
-def init_leap_session(app):
+def init_leap_session(app, leap_home):
     try:
         leap_session = LeapSession.open(app.config['LEAP_USERNAME'],
                                         app.config['LEAP_PASSWORD'],
-                                        app.config['LEAP_SERVER_NAME'])
+                                        app.config['LEAP_SERVER_NAME'],
+                                        leap_home=leap_home)
     except ConnectionError, error:
         print("Can't connect to the requested provider", error)
         sys.exit(1)
@@ -84,12 +85,12 @@ def look_for_user_key_and_create_if_cant_find(leap_session):
     return wrapper
 
 
-def init_app(app):
-    leap_session = init_leap_session(app)
+def init_app(app, leap_home):
+    leap_session = init_leap_session(app, leap_home)
     soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
 
     tag_service = TagService()
-    search_engine = SearchEngine(soledad_querier)
+    search_engine = SearchEngine(soledad_querier, agent_home=leap_home)
     pixelated_mail_sender = MailSender(leap_session.account_email())
 
     pixelated_mailboxes = Mailboxes(leap_session.account, soledad_querier)
@@ -130,7 +131,7 @@ def create_app(app, args):
         listen_with_ssl(app, args)
     else:
         listen_without_ssl(app, args)
-    reactor.callWhenRunning(lambda: init_app(app))
+    reactor.callWhenRunning(lambda: init_app(app, args.home))
     reactor.run()
 
 

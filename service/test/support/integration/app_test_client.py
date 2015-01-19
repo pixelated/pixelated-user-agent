@@ -46,7 +46,7 @@ class AppTestClient:
         # setup app
         PixelatedMail.from_email_address = self.mail_address
 
-        SearchEngine.INDEX_FOLDER = soledad_test_folder + '/search_index'
+        SearchEngine.DEFAULT_INDEX_HOME = soledad_test_folder
 
         self.app = pixelated.runserver.app
 
