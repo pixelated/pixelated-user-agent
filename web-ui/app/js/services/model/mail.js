@@ -30,7 +30,7 @@ define(['helpers/contenttype'],
     }
 
     function isInTrash() {
-      return this.mailbox.toLowerCase() === 'trash';
+      return this.mailbox && this.mailbox.toLowerCase() === 'trash';
     }
 
     function setDraftReplyFor(ident) {
