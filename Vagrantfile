@@ -48,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
 
-  config.vm.network :forwarded_port, guest: "3333", guest_ip: "127.0.0.1", host: "3333"
+  config.vm.network :forwarded_port, guest: 3333, host: 3333
   config.vm.provider "virtualbox" do |v|
     v.memory = 1024
   end
