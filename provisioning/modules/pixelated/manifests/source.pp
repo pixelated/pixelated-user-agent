@@ -8,7 +8,8 @@ class pixelated::source {
     'python-virtualenv',
     'libffi-dev',
     'g++',
-    'ruby-dev']:
+    'ruby-dev',
+    'libsqlite3-dev' ]:
     ensure => latest
   }
 
