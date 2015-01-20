@@ -49,8 +49,9 @@ cd ../service
 rm -rf .virtualenv
 virtualenv .virtualenv
 source .virtualenv/bin/activate
-./go setup
+./go setup --always-unzip
 pip uninstall -y enum34
+pip install enum34
 
 # print usage
 cat <<EOF

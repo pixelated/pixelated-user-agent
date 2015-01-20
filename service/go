@@ -1,8 +1,8 @@
 #!/bin/bash
 
 function setuppy {
-        python setup.py develop
         pip install -r test_requirements.txt
+        python setup.py develop $*
 }
 
 function setupjs {
@@ -12,11 +12,11 @@ function setupjs {
 }
 
 function runIntegrationTests {
-        nosetests "${@:2}" test/integration
+        nosetests "$*" test/integration
 }
 
 function runUnitTests {
-        nosetests "${@:2}" test/unit
+        nosetests "$*" test/unit
 }
 
 function runPep8 {
@@ -32,8 +32,8 @@ function runJSHint {
 if [ "$1" == 'test' ]; then
         runJSHint
         runPep8
-        runUnitTests
-        runIntegrationTests
+        runUnitTests "${@:2}"
+        runIntegrationTests "${@:2}"
 elif [ "$1" == 'unit' ]; then
         runUnitTests
 elif [ "$1" == 'integration' ]; then
@@ -46,7 +46,7 @@ elif [ "$1" == 'setupjs' ]; then
         setupjs
 elif [ "$1" == 'setup' ]; then
         setupjs
-        setuppy
+        setuppy "${@:2}"
 elif [ "$1" == 'start' ]; then
         /usr/bin/env pixelated-user-agent "${@:2}"
 else
