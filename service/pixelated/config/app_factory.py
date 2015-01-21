@@ -101,14 +101,6 @@ def init_app(app, leap_home):
 
     app.resource.initialize(soledad_querier, search_engine, mail_service, draft_service)
 
-    # add root to reactor
-
-    # register(signal=proto.SOLEDAD_SYNC_RECEIVE_STATUS,
-    #          callback=update_info_sync_and_index_partial(sync_info_controller=sync_info_controller,
-    #                                                      search_engine=search_engine,
-    #                                                      mail_service=mail_service))
-
-
     register(signal=proto.SOLEDAD_DONE_DATA_SYNC,
              callback=init_index_and_remove_dupes(querier=soledad_querier,
                                                   search_engine=search_engine,

@@ -41,5 +41,5 @@ class RetrieveAttachmentTest(SoledadTestBase):
         def _assert(attachment):
             self.assertEquals('pequeno anexo :D\n', attachment)
         d.addCallback(_assert)
-        
+
         return d

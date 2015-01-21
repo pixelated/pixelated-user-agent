@@ -123,6 +123,3 @@ class MailsResource(Resource):
             pixelated_mail = self._draft_service.create_draft(_mail)
         self._search_engine.index_mail(pixelated_mail)
         return respond_json({'ident': pixelated_mail.ident}, request)
-
-
-

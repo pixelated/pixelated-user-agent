@@ -99,4 +99,3 @@ def request_mock(path='', method='GET', body='', headers={}):
     dummy.method = method
     dummy.content = io.BytesIO(body)
     return dummy
-
