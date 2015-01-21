@@ -17,7 +17,7 @@
 'use strict';
 
 requirejs.config({
-  baseUrl: '../',
+  baseUrl: '../assets/',
   paths: {
     'mail_list': 'js/mail_list',
     'page': 'js/page',

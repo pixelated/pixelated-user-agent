@@ -14,20 +14,25 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from pixelated.controllers import respond_json_deferred
+from pixelated.resources import respond_json_deferred
 from twisted.internet.threads import deferToThread
+from twisted.web.resource import Resource
+from twisted.web.server import NOT_DONE_YET
 
 
-class TagsController:
+class TagsResource(Resource):
+
+    isLeaf = True
 
     def __init__(self, search_engine):
+        Resource.__init__(self)
         self._search_engine = search_engine
 
-    def tags(self, request):
+    def render_GET(self, request):
         query = request.args.get('q', [''])[0]
         skip_default_tags = request.args.get('skipDefaultTags', [False])[0]
 
         d = deferToThread(lambda: self._search_engine.tags(query=query, skip_default_tags=skip_default_tags))
         d.addCallback(lambda tags: respond_json_deferred(tags, request))
 
-        return d
+        return NOT_DONE_YET

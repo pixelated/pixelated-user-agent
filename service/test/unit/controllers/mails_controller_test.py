@@ -20,7 +20,7 @@ from io import BytesIO
 from klein.test_resource import requestMock
 from mock import MagicMock
 from mockito import *
-from pixelated.controllers.mails_controller import MailsController
+from pixelated.resources.mails_controller import MailsController
 
 
 class TestMailsController(unittest.TestCase):

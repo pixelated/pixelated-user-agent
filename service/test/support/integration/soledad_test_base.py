@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
 
-from pixelated.controllers import *
+from pixelated.resources import *
 from test.support.integration.app_test_client import AppTestClient
 from test.support.integration.model import ResponseMail
 

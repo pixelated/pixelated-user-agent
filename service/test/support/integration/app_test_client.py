@@ -29,7 +29,7 @@ from pixelated.adapter.services.mail_service import MailService
 from pixelated.adapter.services.mailboxes import Mailboxes
 from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
 from pixelated.adapter.services.tag_service import TagService
-from pixelated.controllers import FeaturesController, HomeController, MailsController, TagsController, \
+from pixelated.resources import FeaturesController, HomeController, MailsController, TagsController, \
     SyncInfoController, AttachmentsController, ContactsController
 import pixelated.runserver
 from pixelated.adapter.model.mail import PixelatedMail

@@ -14,19 +14,22 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from pixelated.controllers import respond_json
-import os
+from pixelated.resources import respond_json_deferred
+from twisted.internet.threads import deferToThread
+from twisted.web.resource import Resource
 
 
-class FeaturesController:
-    DISABLED_FEATURES = ['draftReply', 'encryptionStatus']
+class ContactsResource(Resource):
 
-    def __init__(self):
-        pass
+    isLeaf = True
 
-    def features(self, request):
-        try:
-            disabled_features = {'logout': os.environ['DISPATCHER_LOGOUT_URL']}
-        except KeyError:
-            disabled_features = {}
-        return respond_json({'disabled_features': self.DISABLED_FEATURES, 'dispatcher_features': disabled_features}, request)
+    def __init__(self, search_engine):
+        Resource.__init__(self)
+        self._search_engine = search_engine
+
+    def render_GET(self, request):
+        query = request.args.get('q', [''])[0]
+        d = deferToThread(lambda: self._search_engine.contacts(query))
+        d.addCallback(lambda tags: respond_json_deferred(tags, request))
+
+        return d

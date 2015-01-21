@@ -13,11 +13,16 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from pixelated.controllers import respond_json
+from pixelated.resources import respond_json
+from twisted.web.resource import Resource
 
 
-class SyncInfoController:
+class SyncInfoResource(Resource):
+
+    isLeaf = True
+
     def __init__(self):
+        Resource.__init__(self)
         self.current = 0
         self.total = 0
 
@@ -29,7 +34,7 @@ class SyncInfoController:
     def set_sync_info(self, soledad_sync_status):
         self.current, self.total = map(int, soledad_sync_status.content.split('/'))
 
-    def sync_info(self, request):
+    def render_GET(self, request):
         _sync_info = {
             'is_syncing': self.current != self.total,
             'count': {

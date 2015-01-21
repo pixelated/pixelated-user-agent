@@ -82,7 +82,7 @@ setup(name='pixelated-user-agent',
           'pixelated.config',
           'pixelated.certificates',
           'pixelated.support',
-          'pixelated.controllers'
+          'pixelated.resources'
       ],
       test_suite='nose.collector',
       install_requires=[
@@ -97,7 +97,7 @@ setup(name='pixelated-user-agent',
            'leap.soledad.common==0.6.3',
            'leap.soledad.client==0.6.3',
            'leap.mail==0.3.9-1-gc1f9c92',
-           'whoosh==2.3.2'
+           'whoosh==2.5.7'
       ],
       entry_points={
           'console_scripts': [

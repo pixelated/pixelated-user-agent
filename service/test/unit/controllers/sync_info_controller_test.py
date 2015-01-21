@@ -17,7 +17,7 @@ import unittest
 import json
 
 from mock import MagicMock
-from pixelated.controllers import SyncInfoController
+from pixelated.resources import SyncInfoController
 from mockito import *
 
 

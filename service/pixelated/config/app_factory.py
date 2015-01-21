@@ -19,9 +19,9 @@ from OpenSSL import SSL
 from OpenSSL import crypto
 from twisted.internet import reactor
 from twisted.internet import ssl
+from pixelated.resources.root_resource import RootResource
 from twisted.web import resource
 from twisted.web.util import redirectTo
-from pixelated.config.routes import setup_routes
 from pixelated.adapter.services.mail_service import MailService
 from pixelated.adapter.model.mail import InputMail
 from pixelated.adapter.services.mail_sender import MailSender
@@ -33,7 +33,6 @@ from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerL
 import pixelated.bitmask_libraries.session as LeapSession
 from pixelated.bitmask_libraries.leap_srp import LeapAuthException
 from requests.exceptions import ConnectionError
-from pixelated.controllers import *
 from pixelated.adapter.services.tag_service import TagService
 from leap.common.events import (
     register,
@@ -100,20 +99,16 @@ def init_app(app, leap_home):
     MailboxIndexerListener.SEARCH_ENGINE = search_engine
     InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
 
-    home_controller = HomeController()
-    features_controller = FeaturesController()
-    mails_controller = MailsController(mail_service=mail_service,
-                                       draft_service=draft_service,
-                                       search_engine=search_engine)
-    tags_controller = TagsController(search_engine=search_engine)
-    contacts_controller = ContactsController(search_engine=search_engine)
-    sync_info_controller = SyncInfoController()
-    attachments_controller = AttachmentsController(soledad_querier)
+    app.resource.initialize(soledad_querier, search_engine, mail_service, draft_service)
 
-    register(signal=proto.SOLEDAD_SYNC_RECEIVE_STATUS,
-             callback=update_info_sync_and_index_partial(sync_info_controller=sync_info_controller,
-                                                         search_engine=search_engine,
-                                                         mail_service=mail_service))
+    # add root to reactor
+
+    # register(signal=proto.SOLEDAD_SYNC_RECEIVE_STATUS,
+    #          callback=update_info_sync_and_index_partial(sync_info_controller=sync_info_controller,
+    #                                                      search_engine=search_engine,
+    #                                                      mail_service=mail_service))
+
+
     register(signal=proto.SOLEDAD_DONE_DATA_SYNC,
              callback=init_index_and_remove_dupes(querier=soledad_querier,
                                                   search_engine=search_engine,
@@ -122,11 +117,9 @@ def init_app(app, leap_home):
     register(signal=proto.SOLEDAD_DONE_DATA_SYNC, uid=CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK,
              callback=look_for_user_key_and_create_if_cant_find(leap_session))
 
-    setup_routes(app, home_controller, mails_controller, tags_controller, features_controller,
-                 sync_info_controller, attachments_controller, contacts_controller)
-
 
 def create_app(app, args):
+    app.resource = RootResource()
     if args.sslkey and args.sslcert:
         listen_with_ssl(app, args)
     else:
@@ -136,7 +129,7 @@ def create_app(app, args):
 
 
 def listen_without_ssl(app, args):
-    reactor.listenTCP(args.port, Site(app.resource()), interface=args.host)
+    reactor.listenTCP(args.port, Site(app.resource), interface=args.host)
 
 
 def _ssl_options(args):
@@ -152,7 +145,7 @@ def _ssl_options(args):
 
 
 def listen_with_ssl(app, args):
-    reactor.listenSSL(args.port, Site(app.resource()), _ssl_options(args), interface=args.host)
+    reactor.listenSSL(args.port, Site(app.resource), _ssl_options(args), interface=args.host)
 
     return reactor
 

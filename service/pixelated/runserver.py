@@ -19,10 +19,6 @@ import logging
 import json
 
 import os
-from klein import Klein
-
-
-klein_app = Klein()
 
 import ConfigParser
 from twisted.python import log
@@ -36,7 +32,14 @@ import pixelated.support.ext_protobuf  # monkey patch for protobuf in OSX
 import pixelated.support.ext_sqlcipher  # monkey patch for sqlcipher in debian
 
 
-app = Klein()
+class App:
+
+    def __init__(self):
+        self.resource = None
+        self.config = None
+        pass
+
+app = App()
 app.config = {}
 
 

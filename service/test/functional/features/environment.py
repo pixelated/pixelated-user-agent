@@ -19,7 +19,7 @@ from test.support.dispatcher.proxy import Proxy
 
 from test.support.integration import AppTestClient
 from selenium import webdriver
-from pixelated.controllers.features_controller import FeaturesController
+from pixelated.resources.features_resource import FeaturesController
 
 
 def before_all(context):

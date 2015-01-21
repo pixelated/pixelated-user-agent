@@ -31,11 +31,3 @@ def respond_json_deferred(entity, request, status_code=200):
 
 
 import json
-
-from home_controller import HomeController
-from mails_controller import MailsController
-from tags_controller import TagsController
-from features_controller import FeaturesController
-from sync_info_controller import SyncInfoController
-from attachments_controller import AttachmentsController
-from contacts_controller import ContactsController
