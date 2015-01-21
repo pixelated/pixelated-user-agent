@@ -86,19 +86,18 @@ setup(name='pixelated-user-agent',
       ],
       test_suite='nose.collector',
       install_requires=[
-           'pyasn1==0.1.7',
-           'gnupg==1.4.0',
-           'Twisted==14.0.2',
-           'klein==0.2.3',
-           'requests==2.5.0',
-           'srp==1.0.5',
-           'dirspec==13.10',
+           'pyasn1==0.1.3',
+           'gnupg==1.2.5',
+           'Twisted==12.0.0',
+           'requests==2.0.0',
+           'srp==1.0.4',
+           'dirspec==4.2.0',
            'u1db==13.09',
            'leap.keymanager==0.3.8',
            'leap.soledad.common==0.6.3',
            'leap.soledad.client==0.6.3',
            'leap.mail==0.3.9-1-gc1f9c92',
-           'whoosh==2.6.0'
+           'whoosh==2.3.2'
       ],
       entry_points={
           'console_scripts': [
