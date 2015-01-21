@@ -14,12 +14,20 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from mock import patch
+from mock import MagicMock
 
 from pixelated.bitmask_libraries.session import LeapSession
 from abstract_leap_test import AbstractLeapTest
 
 
 class SessionTest(AbstractLeapTest):
+
+    def setUp(self):
+        self.mail_fetcher_mock = MagicMock()
+
+    def tearDown(self):
+        self.mail_fetcher_mock = MagicMock()
+
     def test_background_jobs_are_started(self):
         self.config.start_background_jobs = True
 
