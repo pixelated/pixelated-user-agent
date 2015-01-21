@@ -24,7 +24,7 @@ class MailsUnreadResource(Resource):
         for ident in idents:
             mail = self._mail_service.mark_as_unread(ident)
             self._search_engine.index_mail(mail)
-        return ""
+        return respond_json(None, request)
 
 
 class MailsReadResource(Resource):
@@ -42,7 +42,7 @@ class MailsReadResource(Resource):
         for ident in idents:
             mail = self._mail_service.mark_as_read(ident)
             self._search_engine.index_mail(mail)
-        return ""
+        return respond_json(None, request)
 
 
 class MailsDeleteResource(Resource):
@@ -89,11 +89,11 @@ class MailsResource(Resource):
         response = {
             "stats": {
                 "total": total,
-                },
+            },
             "mails": [mail.as_dict() for mail in mails]
         }
 
-        return json.dumps(response)
+        return respond_json(response, request)
 
     def render_POST(self, request):
         try:

@@ -16,16 +16,16 @@
 import unittest
 import json
 
-from mock import MagicMock
-from pixelated.resources import SyncInfoController
+from test.support.test_helper import request_mock
+from pixelated.resources.sync_info_resource import SyncInfoResource
 from mockito import *
 
 
 class SyncInfoControllerTest(unittest.TestCase):
 
     def setUp(self):
-        self.dummy_request = MagicMock()
-        self.controller = SyncInfoController()
+        self.dummy_request = request_mock()
+        self.controller = SyncInfoResource()
 
     def _set_count(self, current, total):
         soledad_sync_data = mock()
@@ -33,7 +33,8 @@ class SyncInfoControllerTest(unittest.TestCase):
         self.controller.set_sync_info(soledad_sync_data)
 
     def get_sync_info(self):
-        return json.loads(self.controller.sync_info(self.dummy_request))
+        self.controller.render_GET(self.dummy_request)
+        return json.loads(self.dummy_request.written[0])
 
     def test_is_not_syncing_if_total_is_equal_to_current(self):
         self._set_count(total=0, current=0)

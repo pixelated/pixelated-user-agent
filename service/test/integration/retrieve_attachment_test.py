@@ -36,6 +36,10 @@ class RetrieveAttachmentTest(SoledadTestBase):
 
         self.client.add_document_to_soledad(attachment_dict)
 
-        attachment = self.get_attachment(ident, 'base64')
+        d = self.get_attachment(ident, 'base64')
 
-        self.assertEquals('pequeno anexo :D\n', attachment)
+        def _assert(attachment):
+            self.assertEquals('pequeno anexo :D\n', attachment)
+        d.addCallback(_assert)
+        
+        return d

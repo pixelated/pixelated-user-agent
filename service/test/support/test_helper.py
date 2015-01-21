@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from datetime import datetime
+import io
 
 from pixelated.adapter.model.mail import InputMail
 
@@ -79,3 +80,23 @@ class TestRequest:
 
     def __init__(self, json):
         self.json = json
+
+
+from twisted.web.test.test_web import DummyRequest
+
+
+class PixRequestMock(DummyRequest):
+    def __init__(self, path):
+        DummyRequest.__init__(self, path)
+        self.content = None
+        self.code = None
+
+
+def request_mock(path='', method='GET', body='', headers={}):
+    dummy = PixRequestMock(path.split('/'))
+    for name, value in headers.iteritems():
+        dummy.setHeader(name, value)
+    dummy.method = method
+    dummy.content = io.BytesIO(body)
+    return dummy
+

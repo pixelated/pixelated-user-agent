@@ -18,8 +18,6 @@ import multiprocessing
 import shutil
 import time
 
-from pixelated.config.routes import setup_routes
-from klein.test_resource import requestMock, _render
 from leap.mail.imap.account import SoledadBackedAccount
 from leap.soledad.client import Soledad
 from mock import MagicMock, Mock
@@ -29,12 +27,15 @@ from pixelated.adapter.services.mail_service import MailService
 from pixelated.adapter.services.mailboxes import Mailboxes
 from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
 from pixelated.adapter.services.tag_service import TagService
-from pixelated.resources import FeaturesController, HomeController, MailsController, TagsController, \
-    SyncInfoController, AttachmentsController, ContactsController
+from pixelated.resources.root_resource import RootResource
 import pixelated.runserver
 from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.search import SearchEngine
 from test.support.integration.model import MailBuilder
+from test.support.test_helper import request_mock
+from twisted.internet.defer import succeed
+from twisted.web import server
+from twisted.web.resource import getChildForRequest
 
 
 class AppTestClient:
@@ -63,32 +64,26 @@ class AppTestClient:
         self.search_engine = SearchEngine(self.soledad_querier)
         self.search_engine.index_mails(self.mail_service.all_mails())
 
-        features_controller = FeaturesController()
-        features_controller.DISABLED_FEATURES.append('autoReload')
-        home_controller = HomeController()
-        mails_controller = MailsController(mail_service=self.mail_service,
-                                           draft_service=self.draft_service,
-                                           search_engine=self.search_engine)
-        tags_controller = TagsController(search_engine=self.search_engine)
-        contacts_controller = ContactsController(search_engine=self.search_engine)
-        sync_info_controller = SyncInfoController()
-        attachments_controller = AttachmentsController(self.soledad_querier)
+        self.app.resource = RootResource()
 
-        setup_routes(self.app, home_controller, mails_controller, tags_controller,
-                     features_controller, sync_info_controller, attachments_controller, contacts_controller)
+        self.app.resource.initialize(self.soledad_querier, self.search_engine, self.mail_service, self.draft_service)
 
     def _render(self, request, as_json=True):
         def get_request_written_data(_=None):
-            written_data = request.getWrittenData()
+            written_data = None
+            if len(request.written):
+                written_data = request.written[0]
             if written_data:
                 return json.loads(written_data) if as_json else written_data
 
-        d = _render(self.app.resource(), request)
+        resource = getChildForRequest(self.app.resource, request)
+
+        result = resource.render(request)
+
         if request.finished:
             return get_request_written_data(), request
         else:
-            d.addCallback(get_request_written_data)
-            return d, request
+            return request.notifyFinish().addCallback(lambda _: request).addCallback(get_request_written_data), request
 
     def run_on_a_thread(self, logfile='/tmp/app_test_client.log', port=4567, host='localhost'):
         worker = lambda: self.app.run(host=host, port=port, logFile=open(logfile, 'w'))
@@ -98,20 +93,20 @@ class AppTestClient:
         return lambda: process.terminate()
 
     def get(self, path, get_args, as_json=True):
-        request = requestMock(path)
+        request = request_mock(path)
         request.args = get_args
         return self._render(request, as_json)
 
     def post(self, path, body=''):
-        request = requestMock(path=path, method="POST", body=body, headers={'Content-Type': ['application/json']})
+        request = request_mock(path=path, method="POST", body=body, headers={'Content-Type': ['application/json']})
         return self._render(request)
 
     def put(self, path, body):
-        request = requestMock(path=path, method="PUT", body=body, headers={'Content-Type': ['application/json']})
+        request = request_mock(path=path, method="PUT", body=body, headers={'Content-Type': ['application/json']})
         return self._render(request)
 
     def delete(self, path, body=""):
-        request = requestMock(path=path, body=body, headers={'Content-Type': ['application/json']}, method="DELETE")
+        request = request_mock(path=path, body=body, headers={'Content-Type': ['application/json']}, method="DELETE")
         return self._render(request)
 
     def add_document_to_soledad(self, _dict):
