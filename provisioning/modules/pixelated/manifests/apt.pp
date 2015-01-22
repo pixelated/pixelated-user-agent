@@ -5,7 +5,7 @@ class pixelated::apt {
   file { '/etc/apt/sources.list.d/pixelated.list':
     content => "deb http://packages.pixelated-project.org/debian wheezy-snapshots main\ndeb http://packages.pixelated-project.org/debian wheezy main\n",
     owner   => 'root',
-    require => Exec[add_pixelated_key],
+    require => Exec['add_pixelated_key'],
     notify  => Exec['apt_get_update'],
   }
 
@@ -25,7 +25,7 @@ class pixelated::apt {
   file { '/etc/apt/sources.list.d/leap.list':
     content => "deb http://deb.leap.se/0.6 wheezy main",
     owner   => 'root',
-    require => Exec[add_pixelated_key],
+    require => Exec['add_leap_key'],
     notify  => Exec['apt_get_update'],
   }
   file { '/tmp/0x1E34A1828E20790_leap_archive_key':

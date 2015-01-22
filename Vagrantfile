@@ -47,6 +47,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
+  config.vm.define "hackday", autostart: false do |hackday|
+    config.vm.box = "hackday-user-agent"
+  end
+
 
   config.vm.network :forwarded_port, guest: 3333, host: 3333
   config.vm.provider "virtualbox" do |v|

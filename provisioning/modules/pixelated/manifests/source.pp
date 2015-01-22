@@ -25,12 +25,21 @@ class pixelated::source {
   }
 
   class install_pixelated {
+    $virtualenv_path = "/home/vagrant/user-agent-venv"
+
     exec { 'install-pixelated':
       environment => 'USERNAME=vagrant',
-      command     => '/bin/bash /vagrant/install-pixelated.sh',
+      command     => "/vagrant/install-pixelated.sh -v \"${virtualenv_path}\"",
       cwd         => '/vagrant',
       user        => 'vagrant',
       timeout     => 0
+    }
+
+    exec { 'add_virtualenv_to_bashrc':
+      command => "/bin/bash -c 'echo \"source ${virtualenv_path} ; cd /vagrant\" >> /home/vagrant/.bashrc'",
+      unless  => "/bin/grep \"source ${virtualenv_path}\" /home/vagrant/.bashrc",
+      user    => 'vagrant',
+      require => Exec['install-pixelated']
     }
   }
 
