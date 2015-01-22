@@ -12,11 +12,11 @@ function setupjs {
 }
 
 function runIntegrationTests {
-        trial $* test.integration
+        trial --reporter=text $* test.integration
 }
 
 function runUnitTests {
-        trial $* test.unit
+        trial --reporter=text $* test.unit
 }
 
 function runPep8 {
