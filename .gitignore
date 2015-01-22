@@ -30,3 +30,4 @@ __pycache__/
 .virtualenv
 # custom config file that can be used with the useragent
 pixelated.cfg
+service/_trial_temp/
