@@ -74,7 +74,7 @@ define(
 
     'use strict';
     function initialize(path) {
-      viewI18n.init(path);
+      viewI18n.init(path + '/assets/');
       paneContractExpand.attachTo(document);
 
       userAlerts.attachTo('#user-alerts');
