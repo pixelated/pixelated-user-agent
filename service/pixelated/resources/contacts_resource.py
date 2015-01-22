@@ -16,6 +16,7 @@
 
 from pixelated.resources import respond_json_deferred
 from twisted.internet.threads import deferToThread
+from twisted.web import server
 from twisted.web.resource import Resource
 
 
@@ -32,4 +33,4 @@ class ContactsResource(Resource):
         d = deferToThread(lambda: self._search_engine.contacts(query))
         d.addCallback(lambda tags: respond_json_deferred(tags, request))
 
-        return d
+        return server.NOT_DONE_YET

@@ -23,7 +23,7 @@ class RootResource(Resource):
 
     def initialize(self, querier, search_engine, mail_service, draft_service):
         self.putChild('assets', File(self._static_folder))
-        self.putChild('attachments', AttachmentsResource(querier))
+        self.putChild('attachment', AttachmentsResource(querier))
         self.putChild('contacts', ContactsResource(search_engine))
         self.putChild('features', FeaturesResource())
         self.putChild('sync_info', SyncInfoResource())

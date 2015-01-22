@@ -19,14 +19,14 @@ from test.support.dispatcher.proxy import Proxy
 
 from test.support.integration import AppTestClient
 from selenium import webdriver
-from pixelated.resources.features_resource import FeaturesController
+from pixelated.resources.features_resource import FeaturesResource
 
 
 def before_all(context):
     logging.disable('INFO')
     client = AppTestClient()
     proxy = Proxy(proxy_port='8889', app_port='4567')
-    FeaturesController.DISABLED_FEATURES.append('autoRefresh')
+    FeaturesResource.DISABLED_FEATURES.append('autoRefresh')
     context.client = client
     context.call_to_terminate_proxy = proxy.run_on_a_thread()
     context.call_to_terminate = client.run_on_a_thread(logfile='/tmp/behave-tests.log')

@@ -19,10 +19,14 @@ import io
 import re
 from twisted.protocols.basic import FileSender
 from twisted.python.log import err
+from twisted.web import server
 from twisted.web.resource import Resource
 
 
 class AttachmentResource(Resource):
+
+    isLeaf = True
+
     def __init__(self, attachment_id, querier):
         Resource.__init__(self)
         self.attachment_id = attachment_id
@@ -44,7 +48,7 @@ class AttachmentResource(Resource):
 
         d.addErrback(err).addCallback(cb_finished)
 
-        return d
+        return server.NOT_DONE_YET
 
     def _extract_mimetype(self, content_type):
         match = re.compile('([A-Za-z-]+\/[A-Za-z-]+)').search(content_type)
@@ -52,8 +56,6 @@ class AttachmentResource(Resource):
 
 
 class AttachmentsResource(Resource):
-
-    isLeaf = True
 
     def __init__(self, querier):
         Resource.__init__(self)

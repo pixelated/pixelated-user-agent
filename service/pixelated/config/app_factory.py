@@ -116,6 +116,7 @@ def create_app(app, args):
         listen_with_ssl(app, args)
     else:
         listen_without_ssl(app, args)
+    reactor.suggestThreadPoolSize(20)
     reactor.callWhenRunning(lambda: init_app(app, args.home))
     reactor.run()
 

@@ -91,6 +91,10 @@ class PixRequestMock(DummyRequest):
         self.content = None
         self.code = None
 
+    def getWrittenData(self):
+        if len(self.written):
+            return self.written[0]
+
 
 def request_mock(path='', method='GET', body='', headers={}):
     dummy = PixRequestMock(path.split('/'))

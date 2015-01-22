@@ -21,7 +21,7 @@ from pixelated.resources.sync_info_resource import SyncInfoResource
 from mockito import *
 
 
-class SyncInfoControllerTest(unittest.TestCase):
+class SyncInfoResourceTest(unittest.TestCase):
 
     def setUp(self):
         self.dummy_request = request_mock()
@@ -33,8 +33,7 @@ class SyncInfoControllerTest(unittest.TestCase):
         self.controller.set_sync_info(soledad_sync_data)
 
     def get_sync_info(self):
-        self.controller.render_GET(self.dummy_request)
-        return json.loads(self.dummy_request.written[0])
+        return json.loads(self.controller.render_GET(self.dummy_request))
 
     def test_is_not_syncing_if_total_is_equal_to_current(self):
         self._set_count(total=0, current=0)
