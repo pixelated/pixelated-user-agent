@@ -24,6 +24,22 @@ then
   export USERNAME=`whoami`
 fi
 
+usage() { echo "Usage: $0 [-v <virtualenv path>]" 1>&2; exit 1; }
+
+VIRTUALENV_PATH=".virtualenv"
+
+while getopts "v:" OPT; do
+    case "${OPT}" in
+        v)
+            VIRTUALENV_PATH=${OPTARG}
+            ;;
+        *)
+            usage
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
 function check_installed() {
         which $1
         if [ $? -ne 0 ]; then
@@ -46,9 +62,9 @@ LC_ALL=en_US.UTF-8 ./go build
 
 # install service dependencies
 cd ../service
-rm -rf .virtualenv
-virtualenv .virtualenv
-source .virtualenv/bin/activate
+rm -rf "$VIRTUALENV_PATH"
+virtualenv "$VIRTUALENV_PATH"
+source "$VIRTUALENV_PATH/bin/activate"
 ./go setup --always-unzip
 pip uninstall -y enum34
 pip install enum34
