@@ -33,13 +33,11 @@ from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.search import SearchEngine
 from test.support.integration.model import MailBuilder
 from test.support.test_helper import request_mock
-from twisted.internet.defer import succeed
-from twisted.web import server
 from twisted.web.resource import getChildForRequest
 
 
 class AppTestClient:
-    def __init__(self, soledad_test_folder='soledad-test/test'):
+    def __init__(self, soledad_test_folder='/tmp/soledad-test/test'):
 
         self.soledad = initialize_soledad(tempdir=soledad_test_folder)
         self.mail_address = "test@pixelated.org"

@@ -17,7 +17,7 @@ import sys
 
 import os
 from mock import MagicMock, patch
-from abstract_leap_test import AbstractLeapTest
+from test_abstract_leap import AbstractLeapTest
 from pixelated.bitmask_libraries.smtp import LeapSmtp
 from httmock import all_requests, HTTMock, urlmatch
 

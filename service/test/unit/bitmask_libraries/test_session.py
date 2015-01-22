@@ -17,7 +17,7 @@ from mock import patch
 from mock import MagicMock
 
 from pixelated.bitmask_libraries.session import LeapSession
-from abstract_leap_test import AbstractLeapTest
+from test_abstract_leap import AbstractLeapTest
 
 
 class SessionTest(AbstractLeapTest):

@@ -12,11 +12,11 @@ function setupjs {
 }
 
 function runIntegrationTests {
-        nosetests "$*" -w test/integration
+        trial $* test.integration
 }
 
 function runUnitTests {
-        nosetests "$*" -w test/unit
+        trial $* test.unit
 }
 
 function runPep8 {

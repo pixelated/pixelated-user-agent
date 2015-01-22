@@ -17,7 +17,7 @@ from mock import patch
 
 from leap.keymanager import openpgp, KeyNotFound
 from pixelated.bitmask_libraries.nicknym import NickNym
-from abstract_leap_test import AbstractLeapTest
+from test_abstract_leap import AbstractLeapTest
 
 
 class NickNymTest(AbstractLeapTest):

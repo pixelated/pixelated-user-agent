@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from mock import patch
 from pixelated.bitmask_libraries.soledad import SoledadSession
-from abstract_leap_test import AbstractLeapTest
+from test_abstract_leap import AbstractLeapTest
 
 
 @patch('pixelated.bitmask_libraries.soledad.Soledad')
