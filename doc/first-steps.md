@@ -157,7 +157,7 @@ Change the color value to something else. Then run the ./go build command again 
 
 ## Next steps
 
-The pixelated user agent is based on the reactive (flightjs)[https://github.com/flightjs] framework and uses events as the primary way of control flow.
+The pixelated user agent is based on the reactive [FlightJS] (https://github.com/flightjs) framework and uses events as the primary way of control flow.
 
 ## The life of mail.
 
