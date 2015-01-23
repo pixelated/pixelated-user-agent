@@ -47,7 +47,7 @@ Now you can open the user agent in a browser: [http://localhost:3333/](http://lo
 
 ## Write your first mail
 
-Write a test mail to bob@try.pixelated-project.org. You can find bob credentials here: [https://try.pixelated-project.org:8080/](https://try.pixelated-project.org:8080/)
+Write a test mail to bob@try.pixelated-project.org. You can find bobs credentials here: [https://try.pixelated-project.org:8080/](https://try.pixelated-project.org:8080/)
 
 After that take some minutes to familiarize yourself with the user interface.
 
@@ -60,8 +60,8 @@ Start your favorite text editor and open pixelated-user-agent/web-ui/app/js/mail
 ```javascript
   this.render = function () {
       this.attr.tagsForListView = _.without(this.attr.tags, this.attr.tag);
-      var mailItemHtml = templates.mails[this.attr.templateType](this.attr);
-      this.$node.html(mailItemHtml);
+      var mailItemHtml = templates.mails[this.attr.templateType](this.attr); // <-- here
+      this.$node.html(mailItemHtml);                                         // <-- and here
       this.$node.addClass(this.attr.statuses);
       if(this.attr.selected) { this.doSelect(); }
       this.on(this.$node.find('a'), 'click', this.triggerOpenMail);
@@ -73,7 +73,9 @@ Set the mailItemHtml to a fixed string like "found the subject location". The re
 ```javascript
   this.render = function () {
       this.attr.tagsForListView = _.without(this.attr.tags, this.attr.tag);
+      // start of our change
       var mailItemHtml = "<span>found the subject location</span>";
+      // end of our change
       this.$node.html(mailItemHtml);
       this.$node.addClass(this.attr.statuses);
       if(this.attr.selected) { this.doSelect(); }
@@ -84,8 +86,72 @@ Set the mailItemHtml to a fixed string like "found the subject location". The re
 Go back to your browser and refresh the page. You should immediatly see that your change is active.
 
 Now that's nice. Congratulations. But what we really want is to change the way the subjects are displayed on every mail in the list, not to substitute the entire thing by a string.
+The template line we removed seems to produce some more html. But where to find it? As it says **template** perhaps the file **views/templates.js** might be start.
+The code snipped mentions templates.mails and in the mails declaration we see references to four files. The single.hbs is the one we are looking for, so let's open it.
 
+```html
+<span>
+    <input type="checkbox" {{#if isChecked }}checked="true"{{/if}} />
+</span>
+<span>
+    <a href="/#/{{ tag }}/mail/{{ ident }}">
+        <span class="received-date">{{ header.formattedDate }}
+          {{#if attachments}}
+            <div class="attachment-indicator">
+              <i class="fa fa-paperclip"></i>
+            </div>
+          {{/if}}
+        </span>
+        <div class="from">{{#if header.from }}{{ header.from }}{{else}}{{t "you"}}{{/if}}</div>
+        <div class="subject-and-tags">
+          {{ header.subject }}
+        </div>
+        <div class="subject-and-tags">
+          <ul class="tags">
+            {{#each tagsForListView }}
+                <li class="tag" data-tag="{{this}}">{{ this }}</li>
+            {{/each }}
+          </ul>
+        </div>
+    </a>
+</span>
+```
 
+Lets undo the changes in mail_item.js and instead add a span around the header.subject and set the class to 'search-highlight'. It should look like this:
 
- 
+```
+...
+        <div class="subject-and-tags">
+          <span class='search-highlight'>{{ header.subject }}</span>
+        </div>
+...
+```
+
+Uuuups - nothing happened?? Well that is because we have to build the resources (that includes .hbs files) in order to make them available. To do so open another shell and go to the pixelated-user-agent folder and call: 
+
+```shell
+vagrant ssh hackday
+
+cd web-ui
+./go build
+```
+
+Now refresh your browser again to see the changes in effect.
+
+Finally we would like to change the color of the highlighting. The pixleated user agent uses [SASS](http://sass-lang.com/) to make handling styles a little bit easier.
+You can find the style sheets in web-ui/app/scss/. The search-hightlight is defined in styles.scss:
+
+```scss
+.search-highlight {
+  background-color: $search-highlight;
+}
+```
+
+It references a color variable defined in \_colors.scss 
+
+```scss
+ $search-highlight: #FFEF29;
+```
+
+Change the color value to something else. Then run the ./go build command again and refresh the page. 
 
