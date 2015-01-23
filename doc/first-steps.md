@@ -47,7 +47,7 @@ Now you can open the user agent in a browser: [http://localhost:3333/](http://lo
 
 ## Write your first mail
 
-Write a test mail to bob@try.pixelated-project.org. You can find bobs credentials here: [https://try.pixelated-project.org:8080/](https://try.pixelated-project.org:8080/)
+Write a test mail to bob@try.pixelated-project.org. You can find bob's credentials here: [https://try.pixelated-project.org:8080/](https://try.pixelated-project.org:8080/)
 
 After that take some minutes to familiarize yourself with the user interface.
 
