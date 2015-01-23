@@ -31,7 +31,7 @@ rm "$USER_AGENT_DIR/$PACKAGE_FILE"
 
 # build from scratch
 vagrant up source && \
-vagrant package --output "$USER_AGENT_DIR/$PACKAGE_FILE" && \
+vagrant package --output="$USER_AGENT_DIR/$PACKAGE_FILE" && \
 vagrant box add $BOX_NAME $PACKAGE_FILE
 
 SUCCESS=$?
