@@ -69,9 +69,11 @@ def init_leap_session(app, leap_home):
                                         leap_home=leap_home)
     except ConnectionError, error:
         print("Can't connect to the requested provider", error)
+        reactor.stop()
         sys.exit(1)
     except LeapAuthException, e:
         print("Couldn't authenticate with the credentials provided %s" % e.message)
+        reactor.stop()
         sys.exit(1)
     return leap_session
 
