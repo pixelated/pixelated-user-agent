@@ -36,7 +36,7 @@ class pixelated::source {
     }
 
     exec { 'add_virtualenv_to_bashrc':
-      command => "/bin/bash -c 'echo \"source ${virtualenv_path} ; cd /vagrant\" >> /home/vagrant/.bashrc'",
+      command => "/bin/bash -c 'echo \"source ${virtualenv_path}/bin/activate ; cd /vagrant\" >> /home/vagrant/.bashrc'",
       unless  => "/bin/grep \"source ${virtualenv_path}\" /home/vagrant/.bashrc",
       user    => 'vagrant',
       require => Exec['install-pixelated']
