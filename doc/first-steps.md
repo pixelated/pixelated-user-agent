@@ -155,3 +155,18 @@ It references a color variable defined in \_colors.scss
 
 Change the color value to something else. Then run the ./go build command again and refresh the page. 
 
+## Next steps
+
+The pixelated user agent is based on the reactive (flightjs)[https://github.com/flightjs] framework and uses events as the primary way of control flow.
+
+## The life of mail.
+
+How does that list of mails get populated? We only had look onto the JavaScript side of things, there is also the Python side for the service. When we say service we mean a python application that delivers not only the resources for the web application but also provides a REST api to access and send mails.
+
+To give you a brief overview lets follow an email through the service.
+
+* Some javascript calls the MailsResource in service/pixelated/resources/mails_resource.py 
+* The render_GET method asks the search engine for a list of matching mail ids. These mails are then request from the mail service.
+* The mail service asks the soledad querier.
+* The soledad querier fetches the mails from the soledad backend
+
