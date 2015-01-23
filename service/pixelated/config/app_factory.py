@@ -84,6 +84,13 @@ def look_for_user_key_and_create_if_cant_find(leap_session):
     return wrapper
 
 
+def stop_incoming_mail_fetcher(reactor_stop_function, leap_session):
+    def wrapper():
+        leap_session.stop_background_jobs()
+        reactor_stop_function()
+    return wrapper
+
+
 def init_app(app, leap_home):
     leap_session = init_leap_session(app, leap_home)
     soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
@@ -108,6 +115,8 @@ def init_app(app, leap_home):
 
     register(signal=proto.SOLEDAD_DONE_DATA_SYNC, uid=CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK,
              callback=look_for_user_key_and_create_if_cant_find(leap_session))
+
+    reactor.stop = stop_incoming_mail_fetcher(reactor.stop, leap_session)
 
 
 def create_app(app, args):
