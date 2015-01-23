@@ -29,6 +29,7 @@ def parse():
     parser.add_argument('-c', '--config', metavar='<configfile>', default=None, help='use specified file for credentials (for test purposes only)')
     parser.add_argument('-sk', '--sslkey', metavar='<server.key>', default=None, help='use specified file for SSL key')
     parser.add_argument('-sc', '--sslcert', metavar='<server.pem>', default=None, help='use specified file for SSL certificate')
+    parser.add_argument('-lc', '--leap-cert', metavar='<leap.ca.crt>', default=None, help='use specified file for LEAP certificate')
     parser.add_argument('--register', metavar=('provider', 'username'),
                         nargs=2, help='register a new username on the desired provider')
     args = parser.parse_args()

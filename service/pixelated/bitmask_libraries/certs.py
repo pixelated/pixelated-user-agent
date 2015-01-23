@@ -19,8 +19,12 @@ from leap.common import ca_bundle
 
 from .config import AUTO_DETECT_CA_BUNDLE
 
+LEAP_CERT = None
+
 
 def which_bundle(provider):
+    if LEAP_CERT:
+        return LEAP_CERT
     return str(LeapCertificate(provider).auto_detect_ca_bundle())
 
 

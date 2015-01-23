@@ -43,8 +43,14 @@ app = App()
 app.config = {}
 
 
+def setup_leap_cert(leap_cert):
+    import pixelated.bitmask_libraries.certs as certs
+    certs.LEAP_CERT = leap_cert
+
+
 def setup():
     args = input_args.parse()
+    setup_leap_cert(args.leap_cert)
     setup_debugger(args.debug)
 
     if args.register:
