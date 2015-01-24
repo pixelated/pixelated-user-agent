@@ -157,7 +157,9 @@ define(
 
         if (event.which === ENTER_KEY){
           event.preventDefault();
-          this.createNewTag();
+          if (this.select('newTagInput').val() !== '') {
+            this.createNewTag();
+          }
         } else if (event.which === ESC_KEY) {
           event.preventDefault();
           this.addTagLoseFocus();

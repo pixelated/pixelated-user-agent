@@ -166,20 +166,34 @@ describeComponent('mail_view/ui/mail_view', function () {
 
   it('creates new tag when pressing Enter key on new tag input', function(){
     var tagsUpdateEvent = spyOnEvent(document, Pixelated.events.mail.tags.update);
-    var tagListRefreshEvent = spyOnEvent(document, Pixelated.events.dispatchers.tags.refreshTagList);
-    var e = creatingEvent('keydown', 13);
 
     this.component.displayMail({}, testData);
     this.component.select('newTagButton').click();
 
     var newTagInputComponent = this.component.select('newTagInput');
     newTagInputComponent.val('Test');
+
+    var e = creatingEvent('keydown', 13); //ENTER KEY EVENT
     newTagInputComponent.trigger(e);
 
     var tags = testData.mail.tags.slice();
     tags.push('Test');
-
     expect(tagsUpdateEvent).toHaveBeenTriggeredOnAndWith(document, { ident: testData.mail.ident, tags: tags});
+  });
+
+  it('creates new tag when pressing Enter key on new tag input', function(){
+    var tagsUpdateEvent = spyOnEvent(document, Pixelated.events.mail.tags.update);
+
+    this.component.displayMail({}, testData);
+    this.component.select('newTagButton').click();
+
+    var newTagInputComponent = this.component.select('newTagInput');
+    newTagInputComponent.val('');
+
+    var e = creatingEvent('keydown', 13); //ENTER KEY EVENT
+    newTagInputComponent.trigger(e);
+
+    expect(tagsUpdateEvent).not.toHaveBeenTriggeredOnAndWith(document);
   });
 
   it('trigger mail delete event when moving email to trash', function(){

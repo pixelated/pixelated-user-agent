@@ -42,6 +42,16 @@ class TagsTest(SoledadTestBase):
         mails = self.get_mails_by_tag('important')
         self.assertEquals('Mail with tags', mails[0].subject)
 
+    def test_empty_tags_are_not_allowed(self):
+        mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
+        self.client.add_mail_to_inbox(mail)
+
+        self.post_tags(mail.ident, self._tags_json(['tag1', '']))
+
+        mail = self.get_mail(mail.ident)
+
+        self.assertEquals(mail['tags'], ['tag1'])
+
     def test_addition_of_reserved_tags_is_not_allowed(self):
         mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
         self.client.add_mail_to_inbox(mail)

@@ -25,12 +25,6 @@ class SoledadTestBase(unittest.TestCase):
     DEFERRED_TIMEOUT = 120
     DEFERRED_TIMEOUT_LONG = 300
 
-    @classmethod
-    def setUpClass(cls):
-        from nose.twistedtools import threaded_reactor
-
-        threaded_reactor()
-
     def setUp(self):
         self.client = AppTestClient()
 
@@ -64,6 +58,10 @@ class SoledadTestBase(unittest.TestCase):
 
     def get_tags(self, **kwargs):
         res, req = self.client.get('/tags', kwargs)
+        return res
+
+    def get_mail(self, mail_ident):
+        res, req = self.client.get('/mail/%s' % mail_ident)
         return res
 
     def delete_mail(self, mail_ident):
