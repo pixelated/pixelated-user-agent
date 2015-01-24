@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from nose.twistedtools import deferred
 from test.support.integration import *
 
 
@@ -23,7 +22,6 @@ class SearchTest(SoledadTestBase):
     def setUp(self):
         SoledadTestBase.setUp(self)
 
-    @deferred(timeout=SoledadTestBase.DEFERRED_TIMEOUT)
     def test_that_tags_returns_all_tags(self):
         input_mail = MailBuilder().with_tags(['important']).build_input_mail()
         self.client.add_mail_to_inbox(input_mail)
@@ -40,7 +38,6 @@ class SearchTest(SoledadTestBase):
         d.addCallback(_assert)
         return d
 
-    @deferred(timeout=SoledadTestBase.DEFERRED_TIMEOUT)
     def test_that_tags_are_filtered_by_query(self):
         input_mail = MailBuilder().with_tags(['ateu', 'catoa', 'luat', 'zuado']).build_input_mail()
         self.client.add_mail_to_inbox(input_mail)
@@ -57,7 +54,6 @@ class SearchTest(SoledadTestBase):
         d.addCallback(_assert)
         return d
 
-    @deferred(timeout=SoledadTestBase.DEFERRED_TIMEOUT)
     def test_that_default_tags_are_ignorable(self):
         input_mail = MailBuilder().with_tags(['sometag']).build_input_mail()
         self.client.add_mail_to_inbox(input_mail)
@@ -71,7 +67,6 @@ class SearchTest(SoledadTestBase):
         d.addCallback(_assert)
         return d
 
-    @deferred(timeout=SoledadTestBase.DEFERRED_TIMEOUT_LONG)
     def test_tags_count(self):
         self.client.add_multiple_to_mailbox(num=10, mailbox='inbox', flags=['\\Recent'])
         self.client.add_multiple_to_mailbox(num=5, mailbox='inbox', flags=['\\Seen'])
