@@ -76,7 +76,7 @@ class Mail(object):
 
     def _charset(self):
         if 'content_type' in self.headers and 'charset' in self.headers['content_type']:
-            return self._parse_charset_heade(self.headers['content_type'])
+            return self._parse_charset_header(self.headers['content_type'])
         else:
             return 'utf-8'
 
