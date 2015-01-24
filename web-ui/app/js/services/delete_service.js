@@ -47,6 +47,7 @@ define(['flight/lib/component', 'page/events', 'views/i18n'], function (defineCo
         mails: emails,
         successMessage: this.successDeleteManyMessageFor(firstEmail)
       });
+
     };
 
     this.after('initialize', function () {

@@ -34,6 +34,10 @@ define(
       return viewHelper.getFormattedDate(new Date(date));
     };
 
+    this.isOpeningOnANewTab = function (ev) {
+      return ev.metaKey || ev.ctrlKey || ev.which === 2;
+    };
+
     this.doSelect = function () {
       this.$node.addClass('selected');
     };

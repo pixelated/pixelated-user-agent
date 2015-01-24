@@ -33,12 +33,8 @@ define(
         READ: 'read'
       };
 
-      function isOpeningOnANewTab(ev) {
-        return ev.metaKey || ev.ctrlKey || ev.which === 2;
-      }
-
       this.triggerOpenMail = function (ev) {
-        if (isOpeningOnANewTab(ev)) {
+        if (this.isOpeningOnANewTab(ev)) {
           updateMailStatusToRead.call(this);
           return;
         }
