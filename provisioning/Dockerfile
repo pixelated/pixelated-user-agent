@@ -39,7 +39,7 @@ RUN apt-get update -y --force-yes
 RUN apt-get install python-pip python-all-dev libssl-dev
 RUN pip install taskthread
 
-RUN apt-get install -y --force-yes --allow-unauthenticated soledad-client=0.6.1~509f76c soledad-common=0.6.1~509f76c
+RUN apt-get install -y --force-yes --allow-unauthenticated soledad-client soledad-common
 # Install Pixelated User Agent
 RUN apt-get install -y --force-yes pixelated-user-agent
 
