@@ -30,6 +30,6 @@ def register_new_user(username, server_name):
     provider = LeapProvider(server_name, config)
     password = getpass.getpass('Please enter password for %s: ' % username)
     LeapAuthenticator(provider).register(LeapCredentials(username, password))
-    session = LeapSession.open(username, password, server_name)
 
+    session = LeapSession.open(username, password, server_name)
     session.nicknym.generate_openpgp_key()

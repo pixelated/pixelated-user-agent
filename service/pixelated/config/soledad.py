@@ -14,8 +14,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from config import initialize
+from pixelated.bitmask_libraries.session import open as open_leap_session
 
 
-if __name__ == '__main__':
-    initialize()
+def init_soledad_and_user_key(app):
+    leap_session = open_leap_session(app['LEAP_USERNAME'],
+                                     app['LEAP_PASSWORD'],
+                                     app['LEAP_SERVER_NAME'])
+    soledad = leap_session.soledad_session.soledad
+    soledad.sync(defer_decryption=False)
+    leap_session.nicknym.generate_openpgp_key()
+    return leap_session

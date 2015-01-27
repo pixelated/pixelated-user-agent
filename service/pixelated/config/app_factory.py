@@ -89,12 +89,14 @@ def look_for_user_key_and_create_if_cant_find(leap_session):
 def stop_incoming_mail_fetcher(reactor_stop_function, leap_session):
     def wrapper():
         leap_session.stop_background_jobs()
+        reactor.threadpool.stop()
         reactor_stop_function()
     return wrapper
 
 
-def init_app(app, leap_home):
-    leap_session = init_leap_session(app, leap_home)
+def init_app(app, leap_home, leap_session):
+    leap_session.start_background_jobs()
+
     soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
 
     tag_service = TagService()
@@ -118,18 +120,17 @@ def init_app(app, leap_home):
     register(signal=proto.SOLEDAD_DONE_DATA_SYNC, uid=CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK,
              callback=look_for_user_key_and_create_if_cant_find(leap_session))
 
+    reactor.threadpool.adjustPoolsize(20, 40)
     reactor.stop = stop_incoming_mail_fetcher(reactor.stop, leap_session)
 
 
-def create_app(app, args):
+def create_app(app, args, leap_session):
     app.resource = RootResource()
+    init_app(app, args.home, leap_session)
     if args.sslkey and args.sslcert:
         listen_with_ssl(app, args)
     else:
         listen_without_ssl(app, args)
-    reactor.suggestThreadPoolSize(20)
-    reactor.callWhenRunning(lambda: init_app(app, args.home))
-    reactor.run()
 
 
 def listen_without_ssl(app, args):
@@ -150,8 +151,6 @@ def _ssl_options(args):
 
 def listen_with_ssl(app, args):
     reactor.listenSSL(args.port, Site(app.resource), _ssl_options(args), interface=args.host)
-
-    return reactor
 
 
 class RedirectToSSL(resource.Resource):

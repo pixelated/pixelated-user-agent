@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from config import initialize
+import pixelated.bitmask_libraries.certs as certs
 
 
-if __name__ == '__main__':
-    initialize()
+def init_leap_cert(args):
+    certs.LEAP_CERT = args.leap_cert

@@ -14,8 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from config import initialize
 
+class App:
 
-if __name__ == '__main__':
-    initialize()
+    def __getitem__(self, item):
+        return self.config[item]
+
+    def __init__(self):
+        self.resource = None
+        self.config = {}

@@ -27,6 +27,7 @@ from pixelated.adapter.services.mail_service import MailService
 from pixelated.adapter.services.mailboxes import Mailboxes
 from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
 from pixelated.adapter.services.tag_service import TagService
+from pixelated.config import App
 from pixelated.resources.root_resource import RootResource
 import pixelated.runserver
 from pixelated.adapter.model.mail import PixelatedMail
@@ -53,7 +54,7 @@ class AppTestClient:
 
         SearchEngine.DEFAULT_INDEX_HOME = soledad_test_folder
 
-        self.app = pixelated.runserver.app
+        self.app = App()
 
         self.soledad_querier = SoledadQuerier(self.soledad)
         self.soledad_querier.get_index_masterkey = lambda: self.INDEX_KEY

@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from config import initialize
+from leap.common.events import server as events_server
 
 
-if __name__ == '__main__':
-    initialize()
+def init_events_server():
+    events_server.ensure_server(port=8090)

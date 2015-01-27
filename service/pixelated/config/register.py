@@ -14,8 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from config import initialize
+from pixelated.bitmask_libraries.leap_srp import LeapAuthException
+from pixelated.bitmask_libraries.register import register_new_user
 
 
-if __name__ == '__main__':
-    initialize()
+def register(username, server_name):
+    try:
+        register_new_user(username, server_name)
+    except LeapAuthException:
+        print('User already exists')

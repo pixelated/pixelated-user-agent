@@ -101,7 +101,7 @@ setup(name='pixelated-user-agent',
       ],
       entry_points={
           'console_scripts': [
-              'pixelated-user-agent = pixelated.runserver:setup'
+              'pixelated-user-agent = pixelated.config:initialize'
           ]
       },
       data_files=data_files(),
