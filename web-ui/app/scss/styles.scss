@@ -255,7 +255,7 @@ section {
     nav {
       padding-bottom: 25px;
       border-right: 1px solid lighten($secondary, 10%);
-      ul#default-tag-list, #custom-tag-list {
+      ul#default-tag-list, #custom-tag-list, #logout {
         li {
           transition: background-color 150ms ease-out;
           padding: 2px 10px;
@@ -319,6 +319,25 @@ section {
         }
       }
 
+       ul#logout {
+         a {
+          color: #000000;
+        }
+        li {
+          color: #000000;
+          background-color: #2ba6cb;
+          padding: 5px 10px;
+          position: relative;
+          @include searching(4px, 19px, #333, 0.7em);
+
+          &:before {
+            font-family: "FontAwesome";
+            margin-right: 10px;
+            font-weight: normal;
+          }
+        }
+      }
+
       h3 {
         color: white;
         text-transform: uppercase;
@@ -327,8 +346,8 @@ section {
         font-weight: 600;
         margin: 0 10px;
         border-bottom: 1px dotted lighten($secondary, 10%);
+        }
       }
-    }
   }
 
   &#middle-pane {
@@ -470,7 +489,11 @@ button {
     top: 0;
     z-index: 10000;
     position: relative;
+    &.logout {
+      color: #2ba6cb;
+    }
   }
+
   ul.shortcuts {
     li {
       position: relative;
@@ -482,8 +505,8 @@ button {
         cursor: default;
         a {
           color: $secondary;
+          }
         }
-      }
       @include searching(6px, 26px, #666, 0.9em);
       a {
         display: block;
@@ -496,6 +519,10 @@ button {
           background: darken($contrast, 10%);
           color: $secondary;
           @include btn-transition;
+          &.logout{
+            color: #000000;
+            background: #2ba6cb;
+          }
         }
         &[title]:hover:after {
           content: attr(title);
