@@ -46,7 +46,7 @@ class TagsTest(SoledadTestBase):
         mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
         self.client.add_mail_to_inbox(mail)
 
-        self.post_tags(mail.ident, self._tags_json(['tag1', '']))
+        self.post_tags(mail.ident, self._tags_json(['tag1', '   ']))
 
         mail = self.get_mail(mail.ident)
 

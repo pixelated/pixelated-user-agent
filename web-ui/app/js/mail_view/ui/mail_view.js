@@ -157,7 +157,7 @@ define(
 
         if (event.which === ENTER_KEY){
           event.preventDefault();
-          if (this.select('newTagInput').val() !== '') {
+          if (this.select('newTagInput').val().trim() !== '') {
             this.createNewTag();
           }
         } else if (event.which === ESC_KEY) {

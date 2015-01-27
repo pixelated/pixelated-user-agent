@@ -15,7 +15,7 @@ class MailTags(Resource):
 
     def render_POST(self, request):
         content_dict = json.loads(request.content.read())
-        new_tags = [x.lower() for x in content_dict['newtags'] if x != '']
+        new_tags = [x.lower() for x in map(lambda e: e.strip(), content_dict['newtags']) if x != '']
         try:
             self._mail_service.update_tags(self._mail_id, new_tags)
             mail = self._mail_service.mail(self._mail_id)

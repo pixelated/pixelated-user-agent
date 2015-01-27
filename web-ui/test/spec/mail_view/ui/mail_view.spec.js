@@ -188,7 +188,7 @@ describeComponent('mail_view/ui/mail_view', function () {
     this.component.select('newTagButton').click();
 
     var newTagInputComponent = this.component.select('newTagInput');
-    newTagInputComponent.val('');
+    newTagInputComponent.val('    ');
 
     var e = creatingEvent('keydown', 13); //ENTER KEY EVENT
     newTagInputComponent.trigger(e);
