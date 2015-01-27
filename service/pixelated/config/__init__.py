@@ -31,6 +31,10 @@ from pixelated.config.soledad import init_soledad_and_user_key
 from twisted.internet import reactor
 from twisted.internet.threads import deferToThread
 
+# monkey patching some specifics
+import pixelated.support.ext_protobuf
+import pixelated.support.ext_sqlcipher
+
 
 def initialize():
     args = parse_args()
