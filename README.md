@@ -50,7 +50,7 @@ Dependencies are: node, npm, compass (ruby), virtualenv, git
 
 * Enter the folder `pixelated-user-agent`
 
-* Run the setup `./install_pixelated.sh`
+* Run the setup `./install-pixelated.sh`
 
 * After it finishes, you can activate the virtualenv with `source service/.virtualenv/bin/activate`
 
