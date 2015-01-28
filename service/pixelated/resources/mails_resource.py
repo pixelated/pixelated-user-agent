@@ -110,7 +110,7 @@ class MailsResource(Resource):
                 respond_json_deferred(mail.as_dict(), request)
 
             def onError(error):
-                return respond_json_deferred({'message': _format_exception(error)}, request, status_code=422)
+                respond_json_deferred({'message': _format_exception(error)}, request, status_code=422)
 
             sendDeferred.addCallback(onSuccess)
             sendDeferred.addErrback(onError)
