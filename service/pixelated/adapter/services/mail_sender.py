@@ -35,4 +35,6 @@ class MailSender():
             file=StringIO(mail.to_smtp_format()),
             deferred=resultDeferred)
 
-        return reactor.connectTCP('localhost', 4650, senderFactory)
+        reactor.connectTCP('localhost', 4650, senderFactory)
+
+        return resultDeferred

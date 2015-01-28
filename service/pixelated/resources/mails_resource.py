@@ -1,6 +1,7 @@
 import json
 from pixelated.adapter.model.mail import InputMail
-from pixelated.resources import respond_json
+from pixelated.resources import respond_json, respond_json_deferred
+from twisted.web import server
 from twisted.web.resource import Resource
 
 
@@ -102,10 +103,19 @@ class MailsResource(Resource):
             draft_id = content_dict.get('ident')
             if draft_id:
                 self._search_engine.remove_from_index(draft_id)
-            _mail = self._mail_service.send(draft_id, _mail)
-            self._search_engine.index_mail(_mail)
+            sendDeferred = self._mail_service.send(draft_id, _mail)
 
-            return respond_json(_mail.as_dict(), request)
+            def onSuccess(mail):
+                self._search_engine.index_mail(mail)
+                respond_json_deferred(mail.as_dict(), request)
+
+            def onError(error):
+                return respond_json_deferred({'message': _format_exception(error)}, request, status_code=422)
+
+            sendDeferred.addCallback(onSuccess)
+            sendDeferred.addErrback(onError)
+
+            return server.NOT_DONE_YET
         except Exception as error:
             return respond_json({'message': _format_exception(error)}, request, status_code=422)
 

@@ -45,10 +45,14 @@ class MailService:
         return not(not(self.querier.get_header_by_chash(mail_id)))
 
     def send(self, last_draft_ident, mail):
-        self.mail_sender.sendmail(mail)
-        if last_draft_ident:
-            self.mailboxes.drafts().remove(last_draft_ident)
-        return self.mailboxes.sent().add(mail)
+        result = self.mail_sender.sendmail(mail)
+
+        def success(_):
+            if last_draft_ident:
+                self.mailboxes.drafts().remove(last_draft_ident)
+            return self.mailboxes.sent().add(mail)
+        result.addCallback(success)
+        return result
 
     def mark_as_read(self, mail_id):
         return self.mail(mail_id).mark_as_read()
