@@ -80,6 +80,7 @@ setup(name='pixelated-user-agent',
           'pixelated.adapter.soledad',
           'pixelated.bitmask_libraries',
           'pixelated.config',
+          'pixelated.assets',
           'pixelated.certificates',
           'pixelated.support',
           'pixelated.resources'
