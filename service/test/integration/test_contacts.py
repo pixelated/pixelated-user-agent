@@ -34,6 +34,17 @@ class ContactsTest(SoledadTestBase):
         d.addCallback(_assert)
         return d
 
+    def test_FROM_address_is_being_searched(self):
+        input_mail = MailBuilder().with_tags(['important']).build_input_mail()
+        self.client.add_mail_to_inbox(input_mail)
+
+        d = self.get_contacts(query='Sender')
+
+        def _assert(contacts):
+            self.assertIn('Formatted Sender <sender@from.com>', contacts)
+        d.addCallback(_assert)
+        return d
+
     def test_trash_and_drafts_mailboxes_are_being_ignored(self):
         self.client.add_multiple_to_mailbox(1, mailbox='INBOX', to='recipient@inbox.com')
         self.client.add_multiple_to_mailbox(1, mailbox='DRAFTS', to='recipient@drafts.com')

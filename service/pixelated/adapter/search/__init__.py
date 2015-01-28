@@ -202,6 +202,7 @@ class SearchEngine(object):
             to = QueryParser('to', self._index.schema)
             cc = QueryParser('cc', self._index.schema)
             bcc = QueryParser('bcc', self._index.schema)
+            sender = QueryParser('sender', self._index.schema)
             with self._index.searcher() as searcher:
                 to = searcher.search(to.parse("*%s*" % query), limit=None, mask=restrict_q,
                                      groupedby=sorting.FieldFacet('to', allow_overlap=True)).groups()
@@ -209,6 +210,8 @@ class SearchEngine(object):
                                      groupedby=sorting.FieldFacet('cc', allow_overlap=True)).groups()
                 bcc = searcher.search(bcc.parse("*%s*" % query), limit=None, mask=restrict_q,
                                       groupedby=sorting.FieldFacet('bcc', allow_overlap=True)).groups()
-                return flatten([to, cc, bcc])
+                sender = searcher.search(sender.parse("*%s*" % query), limit=None, mask=restrict_q,
+                                         groupedby=sorting.FieldFacet('sender', allow_overlap=True)).groups()
+                return flatten([to, cc, bcc, sender])
 
         return []

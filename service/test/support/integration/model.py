@@ -31,6 +31,7 @@ class MailBuilder:
             'body': "Hello,\nThis is the body of this message\n\nRegards,\n\n--\nPixelated.\n",
             'status': []
         }
+        InputMail.FROM_EMAIL_ADDRESS = 'Formatted Sender <sender@from.com>'
 
     def with_body(self, body):
         self.mail['body'] = body
