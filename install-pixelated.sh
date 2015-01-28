@@ -27,11 +27,14 @@ fi
 usage() { echo "Usage: $0 [-v <virtualenv path>]" 1>&2; exit 1; }
 
 VIRTUALENV_PATH=".virtualenv"
-
-while getopts "v:" OPT; do
+CUSTOM_NODE_MODULES_LOCATION=""
+while getopts "n:v:" OPT; do
     case "${OPT}" in
         v)
             VIRTUALENV_PATH=${OPTARG}
+            ;;
+        n) # custom node_modules installation
+            CUSTOM_NODE_MODULES_LOCATION=${OPTARG}
             ;;
         *)
             usage
@@ -49,6 +52,31 @@ function check_installed() {
         fi
 }
 
+function install_node_modules_at_custom_location() {
+  local LOCATION="$1"
+  local WEBUI_DIR=$(pwd)
+
+  if [ -e "$WEBUI_DIR/node_modules" ] ; then
+    echo "It seems there is already a node_modules folder" 1>&2
+    return
+  fi
+
+  if [ ! -e "$LOCATION" ] ; then
+    mkdir "$LOCATION"
+    pushd "$LOCATION"
+
+    ln -s "$WEBUI_DIR/package.json" package.json
+    npm install
+
+    popd
+  fi
+
+  if [ ! -h "node_modules" ] ; then
+    rm -Rf "$LOCATION/node_modules"
+    ln -s "$LOCATION/node_modules" node_modules
+  fi
+}
+
 for dependency in node npm ruby virtualenv git gpg compass; do
         check_installed $dependency
 done
@@ -56,7 +84,12 @@ done
 # install web-ui dependencies
 cd web-ui
 UIPATH=`pwd`
-npm install
+
+if [ -z "$CUSTOM_NODE_MODULES_LOCATION" ] ; then
+  npm install
+else
+  install_node_modules_at_custom_location "$CUSTOM_NODE_MODULES_LOCATION"
+fi
 node_modules/bower/bin/bower install --config.interactive=false --allow-root
 LC_ALL=en_US.UTF-8 ./go build
 
