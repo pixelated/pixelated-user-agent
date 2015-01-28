@@ -17,10 +17,11 @@
 from pixelated.bitmask_libraries.session import open as open_leap_session
 
 
-def init_soledad_and_user_key(app):
+def init_soledad_and_user_key(app, leap_home):
     leap_session = open_leap_session(app['LEAP_USERNAME'],
                                      app['LEAP_PASSWORD'],
-                                     app['LEAP_SERVER_NAME'])
+                                     app['LEAP_SERVER_NAME'],
+                                     leap_home)
     soledad = leap_session.soledad_session.soledad
     soledad.sync(defer_decryption=False)
     leap_session.nicknym.generate_openpgp_key()

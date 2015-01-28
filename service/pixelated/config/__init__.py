@@ -59,7 +59,7 @@ def initialize():
         loading_app = loading(args)
 
         def init_soledad():
-            return init_soledad_and_user_key(app)
+            return init_soledad_and_user_key(app, args.home)
 
         def stop_loading_app(leap_session):
             d = loading_app.stopListening()
