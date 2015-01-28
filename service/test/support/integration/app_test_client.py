@@ -29,13 +29,12 @@ from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
 from pixelated.adapter.services.tag_service import TagService
 from pixelated.config import App
 from pixelated.resources.root_resource import RootResource
-import pixelated.runserver
 from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.search import SearchEngine
 from test.support.integration.model import MailBuilder
 from test.support.test_helper import request_mock
 from twisted.internet import reactor
-from twisted.internet.defer import Deferred
+from twisted.internet.defer import succeed
 from twisted.web.resource import getChildForRequest
 from twisted.web.server import Site
 
@@ -88,15 +87,10 @@ class AppTestClient:
         if isinstance(result, basestring):
             return get_str(result), request
 
-        if request.finished:
-            d = Deferred()
-            d.addCallback(get_request_written_data)
-            return d, request
-        else:
-            d = request.notifyFinish()
-            d.addCallback(lambda _: request)
-            d.addCallback(get_request_written_data)
-            return d, request
+        # result is NOT_DONE_YET
+        d = succeed(request) if request.finished else request.notifyFinish()
+        d.addCallback(get_request_written_data)
+        return d, request
 
     def run_on_a_thread(self, logfile='/tmp/app_test_client.log', port=4567, host='0.0.0.0'):
         def _start():
