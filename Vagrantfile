@@ -19,8 +19,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # for details
 
   config.vm.box = "leap-jessie-amd64"
+
   config.vm.define "source", primary: true do |source|
-    source.vm.provider "virtualbox" do |v, override|
+    source.vm.provider :virtualbox do |v, override|
       override.vm.box_url = "https://downloads.leap.se/platform/vagrant/virtualbox/leap-debian-jessie-amd64-virtualbox.box"
     end
     source.vm.provider "libvirt" do |v, override|
@@ -55,8 +56,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box = "hackday-pixelated-user-agent"
   end
 
-
-  config.vm.network :forwarded_port, guest: 3333, guest_ip: '127.0.0.1', host: 3333
+  config.vm.network :forwarded_port, guest: 3333, host: 3333 # do NOT add host_ip in this line. It is not necessary
+  config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
   config.vm.provider "virtualbox" do |v|
     v.memory = 1024
   end
