@@ -1,4 +1,5 @@
 class pixelated::source {
+  include phantomjs
 
   package { [
     'git',
@@ -26,7 +27,7 @@ class pixelated::source {
   }
 
   class install_pixelated {
-    $virtualenv_path = "/home/vagrant/user-agent-venv"
+    $virtualenv_path = '/home/vagrant/user-agent-venv'
 
     exec { 'install-pixelated':
       environment => 'USERNAME=vagrant',
@@ -44,8 +45,8 @@ class pixelated::source {
     }
 
     file { '/home/vagrant/.activate_custom_node_modules.sh':
-      owner => 'vagrant',
-      mode  => '0600',
+      owner  => 'vagrant',
+      mode   => '0600',
       source => 'puppet:///modules/pixelated/activate_custom_node_modules.sh',
     }
     exec { 'add_custom_node_modules_to_bashrc':

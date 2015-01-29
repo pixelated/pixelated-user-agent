@@ -72,7 +72,7 @@ function install_node_modules_at_custom_location() {
   fi
 
   if [ ! -h "node_modules" ] ; then
-    rm -Rf "$LOCATION/node_modules"
+    rm -Rf "node_modules"
     ln -s "$LOCATION/node_modules" node_modules
   fi
 }
