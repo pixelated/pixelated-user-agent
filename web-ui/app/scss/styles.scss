@@ -325,7 +325,7 @@ section {
         }
         li {
           color: #000000;
-          background-color: #2ba6cb;
+          background-color: $action_buttons;
           padding: 5px 10px;
           position: relative;
           @include searching(4px, 19px, #333, 0.7em);
@@ -487,7 +487,7 @@ button {
     z-index: 10000;
     position: relative;
     &.logout {
-      color: #2ba6cb;
+      color: $action_buttons;
     }
   }
 
@@ -518,7 +518,7 @@ button {
           @include btn-transition;
           &.logout{
             color: #000000;
-            background: #2ba6cb;
+            background: $action_buttons;
           }
         }
         &[title]:hover:after {
