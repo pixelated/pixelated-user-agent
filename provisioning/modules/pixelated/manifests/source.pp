@@ -37,13 +37,6 @@ class pixelated::source {
       timeout     => 0
     }
 
-    exec { 'add_virtualenv_to_bashrc':
-      command => "/bin/bash -c 'echo \"source ${virtualenv_path}/bin/activate ; cd /vagrant\" >> /home/vagrant/.bashrc'",
-      unless  => "/bin/grep \"source ${virtualenv_path}\" /home/vagrant/.bashrc",
-      user    => 'vagrant',
-      require => Exec['install-pixelated']
-    }
-
     file { '/home/vagrant/.activate_custom_node_modules.sh':
       owner  => 'vagrant',
       mode   => '0600',
