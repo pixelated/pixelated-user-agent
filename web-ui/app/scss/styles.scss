@@ -472,8 +472,12 @@ button {
 
   .left-off-canvas-logo {
     text-align: center;
-    padding: 7px;
+    padding: 8px;
     display: block;
+
+    img {
+      padding-top: 1px;
+    }
  }
 
   .left-off-canvas-toggle {
@@ -481,7 +485,7 @@ button {
     text-align: center;
     display: block;
     left: 0;
-    padding: 10px;
+    padding: 9px;
     background: $secondary;
     top: 0;
     z-index: 10000;
