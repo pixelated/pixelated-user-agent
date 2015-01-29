@@ -21,6 +21,7 @@
   "scripts": {
     "test": "npm run clean && npm run handlebars && node_modules/karma/bin/karma start --single-run --browsers PhantomJS $GRUNT_OPTS",
     "debug": "npm run clean && npm run handlebars && node_modules/karma/bin/karma start --browsers Chrome $GRUNT_OPTS",
+    "watch": "compass watch",
     "watch-test": "node_modules/karma/bin/karma start",
     "handlebars": "mkdir -p app/js/generated/hbs/ && handlebars app/templates/**/*.hbs > app/js/generated/hbs/templates.js --namespace=window.Pixelated --root .",
     "compass": "compass compile",
