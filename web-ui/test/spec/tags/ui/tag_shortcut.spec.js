@@ -20,7 +20,6 @@ describeComponent('tags/ui/tag_shortcut', function () {
   });
 
   it('renders the shortcut inside the parent', function () {
-    expect(parent.html()).toMatch('<a title="inbox">');
     expect(parent.html()).toMatch('<i class="fa fa-inbox"></i>');
     expect(parent.html()).toMatch('<div class="shortcut-label">inbox</div>');
   });
