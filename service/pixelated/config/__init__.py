@@ -34,6 +34,7 @@ from twisted.internet.threads import deferToThread
 # monkey patching some specifics
 import pixelated.support.ext_protobuf
 import pixelated.support.ext_sqlcipher
+import pixelated.support.ext_esmtp_sender_factory
 
 
 def initialize():
