@@ -52,7 +52,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "hackday", autostart: false do |hackday|
-    config.vm.box = "hackaday-pixelated-user-agent"
+    config.vm.box = "hackday-pixelated-user-agent"
   end
 
 
