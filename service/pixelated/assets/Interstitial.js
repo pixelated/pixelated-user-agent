@@ -15,12 +15,12 @@ if ($('#hive').length) {
     for (var i = 0; i < cols; i++) {
       x = i * width + (j%2*width/2);
       y = j * height;
-      all.add(pixelated.clone().transform("translate("+x+","+y+")")); 
+      all.add(pixelated.clone().transform("translate("+x+","+y+")"));
     }
   }
 
   all.add(pixelated);
-  
+
   function brightenLogo() {
 	  var glowPosition = Math.floor(Math.random()*rows*cols);
 
@@ -32,9 +32,9 @@ if ($('#hive').length) {
   function darkenLogo(el) {
       el.animate({fill: "#908e8e"}, 1000, brightenLogo);
   }
-  
+
   brightenLogo();
- 
+
 }
 
 $(function(){
@@ -50,4 +50,8 @@ $(function(){
         }, 5000);
 
     $('#hive-section').height($(window).height())
+
+    $(window).resize(function() {
+      window.location.reload(true);
+    });
 });
