@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from StringIO import StringIO
+import re
 
 from twisted.internet.defer import Deferred
 from twisted.mail.smtp import SMTPSenderFactory
@@ -25,13 +26,26 @@ class MailSender():
     def __init__(self, account_email_address, smtp_client=None):
         self.account_email_address = account_email_address
 
+    def recepients_normalizer(self, mail_list):
+        return set(mail_list)
+
+    def get_email_addresses(self, mail_list):
+        clean_mail_list = []
+        for mail_address in mail_list:
+            if "<" in mail_address:
+                match = re.search(r'<(.*)', mail_address)
+                clean_mail_list.append(match.group(1).strip('>'))
+            else:
+                clean_mail_list.append(mail_address)
+        return self.recepients_normalizer(clean_mail_list)
+
     def sendmail(self, mail):
         recipients = flatten([mail.to, mail.cc, mail.bcc])
-
+        normalized_recepients = get_email_addresses(recipients)
         resultDeferred = Deferred()
         senderFactory = SMTPSenderFactory(
             fromEmail=self.account_email_address,
-            toEmail=recipients,
+            toEmail=normalized_recipients,
             file=StringIO(mail.to_smtp_format()),
             deferred=resultDeferred)
 
