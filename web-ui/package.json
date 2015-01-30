@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "devDependencies": {
     "bower": "1.3.12",
-    "minify": "1.4.1",
     "handlebars": "2.0.0",
     "html-minifier": "^0.6.9",
     "imagemin": "3.1.0",
@@ -16,15 +15,19 @@
     "karma-junit-reporter": "0.2.2",
     "karma-phantomjs-launcher": "0.1.4",
     "karma-requirejs": "0.2.2",
-    "requirejs": "2.1.15"
+    "minify": "1.4.1",
+    "requirejs": "2.1.15",
+    "watch": "^0.13.0"
   },
   "scripts": {
     "test": "npm run clean && npm run handlebars && node_modules/karma/bin/karma start --single-run --browsers PhantomJS $GRUNT_OPTS",
     "debug": "npm run clean && npm run handlebars && node_modules/karma/bin/karma start --browsers Chrome $GRUNT_OPTS",
-    "watch": "compass watch",
+    "watch": "npm run compass-watch & npm run handlebars-watch",
     "watch-test": "node_modules/karma/bin/karma start",
     "handlebars": "mkdir -p app/js/generated/hbs/ && handlebars app/templates/**/*.hbs > app/js/generated/hbs/templates.js --namespace=window.Pixelated --root .",
+    "handlebars-watch": "node_modules/.bin/watch 'npm run handlebars' app/templates",
     "compass": "compass compile",
+    "compass-watch": "compass watch",
     "build": "npm run clean && npm run handlebars && npm run compass",
     "jshint": "node_modules/.bin/jshint --config=.jshintrc app && node_modules/.bin/jshint --config=.jshintrc test",
     "clean": "rm -rf .tmp/ dist/**/* app/js/generated/hbs/* app/css/*",
