@@ -34,7 +34,7 @@ class TestMailService(unittest.TestCase):
     def test_send_mail(self):
         mail = "mail"
 
-        self.mail_service.send(1, mail)
+        self.mail_service.send(mail)
 
         verify(self.mail_sender).sendmail(mail)
 

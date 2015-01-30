@@ -1,16 +1,16 @@
 import json
 from pixelated.adapter.model.mail import InputMail
-from pixelated.resources import respond_json
+from pixelated.resources import respond_json, respond_json_deferred
+from twisted.web import server
 from twisted.web.resource import Resource
-
-
-def _format_exception(e):
-    exception_info = map(str, list(e.args))
-    return '\n'.join(exception_info)
+from leap.common.events import (
+    register,
+    unregister,
+    events_pb2 as proto
+)
 
 
 class MailsUnreadResource(Resource):
-
     isLeaf = True
 
     def __init__(self, mail_service, search_engine):
@@ -28,7 +28,6 @@ class MailsUnreadResource(Resource):
 
 
 class MailsReadResource(Resource):
-
     isLeaf = True
 
     def __init__(self, mail_service, search_engine):
@@ -46,7 +45,6 @@ class MailsReadResource(Resource):
 
 
 class MailsDeleteResource(Resource):
-
     isLeaf = True
 
     def __init__(self, mail_service, search_engine):
@@ -72,6 +70,15 @@ class MailsDeleteResource(Resource):
 
 class MailsResource(Resource):
 
+    def _register_smtp_error_handler(self):
+
+        def on_error(event):
+            delivery_error_mail = InputMail.delivery_error_template(delivery_address=event.content)
+            delivery_error_mail = self._mail_service.mailboxes.inbox().add(delivery_error_mail)
+            self._search_engine.index_mail(delivery_error_mail)
+
+        register(signal=proto.SMTP_SEND_MESSAGE_ERROR, callback=on_error)
+
     def __init__(self, search_engine, mail_service, draft_service):
         Resource.__init__(self)
         self.putChild('delete', MailsDeleteResource(mail_service, search_engine))
@@ -81,9 +88,11 @@ class MailsResource(Resource):
         self._draft_service = draft_service
         self._mail_service = mail_service
         self._search_engine = search_engine
+        self._register_smtp_error_handler()
 
     def render_GET(self, request):
-        mail_ids, total = self._search_engine.search(request.args.get('q')[0], request.args.get('w')[0], request.args.get('p')[0])
+        mail_ids, total = self._search_engine.search(request.args.get('q')[0], request.args.get('w')[0],
+                                                     request.args.get('p')[0])
         mails = self._mail_service.mails(mail_ids)
 
         response = {
@@ -96,18 +105,18 @@ class MailsResource(Resource):
         return respond_json(response, request)
 
     def render_POST(self, request):
-        try:
-            content_dict = json.loads(request.content.read())
-            _mail = InputMail.from_dict(content_dict)
-            draft_id = content_dict.get('ident')
-            if draft_id:
-                self._search_engine.remove_from_index(draft_id)
-            _mail = self._mail_service.send(draft_id, _mail)
-            self._search_engine.index_mail(_mail)
+        content_dict = json.loads(request.content.read())
+        _mail = InputMail.from_dict(content_dict)
+        draft_id = content_dict.get('ident')
 
-            return respond_json(_mail.as_dict(), request)
-        except Exception as error:
-            return respond_json({'message': _format_exception(error)}, request, status_code=422)
+        self._mail_service.send(_mail)
+        sent_mail = self._mail_service.move_to_send(draft_id, _mail)
+        self._search_engine.index_mail(sent_mail)
+
+        if draft_id:
+            self._search_engine.remove_from_index(draft_id)
+
+        return respond_json(sent_mail.as_dict(), request)
 
     def render_PUT(self, request):
         content_dict = json.loads(request.content.read())

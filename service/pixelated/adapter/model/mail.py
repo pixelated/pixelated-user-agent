@@ -186,6 +186,17 @@ class InputMail(Mail):
         return mime_multipart.as_string()
 
     @staticmethod
+    def delivery_error_template(delivery_address):
+        return InputMail.from_dict({
+            'body': "Mail undelivered for %s" % delivery_address,
+            'header': {
+                'bcc': [],
+                'cc': [],
+                'subject': "Mail undelivered for %s" % delivery_address
+            }
+        })
+
+    @staticmethod
     def from_dict(mail_dict):
         input_mail = InputMail()
         input_mail.headers = {key.capitalize(): value for key, value in mail_dict.get('header', {}).items()}

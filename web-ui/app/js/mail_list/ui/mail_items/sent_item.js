@@ -28,12 +28,8 @@ define(
     return defineComponent(sentItem, mailItem);
 
     function sentItem() {
-      function isOpeningOnANewTab(ev) {
-        return ev.metaKey || ev.ctrlKey || ev.which === 2;
-      }
-
       this.triggerOpenMail = function (ev) {
-        if (isOpeningOnANewTab(ev)) {
+        if (this.isOpeningOnANewTab(ev)) {
           return;
         }
         this.trigger(document, events.ui.mail.open, { ident: this.attr.ident });

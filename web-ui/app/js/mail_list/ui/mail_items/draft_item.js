@@ -29,12 +29,8 @@ define(
     return defineComponent(draftItem, mailItem);
 
     function draftItem() {
-      function isOpeningOnANewTab(ev) {
-        return ev.metaKey || ev.ctrlKey || ev.which === 2;
-      }
-
       this.triggerOpenMail = function (ev) {
-        if (isOpeningOnANewTab(ev)) {
+        if (this.isOpeningOnANewTab(ev)) {
           return;
         }
         this.trigger(document, events.dispatchers.rightPane.openDraft, { ident: this.attr.ident });
