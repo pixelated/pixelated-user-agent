@@ -33,19 +33,19 @@ class MailSender():
         clean_mail_list = []
         for mail_address in mail_list:
             if "<" in mail_address:
-                match = re.search(r'<(.*)', mail_address)
-                clean_mail_list.append(match.group(1).strip('>'))
+                match = re.search(r'<(.*)>', mail_address)
+                clean_mail_list.append(match.group(1))
             else:
                 clean_mail_list.append(mail_address)
         return self.recepients_normalizer(clean_mail_list)
 
     def sendmail(self, mail):
         recipients = flatten([mail.to, mail.cc, mail.bcc])
-        normalized_recepients = get_email_addresses(recipients)
+        normalized_recepients = self.get_email_addresses(recipients)
         resultDeferred = Deferred()
         senderFactory = SMTPSenderFactory(
             fromEmail=self.account_email_address,
-            toEmail=normalized_recipients,
+            toEmail=normalized_recepients,
             file=StringIO(mail.to_smtp_format()),
             deferred=resultDeferred)
 
