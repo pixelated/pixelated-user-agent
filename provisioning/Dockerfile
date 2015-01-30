@@ -43,8 +43,4 @@ RUN apt-get install -y --force-yes --allow-unauthenticated soledad-client soleda
 # Install Pixelated User Agent
 RUN apt-get install -y --force-yes pixelated-user-agent
 
-# reinstall pysqlcipher from pip
-RUN rm -rf /usr/lib/python2.7/dist-packages/pysqlcipher*
-RUN pip install pysqlcipher
-
 EXPOSE 4567
