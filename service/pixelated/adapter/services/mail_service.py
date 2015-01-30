@@ -13,8 +13,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-
-
 class MailService:
     __slots__ = ['leap_session', 'account', 'mailbox_name']
 
@@ -44,15 +42,13 @@ class MailService:
     def mail_exists(self, mail_id):
         return not(not(self.querier.get_header_by_chash(mail_id)))
 
-    def send(self, last_draft_ident, mail):
-        result = self.mail_sender.sendmail(mail)
+    def send(self, mail):
+        self.mail_sender.sendmail(mail)
 
-        def success(_):
-            if last_draft_ident:
-                self.mailboxes.drafts().remove(last_draft_ident)
-            return self.mailboxes.sent().add(mail)
-        result.addCallback(success)
-        return result
+    def move_to_send(self, last_draft_ident, mail):
+        if last_draft_ident:
+            self.mailboxes.drafts().remove(last_draft_ident)
+        return self.mailboxes.sent().add(mail)
 
     def mark_as_read(self, mail_id):
         return self.mail(mail_id).mark_as_read()
