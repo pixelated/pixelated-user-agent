@@ -18,16 +18,16 @@ define(['flight/lib/component', 'features', 'views/templates'], function (define
   'use strict';
 
   return defineComponent(function () {
-
+ 
     this.render = function () {
-      var logoutShortcutHTML = templates.page.logoutShortcut();
-      this.$node.html(logoutShortcutHTML);
+      if (features.isLogoutEnabled()) {
+        var logoutShortcutHTML = templates.page.logoutShortcut();
+        this.$node.html(logoutShortcutHTML);
+      }
     };
 
     this.after('initialize', function () {
-      if (features.isLogoutEnabled()) {
-	      this.render();
-      }
+	    this.render();
     });
   });
 });
