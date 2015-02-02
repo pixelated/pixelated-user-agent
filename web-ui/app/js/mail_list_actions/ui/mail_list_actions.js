@@ -20,6 +20,8 @@ define(
   [
     'flight/lib/component',
     'views/templates',
+    'page/events',
+    'page/router/url_params',
     'mail_list_actions/ui/compose_trigger',
     'mail_list_actions/ui/refresh_trigger',
     'mail_list/domain/refresher',
@@ -33,6 +35,8 @@ define(
   function (
     defineComponent,
     templates,
+    events,
+    urlParams,
     composeTrigger,
     refreshTrigger,
     refresher,
@@ -47,7 +51,9 @@ define(
 
     function mailsActions() {
       this.render = function() {
-        this.$node.html(templates.mailActions.actionsBox);
+        this.$node.html(templates.mailActions.actionsBox({
+          txtDeleteButton: this.getTxtDeleteButton()
+        }));
         refreshTrigger.attachTo('#refresh-trigger');
         composeTrigger.attachTo('#compose-trigger');
         toggleCheckAllMailTrigger.attachTo('#toggle-check-all-emails');
@@ -58,7 +64,25 @@ define(
         refresher.attachTo(document);
       };
 
+      this.getCurrentTag = function () {
+        return this.attr.currentTag || urlParams.getTag();
+      };
+
+      this.getTxtDeleteButton = function() {
+        if(this.getCurrentTag() === 'trash') {
+          return 'Delete permanently';
+        } else {
+          return 'Delete';
+        }
+      };
+
+      this.updateCurrentTag = function (ev, data) {
+        this.attr.currentTag = data.tag;
+        this.render();
+      };
+
       this.after('initialize', function () {
+        this.on(document, events.ui.tag.select, this.updateCurrentTag);
         this.render();
       });
     }
