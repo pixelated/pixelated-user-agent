@@ -19,9 +19,10 @@ from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerL
 
 class Mailboxes():
 
-    def __init__(self, account, soledad_querier):
+    def __init__(self, account, soledad_querier, search_engine):
         self.account = account
         self.querier = soledad_querier
+        self.search_engine = search_engine
         for mailbox_name in account.mailboxes:
             MailboxIndexerListener.listen(self.account, mailbox_name, soledad_querier)
 
@@ -30,7 +31,7 @@ class Mailboxes():
         if mailbox_name not in self.account.mailboxes:
             self.account.addMailbox(mailbox_name)
         MailboxIndexerListener.listen(self.account, mailbox_name, self.querier)
-        return Mailbox.create(mailbox_name, self.querier)
+        return Mailbox.create(mailbox_name, self.querier, self.search_engine)
 
     def inbox(self):
         return self._create_or_get('INBOX')

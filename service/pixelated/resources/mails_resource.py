@@ -105,15 +105,7 @@ class MailsResource(Resource):
 
     def render_POST(self, request):
         content_dict = json.loads(request.content.read())
-        _mail = InputMail.from_dict(content_dict)
-        draft_id = content_dict.get('ident')
-
-        self._mail_service.send(_mail)
-        sent_mail = self._mail_service.move_to_send(draft_id, _mail)
-        self._search_engine.index_mail(sent_mail)
-
-        if draft_id:
-            self._search_engine.remove_from_index(draft_id)
+        sent_mail = self._mail_service.send_mail(content_dict)
 
         return respond_json(sent_mail.as_dict(), request)
 

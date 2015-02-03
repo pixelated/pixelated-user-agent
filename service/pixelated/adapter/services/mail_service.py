@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from pixelated.adapter.model.mail import InputMail
 
 
 class MailService:
@@ -47,10 +48,16 @@ class MailService:
     def mail_exists(self, mail_id):
         return not(not(self.querier.get_header_by_chash(mail_id)))
 
-    def send(self, mail):
-        self.mail_sender.sendmail(mail)
+    def send_mail(self, content_dict):
+        mail = InputMail.from_dict(content_dict)
+        draft_id = content_dict.get('ident')
 
-    def move_to_send(self, last_draft_ident, mail):
+        self.mail_sender.sendmail(mail)
+        sent_mail = self.move_to_sent(draft_id, mail)
+
+        return sent_mail
+
+    def move_to_sent(self, last_draft_ident, mail):
         if last_draft_ident:
             self.mailboxes.drafts().remove(last_draft_ident)
         return self.mailboxes.sent().add(mail)

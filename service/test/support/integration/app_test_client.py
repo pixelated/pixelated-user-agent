@@ -63,11 +63,11 @@ class AppTestClient:
         self.soledad_querier.get_index_masterkey = lambda: self.INDEX_KEY
 
         self.account = SoledadBackedAccount('test', self.soledad, MagicMock())
-        self.mailboxes = Mailboxes(self.account, self.soledad_querier)
+        self.search_engine = SearchEngine(self.soledad_querier, agent_home=soledad_test_folder)
+        self.mailboxes = Mailboxes(self.account, self.soledad_querier, self.search_engine)
         self.mail_sender = Mock()
         self.tag_service = TagService()
         self.draft_service = DraftService(self.mailboxes)
-        self.search_engine = SearchEngine(self.soledad_querier, agent_home=soledad_test_folder)
         self.mail_service = MailService(self.mailboxes, self.mail_sender, self.tag_service,
                                         self.soledad_querier, self.search_engine)
         self.search_engine.index_mails(self.mail_service.all_mails())

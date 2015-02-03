@@ -17,25 +17,26 @@
 
 class Mailbox:
 
-    def __init__(self, mailbox_name, querier):
+    def __init__(self, mailbox_name, querier, search_engine):
         self.mailbox_name = mailbox_name
         self.mailbox_tag = mailbox_name.lower()
+        self.search_engine = search_engine
         self.querier = querier
 
     def mail(self, mail_id):
         return self.querier.mail(mail_id)
 
     def add(self, mail):
-        return self.querier.create_mail(mail, self.mailbox_name)
+        added_mail = self.querier.create_mail(mail, self.mailbox_name)
+        self.search_engine.index_mail(added_mail)
+        return added_mail
 
     def remove(self, ident):
         mail = self.querier.mail(ident)
-        self.remove_mail(mail)
-
-    def remove_mail(self, mail):
+        self.search_engine.remove_from_index(mail.ident)
         mail.remove_all_tags()
         self.querier.remove_mail(mail)
 
     @classmethod
-    def create(cls, mailbox_name, soledad_querier):
-        return Mailbox(mailbox_name, soledad_querier)
+    def create(cls, mailbox_name, soledad_querier, search_engine):
+        return Mailbox(mailbox_name, soledad_querier, search_engine)

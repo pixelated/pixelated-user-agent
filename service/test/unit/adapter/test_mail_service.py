@@ -14,8 +14,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
+from pixelated.adapter.model.mail import InputMail
 
 from pixelated.adapter.services.mail_service import MailService
+from test.support.test_helper import mail_dict
 from mockito import *
 
 
@@ -29,14 +31,15 @@ class TestMailService(unittest.TestCase):
         self.mailboxes.sent = lambda: mock()
 
         self.mail_sender = mock()
-        self.mail_service = MailService(self.mailboxes, self.mail_sender, self.tag_service, self.querier)
+        self.search_engine = mock()
+        self.mail_service = MailService(self.mailboxes, self.mail_sender, self.tag_service, self.querier, self.search_engine)
 
     def test_send_mail(self):
-        mail = "mail"
+        when(InputMail).from_dict(any()).thenReturn('inputmail')
 
-        self.mail_service.send(mail)
+        self.mail_service.send_mail(mail_dict())
 
-        verify(self.mail_sender).sendmail(mail)
+        verify(self.mail_sender).sendmail("inputmail")
 
     def test_mark_as_read(self):
         mail = mock()
