@@ -124,7 +124,7 @@ define([
         }, {
           source: createEmailCompleter().ttAdapter(),
           templates: {
-              suggestion: function (o) { return _.escape(o['value']) }
+              suggestion: function (o) { return _.escape(o.value); }
           }
         });
       };
