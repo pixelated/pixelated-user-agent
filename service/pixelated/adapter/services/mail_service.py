@@ -18,17 +18,20 @@
 class MailService:
     __slots__ = ['leap_session', 'account', 'mailbox_name']
 
-    def __init__(self, mailboxes, mail_sender, tag_service, soledad_querier):
+    def __init__(self, mailboxes, mail_sender, tag_service, soledad_querier, search_engine):
         self.tag_service = tag_service
         self.mailboxes = mailboxes
         self.querier = soledad_querier
+        self.search_engine = search_engine
         self.mail_sender = mail_sender
 
     def all_mails(self):
         return self.querier.all_mails()
 
-    def mails(self, ids):
-        return self.querier.mails(ids)
+    def mails(self, query, window_size, page):
+        mail_ids, total = self.search_engine.search(query, window_size, page)
+
+        return self.querier.mails(mail_ids), total
 
     def update_tags(self, mail_id, new_tags):
         reserved_words = self.tag_service.extract_reserved(new_tags)

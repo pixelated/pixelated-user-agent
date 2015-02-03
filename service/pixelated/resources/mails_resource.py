@@ -91,9 +91,8 @@ class MailsResource(Resource):
         self._register_smtp_error_handler()
 
     def render_GET(self, request):
-        mail_ids, total = self._search_engine.search(request.args.get('q')[0], request.args.get('w')[0],
-                                                     request.args.get('p')[0])
-        mails = self._mail_service.mails(mail_ids)
+        query, window_size, page = request.args.get('q')[0], request.args.get('w')[0], request.args.get('p')[0]
+        mails, total = self._mail_service.mails(query, window_size, page)
 
         response = {
             "stats": {

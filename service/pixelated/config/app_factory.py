@@ -105,7 +105,7 @@ def init_app(app, leap_home, leap_session):
 
     pixelated_mailboxes = Mailboxes(leap_session.account, soledad_querier)
     draft_service = DraftService(pixelated_mailboxes)
-    mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, tag_service, soledad_querier)
+    mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, tag_service, soledad_querier, search_engine)
 
     MailboxIndexerListener.SEARCH_ENGINE = search_engine
     InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
@@ -147,7 +147,6 @@ def _ssl_options(args):
     options = ssl.CertificateOptions(privateKey=pkey, certificate=cert, method=SSL.TLSv1_2_METHOD,
                                      acceptableCiphers=acceptable)
     return options
-
 
 def listen_with_ssl(app, args):
     reactor.listenSSL(args.port, Site(app.resource), _ssl_options(args), interface=args.host)
