@@ -16,28 +16,39 @@ The User Agent has 2 components:
 
 ## Quickstart
 
-### Using Vagrant
+Requirements:
 
-to install from source: 
+  * vagrant
+  * virtualbox
 
-    vagrant up
+Clone the repository:
 
-or 
+    git clone git@github.com:pixelated-project/pixelated-user-agent.git
+
+From the root folder, set up the vagrant machine: 
 
     vagrant up source
+    
+You can log into the machine using:
 
-to install using the pixelated prvidede debian packages:
+    vagrant ssh
 
-    vagrant up deb 
+then you can run with:
 
+    pixelated-user-agent --host 0.0.0.0
 
-### Installing dependencies for development:
-Dependencies are: node, npm, compass (ruby), virtualenv, git
+and it's done!
+
+## Long version
+
+### The dependencies for development are:
+node, npm, compass (ruby), virtualenv, git
 
 * debian/ubuntu:
     * `sudo apt-get update`
     * `sudo apt-get install git nodejs-legacy npm python-dev python-virtualenv libffi-dev g++ ruby-dev`
     * `sudo gem install compass`
+
 * MacOS:
     Using brew will get you there faster:
     * `brew install node ruby phantomjs gnupg`
