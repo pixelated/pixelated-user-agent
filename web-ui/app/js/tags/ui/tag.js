@@ -81,7 +81,7 @@ define(
         if (typeof ident === 'number') {
           return ident;
         }
-        if (ident.match(/^[a-zA-Z0-9 ]+$/)) {
+        if (ident.match(/^[a-zA-Z0-9]+$/)) {
           return ident;
         }
 
