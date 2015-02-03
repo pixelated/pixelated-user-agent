@@ -181,7 +181,6 @@ class SearchEngine(object):
     def prepare_query(self, query):
         query = (
             query
-            .replace('\"', '')
             .replace('-in:', 'AND NOT tag:')
             .replace('in:all', '*')
         )

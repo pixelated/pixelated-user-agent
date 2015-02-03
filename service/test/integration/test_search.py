@@ -51,6 +51,14 @@ class SearchTest(SoledadTestBase):
         d.addCallback(_assert)
         return d
 
+    def test_tags_with_multiple_words_are_searchable(self):
+        input_mail = MailBuilder().with_tags(['one tag four words']).build_input_mail()
+        self.client.add_mail_to_inbox(input_mail)
+
+        first_page = self.get_mails_by_tag('"one tag four words"', page=1, window=1)
+
+        self.assertEqual(len(first_page), 1)
+
     def test_that_default_tags_are_ignorable(self):
         input_mail = MailBuilder().with_tags(['sometag']).build_input_mail()
         self.client.add_mail_to_inbox(input_mail)
