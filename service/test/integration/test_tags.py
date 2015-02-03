@@ -21,12 +21,6 @@ from pixelated.adapter.services.tag_service import TagService
 
 class TagsTest(SoledadTestBase):
 
-    def setUp(self):
-        SoledadTestBase.setUp(self)
-
-    def tearDown(self):
-        SoledadTestBase.tearDown(self)
-
     def _tags_json(self, tags):
         return json.dumps({'newtags': tags})
 

@@ -37,6 +37,7 @@ from twisted.internet import reactor
 from twisted.internet.defer import succeed
 from twisted.web.resource import getChildForRequest
 from twisted.web.server import Site
+import uuid
 
 
 class AppTestClient:
@@ -45,7 +46,10 @@ class AppTestClient:
 
     def __init__(self, soledad_test_folder='/tmp/soledad-test/test'):
 
+        soledad_test_folder = os.path.join(soledad_test_folder, str(uuid.uuid4()))
         self.soledad = initialize_soledad(tempdir=soledad_test_folder)
+        self.cleanup = lambda: shutil.rmtree(soledad_test_folder)
+
         self.mail_address = "test@pixelated.org"
 
         # setup app
@@ -65,7 +69,7 @@ class AppTestClient:
         self.draft_service = DraftService(self.mailboxes)
         self.mail_service = MailService(self.mailboxes, self.mail_sender, self.tag_service,
                                         self.soledad_querier)
-        self.search_engine = SearchEngine(self.soledad_querier)
+        self.search_engine = SearchEngine(self.soledad_querier, agent_home=soledad_test_folder)
         self.search_engine.index_mails(self.mail_service.all_mails())
 
         self.app.resource = RootResource()

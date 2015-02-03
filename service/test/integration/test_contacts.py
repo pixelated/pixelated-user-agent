@@ -18,9 +18,6 @@ from test.support.integration import SoledadTestBase, MailBuilder
 
 class ContactsTest(SoledadTestBase):
 
-    def setUp(self):
-        SoledadTestBase.setUp(self)
-
     def test_TO_CC_and_BCC_fields_are_being_searched(self):
         input_mail = MailBuilder().with_tags(['important']).build_input_mail()
         self.client.add_mail_to_inbox(input_mail)

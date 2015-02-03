@@ -19,12 +19,6 @@ from test.support.integration import *
 
 class DraftsTest(SoledadTestBase):
 
-    def setUp(self):
-        SoledadTestBase.setUp(self)
-
-    def tearDown(self):
-        SoledadTestBase.tearDown(self)
-
     def test_post_sends_mail_and_deletes_previous_draft_if_it_exists(self):
         # creates one draft
         first_draft = MailBuilder().with_subject('First draft').build_json()

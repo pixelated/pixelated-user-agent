@@ -19,9 +19,6 @@ from test.support.integration import *
 
 class SearchTest(SoledadTestBase):
 
-    def setUp(self):
-        SoledadTestBase.setUp(self)
-
     def test_that_tags_returns_all_tags(self):
         input_mail = MailBuilder().with_tags(['important']).build_input_mail()
         self.client.add_mail_to_inbox(input_mail)

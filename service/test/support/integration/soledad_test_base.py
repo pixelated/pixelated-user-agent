@@ -27,6 +27,9 @@ class SoledadTestBase(unittest.TestCase):
     def setUp(self):
         self.client = AppTestClient()
 
+    def tearDown(self):
+        self.client.cleanup()
+
     def get_mails_by_tag(self, tag, page=1, window=100):
         tags = 'tag:%s' % tag
         return self.search(tags, page, window)

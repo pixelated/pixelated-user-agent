@@ -29,9 +29,6 @@ class SoledadQuerierTest(SoledadTestBase, WithMsgFields):
         self.maxDiff = None
         self.soledad_querier = self.client.soledad_querier
 
-    def tearDown(self):
-        SoledadTestBase.tearDown(self)
-
     def _get_empty_mailbox(self):
         return copy.deepcopy(self.EMPTY_MBOX)
 

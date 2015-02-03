@@ -19,12 +19,6 @@ from test.support.integration import *
 
 class DeleteMailTest(SoledadTestBase):
 
-    def setUp(self):
-        SoledadTestBase.setUp(self)
-
-    def tearDown(self):
-        SoledadTestBase.tearDown(self)
-
     def test_move_mail_to_trash_when_deleting(self):
         input_mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
         self.client.add_mail_to_inbox(input_mail)

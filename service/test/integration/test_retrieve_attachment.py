@@ -19,12 +19,6 @@ from test.support.integration.soledad_test_base import SoledadTestBase
 
 class RetrieveAttachmentTest(SoledadTestBase):
 
-    def setUp(self):
-        SoledadTestBase.setUp(self)
-
-    def tearDown(self):
-        SoledadTestBase.tearDown(self)
-
     def test_attachment_content_is_retrieved(self):
         ident = 'F4E99C1CEC4D300A4223A96CCABBE0304BDBC31C550A5A03E207A5E4C3C71A22'
         attachment_dict = {'content-disposition': 'attachment',

@@ -20,12 +20,6 @@ from pixelated.adapter.model.status import Status
 
 class MarkAsReadUnreadTest(SoledadTestBase):
 
-    def setUp(self):
-        SoledadTestBase.setUp(self)
-
-    def tearDown(self):
-        SoledadTestBase.tearDown(self)
-
     def test_mark_single_as_read(self):
         input_mail = MailBuilder().build_input_mail()
         self.client.add_mail_to_inbox(input_mail)
