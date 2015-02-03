@@ -1,5 +1,15 @@
 #!/bin/bash
 
+NUM_OF_CORES=''
+
+function resolveNumOfCores {
+        if [ "$(uname)" ==  "Darwin" ]; then
+                NUM_OF_CORES="$(sysctl -n hw.ncpu)"
+        else
+                NUM_OF_CORES="$(nproc)"
+        fi
+}
+
 function setuppy {
         pip install -r test_requirements.txt
         python setup.py develop $*
@@ -14,7 +24,9 @@ function setupjs {
 }
 
 function runIntegrationTests {
-        trial --reporter=text $* test.integration
+        resolveNumOfCores
+        echo $NUM_OF_CORES
+        trial -j $NUM_OF_CORES --reporter=text $* test.integration
 }
 
 function runUnitTests {
