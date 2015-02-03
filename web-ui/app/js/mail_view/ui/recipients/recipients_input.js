@@ -122,7 +122,10 @@ define([
           highlight: true,
           minLength: 1
         }, {
-          source: createEmailCompleter().ttAdapter()
+          source: createEmailCompleter().ttAdapter(),
+          templates: {
+              suggestion: function (o) { return _.escape(o['value']) }
+          }
         });
       };
 
