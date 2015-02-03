@@ -1,11 +1,9 @@
 import json
 from pixelated.adapter.model.mail import InputMail
-from pixelated.resources import respond_json, respond_json_deferred
-from twisted.web import server
+from pixelated.resources import respond_json
 from twisted.web.resource import Resource
 from leap.common.events import (
     register,
-    unregister,
     events_pb2 as proto
 )
 
