@@ -57,7 +57,7 @@ setup(name='pixelated-user-agent',
       install_requires=[
            'pyasn1==0.1.3',
            'gnupg==1.2.5',
-           'Twisted==12.0.0',
+           'Twisted==13.2.0',
            'requests==2.0.0',
            'srp==1.0.4',
            'dirspec==4.2.0',
