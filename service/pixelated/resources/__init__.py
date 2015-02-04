@@ -20,7 +20,6 @@ def respond_json(entity, request, status_code=200):
     request.responseHeaders.addRawHeader(b"content-type", b"application/json")
     request.code = status_code
     return json_response
-    # request.finish()
 
 
 def respond_json_deferred(entity, request, status_code=200):

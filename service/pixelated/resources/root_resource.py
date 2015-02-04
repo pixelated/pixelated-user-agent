@@ -28,8 +28,8 @@ class RootResource(Resource):
         self.putChild('features', FeaturesResource())
         self.putChild('sync_info', SyncInfoResource())
         self.putChild('tags', TagsResource(search_engine))
-        self.putChild('mails', MailsResource(search_engine, mail_service, draft_service))
-        self.putChild('mail', MailResource(mail_service, search_engine))
+        self.putChild('mails', MailsResource(mail_service, draft_service))
+        self.putChild('mail', MailResource(mail_service))
 
     def _get_static_folder(self):
 

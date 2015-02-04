@@ -11,59 +11,44 @@ from leap.common.events import (
 class MailsUnreadResource(Resource):
     isLeaf = True
 
-    def __init__(self, mail_service, search_engine):
+    def __init__(self, mail_service):
         Resource.__init__(self)
-        self._search_engine = search_engine
         self._mail_service = mail_service
 
     def render_POST(self, request):
-        content_dict = json.load(request.content)
-        idents = content_dict.get('idents')
+        idents = json.load(request.content).get('idents')
         for ident in idents:
-            mail = self._mail_service.mark_as_unread(ident)
-            self._search_engine.index_mail(mail)
+            self._mail_service.mark_as_unread(ident)
         return respond_json(None, request)
 
 
 class MailsReadResource(Resource):
     isLeaf = True
 
-    def __init__(self, mail_service, search_engine):
+    def __init__(self, mail_service):
         Resource.__init__(self)
-        self._search_engine = search_engine
         self._mail_service = mail_service
 
     def render_POST(self, request):
-        content_dict = json.load(request.content)
-        idents = content_dict.get('idents')
+        idents = json.load(request.content).get('idents')
         for ident in idents:
-            mail = self._mail_service.mark_as_read(ident)
-            self._search_engine.index_mail(mail)
+            self._mail_service.mark_as_read(ident)
+
         return respond_json(None, request)
 
 
 class MailsDeleteResource(Resource):
     isLeaf = True
 
-    def __init__(self, mail_service, search_engine):
+    def __init__(self, mail_service):
         Resource.__init__(self)
         self._mail_service = mail_service
-        self._search_engine = search_engine
 
     def render_POST(self, request):
         idents = json.loads(request.content.read())['idents']
         for ident in idents:
-            self._delete_mail(ident)
+            self._mail_service.delete_mail(ident)
         return respond_json(None, request)
-
-    def _delete_mail(self, mail_id):
-        mail = self._mail_service.mail(mail_id)
-        if mail.mailbox_name == 'TRASH':
-            self._mail_service.delete_permanent(mail_id)
-            self._search_engine.remove_from_index(mail_id)
-        else:
-            trashed_mail = self._mail_service.delete_mail(mail_id)
-            self._search_engine.index_mail(trashed_mail)
 
 
 class MailsResource(Resource):
@@ -72,20 +57,18 @@ class MailsResource(Resource):
 
         def on_error(event):
             delivery_error_mail = InputMail.delivery_error_template(delivery_address=event.content)
-            delivery_error_mail = self._mail_service.mailboxes.inbox().add(delivery_error_mail)
-            self._search_engine.index_mail(delivery_error_mail)
+            self._mail_service.mailboxes.inbox().add(delivery_error_mail)
 
         register(signal=proto.SMTP_SEND_MESSAGE_ERROR, callback=on_error)
 
-    def __init__(self, search_engine, mail_service, draft_service):
+    def __init__(self, mail_service, draft_service):
         Resource.__init__(self)
-        self.putChild('delete', MailsDeleteResource(mail_service, search_engine))
-        self.putChild('read', MailsReadResource(mail_service, search_engine))
-        self.putChild('unread', MailsUnreadResource(mail_service, search_engine))
+        self.putChild('delete', MailsDeleteResource(mail_service))
+        self.putChild('read', MailsReadResource(mail_service))
+        self.putChild('unread', MailsUnreadResource(mail_service))
 
         self._draft_service = draft_service
         self._mail_service = mail_service
-        self._search_engine = search_engine
         self._register_smtp_error_handler()
 
     def render_GET(self, request):
@@ -116,9 +99,7 @@ class MailsResource(Resource):
             if not self._mail_service.mail_exists(draft_id):
                 return respond_json("", request, status_code=422)
             pixelated_mail = self._draft_service.update_draft(draft_id, _mail)
-            self._search_engine.remove_from_index(draft_id)
         else:
             pixelated_mail = self._draft_service.create_draft(_mail)
-        self._search_engine.index_mail(pixelated_mail)
 
         return respond_json({'ident': pixelated_mail.ident}, request)

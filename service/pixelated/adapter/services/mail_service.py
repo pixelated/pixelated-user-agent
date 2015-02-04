@@ -35,11 +35,14 @@ class MailService:
         return self.querier.mails(mail_ids), total
 
     def update_tags(self, mail_id, new_tags):
+        new_tags = [x.lower() for x in map(lambda e: e.strip(), new_tags) if x != '']
         reserved_words = self.tag_service.extract_reserved(new_tags)
         if len(reserved_words):
             raise ValueError('None of the following words can be used as tags: ' + ' '.join(reserved_words))
         mail = self.mail(mail_id)
         mail.update_tags(set(new_tags))
+        self.search_engine.index_mail(mail)
+
         return mail
 
     def mail(self, mail_id):
@@ -63,14 +66,24 @@ class MailService:
         return self.mailboxes.sent().add(mail)
 
     def mark_as_read(self, mail_id):
-        return self.mail(mail_id).mark_as_read()
+        mail = self.mail(mail_id)
+        mail.mark_as_read()
+        self.search_engine.index_mail(mail)
 
     def mark_as_unread(self, mail_id):
-        return self.mail(mail_id).mark_as_unread()
+        mail = self.mail(mail_id)
+        mail.mark_as_unread()
+        self.search_engine.index_mail(mail)
 
     def delete_mail(self, mail_id):
-        return self.mailboxes.move_to_trash(mail_id)
+        mail = self.mail(mail_id)
+        if mail.mailbox_name == 'TRASH':
+            self.delete_permanent(mail_id)
+        else:
+            trashed_mail = self.mailboxes.move_to_trash(mail_id)
+            self.search_engine.index_mail(trashed_mail)
 
     def delete_permanent(self, mail_id):
         mail = self.mail(mail_id)
+        self.search_engine.remove_from_index(mail_id)
         self.querier.remove_mail(mail)

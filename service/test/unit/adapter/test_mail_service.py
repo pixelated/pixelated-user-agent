@@ -14,10 +14,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
-from pixelated.adapter.model.mail import InputMail
+from pixelated.adapter.model.mail import InputMail, PixelatedMail
 
 from pixelated.adapter.services.mail_service import MailService
-from test.support.test_helper import mail_dict
+from test.support.test_helper import mail_dict, leap_mail
 from mockito import *
 
 
@@ -49,6 +49,9 @@ class TestMailService(unittest.TestCase):
         verify(mail).mark_as_read()
 
     def test_delete_mail(self):
+        mail_to_delete = PixelatedMail.from_soledad(*leap_mail(), soledad_querier=None)
+        when(self.mail_service).mail(1).thenReturn(mail_to_delete)
+
         self.mail_service.delete_mail(1)
 
         verify(self.mailboxes).move_to_trash(1)
