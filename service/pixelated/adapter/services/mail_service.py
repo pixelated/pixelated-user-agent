@@ -55,10 +55,12 @@ class MailService:
         mail = InputMail.from_dict(content_dict)
         draft_id = content_dict.get('ident')
 
-        self.mail_sender.sendmail(mail)
-        sent_mail = self.move_to_sent(draft_id, mail)
+        def move_to_sent(_):
+            return self.move_to_sent(draft_id, mail)
 
-        return sent_mail
+        deferred = self.mail_sender.sendmail(mail)
+        deferred.addCallback(move_to_sent)
+        return deferred
 
     def move_to_sent(self, last_draft_ident, mail):
         if last_draft_ident:

@@ -42,10 +42,6 @@ class SoledadTestBase(unittest.TestCase):
         })
         return [ResponseMail(m) for m in res['mails']]
 
-    def post_mail(self, data):
-        res, req = self.client.post('/mails', data)
-        return ResponseMail(res)
-
     def get_attachment(self, ident, encoding):
         res, req = self.client.get("/attachment/%s" % ident, {'encoding': [encoding]}, as_json=False)
         return res

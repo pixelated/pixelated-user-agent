@@ -1,7 +1,8 @@
 import json
 from pixelated.adapter.model.mail import InputMail
-from pixelated.resources import respond_json
+from pixelated.resources import respond_json, respond_json_deferred
 from twisted.web.resource import Resource
+from twisted.web import server
 from leap.common.events import (
     register,
     events_pb2 as proto
@@ -86,9 +87,20 @@ class MailsResource(Resource):
 
     def render_POST(self, request):
         content_dict = json.loads(request.content.read())
-        sent_mail = self._mail_service.send_mail(content_dict)
 
-        return respond_json(sent_mail.as_dict(), request)
+        deferred = self._mail_service.send_mail(content_dict)
+
+        def onSuccess(sent_mail):
+            data = sent_mail.as_dict()
+            respond_json_deferred(data, request)
+
+        def onError(error):
+            respond_json_deferred({'message': str(error)}, request, status_code=422)
+
+        deferred.addCallback(onSuccess)
+        deferred.addErrback(onError)
+
+        return server.NOT_DONE_YET
 
     def render_PUT(self, request):
         content_dict = json.loads(request.content.read())

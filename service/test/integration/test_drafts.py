@@ -15,39 +15,68 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 from test.support.integration import *
+from mockito import *
+from twisted.internet.defer import Deferred
 
 
 class DraftsTest(SoledadTestBase):
 
+    def tearDown(self):
+        unstub()
+
     def test_post_sends_mail_and_deletes_previous_draft_if_it_exists(self):
+        # act is if sending the mail by SMTP succeeded
+        sendmail_deferred = Deferred()
+        when(self.client.mail_sender).sendmail(any()).thenReturn(sendmail_deferred)
+
         # creates one draft
         first_draft = MailBuilder().with_subject('First draft').build_json()
         first_draft_ident = self.put_mail(first_draft)[0]['ident']
 
         # sends an updated version of the draft
         second_draft = MailBuilder().with_subject('Second draft').with_ident(first_draft_ident).build_json()
-        self.post_mail(second_draft)
+        deferred_res = self.post_mail(second_draft)
 
-        sent_mails = self.get_mails_by_tag('sent')
-        drafts = self.get_mails_by_tag('drafts')
+        sendmail_deferred.callback(None)  # SMTP succeeded
 
-        # make sure there is one email in the sent mailbox and it is the second draft
-        self.assertEquals(1, len(sent_mails))
-        self.assertEquals('Second draft', sent_mails[0].subject)
+        def onSuccess(mail):
+            sent_mails = self.get_mails_by_tag('sent')
+            drafts = self.get_mails_by_tag('drafts')
 
-        # make sure that there are no drafts in the draft mailbox
-        self.assertEquals(0, len(drafts))
+            # make sure there is one email in the sent mailbox and it is the second draft
+            self.assertEquals(1, len(sent_mails))
+            self.assertEquals('Second draft', sent_mails[0].subject)
+
+            # make sure that there are no drafts in the draft mailbox
+            self.assertEquals(0, len(drafts))
+
+        deferred_res.addCallback(onSuccess)
+        return deferred_res
 
     def test_post_sends_mail_even_when_draft_does_not_exist(self):
+        # act is if sending the mail by SMTP succeeded
+        sendmail_deferred = Deferred()
+        when(self.client.mail_sender).sendmail(any()).thenReturn(sendmail_deferred)
+
         first_draft = MailBuilder().with_subject('First draft').build_json()
-        self.post_mail(first_draft)
+        deferred_res = self.post_mail(first_draft)
+        sendmail_deferred.callback(True)
 
-        sent_mails = self.get_mails_by_tag('sent')
-        drafts = self.get_mails_by_tag('drafts')
+        def onSuccess(result):
+            sent_mails = self.get_mails_by_tag('sent')
+            drafts = self.get_mails_by_tag('drafts')
 
-        self.assertEquals(1, len(sent_mails))
-        self.assertEquals('First draft', sent_mails[0].subject)
-        self.assertEquals(0, len(drafts))
+            self.assertEquals(1, len(sent_mails))
+            self.assertEquals('First draft', sent_mails[0].subject)
+            self.assertEquals(0, len(drafts))
+
+        deferred_res.addCallback(onSuccess)
+        return deferred_res
+
+    def post_mail(self, data):
+        deferred_res, req = self.client.post('/mails', data)
+        deferred_res.callback(None)
+        return deferred_res
 
     def test_put_creates_a_draft_if_it_does_not_exist(self):
         mail = MailBuilder().with_subject('A new draft').build_json()

@@ -22,7 +22,7 @@ from twisted.internet import reactor
 from pixelated.support.functional import flatten
 
 
-class MailSender():
+class MailSender(object):
     def __init__(self, account_email_address, smtp_client=None):
         self.account_email_address = account_email_address
 
@@ -41,11 +41,11 @@ class MailSender():
 
     def sendmail(self, mail):
         recipients = flatten([mail.to, mail.cc, mail.bcc])
-        normalized_recepients = self.get_email_addresses(recipients)
+        normalized_recipients = self.get_email_addresses(recipients)
         resultDeferred = Deferred()
         senderFactory = SMTPSenderFactory(
             fromEmail=self.account_email_address,
-            toEmail=normalized_recepients,
+            toEmail=normalized_recipients,
             file=StringIO(mail.to_smtp_format()),
             deferred=resultDeferred)
 
