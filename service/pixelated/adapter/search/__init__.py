@@ -18,6 +18,7 @@ from pixelated.support.encrypted_file_storage import EncryptedFileStorage
 
 import os
 from pixelated.adapter.model.status import Status
+from pixelated.adapter.contacts import address_duplication_filter
 from pixelated.support.functional import flatten
 from whoosh.index import FileIndex
 from whoosh.fields import *
@@ -211,6 +212,6 @@ class SearchEngine(object):
                                       groupedby=sorting.FieldFacet('bcc', allow_overlap=True)).groups()
                 sender = searcher.search(sender.parse("*%s*" % query), limit=None, mask=restrict_q,
                                          groupedby=sorting.FieldFacet('sender', allow_overlap=True)).groups()
-                return flatten([to, cc, bcc, sender])
+                return address_duplication_filter(flatten([to, cc, bcc, sender]))
 
         return []
