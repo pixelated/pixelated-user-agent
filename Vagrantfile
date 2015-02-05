@@ -57,7 +57,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.network :forwarded_port, guest: 3333, host: 3333 # do NOT add host_ip in this line. It is not necessary
-  config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
+
+  if /mswin|mingw/ =~ RUBY_PLATFORM
+    config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
+  end
+
   config.vm.provider "virtualbox" do |v|
     v.memory = 1024
   end
