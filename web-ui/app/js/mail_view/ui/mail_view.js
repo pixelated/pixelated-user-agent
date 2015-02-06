@@ -179,6 +179,7 @@ define(
       };
 
       this.removeTag = function (tag) {
+        tag = tag.toString();
         var filteredTags = _.without(this.attr.mail.tags, tag);
         this.updateTags(this.attr.mail, filteredTags);
         this.trigger(document, events.dispatchers.tags.refreshTagList);

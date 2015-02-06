@@ -33,10 +33,23 @@ describeComponent('mail_view/ui/mail_view', function () {
   it('removes the tag from the mail when the tag label is clicked', function() {
     var updateSpy = spyOnEvent(document, Pixelated.events.mail.tags.update);
 
+    testData.mail.tags = ['inbox', 'other'];
     this.component.displayMail({}, testData);
     this.component.removeTag('inbox');
 
     expect(updateSpy).toHaveBeenTriggeredOn(document);
+    expect(updateSpy.mostRecentCall.data.tags).toEqual(['other']);
+  });
+
+  it('removes numeric tag from the mail when its label is clicked', function() {
+    var updateSpy = spyOnEvent(document, Pixelated.events.mail.tags.update);
+
+    testData.mail.tags = ['inbox', '12345'];
+    this.component.displayMail({}, testData);
+    this.component.removeTag(12345);
+
+    expect(updateSpy).toHaveBeenTriggeredOn(document);
+    expect(updateSpy.mostRecentCall.data.tags).toEqual(['inbox']);
   });
 
   it('remove tag triggers refreshTagList event', function(){
