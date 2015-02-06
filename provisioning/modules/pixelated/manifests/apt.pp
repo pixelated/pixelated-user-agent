@@ -3,9 +3,15 @@ class pixelated::apt {
 
   # pixelated repo
   file { '/etc/apt/sources.list.d/pixelated.list':
-    content => "deb http://packages.pixelated-project.org/debian wheezy-snapshots main\ndeb http://packages.pixelated-project.org/debian wheezy-backports main\ndeb http://packages.pixelated-project.org/debian wheezy main\n",
+    source => 'puppet:///modules/pixelated/apt/pixelated.list',
     owner   => 'root',
     require => Exec['add_pixelated_key'],
+    notify  => Exec['apt_get_update'],
+  }
+
+  file { '/etc/apt/preferences.d/pixelated':
+    source => 'puppet:///modules/pixelated/apt/pixelated-preferences',
+    owner  => 'root',
     notify  => Exec['apt_get_update'],
   }
 

@@ -1,0 +1,11 @@
+Package: python-twisted*
+Pin: release a=wheezy-backports
+Pin-Priority: 999
+
+Package: python-whoosh
+Pin: origin packages.pixelated-project.org
+Pin-Priority: 999
+
+Package: python-pycryptopp
+Pin: release a=wheezy-backports
+Pin-Priority: 999
