@@ -35,7 +35,7 @@ class MailService:
         return self.querier.mails(mail_ids), total
 
     def update_tags(self, mail_id, new_tags):
-        new_tags = [x.lower() for x in map(lambda e: e.strip(), new_tags) if x != '']
+        new_tags = self._filter_white_space_tags(new_tags)
         reserved_words = self.tag_service.extract_reserved(new_tags)
         if len(reserved_words):
             raise ValueError('None of the following words can be used as tags: ' + ' '.join(reserved_words))
@@ -44,6 +44,9 @@ class MailService:
         self.search_engine.index_mail(mail)
 
         return mail
+
+    def _filter_white_space_tags(self, tags):
+        return filter(bool, map(lambda e: e.strip(), tags))
 
     def mail(self, mail_id):
         return self.querier.mail(mail_id)

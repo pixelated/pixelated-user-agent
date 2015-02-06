@@ -31,10 +31,25 @@ class TagsTest(SoledadTestBase):
         self.post_tags(mail.ident, self._tags_json(['IMPORTANT']))
 
         mails = self.get_mails_by_tag('inbox')
-        self.assertEquals({'important'}, set(mails[0].tags))
+        self.assertEquals({'IMPORTANT'}, set(mails[0].tags))
+
+        mails = self.get_mails_by_tag('IMPORTANT')
+        self.assertEquals('Mail with tags', mails[0].subject)
+
+    def test_tags_are_case_sensitive(self):
+        mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
+        self.client.add_mail_to_inbox(mail)
+
+        self.post_tags(mail.ident, self._tags_json(['ImPoRtAnT']))
 
         mails = self.get_mails_by_tag('important')
-        self.assertEquals('Mail with tags', mails[0].subject)
+        self.assertEquals(0, len(mails))
+
+        mails = self.get_mails_by_tag('IMPORTANT')
+        self.assertEquals(0, len(mails))
+
+        mails = self.get_mails_by_tag('ImPoRtAnT')
+        self.assertEquals({'ImPoRtAnT'}, set(mails[0].tags))
 
     def test_empty_tags_are_not_allowed(self):
         mail = MailBuilder().with_subject('Mail with tags').build_input_mail()

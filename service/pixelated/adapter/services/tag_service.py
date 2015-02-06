@@ -23,4 +23,5 @@ class TagService:
 
     @classmethod
     def extract_reserved(cls, tags):
+        tags = map(lambda tag: tag.lower(), tags)
         return {tag.name for tag in cls.SPECIAL_TAGS if tag.name in tags}
