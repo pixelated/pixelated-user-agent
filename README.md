@@ -23,7 +23,7 @@ Requirements:
 
 Clone the repository:
 
-    git clone git@github.com:pixelated-project/pixelated-user-agent.git
+    git clone https://github.com/pixelated-project/pixelated-user-agent.git
 
 From the root folder, set up the vagrant machine: 
 
