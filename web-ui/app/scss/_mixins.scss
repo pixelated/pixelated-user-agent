@@ -87,7 +87,6 @@
       padding: 2px 3px;
       margin: 0 1px;
       position: relative;
-      text-transform: uppercase;
       @include border-radius(2px);
       &[data-tag="drafts"] {
         color: $attention;
