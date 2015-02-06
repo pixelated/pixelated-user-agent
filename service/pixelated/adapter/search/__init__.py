@@ -18,13 +18,11 @@ from pixelated.support.encrypted_file_storage import EncryptedFileStorage
 
 import os
 from pixelated.adapter.model.status import Status
-from pixelated.adapter.contacts import address_duplication_filter
-from pixelated.support.functional import flatten
+from pixelated.adapter.search.contacts import contacts_suggestions
 from whoosh.index import FileIndex
 from whoosh.fields import *
 from whoosh.qparser import QueryParser
 from whoosh.qparser import MultifieldParser
-from whoosh.query import Term
 from whoosh import sorting
 from pixelated.support.functional import unique
 from pixelated.support.date import milliseconds
@@ -196,22 +194,5 @@ class SearchEngine(object):
                 writer.commit()
 
     def contacts(self, query):
-        restrict_q = Term("tag", "drafts") | Term("tag", "trash")
-
-        if query:
-            to = QueryParser('to', self._index.schema)
-            cc = QueryParser('cc', self._index.schema)
-            bcc = QueryParser('bcc', self._index.schema)
-            sender = QueryParser('sender', self._index.schema)
-            with self._index.searcher() as searcher:
-                to = searcher.search(to.parse("*%s*" % query), limit=None, mask=restrict_q,
-                                     groupedby=sorting.FieldFacet('to', allow_overlap=True)).groups()
-                cc = searcher.search(cc.parse("*%s*" % query), limit=None, mask=restrict_q,
-                                     groupedby=sorting.FieldFacet('cc', allow_overlap=True)).groups()
-                bcc = searcher.search(bcc.parse("*%s*" % query), limit=None, mask=restrict_q,
-                                      groupedby=sorting.FieldFacet('bcc', allow_overlap=True)).groups()
-                sender = searcher.search(sender.parse("*%s*" % query), limit=None, mask=restrict_q,
-                                         groupedby=sorting.FieldFacet('sender', allow_overlap=True)).groups()
-                return address_duplication_filter(flatten([to, cc, bcc, sender]))
-
-        return []
+        with self._index.searcher() as searcher:
+            return contacts_suggestions(query, searcher)

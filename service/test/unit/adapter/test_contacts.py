@@ -15,8 +15,8 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
 
-from pixelated.adapter.contacts import address_duplication_filter
-from pixelated.adapter.contacts import extract_mail_address
+from pixelated.adapter.search.contacts import address_duplication_filter
+from pixelated.adapter.search.contacts import extract_mail_address
 
 
 class TestContacts(unittest.TestCase):
