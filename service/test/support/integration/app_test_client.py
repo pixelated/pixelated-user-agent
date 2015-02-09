@@ -31,7 +31,6 @@ from pixelated.config import App
 from pixelated.resources.root_resource import RootResource
 from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.search import SearchEngine
-from test.support.integration.model import MailBuilder
 from test.support.test_helper import request_mock
 from twisted.internet import reactor
 from twisted.internet.defer import succeed
@@ -73,6 +72,9 @@ class AppTestClient:
         self.search_engine.index_mails(self.mail_service.all_mails())
 
         self.app.resource = RootResource()
+
+        # sending a mail is always successful
+        self.mail_sender.sendmail.side_effect = lambda mail: succeed(mail)
 
         self.app.resource.initialize(self.soledad_querier, self.search_engine, self.mail_service, self.draft_service)
 
