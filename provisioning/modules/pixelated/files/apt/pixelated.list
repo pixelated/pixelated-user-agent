@@ -1,3 +1,5 @@
 deb http://packages.pixelated-project.org/debian wheezy-snapshots main
 deb http://packages.pixelated-project.org/debian wheezy-backports main
 deb http://packages.pixelated-project.org/debian wheezy main
+deb http://http.us.debian.org/debian wheezy-backports main
+deb-src http://http.us.debian.org/debian wheezy-backports main
