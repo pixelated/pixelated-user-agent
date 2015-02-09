@@ -12,7 +12,7 @@ This contains the Pixelated User Agent, which is composed of a web UI written as
 # Running it
 The User Agent has 2 components:
 * The Web Ui, which is the the HTML, CSS and JS files served to the browser;
-* The Service component, which is the web service that serves the Web UI to the browser, provides the REST API which the the Web Ui uses, and integrates with the LEAP or Pixelated provider.
+* The Service component, which is the web service that serves the Web UI to the browser, provides the REST API which the Web Ui uses, and integrates with the LEAP or Pixelated provider.
 
 ## Quickstart
 
@@ -25,10 +25,10 @@ Clone the repository:
 
     git clone https://github.com/pixelated-project/pixelated-user-agent.git
 
-From the root folder, set up the vagrant machine: 
+From the root folder, set up the vagrant machine:
 
     vagrant up source
-    
+
 You can log into the machine using:
 
     vagrant ssh
@@ -73,11 +73,11 @@ node, npm, compass (ruby), virtualenv, git
 
 * Enter the `service` folder
 
-* Create the virtualenv with `virtualenv .virtualenv` 
+* Create the virtualenv with `virtualenv .virtualenv`
 
 * Activate it with `source .virtualenv/bin/activate`
 
-* Install the test dependencies with `pip install -r test_requirements.txt` 
+* Install the test dependencies with `pip install -r test_requirements.txt`
 
 * Run the setup with `python setup.py develop`
 
@@ -122,6 +122,3 @@ apt-get update
 
 apt-get install pixelated-user-agent
 ```
-
-**Warning:** Currently there are some challenges with the dependencies. To make the user agent work see instructions used to build the docker image: [Dockerfile](provisioning/Dockerfile).
-
