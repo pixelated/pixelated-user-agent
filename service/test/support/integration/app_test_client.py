@@ -31,7 +31,7 @@ from pixelated.config import App
 from pixelated.resources.root_resource import RootResource
 from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.search import SearchEngine
-from test.support.integration import MailBuilder
+from test.support.integration.model import MailBuilder
 from test.support.test_helper import request_mock
 from twisted.internet import reactor
 from twisted.internet.defer import succeed
