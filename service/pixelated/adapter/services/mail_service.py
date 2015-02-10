@@ -39,6 +39,7 @@ class MailService:
         reserved_words = self.tag_service.extract_reserved(new_tags)
         if len(reserved_words):
             raise ValueError('None of the following words can be used as tags: ' + ' '.join(reserved_words))
+        new_tags = self._favor_existing_tags_casing(new_tags)
         mail = self.mail(mail_id)
         mail.update_tags(set(new_tags))
         self.search_engine.index_mail(mail)
@@ -47,6 +48,15 @@ class MailService:
 
     def _filter_white_space_tags(self, tags):
         return filter(bool, map(lambda e: e.strip(), tags))
+
+    def _favor_existing_tags_casing(self, new_tags):
+        current_tags = map(lambda tag: tag['name'], self.search_engine.tags(query='', skip_default_tags=True))
+        current_tags_lower = map(lambda tag: tag.lower(), current_tags)
+
+        def _use_current_casing(new_tag_lower):
+            return current_tags[current_tags_lower.index(new_tag_lower)]
+
+        return map(lambda new_tag: _use_current_casing(new_tag.lower()) if new_tag.lower() in current_tags_lower else new_tag, new_tags)
 
     def mail(self, mail_id):
         return self.querier.mail(mail_id)

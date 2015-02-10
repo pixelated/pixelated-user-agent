@@ -36,6 +36,23 @@ class TagsTest(SoledadTestBase):
         mails = self.get_mails_by_tag('IMPORTANT')
         self.assertEquals('Mail with tags', mails[0].subject)
 
+    def test_use_old_casing_when_same_tag_with_different_casing_is_posted(self):
+        mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
+        self.client.add_mail_to_inbox(mail)
+        self.post_tags(mail.ident, self._tags_json(['ImPoRtAnT']))
+        mails = self.get_mails_by_tag('ImPoRtAnT')
+        self.assertEquals({'ImPoRtAnT'}, set(mails[0].tags))
+
+        another_mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
+        self.client.add_mail_to_inbox(another_mail)
+        self.post_tags(another_mail.ident, self._tags_json(['IMPORTANT']))
+        mails = self.get_mails_by_tag('IMPORTANT')
+        self.assertEquals(0, len(mails))
+        mails = self.get_mails_by_tag('ImPoRtAnT')
+        self.assertEquals(2, len(mails))
+        self.assertEquals({'ImPoRtAnT'}, set(mails[0].tags))
+        self.assertEquals({'ImPoRtAnT'}, set(mails[1].tags))
+
     def test_tags_are_case_sensitive(self):
         mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
         self.client.add_mail_to_inbox(mail)
