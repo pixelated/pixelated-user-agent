@@ -18,6 +18,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.box = "leap-wheezy"
 
+  unless Vagrant.has_plugin?("vagrant-vbguest")
+    raise 'plugin vagrant-vbguest is not installed! Please run `vagrant plugin install vagrant-vbguest`'
+  end
+
+  config.vbguest.auto_update = false
+
   config.vm.define "source", primary: true do |source|
     source.vm.provider :virtualbox do |v, override|
       override.vm.box_url = "https://downloads.leap.se/platform/vagrant/virtualbox/leap-wheezy.box"
