@@ -94,13 +94,11 @@ pixelated-user-agent --register your.provider.org desired_account
 * Run:
 ```
 $ npm install
-$ bower install
+$ ./node_modules/bower/bin/bower install
+$ ./go build
 ```
 
-If you don't have `bower` installed globally, change the third line to `$ ./node_modules/bower/bin/bower install`
-
-The Web Ui needs to generate the templates and CSS to be served. For that, you need (from inside `./web-ui`) to run the command `./go build` at least once after downloading the code. From here on, you can run `./go watch` to auto-generate the resources as they are changed.
-
+The Web Ui needs to generate the html and CSS to be served, that's why you need to the command `./go build` at least once after downloading the code. From here on, you can run `./go watch` to auto-generate the resources as they are changed.
 
 And that's it.
 
