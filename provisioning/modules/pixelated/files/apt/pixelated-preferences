@@ -9,3 +9,12 @@ Pin-Priority: 999
 Package: python-pycryptopp
 Pin: release a=wheezy-backports
 Pin-Priority: 999
+
+Package: python-requests
+Pin: release a=wheezy-backports
+Pin-Priority: 999
+
+# python-requests from backports depends on python-urllib3 (>= 1.7.1)
+Package: python-urllib3
+Pin: release a=wheezy-backports
+Pin-Priority: 999
