@@ -9,10 +9,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
-  # we need a debian testing vagrantbox because
-  # - currently the useragent debian packages depend on python-cryptography which is only
-  #   available in debian jessie (for the fernet module to create keys)
-  # - the source installation needs npm, which is also only available in debian jessie
+  # the source installation needs npm, which is also only available in debian jessie
+  # so we need a debian testing vagrantbox
+
+  # 1024 mb ram is required on the source vm so that all tests can run fine
+  # 512  mb ram is probably enough for the deb vm
 
   # Please verify the sha512 sum of the downloaded box before importing it into vagrant !
   # see https://leap.se/en/docs/platform/details/development#Verify.vagrantbox.download
@@ -56,13 +57,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box = "hackday-pixelated-user-agent"
   end
 
-  config.vm.network :forwarded_port, guest: 3333, host: 3333 # do NOT add host_ip in this line. It is not necessary
-
   if /mswin|mingw/ =~ RUBY_PLATFORM
     config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
   end
 
+  config.vm.provider "libvirt" do |v, override|
+    v.memory = 1024
+    config.vm.network :forwarded_port, guest: 3333, guest_ip: '127.0.0.1', host: 3333
+  end
+
   config.vm.provider "virtualbox" do |v|
     v.memory = 1024
+    config.vm.network :forwarded_port, guest: 3333, host: 3333 # do NOT add host_ip in this line. It is not necessary
   end
 end
