@@ -63,9 +63,6 @@ define(
         var list = tag.default ? defaultList : customList;
 
         var tagComponent = Tag.appendedTo(list, {tag: tag, currentTag: this.getCurrentTag()});
-        if (_.contains(_.keys(ORDER), tag.name)) {
-          tagComponent.attr.shortcut = this.renderShortcut(tag, tagComponent);
-        }
       }
 
       function resetTagList(lists) {
