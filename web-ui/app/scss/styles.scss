@@ -480,22 +480,19 @@ button {
   }
 }
 
+.left-off-canvas-logo {
+  img {
+    padding: 4px 0 0 4px;
+    width: 36px;
+  }
+}
+
 .collapsed-nav {
   width: 50px;
   position: absolute;
   z-index: 2;
   height: 100vh;
   background: $secondary;
-
-  .left-off-canvas-logo {
-    text-align: center;
-    padding: 8px;
-    display: block;
-
-    img {
-      padding-top: 1px;
-    }
-  }
 
   ul.shortcuts {
     li {
