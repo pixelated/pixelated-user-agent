@@ -4,7 +4,6 @@ class pixelated::source {
   package { [
     'git',
     'nodejs-legacy',
-    'npm',
     'python-dev',
     'python-virtualenv',
     'libffi-dev',
@@ -15,6 +14,8 @@ class pixelated::source {
     ensure => latest
   }
 
+  include pixelated::source::npm
+
   package { 'compass':
     ensure   => installed,
     provider => 'gem'
@@ -22,20 +23,8 @@ class pixelated::source {
 
   stage { 'install_pixelated': }
 
-  class { 'install_pixelated' :
+  class { 'pixelated::source::install_useragent' :
     stage => install_pixelated
-  }
-
-  class install_pixelated {
-    $virtualenv_path = '/home/vagrant/user-agent-venv'
-
-    exec { 'install-pixelated':
-      environment => 'USERNAME=vagrant',
-      command     => "/vagrant/install-pixelated.sh -v \"${virtualenv_path}\" -n /home/vagrant/boxed_node_modules",
-      cwd         => '/vagrant',
-      user        => 'vagrant',
-      timeout     => 0
-    }
   }
 
   Stage['main'] -> Stage['install_pixelated']

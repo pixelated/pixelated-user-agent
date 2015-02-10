@@ -90,7 +90,8 @@ if [ -z "$CUSTOM_NODE_MODULES_LOCATION" ] ; then
 else
   install_node_modules_at_custom_location "$CUSTOM_NODE_MODULES_LOCATION"
 fi
-node_modules/bower/bin/bower install --config.interactive=false --allow-root
+
+node_modules/bower/bin/bower -V install --config.interactive=false --allow-root
 LC_ALL=en_US.UTF-8 ./go build
 
 # install service dependencies

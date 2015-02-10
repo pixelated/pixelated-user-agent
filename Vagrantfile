@@ -19,14 +19,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # see https://leap.se/en/docs/platform/details/development#Verify.vagrantbox.download
   # for details
 
-  config.vm.box = "leap-jessie-amd64"
+  config.vm.box = "leap-wheezy"
 
   config.vm.define "source", primary: true do |source|
     source.vm.provider :virtualbox do |v, override|
-      override.vm.box_url = "https://downloads.leap.se/platform/vagrant/virtualbox/leap-debian-jessie-amd64-virtualbox.box"
+      override.vm.box_url = "https://downloads.leap.se/platform/vagrant/virtualbox/leap-wheezy.box"
     end
     source.vm.provider "libvirt" do |v, override|
-      override.vm.box_url = "https://downloads.leap.se/platform/vagrant/libvirt/Debian-jessie.beta1-amd64-netboot.box"
+      override.vm.box_url = "https://downloads.leap.se/platform/vagrant/libvirt/leap-wheezy.box"
     end
     source.vm.provision "puppet" do |puppet|
       puppet.manifests_path = "provisioning/manifests"
