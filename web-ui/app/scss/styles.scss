@@ -176,10 +176,6 @@
   @include border-radius(100px);
 }
 
-article {
-  padding-left: 50px !important;
-}
-
 section {
   display: inline-block;
   vertical-align: top;
@@ -601,12 +597,12 @@ display: table; }
 clear: both; }
 
 .off-canvas-wrap.move-right.content > .inner-wrap {
-  -ms-transform: translate(9rem, 0);
-  -webkit-transform: translate3d(9rem, 0, 0);
-  -moz-transform: translate3d(9rem, 0, 0);
-  -ms-transform: translate3d(9rem, 0, 0);
-  -o-transform: translate3d(9rem, 0, 0);
-  transform: translate3d(9rem, 0, 0);
+  -ms-transform: translate(6rem, 0);
+  -webkit-transform: translate3d(6rem, 0, 0);
+  -moz-transform: translate3d(6rem, 0, 0);
+  -ms-transform: translate3d(6rem, 0, 0);
+  -o-transform: translate3d(6rem, 0, 0);
+  transform: translate3d(6rem, 0, 0);
 }
 
 .move-right .exit-off-canvas {
@@ -635,7 +631,8 @@ background: rgba(255, 255, 255, 0.05); } }
 }
 
 .off-canvas-wrap.content {
-  left: 75px;
+  left: 50px;
+  padding-right: 50px;
 }
 
 .offcanvas-overlap .left-off-canvas-menu, .offcanvas-overlap .right-off-canvas-menu {
