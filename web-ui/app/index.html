@@ -19,26 +19,28 @@
 
 <div class="off-canvas-wrap move-right menu" data-offcanvas>
   <div class="inner-wrap">
-  <section id="left-pane" class="left-off-canvas-menu">
-  <nav id="tag-list"></nav>
-  <nav id="logout"></nav>
-</section>
-</div>
+    <section id="left-pane" class="left-off-canvas-menu">
+      <a class="fake-left-off-canvas-toggle" href="#">
+        <i class=" toggle fa fa-navicon"></i>
+      </a>
+      <nav id="tag-list"></nav>
+      <nav id="logout"></nav>
+    </section>
+  </div>
 </div>
 
-<div class="off-canvas-wrap" data-offcanvas>
+<div class="off-canvas-wrap content" data-offcanvas>
   <header id="main" >
     <div id="user-alerts" class="message-panel"></div>
     <div id="loading" class="message-panel"><span>Loading...</span></div>
   </header>
 
-  <div class="inner-wrap content">
+  <div class="inner-wrap">
     <div id="menu" class="column collapsed-nav no-padding">
+      <a class="left-off-canvas-toggle" href="#">
+      </a>
       <a class="left-off-canvas-logo" href="#">
         <img id="pixelated-logo" src="/assets/images/pixelated-logo_symbol_orange.png" alt="Pixelated">
-      </a>
-      <a class="left-off-canvas-toggle" href="#">
-        <i class=" toggle fa fa-navicon"></i>
       </a>
     </div>
 
@@ -86,6 +88,11 @@
 $(document).foundation();
 </script>
 
+<script>
+$('.fake-left-off-canvas-toggle').on('click', function () {
+    $('.left-off-canvas-toggle').click();
+    });
+</script>
 
 </body>
 </html>

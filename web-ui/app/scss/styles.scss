@@ -463,6 +463,23 @@ button {
   }
 }
 
+.fake-left-off-canvas-toggle {
+  color: white;
+  &:hover, &:focus {
+    color: white;
+  }
+  display: block;
+  left: 0;
+  padding: 9px;
+  background: $secondary;
+  top: 0;
+  z-index: 10000;
+  position: relative;
+  &.logout {
+    color: $action_buttons;
+  }
+}
+
 .collapsed-nav {
   width: 50px;
   position: absolute;
@@ -477,21 +494,6 @@ button {
 
     img {
       padding-top: 1px;
-    }
- }
-
-  .left-off-canvas-toggle {
-    color: white;
-    text-align: center;
-    display: block;
-    left: 0;
-    padding: 9px;
-    background: $secondary;
-    top: 0;
-    z-index: 10000;
-    position: relative;
-    &.logout {
-      color: $action_buttons;
     }
   }
 
@@ -601,13 +603,13 @@ display: table; }
 .inner-wrap:after {
 clear: both; }
 
-.off-canvas-wrap.move-right > .inner-wrap.content {
-  -ms-transform: translate(13.88889rem, 0);
-  -webkit-transform: translate3d(13.88889rem, 0, 0);
-  -moz-transform: translate3d(13.88889rem, 0, 0);
-  -ms-transform: translate3d(13.88889rem, 0, 0);
-  -o-transform: translate3d(13.88889rem, 0, 0);
-  transform: translate3d(13.88889rem, 0, 0);
+.off-canvas-wrap.move-right.content > .inner-wrap {
+  -ms-transform: translate(9rem, 0);
+  -webkit-transform: translate3d(9rem, 0, 0);
+  -moz-transform: translate3d(9rem, 0, 0);
+  -ms-transform: translate3d(9rem, 0, 0);
+  -o-transform: translate3d(9rem, 0, 0);
+  transform: translate3d(9rem, 0, 0);
 }
 
 .move-right .exit-off-canvas {
@@ -631,17 +633,12 @@ background: rgba(255, 255, 255, 0.05); } }
   position: absolute;
 }
 
-.off-canvas-wrap.move-right.menu > .inner-wrap.content {
+.off-canvas-wrap.move-right.menu > .inner-wrap {
   transform: translate3d(0, 0, 0);
 }
 
-.off-canvas-wrap .inner-wrap.content {
-  -ms-transform: translate(75px, 0);
-  -webkit-transform: translate3d(75px, 0, 0);
-  -moz-transform: translate3d(75px, 0, 0);
-  -ms-transform: translate3d(75px, 0, 0);
-  -o-transform: translate3d(75px, 0, 0);
-  transform: translate3d(75px, 0, 0);
+.off-canvas-wrap.content {
+  left: 75px;
 }
 
 .offcanvas-overlap .left-off-canvas-menu, .offcanvas-overlap .right-off-canvas-menu {
