@@ -55,6 +55,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "hackday", autostart: false do |hackday|
     config.vm.box = "hackday-pixelated-user-agent"
+    hackday.vm.provision "puppet" do |puppet|
+      puppet.manifests_path = "provisioning/manifests"
+      puppet.module_path    = "provisioning/modules"
+      puppet.manifest_file  = "hackday.pp"
+    end
   end
 
   if /mswin|mingw/ =~ RUBY_PLATFORM
