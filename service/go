@@ -11,38 +11,49 @@ function resolveNumOfCores {
 }
 
 function setuppy {
+        echo "Installing Pixelated User Agent."
         pip install -r test_requirements.txt
         python setup.py develop $*
         pip uninstall -y scrypt; pip install scrypt
         pip uninstall -y gnupg; pip install gnupg==1.2.5
+        echo "Done."
 }
 
 function setupjs {
+        echo "Installing node and bower libraries."
         cd ../web-ui
         npm install
         node_modules/bower/bin/bower install --config.interactive=false --allow-root
         LC_ALL=en_US.UTF-8 ./go build
         cd -
+        echo "Done."
 }
 
 function runIntegrationTests {
+        echo "Executing Integration Tests."
         resolveNumOfCores
-        echo $NUM_OF_CORES
         trial -j $NUM_OF_CORES --reporter=text $* test.integration
+        echo "Done."
 }
 
 function runUnitTests {
+        echo "Executing Unit Tests."
         trial --reporter=text $* test.unit
+        echo "Done."
 }
 
 function runPep8 {
+        echo "Verifying conformation to pep8."
         pep8 pixelated test --ignore=E501
+        echo "Done."
 }
 
 function runJSHint {
+        echo "Executing JSHint."
         cd ../web-ui
         LC_ALL=en_US.UTF-8 ./go jshint
         cd -
+        echo "Done."
 }
 
 if [ "$1" == 'test' ]; then
