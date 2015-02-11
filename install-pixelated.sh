@@ -99,6 +99,9 @@ rm -rf "$VIRTUALENV_PATH"
 virtualenv "$VIRTUALENV_PATH"
 source "$VIRTUALENV_PATH/bin/activate"
 ./go setup --always-unzip
+
+# see https://github.com/pixelated-project/pixelated-user-agent/issues/225#issuecomment-70651268
+# for details why we need to reinstall enum34
 pip uninstall -y enum34
 pip install enum34
 
