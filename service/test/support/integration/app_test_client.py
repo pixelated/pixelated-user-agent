@@ -187,9 +187,3 @@ def initialize_soledad(tempdir):
         cert_file,
         defer_encryption=False)
     return _soledad
-
-
-
-
-
-
