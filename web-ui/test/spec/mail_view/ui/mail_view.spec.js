@@ -41,6 +41,21 @@ describeComponent('mail_view/ui/mail_view', function () {
     expect(updateSpy.mostRecentCall.data.tags).toEqual(['other']);
   });
 
+  it('removes the tag from email even if tag is highlighted', function () {
+    var updateSpy = spyOnEvent(document, Pixelated.events.mail.tags.update);
+
+    testData.mail.tags = ['tag', 'other'];
+    this.component.displayMail({}, testData);
+
+    var inboxTag = this.component.$node.find('.tag[data-tag="tag"]');
+    inboxTag.html('<em class="search-highlight">' + inboxTag.text() + '</em>');
+
+    this.component.$node.find('.search-highlight').click();
+
+    expect(updateSpy).toHaveBeenTriggeredOn(document);
+    expect(updateSpy.mostRecentCall.data.tags).toEqual(['other']);
+  });
+
   it('removes numeric tag from the mail when its label is clicked', function() {
     var updateSpy = spyOnEvent(document, Pixelated.events.mail.tags.update);
 

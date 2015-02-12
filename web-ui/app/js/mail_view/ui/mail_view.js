@@ -84,7 +84,7 @@ define(
         this.attachTagCompletion(this.attr.mail);
 
         this.select('tags').on('click', function (event) {
-          this.removeTag($(event.target).data('tag'));
+          this.removeTag($(event.target).text());
         }.bind(this));
 
         this.addTagLoseFocus();
