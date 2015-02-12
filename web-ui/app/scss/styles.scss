@@ -270,7 +270,7 @@ section {
 
       ul#default-tag-list {
         li {
-          padding: 5px 10px 5px 15px;
+          padding: 5px 10px 5px 16px;
           position: relative;
           @include searching(4px, 19px, #333, 0.7em);
 
@@ -312,7 +312,11 @@ section {
         padding-bottom: 30px;
         li {
           font-size: 0.8em;
-          padding: 5px 20px;
+          padding: 5px 10px 5px 15px;
+
+          span {
+            padding: 5px 20px 5px 38px;
+          }
         }
       }
 
