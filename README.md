@@ -29,12 +29,16 @@ From the root folder, set up the vagrant machine:
 You can log into the machine using:
 
     vagrant ssh
+    
+From here on you can run the tests for the UI by going to the web-ui folder or for the API by going to the service folder and running:
 
-then you can run with:
+    ./go test
+    
+You can also run the mail client with:
 
     pixelated-user-agent --host 0.0.0.0
 
-and it's done!
+Then point your browser to [http://localhost:3333](http://localhost:3333) to see it running.
 
 ## Getting started as an user
 
