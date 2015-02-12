@@ -270,13 +270,14 @@ section {
 
       ul#default-tag-list {
         li {
-          padding: 5px 10px;
+          padding: 5px 10px 5px 15px;
           position: relative;
           @include searching(4px, 19px, #333, 0.7em);
 
           &:before {
+            font-size: 1.5em;
             font-family: "FontAwesome";
-            margin-right: 10px;
+            margin-right: 13px;
             font-weight: normal;
           }
           &:nth-child(1) {
@@ -461,12 +462,14 @@ button {
 
 .fake-left-off-canvas-toggle {
   color: white;
+  
   &:hover, &:focus {
     color: white;
   }
+
+  padding: 9px 0px 8px 19px;
   display: block;
   left: 0;
-  padding: 9px;
   background: $secondary;
   top: 0;
   z-index: 10000;
@@ -597,12 +600,12 @@ display: table; }
 clear: both; }
 
 .off-canvas-wrap.move-right.content > .inner-wrap {
-  -ms-transform: translate(6rem, 0);
-  -webkit-transform: translate3d(6rem, 0, 0);
-  -moz-transform: translate3d(6rem, 0, 0);
-  -ms-transform: translate3d(6rem, 0, 0);
-  -o-transform: translate3d(6rem, 0, 0);
-  transform: translate3d(6rem, 0, 0);
+  -ms-transform: translate(10rem, 0);
+  -webkit-transform: translate3d(10rem, 0, 0);
+  -moz-transform: translate3d(10rem, 0, 0);
+  -ms-transform: translate3d(10rem, 0, 0);
+  -o-transform: translate3d(10rem, 0, 0);
+  transform: translate3d(10rem, 0, 0);
 }
 
 .move-right .exit-off-canvas {
