@@ -1,4 +1,7 @@
 .virtualenv/
+.venv/
 soledad-test/
 build/
 test/perf/**/results
+.coverage
+htmlcov/

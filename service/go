@@ -1,6 +1,11 @@
 #!/bin/bash
 
 NUM_OF_CORES=''
+TRIAL_PATH=''
+
+function getTrialAbsolutePath {
+    TRIAL_PATH="$(which trial)"
+}
 
 function resolveNumOfCores {
         if [ "$(uname)" ==  "Darwin" ]; then
@@ -56,6 +61,37 @@ function runJSHint {
         echo "Done."
 }
 
+function runCoverageUnit {
+        echo "Generating Unit Test Converage Information."
+        coverage erase
+        getTrialAbsolutePath
+        coverage run -p --source=pixelated $TRIAL_PATH --reporter=text $* test.unit
+        coverage combine
+        coverage html
+        echo "Done."
+}
+
+function runCoverageIntegration {
+        echo "Generating Integration Test Converage Information."
+        coverage erase
+        getTrialAbsolutePath
+        coverage run -p --source=pixelated $TRIAL_PATH --reporter=text $* test.integration
+        coverage combine
+        coverage html
+        echo "Done."
+}
+
+function runCoverageUnitAndIntegration {
+        echo "Generating Unit and Integration Test Converage Information."
+        coverage erase
+        getTrialAbsolutePath
+        coverage run -p --source=pixelated $TRIAL_PATH --reporter=text test.unit
+        coverage run -p --source=pixelated $TRIAL_PATH --reporter=text test.integration
+        coverage combine
+        coverage html
+        echo "Done."
+}
+
 if [ "$1" == 'test' ]; then
         runJSHint
         runPep8
@@ -74,6 +110,12 @@ elif [ "$1" == 'setupjs' ]; then
 elif [ "$1" == 'setup' ]; then
         setupjs
         setuppy "${@:2}"
+elif [ "$1" == 'coverage_unit' ]; then
+        runCoverageUnit "${@:2}"
+elif [ "$1" == 'coverage_integration' ]; then
+        runCoverageIntegration "${@:2}"
+elif [ "$1" == 'coverage_all' ]; then
+        runCoverageUnitAndIntegration "${@:2}"
 elif [ "$1" == 'start' ]; then
         /usr/bin/env pixelated-user-agent "${@:2}"
 else
