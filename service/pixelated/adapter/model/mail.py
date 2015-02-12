@@ -379,7 +379,8 @@ class PixelatedMail(Mail):
 
     @property
     def encrypted(self):
-        return self.hdoc.content["headers"].get("OpenPGP", None) is not None
+        return self.hdoc.content["headers"].get("OpenPGP", None) is not None or \
+               self.hdoc.content["headers"].get("X-Pixelated-encryption-status", "false") is "true"
 
     def as_dict(self):
         dict_mail = {'header': {k.lower(): v for k, v in self.headers.items()},

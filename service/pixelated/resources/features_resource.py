@@ -20,7 +20,7 @@ from twisted.web.resource import Resource
 
 
 class FeaturesResource(Resource):
-    DISABLED_FEATURES = ['draftReply', 'encryptionStatus']
+    DISABLED_FEATURES = ['draftReply']
 
     isLeaf = True
 
