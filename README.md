@@ -10,8 +10,11 @@ The Pixelated User Agent is the mail client of the Pixelated ecosystem, it is co
 
 ## Getting started for development
 
-Requirements:
+First of all, you should have an account on a LEAP/Pixelated provider with email support.
+  * You can use one of the demo accounts at [Try Pixelated](https://try.pixelated-project.org:8080/auth/login).
+  * There are some other LEAP providers on the [Bitmask page](https://bitmask.net), but they don't support email currently.
 
+Requirements:
   * vagrant
   * virtualbox
 
