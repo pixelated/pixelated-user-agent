@@ -56,7 +56,11 @@ module.exports = function (config) {
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress', 'junit'],
+    reporters: ['progress', 'junit', 'coverage'],
+
+    preprocessors: {
+        'app/js/!(lib)/**/*.js': ['coverage']
+    },
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
@@ -87,6 +91,11 @@ module.exports = function (config) {
     junitReporter: {
       outputFile: 'test-results.xml',
       suite: ''
+    },
+
+    coverageReporter: {
+      type : 'html',
+      dir : 'coverage/'
     }
 
   });

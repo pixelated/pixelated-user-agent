@@ -32,3 +32,4 @@ __pycache__/
 /config
 pixelated.cfg
 service/_trial_temp/
+web-ui/coverage
