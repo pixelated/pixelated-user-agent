@@ -116,7 +116,7 @@
           margin: -3px 0 0 0;
           li {
             background-color: #DDD;
-            color: black; 
+            color: black;
             display: inline-block;
             height: auto;
             font-weight: 400;
@@ -466,7 +466,7 @@ button {
 
 .fake-left-off-canvas-toggle {
   color: white;
-  
+
   &:hover, &:focus {
     color: white;
   }
@@ -476,7 +476,6 @@ button {
   left: 0;
   background: $secondary;
   top: 0;
-  z-index: 10000;
   position: relative;
   &.logout {
     color: $action_buttons;
@@ -575,41 +574,53 @@ button {
   position: absolute;
   overflow-y: auto;
 }
+
 .left-off-canvas-menu * {
--webkit-backface-visibility: hidden; }
+  -webkit-backface-visibility: hidden;
+}
 
 
 .off-canvas-wrap {
   -webkit-backface-visibility: hidden;
   position: relative;
   width: 100%;
-overflow: hidden; }
+  overflow: hidden;
+}
+
 .off-canvas-wrap.move-right, .off-canvas-wrap.move-left {
   min-height: 100%;
--webkit-overflow-scrolling: touch; }
+  -webkit-overflow-scrolling: touch;
+}
 
 .inner-wrap {
   -webkit-backface-visibility: hidden;
   position: relative;
   width: 100%;
+}
+
+.inner-wrap:before, .inner-wrap:after {
+  content: " ";
+  display: table;
+}
+
+.inner-wrap:after {
+  clear: both;
+}
+
+.off-canvas-wrap.content {
   -webkit-transition: -webkit-transform 500ms ease;
   -moz-transition: -moz-transform 500ms ease;
   -ms-transition: -ms-transform 500ms ease;
   -o-transition: -o-transform 500ms ease;
-transition: transform 500ms ease; }
-.inner-wrap:before, .inner-wrap:after {
-  content: " ";
-display: table; }
-.inner-wrap:after {
-clear: both; }
+  transition: transform 500ms ease;
 
-.off-canvas-wrap.move-right.content > .inner-wrap {
-  -ms-transform: translate(10rem, 0);
-  -webkit-transform: translate3d(10rem, 0, 0);
-  -moz-transform: translate3d(10rem, 0, 0);
-  -ms-transform: translate3d(10rem, 0, 0);
-  -o-transform: translate3d(10rem, 0, 0);
-  transform: translate3d(10rem, 0, 0);
+  &.move-right {
+    -webkit-transform: translate3d(10rem, 0, 0);
+    -moz-transform: translate3d(10rem, 0, 0);
+    -ms-transform: translate3d(10rem, 0, 0);
+    -o-transform: translate3d(10rem, 0, 0);
+    transform: translate3d(10rem, 0, 0);
+  }
 }
 
 .move-right .exit-off-canvas {
@@ -631,10 +642,6 @@ background: rgba(255, 255, 255, 0.05); } }
 
 .off-canvas-wrap.move-right.menu {
   position: absolute;
-}
-
-.off-canvas-wrap.move-right.menu > .inner-wrap {
-  transform: translate3d(0, 0, 0);
 }
 
 .off-canvas-wrap.content {
