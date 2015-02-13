@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 import multiprocessing
+from mockito import mock
 import os
 import shutil
 import time
@@ -57,6 +58,7 @@ class AppTestClient:
 
         self.soledad = initialize_soledad(tempdir=soledad_test_folder)
         self.soledad_querier = self._create_soledad_querier(self.soledad, self.INDEX_KEY)
+        self.keymanager = mock()
 
         self.search_engine = SearchEngine(self.soledad_querier, agent_home=soledad_test_folder)
         self.mail_sender = self._create_mail_sender()
@@ -70,7 +72,7 @@ class AppTestClient:
 
         self.app = App()
         self.app.resource = RootResource()
-        self.app.resource.initialize(self.soledad_querier, self.search_engine, self.mail_service, self.draft_service)
+        self.app.resource.initialize(self.soledad_querier, self.keymanager, self.search_engine, self.mail_service, self.draft_service)
 
     def _render(self, request, as_json=True):
         def get_str(_str):

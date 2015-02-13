@@ -8,13 +8,18 @@ from twisted.web.resource import Resource
 
 class KeysResource(Resource):
 
+    isLeaf = True
+
     def __init__(self, keymanager):
         Resource.__init__(self)
         self._keymanager = keymanager
 
     def render_GET(self, request):
         def finish_request(key):
-            respond_json_deferred(key.get_json(), request)
+            if key.private:
+                respond_json_deferred(None, request, status_code=401)
+            else:
+                respond_json_deferred(key.get_json(), request)
 
         def key_not_found(_):
             respond_json_deferred(None, request, status_code=404)
