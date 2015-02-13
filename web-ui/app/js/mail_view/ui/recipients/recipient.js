@@ -54,13 +54,12 @@ define(
         var p = $.getJSON('/keys?search=' + this.attr.address).promise();
         p.done(function () {
           this.$node.addClass('encrypted');
-          this.$node.removeClass('discorver-encryption')
+          this.$node.removeClass('discorver-encryption');
         }.bind(this));
         p.fail(function () {
           this.$node.addClass('not-encrypted');
-          this.$node.removeClass('discorver-encryption')
+          this.$node.removeClass('discorver-encryption');
         }.bind(this));
-
       };
 
       this.after('initialize', function () {
