@@ -23,6 +23,8 @@ import dateutil.parser as dateparser
 import base64
 from leap.mail.imap.fields import fields
 from datetime import datetime
+import os
+import json
 
 
 class TestPixelatedMail(unittest.TestCase):
@@ -208,6 +210,21 @@ class TestPixelatedMail(unittest.TestCase):
         mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier, parts=parts)
 
         self.assertEquals(body, mail.text_plain_body)
+
+    def test_bounced_mails_are_recognized(self):
+        bounced_mail_hdoc = os.path.join(os.path.dirname(__file__), '..', 'fixtures', 'bounced_mail_hdoc.json')
+        with open(bounced_mail_hdoc) as f:
+            hdoc = json.loads(f.read())
+
+        bounced_leap_mail = test_helper.leap_mail()
+        bounced_leap_mail[1].content = hdoc
+        bounced_mail = PixelatedMail.from_soledad(*bounced_leap_mail, soledad_querier=self.querier)
+
+        not_bounced_leap_mail = test_helper.leap_mail()
+        not_bounced_mail = PixelatedMail.from_soledad(*not_bounced_leap_mail, soledad_querier=self.querier)
+
+        self.assertTrue(bounced_mail.bounced)
+        self.assertFalse(not_bounced_mail.bounced)
 
     def _create_bdoc(self, raw):
         class FakeBDoc:
