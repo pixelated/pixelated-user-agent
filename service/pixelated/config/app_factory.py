@@ -96,6 +96,7 @@ def stop_incoming_mail_fetcher(reactor_stop_function, leap_session):
 
 def init_app(app, leap_home, leap_session):
     leap_session.start_background_jobs()
+    keymanager = leap_session.nicknym.keymanager
 
     soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
 
@@ -110,7 +111,7 @@ def init_app(app, leap_home, leap_session):
     MailboxIndexerListener.SEARCH_ENGINE = search_engine
     InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
 
-    app.resource.initialize(soledad_querier, search_engine, mail_service, draft_service)
+    app.resource.initialize(soledad_querier, keymanager, search_engine, mail_service, draft_service)
 
     register(signal=proto.SOLEDAD_DONE_DATA_SYNC,
              callback=init_index_and_remove_dupes(querier=soledad_querier,

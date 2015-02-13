@@ -32,6 +32,7 @@ define(
         html.insertBefore(nodeToPrependTo.children().last());
         var component = new this.constructor();
         component.initialize(html, recipient);
+        component.attr.recipient = recipient;
         return component;
       };
 
@@ -47,6 +48,24 @@ define(
       this.doUnselect = function () {
         this.$node.find('.recipient-value').removeClass('selected');
       };
+
+      this.discoverEncryption = function () {
+        this.$node.addClass('discorver-encryption');
+        var p = $.getJSON('/keys?search=' + this.attr.address).promise();
+        p.done(function () {
+          this.$node.addClass('encrypted');
+          this.$node.removeClass('discorver-encryption')
+        }.bind(this));
+        p.fail(function () {
+          this.$node.addClass('not-encrypted');
+          this.$node.removeClass('discorver-encryption')
+        }.bind(this));
+
+      };
+
+      this.after('initialize', function () {
+        this.discoverEncryption();
+      });
     }
   }
 );

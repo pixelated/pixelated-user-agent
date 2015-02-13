@@ -6,6 +6,7 @@ from pixelated.resources.mail_resource import MailResource
 from pixelated.resources.mails_resource import MailsResource
 from pixelated.resources.sync_info_resource import SyncInfoResource
 from pixelated.resources.tags_resource import TagsResource
+from pixelated.resources.keys_resource import KeysResource
 from twisted.web.resource import Resource
 from twisted.web.static import File
 
@@ -21,8 +22,9 @@ class RootResource(Resource):
             return self
         return Resource.getChild(self, path, request)
 
-    def initialize(self, querier, search_engine, mail_service, draft_service):
+    def initialize(self, querier, keymanager, search_engine, mail_service, draft_service):
         self.putChild('assets', File(self._static_folder))
+        self.putChild('keys', KeysResource(keymanager))
         self.putChild('attachment', AttachmentsResource(querier))
         self.putChild('contacts', ContactsResource(search_engine))
         self.putChild('features', FeaturesResource())
