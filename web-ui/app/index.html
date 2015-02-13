@@ -86,7 +86,8 @@ $(document).foundation();
 </script>
 
 <script>
-$('.fake-left-off-canvas-toggle').on('click', function () {
+$('.fake-left-off-canvas-toggle').click(function (ev) {
+    ev.preventDefault();
     $('.left-off-canvas-toggle').click();
     });
 </script>
