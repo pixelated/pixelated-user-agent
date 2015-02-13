@@ -82,7 +82,7 @@ class Mail(object):
 
     def _parse_charset_header(self, charset_header, default_charset='utf-8'):
         try:
-            return re.compile('.*charset=(.*)').match(charset_header).group(1)
+            return re.compile('.*charset=(.*);').match(charset_header).group(1)
         except:
             return default_charset
 
