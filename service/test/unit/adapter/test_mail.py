@@ -224,6 +224,7 @@ class TestPixelatedMail(unittest.TestCase):
         not_bounced_mail = PixelatedMail.from_soledad(*not_bounced_leap_mail, soledad_querier=self.querier)
 
         self.assertTrue(bounced_mail.bounced)
+        self.assertEquals('inexistentaccount@domain.com', bounced_mail.bounced)
         self.assertFalse(not_bounced_mail.bounced)
 
     def _create_bdoc(self, raw):
