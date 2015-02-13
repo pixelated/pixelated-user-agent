@@ -299,14 +299,9 @@ class PixelatedMail(Mail):
     @property
     def security_casing(self):
         casing = {"imprints": [], "locks": []}
-        if self.signed:
-            casing["imprints"].append({"state": "valid", "seal": {"validity": "valid"}})
-        elif self.signed is None:
-            casing["imprints"].append({"state": "no_signature_information"})
-
+        casing["imprints"] = self.signature_information
         if self.encrypted:
-            casing["locks"].append({"state": "valid"})
-
+            casing["locks"] = [{"state": "valid"}]
         return casing
 
     @property
@@ -370,17 +365,20 @@ class PixelatedMail(Mail):
         return tag in self.tags
 
     @property
-    def signed(self):
+    def signature_information(self):
         signature = self.hdoc.content["headers"].get("X-Leap-Signature", None)
-        if signature is None:
-            return None
+        if signature is None or signature.startswith("could not verify"):
+            return [{"state": "no_signature_information"}]
         else:
-            return signature.startswith("valid")
+            if signature.startswith("valid"):
+                return [{"state": "valid", "seal": {"validity": "valid"}}]
+            else:
+                return []
 
     @property
     def encrypted(self):
         return self.hdoc.content["headers"].get("OpenPGP", None) is not None or \
-               self.hdoc.content["headers"].get("X-Pixelated-encryption-status", "false") is "true"
+               self.hdoc.content["headers"].get("X-Pixelated-encryption-status", "false") == "true"
 
     def as_dict(self):
         dict_mail = {'header': {k.lower(): v for k, v in self.headers.items()},
