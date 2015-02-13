@@ -191,6 +191,12 @@
         &.selected {
           border: 1px solid #666666;
         }
+        &.encrypted {
+          border-bottom-color: limegreen;
+        }
+        &.not-encrypted {
+          border-bottom-color: orangered;
+        }
         background-color: #F5F5F5;
         border: 1px solid #D9D9D9;
         border-radius: 2px;
