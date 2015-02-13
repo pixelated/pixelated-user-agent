@@ -1,3 +1,5 @@
+@import 'colors';
+
 // SHARED MIXINS
 @mixin btn-transition {
   @include transition-property(background-color);
@@ -192,10 +194,10 @@
           border: 1px solid #666666;
         }
         &.encrypted {
-          border-bottom-color: limegreen;
+          border-bottom-color: $will_be_encrypted;
         }
         &.not-encrypted {
-          border-bottom-color: orangered;
+          border-bottom-color: $wont_be_encrypted;
         }
         background-color: #F5F5F5;
         border: 1px solid #D9D9D9;

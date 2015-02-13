@@ -56,4 +56,3 @@ class TestKeysResource(unittest.TestCase):
 
         d.addCallback(assert_response)
         return d
-
