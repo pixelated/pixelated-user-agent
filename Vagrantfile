@@ -9,9 +9,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
-  # the source installation needs npm, which is also only available in debian jessie
-  # so we need a debian testing vagrantbox
-
   # 1024 mb ram is required on the source vm so that all tests can run fine
   # 512  mb ram is probably enough for the deb vm
 
