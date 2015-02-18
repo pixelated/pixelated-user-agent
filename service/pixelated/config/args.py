@@ -27,9 +27,9 @@ def parse():
     parser.add_argument('--port', type=int, default=3333, help='the port to run the user agent on')
     parser.add_argument('--home', help='The folder where the user agent stores its data. Defaults to ~/.leap', default=DEFAULT_LEAP_HOME)
     parser.add_argument('-c', '--config', metavar='<configfile>', default=None, help='use specified file for credentials (for test purposes only)')
-    parser.add_argument('-sk', '--sslkey', metavar='<server.key>', default=None, help='use specified file as web server\'s SSL key')
-    parser.add_argument('-sc', '--sslcert', metavar='<server.crt>', default=None, help='use specified file as web server\'s SSL certificate')
-    parser.add_argument('-lc', '--leap-cert', metavar='<leap.crt>', default=None, help='use specified file for LEAP certificate')
+    parser.add_argument('-sk', '--sslkey', metavar='<server.key>', default=None, help='use specified file as web server\'s SSL key (when using the user-agent together with the pixelated-dispatcher)')
+    parser.add_argument('-sc', '--sslcert', metavar='<server.crt>', default=None, help='use specified file as web server\'s SSL certificate (when using the user-agent together with the pixelated-dispatcher)')
+    parser.add_argument('-lc', '--leap-cert', metavar='<leap.crt>', default=None, help='use specified file for LEAP cert authority certificate (url https://<provider-domain>/ca.crt')
     parser.add_argument('--register', metavar=('provider', 'username'),
                         nargs=2, help='register a new username on the desired provider')
     args = parser.parse_args()
