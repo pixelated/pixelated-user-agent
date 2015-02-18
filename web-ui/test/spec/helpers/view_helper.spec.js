@@ -56,7 +56,7 @@ define(['helpers/view_helper'], function (viewHelper) {
     it('each line of plain text mail gets a new paragraph', function () {
       var formattedMail = $('<div></div>');
       formattedMail.html(viewHelper.formatMailBody(testData.parsedMail.simpleTextPlain));
-      expect(formattedMail).toContainHtml('<p>Hello Everyone</p>');
+      expect(formattedMail).toContainHtml('<div>Hello Everyone<br/></div>');
     });
 
 

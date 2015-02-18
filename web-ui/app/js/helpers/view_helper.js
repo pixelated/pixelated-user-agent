@@ -32,7 +32,7 @@ define(
   }
 
   function addParagraphsToPlainText(textPlainBody) {
-    return textPlainBody.replace(/^(.*?)$/mg, '<p>$1</p>');
+    return textPlainBody.replace(/^(.*?)$/mg, '$1<br/>');
   }
 
   function escapeHtmlTags(body) {
@@ -44,7 +44,6 @@ define(
       '"': '&quot;',
       '\'':'&#39;',
       '/': '&#x2f;'
-
     };
 
     return body.replace(/["'<>\/&]/g, function(char){
@@ -62,7 +61,7 @@ define(
     var body = mail.htmlBodyPart ?
                 htmlWhitelister.sanitize(mail.htmlBody, htmlWhitelister.tagPolicy) :
                 escapeHtmlAndAddParagraphs(mail.textPlainBody);
-    return $(body);
+    return $('<div>' + body + '</div>');
   }
 
   function moveCaretToEnd(el) {
