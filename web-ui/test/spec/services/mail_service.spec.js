@@ -164,12 +164,12 @@ describeComponent('services/mail_service', function () {
 
   it('will trigger an error message when a message cannot be deleted', function() {
     var deferred = $.Deferred();
-    var spyAjax = spyOn($, 'ajax').and.returnValue(deferred);
+    spyOn($, 'ajax').and.returnValue(deferred);
     var spyEvent = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
 
     this.component.trigger(Pixelated.events.mail.delete, {mail: {ident: '43'}});
 
-    deferred.reject();
+    deferred.reject({responseJSON: {}});
 
     expect(spyEvent).toHaveBeenTriggeredOnAndWith(document, {message: i18n('Could not delete email')} );
   });

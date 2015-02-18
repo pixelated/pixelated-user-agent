@@ -47,29 +47,14 @@ describeComponent('mail_view/data/mail_sender', function () {
     expect(JSON.parse($.ajax.calls.mostRecent().args[1].data).body).toEqual(mail.body);
   });
 
-  it('displays generic error message when sending an email fails in the service', function () {
-    var deferred;
-    deferred = $.Deferred();
-    deferred.reject({responseJSON: {}}, 500, 'Internal Server Error');
-
-    var messageEvent = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
-    spyOn($, 'ajax').and.returnValue(deferred);
+  it('uses the monitored ajax call to delegate for errors', function () {
+    var monitoredAjaxCall = require('helpers/monitored_ajax');
+    spyOn(monitoredAjaxCall, 'call').and.returnValue($.Deferred());
 
     this.component.trigger(Pixelated.events.mail.send, mail);
+    this.component.trigger(Pixelated.events.mail.saveDraft, mail);
 
-    expect(messageEvent).toHaveBeenTriggeredOnAndWith(document, {message: 'Ops! something went wrong, try again later.'});
+    expect(monitoredAjaxCall.call.calls.count()).toEqual(2);
   });
 
-  it('displays error message returned by the service when sending an email fails in the service', function () {
-    var deferred;
-    deferred = $.Deferred();
-    deferred.reject({responseJSON: {message: 'test: error message'}}, 422, 'Unprocessable Entity');
-
-    var messageEvent = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
-    spyOn($, 'ajax').and.returnValue(deferred);
-
-    this.component.trigger(Pixelated.events.mail.send, mail);
-
-    expect(messageEvent).toHaveBeenTriggeredOnAndWith(document, {message: 'Error sending mail: test: error message'});
-  });
 });

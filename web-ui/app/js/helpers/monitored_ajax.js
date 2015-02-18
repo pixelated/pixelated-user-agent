@@ -51,7 +51,9 @@ define(['page/events', 'views/i18n'], function (events, i18n) {
 
     return $.ajax(url, config).fail(function (xmlhttprequest, textstatus, message) {
       if (!config.skipErrorMessage) {
-        var msg = messages[textstatus] || 'unexpected problem while talking to server';
+        var msg =  (xmlhttprequest.responseJSON && xmlhttprequest.responseJSON.message) ||
+            messages[textstatus] ||
+            'unexpected problem while talking to server';
         on.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n(msg) });
       }
     }.bind(this));

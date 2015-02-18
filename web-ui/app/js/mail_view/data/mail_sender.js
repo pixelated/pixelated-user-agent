@@ -40,43 +40,22 @@ define(
         };
       }
 
-      function failure(on, context) {
-        return function(xhr, status, error) {
-          var contextMessage = '';
-
-          if (context) {
-            contextMessage = context + ': ';
-          }
-
-          if (xhr.status === 422) {
-            return; // ignore the fact that it failed to save the draft - it will succeed eventually
-          }
-
-          if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
-            on.trigger(document, events.ui.userAlerts.displayMessage, {message: contextMessage + xhr.responseJSON.message});
-          } else {
-            on.trigger(document, events.ui.userAlerts.displayMessage, {message: 'Ops! something went wrong, try again later.'});
-          }
-          on.trigger(document, events.mail.send_failed, {xhr: xhr, error:error});
-        };
-      }
-
       this.defaultAttrs({
         mailsResource: '/mails'
       });
 
       this.sendMail = function(event, data) {
-        monitoredAjax(this, this.attr.mailsResource, {
+        monitoredAjax.call(_, this, this.attr.mailsResource, {
           type: 'POST',
           dataType: 'json',
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify(data),
-        }).done(successSendMail(this))
-          .fail(failure(this, 'Error sending mail'));
+        }).done(successSendMail(this));
+
       };
 
       this.saveMail = function(mail) {
-        return monitoredAjax(this, this.attr.mailsResource, {
+        return monitoredAjax.call(_, this, this.attr.mailsResource, {
           type: 'PUT',
           dataType: 'json',
           contentType: 'application/json; charset=utf-8',
@@ -88,8 +67,7 @@ define(
 
       this.saveDraft = function(event, data) {
         this.saveMail(data)
-          .done(successSaveDraft(this))
-          .fail(failure(this));
+          .done(successSaveDraft(this));
       };
 
       this.saveMailWithCallback = function(event, data) {
