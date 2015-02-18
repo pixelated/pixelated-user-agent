@@ -269,6 +269,9 @@ section {
       }
 
       ul#default-tag-list {
+        span {
+          padding-left: 2px;
+        }
         li {
           padding: 5px 10px 5px 16px;
           position: relative;
