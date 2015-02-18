@@ -4,6 +4,10 @@ describeComponent('mail_view/ui/recipients/recipients',function () {
   'use strict';
   var recipientsUpdatedEvent;
 
+  beforeEach(function () {
+    spyOn($, 'getJSON').and.returnValue($.Deferred());
+  });
+
   describe('initialization', function() {
     it('adds recipients', function() {
       this.setupComponent({name: 'to', addresses: ['foobar@gmail.com'] });

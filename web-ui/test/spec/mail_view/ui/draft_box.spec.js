@@ -8,6 +8,7 @@ describeComponent('mail_view/ui/draft_box', function () {
   beforeEach(function () {
     Pixelated.mockBloodhound();
     mail = Pixelated.testData().parsedMail.simpleTextPlain;
+    spyOn($, 'getJSON').and.returnValue($.Deferred());
   });
 
   describe('when initializing', function () {

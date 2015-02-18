@@ -8,6 +8,7 @@ describeComponent('mail_view/ui/reply_box', function () {
     };
     this.setupComponent(attrs);
     i18n = require('views/i18n');
+    spyOn($, 'getJSON').and.returnValue($.Deferred());
   });
 
   describe('reply compose box', function() {

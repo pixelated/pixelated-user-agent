@@ -3,6 +3,7 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
 
   beforeEach(function () {
     this.setupComponent({name: 'to'});
+    spyOn($, 'getJSON').and.returnValue($.Deferred());
   });
 
   describe('keys that finish address input', function () {
