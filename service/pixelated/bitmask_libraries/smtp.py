@@ -13,10 +13,14 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+import logging
 import os
 import requests
 from .certs import which_bundle
 from leap.mail.smtp import setup_smtp_gateway
+
+
+logger = logging.getLogger(__name__)
 
 
 class LeapSmtp(object):
@@ -85,6 +89,15 @@ class LeapSmtp(object):
             smtp_key=cert_path,
             encrypted_only=False
         )
+
+    def ensure_running(self):
+        if not self._smtp_service:
+            try:
+                self.start()
+            except Exception as e:
+                logger.warning("Couldn't start the SMTP server now, will try again when the user tries to use it")
+                return False
+        return True
 
     def stop(self):
         if self._smtp_service is not None:

@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+import json
+
 
 def respond_json(entity, request, status_code=200):
     json_response = json.dumps(entity)
@@ -28,6 +30,3 @@ def respond_json_deferred(entity, request, status_code=200):
     request.code = status_code
     request.write(json_response)
     request.finish()
-
-
-import json

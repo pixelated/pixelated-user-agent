@@ -24,6 +24,7 @@ class SessionTest(AbstractLeapTest):
 
     def setUp(self):
         self.mail_fetcher_mock = MagicMock()
+        self.smtp_mock = MagicMock()
 
     def tearDown(self):
         self.mail_fetcher_mock = MagicMock()
@@ -65,7 +66,7 @@ class SessionTest(AbstractLeapTest):
 
     def _create_session(self):
         return LeapSession(self.provider, self.srp_session, self.soledad_session, self.nicknym, self.soledad_account,
-                           self.mail_fetcher_mock)
+                           self.mail_fetcher_mock, self.smtp_mock)
 
 
 def _execute_func(func):

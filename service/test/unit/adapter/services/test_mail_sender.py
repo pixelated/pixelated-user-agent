@@ -16,7 +16,7 @@
 from twisted.trial import unittest
 
 from mockito import mock, when, verify, any, unstub
-from pixelated.adapter.services.mail_sender import MailSender
+from pixelated.adapter.services.mail_sender import MailSender, SMTPDownException
 from pixelated.adapter.model.mail import PixelatedMail, InputMail
 from test.support.test_helper import mail_dict
 from twisted.internet import reactor
@@ -24,10 +24,14 @@ from twisted.internet.defer import Deferred
 
 
 class MailSenderTest(unittest.TestCase):
+    def setUp(self):
+        self.ensure_smtp_is_running_cb = lambda: True
+        self.ensure_smtp_is_not_running_cb = lambda: False
+
     def test_sendmail(self):
         when(reactor).connectTCP('localhost', 4650, any()).thenReturn(None)
         input_mail = InputMail.from_dict(mail_dict())
-        mail_sender = MailSender('someone@somedomain.tld')
+        mail_sender = MailSender('someone@somedomain.tld', self.ensure_smtp_is_running_cb)
 
         return self._succeed(mail_sender.sendmail(input_mail))
 
@@ -38,7 +42,8 @@ class MailSenderTest(unittest.TestCase):
         when(reactor).connectTCP('localhost', 4650, any()).thenReturn(None)
 
         input_mail = InputMail.from_dict(mail_dict())
-        mail_sender = MailSender('someone@somedomain.tld')
+
+        mail_sender = MailSender('someone@somedomain.tld', self.ensure_smtp_is_running_cb)
 
         sent_deferred = mail_sender.sendmail(input_mail)
 
@@ -49,7 +54,7 @@ class MailSenderTest(unittest.TestCase):
     def test_senmail_returns_deffered(self):
         when(reactor).connectTCP('localhost', 4650, any()).thenReturn(None)
         input_mail = InputMail.from_dict(mail_dict())
-        mail_sender = MailSender('someone@somedomain.tld')
+        mail_sender = MailSender('someone@somedomain.tld', self.ensure_smtp_is_running_cb)
 
         deferred = mail_sender.sendmail(input_mail)
 
@@ -57,6 +62,18 @@ class MailSenderTest(unittest.TestCase):
         self.assertTrue(isinstance(deferred, Deferred))
 
         return self._succeed(deferred)
+
+    def test_doesnt_send_mail_if_smtp_is_not_running(self):
+        mail_sender = MailSender('someone@somedomain.tld', self.ensure_smtp_is_not_running_cb)
+
+        deferred = mail_sender.sendmail({})
+
+        def _assert(_):
+            self.assertTrue(isinstance(deferred.result.value, SMTPDownException))
+
+        deferred.addErrback(_assert)
+
+        return deferred
 
     def _succeed(self, deferred):
         deferred.callback(None)

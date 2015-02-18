@@ -71,7 +71,7 @@ class LeapSmtpTest(AbstractLeapTest):
         smtp.TWISTED_PORT = port
         gateway_mock.return_value = (None, None)
         with HTTMock(ca_cert_mock, not_found_mock):
-            smtp.start()
+            smtp.ensure_running()
 
         cert_path = self._client_cert_path()
         gateway_mock.assert_called_with(keymanager=self.keymanager, smtp_cert=cert_path, smtp_key=cert_path, userid='test_user@some-server.test', smtp_port='1234', encrypted_only=False, smtp_host='smtp.some-sever.test', port=port)
@@ -91,7 +91,7 @@ class LeapSmtpTest(AbstractLeapTest):
         gateway_mock.return_value = (smtp_service, smtp_port)
 
         with HTTMock(ca_cert_mock, not_found_mock):
-            smtp.start()
+            smtp.ensure_running()
             smtp.stop()
 
         smtp_port.stopListening.assert_called_with()

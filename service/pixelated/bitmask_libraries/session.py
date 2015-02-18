@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import errno
+import logging
 import traceback
 import sys
 
@@ -65,7 +66,7 @@ class LeapSession(object):
     - ``incoming_mail_fetcher`` Background job for fetching incoming mails from LEAP server (LeapIncomingMail)
     """
 
-    def __init__(self, provider, srp_session, soledad_session, nicknym, soledad_account, incoming_mail_fetcher):
+    def __init__(self, provider, srp_session, soledad_session, nicknym, soledad_account, incoming_mail_fetcher, smtp):
         """
         Constructor.
 
@@ -73,6 +74,7 @@ class LeapSession(object):
         :type leap_config: LeapConfig
 
         """
+        self.smtp = smtp
         self.config = provider.config
         self.provider = provider
         self.srp_session = srp_session
@@ -133,9 +135,10 @@ class LeapSessionFactory(object):
                                                                    account, auth)
 
         smtp = LeapSmtp(self._provider, nicknym.keymanager, auth)
-        smtp.start()
 
-        return LeapSession(self._provider, auth, soledad, nicknym, account, incoming_mail_fetcher)
+        smtp.ensure_running()
+
+        return LeapSession(self._provider, auth, soledad, nicknym, account, incoming_mail_fetcher, smtp)
 
     def _lookup_session(self, key):
         global SESSIONS

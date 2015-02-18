@@ -1,4 +1,5 @@
 import json
+from pixelated.adapter.services.mail_sender import SMTPDownException
 from pixelated.adapter.model.mail import InputMail
 from pixelated.resources import respond_json, respond_json_deferred
 from twisted.web.resource import Resource
@@ -95,7 +96,10 @@ class MailsResource(Resource):
             respond_json_deferred(data, request)
 
         def onError(error):
-            respond_json_deferred({'message': str(error)}, request, status_code=422)
+            if isinstance(error.value, SMTPDownException):
+                respond_json_deferred({'message': str(error.value)}, request, status_code=503)
+            else:
+                respond_json_deferred({'message': str(error)}, request, status_code=422)
 
         deferred.addCallback(onSuccess)
         deferred.addErrback(onError)

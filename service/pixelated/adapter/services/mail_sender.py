@@ -16,14 +16,20 @@
 from StringIO import StringIO
 import re
 
-from twisted.internet.defer import Deferred
+from twisted.internet.defer import Deferred, fail
 from twisted.mail.smtp import SMTPSenderFactory
 from twisted.internet import reactor
 from pixelated.support.functional import flatten
 
 
+class SMTPDownException(Exception):
+    def __init__(self):
+        Exception.__init__(self, "Couldn't send mail now, try again later.")
+
+
 class MailSender(object):
-    def __init__(self, account_email_address, smtp_client=None):
+    def __init__(self, account_email_address, ensure_smtp_is_running_cb):
+        self.ensure_smtp_is_running_cb = ensure_smtp_is_running_cb
         self.account_email_address = account_email_address
 
     def recepients_normalizer(self, mail_list):
@@ -40,15 +46,17 @@ class MailSender(object):
         return self.recepients_normalizer(clean_mail_list)
 
     def sendmail(self, mail):
-        recipients = flatten([mail.to, mail.cc, mail.bcc])
-        normalized_recipients = self.get_email_addresses(recipients)
-        resultDeferred = Deferred()
-        senderFactory = SMTPSenderFactory(
-            fromEmail=self.account_email_address,
-            toEmail=normalized_recipients,
-            file=StringIO(mail.to_smtp_format()),
-            deferred=resultDeferred)
+        if self.ensure_smtp_is_running_cb():
+            recipients = flatten([mail.to, mail.cc, mail.bcc])
+            normalized_recipients = self.get_email_addresses(recipients)
+            resultDeferred = Deferred()
+            senderFactory = SMTPSenderFactory(
+                fromEmail=self.account_email_address,
+                toEmail=normalized_recipients,
+                file=StringIO(mail.to_smtp_format()),
+                deferred=resultDeferred)
 
-        reactor.connectTCP('localhost', 4650, senderFactory)
+            reactor.connectTCP('localhost', 4650, senderFactory)
 
-        return resultDeferred
+            return resultDeferred
+        return fail(SMTPDownException())

@@ -102,7 +102,8 @@ def init_app(app, leap_home, leap_session):
 
     tag_service = TagService()
     search_engine = SearchEngine(soledad_querier, agent_home=leap_home)
-    pixelated_mail_sender = MailSender(leap_session.account_email())
+    pixelated_mail_sender = MailSender(leap_session.account_email(),
+                                       lambda: leap_session.smtp.ensure_running())
 
     pixelated_mailboxes = Mailboxes(leap_session.account, soledad_querier, search_engine)
     draft_service = DraftService(pixelated_mailboxes)
