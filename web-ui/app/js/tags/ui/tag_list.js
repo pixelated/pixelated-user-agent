@@ -20,11 +20,10 @@ define(
     'tags/ui/tag',
     'views/templates',
     'page/events',
-    'tags/ui/tag_shortcut',
     'page/router/url_params'
   ],
 
-  function(defineComponent, Tag, templates, events, TagShortcut, urlParams) {
+  function(defineComponent, Tag, templates, events, urlParams) {
     'use strict';
 
     var ICON_FOR = {
@@ -55,17 +54,10 @@ define(
         customTagList: '#custom-tag-list'
       });
 
-      this.renderShortcut = function (tag, tagComponent) {
-        return TagShortcut.appendedTo($('#tags-shortcuts'), { tag: tag, trigger: tagComponent, currentTag: this.getCurrentTag()});
-      };
-
       function renderTag(tag, defaultList, customList) {
         var list = tag.default ? defaultList : customList;
 
         var tagComponent = Tag.appendedTo(list, {tag: tag, currentTag: this.getCurrentTag()});
-        if (_.contains(_.keys(ORDER), tag.name)) {
-          tagComponent.attr.shortcut = this.renderShortcut(tag, tagComponent);
-        }
       }
 
       function resetTagList(lists) {
@@ -76,17 +68,11 @@ define(
 
       }
 
-      this.resetShortcuts = function () {
-        $('#tags-shortcuts').empty();
-        this.trigger(document, events.tags.shortcuts.teardown);
-      };
-
       this.renderTagList = function(tags) {
         var defaultList = this.select('defaultTagList');
         var customList = this.select('customTagList');
 
         resetTagList.call(this, [defaultList, customList]);
-        this.resetShortcuts();
 
         tags.forEach(function (tag) {
           renderTag.call(this, tag, defaultList, customList);

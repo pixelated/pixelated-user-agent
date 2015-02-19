@@ -80,30 +80,14 @@ describeComponent('tags/ui/tag_list', function () {
       expect(defaultTags).toEqual(['tag-2']);
     });
 
-    it('resets the tag shortcuts when loading tags', function () {
-      var tagList = [tag('inbox', 1, true)];
-      $(document).trigger(Pixelated.events.tags.received, {tags: tagList});
-
-      tagList = [tag('sent', 1, true)];
-      $(document).trigger(Pixelated.events.tags.received, {tags: tagList});
-
-      var shortcuts = _.map($('#tags-shortcuts').find('li'), function (el) {
-        return $(el).text().trim();
-      });
-
-      expect(shortcuts).toEqual(['sent']);
-    });
-
     it('sends teardown events when loading new tags', function () {
       var tagsTeardownCustom = spyOnEvent(this.component.select('customTagList'), Pixelated.events.tags.teardown);
       var tagsTeardownDefault = spyOnEvent(this.component.select('defaultTagList'), Pixelated.events.tags.teardown);
-      var tagsShortcutsTeardown = spyOnEvent(document, Pixelated.events.tags.shortcuts.teardown);
 
       $(document).trigger(Pixelated.events.tags.received, {tags: []});
 
       expect(tagsTeardownCustom).toHaveBeenTriggeredOn(this.component.select('customTagList'));
       expect(tagsTeardownDefault).toHaveBeenTriggeredOn(this.component.select('defaultTagList'));
-      expect(tagsShortcutsTeardown).toHaveBeenTriggeredOn(document);
     });
   });
 });

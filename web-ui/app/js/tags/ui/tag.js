@@ -19,15 +19,14 @@ define(
   [
     'flight/lib/component',
     'views/templates',
-    'tags/ui/tag_base',
     'page/events',
     'views/i18n'
   ],
 
-  function (defineComponent, templates, tagBase, events, i18n) {
+  function (defineComponent, templates, events, i18n) {
     'use strict';
 
-    var Tag = defineComponent(tag, tagBase);
+    var Tag = defineComponent(tag);
 
     Tag.appendedTo = function (parent, data) {
       var res = new this();
@@ -38,6 +37,44 @@ define(
     return Tag;
 
     function tag() {
+
+      var ALWAYS_HIDE_BADGE_FOR = ['sent', 'trash', 'all'];
+      var TOTAL_BADGE = ['drafts'];
+
+      this.displayBadge = function(tag) {
+        if(_.include(ALWAYS_HIDE_BADGE_FOR, tag.name)) { return false; }
+        if(this.badgeType(tag) === 'total') {
+          return tag.counts.total > 0;
+        } else {
+          return (tag.counts.total - tag.counts.read) > 0;
+        }
+      };
+
+      this.badgeType = function(tag) {
+        return _.include(TOTAL_BADGE, tag.name) ? 'total' : 'unread';
+      };
+
+      this.doUnselect = function () {
+        this.$node.removeClass('selected');
+      };
+
+      this.doSelect = function () {
+        this.$node.addClass('selected');
+      };
+
+      this.selectTag = function (ev, data) {
+        this.attr.currentTag = data.tag;
+        if (data.tag === this.attr.tag.name) {
+          this.doSelect();
+        }
+        else {
+          this.doUnselect();
+        }
+      };
+
+      this.selectTagAll = function () {
+        this.selectTag(null, {tag: 'all'});
+      };
 
       this.viewFor = function (tag, template, currentTag) {
         return template({
@@ -100,6 +137,10 @@ define(
         this.on(document, events.mail.read, this.decreaseReadCountIfMatchingTag);
         this.on(document, events.search.perform, this.addSearchingClass);
         this.on(document, events.search.empty, this.removeSearchingClass);
+
+        this.on(document, events.ui.tag.select, this.selectTag);
+        this.on(document, events.search.perform, this.selectTagAll);
+        this.on(document, events.search.empty, this.selectTagAll);
       });
 
       this.renderAndAttach = function (parent, data) {
