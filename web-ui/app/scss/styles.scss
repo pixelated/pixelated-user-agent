@@ -249,10 +249,9 @@ section {
   &#left-pane {
     background-color: $secondary;
     color: white;
-    nav {
-      padding-bottom: 25px;
+    nav, nav#logout {
       border-right: 1px solid lighten($secondary, 10%);
-      ul#default-tag-list, #custom-tag-list, #logout {
+      ul#default-tag-list, #custom-tag-list {
         li {
           transition: background-color 150ms ease-out;
           padding: 2px 10px;
@@ -327,7 +326,6 @@ section {
       }
 
       ul#custom-tag-list {
-        padding-bottom: 30px;
         li {
           white-space: nowrap;
           overflow: hidden;
@@ -340,21 +338,22 @@ section {
         }
       }
 
-       ul#logout {
-         a {
-          color: #000000;
-        }
-        li {
-          color: #000000;
-          background-color: $action_buttons;
-          padding: 5px 10px;
-          position: relative;
-          @include searching(4px, 19px, #333, 0.7em);
-
+      ul#logout li {
+        color: $action_buttons;
+        background-color: $secondary;
+        padding: 5px 10px;
+        position: relative;
+        @include searching(4px, 19px, #333, 0.7em);
+        
+        div {
+          padding-left: 7px;
           &:before {
+            font-size: 1.5em;
             font-family: "FontAwesome";
-            margin-right: 10px;
+            margin-right: 13px;
             font-weight: normal;
+            position: relative;
+            top: 2px;
           }
         }
       }
