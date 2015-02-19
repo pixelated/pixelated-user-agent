@@ -282,6 +282,8 @@ section {
             font-family: "FontAwesome";
             margin-right: 13px;
             font-weight: normal;
+            position: relative;
+            top: 2px;
           }
           &:nth-child(1) {
             &:before {
