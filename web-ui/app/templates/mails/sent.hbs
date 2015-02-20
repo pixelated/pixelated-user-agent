@@ -2,11 +2,17 @@
   <input type="checkbox"/>
 </span>
 <span>
-  <a href="/#/{{ tag }}/mail/{{ ident }}">  
+  <a href="/#/{{ tag }}/mail/{{ ident }}">
     <span class="sent-date">{{ header.formattedDate }}</span>
 
-    <div class="from">{{t 'to:'}} {{#if header.to }}{{
-      header.to }}{{else}}{{t 'no_recipient'}}{{/if}}</div>
+    <div class="from">
+      {{t 'to:'}}
+      {{#if header.to }}
+        {{ header.to }}
+      {{else}}
+        {{t 'no_recipient'}}
+      {{/if}}
+    </div>
     <div class="subject-and-tags">
       {{#if header.subject }}
         {{header.subject}}
