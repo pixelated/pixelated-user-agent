@@ -55,9 +55,9 @@ define(
     };
 
     var detectMailType = function(mail) {
-      if(_.include(mail.tags, 'drafts')) {
+      if (mail.isDraftMail()) {
         return MAIL_ITEM_TYPE.drafts;
-      } else if(_.include(mail.tags, 'sent')) {
+      } else if (mail.isSentMail()) {
         return MAIL_ITEM_TYPE.sent;
       } else {
         return GenericMailItem;

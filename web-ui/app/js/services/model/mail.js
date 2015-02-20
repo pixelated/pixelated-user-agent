@@ -22,15 +22,15 @@ define(['helpers/contenttype'],
   var asMail = (function () {
 
     function isSentMail() {
-      return this.mailbox === 'SENT';
+      return _.has(this, 'mailbox') && this.mailbox.toUpperCase() === 'SENT';
     }
 
     function isDraftMail() {
-      return  this.mailbox === 'DRAFTS';
+      return _.has(this, 'mailbox') && this.mailbox.toUpperCase() === 'DRAFTS';
     }
 
     function isInTrash() {
-      return this.mailbox && this.mailbox.toLowerCase() === 'trash';
+      return _.has(this, 'mailbox') && this.mailbox.toUpperCase() === 'TRASH';
     }
 
     function setDraftReplyFor(ident) {
