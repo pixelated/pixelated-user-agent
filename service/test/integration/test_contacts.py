@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from test.support.integration import SoledadTestBase, MailBuilder
+import os
+import json
 
 
 class ContactsTest(SoledadTestBase):
@@ -73,10 +75,37 @@ class ContactsTest(SoledadTestBase):
         d = self.get_contacts(query='Recipient')
 
         def _assert(contacts):
-            print contacts
             self.assertEquals(3, len(contacts))
             self.assertTrue('Recipient Principal <recipient@to.com>' in contacts)
             self.assertTrue('Recipient Copied <recipient@cc.com>' in contacts)
             self.assertTrue('Recipient Carbon <recipient@bcc.com>' in contacts)
         d.addCallback(_assert)
         return d
+
+    def test_bounced_addresses_are_ignored(self):
+        to_be_bounced = MailBuilder().with_to('this_mail_was_bounced@domain.com').build_input_mail()
+        self.client.add_mail_to_inbox(to_be_bounced)
+
+        bounced_mail_template = MailBuilder().build_input_mail()
+        bounced_mail = self.client.mailboxes.inbox().add(bounced_mail_template)
+        bounced_mail.hdoc.content = self._bounced_mail_hdoc_content()
+        bounced_mail.save()
+        self.client.search_engine.index_mail(bounced_mail)
+
+        not_bounced_mail = MailBuilder(
+        ).with_tags(['important']).with_to('this_mail_was_not@bounced.com').build_input_mail()
+        self.client.add_mail_to_inbox(not_bounced_mail)
+
+        d = self.get_contacts(query='this')
+
+        def _assert(contacts):
+            self.assertNotIn('this_mail_was_bounced@domain.com', contacts)
+            self.assertIn('this_mail_was_not@bounced.com', contacts)
+        d.addCallback(_assert)
+        return d
+
+    def _bounced_mail_hdoc_content(self):
+        hdoc_file = os.path.join(os.path.dirname(__file__), '..', 'unit', 'fixtures', 'bounced_mail_hdoc.json')
+        with open(hdoc_file) as f:
+            hdoc = json.loads(f.read())
+        return hdoc

@@ -82,11 +82,11 @@
                     "headers": [
                         [
                             "Final-Recipient",
-                            "rfc822; inexistentaccount@domain.com"
+                            "rfc822; this_mail_was_bounced@domain.com"
                         ],
                         [
                             "Original-Recipient",
-                            "rfc822;inexistentaccount@domain.com"
+                            "rfc822;this_mail_was_bounced@domain.com"
                         ],
                         [
                             "Action",
@@ -135,10 +135,10 @@
                         "MIME-Version": "1.0",
                         "Message-Id": "<20150211194857.19888.1605637474.0@host>",
                         "OpenPGP": "id=E2F104EE8B01F675;\n url=\"https://domain.org/key/cuzcuz2\"; preference=\"signencrypt\"",
-                        "Received": "from 0.3.9-1-gc1f9c92 (unknown [127.0.0.1])\n (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))\n (Client CN \"UNLIMITEDdbe63unx9tfxa286ol3che4vx\",\n Issuer \"LEAP_Example Root CA (client certificates only!)\" (verified OK))\n by domain.org (Postfix) with ESMTPS id 499F57FF7C\n for <inexistentaccount@domain.com>; Wed, 11 Feb 2015 20:49:10 +0100 (CET)",
+                        "Received": "from 0.3.9-1-gc1f9c92 (unknown [127.0.0.1])\n (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))\n (Client CN \"UNLIMITEDdbe63unx9tfxa286ol3che4vx\",\n Issuer \"LEAP_Example Root CA (client certificates only!)\" (verified OK))\n by domain.org (Postfix) with ESMTPS id 499F57FF7C\n for <this_mail_was_bounced@domain.com>; Wed, 11 Feb 2015 20:49:10 +0100 (CET)",
                         "Return-Path": "<cuzcuz2@domain.org>",
                         "Subject": "volte",
-                        "To": "inexistentaccount@domain.com"
+                        "To": "this_mail_was_bounced@domain.com"
                     },
                     "multi": true,
                     "part_map": {
