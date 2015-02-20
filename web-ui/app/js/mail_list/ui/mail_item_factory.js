@@ -30,7 +30,7 @@ define(
     };
 
     var TEMPLATE_TYPE = {
-      'drafts': 'sent',
+      'drafts': 'draft',
       'sent': 'sent'
     };
 
@@ -38,30 +38,15 @@ define(
       var mailItemContainer = $('<li>', { id: 'mail-' + mail.ident});
       nodeToAttachTo.append(mailItemContainer);
 
-      var mailToCreate;
-      if(currentTag === 'all'){
-        mailToCreate = detectMailType(mail);
-      } else {
-        mailToCreate = MAIL_ITEM_TYPE[currentTag] || GenericMailItem;
-      }
+      var mailToCreate = MAIL_ITEM_TYPE[mail.mailbox] || GenericMailItem;
       mailToCreate.attachTo(mailItemContainer, {
         mail: mail,
         selected: mail.ident === currentMailIdent,
         tag: currentTag,
         isChecked: isChecked,
-        templateType: TEMPLATE_TYPE[currentTag] || 'single'
+        templateType: TEMPLATE_TYPE[mail.mailbox] || 'single'
       });
 
-    };
-
-    var detectMailType = function(mail) {
-      if (mail.isDraftMail()) {
-        return MAIL_ITEM_TYPE.drafts;
-      } else if (mail.isSentMail()) {
-        return MAIL_ITEM_TYPE.sent;
-      } else {
-        return GenericMailItem;
-      }
     };
 
     return {

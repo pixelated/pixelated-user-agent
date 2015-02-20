@@ -40,6 +40,7 @@ define(['hbs/templates'], function (templates) {
       single: window.Pixelated['app/templates/mails/single.hbs'],
       fullView: window.Pixelated['app/templates/mails/full_view.hbs'],
       mailActions: window.Pixelated['app/templates/mails/mail_actions.hbs'],
+      draft: window.Pixelated['app/templates/mails/draft.hbs'],
       sent: window.Pixelated['app/templates/mails/sent.hbs']
     },
     mailActions: {
