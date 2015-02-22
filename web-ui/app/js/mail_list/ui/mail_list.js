@@ -43,7 +43,7 @@ define(
       });
 
       this.appendMail = function (mail) {
-        var isChecked = mail.ident in this.attr.checkedMails;
+        var isChecked = this.attr.checkedMails[this.attr.currentTag] && mail.ident in this.attr.checkedMails[this.attr.currentTag];
         MailItemFactory.createAndAttach(this.$node, mail, this.attr.currentMailIdent, this.attr.currentTag, isChecked);
       };
 
@@ -117,25 +117,29 @@ define(
       };
 
       this.respondWithCheckedMails = function (ev, caller) {
-        this.trigger(caller, events.ui.mail.hereChecked, {checkedMails: this.attr.checkedMails});
+        this.trigger(caller, events.ui.mail.hereChecked, {checkedMails: this.attr.checkedMails[this.attr.currentTag]});
       };
 
       this.updateCheckAllCheckbox = function () {
-        this.trigger(document, events.ui.mails.hasMailsChecked, _.keys(this.attr.checkedMails).length > 0);
+        debugger;
+        this.trigger(document, events.ui.mails.hasMailsChecked, _.keys(this.attr.checkedMails[this.attr.currentTag]).length > 0);
       };
 
       this.addToCheckedMails = function (ev, data) {
-        this.attr.checkedMails[data.mail.ident] = data.mail;
+        if (!this.attr.checkedMails[this.attr.currentTag]) {
+          this.attr.checkedMails[this.attr.currentTag] = {};
+        }
+        this.attr.checkedMails[this.attr.currentTag][data.mail.ident] = data.mail;
         this.updateCheckAllCheckbox();
       };
 
       this.removeFromCheckedMails = function (ev, data) {
         if (data.mails) {
           _.each(data.mails, function (mail) {
-            delete this.attr.checkedMails[mail.ident];
+            delete this.attr.checkedMails[this.attr.currentTag][mail.ident];
           }, this);
         } else {
-          delete this.attr.checkedMails[data.mail.ident];
+          delete this.attr.checkedMails[this.attr.currentTag][data.mail.ident];
         }
         this.updateCheckAllCheckbox();
       };
