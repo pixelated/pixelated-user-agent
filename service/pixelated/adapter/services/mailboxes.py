@@ -50,7 +50,6 @@ class Mailboxes():
 
     def move_to_trash(self, mail_id):
         mail = self.querier.mail(mail_id)
-        mail.remove_all_tags()
         mail.set_mailbox(self.trash().mailbox_name)
         mail.save()
         return mail
