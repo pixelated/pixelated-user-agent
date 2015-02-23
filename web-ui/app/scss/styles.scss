@@ -273,6 +273,7 @@ section {
           top: 1px;
           left: 0;
           border: 1px solid #FFF;
+          border-bottom: 1px solid white;
           position: absolute;
           opacity: 0.95;
         }
@@ -333,6 +334,24 @@ section {
           span.tag-label {
             padding: 5px 20px 5px 38px;
           }
+        }
+      }
+
+      div.tags-icon {
+        margin-bottom: 20px;
+        i {
+          font-size: 1.5em;
+          font-family: "FontAwesome";
+          margin-right: 13px;
+          font-weight: normal;
+          position: relative;
+          top: 2px;
+          left: 16px;
+        }
+        span.tag-label {
+          font-size: 0.9rem;
+          padding-left: 16px;
+          margin-bottom: 10px;
         }
       }
 
