@@ -348,9 +348,9 @@ section {
 
           &:hover {
           background-color: $action_buttons;
-          color: $secondary;  
+          color: $secondary;
           }
-          
+
           div {
             padding-left: 7px;
             &:before {
@@ -661,10 +661,14 @@ button {
   left: 0;
   right: 0;
   z-index: 1002;
--webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
 @media only screen and (min-width:40.063em) {
   .move-right .exit-off-canvas:hover {
-background: rgba(255, 255, 255, 0.05); } }
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
 
 .off-canvas-wrap.move-right.menu {
   position: absolute;
@@ -681,7 +685,8 @@ background: rgba(255, 255, 255, 0.05); } }
   -moz-transform: none;
   -o-transform: none;
   transform: none;
-z-index: 1003; }
+}
+
 .offcanvas-overlap .exit-offcanvas-menu {
   -webkit-backface-visibility: hidden;
   transition: background 300ms ease;
@@ -693,9 +698,8 @@ z-index: 1003; }
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 1002;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-z-index: 1002; }
+}
 
 
 #delete-modal {
