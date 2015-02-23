@@ -75,7 +75,7 @@ define(
 
       };
 
-      function extractMailIds(data) {
+      this.readMail = function (ev, data) {
         var mailIdents;
         if (data.checkedMails) {
           mailIdents = _.map(data.checkedMails, function (mail) {
@@ -84,25 +84,28 @@ define(
         } else {
           mailIdents = [data.ident];
         }
-        return mailIdents;
-      }
-
-      this.readMail = function (ev, data) {
-
         monitoredAjax(this, '/mails/read', {
           type: 'POST',
-          data: JSON.stringify({idents: extractMailIds(data)})
+          data: JSON.stringify({idents: mailIdents})
         }).done(this.triggerMailsRead(data.checkedMails));
       };
 
       this.unreadMail = function (ev, data) {
+        var mailIdents;
+        if (data.checkedMails) {
+          mailIdents = _.map(data.checkedMails, function (mail) {
+            return mail.ident;
+          });
+        } else {
+          mailIdents = [data.ident];
+        }
         monitoredAjax(this, '/mails/unread', {
           type: 'POST',
-          data: JSON.stringify({idents: extractMailIds(data)})
+          data: JSON.stringify({idents: mailIdents})
         }).done(this.triggerMailsRead(data.checkedMails));
       };
 
-      this.triggerMailsRead = function () {
+      this.triggerMailsRead = function (mails) {
         return _.bind(function () {
           this.refreshMails();
           this.trigger(document, events.ui.mails.uncheckAll);
