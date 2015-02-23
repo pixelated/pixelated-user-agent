@@ -384,7 +384,9 @@ class PixelatedMail(Mail):
     def bounced(self):
         content_type = self.hdoc.content["headers"].get("Content-Type", '')
         if re.compile('delivery-status').search(content_type):
-            return self._extract_bounced_address(self.hdoc.content)
+            bounce_recipient = self._extract_bounced_address(self.hdoc.content)
+            bounce_daemon = self.headers["From"]
+            return [bounce_recipient, bounce_daemon] if bounce_recipient else False
 
         return False
 

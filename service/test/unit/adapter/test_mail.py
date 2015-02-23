@@ -224,7 +224,8 @@ class TestPixelatedMail(unittest.TestCase):
         not_bounced_mail = PixelatedMail.from_soledad(*not_bounced_leap_mail, soledad_querier=self.querier)
 
         self.assertTrue(bounced_mail.bounced)
-        self.assertEquals('this_mail_was_bounced@domain.com', bounced_mail.bounced)
+        self.assertIn('this_mail_was_bounced@domain.com', bounced_mail.bounced)
+        self.assertIn("MAILER-DAEMON@domain.org (Mail Delivery System)", bounced_mail.bounced)
         self.assertFalse(not_bounced_mail.bounced)
 
     def test_ignore_transient_failures(self):

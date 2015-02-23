@@ -100,6 +100,7 @@ class ContactsTest(SoledadTestBase):
 
         def _assert(contacts):
             self.assertNotIn('this_mail_was_bounced@domain.com', contacts)
+            self.assertNotIn("MAILER-DAEMON@domain.org (Mail Delivery System)", contacts)
             self.assertIn('this_mail_was_not@bounced.com', contacts)
         d.addCallback(_assert)
         return d

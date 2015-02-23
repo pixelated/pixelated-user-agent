@@ -124,6 +124,7 @@ class SearchEngine(object):
         header = mdict['header']
         tags = mdict.get('tags', [])
         tags.append(mail.mailbox_name.lower())
+        bounced = mail.bounced if mail.bounced else ['']
         index_data = {
             'sender': unicode(header.get('from', '')),
             'subject': unicode(header.get('subject', '')),
@@ -132,7 +133,7 @@ class SearchEngine(object):
             'cc': u','.join(header.get('cc', [''])),
             'bcc': u','.join(header.get('bcc', [''])),
             'tag': u','.join(unique(tags)),
-            'bounced': unicode(mail.bounced),
+            'bounced': u','.join(bounced),
             'body': unicode(mdict['textPlainBody']),
             'ident': unicode(mdict['ident']),
             'flags': unicode(','.join(unique(mail.flags))),
