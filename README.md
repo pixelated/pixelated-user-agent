@@ -8,6 +8,8 @@ The Pixelated User Agent is the mail client of the Pixelated ecosystem, it is co
 >Some things may not yet work the way you expect it to.
 >Setting up the service is still rather troublesome and so far it only serves limited functionality.
 
+![High level architecture User Agent](https://pixelated-project.org/drawings/architecture-user-agent.svg)
+
 ## Getting started for development
 
 First of all, you should have an account on a LEAP/Pixelated provider with email support.
