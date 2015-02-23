@@ -391,7 +391,10 @@ class PixelatedMail(Mail):
     def _extract_bounced_address(self, part):
         part_header = dict(part.get('headers', {}))
         if 'Final-Recipient' in part_header:
-            return part_header['Final-Recipient'].split(';')[1].strip()
+            if self._bounce_permanent(part_header):
+                return part_header['Final-Recipient'].split(';')[1].strip()
+            else:
+                return False
         elif 'part_map' in part:
             for subpart in part['part_map'].values():
                 result = self._extract_bounced_address(subpart)
@@ -399,6 +402,11 @@ class PixelatedMail(Mail):
                     return result
                 else:
                     continue
+        return False
+
+    def _bounce_permanent(self, part_headers):
+        status = part_headers.get('Status', '')
+        return status.startswith('5')
 
     def as_dict(self):
         dict_mail = {'header': {k.lower(): v for k, v in self.headers.items()},

@@ -227,6 +227,28 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEquals('this_mail_was_bounced@domain.com', bounced_mail.bounced)
         self.assertFalse(not_bounced_mail.bounced)
 
+    def test_ignore_transient_failures(self):
+        """
+        Persistent errors should start with 5.
+        See: http://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xhtml
+        """
+        bounced_mail_hdoc = os.path.join(os.path.dirname(__file__), '..', 'fixtures', 'bounced_mail_hdoc.json')
+        with open(bounced_mail_hdoc) as f:
+            content = f.read()
+            # Change status to 4.XXX.YYY (only the first number is relevant here)
+            content = content.replace("5.1.1", "4.X.Y")
+            hdoc = json.loads(content)
+
+        temporary_bounced_leap_mail = test_helper.leap_mail()
+        temporary_bounced_leap_mail[1].content = hdoc
+        temporary_bounced_mail = PixelatedMail.from_soledad(*temporary_bounced_leap_mail, soledad_querier=self.querier)
+
+        not_bounced_leap_mail = test_helper.leap_mail()
+        not_bounced_mail = PixelatedMail.from_soledad(*not_bounced_leap_mail, soledad_querier=self.querier)
+
+        self.assertFalse(temporary_bounced_mail.bounced)
+        self.assertFalse(not_bounced_mail.bounced)
+
     def _create_bdoc(self, raw):
         class FakeBDoc:
             def __init__(self, raw):
