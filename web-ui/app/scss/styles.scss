@@ -31,7 +31,6 @@
     background: darken($top_pane, 5%);
     clear: both;
     overflow: hidden;
-    z-index: 1;
     li {
       display: inline-block;
       margin: 1px -3px;
@@ -157,7 +156,6 @@
       }
       &.selected {
         background: #FFF;
-        z-index: 3;
         a {
           color: #333;
         }
@@ -485,8 +483,6 @@ button {
       padding: 0;
       vertical-align: middle;
     }
-    &:hover {
-    }
   }
 }
 
@@ -518,7 +514,6 @@ button {
 .collapsed-nav {
   width: 50px;
   position: absolute;
-  z-index: 2;
   height: 100vh;
   background: $secondary;
 
@@ -660,7 +655,6 @@ button {
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 1002;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
