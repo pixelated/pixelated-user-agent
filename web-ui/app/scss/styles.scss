@@ -325,6 +325,10 @@ section {
       }
 
       ul#custom-tag-list {
+        visibility: hidden;
+        opacity: 0;
+        transition-duration: 500ms;
+
         li {
           white-space: nowrap;
           overflow: hidden;
@@ -335,6 +339,11 @@ section {
             padding: 5px 20px 5px 38px;
           }
         }
+      }
+
+      ul#custom-tag-list.expanded {
+        visibility: visible;
+        opacity: 1;
       }
 
       div.tags-icon {
