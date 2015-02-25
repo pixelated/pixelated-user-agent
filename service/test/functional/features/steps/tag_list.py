@@ -24,7 +24,7 @@ def click_first_element_with_class(context, classname):
 @when('I select the tag \'{tag}\'')
 def impl(context, tag):
     wait_for_user_alert_to_disapear(context)
-    click_first_element_with_class(context, 'fake-left-off-canvas-toggle')
+    click_first_element_with_class(context, 'side-nav-toggle')
     context.browser.execute_script("window.scrollBy(0, -200)")
     e = find_element_by_id(context, 'tag-%s' % tag.lower())
     e.click()
