@@ -23,7 +23,7 @@
       <a class="left-off-canvas-logo" href="#">
         <img id="pixelated-logo" src="/assets/images/pixelated-logo-orange.svg" alt="Pixelated">
       </a>
-      <a class="fake-left-off-canvas-toggle" href="#">
+      <a class="side-nav-toggle side-nav-toggle-icon" href="#">
         <i class="toggle fa fa-navicon"></i>
       </a>
       <nav id="tag-list"></nav>
@@ -79,23 +79,8 @@
 <script src="assets/bower_components/requirejs/require.js" data-main="assets/js/main.js"></script>
 <!--usemin_end-->
 
-
-
 <script>
 $(document).foundation();
-</script>
-
-<script>
-$('.fake-left-off-canvas-toggle').click(function (ev) {
-    ev.preventDefault();
-    $('.left-off-canvas-toggle').click();
-      if ($('#custom-tag-list').hasClass('expanded')) {
-        $('#custom-tag-list').removeClass('expanded'); 
-      } 
-      else {
-        $('#custom-tag-list').addClass('expanded'); 
-      }
-  });
 </script>
 </body>
 </html>

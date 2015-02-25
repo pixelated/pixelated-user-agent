@@ -1,6 +1,19 @@
 <ul id="default-tag-list"></ul>
-<div class="tags-icon">
+<div class="tags-icon side-nav-toggle">
 	<i class="fa fa-tags"></i>
 	<span class="tag-label">Tags</span>
 </div>
 <ul id="custom-tag-list"></ul>
+
+<script>
+$('.side-nav-toggle').click(function (ev) {
+    ev.preventDefault();
+    $('.left-off-canvas-toggle').click();
+      if ($('#custom-tag-list').hasClass('expanded')) {
+        $('#custom-tag-list').removeClass('expanded'); 
+      } 
+      else {
+        $('#custom-tag-list').addClass('expanded'); 
+      }
+  });
+</script>

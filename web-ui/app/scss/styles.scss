@@ -514,22 +514,25 @@ button {
   }
 }
 
-.fake-left-off-canvas-toggle {
+.side-nav-toggle, .side-nav-toggle-icon {
   color: white;
+  cursor: pointer;
 
   &:hover, &:focus {
     color: white;
   }
-
-  padding: 9px 0px 8px 19px;
-  display: block;
-  left: 0;
   background: $secondary;
-  top: 0;
-  position: relative;
   &.logout {
     color: $action_buttons;
   }
+}
+
+.side-nav-toggle-icon {
+  padding: 9px 0px 8px 19px;
+  display: block;
+  left: 0;
+  top: 0;
+  position: relative;
 }
 
 .left-off-canvas-logo {
