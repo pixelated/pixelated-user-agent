@@ -25,7 +25,7 @@ from pixelated.config.dispatcher import config_dispatcher
 from pixelated.config.events_server import init_events_server
 from pixelated.config.loading_page import loading
 from pixelated.config.register import register
-from pixelated.config.debug import init_debugger
+from pixelated.config.logging_setup import init_logging
 from pixelated.config.leap_cert import init_leap_cert
 from pixelated.config.soledad import init_soledad_and_user_key
 from twisted.internet import reactor
@@ -42,7 +42,7 @@ def initialize():
     args = parse_args()
     app = App()
 
-    init_debugger(args)
+    init_logging(args)
     init_leap_cert(args)
 
     if args.register:
