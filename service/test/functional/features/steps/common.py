@@ -20,8 +20,8 @@ from selenium.common.exceptions import TimeoutException
 from hamcrest import *
 
 
-def wait_until_element_is_invisible_by_locator(context, locator_tuple):
-    wait = WebDriverWait(context.browser, 10)
+def wait_until_element_is_invisible_by_locator(context, locator_tuple, timeout=10):
+    wait = WebDriverWait(context.browser, timeout)
     wait.until(EC.invisibility_of_element_located(locator_tuple))
 
 
@@ -30,18 +30,18 @@ def wait_until_element_is_deleted(context, locator_tuple, timeout=10):
     wait.until(lambda s: len(s.find_elements(locator_tuple[0], locator_tuple[1])) == 0)
 
 
-def wait_for_user_alert_to_disapear(context):
-    wait_until_element_is_invisible_by_locator(context, (By.ID, 'user-alerts'))
+def wait_for_user_alert_to_disapear(context, timeout=10):
+    wait_until_element_is_invisible_by_locator(context, (By.ID, 'user-alerts'), timeout)
 
 
-def wait_until_elements_are_visible_by_locator(context, locator_tuple):
-    wait = WebDriverWait(context.browser, 10)
+def wait_until_elements_are_visible_by_locator(context, locator_tuple, timeout=10):
+    wait = WebDriverWait(context.browser, timeout)
     wait.until(EC.presence_of_all_elements_located(locator_tuple))
     return context.browser.find_elements(locator_tuple[0], locator_tuple[1])
 
 
-def wait_until_element_is_visible_by_locator(context, locator_tuple):
-    wait = WebDriverWait(context.browser, 10)
+def wait_until_element_is_visible_by_locator(context, locator_tuple, timeout=10):
+    wait = WebDriverWait(context.browser, timeout)
     wait.until(EC.visibility_of_element_located(locator_tuple))
     return context.browser.find_element(locator_tuple[0], locator_tuple[1])
 
@@ -93,8 +93,8 @@ def element_should_have_content(context, css_selector, content):
     assert_that(e.text, equal_to(content))
 
 
-def wait_until_button_is_visible(context, title):
-    wait = WebDriverWait(context.browser, 10)
+def wait_until_button_is_visible(context, title, timeout=10):
+    wait = WebDriverWait(context.browser, timeout)
     locator_tuple = (By.XPATH, ("//%s[contains(.,'%s')]" % ('button', title)))
     wait.until(EC.visibility_of_element_located(locator_tuple))
 
