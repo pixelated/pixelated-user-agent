@@ -26,26 +26,21 @@ LOG_FILE = '/tmp/pixelated.log'
 
 
 def init_logging(args):
-    pixelated_log_format = '[%(asctime)s] ' + socket.gethostname() + ' %(name)-12s %(levelname)-8s %(message)s'
-    pixelated_log = logging.FileHandler(LOG_FILE)
-    pixelated_log.setLevel(logging.DEBUG)
-    pixelated_log.setFormatter(logging.Formatter(pixelated_log_format))
-
-    logging.getLogger('').addHandler(pixelated_log)
-    init_twisted_logging()
     debug_enabled = args.debug or os.environ.get('DEBUG', False)
+
+    logging.basicConfig(level=logging.DEBUG if debug_enabled else logging.WARNING,
+                        format='[%(asctime)s] ' + socket.gethostname() + ' %(name)-12s %(levelname)-8s %(message)s',
+                        datefmt='%m-%d %H:%M:%S',
+                        filename=LOG_FILE,
+                        filemode='a')
 
     if debug_enabled:
         init_debugger()
 
+    init_twisted_logging()
+
 
 def init_debugger():
-    logging.basicConfig(level=logging.DEBUG,
-                        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                        datefmt='%m-%d %H:%M:%S',
-                        filename='/tmp/leap.log',
-                        filemode='w')  # define a Handler which writes INFO messages or higher to the sys.stderr
-
     formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
     console = logging.StreamHandler()
     console.setLevel(logging.DEBUG)
