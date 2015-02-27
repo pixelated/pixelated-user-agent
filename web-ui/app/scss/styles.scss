@@ -1,3 +1,4 @@
+
 @import "compass/css3";
 @import "colors";
 @import "mixins";
@@ -540,10 +541,13 @@ button {
 }
 
 .left-off-canvas-logo {
-  img {
-    padding: 9px 6px 6px 6px;
+  svg {
     width: 163px;
-    height: 59px;
+    height: 56px;
+    padding-left: 5px;
+    path, polygon, rect {
+      fill: $logo_color;
+    }
   }
 }
 
