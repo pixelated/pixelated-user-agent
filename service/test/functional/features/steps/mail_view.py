@@ -46,6 +46,7 @@ def impl(context, tag):
     e = wait_until_element_is_visible_by_locator(context, (By.ID, 'new-tag-input'))
     e.send_keys(tag)
     e.send_keys(Keys.ENTER)
+    wait_until_element_is_visible_by_locator(context, (By.XPATH, '//li[@data-tag="%s"]' % tag))
 
 
 @then('I reply to it')

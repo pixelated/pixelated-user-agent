@@ -21,10 +21,28 @@ def click_first_element_with_class(context, classname):
     elements[0].click()
 
 
+def is_side_nax_expanded(context):
+    return context.browser.find_elements_by_class_name('content')[0].get_attribute('class').count(u'move-right') == 1
+
+
+def ensure_side_nav_is_expanded(context):
+    if is_side_nax_expanded(context):
+        return
+
+    toggle = context.browser.find_elements_by_class_name('side-nav-toggle')[0]
+    toggle.click()
+
+    wait = WebDriverWait(context, 5)
+    wait.until(is_side_nax_expanded)
+
+
 @when('I select the tag \'{tag}\'')
 def impl(context, tag):
     wait_for_user_alert_to_disapear(context)
-    click_first_element_with_class(context, 'side-nav-toggle')
-    context.browser.execute_script("window.scrollBy(0, -200)")
+
+    ensure_side_nav_is_expanded(context)
+
+    wait_until_element_is_visible_by_locator(context, (By.ID, 'tag-%s' % tag.lower()), 20)
+
     e = find_element_by_id(context, 'tag-%s' % tag.lower())
     e.click()
