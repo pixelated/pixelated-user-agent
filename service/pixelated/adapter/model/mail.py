@@ -273,7 +273,7 @@ class PixelatedMail(Mail):
             if not header_value:
                 continue
             _headers[header] = header_value if type(header_value) is list else header_value.split(',')
-            _headers[header] = map(lambda x: x.strip(), compact(_headers[header]))
+            _headers[header] = [head.strip() for head in compact(_headers[header])]
 
         for header in ['From', 'Subject']:
             _headers[header] = hdoc_headers.get(header)

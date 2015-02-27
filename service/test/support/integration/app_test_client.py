@@ -35,7 +35,6 @@ from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.services.mail_service import MailService
 from pixelated.adapter.services.mailboxes import Mailboxes
 from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
-from pixelated.adapter.services.tag_service import TagService
 from pixelated.config import App
 from pixelated.resources.root_resource import RootResource
 from test.support.integration.model import MailBuilder
@@ -149,8 +148,7 @@ class AppTestClient:
         return mail_sender
 
     def _create_mail_service(self, mailboxes, mail_sender, soledad_querier, search_engine):
-        tag_service = TagService()
-        mail_service = MailService(mailboxes, mail_sender, tag_service, soledad_querier, search_engine)
+        mail_service = MailService(mailboxes, mail_sender, soledad_querier, search_engine)
         return mail_service
 
     def _generate_soledad_test_folder_name(self, soledad_test_folder='/tmp/soledad-test/test'):

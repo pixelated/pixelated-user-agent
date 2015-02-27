@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 
-class Mailbox:
+class Mailbox(object):
 
     def __init__(self, mailbox_name, querier, search_engine):
         self.mailbox_name = mailbox_name

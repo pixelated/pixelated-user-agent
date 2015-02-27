@@ -15,13 +15,9 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.model.tag import Tag
 
+SPECIAL_TAGS = {Tag('inbox', True), Tag('sent', True), Tag('drafts', True), Tag('trash', True), Tag('ALL', True)}
 
-class TagService:
 
-    instance = None
-    SPECIAL_TAGS = {Tag('inbox', True), Tag('sent', True), Tag('drafts', True), Tag('trash', True), Tag('ALL', True)}
-
-    @classmethod
-    def extract_reserved(cls, tags):
-        tags = map(lambda tag: tag.lower(), tags)
-        return {tag.name for tag in cls.SPECIAL_TAGS if tag.name in tags}
+def extract_reserved_tags(tags):
+    tags = [tag.lower() for tag in tags]
+    return {tag.name for tag in SPECIAL_TAGS if tag.name in tags}

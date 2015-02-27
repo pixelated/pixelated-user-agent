@@ -23,7 +23,6 @@ from test.support import test_helper
 
 class PixelatedMailboxTest(unittest.TestCase):
     def setUp(self):
-        self.tag_service = mock()
         self.querier = mock()
         self.search_engine = mock()
         self.mailbox = Mailbox('INBOX', self.querier, self.search_engine)

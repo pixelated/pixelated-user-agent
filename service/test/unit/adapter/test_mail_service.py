@@ -29,14 +29,13 @@ class TestMailService(unittest.TestCase):
         self.drafts = mock()
         self.querier = mock()
         self.mailboxes = mock()
-        self.tag_service = mock()
         self.mailboxes.drafts = lambda: self.drafts
         self.mailboxes.trash = lambda: mock()
         self.mailboxes.sent = lambda: mock()
 
         self.mail_sender = mock()
         self.search_engine = mock()
-        self.mail_service = MailService(self.mailboxes, self.mail_sender, self.tag_service, self.querier, self.search_engine)
+        self.mail_service = MailService(self.mailboxes, self.mail_sender, self.querier, self.search_engine)
 
     def tearDown(self):
         unstub()

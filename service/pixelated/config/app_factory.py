@@ -33,7 +33,6 @@ from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerL
 import pixelated.bitmask_libraries.session as LeapSession
 from pixelated.bitmask_libraries.leap_srp import LeapAuthException
 from requests.exceptions import ConnectionError
-from pixelated.adapter.services.tag_service import TagService
 from leap.common.events import (
     register,
     unregister,
@@ -100,14 +99,13 @@ def init_app(app, leap_home, leap_session):
 
     soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
 
-    tag_service = TagService()
     search_engine = SearchEngine(soledad_querier, agent_home=leap_home)
     pixelated_mail_sender = MailSender(leap_session.account_email(),
                                        lambda: leap_session.smtp.ensure_running())
 
     pixelated_mailboxes = Mailboxes(leap_session.account, soledad_querier, search_engine)
     draft_service = DraftService(pixelated_mailboxes)
-    mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, tag_service, soledad_querier, search_engine)
+    mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, soledad_querier, search_engine)
 
     MailboxIndexerListener.SEARCH_ENGINE = search_engine
     InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()

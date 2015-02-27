@@ -14,13 +14,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.model.mail import InputMail
+from pixelated.adapter.services.tag_service import extract_reserved_tags
 
 
 class MailService:
     __slots__ = ['leap_session', 'account', 'mailbox_name']
 
-    def __init__(self, mailboxes, mail_sender, tag_service, soledad_querier, search_engine):
-        self.tag_service = tag_service
+    def __init__(self, mailboxes, mail_sender, soledad_querier, search_engine):
         self.mailboxes = mailboxes
         self.querier = soledad_querier
         self.search_engine = search_engine
@@ -36,7 +36,7 @@ class MailService:
 
     def update_tags(self, mail_id, new_tags):
         new_tags = self._filter_white_space_tags(new_tags)
-        reserved_words = self.tag_service.extract_reserved(new_tags)
+        reserved_words = extract_reserved_tags(new_tags)
         if len(reserved_words):
             raise ValueError('None of the following words can be used as tags: ' + ' '.join(reserved_words))
         new_tags = self._favor_existing_tags_casing(new_tags)

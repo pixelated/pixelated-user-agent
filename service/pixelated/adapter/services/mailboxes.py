@@ -17,7 +17,7 @@ from pixelated.adapter.services.mailbox import Mailbox
 from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerListener
 
 
-class Mailboxes():
+class Mailboxes(object):
 
     def __init__(self, account, soledad_querier, search_engine):
         self.account = account
