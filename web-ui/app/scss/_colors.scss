@@ -1,19 +1,24 @@
+/* Side nav background color */
+$navigation_background: #3E3A37;
+
+/* Action buttons and links */
+$action_buttons: #3dabc4;
+
+/* Unread count dialog bubble background color */
+$secondary_callout: #FF7902;
+
+/* Grayscale */
+$contrast: #EEE;
+$top_pane: #EAEAEA;
+$total_count_bg: #C0B9B9;
+
+/* Feedback to Users */
 $warning: #F7E8AF;
 $search-highlight: #FFEF29;
-
-$total_count_bg: #C0B9B9;
 
 $error: #D72A25;
 $attention: #F6A40A;
 $success: #2DAB49;
-
-$contrast: #EEE;
-$top_pane: #EAEAEA;
-$secondary: #3E3A37;
-$primary_color: #EF4E2F;
-$action_buttons: #2ba6cb;
-
-$secondary_callout: #FF7902;
 
 $will_be_encrypted: #41cd60;
 $wont_be_encrypted: #F6A40A;

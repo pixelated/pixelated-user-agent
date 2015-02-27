@@ -64,6 +64,16 @@
   .attachmentsArea {
     border-top: 1px solid #DDD;
     padding: 10px 0 0;
+
+    a {
+      color: $action_buttons;
+      text-decoration: none;
+      line-height: inherit;
+      &:hover, &:focus {
+      color: lighten($action_buttons, 10);
+      outline: none;
+      }
+    }
   }
 }
 
