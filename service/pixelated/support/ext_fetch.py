@@ -6,7 +6,7 @@ def mark_as_encrypted_inline(f):
     def w(*args, **kwargs):
         msg, valid_sign = f(*args)
         is_encrypted = fetch.PGP_BEGIN in args[1].as_string() and fetch.PGP_END in args[1].as_string()
-        decrypted_successfully = not fetch.PGP_BEGIN in msg.as_string() and not fetch.PGP_END in msg.as_string()
+        decrypted_successfully = fetch.PGP_BEGIN not in msg.as_string() and fetch.PGP_END not in msg.as_string()
 
         if not is_encrypted:
             encrypted = 'false'
