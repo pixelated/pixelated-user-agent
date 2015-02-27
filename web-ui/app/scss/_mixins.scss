@@ -83,9 +83,10 @@
 @mixin tags {
   ul.tags {
     li {
-      background: #DDD;
+      font-size: 0.6rem;
+      background-color: lighten($action_buttons, 12);
+      color: white;
       display: inline;
-      font-size: 0.55em;
       padding: 2px 3px;
       margin: 0 1px;
       position: relative;

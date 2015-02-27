@@ -114,8 +114,9 @@
           line-height: 1.2;
           margin: -3px 0 0 0;
           li {
-            background-color: #DDD;
-            color: black;
+            font-size: 0.6rem;
+            background-color: lighten($action_buttons, 12);
+            color: white;
             display: inline-block;
             height: auto;
             font-weight: 400;
@@ -531,7 +532,7 @@ button {
 }
 
 .side-nav-toggle-icon {
-  padding: 9px 0px 8px 19px;
+  padding: 6px 0px 8px 19px;
   display: block;
   left: 0;
   top: 0;
