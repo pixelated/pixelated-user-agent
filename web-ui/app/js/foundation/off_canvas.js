@@ -19,11 +19,6 @@ define(['flight/lib/component', 'page/events'], function (defineComponent, event
 
   return defineComponent(function() {
 
-    this.closeSlider = function (ev){
-      ev.preventDefault();
-      $('.exit-off-canvas').click();
-    };
-
     this.toggleSlideContent = function (ev) {
       ev.preventDefault();
 	  $('.left-off-canvas-toggle').click();
@@ -35,8 +30,8 @@ define(['flight/lib/component', 'page/events'], function (defineComponent, event
     }
 
     this.after('initialize', function () {
-      this.on($('#middle-pane-container'), 'click', this.closeSlider);
-      this.on($('#right-pane'), 'click', this.closeSlider);
+      this.on($('#middle-pane-container'), 'click', this.toggleSlideContent);
+      this.on($('#right-pane'), 'click', this.toggleSlideContent);
       this.on($('.side-nav-toggle'), 'click', this.toggleSlideContent);
     });
   });
