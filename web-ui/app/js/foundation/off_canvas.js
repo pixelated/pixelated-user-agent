@@ -19,13 +19,25 @@ define(['flight/lib/component', 'page/events'], function (defineComponent, event
 
   return defineComponent(function() {
 
-    this.closeSlider = function (){
+    this.closeSlider = function (ev){
+      ev.preventDefault();
       $('.exit-off-canvas').click();
     };
+
+    this.toggleSlideContent = function (ev) {
+      ev.preventDefault();
+	  $('.left-off-canvas-toggle').click();
+	  if ($('#custom-tag-list').hasClass('expanded')) {
+	    $('#custom-tag-list').removeClass('expanded');
+	  } else {
+	    $('#custom-tag-list').addClass('expanded');
+	  }
+    }
 
     this.after('initialize', function () {
       this.on($('#middle-pane-container'), 'click', this.closeSlider);
       this.on($('#right-pane'), 'click', this.closeSlider);
+      this.on($('.side-nav-toggle'), 'click', this.toggleSlideContent);
     });
   });
 });
