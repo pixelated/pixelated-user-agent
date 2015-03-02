@@ -1,14 +1,22 @@
+/* Pixelated Color Palette - don't change these! */
+$dark_slate_gray: #3E3A37;
+$light_blue: #3DABC4;
+$dark_blue: #178CA6;
+$light_orange: #FF9C00;
+$dark_orange: #FF7902;
+
+
 /* Side nav background color */
-$navigation_background: #3E3A37;
+$navigation_background: $dark_slate_gray;
 
 /* Action buttons and links */
-$action_buttons: #3dabc4;
+$action_buttons: $light_blue;
 
 /* Primary Highlight*/
-$primary_highlight: #FF9C00;
+$primary_highlight: $light_orange;
 
 /* Logo color*/
-$logo_color: #FF9C00;
+$logo_color: $light_orange;
 
 /* Unread count dialog bubble background color */
 $secondary_callout: darken($primary_highlight, 5);
