@@ -338,6 +338,10 @@ section {
           font-size: 0.8em;
           padding: 5px 10px 5px 15px;
 
+          &.custom-tag {
+            text-overflow: ellipsis;
+          }
+
           span.tag-label {
             padding: 5px 20px 5px 38px;
           }
