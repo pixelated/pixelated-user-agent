@@ -27,7 +27,7 @@ define(['flight/lib/component', 'page/events'], function (defineComponent, event
 	  } else {
 	    $('#custom-tag-list').addClass('expanded');
 	  }
-    }
+    };
 
     this.after('initialize', function () {
       this.on($('#middle-pane-container'), 'click', this.toggleSlideContent);
