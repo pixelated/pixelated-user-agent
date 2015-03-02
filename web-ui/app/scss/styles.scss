@@ -546,9 +546,10 @@ button {
 
 .left-off-canvas-logo {
   svg {
-    width: 163px;
+    width: 162px;
     height: 56px;
-    padding-left: 5px;
+    padding-left: 6px;
+    padding-top: 2px;
     path, polygon, rect {
       fill: $logo_color;
     }
