@@ -93,7 +93,6 @@ define(
       this.showMails = function (event, data) {
         this.updateCurrentTagAndMail(data);
         this.refreshMailList(null, data);
-        this.triggerScrollReset();
         this.triggerMailOpenForPopState(data);
         this.openMailFromUrl();
       };
@@ -114,6 +113,7 @@ define(
 
       this.cleanSelected = function () {
         this.attr.currentMailIdent = '';
+        this.triggerScrollReset();
       };
 
       this.respondWithCheckedMails = function (ev, caller) {
