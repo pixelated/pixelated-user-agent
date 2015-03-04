@@ -152,7 +152,7 @@ describeComponent('mail_list/ui/mail_list', function () {
 
   it('resets scroll when opening a new tag or choosing a new tag', function () {
     var eventSpy = spyOnEvent(document, Pixelated.events.dispatchers.middlePane.resetScroll);
-    this.component.$node.trigger(Pixelated.events.mails.available, { mails: mailList });
+    this.component.$node.trigger(Pixelated.events.ui.tag.select, { mails: mailList });
     expect(eventSpy).toHaveBeenTriggeredOn(document);
   });
 
