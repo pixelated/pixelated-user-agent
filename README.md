@@ -12,10 +12,12 @@ The Pixelated User Agent is the mail client of the Pixelated ecosystem, it is co
 
 ## Getting started for development
 
+### Registering with a provider
 First of all, you should have an account on a LEAP/Pixelated provider with email support.
   * You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/).
   * There are some other LEAP providers on the [Bitmask page](https://bitmask.net), but they don't support email currently.
 
+### Instructions
 Requirements:
   * vagrant
   * virtualbox
@@ -31,15 +33,18 @@ From the root folder, set up the vagrant machine:
 You can log into the machine and view project root folder with:
 
     vagrant ssh
-    cd /vagrant
 From here on you can run the tests for the UI by going to the **web-ui** folder or for the API by going to the **service** folder and running:
 
-    cd web-ui
+    cd /vagrant/web-ui
     ./go test
     
+    cd /vagrant/service
+    ./go test
 You can also run the mail client with:
 
     pixelated-user-agent --host 0.0.0.0
+
+As soon as the agent start you will be asked for username, password and the [provider you registered with](/pixelated-project/pixelated-user-agent/blob/master/README.md#registering-with-a-provider). 
 
 Then point your browser to [http://localhost:3333](http://localhost:3333) to see it running.
 
