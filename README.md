@@ -44,7 +44,7 @@ You can also run the mail client with:
 
     pixelated-user-agent --host 0.0.0.0
 
-As soon as the agent start you will be asked for username, password and the [provider you registered with](/pixelated-project/pixelated-user-agent/blob/master/README.md#registering-with-a-provider). 
+As soon as the agent start you will be asked for username, password and the [provider you registered with](https://github.com/pixelated-project/pixelated-user-agent/blob/master/README.md#registering-with-a-provider). 
 
 Then point your browser to [http://localhost:3333](http://localhost:3333) to see it running.
 
