@@ -20,8 +20,7 @@ define(['flight/lib/component', 'page/events'], function (defineComponent, event
   return defineComponent(function() {
 
     this.closeSlider = function (ev){
-      ev.preventDefault();
-      $('.exit-off-canvas').click();
+      $('.off-canvas-wrap.content').removeClass('move-right');
       this.toggleTagsVisibility();
     };
 
@@ -32,10 +31,10 @@ define(['flight/lib/component', 'page/events'], function (defineComponent, event
     };
 
     this.toggleTagsVisibility = function () {
-	  if ($('#custom-tag-list').hasClass('expanded')) {
-	    $('#custom-tag-list').removeClass('expanded');
-	  } else {
+	  if ($('.off-canvas-wrap.content').hasClass('move-right')) {
 	    $('#custom-tag-list').addClass('expanded');
+	  } else {
+	    $('#custom-tag-list').removeClass('expanded');
 	  }
     };
 
