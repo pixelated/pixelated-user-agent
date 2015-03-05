@@ -174,9 +174,9 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertRegexpMatches(mail.html_body, '([\s\S]*100%)')
 
     def test_content_type_header_of_mail_part_is_used(self):
-        plain_headers = {'Content-Type': 'text/plain; charset=utf-8', 'Content-Transfer-Encoding': 'quoted-printable'}
+        plain_headers = {'Content-Type': 'text/plain; charset=iso-8859-1', 'Content-Transfer-Encoding': 'quoted-printable'}
         html_headers = {'Content-Type': 'text/html; charset=utf-8', 'Content-Transfer-Encoding': 'quoted-printable'}
-        parts = {'alternatives': [{'content': 'H=C3=A4llo', 'headers': plain_headers}, {'content': '<p>H=C3=A4llo</p>', 'headers': html_headers}]}
+        parts = {'alternatives': [{'content': 'H=E4llo', 'headers': plain_headers}, {'content': '<p>H=C3=A4llo</p>', 'headers': html_headers}]}
 
         mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw='some raw body'), parts=parts, soledad_querier=None)
 
