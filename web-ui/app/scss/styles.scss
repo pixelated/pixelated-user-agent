@@ -755,4 +755,10 @@ button {
   }
 }
 
+div.side-nav-bottom {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+}
+
 @import "mascot.scss";
