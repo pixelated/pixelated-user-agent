@@ -331,6 +331,9 @@ section {
         visibility: hidden;
         opacity: 0;
         transition-duration: 500ms;
+        height: 220px;
+        overflow: auto;
+        background-color: lighten($navigation_background,1);
 
         li {
           white-space: nowrap;
