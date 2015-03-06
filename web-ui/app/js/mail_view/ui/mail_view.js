@@ -108,7 +108,7 @@ define(
         var status = ['encrypted'];
 
         if(_.any(mail.security_casing.locks, function (lock) { return lock.state === 'valid'; })) { status.push('encryption-valid'); }
-        else { status.push('encryption-failure'); }
+        else { status.push('encryption-error'); }
 
         return status.join(' ');
       };

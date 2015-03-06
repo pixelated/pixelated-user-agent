@@ -117,7 +117,7 @@ describeComponent('mail_view/ui/mail_view', function () {
   it('assumes that the mail is encrypted and failure if all the locks are failed', function() {
     var email = testData;
     email.security_casing = {locks: [{state: 'failure'}, {state: 'failure'}]};
-    expect(this.component.checkEncrypted(email)).toEqual('encrypted encryption-failure');
+    expect(this.component.checkEncrypted(email)).toEqual('encrypted encryption-error');
   });
 
   it('assumes that the mail is not encrypted if it doesn\'t have any locks', function() {
