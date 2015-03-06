@@ -300,8 +300,10 @@ class PixelatedMail(Mail):
     def security_casing(self):
         casing = {"imprints": [], "locks": []}
         casing["imprints"] = self.signature_information
-        if self.encrypted:
+        if self.encrypted == "true":
             casing["locks"] = [{"state": "valid"}]
+        elif self.encrypted == "fail":
+            casing["locks"] = [{"state": "failure"}]
         return casing
 
     @property
@@ -377,7 +379,7 @@ class PixelatedMail(Mail):
 
     @property
     def encrypted(self):
-        return self.hdoc.content["headers"].get("X-Pixelated-encryption-status", "false") == "true"
+        return self.hdoc.content["headers"].get("X-Pixelated-encryption-status", "false")
 
     @property
     def bounced(self):
