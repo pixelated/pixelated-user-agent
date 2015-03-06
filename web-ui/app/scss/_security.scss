@@ -20,6 +20,12 @@
           content: "\f023  \f05e";
         }
       }
+      &.encryption-error {
+        background: $attention;
+        &:before {
+          content: "\f023  \f12a";
+        }
+      }
     }
     &.signed {
       &:before {

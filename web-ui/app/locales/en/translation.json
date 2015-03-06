@@ -44,6 +44,7 @@
     "you": "you",
     "encrypted": "Encrypted",
     "encrypted encryption-failure": "You are not authorized to see this message.",
+    "encrypted encryption-error": "Message was encrypted but we couldn't decrypt it.",
     "encrypted encryption-valid": "Message was transmitted securely.",
     "not-encrypted": "Message was readable during transmission.",
     "signed": "Certified sender.",
