@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import logging
-import time
-from test.support.dispatcher.proxy import Proxy
 
+from test.support.dispatcher.proxy import Proxy
 from test.support.integration import AppTestClient
 from selenium import webdriver
+
 from pixelated.resources.features_resource import FeaturesResource
 
 
@@ -48,10 +48,6 @@ def before_feature(context, feature):
 
 def after_feature(context, feature):
     context.browser.quit()
-
-
-def take_screenshot(context):
-    context.browser.save_screenshot('/tmp/screenshot.jpeg')
 
 
 def save_source(context):

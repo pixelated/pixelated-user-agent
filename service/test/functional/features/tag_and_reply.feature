@@ -14,14 +14,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-Feature: tagging and replying
+Feature: Tag and reply
+  As a user of Pixelated
+  I want to tag my emails
+  So that I can easily find them
 
   Scenario: User tags a mail, replies to it then checks that mail is in the right tag
     Given I have a mail in my inbox
     When I open the first mail in the 'inbox'
     When I add the tag 'website' to that mail
     Then I see that mail under the 'website' tag
-    And I open the mail I previously tagged
+    When I open the mail I previously tagged
     And I reply to it
     When I select the tag 'sent'
     Then I see the mail I sent

@@ -54,7 +54,7 @@ def impl(context, tag):
     context.execute_steps(u'When I open the first mail in the mail list')
 
 
-@then('I open the mail I previously tagged')
+@when('I open the mail I previously tagged')
 def impl(context):
     open_current_mail(context)
 
@@ -68,3 +68,9 @@ def impl(context):
 @then('the deleted mail is there')
 def impl(context):
     check_current_mail_is_visible(context)
+
+
+@given('I have mails')
+def impl(context):
+    elements = wait_until_elements_are_visible_by_locator(context, (By.XPATH, '//*[@id="mail-list"]//a'))
+    assert len(elements) > 0

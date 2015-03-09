@@ -15,16 +15,18 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 Feature: compose mail, save draft and send mail
+  As a user of Pixelated
+  I want to save drafts
+  So I can review and send them later
 
   Scenario: user composes and email, save the draft, later sends the draft and checks the sent message
-    Given I compose a message with
+    When I compose a message with
       | subject          | body                                        |
       | Pixelated rocks! | You should definitely use it. Cheers, User. |
-    # And for the 'To' field I type 'ab' and chose the first contact that shows
-    And for the 'To' field I enter 'pixelated@friends.org'
-    And I save the draft
+      And for the 'To' field I enter 'pixelated@friends.org'
+      And I save the draft
     When I open the saved draft and send it
     Then I see that mail under the 'sent' tag
     When I open that mail
     Then I see that the subject reads 'Pixelated rocks!'
-    And I see that the body reads 'You should definitely use it. Cheers, User.'
+      And I see that the body reads 'You should definitely use it. Cheers, User.'

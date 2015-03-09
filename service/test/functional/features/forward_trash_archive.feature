@@ -14,18 +14,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-Feature: forward_trash_archive
+Feature: forward and deletion
+  As a user of Pixelated
+  I want to forward emails using CC and Bcc features
+  So I can take actions
 
   Scenario: User forwards a mail, add CC and BCC address, later trash the mail
     Given I have a mail in my inbox
     When I open the first mail in the 'inbox'
-    Then I choose to forward this mail
-    # And for the 'CC' field I type 'ab' and chose the first contact that shows
-    # And for the 'Bcc' field I type 'fr' and chose the first contact that shows
-    Given for the 'CC' field I enter 'pixelated@friends.org'
-    And for the 'Bcc' field I enter 'pixelated@family.org'
-    Then I forward this mail
+      And I choose to forward this mail
+    When for the 'CC' field I enter 'pixelated@friends.org'
+      And for the 'Bcc' field I enter 'pixelated@family.org'
+      And I forward this mail
     When I open the first mail in the 'sent'
     Then I see the mail has a cc and a bcc recipient
-    And I choose to trash
+    When I choose to trash
     Then I see that mail under the 'trash' tag

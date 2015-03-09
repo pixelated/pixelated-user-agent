@@ -49,7 +49,7 @@ def impl(context, tag):
     wait_until_element_is_visible_by_locator(context, (By.XPATH, '//li[@data-tag="%s"]' % tag))
 
 
-@then('I reply to it')
+@when('I reply to it')
 def impl(context):
     click_button(context, 'Reply')
     click_button(context, 'Send')
@@ -73,20 +73,20 @@ def impl(context):
     assert_that(e.text, equal_to('Your message was moved to trash!'))
 
 
-@then('I choose to forward this mail')
+@when('I choose to forward this mail')
 def impl(context):
     wait_until_button_is_visible(context, 'Forward')
     click_button(context, 'Forward')
 
 
-@then('I forward this mail')
+@when('I forward this mail')
 def impl(context):
-    context.execute_steps(u'Given I save the draft')  # FIXME: this won't be necessary after #89 is done
+    context.execute_steps(u'When I save the draft')  # FIXME: this won't be necessary after #89 is done
     wait_until_button_is_visible(context, 'Send')
     click_button(context, 'Send')
 
 
-@then('I remove all tags')
+@when('I remove all tags')
 def impl(context):
     e = find_element_by_css_selector(context, '.tagsArea')
     tags = e.find_elements_by_css_selector('.tag')
@@ -95,7 +95,7 @@ def impl(context):
         tag.click()
 
 
-@then('I choose to trash')
+@when('I choose to trash')
 def impl(context):
     context.browser.execute_script("$('button#view-more-actions').click()")
     click_button(context, 'Delete this message', 'span')

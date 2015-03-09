@@ -16,15 +16,16 @@
 
 
 # XXX: must implement with HTML content
-Feature: search mail and destroy
+Feature: search mail and deletion
+  As a user of pixelated
+  I want to search for emails
+  So I can manage them
 
-  Scenario: User searches for a mail and deletes it'
+  Scenario: User searches for a mail and deletes it
     Given I have a mail in my inbox
     When I search for a mail with the words "the body of this message"
     When I open the first mail in the mail list
     Then I see one or more mails in the search results
-#    Then I see if the mail has html content
     When I try to delete the first mail
-    # Then I learn that the mail was deleted
     When I select the tag 'trash'
     Then the deleted mail is there
