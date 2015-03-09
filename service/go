@@ -94,7 +94,6 @@ function runCoverageUnitAndIntegration {
 
 if [ "$1" == 'test' ]; then
         set -e
-        runJSHint
         runPep8
         runUnitTests "${@:2}"
         runIntegrationTests "${@:2}"
