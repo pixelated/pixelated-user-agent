@@ -158,7 +158,6 @@
       }
       &.selected {
         background: #FFF;
-        z-index: 2;
         a {
           color: #333;
         }
@@ -254,20 +253,20 @@ section {
       border-right: 1px solid lighten($navigation_background, 10%);
       ul#default-tag-list, #custom-tag-list {
         li {
-          transition: background-color 150ms ease-in-out;
+          transition: background-color 0.15s, color 0s, z-index 0.15s;
           padding: 2px 10px;
           cursor: pointer;
+
           &.selected {
             font-weight: bold;
             background: $contrast;
             color: $navigation_background;
           }
+
           &:hover {
             z-index: 5;
-            transition: z-index 150ms ease-out;
             background: #CCC;
             color: $navigation_background;
-            width: 95%;
             opacity: 0.90;
           }
         }
