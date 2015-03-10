@@ -211,6 +211,28 @@ class TestPixelatedMail(unittest.TestCase):
 
         self.assertEquals(body, mail.text_plain_body)
 
+    def test_that_body_understands_7bit(self):
+        body = u'testtext'
+        encoded_body = body
+
+        fdoc, hdoc, bdoc = test_helper.leap_mail()
+        parts = {'alternatives': []}
+        parts['alternatives'].append({'content': encoded_body, 'headers': {'Content-Transfer-Encoding': '7bit'}})
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier, parts=parts)
+
+        self.assertEquals(body, mail.text_plain_body)
+
+    def test_that_body_understands_8bit(self):
+        body = u'testtext'
+        encoded_body = body
+
+        fdoc, hdoc, bdoc = test_helper.leap_mail()
+        parts = {'alternatives': []}
+        parts['alternatives'].append({'content': encoded_body, 'headers': {'Content-Transfer-Encoding': '8bit'}})
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier, parts=parts)
+
+        self.assertEquals(body, mail.text_plain_body)
+
     def test_bounced_mails_are_recognized(self):
         bounced_mail_hdoc = os.path.join(os.path.dirname(__file__), '..', 'fixtures', 'bounced_mail_hdoc.json')
         with open(bounced_mail_hdoc) as f:

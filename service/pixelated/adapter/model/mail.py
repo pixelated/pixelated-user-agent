@@ -234,7 +234,9 @@ class PixelatedMail(Mail):
 
         decoding_map = {
             'quoted-printable': lambda content, content_type: unicode(content.decode('quopri'), content_type),
-            'base64': lambda content, content_type: content.decode('base64').decode('utf-8')
+            'base64': lambda content, content_type: content.decode('base64').decode('utf-8'),
+            '7bit': lambda content, content_type: content.encode(content_type),
+            '8bit': lambda content, content_type: content.encode(content_type)
         }
         if encoding:
             return decoding_map[encoding](part['content'], content_type)
