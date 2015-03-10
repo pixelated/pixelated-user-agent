@@ -24,7 +24,7 @@ class SoledadDbFacadeMixin(object):
         return self.soledad.get_from_index('by-type-and-mbox', 'flags', mbox)
 
     def get_content_by_phash(self, phash):
-        content = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', phash)
+        content = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', phash) if phash else []
         if len(content):
             return content[0]
 
