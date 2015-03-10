@@ -1,11 +1,11 @@
 Pixelated User Agent First Steps
 ================================
 
-## First things first - get a test account
+## First things first - get a development account
 
-In order to run the user agent, you will need an account at a Leap provider supporting mail. To do so sign up at [try.pixelated-project.org](https://try.pixelated-project.org/signup)
+In order to run the user agent, you will need an account at a Leap provider supporting mail. To do so sign up at [dev.pixelated-project.org](https://dev.pixelated-project.org/signup)
 
-Notice: This account is only for test purposes and does not allow to send emails to external recipients.
+Notice: This account is only for development purposes and does not allow to send emails to external recipients.
 
 
 ## Starting the agent for the first time
