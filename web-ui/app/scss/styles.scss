@@ -368,6 +368,11 @@ section {
         &:hover {
             background: #CCC;
             color: $navigation_background;
+            position: relative;
+            z-index: 5;
+            transition: z-index 150ms ease-out;
+            width: 95%;
+            opacity: 0.90;
           }
 
         i {
