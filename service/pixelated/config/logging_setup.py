@@ -22,22 +22,18 @@ from twisted.python import log
 from twisted.python import util
 
 
-LOG_FILE = '/tmp/pixelated.log'
-
-
 def init_logging(args):
     debug_enabled = args.debug or os.environ.get('DEBUG', False)
 
     logging.basicConfig(level=logging.DEBUG if debug_enabled else logging.WARNING,
                         format='[%(asctime)s] ' + socket.gethostname() + ' %(name)-12s %(levelname)-8s %(message)s',
                         datefmt='%m-%d %H:%M:%S',
-                        filename=LOG_FILE,
                         filemode='a')
 
     if debug_enabled:
         init_debugger()
 
-    init_twisted_logging()
+    log.startLogging(sys.stdout)
 
 
 def init_debugger():
@@ -46,12 +42,6 @@ def init_debugger():
     console.setLevel(logging.DEBUG)
     console.setFormatter(formatter)
     logging.getLogger('').addHandler(console)
-
-
-def init_twisted_logging():
-    log.startLogging(sys.stdout)
-    file_observer = PixelatedLogObserver(file(LOG_FILE, 'a'))
-    log.addObserver(file_observer.emit)
 
 
 class PixelatedLogObserver(log.FileLogObserver):
