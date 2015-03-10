@@ -362,8 +362,14 @@ section {
 
       div.tags-icon {
         border-top: 1px solid white;
-        padding-top: 25px;
+        padding: 10px 0 15px 0;
         margin-bottom: 20px;
+        
+        &:hover {
+            background: #CCC;
+            color: $navigation_background;
+          }
+
         i {
           font-size: 1.5em;
           font-family: "FontAwesome";
