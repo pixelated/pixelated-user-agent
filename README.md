@@ -42,7 +42,16 @@ From here on you can run the tests for the UI by going to the **web-ui** folder 
     ./go test
 You can also run the mail client with:
 
-    pixelated-user-agent --host 0.0.0.0
+```
+$ pixelated-user-agent --host 0.0.0.0
+> 2015-01-23 11:18:07+0100 [-] Log opened.
+> 2015-01-23 11:18:07+0100 [-] Which provider do you want to connect to:
+dev.pixelated-project.org
+> 2015-01-23 11:18:52+0100 [-] What's your username registered on the provider:
+username
+> Type your password:
+*******************
+```
 
 As soon as the agent start you will be asked for username, password and the [provider you registered with](https://github.com/pixelated-project/pixelated-user-agent/blob/master/README.md#registering-with-a-provider). 
 
