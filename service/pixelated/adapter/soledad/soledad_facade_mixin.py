@@ -21,7 +21,7 @@ class SoledadDbFacadeMixin(object):
         return self.soledad.get_from_index('by-type', 'flags')
 
     def get_all_flags_by_mbox(self, mbox):
-        return self.soledad.get_from_index('by-type-and-mbox', 'flags', mbox)
+        return self.soledad.get_from_index('by-type-and-mbox', 'flags', mbox) if mbox else []
 
     def get_content_by_phash(self, phash):
         content = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', phash) if phash else []
@@ -29,17 +29,17 @@ class SoledadDbFacadeMixin(object):
             return content[0]
 
     def get_flags_by_chash(self, chash):
-        flags = self.soledad.get_from_index('by-type-and-contenthash', 'flags', chash)
+        flags = self.soledad.get_from_index('by-type-and-contenthash', 'flags', chash) if chash else []
         if len(flags):
             return flags[0]
 
     def get_header_by_chash(self, chash):
-        header = self.soledad.get_from_index('by-type-and-contenthash', 'head', chash)
+        header = self.soledad.get_from_index('by-type-and-contenthash', 'head', chash) if chash else []
         if len(header):
             return header[0]
 
     def get_recent_by_mbox(self, mbox):
-        return self.soledad.get_from_index('by-type-and-mbox', 'rct', mbox)
+        return self.soledad.get_from_index('by-type-and-mbox', 'rct', mbox) if mbox else []
 
     def put_doc(self, doc):
         return self.soledad.put_doc(doc)
@@ -51,13 +51,13 @@ class SoledadDbFacadeMixin(object):
         return self.soledad.delete_doc(doc)
 
     def idents_by_mailbox(self, mbox):
-        return set(doc.content['chash'] for doc in self.soledad.get_from_index('by-type-and-mbox-and-deleted', 'flags', mbox, '0'))
+        return set(doc.content['chash'] for doc in self.soledad.get_from_index('by-type-and-mbox-and-deleted', 'flags', mbox, '0')) if mbox else set()
 
     def get_all_mbox(self):
         return self.soledad.get_from_index('by-type', 'mbox')
 
     def get_mbox(self, mbox):
-        return self.soledad.get_from_index('by-type-and-mbox', 'mbox', mbox)
+        return self.soledad.get_from_index('by-type-and-mbox', 'mbox', mbox) if mbox else []
 
     def get_search_index_masterkey(self):
         return self.soledad.get_from_index('by-type', 'index_key')
