@@ -83,3 +83,20 @@ class SoledadQuerierTest(SoledadTestBase, WithMsgFields):
         fetched_mails = self.soledad_querier.mails(chashes)
 
         self.assertEquals([m.as_dict() for m in fetched_mails], [m.as_dict() for m in mails])
+
+    def test_empty_or_bad_queries_are_handled(self):
+        self.client.add_multiple_to_mailbox(3, 'INBOX')
+
+        test_parameters = ['', 'undefined', None, 'none']
+
+        def call_with_bad_parameters(funct):
+            for param in test_parameters:
+                self.assertFalse(funct(param))
+
+        call_with_bad_parameters(self.soledad_querier.get_all_flags_by_mbox)
+        call_with_bad_parameters(self.soledad_querier.get_content_by_phash)
+        call_with_bad_parameters(self.soledad_querier.get_flags_by_chash)
+        call_with_bad_parameters(self.soledad_querier.get_header_by_chash)
+        call_with_bad_parameters(self.soledad_querier.get_recent_by_mbox)
+        call_with_bad_parameters(self.soledad_querier.idents_by_mailbox)
+        call_with_bad_parameters(self.soledad_querier.get_mbox)
