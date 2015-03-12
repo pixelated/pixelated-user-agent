@@ -184,6 +184,17 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEquals(u'H\xe4llo', mail.text_plain_body)
         self.assertEquals(u'<p>H\xe4llo</p>', mail.html_body)
 
+    def test_multi_line_content_type_header_is_supported(self):
+        plain_headers = {'Content-Type': 'text/plain;\ncharset=iso-8859-1', 'Content-Transfer-Encoding': 'quoted-printable'}
+        html_headers = {'Content-Type': 'text/html;\ncharset=utf-8', 'Content-Transfer-Encoding': 'quoted-printable'}
+        parts = {'alternatives': [{'content': 'H=E4llo', 'headers': plain_headers}, {'content': '<p>H=C3=A4llo</p>', 'headers': html_headers}]}
+
+        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw='some raw body'), parts=parts, soledad_querier=None)
+
+        self.assertEqual(2, len(mail.alternatives))
+        self.assertEquals(u'H\xe4llo', mail.text_plain_body)
+        self.assertEquals(u'<p>H\xe4llo</p>', mail.html_body)
+
     def test_clean_line_breaks_on_address_headers(self):
         many_recipients = 'One <one@mail.com>,\nTwo <two@mail.com>, Normal <normal@mail.com>,\nalone@mail.com'
         headers = {'Cc': many_recipients,
