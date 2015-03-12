@@ -40,40 +40,39 @@ import pixelated.support.ext_keymanager_fetch_key
 
 
 def initialize():
-    with monkey_patch_leap_fetch_keys():
-        args = parse_args()
-        app = App()
+    args = parse_args()
+    app = App()
 
-        init_logging(args)
-        init_leap_cert(args)
+    init_logging(args)
+    init_leap_cert(args)
 
-        if args.register:
-            register(*args.register[::-1])
-            sys.exit(0)
+    if args.register:
+        register(*args.register[::-1])
+        sys.exit(0)
 
-        if args.dispatcher or args.dispatcher_stdin:
-            config_dispatcher(app, args)
-        else:
-            config_user_agent(app, args)
+    if args.dispatcher or args.dispatcher_stdin:
+        config_dispatcher(app, args)
+    else:
+        config_user_agent(app, args)
 
-        init_events_server()
+    init_events_server()
 
-        def load_app():
-            # welcome to deferred hell. Or maybe you'll be welcomed later, who knows.
-            loading_app = loading(args)
+    def load_app():
+        # welcome to deferred hell. Or maybe you'll be welcomed later, who knows.
+        loading_app = loading(args)
 
-            def init_soledad():
-                return init_soledad_and_user_key(app, args.home)
+        def init_soledad():
+            return init_soledad_and_user_key(app, args.home)
 
-            def stop_loading_app(leap_session):
-                d = loading_app.stopListening()
-                d.addCallback(partial(start_user_agent_app, leap_session))
+        def stop_loading_app(leap_session):
+            d = loading_app.stopListening()
+            d.addCallback(partial(start_user_agent_app, leap_session))
 
-            def start_user_agent_app(leap_session, _):
-                app_factory.create_app(app, args, leap_session)
+        def start_user_agent_app(leap_session, _):
+            app_factory.create_app(app, args, leap_session)
 
-            d = deferToThread(init_soledad)
-            d.addCallback(stop_loading_app)
+        d = deferToThread(init_soledad)
+        d.addCallback(stop_loading_app)
 
-        reactor.callWhenRunning(load_app)
-        reactor.run()
+    reactor.callWhenRunning(load_app)
+    reactor.run()
