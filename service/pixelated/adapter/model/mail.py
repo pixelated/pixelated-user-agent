@@ -26,6 +26,10 @@ from email.MIMEMultipart import MIMEMultipart
 from pycryptopp.hash import sha256
 import re
 from pixelated.support.functional import compact
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class Mail(object):
@@ -232,16 +236,22 @@ class PixelatedMail(Mail):
         encoding = part['headers'].get('Content-Transfer-Encoding', '')
         content_type = self._parse_charset_header(part['headers'].get('Content-Type'))
 
-        decoding_map = {
-            'quoted-printable': lambda content, content_type: unicode(content.decode('quopri'), content_type),
-            'base64': lambda content, content_type: content.decode('base64').decode('utf-8'),
-            '7bit': lambda content, content_type: content.encode(content_type),
-            '8bit': lambda content, content_type: content.encode(content_type)
-        }
-        if encoding:
-            return decoding_map[encoding](part['content'], content_type)
-        else:
-            return part['content']
+        try:
+            decoding_map = {
+                'quoted-printable': lambda content, content_type: unicode(content.decode('quopri'), content_type),
+                'base64': lambda content, content_type: content.decode('base64').decode('utf-8'),
+                '7bit': lambda content, content_type: content.encode(content_type),
+                '8bit': lambda content, content_type: content.encode(content_type)
+            }
+            if encoding:
+                return decoding_map[encoding](part['content'], content_type)
+            else:
+                return part['content']
+        except Exception:
+            logger.error('Failed to decode mail part with:')
+            logger.error('Content-Transfer-Encoding: %s' % encoding)
+            logger.error('Content-Type: %s' % part['headers'].get('Content-Type'))
+            raise
 
     @property
     def alternatives(self):
