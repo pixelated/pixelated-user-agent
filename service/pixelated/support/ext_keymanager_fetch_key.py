@@ -14,6 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import leap.keymanager
+import requests
+import logging
+from leap.keymanager.errors import KeyNotFound
+
+
+logger = logging.getLogger(__name__)
 
 
 def patched_fetch_keys_from_server(self, address):
