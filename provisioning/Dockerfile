@@ -35,16 +35,34 @@ RUN apt-key adv --keyserver pool.sks-keyservers.net --recv-key 1E34A1828E207901 
 # Update packages lists
 RUN apt-get update -y --force-yes
 
+# Set the locale
+# Install program to configure locales
+RUN apt-get install -y locales
+RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales && \
+  locale-gen C.UTF-8 && \
+  /usr/sbin/update-locale LANG=C.UTF-8
+# Install needed default locale for Makefly
+RUN echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && \
+  locale-gen
+# Set default locale for the environment
+ENV LC_ALL C.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+
+
+# RUN apt-get install locales apt-utils
+# RUN export LANGUAGE=en_US.UTF-8 && \
+#     export LANG=en_US.UTF-8 && \
+#     export LC_ALL=en_US.UTF-8 && \
+#     locale-gen en_US.UTF-8 && \
+#     DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
+# ENV LANG en_US.UTF-8  
+# ENV LANGUAGE en_US:en  
+# ENV LC_ALL en_US.UTF-8 
+
 # Install pip for taskthread dependency (no backport yet)
 RUN apt-get install python-pip python-all-dev libssl-dev
 RUN pip install taskthread
-
-# Set the locale
-RUN apt-get install locales
-RUN /usr/sbin/locale-gen en_US.UTF-8  
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8 
 
 RUN apt-get install -y --force-yes --allow-unauthenticated soledad-client soledad-common
 # Install Pixelated User Agent

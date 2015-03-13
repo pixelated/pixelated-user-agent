@@ -17,6 +17,7 @@ import leap.keymanager
 import requests
 import logging
 from leap.keymanager.errors import KeyNotFound
+from leap.keymanager.openpgp import OpenPGPKey
 
 
 logger = logging.getLogger(__name__)
