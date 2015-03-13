@@ -3,7 +3,7 @@ Pixelated User Agent
 
 The Pixelated User Agent is the mail client of the Pixelated ecosystem, it is composed of two parts, a web interface written in javascript and an API written in python that glues that interface with the Pixelated or LEAP Provider.
 
->**The Pixelated User Agent is still in early development state!**
+**The Pixelated User Agent is still in early development state!**
 
 >Some things may not yet work the way you expect it to.
 >Setting up the service is still rather troublesome and so far it only serves limited functionality.
