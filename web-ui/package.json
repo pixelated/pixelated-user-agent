@@ -21,8 +21,8 @@
     "watch": "^0.13.0"
   },
   "scripts": {
-    "test": "npm run clean && npm run handlebars && node_modules/karma/bin/karma start --single-run --browsers PhantomJS $GRUNT_OPTS",
-    "debug": "npm run clean && npm run handlebars && node_modules/karma/bin/karma start --browsers Chrome $GRUNT_OPTS",
+    "test": "npm run build && node_modules/karma/bin/karma start --single-run --browsers PhantomJS $GRUNT_OPTS",
+    "debug": "npm run build && node_modules/karma/bin/karma start --browsers Chrome $GRUNT_OPTS",
     "watch": "npm run compass-watch & npm run handlebars-watch",
     "watch-test": "node_modules/karma/bin/karma start",
     "handlebars": "mkdir -p app/js/generated/hbs/ && node_modules/handlebars/bin/handlebars app/templates/**/*.hbs > app/js/generated/hbs/templates.js --namespace=window.Pixelated --root .",
