@@ -40,7 +40,8 @@ RUN apt-get install python-pip python-all-dev libssl-dev
 RUN pip install taskthread
 
 # Set the locale
-RUN locale-gen en_US.UTF-8  
+RUN apt-get install locales
+RUN /usr/sbin/locale-gen en_US.UTF-8  
 ENV LANG en_US.UTF-8  
 ENV LANGUAGE en_US:en  
 ENV LC_ALL en_US.UTF-8 
