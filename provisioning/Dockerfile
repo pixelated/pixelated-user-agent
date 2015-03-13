@@ -49,17 +49,6 @@ ENV LC_ALL C.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 
-
-# RUN apt-get install locales apt-utils
-# RUN export LANGUAGE=en_US.UTF-8 && \
-#     export LANG=en_US.UTF-8 && \
-#     export LC_ALL=en_US.UTF-8 && \
-#     locale-gen en_US.UTF-8 && \
-#     DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
-# ENV LANG en_US.UTF-8  
-# ENV LANGUAGE en_US:en  
-# ENV LC_ALL en_US.UTF-8 
-
 # Install pip for taskthread dependency (no backport yet)
 RUN apt-get install python-pip python-all-dev libssl-dev
 RUN pip install taskthread
