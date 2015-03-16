@@ -81,9 +81,9 @@
   ul#mail-list {
     clear: both;
     li {
-      height: 75px;
+      height: 66px;
       position: relative;
-      padding: 12px 10px;
+      padding: 10px;
       background: $contrast;
       border-bottom: 1px solid white;
       cursor: pointer;
@@ -101,6 +101,11 @@
         }
         a {
           color: #333;
+          display: block;
+          height: 62px;
+          margin-top: -8px;
+          padding-top: 3px;
+          width: 106%;
         }
       }
       .subject-and-tags {
