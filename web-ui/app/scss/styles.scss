@@ -303,6 +303,7 @@ section {
             font-weight: normal;
             position: relative;
             top: 2px;
+            margin-left: -3px;
           }
           &:nth-child(1) {
             &:before {
@@ -312,6 +313,7 @@ section {
           &:nth-child(2) {
             &:before {
               content: "\f1d8";
+              margin-left: -5px;
             }
           }
           &:nth-child(3) {
@@ -327,6 +329,7 @@ section {
           &:nth-child(5) {
             &:before {
               content: "\f187";
+              margin-left: -5px;
             }
           }
         }
