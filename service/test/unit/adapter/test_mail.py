@@ -31,6 +31,9 @@ class TestPixelatedMail(unittest.TestCase):
     def setUp(self):
         self.querier = mock()
 
+    def tearDown(self):
+        unstub()
+
     def test_parse_date_from_soledad_uses_date_header_if_available(self):
         leap_mail_date = 'Wed, 3 Sep 2014 12:36:17 -0300'
         leap_mail_date_in_iso_format = "2014-09-03T12:36:17-03:00"
@@ -49,6 +52,17 @@ class TestPixelatedMail(unittest.TestCase):
         leap_mail = test_helper.leap_mail(headers={'received': leap_mail_received_header})
 
         mail = PixelatedMail.from_soledad(*leap_mail, soledad_querier=self.querier)
+
+        self.assertEqual(str(mail.headers['Date']), leap_mail_date_in_iso_format)
+
+    def test_parse_date_from_soledad_fallback_to_now_if_neither_date_nor_received_header(self):
+        leap_mail_date_in_iso_format = "2014-09-03T13:11:15-03:00"
+
+        when(pixelated.support.date).iso_now().thenReturn(leap_mail_date_in_iso_format)
+        fdoc, hdoc, bdoc = test_helper.leap_mail()
+        del hdoc.content['date']
+
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier)
 
         self.assertEqual(str(mail.headers['Date']), leap_mail_date_in_iso_format)
 

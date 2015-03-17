@@ -305,7 +305,13 @@ class PixelatedMail(Mail):
     def _get_date(self):
         date = self.hdoc.content.get('date', None)
         if not date:
-            date = self.hdoc.content['received'].split(";")[-1].strip()
+            received = self.hdoc.content.get('received', None)
+            if received:
+                date = received.split(";")[-1].strip()
+            else:
+                # we can't get a date for this mail, so lets just use now
+                logger.warning('Encountered a mail with missing date and received header fields. Subject %s' % self.hdoc.content.get('subject', None))
+                date = pixelated.support.date.iso_now()
         return dateparser.parse(date).isoformat()
 
     @property
