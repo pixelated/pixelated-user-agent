@@ -38,7 +38,7 @@
       vertical-align: top;
       input[type=checkbox] {
         @include check-box;
-        margin: 7px 8px 7px 13px;
+        margin: 7px 13px 7px;
       }
       select {
         padding: 1px 3px;
@@ -83,7 +83,7 @@
     li {
       height: 66px;
       position: relative;
-      padding: 10px;
+      padding: 8px 10px 10px 10px;
       background: $contrast;
       border-bottom: 1px solid white;
       cursor: pointer;
