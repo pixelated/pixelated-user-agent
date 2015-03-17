@@ -1,5 +1,6 @@
 Pixelated User Agent
 ====================
+[![Build Status](https://snap-ci.com/pixelated-project/pixelated-user-agent/branch/master/build_image)](https://snap-ci.com/pixelated-project/pixelated-user-agent/branch/master)
 
 The Pixelated User Agent is the mail client of the Pixelated ecosystem, it is composed of two parts, a web interface written in javascript and an API written in python that glues that interface with the Pixelated or LEAP Provider.
 
