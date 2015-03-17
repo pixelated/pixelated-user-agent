@@ -16,7 +16,7 @@
 from datetime import datetime
 import io
 
-from pixelated.adapter.model.mail import InputMail
+from pixelated.adapter.model.mail import InputMail, PixelatedMail
 
 
 LEAP_FLAGS = ['\\Seen',
@@ -66,6 +66,12 @@ def leap_mail(uid=0, flags=LEAP_FLAGS, headers=None, extra_headers={}, mbox='INB
     bdoc = TestDoc({'raw': body, 'type': 'cnt'})
 
     return (fdoc, hdoc, bdoc)
+
+
+def pixelated_mail(uid=0, flags=LEAP_FLAGS, headers=None, extra_headers={}, mbox='INBOX', body='body', chash='chash'):
+    fdoc, hdoc, bdoc = leap_mail(uid, flags, headers, extra_headers, mbox, body, chash)
+
+    return PixelatedMail.from_soledad(fdoc, hdoc, bdoc)
 
 
 def input_mail():

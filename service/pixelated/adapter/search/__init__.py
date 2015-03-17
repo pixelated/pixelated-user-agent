@@ -116,8 +116,9 @@ class SearchEngine(object):
         return FileIndex.create(storage, self._mail_schema(), indexname='mails')
 
     def index_mail(self, mail):
-        with self._index.writer() as writer:
-            self._index_mail(writer, mail)
+        with self._write_lock:
+            with self._index.writer() as writer:
+                self._index_mail(writer, mail)
 
     def _index_mail(self, writer, mail):
         mdict = mail.as_dict()
