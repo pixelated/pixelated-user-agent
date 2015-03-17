@@ -299,12 +299,17 @@ section {
           &:before {
             font-size: 1.5em;
             font-family: "FontAwesome";
-            margin-right: 13px;
+            margin-right: 16px;
             font-weight: normal;
             position: relative;
             top: 2px;
             margin-left: -3px;
           }
+
+          &:after {
+            padding-left: 10px;
+          }
+
           &:nth-child(1) {
             &:before {
               content: "\f01c";
