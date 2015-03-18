@@ -14,24 +14,25 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
-import json
 
 from funkload.FunkLoadTestCase import FunkLoadTestCase
 from funkload.utils import Data
 from test.support.integration import AppTestClient
 
 
+CLIENT = AppTestClient()
+
+
 class Search(FunkLoadTestCase):
 
     def setUpBench(self):
-        client = AppTestClient()
 
         # setup data
-        client.add_multiple_to_mailbox(10, 'INBOX', to='to@inbox.com', cc='cc@inbox.com', bcc='bcc@inbox.com', tags=['inbox'])
-        client.add_multiple_to_mailbox(10, 'TRASH', to='to@trash.com', cc='cc@trash.com', bcc='bcc@trash.com', tags=['trash'])
-        client.add_multiple_to_mailbox(10, 'DRAFTS', to='to@drafts.com', cc='cc@drafts.com', bcc='bcc@drafts.com', tags=['drafts'])
+        CLIENT.add_multiple_to_mailbox(10, 'INBOX', to='to@inbox.com', cc='cc@inbox.com', bcc='bcc@inbox.com', tags=['inbox'])
+        CLIENT.add_multiple_to_mailbox(10, 'TRASH', to='to@trash.com', cc='cc@trash.com', bcc='bcc@trash.com', tags=['trash'])
+        CLIENT.add_multiple_to_mailbox(10, 'DRAFTS', to='to@drafts.com', cc='cc@drafts.com', bcc='bcc@drafts.com', tags=['drafts'])
 
-        self.call_to_terminate = client.run_on_a_thread(logfile='results/app.log')
+        self.call_to_terminate = CLIENT.run_on_a_thread(logfile='results/app.log')
 
     def tearDownBench(self):
         self.call_to_terminate()
@@ -42,7 +43,7 @@ class Search(FunkLoadTestCase):
         self.mails_by_tag_url = self.server_url + '/mails?q=%%22tag:%s%%22&w=25&p=0'
 
     def idents_by_tag(self, tag):
-        return list(mail['ident'] for mail in json.loads(self.get(self.mails_by_tag_url % tag, description='Query mails by tag').body)['mails'])
+        return [mail.ident for mail in CLIENT.get_mails_by_tag(tag)]
 
     def test_search(self):
         """ Query contacts and tags. Write a new tag, updating index. Query again. """
