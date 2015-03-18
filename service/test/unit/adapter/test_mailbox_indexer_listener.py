@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
 
-from mockito import *
+from mockito import mock, when, verify
 from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerListener
 
 

@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 
-from test.support.integration import *
+from test.support.integration import SoledadTestBase, MailBuilder
 from pixelated.adapter.services.tag_service import SPECIAL_TAGS
 
 

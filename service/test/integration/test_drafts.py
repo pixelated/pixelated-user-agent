@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from test.support.integration import *
-from mockito import *
+from test.support.integration import SoledadTestBase, MailBuilder
+from mockito import unstub, when, any
 from twisted.internet.defer import Deferred
 
 

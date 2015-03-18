@@ -17,7 +17,7 @@
 import copy
 import time
 
-from test.support.integration import *
+from test.support.integration import SoledadTestBase, MailBuilder
 from leap.mail.imap.fields import WithMsgFields
 
 

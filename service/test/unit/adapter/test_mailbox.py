@@ -17,7 +17,7 @@ import unittest
 
 from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.services.mailbox import Mailbox
-from mockito import *
+from mockito import mock, when, verify
 from test.support import test_helper
 
 

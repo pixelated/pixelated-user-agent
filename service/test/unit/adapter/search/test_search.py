@@ -16,7 +16,7 @@
 
 
 import unittest
-from mockito import *
+from mockito import mock, when
 from pixelated.adapter.search import SearchEngine
 from tempdir import TempDir
 from test.support import test_helper

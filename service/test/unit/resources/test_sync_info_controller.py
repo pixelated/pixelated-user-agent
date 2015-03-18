@@ -18,7 +18,7 @@ import json
 
 from test.support.test_helper import request_mock
 from pixelated.resources.sync_info_resource import SyncInfoResource
-from mockito import *
+from mockito import mock
 
 
 class SyncInfoResourceTest(unittest.TestCase):

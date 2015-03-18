@@ -18,10 +18,8 @@ from pixelated.adapter.model.mail import InputMail, PixelatedMail
 
 from pixelated.adapter.services.mail_service import MailService
 from test.support.test_helper import mail_dict, leap_mail
-from mockito import *
+from mockito import mock, unstub, when, verify, verifyNoMoreInteractions, any
 from twisted.internet.defer import Deferred
-
-from twisted.internet import defer
 
 
 class TestMailService(unittest.TestCase):
