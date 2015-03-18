@@ -17,10 +17,11 @@
 from pixelated.support.encrypted_file_storage import EncryptedFileStorage
 
 import os
+import re
 from pixelated.adapter.model.status import Status
 from pixelated.adapter.search.contacts import contacts_suggestions
 from whoosh.index import FileIndex
-from whoosh.fields import *
+from whoosh.fields import Schema, ID, KEYWORD, TEXT, NUMERIC
 from whoosh.qparser import QueryParser
 from whoosh.qparser import MultifieldParser
 from whoosh import sorting
