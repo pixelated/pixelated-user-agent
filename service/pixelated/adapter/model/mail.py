@@ -16,6 +16,7 @@
 import json
 from uuid import uuid4
 from email.mime.text import MIMEText
+from email.header import decode_header
 
 from leap.mail.imap.fields import fields
 import leap.mail.walk as walk
@@ -288,7 +289,8 @@ class PixelatedMail(Mail):
             _headers[header] = [head.strip() for head in compact(_headers[header])]
 
         for header in ['From', 'Subject']:
-            _headers[header] = hdoc_headers.get(header)
+            # _headers[header] = hdoc_headers.get(header)
+            _headers[header] = self._decode_header(hdoc_headers.get(header))
 
         _headers['Date'] = self._get_date()
 
@@ -301,6 +303,10 @@ class PixelatedMail(Mail):
             _headers['Reply-To'] = hdoc_headers.get('Reply-To')
 
         return _headers
+
+    def _decode_header(self, header):
+        arr_header = decode_header(header)
+        return arr_header[0][0]
 
     def _get_date(self):
         date = self.hdoc.content.get('date', None)

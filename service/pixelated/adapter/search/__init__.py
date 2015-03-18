@@ -128,8 +128,8 @@ class SearchEngine(object):
         tags.append(mail.mailbox_name.lower())
         bounced = mail.bounced if mail.bounced else ['']
         index_data = {
-            'sender': unicode(header.get('from', '')),
-            'subject': unicode(header.get('subject', '')),
+            'sender': unicode(header.get('from', '').decode('utf-8')),
+            'subject': unicode(header.get('subject', '').decode('utf-8')),
             'date': milliseconds(header.get('date', '')),
             'to': u','.join(header.get('to', [''])),
             'cc': u','.join(header.get('cc', [''])),
@@ -139,7 +139,7 @@ class SearchEngine(object):
             'body': unicode(mdict['textPlainBody']),
             'ident': unicode(mdict['ident']),
             'flags': unicode(','.join(unique(mail.flags))),
-            'raw': unicode(mail.raw)
+            'raw': unicode(mail.raw.decode('utf-8'))
         }
 
         writer.update_document(**index_data)
