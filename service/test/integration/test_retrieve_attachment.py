@@ -28,7 +28,7 @@ class RetrieveAttachmentTest(SoledadTestBase):
                            'phash': ident,
                            'content-type': 'text/plain; charset=US-ASCII; name="attachment_pequeno.txt"'}
 
-        self.client.add_document_to_soledad(attachment_dict)
+        self.add_document_to_soledad(attachment_dict)
 
         d = self.get_attachment(ident, 'base64')
 

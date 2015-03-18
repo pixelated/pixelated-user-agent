@@ -22,7 +22,7 @@ class MarkAsReadUnreadTest(SoledadTestBase):
 
     def test_mark_single_as_read(self):
         input_mail = MailBuilder().build_input_mail()
-        self.client.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail)
 
         mails = self.get_mails_by_tag('inbox')
         self.assertNotIn('read', mails[0].status)
@@ -34,7 +34,7 @@ class MarkAsReadUnreadTest(SoledadTestBase):
 
     def test_mark_single_as_unread(self):
         input_mail = MailBuilder().with_status([Status.SEEN]).build_input_mail()
-        self.client.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail)
 
         self.mark_many_as_unread([input_mail.ident])
         mail = self.get_mails_by_tag('inbox')[0]
@@ -45,8 +45,8 @@ class MarkAsReadUnreadTest(SoledadTestBase):
         input_mail = MailBuilder().with_status([Status.SEEN]).build_input_mail()
         input_mail2 = MailBuilder().with_status([Status.SEEN]).build_input_mail()
 
-        self.client.add_mail_to_inbox(input_mail)
-        self.client.add_mail_to_inbox(input_mail2)
+        self.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail2)
 
         self.mark_many_as_unread([input_mail.ident, input_mail2.ident])
 
@@ -59,8 +59,8 @@ class MarkAsReadUnreadTest(SoledadTestBase):
         input_mail = MailBuilder().build_input_mail()
         input_mail2 = MailBuilder().build_input_mail()
 
-        self.client.add_mail_to_inbox(input_mail)
-        self.client.add_mail_to_inbox(input_mail2)
+        self.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail2)
 
         mails = self.get_mails_by_tag('inbox')
 
@@ -79,8 +79,8 @@ class MarkAsReadUnreadTest(SoledadTestBase):
         input_mail = MailBuilder().build_input_mail()
         input_mail2 = MailBuilder().with_status([Status.SEEN]).build_input_mail()
 
-        self.client.add_mail_to_inbox(input_mail)
-        self.client.add_mail_to_inbox(input_mail2)
+        self.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail2)
 
         mails = self.get_mails_by_tag('inbox')
 

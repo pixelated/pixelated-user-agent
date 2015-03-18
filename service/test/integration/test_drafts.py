@@ -27,7 +27,7 @@ class DraftsTest(SoledadTestBase):
     def test_post_sends_mail_and_deletes_previous_draft_if_it_exists(self):
         # act is if sending the mail by SMTP succeeded
         sendmail_deferred = Deferred()
-        when(self.client.mail_sender).sendmail(any()).thenReturn(sendmail_deferred)
+        when(self.mail_sender).sendmail(any()).thenReturn(sendmail_deferred)
 
         # creates one draft
         first_draft = MailBuilder().with_subject('First draft').build_json()
@@ -56,7 +56,7 @@ class DraftsTest(SoledadTestBase):
     def test_post_sends_mail_even_when_draft_does_not_exist(self):
         # act is if sending the mail by SMTP succeeded
         sendmail_deferred = Deferred()
-        when(self.client.mail_sender).sendmail(any()).thenReturn(sendmail_deferred)
+        when(self.mail_sender).sendmail(any()).thenReturn(sendmail_deferred)
 
         first_draft = MailBuilder().with_subject('First draft').build_json()
         deferred_res = self.post_mail(first_draft)
@@ -74,7 +74,7 @@ class DraftsTest(SoledadTestBase):
         return deferred_res
 
     def post_mail(self, data):
-        deferred_res, req = self.client.post('/mails', data)
+        deferred_res, req = self.post('/mails', data)
         deferred_res.callback(None)
         return deferred_res
 

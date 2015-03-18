@@ -25,9 +25,7 @@ class SoledadQuerierTest(SoledadTestBase, WithMsgFields):
 
     def setUp(self):
         SoledadTestBase.setUp(self)
-        self.soledad = self.client.soledad
         self.maxDiff = None
-        self.soledad_querier = self.client.soledad_querier
 
     def _get_empty_mailbox(self):
         return copy.deepcopy(self.EMPTY_MBOX)
@@ -42,7 +40,7 @@ class SoledadQuerierTest(SoledadTestBase, WithMsgFields):
         return [m for m in self.soledad.get_from_index('by-type', 'mbox') if m.content['mbox'] == mailbox_name]
 
     def test_remove_dup_mailboxes_keeps_the_one_with_the_highest_last_uid(self):
-        self.client.add_multiple_to_mailbox(3, 'INBOX')  # by now we already have one inbox with 3 mails
+        self.add_multiple_to_mailbox(3, 'INBOX')  # by now we already have one inbox with 3 mails
         self._create_mailbox('INBOX')  # now we have a duplicate
 
         # make sure we have two
@@ -77,7 +75,7 @@ class SoledadQuerierTest(SoledadTestBase, WithMsgFields):
         self.assertEqual(1, len(mails))
 
     def test_get_mails_by_chash(self):
-        mails = self.client.add_multiple_to_mailbox(3, 'INBOX')
+        mails = self.add_multiple_to_mailbox(3, 'INBOX')
         chashes = [mail.ident for mail in mails]
 
         fetched_mails = self.soledad_querier.mails(chashes)
@@ -85,7 +83,7 @@ class SoledadQuerierTest(SoledadTestBase, WithMsgFields):
         self.assertEquals([m.as_dict() for m in fetched_mails], [m.as_dict() for m in mails])
 
     def test_empty_or_bad_queries_are_handled(self):
-        self.client.add_multiple_to_mailbox(3, 'INBOX')
+        self.add_multiple_to_mailbox(3, 'INBOX')
 
         test_parameters = ['', 'undefined', None, 'none']
 

@@ -26,7 +26,7 @@ class TagsTest(SoledadTestBase):
 
     def test_add_tag_to_an_inbox_mail_and_query(self):
         mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        self.client.add_mail_to_inbox(mail)
+        self.add_mail_to_inbox(mail)
 
         self.post_tags(mail.ident, self._tags_json(['IMPORTANT']))
 
@@ -38,13 +38,13 @@ class TagsTest(SoledadTestBase):
 
     def test_use_old_casing_when_same_tag_with_different_casing_is_posted(self):
         mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        self.client.add_mail_to_inbox(mail)
+        self.add_mail_to_inbox(mail)
         self.post_tags(mail.ident, self._tags_json(['ImPoRtAnT']))
         mails = self.get_mails_by_tag('ImPoRtAnT')
         self.assertEquals({'ImPoRtAnT'}, set(mails[0].tags))
 
         another_mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        self.client.add_mail_to_inbox(another_mail)
+        self.add_mail_to_inbox(another_mail)
         self.post_tags(another_mail.ident, self._tags_json(['IMPORTANT']))
         mails = self.get_mails_by_tag('IMPORTANT')
         self.assertEquals(0, len(mails))
@@ -55,7 +55,7 @@ class TagsTest(SoledadTestBase):
 
     def test_tags_are_case_sensitive(self):
         mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        self.client.add_mail_to_inbox(mail)
+        self.add_mail_to_inbox(mail)
 
         self.post_tags(mail.ident, self._tags_json(['ImPoRtAnT']))
 
@@ -70,7 +70,7 @@ class TagsTest(SoledadTestBase):
 
     def test_empty_tags_are_not_allowed(self):
         mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        self.client.add_mail_to_inbox(mail)
+        self.add_mail_to_inbox(mail)
 
         self.post_tags(mail.ident, self._tags_json(['tag1', '   ']))
 
@@ -80,11 +80,11 @@ class TagsTest(SoledadTestBase):
 
     def test_addition_of_reserved_tags_is_not_allowed(self):
         mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        self.client.add_mail_to_inbox(mail)
+        self.add_mail_to_inbox(mail)
 
         for tag in SPECIAL_TAGS:
             response = self.post_tags(mail.ident, self._tags_json([tag.name.upper()]))
             self.assertEquals("None of the following words can be used as tags: %s" % tag.name, response)
 
-        mail = self.client.mailboxes.inbox().mail(mail.ident)
+        mail = self.mailboxes.inbox().mail(mail.ident)
         self.assertNotIn('drafts', mail.tags)

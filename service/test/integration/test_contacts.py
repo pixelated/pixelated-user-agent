@@ -22,7 +22,7 @@ class ContactsTest(SoledadTestBase):
 
     def test_TO_CC_and_BCC_fields_are_being_searched(self):
         input_mail = MailBuilder().with_tags(['important']).build_input_mail()
-        self.client.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail)
 
         d = self.get_contacts(query='recipient')
 
@@ -35,7 +35,7 @@ class ContactsTest(SoledadTestBase):
 
     def test_FROM_address_is_being_searched(self):
         input_mail = MailBuilder().with_tags(['important']).build_input_mail()
-        self.client.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail)
 
         d = self.get_contacts(query='Sender')
 
@@ -45,10 +45,10 @@ class ContactsTest(SoledadTestBase):
         return d
 
     def test_trash_and_drafts_mailboxes_are_being_ignored(self):
-        self.client.add_multiple_to_mailbox(1, mailbox='INBOX', to='recipient@inbox.com')
-        self.client.add_multiple_to_mailbox(1, mailbox='DRAFTS', to='recipient@drafts.com')
-        self.client.add_multiple_to_mailbox(1, mailbox='SENT', to='recipient@sent.com')
-        self.client.add_multiple_to_mailbox(1, mailbox='TRASH', to='recipient@trash.com')
+        self.add_multiple_to_mailbox(1, mailbox='INBOX', to='recipient@inbox.com')
+        self.add_multiple_to_mailbox(1, mailbox='DRAFTS', to='recipient@drafts.com')
+        self.add_multiple_to_mailbox(1, mailbox='SENT', to='recipient@sent.com')
+        self.add_multiple_to_mailbox(1, mailbox='TRASH', to='recipient@trash.com')
 
         d = self.get_contacts(query='recipient')
 
@@ -69,8 +69,8 @@ class ContactsTest(SoledadTestBase):
         formatted_input_mail.with_bcc('Recipient Carbon <recipient@bcc.com>')
         formatted_input_mail = formatted_input_mail.build_input_mail()
 
-        self.client.add_mail_to_inbox(input_mail)
-        self.client.add_mail_to_inbox(formatted_input_mail)
+        self.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(formatted_input_mail)
 
         d = self.get_contacts(query='Recipient')
 
@@ -84,17 +84,17 @@ class ContactsTest(SoledadTestBase):
 
     def test_bounced_addresses_are_ignored(self):
         to_be_bounced = MailBuilder().with_to('this_mail_was_bounced@domain.com').build_input_mail()
-        self.client.add_mail_to_inbox(to_be_bounced)
+        self.add_mail_to_inbox(to_be_bounced)
 
         bounced_mail_template = MailBuilder().build_input_mail()
-        bounced_mail = self.client.mailboxes.inbox().add(bounced_mail_template)
+        bounced_mail = self.mailboxes.inbox().add(bounced_mail_template)
         bounced_mail.hdoc.content = self._bounced_mail_hdoc_content()
         bounced_mail.save()
-        self.client.search_engine.index_mail(bounced_mail)
+        self.search_engine.index_mail(bounced_mail)
 
         not_bounced_mail = MailBuilder(
         ).with_tags(['important']).with_to('this_mail_was_not@bounced.com').build_input_mail()
-        self.client.add_mail_to_inbox(not_bounced_mail)
+        self.add_mail_to_inbox(not_bounced_mail)
 
         d = self.get_contacts(query='this')
 

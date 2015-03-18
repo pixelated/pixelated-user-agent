@@ -21,7 +21,7 @@ class SearchTest(SoledadTestBase):
 
     def test_that_tags_returns_all_tags(self):
         input_mail = MailBuilder().with_tags(['important']).build_input_mail()
-        self.client.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail)
 
         d = self.get_tags()
 
@@ -37,7 +37,7 @@ class SearchTest(SoledadTestBase):
 
     def test_that_tags_are_filtered_by_query(self):
         input_mail = MailBuilder().with_tags(['ateu', 'catoa', 'luat', 'zuado']).build_input_mail()
-        self.client.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail)
 
         d = self.get_tags(q=["at"], skipDefaultTags=["true"])
 
@@ -53,7 +53,7 @@ class SearchTest(SoledadTestBase):
 
     def test_tags_with_multiple_words_are_searchable(self):
         input_mail = MailBuilder().with_tags(['one tag four words']).build_input_mail()
-        self.client.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail)
 
         first_page = self.get_mails_by_tag('"one tag four words"', page=1, window=1)
 
@@ -61,7 +61,7 @@ class SearchTest(SoledadTestBase):
 
     def test_that_default_tags_are_ignorable(self):
         input_mail = MailBuilder().with_tags(['sometag']).build_input_mail()
-        self.client.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail)
 
         d = self.get_tags(skipDefaultTags=["true"])
 
@@ -73,10 +73,10 @@ class SearchTest(SoledadTestBase):
         return d
 
     def test_tags_count(self):
-        self.client.add_multiple_to_mailbox(num=10, mailbox='inbox', flags=['\\Recent'])
-        self.client.add_multiple_to_mailbox(num=5, mailbox='inbox', flags=['\\Seen'])
-        self.client.add_multiple_to_mailbox(num=3, mailbox='inbox', flags=['\\Recent'], tags=['important', 'later'])
-        self.client.add_multiple_to_mailbox(num=1, mailbox='inbox', flags=['\\Seen'], tags=['important'])
+        self.add_multiple_to_mailbox(num=10, mailbox='inbox', flags=['\\Recent'])
+        self.add_multiple_to_mailbox(num=5, mailbox='inbox', flags=['\\Seen'])
+        self.add_multiple_to_mailbox(num=3, mailbox='inbox', flags=['\\Recent'], tags=['important', 'later'])
+        self.add_multiple_to_mailbox(num=1, mailbox='inbox', flags=['\\Seen'], tags=['important'])
 
         d = self.get_tags()
 
@@ -91,8 +91,8 @@ class SearchTest(SoledadTestBase):
     def test_search_mails_different_window(self):
         input_mail = MailBuilder().build_input_mail()
         input_mail2 = MailBuilder().build_input_mail()
-        self.client.add_mail_to_inbox(input_mail)
-        self.client.add_mail_to_inbox(input_mail2)
+        self.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail2)
 
         first_page = self.get_mails_by_tag('inbox', page=1, window=1)
 
@@ -101,8 +101,8 @@ class SearchTest(SoledadTestBase):
     def test_search_mails_with_multiple_pages(self):
         input_mail = MailBuilder().build_input_mail()
         input_mail2 = MailBuilder().build_input_mail()
-        self.client.add_mail_to_inbox(input_mail)
-        self.client.add_mail_to_inbox(input_mail2)
+        self.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail2)
 
         first_page = self.get_mails_by_tag('inbox', page=1, window=1)
         second_page = self.get_mails_by_tag('inbox', page=2, window=1)
@@ -114,7 +114,7 @@ class SearchTest(SoledadTestBase):
 
     def test_page_zero_fetches_first_page(self):
         input_mail = MailBuilder().build_input_mail()
-        self.client.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail)
         page = self.get_mails_by_tag('inbox', page=0, window=1)
         self.assertEqual(page[0].ident, input_mail.ident)
 
@@ -127,8 +127,8 @@ class SearchTest(SoledadTestBase):
         input_mail = MailBuilder().with_date('2014-10-15T15:15').build_input_mail()
         input_mail2 = MailBuilder().with_date('2014-10-15T15:16').build_input_mail()
 
-        self.client.add_mail_to_inbox(input_mail)
-        self.client.add_mail_to_inbox(input_mail2)
+        self.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail2)
 
         results = self.get_mails_by_tag('inbox')
         self.assertEqual(results[0].ident, input_mail2.ident)
@@ -137,7 +137,7 @@ class SearchTest(SoledadTestBase):
     def test_search_base64_body(self):
         body = u'bl\xe1'
         input_mail = MailBuilder().with_body(body.encode('utf-8')).build_input_mail()
-        self.client.add_mail_to_inbox(input_mail)
+        self.add_mail_to_inbox(input_mail)
         results = self.search(body)
 
         self.assertGreater(len(results), 0, 'No results returned from search')
