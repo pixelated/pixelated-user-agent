@@ -24,37 +24,37 @@ logger = logging.getLogger(__name__)
 
 
 def patched_fetch_keys_from_server(self, address):
-        """
-        Fetch keys bound to C{address} from nickserver and insert them in
-        local database.
+    """
+    Fetch keys bound to C{address} from nickserver and insert them in
+    local database.
 
-        Instead of raising a KeyNotFound only for 404 responses, this implementation
-        raises a KeyNotFound exception for all problems.
+    Instead of raising a KeyNotFound only for 404 responses, this implementation
+    raises a KeyNotFound exception for all problems.
 
-        For original see: https://github.com/leapcode/keymanager/blob/develop/src/leap/keymanager/__init__.py
+    For original see: https://github.com/leapcode/keymanager/blob/develop/src/leap/keymanager/__init__.py
 
-        :param address: The address bound to the keys.
-        :type address: str
+    :param address: The address bound to the keys.
+    :type address: str
 
-        :raise KeyNotFound: If the key was not found on nickserver.
-        """
-        # request keys from the nickserver
-        res = None
-        try:
-            res = self._get(self._nickserver_uri, {'address': address})
-            res.raise_for_status()
-            server_keys = res.json()
-            # insert keys in local database
-            if self.OPENPGP_KEY in server_keys:
-                self._wrapper_map[OpenPGPKey].put_ascii_key(
-                    server_keys['openpgp'])
-        except requests.exceptions.HTTPError as e:
-            logger.warning("HTTP error retrieving key: %r" % (e,))
-            logger.warning("%s" % (res.content,))
-            raise KeyNotFound(address)
-        except Exception as e:
-            logger.warning("Error retrieving key: %r" % (e,))
-            raise KeyNotFound(address)
+    :raise KeyNotFound: If the key was not found on nickserver.
+    """
+    # request keys from the nickserver
+    res = None
+    try:
+        res = self._get(self._nickserver_uri, {'address': address})
+        res.raise_for_status()
+        server_keys = res.json()
+        # insert keys in local database
+        if self.OPENPGP_KEY in server_keys:
+            self._wrapper_map[OpenPGPKey].put_ascii_key(
+                server_keys['openpgp'])
+    except requests.exceptions.HTTPError as e:
+        logger.warning("HTTP error retrieving key: %r" % (e,))
+        logger.warning("%s" % (res.content,))
+        raise KeyNotFound(address)
+    except Exception as e:
+        logger.warning("Error retrieving key: %r" % (e,))
+        raise KeyNotFound(address)
 
 
 leap.keymanager.KeyManager._fetch_keys_from_server = patched_fetch_keys_from_server
