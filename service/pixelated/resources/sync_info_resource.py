@@ -32,7 +32,7 @@ class SyncInfoResource(Resource):
         return self.current / float(self.total)
 
     def set_sync_info(self, soledad_sync_status):
-        self.current, self.total = map(int, soledad_sync_status.content.split('/'))
+        self.current, self.total = [int(x) for x in soledad_sync_status.content.split('/')]
 
     def render_GET(self, request):
         _sync_info = {
