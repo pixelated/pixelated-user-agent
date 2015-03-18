@@ -17,8 +17,7 @@ from pixelated.adapter.model.mail import InputMail
 from pixelated.adapter.services.tag_service import extract_reserved_tags
 
 
-class MailService:
-    __slots__ = ['leap_session', 'account', 'mailbox_name']
+class MailService(object):
 
     def __init__(self, mailboxes, mail_sender, soledad_querier, search_engine):
         self.mailboxes = mailboxes
