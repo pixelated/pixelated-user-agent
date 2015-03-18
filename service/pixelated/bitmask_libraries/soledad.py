@@ -18,7 +18,7 @@ import errno
 import os
 from leap.keymanager import KeyManager
 from leap.soledad.client import Soledad
-from leap.soledad.common.crypto import WrongMac, UnknownMacMethod, MacMethods
+from leap.soledad.common.crypto import WrongMac, UnknownMacMethod
 from .certs import which_bundle
 
 
@@ -69,7 +69,7 @@ class SoledadSession(object):
             return Soledad(self.leap_srp_session.uuid, unicode(encryption_passphrase), secrets,
                            local_db, server_url, which_bundle(self.provider), self.leap_srp_session.token, defer_encryption=False)
 
-        except (WrongMac, UnknownMacMethod, MacMethods), e:
+        except (WrongMac, UnknownMacMethod), e:
             raise SoledadWrongPassphraseException(e)
 
     def _leap_path(self):
