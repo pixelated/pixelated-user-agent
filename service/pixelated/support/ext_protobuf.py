@@ -29,8 +29,7 @@ if _platform == 'darwin':
                 func(*args, **kwargs)
                 pass
             except Exception as e:
-                if e.strerror == 'Socket is not connected':
-                    pass
+                pass
 
         return wrapper
 
