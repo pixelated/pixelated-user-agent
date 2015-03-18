@@ -46,16 +46,16 @@ class MailService(object):
         return mail
 
     def _filter_white_space_tags(self, tags):
-        return filter(bool, map(lambda e: e.strip(), tags))
+        return [tag.strip() for tag in tags if not tag.isspace()]
 
     def _favor_existing_tags_casing(self, new_tags):
-        current_tags = map(lambda tag: tag['name'], self.search_engine.tags(query='', skip_default_tags=True))
-        current_tags_lower = map(lambda tag: tag.lower(), current_tags)
+        current_tags = [tag['name'] for tag in self.search_engine.tags(query='', skip_default_tags=True)]
+        current_tags_lower = [tag.lower() for tag in current_tags]
 
         def _use_current_casing(new_tag_lower):
             return current_tags[current_tags_lower.index(new_tag_lower)]
 
-        return map(lambda new_tag: _use_current_casing(new_tag.lower()) if new_tag.lower() in current_tags_lower else new_tag, new_tags)
+        return [_use_current_casing(new_tag.lower()) if new_tag.lower() in current_tags_lower else new_tag for new_tag in new_tags]
 
     def mail(self, mail_id):
         return self.querier.mail(mail_id)
