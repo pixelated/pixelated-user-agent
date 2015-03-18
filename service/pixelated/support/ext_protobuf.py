@@ -28,7 +28,7 @@ if _platform == 'darwin':
             try:
                 func(*args, **kwargs)
                 pass
-            except Exception as e:
+            except:
                 pass
 
         return wrapper

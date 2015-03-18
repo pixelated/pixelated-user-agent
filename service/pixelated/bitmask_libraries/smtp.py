@@ -55,7 +55,6 @@ class LeapSmtp(object):
         if not os.path.exists(os.path.dirname(cert_path)):
             os.makedirs(os.path.dirname(cert_path))
 
-        session = requests.session()
         cert_url = '%s/%s/cert' % (self._provider.api_uri, self._provider.api_version)
         cookies = {"_session_id": self._srp_session.session_id}
 
@@ -94,7 +93,7 @@ class LeapSmtp(object):
         if not self._smtp_service:
             try:
                 self.start()
-            except Exception as e:
+            except:
                 logger.warning("Couldn't start the SMTP server now, will try again when the user tries to use it")
                 return False
         return True
