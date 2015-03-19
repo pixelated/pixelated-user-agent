@@ -303,6 +303,26 @@ class TestPixelatedMail(unittest.TestCase):
                 self.content = {'raw': raw}
         return FakeBDoc(raw)
 
+    def test_encoding_special_character_on_header(self):
+        subject = "=?UTF-8?Q?test_encoding_St=C3=A4ch?="
+        email_from = "=?UTF-8?Q?St=C3=A4ch_<stach@pixelated-project.org>?="
+
+        pixel_mail = PixelatedMail()
+
+        self.assertEqual(pixel_mail._decode_header(subject), 'test encoding St\xc3\xa4ch')
+        self.assertEqual(pixel_mail._decode_header(email_from), 'St\xc3\xa4ch <stach@pixelated-project.org>')
+
+    def test_headers_are_encoded_right(self):
+        subject = "=?UTF-8?Q?test_encoding_St=C3=A4ch?="
+        email_from = "=?UTF-8?Q?St=C3=A4ch_<stach@pixelated-project.org>?="
+
+        leap_mail = test_helper.leap_mail(extra_headers={'Subject': subject, 'From': email_from})
+
+        mail = PixelatedMail.from_soledad(*leap_mail, soledad_querier=self.querier)
+
+        self.assertEqual(str(mail.headers['Subject']), 'test encoding St\xc3\xa4ch')
+        self.assertEqual(str(mail.headers['From']), 'St\xc3\xa4ch <stach@pixelated-project.org>')
+
 
 class InputMailTest(unittest.TestCase):
     mail_dict = lambda x: {

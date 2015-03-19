@@ -289,7 +289,6 @@ class PixelatedMail(Mail):
             _headers[header] = [head.strip() for head in compact(_headers[header])]
 
         for header in ['From', 'Subject']:
-            # _headers[header] = hdoc_headers.get(header)
             _headers[header] = self._decode_header(hdoc_headers.get(header))
 
         _headers['Date'] = self._get_date()
