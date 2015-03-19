@@ -128,8 +128,9 @@ class AppTestClient(object):
 
     def add_mail_to_inbox(self, input_mail):
         mail = self.mailboxes.inbox().add(input_mail)
-        mail.update_tags(input_mail.tags)
-        self.search_engine.index_mail(mail)
+        if input_mail.tags:
+            mail.update_tags(input_mail.tags)
+            self.search_engine.index_mail(mail)
 
     def add_multiple_to_mailbox(self, num, mailbox='', flags=[], tags=[], to='recipient@to.com', cc='recipient@cc.com', bcc='recipient@bcc.com'):
         mails = []
@@ -137,8 +138,8 @@ class AppTestClient(object):
             input_mail = MailBuilder().with_status(flags).with_tags(tags).with_to(to).with_cc(cc).with_bcc(bcc).build_input_mail()
             mail = self.mailboxes._create_or_get(mailbox).add(input_mail)
             mails.append(mail)
-            mail.update_tags(input_mail.tags)
-            self.search_engine.index_mail(mail)
+            mail.update_tags(input_mail.tags) if tags else None
+        self.search_engine.index_mails(mails) if tags else None
         return mails
 
     def _create_soledad_querier(self, soledad, index_key):
