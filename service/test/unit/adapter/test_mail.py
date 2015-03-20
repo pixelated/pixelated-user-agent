@@ -306,22 +306,33 @@ class TestPixelatedMail(unittest.TestCase):
     def test_encoding_special_character_on_header(self):
         subject = "=?UTF-8?Q?test_encoding_St=C3=A4ch?="
         email_from = "=?UTF-8?Q?St=C3=A4ch_<stach@pixelated-project.org>?="
+        email_to = "=?utf-8?b?IsOEw7zDtiDDlsO8w6QiIDxmb2xrZXJAcGl4ZWxhdGVkLXByb2plY3Qub3Jn?=\n =?utf-8?b?PiwgRsO2bGtlciA8Zm9sa2VyQHBpeGVsYXRlZC1wcm9qZWN0Lm9yZz4=?="
 
         pixel_mail = PixelatedMail()
 
         self.assertEqual(pixel_mail._decode_header(subject), 'test encoding St\xc3\xa4ch')
         self.assertEqual(pixel_mail._decode_header(email_from), 'St\xc3\xa4ch <stach@pixelated-project.org>')
+        self.assertEqual(pixel_mail._decode_header(email_to), '"\xc3\x84\xc3\xbc\xc3\xb6 \xc3\x96\xc3\xbc\xc3\xa4" <folker@pixelated-project.org>, F\xc3\xb6lker <folker@pixelated-project.org>')
+        self.assertEqual(pixel_mail._decode_header(None), None)
 
     def test_headers_are_encoded_right(self):
         subject = "=?UTF-8?Q?test_encoding_St=C3=A4ch?="
         email_from = "=?UTF-8?Q?St=C3=A4ch_<stach@pixelated-project.org>?="
+        email_to = "=?utf-8?b?IsOEw7zDtiDDlsO8w6QiIDxmb2xrZXJAcGl4ZWxhdGVkLXByb2plY3Qub3Jn?=\n =?utf-8?b?PiwgRsO2bGtlciA8Zm9sa2VyQHBpeGVsYXRlZC1wcm9qZWN0Lm9yZz4=?="
+        email_cc = "=?UTF-8?Q?St=C3=A4ch_<stach@pixelated-project.org>?="
+        email_bcc = "=?UTF-8?Q?St=C3=A4ch_<stach@pixelated-project.org>?="
 
-        leap_mail = test_helper.leap_mail(extra_headers={'Subject': subject, 'From': email_from})
+        leap_mail = test_helper.leap_mail(extra_headers={'Subject': subject, 'From': email_from, 'To': email_to, 'Cc': email_cc, 'Bcc': email_bcc})
 
         mail = PixelatedMail.from_soledad(*leap_mail, soledad_querier=self.querier)
 
         self.assertEqual(str(mail.headers['Subject']), 'test encoding St\xc3\xa4ch')
         self.assertEqual(str(mail.headers['From']), 'St\xc3\xa4ch <stach@pixelated-project.org>')
+        self.assertEqual(mail.headers['To'], ['"\xc3\x84\xc3\xbc\xc3\xb6 \xc3\x96\xc3\xbc\xc3\xa4" <folker@pixelated-project.org>', 'F\xc3\xb6lker <folker@pixelated-project.org>'])
+        self.assertEqual(mail.headers['Cc'], ['St\xc3\xa4ch <stach@pixelated-project.org>'])
+        self.assertEqual(mail.headers['Bcc'], ['St\xc3\xa4ch <stach@pixelated-project.org>'])
+
+        mail.as_dict()
 
 
 class InputMailTest(unittest.TestCase):

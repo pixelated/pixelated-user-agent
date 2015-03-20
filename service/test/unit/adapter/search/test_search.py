@@ -50,11 +50,40 @@ class SearchEngineTest(unittest.TestCase):
         soledad_querier = mock()
         lock_stub = LockStub()
         when(soledad_querier).get_index_masterkey().thenReturn(INDEX_KEY)
+
+        self.assertEqual(INDEX_KEY, soledad_querier.get_index_masterkey())
         se = SearchEngine(soledad_querier, self.agent_home)
         se._write_lock = lock_stub
 
+        headers = {
+            'From': 'from@bar.tld',
+            'To': 'to@bar.tld',
+            'Subject': 'Some test mail',
+        }
+
         # when
-        se.index_mail(test_helper.pixelated_mail())
+        se.index_mail(test_helper.pixelated_mail(extra_headers=headers))
 
         # then
         self.assertTrue(lock_stub.called)
+
+    def test_encoding(self):
+        # given
+        soledad_querier = mock()
+        when(soledad_querier).get_index_masterkey().thenReturn(INDEX_KEY)
+
+        se = SearchEngine(soledad_querier, self.agent_home)
+
+        headers = {
+            'From': 'foo@bar.tld',
+            'To': '=?utf-8?b?IsOEw7zDtiDDlsO8w6QiIDxmb2xrZXJAcGl4ZWxhdGVkLXByb2plY3Qub3Jn?=\n =?utf-8?b?PiwgRsO2bGtlciA8Zm9sa2VyQHBpeGVsYXRlZC1wcm9qZWN0Lm9yZz4=?=',
+            'Cc': '=?utf-8?b?IsOEw7zDtiDDlsO8w6QiIDxmb2xrZXJAcGl4ZWxhdGVkLXByb2plY3Qub3Jn?=\n =?utf-8?b?PiwgRsO2bGtlciA8Zm9sa2VyQHBpeGVsYXRlZC1wcm9qZWN0Lm9yZz4=?=',
+            'Subject': 'Some test mail',
+        }
+
+        # when
+        se.index_mail(test_helper.pixelated_mail(extra_headers=headers, chash='mailid'))
+
+        result = se.search('folker')
+
+        self.assertEqual((['mailid'], 1), result)

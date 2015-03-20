@@ -282,7 +282,7 @@ class PixelatedMail(Mail):
         hdoc_headers = self.hdoc.content['headers']
 
         for header in ['To', 'Cc', 'Bcc']:
-            header_value = hdoc_headers.get(header)
+            header_value = self._decode_header(hdoc_headers.get(header))
             if not header_value:
                 continue
             _headers[header] = header_value if type(header_value) is list else header_value.split(',')
@@ -304,8 +304,12 @@ class PixelatedMail(Mail):
         return _headers
 
     def _decode_header(self, header):
-        arr_header = decode_header(header)
-        return arr_header[0][0]
+        if not header:
+            return None
+        if isinstance(header, list):
+            return [decode_header(entry)[0][0] for entry in header]
+        else:
+            return decode_header(header)[0][0]
 
     def _get_date(self):
         date = self.hdoc.content.get('date', None)
