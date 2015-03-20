@@ -77,10 +77,10 @@ define([
           this.off(document, events.ui.mail.recipientsUpdated);
         }.bind(this)));
 
-        this.trigger(document, events.ui.recipients.doCompleteInput);
         this.disableButton();
         this.$node.text(viewHelper.i18n('sending-mail'));
 
+        this.trigger(document, events.ui.recipients.doCompleteInput);
       };
 
       this.forceEnableButton = function () {

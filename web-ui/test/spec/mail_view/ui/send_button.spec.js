@@ -63,6 +63,14 @@ describeComponent('mail_view/ui/send_button', function () {
 
         expect(this.$node).toBeDisabled();
       });
+
+      it('gets disabled if recipients:updated with invalid email', function () {
+        $(document).trigger(Pixelated.events.ui.recipients.inputHasMail, { name: 'to' });
+        $(document).trigger(Pixelated.events.ui.recipients.updated, { newRecipients: ['InvalidEmail']});
+
+        expect(this.$node).not.toBeDisabled();
+        expect(this.$node.text()).toBe('Send');
+      });
     });
 
     describe('on click', function () {
