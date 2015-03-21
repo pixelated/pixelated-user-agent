@@ -104,3 +104,22 @@ class SoledadQuerierTest(unittest.TestCase):
         attachment = querier.attachment(u'0400BEBACAFE', 'quoted-printable')
 
         self.assertEquals('esse papo seu ta qualquer coisa', attachment['content'])
+
+    def test_empty_or_null_queries_are_ignored(self):
+        soledad = mock()
+        when(soledad).get_from_index(any(), any(), any()).thenReturn(['nonempty', 'list'])
+        querier = SoledadQuerier(soledad)
+
+        test_parameters = ['', None]
+
+        def call_with_bad_parameters(funct):
+            for param in test_parameters:
+                self.assertFalse(funct(param))
+
+        call_with_bad_parameters(querier.get_all_flags_by_mbox)
+        call_with_bad_parameters(querier.get_content_by_phash)
+        call_with_bad_parameters(querier.get_flags_by_chash)
+        call_with_bad_parameters(querier.get_header_by_chash)
+        call_with_bad_parameters(querier.get_recent_by_mbox)
+        call_with_bad_parameters(querier.idents_by_mailbox)
+        call_with_bad_parameters(querier.get_mbox)
