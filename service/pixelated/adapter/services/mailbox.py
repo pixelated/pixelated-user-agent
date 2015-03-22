@@ -23,6 +23,10 @@ class Mailbox(object):
         self.search_engine = search_engine
         self.querier = querier
 
+    @property
+    def fresh(self):
+        return self.querier.get_lastuid(self.mailbox_name) == 0
+
     def mail(self, mail_id):
         return self.querier.mail(mail_id)
 

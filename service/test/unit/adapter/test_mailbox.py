@@ -34,3 +34,9 @@ class PixelatedMailboxTest(unittest.TestCase):
         self.mailbox.remove(1)
 
         verify(self.querier).remove_mail(mail)
+
+    def test_fresh_mailbox_checking_lastuid(self):
+        when(self.querier).get_lastuid('INBOX').thenReturn(0)
+        self.assertTrue(self.mailbox.fresh)
+        when(self.querier).get_lastuid('INBOX').thenReturn(1)
+        self.assertFalse(self.mailbox.fresh)
