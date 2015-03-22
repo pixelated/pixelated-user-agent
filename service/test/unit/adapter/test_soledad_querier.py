@@ -123,3 +123,28 @@ class SoledadQuerierTest(unittest.TestCase):
         call_with_bad_parameters(querier.get_recent_by_mbox)
         call_with_bad_parameters(querier.idents_by_mailbox)
         call_with_bad_parameters(querier.get_mbox)
+
+    def test_get_lastuid(self):
+        soledad = mock()
+        mbox = mock()
+        mbox.content = {'lastuid': 0}
+        when(soledad).get_from_index('by-type-and-mbox', 'mbox', 'INBOX').thenReturn([mbox])
+        querier = SoledadQuerier(soledad)
+
+        self.assertEquals(querier.get_lastuid(querier.get_mbox('INBOX')[0]), 0)
+        mbox.content = {'lastuid': 1}
+        self.assertEquals(querier.get_lastuid(querier.get_mbox('INBOX')[0]), 1)
+
+    def test_create_mail_increments_uid(self):
+        soledad = mock()
+        mbox = mock()
+        mail = mock()
+        when(mail).get_for_save(next_uid=any(), mailbox='INBOX').thenReturn([])
+        mbox.content = {'lastuid': 0}
+        when(soledad).get_from_index('by-type-and-mbox', 'mbox', 'INBOX').thenReturn([mbox])
+        querier = SoledadQuerier(soledad)
+        when(querier).mail(any()).thenReturn([])
+
+        self.assertEquals(querier.get_lastuid(querier.get_mbox('INBOX')[0]), 0)
+        querier.create_mail(mail, 'INBOX')
+        self.assertEquals(querier.get_lastuid(querier.get_mbox('INBOX')[0]), 1)

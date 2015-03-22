@@ -31,13 +31,13 @@ class SoledadWriterMixin(SoledadDbFacadeMixin, object):
         self.put_doc(mail.fdoc)
 
     def create_mail(self, mail, mailbox_name):
-        mbox = self.get_mbox(mailbox_name)[0]
-        uid = mbox.content['lastuid'] + 1
+        mbox_doc = self.get_mbox(mailbox_name)[0]
+        uid = self.get_lastuid(mbox_doc)
 
         [self.create_doc(doc) for doc in mail.get_for_save(next_uid=uid, mailbox=mailbox_name)]
 
-        mbox.content['lastuid'] = uid
-        self.put_doc(mbox)
+        mbox_doc.content['lastuid'] = uid + 1
+        self.put_doc(mbox_doc)
 
         return self.mail(mail.ident)
 

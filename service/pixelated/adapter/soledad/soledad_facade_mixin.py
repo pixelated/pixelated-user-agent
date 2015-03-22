@@ -59,5 +59,8 @@ class SoledadDbFacadeMixin(object):
     def get_mbox(self, mbox):
         return self.soledad.get_from_index('by-type-and-mbox', 'mbox', mbox) if mbox else []
 
+    def get_lastuid(self, mbox_doc):
+        return mbox_doc.content['lastuid']
+
     def get_search_index_masterkey(self):
         return self.soledad.get_from_index('by-type', 'index_key')
