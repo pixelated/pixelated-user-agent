@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 NUM_OF_CORES=''
 TRIAL_PATH=''
 
@@ -95,14 +93,18 @@ function runCoverageUnitAndIntegration {
 }
 
 if [ "$1" == 'test' ]; then
+        set -e
         runPep8
         runUnitTests "${@:2}"
         runIntegrationTests "${@:2}"
 elif [ "$1" == 'unit' ]; then
+        set -e
         runUnitTests
 elif [ "$1" == 'integration' ]; then
+        set -e
         runIntegrationTests
 elif [ "$1" == 'pep8' ]; then
+        set -e
         runPep8
 elif [ "$1" == 'setuppy' ]; then
         setuppy
