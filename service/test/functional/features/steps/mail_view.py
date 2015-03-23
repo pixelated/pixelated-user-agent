@@ -19,7 +19,6 @@ from common import *
 
 @then('I see that the subject reads \'{subject}\'')
 def impl(context, subject):
-    import pdb; pdb.set_trace()
     e = find_element_by_css_selector(context, '#mail-view .subject')
     assert e.text == subject
 

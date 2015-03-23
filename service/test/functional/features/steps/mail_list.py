@@ -46,7 +46,6 @@ def impl(context):
 
 @when('I open the first mail in the mail list')
 def impl(context):
-    import pdb;pdb.set_trace()
     first_email = wait_until_elements_are_visible_by_locator(context, (By.XPATH, '//*[@id="mail-list"]//a'))[0]
     context.current_mail_id = 'mail-' + first_email.get_attribute('href').split('/')[-1]
     first_email.click()
