@@ -28,7 +28,7 @@ Feature: compose mail, save draft and send mail
     When I select the tag 'drafts'
     When I open the first mail in the mail list
      And I send it
-    Then I see that mail under the 'sent' tag
-    When I open that mail
+    When I select the tag 'sent'
+      And I open the first mail in the mail list
     Then I see that the subject reads 'Pixelated rocks!'
-      And I see that the body reads 'You should definitely use it. Cheers, User.'
+    Then I see that the body reads 'You should definitely use it. Cheers, User.'
