@@ -17,7 +17,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException
-from hamcrest import *
+
+from test.support.integration import MailBuilder
 
 
 def wait_until_element_is_invisible_by_locator(context, locator_tuple, timeout=10):
@@ -35,6 +36,12 @@ def wait_for_user_alert_to_disapear(context, timeout=10):
 
 
 def wait_until_elements_are_visible_by_locator(context, locator_tuple, timeout=10):
+    wait = WebDriverWait(context.browser, timeout)
+    wait.until(EC.presence_of_all_elements_located(locator_tuple))
+    return context.browser.find_elements(locator_tuple[0], locator_tuple[1])
+
+
+def wait_until_elements_are_visible_by_xpath(context, locator_tuple, timeout=10):
     wait = WebDriverWait(context.browser, timeout)
     wait.until(EC.presence_of_all_elements_located(locator_tuple))
     return context.browser.find_elements(locator_tuple[0], locator_tuple[1])
@@ -84,13 +91,17 @@ def find_elements_by_css_selector(context, css_selector):
     return wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, css_selector))
 
 
+def find_elements_by_xpath(context, xpath):
+    return wait_until_elements_are_visible_by_xpath(context, (By.XPATH, xpath))
+
+
 def find_element_containing_text(context, text, element_type='*'):
     return find_element_by_xpath(context, "//%s[contains(.,'%s')]" % (element_type, text))
 
 
 def element_should_have_content(context, css_selector, content):
     e = find_element_by_css_selector(context, css_selector)
-    assert_that(e.text, equal_to(content))
+    assert e.text == content
 
 
 def wait_until_button_is_visible(context, title, timeout=10):
@@ -120,3 +131,8 @@ def get_console_log(context):
         msg = entry['message']
         if not (msg.startswith('x  off') or msg.startswith('<- on')):
             print entry['message']
+
+
+def create_email(context):
+    input_mail = MailBuilder().build_input_mail()
+    context.client.add_mail_to_inbox(input_mail)

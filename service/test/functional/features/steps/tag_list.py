@@ -43,3 +43,12 @@ def impl(context, tag):
 
     e = find_element_by_id(context, 'tag-%s' % tag.lower())
     e.click()
+
+
+@when('I am in  \'{tag}\'')
+def impl(context, tag):
+    expand_side_nav(context)
+
+    wait_until_element_is_visible_by_locator(context, (By.ID, 'tag-%s' % tag), 20)
+    e = find_element_by_id(context, 'tag-%s' % tag)
+    assert "selected" in e.get_attribute("class")

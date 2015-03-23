@@ -13,21 +13,19 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from time import sleep
 
-from selenium.webdriver.common.keys import Keys
-from common import *
+Feature: Checkboxes
+  As a user of Pixelated
+  I want to use checkboxes to manage my emails
+  So I can manage more than one email at once
 
+  Scenario: User has a list of emails in each mailboxes that needs to be managed
+    Given I have a mail in my inbox
+    When I mark the first unread email as read
+      And I delete the email
+    When I select the tag 'trash'
+    Then the deleted mail is there
+    When I check all emails
+      And I delete them permanently
+    Then I should not see any email
 
-@when('I search for a mail with the words "{search_term}"')
-def impl(context, search_term):
-    search_field = find_element_by_css_selector(context, '#search-trigger input[type="search"]')
-    search_field.send_keys(search_term)
-    search_field.send_keys(Keys.ENTER)
-    sleep(1)
-
-
-@then('I see one or more mails in the search results')
-def impl(context):
-    lis = find_elements_by_css_selector(context, '#mail-list li')
-    assert len(lis) >= 1

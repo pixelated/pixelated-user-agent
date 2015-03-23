@@ -15,9 +15,8 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from time import sleep
 
-from behave import given, when, then
+from behave import when
 from common import *
-from hamcrest import *
 
 
 @when('I compose a message with')
@@ -48,13 +47,11 @@ def save_impl(context):
     context.browser.find_element_by_id('draft-button').click()
 
 
-@when('I open the saved draft and send it')
+@when('I send it')
 def send_impl(context):
-    context.execute_steps(u"when I select the tag 'drafts'")
-    context.execute_steps(u"when I open the first mail in the mail list")
-    assert_that(is_not(page_has_css(context, '#send-button[disabled]')))
-    click_button(context, 'Send')
-    wait_until_element_is_deleted(context, (By.ID, 'send-button'), timeout=120)
+    assert page_has_css(context, '#send-button[disabled]') is False
+    context.browser.find_element(By.ID, 'send-button').click()
+    # wait_until_element_is_deleted(context, (By.ID, 'send-button'), timeout=120)
 
 
 def _enter_recipient(context, recipients_field, to_type):

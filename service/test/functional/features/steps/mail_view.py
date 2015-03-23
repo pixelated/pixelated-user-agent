@@ -15,19 +15,18 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from selenium.webdriver.common.keys import Keys
 from common import *
-from hamcrest import *
 
 
 @then('I see that the subject reads \'{subject}\'')
 def impl(context, subject):
     e = find_element_by_css_selector(context, '#mail-view .subject')
-    assert_that(e.text, equal_to(subject))
+    assert e.text == subject
 
 
 @then('I see that the body reads \'{expected_body}\'')
 def impl(context, expected_body):
     e = find_element_by_css_selector(context, '#mail-view .bodyArea')
-    assert_that(e.text, equal_to(expected_body))
+    assert e.text == expected_body
 
 
 @then('that email has the \'{tag}\' tag')
@@ -35,7 +34,7 @@ def impl(context, tag):
     wait_until_element_is_visible_by_locator(context, (By.CSS, '#mail-view .tagsArea .tag'))
     elements = find_elements_by_css_selector(context, '#mail-view .tagsArea .tag')
     tags = [e.text for e in elements]
-    assert_that(tags, has_item(tag.upper()))
+    assert tag in tags
 
 
 @when('I add the tag \'{tag}\' to that mail')
@@ -52,15 +51,15 @@ def impl(context, tag):
 @when('I reply to it')
 def impl(context):
     click_button(context, 'Reply')
-    click_button(context, 'Send')
     context.reply_subject = reply_subject(context)
+    click_button(context, 'Send')
 
-
+#NOT BEING USED
 @then('I see if the mail has html content')
 def impl(context):
     e = find_element_by_css_selector(context, '#mail-view .bodyArea')
     h2 = e.find_element_by_css_selector("h2[style*='color: #3f4944']")
-    assert_that(h2.text, contains_string('cborim'))
+    assert 'cborim' in h2.text
 
 
 @when('I try to delete the first mail')
@@ -70,7 +69,7 @@ def impl(context):
     context.browser.execute_script("$('#delete-button-top').click();")
 
     e = find_element_by_css_selector(context, '#user-alerts')
-    assert_that(e.text, equal_to('Your message was moved to trash!'))
+    assert 'Your message was moved to trash!' == e.text
 
 
 @when('I choose to forward this mail')
@@ -90,7 +89,7 @@ def impl(context):
 def impl(context):
     e = find_element_by_css_selector(context, '.tagsArea')
     tags = e.find_elements_by_css_selector('.tag')
-    assert_that(len(tags), greater_than(0))
+    assert len(tags) > 0
     for tag in tags:
         tag.click()
 
@@ -106,4 +105,5 @@ def impl(context):
     cc = find_element_by_css_selector(context, '.msg-header .cc')
     bcc = find_element_by_css_selector(context, '.msg-header .bcc')
 
-    assert_that(cc.text, matches_regexp('[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+'))
+    assert cc is not None
+    assert bcc is not None
