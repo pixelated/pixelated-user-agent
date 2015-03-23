@@ -22,7 +22,6 @@ def find_current_mail(context):
     return find_element_by_id(context, '%s' % context.current_mail_id)
 
 
-
 def check_current_mail_is_visible(context):
     find_current_mail(context)
 
@@ -109,9 +108,11 @@ def impl(context):
 def impl(context):
     find_element_by_id(context, 'toggle-check-all-emails').click()
 
+
 @when('I delete them permanently')
 def impl(context):
     find_element_by_id(context, 'delete-selected').click()
+
 
 @then('I should not see any email')
 def impl(context):
@@ -121,8 +122,3 @@ def impl(context):
         assert True
     except:
         assert False
-
-
-
-
-

@@ -54,7 +54,8 @@ def impl(context):
     context.reply_subject = reply_subject(context)
     click_button(context, 'Send')
 
-#NOT BEING USED
+
+# NOT BEING USED
 @then('I see if the mail has html content')
 def impl(context):
     e = find_element_by_css_selector(context, '#mail-view .bodyArea')
