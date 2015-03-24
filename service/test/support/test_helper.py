@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from datetime import datetime
 import io
+from twisted.web.test.test_web import DummyRequest
 
 from pixelated.adapter.model.mail import InputMail, PixelatedMail
 
@@ -86,9 +87,6 @@ class TestRequest:
 
     def __init__(self, json):
         self.json = json
-
-
-from twisted.web.test.test_web import DummyRequest
 
 
 class PixRequestMock(DummyRequest):

@@ -335,8 +335,8 @@ class TestPixelatedMail(unittest.TestCase):
         mail.as_dict()
 
 
-class InputMailTest(unittest.TestCase):
-    mail_dict = lambda x: {
+def simple_mail_dict():
+    return {
         'body': 'Este \xe9 o corpo',
         'header': {
             'cc': ['cc@pixelated.org', 'anothercc@pixelated.org'],
@@ -348,7 +348,9 @@ class InputMailTest(unittest.TestCase):
         'tags': ['sent']
     }
 
-    multipart_mail_dict = lambda x: {
+
+def multipart_mail_dict():
+    return {
         'body': [{'content-type': 'plain', 'raw': 'Hello world!'},
                  {'content-type': 'html', 'raw': '<p>Hello html world!</p>'}],
         'header': {
@@ -361,10 +363,13 @@ class InputMailTest(unittest.TestCase):
         'tags': ['sent']
     }
 
+
+class InputMailTest(unittest.TestCase):
+
     def test_to_mime_multipart_should_add_blank_fields(self):
         pixelated.support.date.iso_now = lambda: 'date now'
 
-        mail_dict = self.mail_dict()
+        mail_dict = simple_mail_dict()
         mail_dict['header']['to'] = ''
         mail_dict['header']['bcc'] = ''
         mail_dict['header']['cc'] = ''
@@ -380,24 +385,24 @@ class InputMailTest(unittest.TestCase):
     def test_to_mime_multipart(self):
         pixelated.support.date.iso_now = lambda: 'date now'
 
-        mime_multipart = InputMail.from_dict(self.mail_dict()).to_mime_multipart()
+        mime_multipart = InputMail.from_dict(simple_mail_dict()).to_mime_multipart()
 
         self.assertRegexpMatches(mime_multipart.as_string(), "\nTo: to@pixelated.org, anotherto@pixelated.org\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nCc: cc@pixelated.org, anothercc@pixelated.org\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nBcc: bcc@pixelated.org, anotherbcc@pixelated.org\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nDate: date now\n")
         self.assertRegexpMatches(mime_multipart.as_string(), "\nSubject: Oi\n")
-        self.assertRegexpMatches(mime_multipart.as_string(), base64.b64encode(self.mail_dict()['body']))
+        self.assertRegexpMatches(mime_multipart.as_string(), base64.b64encode(simple_mail_dict()['body']))
 
     def test_smtp_format(self):
         InputMail.FROM_EMAIL_ADDRESS = 'pixelated@org'
 
-        smtp_format = InputMail.from_dict(self.mail_dict()).to_smtp_format()
+        smtp_format = InputMail.from_dict(simple_mail_dict()).to_smtp_format()
 
         self.assertRegexpMatches(smtp_format, "\nFrom: pixelated@org")
 
     def test_to_mime_multipart_handles_alternative_bodies(self):
-        mime_multipart = InputMail.from_dict(self.multipart_mail_dict()).to_mime_multipart()
+        mime_multipart = InputMail.from_dict(multipart_mail_dict()).to_mime_multipart()
 
         part_one = 'Content-Type: text/plain; charset="us-ascii"\nMIME-Version: 1.0\nContent-Transfer-Encoding: 7bit\n\nHello world!'
         part_two = 'Content-Type: text/html; charset="us-ascii"\nMIME-Version: 1.0\nContent-Transfer-Encoding: 7bit\n\n<p>Hello html world!</p>'
