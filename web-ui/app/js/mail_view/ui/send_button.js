@@ -96,7 +96,7 @@ define([
       this.after('initialize', function () {
         this.attr.recipients = {};
         this.attr.inputFieldHasCharacters = {};
-        this.resetButton()
+        this.resetButton();
 
         this.on(document, events.ui.recipients.inputFieldHasCharacters, this.inputFieldHasCharacters);
         this.on(document, events.ui.recipients.inputFieldIsEmpty, this.inputFieldIsEmpty);
