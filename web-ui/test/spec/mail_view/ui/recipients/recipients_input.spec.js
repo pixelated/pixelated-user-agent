@@ -105,22 +105,22 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
   });
 
   describe('on keyup', function () {
-    it('triggers inputHasNoMail if input is empty', function () {
-      var inputHasNoMailEvent = spyOnEvent(document, Pixelated.events.ui.recipients.inputHasNoMail);
+    it('triggers inputFieldIsEmpty if input is empty', function () {
+      var inputFieldIsEmptyEvent = spyOnEvent(document, Pixelated.events.ui.recipients.inputFieldIsEmpty);
       this.$node.val('');
 
       this.$node.trigger('keyup');
 
-      expect(inputHasNoMailEvent).toHaveBeenTriggeredOn(document);
+      expect(inputFieldIsEmptyEvent).toHaveBeenTriggeredOn(document);
     });
 
-    it('triggers inputHasMail if input is not empty', function () {
-      var inputHasMailEvent = spyOnEvent(document, Pixelated.events.ui.recipients.inputHasMail);
+    it('triggers inputFieldHasCharacters if input is not empty', function () {
+      var inputFieldHasCharactersEvent = spyOnEvent(document, Pixelated.events.ui.recipients.inputFieldHasCharacters);
       this.$node.val('lalala');
 
       this.$node.trigger('keyup');
 
-      expect(inputHasMailEvent).toHaveBeenTriggeredOn(document, { name: 'to' });
+      expect(inputFieldHasCharactersEvent).toHaveBeenTriggeredOn(document, { name: 'to' });
     });
   });
 

@@ -37,17 +37,17 @@ define([
         this.$node.prop('disabled', true);
       };
 
-      this.atLeastOneFieldHasRecipients = function () {
+      this.atLeastOneInputFieldHasRecipients = function () {
         return _.any(_.values(this.attr.recipients), function (e) { return !_.isEmpty(e); });
       };
 
-      this.atLeastOneInputHasMail = function () {
-        return _.any(_.values(this.attr.inputHasMail), function (e) { return e === true; });
+      this.atLeastOneInputFieldHasCharacters = function () {
+        return _.any(_.values(this.attr.inputFieldHasCharacters), function (e) { return e === true; });
       };
 
       this.updateButton = function () {
         if (this.attr.sendingInProgress === false) {
-          if (this.atLeastOneInputHasMail() || this.atLeastOneFieldHasRecipients()) {
+          if (this.atLeastOneInputFieldHasCharacters() || this.atLeastOneInputFieldHasRecipients()) {
             this.enableButton();
           } else {
             this.disableButton();
@@ -55,19 +55,19 @@ define([
         }
       };
 
-      this.inputHasNoMail = function (ev, data) {
-        this.attr.inputHasMail[data.name] = false;
+      this.inputFieldIsEmpty = function (ev, data) {
+        this.attr.inputFieldHasCharacters[data.name] = false;
         this.updateButton();
       };
 
-      this.inputHasMail = function (ev, data) {
-        this.attr.inputHasMail[data.name] = true;
+      this.inputFieldHasCharacters = function (ev, data) {
+        this.attr.inputFieldHasCharacters[data.name] = true;
         this.updateButton();
       };
 
       this.updateRecipientsForField = function (ev, data) {
         this.attr.recipients[data.recipientsName] = data.newRecipients;
-        this.attr.inputHasMail[data.recipientsName] = false;
+        this.attr.inputFieldHasCharacters[data.recipientsName] = false;
 
         this.updateButton();
       };
@@ -95,11 +95,11 @@ define([
 
       this.after('initialize', function () {
         this.attr.recipients = {};
-        this.attr.inputHasMail = {};
+        this.attr.inputFieldHasCharacters = {};
         this.resetButton()
 
-        this.on(document, events.ui.recipients.inputHasMail, this.inputHasMail);
-        this.on(document, events.ui.recipients.inputHasNoMail, this.inputHasNoMail);
+        this.on(document, events.ui.recipients.inputFieldHasCharacters, this.inputFieldHasCharacters);
+        this.on(document, events.ui.recipients.inputFieldIsEmpty, this.inputFieldIsEmpty);
         this.on(document, events.ui.recipients.updated, this.updateRecipientsForField);
 
         this.on(this.$node, 'click', this.updateRecipientsAndSendMail);

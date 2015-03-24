@@ -85,8 +85,8 @@ define(function () {
         selectLast: 'ui:recipients:selectLast',
         unselectAll: 'ui:recipients:unselectAll',
         addressesExist: 'ui:recipients:addressesExist',
-        inputHasMail: 'ui:recipients:inputHasMail',
-        inputHasNoMail: 'ui:recipients:inputHasNoMail',
+        inputFieldHasCharacters: 'ui:recipients:inputFieldHasCharacters',
+        inputFieldIsEmpty: 'ui:recipients:inputFieldIsEmpty',
         doCompleteInput: 'ui:recipients:doCompleteInput',
         doCompleteRecipients: 'ui:recipients:doCompleteRecipients'
       }

@@ -136,7 +136,7 @@ define([
       };
 
       this.warnSendButtonOfInputState = function () {
-        var toTrigger = _.isEmpty(this.$node.val()) ? events.ui.recipients.inputHasNoMail : events.ui.recipients.inputHasMail;
+        var toTrigger = _.isEmpty(this.$node.val()) ? events.ui.recipients.inputFieldIsEmpty : events.ui.recipients.inputFieldHasCharacters;
         this.trigger(document, toTrigger, { name: this.attr.name });
       };
 

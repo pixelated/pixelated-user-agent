@@ -14,8 +14,8 @@ describeComponent('mail_view/ui/send_button', function () {
         this.$node.prop('disabled', true);
       });
 
-      it('gets enabled in a inputHasMail event', function () {
-        $(document).trigger(Pixelated.events.ui.recipients.inputHasMail, { name: 'to' });
+      it('gets enabled in a inputFieldHasCharacters event', function () {
+        $(document).trigger(Pixelated.events.ui.recipients.inputFieldHasCharacters, { name: 'to' });
 
         expect(this.$node).not.toBeDisabled();
       });
@@ -28,20 +28,20 @@ describeComponent('mail_view/ui/send_button', function () {
     });
 
     describe('multiple events', function () {
-      it('gets enabled and remains enabled when a inputHasMail is followed by a recipients:updated with NO new recipients', function () {
+      it('gets enabled and remains enabled when a inputFieldHasCharacters is followed by a recipients:updated with NO new recipients', function () {
         this.$node.prop('disabled', true);
 
-        $(document).trigger(Pixelated.events.ui.recipients.inputHasMail, { name: 'to' });
+        $(document).trigger(Pixelated.events.ui.recipients.inputFieldHasCharacters, { name: 'to' });
         $(document).trigger(Pixelated.events.ui.recipients.updated, { newRecipients: [] });
 
         expect(this.$node).not.toBeDisabled();
       });
 
-      it('gets enabled and remains enabled when a recipients:updated with recipients is followed by a inputHasNoMail', function () {
+      it('gets enabled and remains enabled when a recipients:updated with recipients is followed by a inputFieldIsEmpty', function () {
         this.$node.prop('disabled', true);
 
         $(document).trigger(Pixelated.events.ui.recipients.updated, { newRecipients: ['a@b.c']});
-        $(document).trigger(Pixelated.events.ui.recipients.inputHasNoMail, { name: 'to' });
+        $(document).trigger(Pixelated.events.ui.recipients.inputFieldIsEmpty, { name: 'to' });
 
         expect(this.$node).not.toBeDisabled();
       });
@@ -52,8 +52,8 @@ describeComponent('mail_view/ui/send_button', function () {
         this.$node.prop('disabled', false);
       });
 
-      it('gets disabled in a inputHasNoMail', function () {
-        $(document).trigger(Pixelated.events.ui.recipients.inputHasNoMail, { name: 'to' });
+      it('gets disabled in a inputFieldIsEmpty', function () {
+        $(document).trigger(Pixelated.events.ui.recipients.inputFieldIsEmpty, { name: 'to' });
 
         expect(this.$node).toBeDisabled();
       });
@@ -65,7 +65,7 @@ describeComponent('mail_view/ui/send_button', function () {
       });
 
       it('gets disabled if recipients:updated with invalid email', function () {
-        $(document).trigger(Pixelated.events.ui.recipients.inputHasMail, { name: 'to' });
+        $(document).trigger(Pixelated.events.ui.recipients.inputFieldHasCharacters, { name: 'to' });
         $(document).trigger(Pixelated.events.ui.recipients.updated, { newRecipients: ['InvalidEmail']});
 
         expect(this.$node).not.toBeDisabled();
