@@ -46,10 +46,12 @@ define([
       };
 
       this.updateButton = function () {
-        if (this.atLeastOneInputHasMail() || this.atLeastOneFieldHasRecipients()) {
-          this.enableButton();
-        } else {
-          this.disableButton();
+        if (this.attr.sendingInProgress === false) {
+          if (this.atLeastOneInputHasMail() || this.atLeastOneFieldHasRecipients()) {
+            this.enableButton();
+          } else {
+            this.disableButton();
+          }
         }
       };
 
@@ -80,18 +82,21 @@ define([
         this.disableButton();
         this.$node.text(viewHelper.i18n('sending-mail'));
 
+        this.attr.sendingInProgress = true;
+
         this.trigger(document, events.ui.recipients.doCompleteInput);
       };
 
-      this.forceEnableButton = function () {
-        this.enableButton();
+      this.resetButton = function () {
+        this.attr.sendingInProgress = false;
         this.$node.html(viewHelper.i18n('send-button'));
+        this.enableButton();
       };
 
       this.after('initialize', function () {
         this.attr.recipients = {};
         this.attr.inputHasMail = {};
-        this.$node.html(viewHelper.i18n('send-button'));
+        this.resetButton()
 
         this.on(document, events.ui.recipients.inputHasMail, this.inputHasMail);
         this.on(document, events.ui.recipients.inputHasNoMail, this.inputHasNoMail);
@@ -100,8 +105,8 @@ define([
         this.on(this.$node, 'click', this.updateRecipientsAndSendMail);
 
         this.on(document, events.dispatchers.rightPane.clear, this.teardown);
-        this.on(document, events.ui.sendbutton.enable, this.enableButton);
-        this.on(document, events.mail.send_failed, this.forceEnableButton);
+        this.on(document, events.ui.sendbutton.enable, this.resetButton);
+        this.on(document, events.mail.send_failed, this.resetButton);
 
         this.disableButton();
       });
