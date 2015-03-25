@@ -39,6 +39,7 @@ define(
       };
 
       this.search = function(ev, data) {
+        this.trigger(document, events.search.resetHighlight);
         ev.preventDefault();
         var input = this.select('input');
         var value = input.val();

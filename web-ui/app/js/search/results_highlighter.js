@@ -60,6 +60,7 @@ define(
       this.after('initialize', function () {
         this.on(document, events.search.perform, this.getKeywordsSearch);
         this.on(document, events.ui.tag.select, this.clearHighlights);
+        this.on(document, events.search.resetHighlight, this.clearHighlights);
 
         this.on(document, events.search.highlightResults, this.highlightResults);
       });

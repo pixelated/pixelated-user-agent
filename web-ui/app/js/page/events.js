@@ -95,7 +95,8 @@ define(function () {
       perform: 'search:perform',
       results: 'search:results',
       empty: 'search:empty',
-      highlightResults: 'search:highlightResults'
+      highlightResults: 'search:highlightResults',
+      resetHighlight: 'search:resetHighlight'
     },
     mail: {
       here: 'mail:here',
