@@ -29,6 +29,7 @@ module.exports = function (config) {
       'app/bower_components/foundation/js/foundation.js',
       'app/bower_components/foundation/js/foundation/foundation.reveal.js',
       'app/bower_components/foundation/js/foundation/foundation.offcanvas.js',
+      'app/js/lib/highlightRegex.js',
 
       // hack to load RequireJS after the shim libs
       'node_modules/requirejs/require.js',

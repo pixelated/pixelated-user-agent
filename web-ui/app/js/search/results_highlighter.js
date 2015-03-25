@@ -40,7 +40,7 @@ define(
         var domIdent = data.where;
         if(this.attr.keywords) {
           _.each(this.attr.keywords, function (keyword) {
-            $(domIdent).highlightRegex(new RegExp(keyword, 'i'), {
+            $(domIdent).highlightRegex(new RegExp('\\b' + keyword, 'i'), {
               tagType:   'em',
               className: 'search-highlight'
             });
