@@ -46,7 +46,7 @@ def impl(context):
 
 @when('I open the first mail in the mail list')
 def impl(context):
-    first_email = wait_until_elements_are_visible_by_locator(context, (By.XPATH, '//*[@id="mail-list"]//a'))[0]
+    first_email = wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-list li span a'))[0]
     context.current_mail_id = 'mail-' + first_email.get_attribute('href').split('/')[-1]
     first_email.click()
     sleep(5)
@@ -71,19 +71,18 @@ def impl(context):
 
 @then('the deleted mail is there')
 def impl(context):
-    # wait_until_elements_are_visible_by_locator(context, (By.XPATH, '//*[@id="mail-list"]//a'))
     find_current_mail(context)
 
 
 @given('I have mails')
 def impl(context):
-    emails = wait_until_elements_are_visible_by_locator(context, (By.XPATH, '//*[@id="mail-list"]//a'))
+    emails = wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-list li span a'))
     assert len(emails) > 0
 
 
 @when('I mark the first unread email as read')
 def impl(context):
-    emails = wait_until_elements_are_visible_by_locator(context, (By.XPATH, '//*[@id="mail-list"]//li'))
+    emails = wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-list li'))
 
     for email in emails:
         if 'status-read' not in email.get_attribute('class'):
@@ -98,11 +97,11 @@ def impl(context):
 @when('I delete the email')
 def impl(context):
     def last_email():
-        return wait_until_elements_are_visible_by_locator(context, (By.XPATH, '//*[@id="mail-list"]//li'))[0]
+        return wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-list li'))[0]
     context.current_mail_id = last_email().get_attribute('id')
     last_email().find_element_by_tag_name('input').click()
     find_element_by_id(context, 'delete-selected').click()
-    assert context.current_mail_id != find_elements_by_xpath(context, '//*[@id="mail-list"]//a')[0]
+    assert context.current_mail_id != find_elements_by_css_selector(context, '#mail-list li span a')[0]
 
 
 @when('I check all emails')
@@ -118,7 +117,7 @@ def impl(context):
 @then('I should not see any email')
 def impl(context):
     try:
-        context.browser.find_element_by_xpath('//*[@id="mail-list"]//a')
+        context.browser.find_element(By.CSS_SELECTOR, '#mail-list li span a')
     except NoSuchElementException:
         assert True
     except:

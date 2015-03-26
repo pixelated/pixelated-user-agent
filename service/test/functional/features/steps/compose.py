@@ -26,8 +26,8 @@ def impl(context):
     toggle.click()
 
     for row in context.table:
-        fill_by_xpath(context, '//*[@id="subject"]', row['subject'])
-        fill_by_xpath(context, '//*[@id="text-box"]', row['body'])
+        fill_by_css_selector(context, 'input#subject', row['subject'])
+        fill_by_css_selector(context, 'textarea#text-box', row['body'])
 
 
 @when("for the '{recipients_field}' field I enter '{to_type}'")

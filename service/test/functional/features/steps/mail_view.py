@@ -31,7 +31,7 @@ def impl(context, expected_body):
 
 @then('that email has the \'{tag}\' tag')
 def impl(context, tag):
-    wait_until_element_is_visible_by_locator(context, (By.CSS, '#mail-view .tagsArea .tag'))
+    wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-view .tagsArea .tag'))
     elements = find_elements_by_css_selector(context, '#mail-view .tagsArea .tag')
     tags = [e.text for e in elements]
     assert tag in tags
@@ -45,7 +45,7 @@ def impl(context, tag):
     e = wait_until_element_is_visible_by_locator(context, (By.ID, 'new-tag-input'))
     e.send_keys(tag)
     e.send_keys(Keys.ENTER)
-    wait_until_element_is_visible_by_locator(context, (By.XPATH, '//li[@data-tag="%s"]' % tag))
+    wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, 'li[data-tag=%s]' % tag))
 
 
 @when('I reply to it')

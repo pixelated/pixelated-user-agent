@@ -58,6 +58,11 @@ def fill_by_xpath(context, xpath, text):
     field.send_keys(text)
 
 
+def fill_by_css_selector(context, css_selector, text):
+    field = context.browser.find_element_by_css_selector(css_selector)
+    field.send_keys(text)
+
+
 def take_screenshot(context, filename):
     context.browser.save_screenshot(filename)
 

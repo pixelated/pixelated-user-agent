@@ -29,4 +29,6 @@ Feature: forward and deletion
     When I open the first mail in the 'sent'
     Then I see the mail has a cc and a bcc recipient
     When I choose to trash
-    Then I see that mail under the 'trash' tag
+#    Then I see that mail under the 'trash' tag
+    When I select the tag 'trash'
+      And I open the first mail in the mail list
