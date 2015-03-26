@@ -98,7 +98,7 @@ def impl(context):
 @when('I delete the email')
 def impl(context):
     def last_email():
-       return wait_until_elements_are_visible_by_locator(context, (By.XPATH, '//*[@id="mail-list"]//li'))[0]
+        return wait_until_elements_are_visible_by_locator(context, (By.XPATH, '//*[@id="mail-list"]//li'))[0]
     context.current_mail_id = last_email().get_attribute('id')
     last_email().find_element_by_tag_name('input').click()
     find_element_by_id(context, 'delete-selected').click()
