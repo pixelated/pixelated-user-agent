@@ -17,8 +17,6 @@ module.exports = function (config) {
     // list of files / patterns to load in the browser
     files: [
       // loaded without require
-      'app/bower_components/es5-shim/es5-shim.js',
-      'app/bower_components/es5-shim/es5-sham.js',
       'app/bower_components/lodash/dist/lodash.js',
       'app/bower_components/jquery/dist/jquery.js',
       'app/bower_components/jasmine-jquery/lib/jasmine-jquery.js',
