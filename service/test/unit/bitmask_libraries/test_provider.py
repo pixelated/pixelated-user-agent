@@ -15,11 +15,14 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 
+from mock import patch, MagicMock
 from httmock import all_requests, HTTMock, urlmatch
 from requests import HTTPError
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
 from test_abstract_leap import AbstractLeapTest
+from requests import Session
+import requests
 
 
 @all_requests
@@ -130,9 +133,13 @@ VeJ6
 """
 
 
+CA_CERT = '/tmp/ca.crt'
+BOOTSTRAP_CA_CERT = '/tmp/bootstrap-ca.crt'
+
+
 class LeapProviderTest(AbstractLeapTest):
     def setUp(self):
-        self.config = LeapConfig(verify_ssl=False, leap_home='/tmp/foobar', ca_cert_bundle='/tmp/ca.crt')
+        self.config = LeapConfig(verify_ssl=False, leap_home='/tmp/foobar', bootstrap_ca_cert_bundle=BOOTSTRAP_CA_CERT, ca_cert_bundle=CA_CERT)
 
     def test_provider_fetches_provider_json(self):
         with HTTMock(provider_json_mock):
@@ -183,3 +190,27 @@ class LeapProviderTest(AbstractLeapTest):
         with HTTMock(provider_json_invalid_fingerprint_mock, ca_cert_mock, not_found_mock):
             provider = LeapProvider('some-provider.test', self.config)
             self.assertRaises(Exception, provider.fetch_valid_certificate)
+
+    def test_that_bootstrap_cert_is_used_to_fetch_certificate(self):
+        session = MagicMock(wraps=requests.session())
+        session_func = MagicMock(return_value=session)
+        get_func = MagicMock(wraps=requests.get)
+
+        with patch('pixelated.bitmask_libraries.provider.requests.session', new=session_func):
+            with patch('pixelated.bitmask_libraries.provider.requests.get', new=get_func):
+                with HTTMock(provider_json_mock, ca_cert_mock, not_found_mock):
+                    provider = LeapProvider('some-provider.test', self.config)
+                    provider.fetch_valid_certificate()
+
+        get_func.assert_called_once_with('https://some-provider.test/provider.json', verify=BOOTSTRAP_CA_CERT, timeout=15)
+        session.get.assert_called_once_with('https://some-provider.test/ca.crt', verify=BOOTSTRAP_CA_CERT, timeout=15)
+
+    def test_that_provider_cert_is_used_to_fetch_soledad_json(self):
+        get_func = MagicMock(wraps=requests.get)
+
+        with patch('pixelated.bitmask_libraries.provider.requests.get', new=get_func):
+            with HTTMock(provider_json_mock, soledad_json_mock, not_found_mock):
+                provider = LeapProvider('some-provider.test', self.config)
+                provider.fetch_soledad_json()
+
+        get_func.assert_called_with('https://api.some-provider.test:4430/1/config/soledad-service.json', verify=CA_CERT, timeout=15)

@@ -17,7 +17,7 @@ import json
 
 from leap.common.certs import get_digest
 import requests
-from .certs import which_bundle
+from .certs import which_bootstrap_bundle, which_bundle
 
 
 class LeapProvider(object):
@@ -78,7 +78,7 @@ class LeapProvider(object):
         session = requests.session()
         try:
             cert_url = '%s/ca.crt' % self._provider_base_url()
-            response = session.get(cert_url, verify=which_bundle(self), timeout=self.config.timeout_in_s)
+            response = session.get(cert_url, verify=which_bootstrap_bundle(self), timeout=self.config.timeout_in_s)
             response.raise_for_status()
 
             cert_data = response.content
@@ -101,7 +101,7 @@ class LeapProvider(object):
 
     def fetch_provider_json(self):
         url = '%s/provider.json' % self._provider_base_url()
-        response = requests.get(url, verify=which_bundle(self), timeout=self.config.timeout_in_s)
+        response = requests.get(url, verify=which_bootstrap_bundle(self), timeout=self.config.timeout_in_s)
         response.raise_for_status()
 
         json_data = json.loads(response.content)

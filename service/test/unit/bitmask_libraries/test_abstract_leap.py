@@ -28,7 +28,7 @@ class AbstractLeapTest(unittest.TestCase):
 
     leap_home = os.path.join(tempfile.mkdtemp(), 'leap')
 
-    config = Mock(leap_home=leap_home, ca_cert_bundle='/some/path/to/ca_cert', gpg_binary='/path/to/gpg')
+    config = Mock(leap_home=leap_home, bootstrap_ca_cert_bundle='/some/path/to/ca_cert', ca_cert_bundle='/some/path/to/provider_ca_cert', gpg_binary='/path/to/gpg')
     provider = Mock(config=config, server_name='some-server.test', domain='some-server.test',
                     api_uri='https://api.some-server.test:4430', api_version='1')
     soledad = Mock()

@@ -30,7 +30,7 @@ class NickNymTest(AbstractLeapTest):
 
         # then
         init_mock.assert_called_with('test_user@some-server.test', 'https://nicknym.some-server.test:6425/',
-                                     self.soledad, self.token, '/some/path/to/ca_cert',
+                                     self.soledad, self.token, '/some/path/to/provider_ca_cert',
                                      'https://api.some-server.test:4430', '1', self.uuid,
                                      '/path/to/gpg')
 
