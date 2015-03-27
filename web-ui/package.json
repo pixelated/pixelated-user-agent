@@ -9,8 +9,7 @@
     "handlebars": "2.0.0",
     "html-minifier": "0.7.0",
     "imagemin": "3.1.0",
-    "jshint": "2.5.10",
-    "jshint-stylish": "1.0.0",
+    "jshint": "2.6.3",
     "karma": "0.12.28",
     "karma-chrome-launcher": "0.1.7",
     "karma-firefox-launcher": "0.1.3",
@@ -19,9 +18,8 @@
     "karma-phantomjs-launcher": "0.1.4",
     "karma-requirejs": "0.2.2",
     "karma-coverage": "~0.1",
-    "minify": "1.4.10",
     "requirejs": "2.1.16",
-    "watch": "^0.13.0"
+    "watch": "0.14.0"
   },
   "scripts": {
     "test": "npm run build && node_modules/karma/bin/karma start --single-run --browsers PhantomJS $GRUNT_OPTS",
