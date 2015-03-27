@@ -33,7 +33,7 @@
     "compass": "compass compile",
     "compass-watch": "compass watch",
     "build": "npm run clean && npm run handlebars && npm run compass",
-    "jshint": "node_modules/.bin/jshint --config=.jshintrc app && node_modules/.bin/jshint --config=.jshintrc test",
+    "jshint": "jshint --config=.jshintrc app test",
     "clean": "rm -rf .tmp/ dist/**/* app/js/generated/hbs/* app/css/*",
     "buildmain": "node_modules/requirejs/bin/r.js -o config/buildoptions.js",
     "package": "/bin/bash config/package.sh",
