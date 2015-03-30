@@ -102,7 +102,7 @@ describeComponent('mail_view/ui/send_button', function () {
         expect(this.$node.text()).toBe('Send');
         expect(this.$node.prop('disabled')).not.toBeTruthy();
 
-      })
+      });
     });
 
     describe('after clicking', function () {

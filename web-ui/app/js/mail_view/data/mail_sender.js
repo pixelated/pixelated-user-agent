@@ -37,8 +37,8 @@ define(
       function failureSendingMail(on) {
         return function(result) {
           on.trigger(document, events.mail.send_failed);
-        }
-      };
+        };
+      }
 
       function successSaveDraft(on){
         return function(result){
