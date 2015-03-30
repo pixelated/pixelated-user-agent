@@ -91,6 +91,18 @@ describeComponent('mail_view/ui/send_button', function () {
         expect(this.$node.text()).toBe('Sending...');
         expect(this.$node.prop('disabled')).toBeTruthy();
       });
+
+      it('enables again if sending errors out', function() {
+        expect(this.$node.text()).toBe('Send');
+
+        this.$node.click();
+
+        $(document).trigger(Pixelated.events.mail.send_failed);
+
+        expect(this.$node.text()).toBe('Send');
+        expect(this.$node.prop('disabled')).not.toBeTruthy();
+
+      })
     });
 
     describe('after clicking', function () {

@@ -28,11 +28,17 @@ define(
     return defineComponent(mailSender);
 
     function mailSender() {
-      function successSendMail(on){
+      function successSendingMail(on){
         return function(result) {
           on.trigger(document, events.mail.sent, result);
         };
       }
+
+      function failureSendingMail(on) {
+        return function(result) {
+          on.trigger(document, events.mail.send_failed);
+        }
+      };
 
       function successSaveDraft(on){
         return function(result){
@@ -50,7 +56,7 @@ define(
           dataType: 'json',
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify(data),
-        }).done(successSendMail(this));
+        }).done(successSendingMail(this)).fail(failureSendingMail(this));
 
       };
 
