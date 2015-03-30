@@ -21,7 +21,9 @@ import re
 from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.soledad.soledad_facade_mixin import SoledadDbFacadeMixin
 
+
 logger = logging.getLogger(__name__)
+
 
 class SoledadReaderMixin(SoledadDbFacadeMixin, object):
 
