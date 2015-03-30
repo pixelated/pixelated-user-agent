@@ -104,11 +104,11 @@ class SoledadReaderMixin(SoledadDbFacadeMixin, object):
     def _extract_alternative(self, hdoc, headers_dict):
         bdoc = self.get_content_by_phash(hdoc['phash'])
 
-        if bdoc is not None:
+        if bdoc is None:
             logger.warning("No BDOC content found for message!!!")
-            raw_content = bdoc.content['raw']
-        else:
             raw_content = ""
+        else:
+            raw_content = bdoc.content['raw']
 
         return {'headers': headers_dict, 'content': raw_content}
 
