@@ -14,11 +14,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import base64
+import logging
 import quopri
-from pixelated.adapter.soledad.soledad_facade_mixin import SoledadDbFacadeMixin
 import re
-from pixelated.adapter.model.mail import PixelatedMail
 
+from pixelated.adapter.model.mail import PixelatedMail
+from pixelated.adapter.soledad.soledad_facade_mixin import SoledadDbFacadeMixin
+
+logger = logging.getLogger(__name__)
 
 class SoledadReaderMixin(SoledadDbFacadeMixin, object):
 
@@ -98,7 +101,13 @@ class SoledadReaderMixin(SoledadDbFacadeMixin, object):
 
     def _extract_alternative(self, hdoc, headers_dict):
         bdoc = self.get_content_by_phash(hdoc['phash'])
-        raw_content = bdoc.content['raw']
+
+        if bdoc is not None:
+            logger.warning("No BDOC content found for message!!!")
+            raw_content = bdoc.content['raw']
+        else:
+            raw_content = ""
+
         return {'headers': headers_dict, 'content': raw_content}
 
     def _extract_attachment(self, hdoc, headers_dict):
