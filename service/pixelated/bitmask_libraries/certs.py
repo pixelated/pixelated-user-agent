@@ -36,6 +36,10 @@ def which_bootstrap_bundle(provider):
     return str(LeapCertificate(provider).auto_detect_bootstrap_ca_bundle())
 
 
+def refresh_ca_bundle(provider):
+    LeapCertificate(provider).refresh_ca_bundle()
+
+
 class LeapCertificate(object):
     def __init__(self, provider):
         self._config = provider.config
@@ -57,13 +61,20 @@ class LeapCertificate(object):
         if self._provider.config.ca_cert_bundle:
             return self._provider.config.ca_cert_bundle
 
-        certs_root = self._provider_certs_root_path()
-        cert_file = os.path.join(certs_root, 'provider.pem')
+        cert_file = self._provider_cert_file()
 
         if not os.path.isfile(cert_file):
             self._download_server_cert(cert_file)
 
         return cert_file
+
+    def refresh_ca_bundle(self):
+        cert_file = self._provider_cert_file()
+        self._download_server_cert(cert_file)
+
+    def _provider_cert_file(self):
+        certs_root = self._provider_certs_root_path()
+        return os.path.join(certs_root, 'provider.pem')
 
     def _provider_certs_root_path(self):
         path = os.path.join(self._provider.config.leap_home, 'providers', self._server_name, 'keys', 'client')
