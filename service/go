@@ -92,6 +92,13 @@ function runCoverageUnitAndIntegration {
         echo "Done."
 }
 
+function runFunctionalTests {
+        echo "Executing Functional Tests on headless PhantomJS."
+        echo "You should execute it on Debian box for more similar results with CI environment."
+        behave --tags ~@wip test/functional/features
+        echo "Done."
+}
+
 if [ "$1" == 'test' ]; then
         set -e
         runPep8
@@ -121,6 +128,8 @@ elif [ "$1" == 'coverage_all' ]; then
         runCoverageUnitAndIntegration "${@:2}"
 elif [ "$1" == 'start' ]; then
         /usr/bin/env pixelated-user-agent "${@:2}"
+elif [ "$1" == "functional" ]; then
+        runFunctionalTests "${@:2}"
 else
         python setup.py $*
 fi
