@@ -58,7 +58,7 @@ define(
   }
 
   function formatMailBody(mail) {
-    var body = mail.htmlBodyPart ?
+    var body = mail.htmlBody ?
                 htmlWhitelister.sanitize(mail.htmlBody, htmlWhitelister.tagPolicy) :
                 escapeHtmlAndAddParagraphs(mail.textPlainBody);
     return $('<div>' + body + '</div>');
