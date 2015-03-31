@@ -19,7 +19,7 @@ import os
 from leap.keymanager import KeyManager
 from leap.soledad.client import Soledad
 from leap.soledad.common.crypto import WrongMac, UnknownMacMethod
-from .certs import which_bundle
+from .certs import which_api_CA_bundle
 
 
 SOLEDAD_TIMEOUT = 120
@@ -67,7 +67,7 @@ class SoledadSession(object):
             local_db = self._local_db_path()
 
             return Soledad(self.leap_srp_session.uuid, unicode(encryption_passphrase), secrets,
-                           local_db, server_url, which_bundle(self.provider), self.leap_srp_session.token, defer_encryption=False)
+                           local_db, server_url, which_api_CA_bundle(self.provider), self.leap_srp_session.token, defer_encryption=False)
 
         except (WrongMac, UnknownMacMethod), e:
             raise SoledadWrongPassphraseException(e)

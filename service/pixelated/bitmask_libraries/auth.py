@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from .leap_srp import LeapSecureRemotePassword
-from .certs import which_bundle
+from .certs import which_api_CA_bundle
 
 USE_PASSWORD = None
 
@@ -32,11 +32,11 @@ class LeapAuthenticator(object):
 
     def authenticate(self, credentials):
         config = self._provider.config
-        srp = LeapSecureRemotePassword(ca_bundle=which_bundle(self._provider), timeout_in_s=config.timeout_in_s)
+        srp = LeapSecureRemotePassword(ca_bundle=which_api_CA_bundle(self._provider), timeout_in_s=config.timeout_in_s)
         srp_session = srp.authenticate(self._provider.api_uri, credentials.user_name, credentials.password)
         return srp_session
 
     def register(self, credentials):
         config = self._provider.config
-        srp = LeapSecureRemotePassword(ca_bundle=which_bundle(self._provider), timeout_in_s=config.timeout_in_s)
+        srp = LeapSecureRemotePassword(ca_bundle=which_api_CA_bundle(self._provider), timeout_in_s=config.timeout_in_s)
         srp.register(self._provider.api_uri, credentials.user_name, credentials.password)

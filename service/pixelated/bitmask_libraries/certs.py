@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import os
-import requests
-import json
 
 from leap.common import ca_bundle
 
@@ -25,15 +23,15 @@ LEAP_CERT = None
 LEAP_FINGERPRINT = None
 
 
-def which_bundle(provider):
-    return str(LeapCertificate(provider).provider_ca_bundle())
+def which_api_CA_bundle(provider):
+    return str(LeapCertificate(provider).api_ca_bundle())
 
 
-def which_bootstrap_fingerprint(provider):
+def which_bootstrap_cert_fingerprint():
     return LEAP_FINGERPRINT
 
 
-def which_bootstrap_bundle(provider):
+def which_bootstrap_CA_bundle(provider):
     if LEAP_CERT is not None:
         return LEAP_CERT
     return str(LeapCertificate(provider).auto_detect_bootstrap_ca_bundle())
@@ -60,11 +58,11 @@ class LeapCertificate(object):
         else:
             return self._config.bootstrap_ca_cert_bundle
 
-    def provider_ca_bundle(self):
+    def api_ca_bundle(self):
         if self._provider.config.ca_cert_bundle:
             return self._provider.config.ca_cert_bundle
 
-        cert_file = self._provider_cert_file()
+        cert_file = self._api_cert_file()
 
         if not os.path.isfile(cert_file):
             self._download_server_cert(cert_file)
@@ -72,14 +70,14 @@ class LeapCertificate(object):
         return cert_file
 
     def refresh_ca_bundle(self):
-        cert_file = self._provider_cert_file()
+        cert_file = self._api_cert_file()
         self._download_server_cert(cert_file)
 
-    def _provider_cert_file(self):
-        certs_root = self._provider_certs_root_path()
-        return os.path.join(certs_root, 'provider.pem')
+    def _api_cert_file(self):
+        certs_root = self._api_certs_root_path()
+        return os.path.join(certs_root, 'api.pem')
 
-    def _provider_certs_root_path(self):
+    def _api_certs_root_path(self):
         path = os.path.join(self._provider.config.leap_home, 'providers', self._server_name, 'keys', 'client')
         if not os.path.isdir(path):
             os.makedirs(path, 0700)

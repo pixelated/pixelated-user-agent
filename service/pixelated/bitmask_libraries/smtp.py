@@ -16,7 +16,7 @@
 import logging
 import os
 import requests
-from .certs import which_bundle
+from .certs import which_api_CA_bundle
 from leap.mail.smtp import setup_smtp_gateway
 
 
@@ -58,7 +58,7 @@ class LeapSmtp(object):
         cert_url = '%s/%s/cert' % (self._provider.api_uri, self._provider.api_version)
         cookies = {"_session_id": self._srp_session.session_id}
 
-        response = requests.get(cert_url, verify=which_bundle(self._provider), cookies=cookies, timeout=self._provider.config.timeout_in_s)
+        response = requests.get(cert_url, verify=which_api_CA_bundle(self._provider), cookies=cookies, timeout=self._provider.config.timeout_in_s)
         response.raise_for_status()
 
         client_cert = response.content
