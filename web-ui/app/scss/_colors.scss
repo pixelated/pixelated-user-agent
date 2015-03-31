@@ -23,16 +23,16 @@ $secondary_callout: darken($primary_highlight, 5);
 
 /* Grayscale */
 $contrast: #EEE;
-$top_pane: #EAEAEA;
+$top_pane: $contrast;
 $total_count_bg: #C0B9B9;
 
 /* Feedback to Users */
 $warning: #F7E8AF;
 $search-highlight: #FFEF29;
 
-$error: #D72A25;
-$attention: #F6A40A;
-$success: #2DAB49;
+$error: #D93C38;
+$attention: #F6A41C;
+$success: #50BA5B;
 
 $will_be_encrypted: #41cd60;
 $wont_be_encrypted: #F6A40A;
