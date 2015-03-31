@@ -27,6 +27,7 @@ define(['lib/html-sanitizer'], function (htmlSanitizer) {
     'img': ['title'],
     'em': [],
     'b': [],
+    'i': [],
     'strong': ['style'],
     'table': ['style'],
     'tr': ['style'],
