@@ -303,13 +303,19 @@ class PixelatedMail(Mail):
 
         return _headers
 
+    def _decode_header_with_fallback(self, entry):
+        try:
+            return decode_header(entry)[0][0]
+        except Exception, e:
+            return entry.encode('ascii', 'ignore')
+
     def _decode_header(self, header):
         if not header:
             return None
         if isinstance(header, list):
-            return [decode_header(entry)[0][0] for entry in header]
+            return [self._decode_header_with_fallback(entry) for entry in header]
         else:
-            return decode_header(header)[0][0]
+            return self._decode_header_with_fallback(header)
 
     def _get_date(self):
         date = self.hdoc.content.get('date', None)

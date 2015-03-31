@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 #
 # Copyright (c) 2014 ThoughtWorks, Inc.
 #
@@ -333,6 +334,17 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEqual(mail.headers['Bcc'], ['St\xc3\xa4ch <stach@pixelated-project.org>'])
 
         mail.as_dict()
+
+    def test_parse_UTF8_headers_with_CharsetAscii(self):
+        leap_mail_from = u'"söme ümläuds" <lisa5@dev.pixelated-project.org>'
+        leap_mail_to = u'"söme ümläuds" <lisa5@dev.pixelated-project.org>,\n"söme ümläuds" <lisa5@dev.pixelated-project.org>'
+
+        leap_mail = test_helper.leap_mail(extra_headers={'From': leap_mail_from, 'Subject': "some subject", 'To': leap_mail_to})
+
+        mail = PixelatedMail.from_soledad(*leap_mail, soledad_querier=self.querier)
+
+        mail.headers['From'].encode('ascii')
+        self.assertEqual(mail.headers['To'], ['"sme mluds" <lisa5@dev.pixelated-project.org>', '"sme mluds" <lisa5@dev.pixelated-project.org>'])
 
 
 def simple_mail_dict():
