@@ -37,6 +37,7 @@ import pixelated.support.ext_sqlcipher
 import pixelated.support.ext_esmtp_sender_factory
 import pixelated.support.ext_fetch
 import pixelated.support.ext_keymanager_fetch_key
+import pixelated.support.ext_requests_urllib3
 
 
 def initialize():

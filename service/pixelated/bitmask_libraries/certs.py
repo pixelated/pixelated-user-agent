@@ -22,16 +22,19 @@ from leap.common import ca_bundle
 from .config import AUTO_DETECT_CA_BUNDLE
 
 LEAP_CERT = None
+LEAP_FINGERPRINT = None
 
 
 def which_bundle(provider):
-    if LEAP_CERT:
-        return LEAP_CERT
     return str(LeapCertificate(provider).provider_ca_bundle())
 
 
+def which_bootstrap_fingerprint(provider):
+    return LEAP_FINGERPRINT
+
+
 def which_bootstrap_bundle(provider):
-    if LEAP_CERT:
+    if LEAP_CERT is not None:
         return LEAP_CERT
     return str(LeapCertificate(provider).auto_detect_bootstrap_ca_bundle())
 

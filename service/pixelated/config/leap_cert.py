@@ -18,4 +18,9 @@ import pixelated.bitmask_libraries.certs as certs
 
 
 def init_leap_cert(args):
-    certs.LEAP_CERT = args.leap_cert
+    if args.leap_cert_fingerprint is None:
+        certs.LEAP_CERT = args.leap_cert
+        certs.LEAP_FINGERPRINT = None
+    else:
+        certs.LEAP_FINGERPRINT = args.leap_cert_fingerprint
+        certs.LEAP_CERT = False

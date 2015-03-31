@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 
-from mock import patch, MagicMock
+from mock import patch, MagicMock, ANY
 from httmock import all_requests, HTTMock, urlmatch
 from requests import HTTPError
 from pixelated.bitmask_libraries.config import LeapConfig
@@ -202,8 +202,8 @@ class LeapProviderTest(AbstractLeapTest):
                     provider = LeapProvider('some-provider.test', self.config)
                     provider.fetch_valid_certificate()
 
-        get_func.assert_called_once_with('https://some-provider.test/provider.json', verify=BOOTSTRAP_CA_CERT, timeout=15)
-        session.get.assert_called_once_with('https://some-provider.test/ca.crt', verify=BOOTSTRAP_CA_CERT, timeout=15)
+        session.get.assert_any_call('https://some-provider.test/ca.crt', verify=BOOTSTRAP_CA_CERT, timeout=15)
+        session.get.assert_any_call('https://some-provider.test/provider.json', verify=BOOTSTRAP_CA_CERT, timeout=15)
 
     def test_that_provider_cert_is_used_to_fetch_soledad_json(self):
         get_func = MagicMock(wraps=requests.get)
@@ -214,3 +214,17 @@ class LeapProviderTest(AbstractLeapTest):
                 provider.fetch_soledad_json()
 
         get_func.assert_called_with('https://api.some-provider.test:4430/1/config/soledad-service.json', verify=CA_CERT, timeout=15)
+
+    def test_that_leap_fingerprint_is_validated(self):
+        session = MagicMock(wraps=requests.session())
+        session_func = MagicMock(return_value=session)
+
+        with patch('pixelated.bitmask_libraries.provider.which_bootstrap_fingerprint', return_value='some fingerprint'):
+            with patch('pixelated.bitmask_libraries.provider.which_bootstrap_bundle', return_value=False):
+                with patch('pixelated.bitmask_libraries.provider.requests.session', new=session_func):
+                    with HTTMock(provider_json_mock, ca_cert_mock, not_found_mock):
+                        provider = LeapProvider('some-provider.test', self.config)
+                        provider.fetch_valid_certificate()
+
+        session.get.assert_any_call('https://some-provider.test/ca.crt', verify=False, timeout=15)
+        session.mount.assert_called_with('https://', ANY)

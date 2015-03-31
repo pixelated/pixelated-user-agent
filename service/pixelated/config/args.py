@@ -30,6 +30,7 @@ def parse():
     parser.add_argument('-sk', '--sslkey', metavar='<server.key>', default=None, help='use specified file as web server\'s SSL key (when using the user-agent together with the pixelated-dispatcher)')
     parser.add_argument('-sc', '--sslcert', metavar='<server.crt>', default=None, help='use specified file as web server\'s SSL certificate (when using the user-agent together with the pixelated-dispatcher)')
     parser.add_argument('-lc', '--leap-cert', metavar='<leap.crt>', default=None, help='use specified file for LEAP cert authority certificate (url https://<provider-domain>/ca.crt)')
+    parser.add_argument('--leap-cert-fingerprint', metavar='<leap certificate fingerprint>', default=None, help='use specified fingerprint to validate connection with leap provider', dest='leap_cert_fingerprint')
     parser.add_argument('--register', metavar=('provider', 'username'),
                         nargs=2, help='register a new username on the desired provider')
     args = parser.parse_args()

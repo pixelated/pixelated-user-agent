@@ -17,7 +17,8 @@ import json
 
 from leap.common.certs import get_digest
 import requests
-from .certs import which_bootstrap_bundle, which_bundle
+from .certs import which_bootstrap_bundle, which_bundle, which_bootstrap_fingerprint
+from pixelated.support.tls_adapter import EnforceTLSv1Adapter
 
 
 class LeapProvider(object):
@@ -75,16 +76,10 @@ class LeapProvider(object):
         return cert
 
     def _fetch_certificate(self):
-        session = requests.session()
-        try:
-            cert_url = '%s/ca.crt' % self._provider_base_url()
-            response = session.get(cert_url, verify=which_bootstrap_bundle(self), timeout=self.config.timeout_in_s)
-            response.raise_for_status()
-
-            cert_data = response.content
-            return cert_data
-        finally:
-            session.close()
+        cert_url = '%s/ca.crt' % self._provider_base_url()
+        response = self._validated_get(cert_url)
+        cert_data = response.content
+        return cert_data
 
     def validate_certificate(self, cert_data=None):
         if cert_data is None:
@@ -99,11 +94,19 @@ class LeapProvider(object):
         if fingerprint.strip() != digest:
             raise Exception('Certificate fingerprints don\'t match')
 
+    def _validated_get(self, url):
+        session = requests.session()
+        try:
+            session.mount('https://', EnforceTLSv1Adapter(assert_fingerprint=which_bootstrap_fingerprint(self)))
+            response = session.get(url, verify=which_bootstrap_bundle(self), timeout=self.config.timeout_in_s)
+            response.raise_for_status()
+            return response
+        finally:
+            session.close()
+
     def fetch_provider_json(self):
         url = '%s/provider.json' % self._provider_base_url()
-        response = requests.get(url, verify=which_bootstrap_bundle(self), timeout=self.config.timeout_in_s)
-        response.raise_for_status()
-
+        response = self._validated_get(url)
         json_data = json.loads(response.content)
         return json_data
 
