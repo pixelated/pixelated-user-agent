@@ -14,7 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import os
-
+import requests
+import json
 from leap.common import ca_bundle
 
 from .config import AUTO_DETECT_CA_BUNDLE
@@ -86,7 +87,13 @@ class LeapCertificate(object):
     def _local_bootstrap_server_cert(self):
         cert_file = os.path.join(self._certs_home, '%s.ca.crt' % self._server_name)
         if not os.path.isfile(cert_file):
-            self._download_server_cert(cert_file)
+            response = requests.get('https://%s/provider.json' % self._server_name)
+            provider_data = json.loads(response.content)
+            ca_cert_uri = str(provider_data['ca_cert_uri'])
+
+            response = requests.get(ca_cert_uri)
+            with open(cert_file, 'w') as file:
+                file.write(response.content)
 
         return cert_file
 
