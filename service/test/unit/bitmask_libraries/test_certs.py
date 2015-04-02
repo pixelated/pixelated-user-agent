@@ -12,7 +12,7 @@ class CertsTest(unittest.TestCase):
     def test_that_which_bootstrap_cert_bundle_returns_byte_string(self, mock_isdir, mock_isfile):
         mock_isfile.return_value = True
         mock_isdir.return_value = True
-        config = MagicMock(bootstrap_ca_cert_bundle=AUTO_DETECT_CA_BUNDLE, leap_home='/leap/home', certs_home='/some/path')
+        config = MagicMock(bootstrap_ca_cert_bundle=AUTO_DETECT_CA_BUNDLE, leap_home='/leap/home')
         provider = MagicMock(server_name=u'test.leap.net', config=config)
 
         bundle = which_bootstrap_CA_bundle(provider)
@@ -26,7 +26,7 @@ class CertsTest(unittest.TestCase):
         mock_isfile.return_value = True
         mock_isdir.return_value = True
 
-        config = MagicMock(bootstrap_ca_cert_bundle=AUTO_DETECT_CA_BUNDLE, ca_cert_bundle=None, leap_home='/some/leap/home', certs_home='/some/path')
+        config = MagicMock(bootstrap_ca_cert_bundle=AUTO_DETECT_CA_BUNDLE, ca_cert_bundle=None, leap_home='/some/leap/home')
         provider = MagicMock(server_name=u'test.leap.net', config=config)
 
         bundle = which_api_CA_bundle(provider)

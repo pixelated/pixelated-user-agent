@@ -37,9 +37,7 @@ SESSIONS = {}
 
 
 def open(username, password, server_name, leap_home=DEFAULT_LEAP_HOME):
-    certs_home = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "certificates"))
-
-    config = LeapConfig(leap_home=leap_home, certs_home=certs_home)
+    config = LeapConfig(leap_home=leap_home)
     provider = LeapProvider(server_name, config)
     refresh_ca_bundle(provider)
     session = LeapSessionFactory(provider).create(LeapCredentials(username, password))

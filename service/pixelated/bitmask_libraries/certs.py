@@ -47,7 +47,6 @@ class LeapCertificate(object):
     def __init__(self, provider):
         self._config = provider.config
         self._server_name = provider.server_name
-        self._certs_home = self._config.certs_home
         self._provider = provider
 
     def auto_detect_bootstrap_ca_bundle(self):
