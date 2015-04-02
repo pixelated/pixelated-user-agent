@@ -67,6 +67,17 @@ class TestPixelatedMail(unittest.TestCase):
 
         self.assertEqual(str(mail.headers['Date']), leap_mail_date_in_iso_format)
 
+    def test_use_datetime_now_as_fallback_for_invalid_date(self):
+        leap_mail_date = 'söme däte'
+        date_expected = "2014-09-03T13:11:15-03:00"
+        when(pixelated.support.date).iso_now().thenReturn(date_expected)
+
+        leap_mail = test_helper.leap_mail(headers={'date': leap_mail_date})
+
+        mail = PixelatedMail.from_soledad(*leap_mail, soledad_querier=self.querier)
+
+        self.assertEqual(str(mail.headers['Date']), date_expected)
+
     def test_update_tags_return_a_set_with_the_current_tags(self):
         soledad_docs = test_helper.leap_mail(extra_headers={'X-tags': '["custom_1", "custom_2"]'})
         pixelated_mail = PixelatedMail.from_soledad(*soledad_docs, soledad_querier=self.querier)

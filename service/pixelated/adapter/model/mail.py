@@ -21,6 +21,7 @@ from email.header import decode_header
 from leap.mail.imap.fields import fields
 import leap.mail.walk as walk
 import dateutil.parser as dateparser
+from datetime import datetime
 from pixelated.adapter.model.status import Status
 import pixelated.support.date
 from email.MIMEMultipart import MIMEMultipart
@@ -291,7 +292,10 @@ class PixelatedMail(Mail):
         for header in ['From', 'Subject']:
             _headers[header] = self._decode_header(hdoc_headers.get(header))
 
-        _headers['Date'] = self._get_date()
+        try:
+            _headers['Date'] = self._get_date()
+        except Exception, e:
+            _headers['Date'] = pixelated.support.date.iso_now()
 
         if self.parts and len(self.parts['alternatives']) > 1:
             _headers['content_type'] = 'multipart/alternative; boundary="%s"' % self.boundary
