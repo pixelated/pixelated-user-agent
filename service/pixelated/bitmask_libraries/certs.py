@@ -22,6 +22,7 @@ from .config import AUTO_DETECT_CA_BUNDLE
 
 LEAP_CERT = None
 LEAP_FINGERPRINT = None
+PACKAGED_CERTS_HOME = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "certificates"))
 
 
 def which_api_CA_bundle(provider):
@@ -85,17 +86,34 @@ class LeapCertificate(object):
         return path
 
     def _local_bootstrap_server_cert(self):
-        cert_file = os.path.join(self._certs_home, '%s.ca.crt' % self._server_name)
-        if not os.path.isfile(cert_file):
-            response = requests.get('https://%s/provider.json' % self._server_name)
-            provider_data = json.loads(response.content)
-            ca_cert_uri = str(provider_data['ca_cert_uri'])
+        cert_file = self._bootstrap_certs_cert_file()
+        if os.path.isfile(cert_file):
+            return cert_file
 
-            response = requests.get(ca_cert_uri)
-            with open(cert_file, 'w') as file:
-                file.write(response.content)
+        cert_file = os.path.join(PACKAGED_CERTS_HOME, '%s.ca.crt' % self._server_name)
+        if os.path.exists(cert_file):
+            return cert_file
+
+        # else download the file
+        cert_file = self._bootstrap_certs_cert_file()
+        response = requests.get('https://%s/provider.json' % self._server_name)
+        provider_data = json.loads(response.content)
+        ca_cert_uri = str(provider_data['ca_cert_uri'])
+
+        response = requests.get(ca_cert_uri)
+        with open(cert_file, 'w') as file:
+            file.write(response.content)
 
         return cert_file
+
+    def _bootstrap_certs_cert_file(self):
+        path = os.path.join(self._provider.config.leap_home, 'providers', self._server_name)
+        if not os.path.isdir(path):
+            os.makedirs(path, 0700)
+
+        file_path = os.path.join(path, '%s.ca.crt' % self._server_name)
+
+        return file_path
 
     def _download_server_cert(self, cert_file_name):
         cert = self._provider.fetch_valid_certificate()
