@@ -429,7 +429,7 @@ section {
   }
 
   &#middle-pane {
-    background: lighten($contrast, 2%);
+    background: $contrast;
     @include email-list;
   }
 
