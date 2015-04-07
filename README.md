@@ -32,6 +32,12 @@ From the project root folder, set up the vagrant machine:
 You can log into the machine and view project root folder with:
 
     vagrant ssh
+    
+ Then you need to run the setup:
+ 
+    cd service
+    ./go setup
+    
 From here on you can run the tests for the UI by going to the **web-ui** folder or for the API by going to the **service** folder:
 
     cd /vagrant/web-ui
