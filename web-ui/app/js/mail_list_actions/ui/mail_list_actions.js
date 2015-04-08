@@ -51,14 +51,13 @@ define(
 
     function mailsActions() {
       this.render = function() {
-        this.$node.html(templates.mailActions.actionsBox({
-          txtDeleteButton: this.getTxtDeleteButton()
-        }));
+        this.$node.html(this.getActionsBoxTemplate());
         refreshTrigger.attachTo('#refresh-trigger');
         composeTrigger.attachTo('#compose-trigger');
         toggleCheckAllMailTrigger.attachTo('#toggle-check-all-emails');
         paginationTrigger.attachTo('#pagination-trigger');
         deleteManyTrigger.attachTo('#delete-selected');
+        recoverManyTrigger.attachTo('#recover-selected');
         markManyAsReadTrigger.attachTo('#mark-selected-as-read');
         markAsUnreadTrigger.attachTo('#mark-selected-as-unread');
         refresher.attachTo(document);
@@ -79,6 +78,16 @@ define(
       this.updateCurrentTag = function (ev, data) {
         this.attr.currentTag = data.tag;
         this.render();
+      };
+
+      this.getActionsBoxTemplate = function () {
+        if(this.getCurrentTag() === 'trash') {
+          return templates.mailActions.trashActionsBox();
+        } else {
+          return templates.mailActions.actionsBox({
+            txtDeleteButton: this.getTxtDeleteButton();
+          });
+        }
       };
 
       this.after('initialize', function () {
