@@ -174,6 +174,42 @@ describeComponent('services/mail_service', function () {
     expect(spyEvent).toHaveBeenTriggeredOnAndWith(document, {message: i18n('Could not delete email')} );
   });
 
+  it('will try to recover a message when requested to', function() {
+    var spyAjax = spyOn($, 'ajax').and.returnValue($.Deferred());
+    this.component.trigger(Pixelated.events.mail.recoverMany, {mails: [{ident: '43'}, {ident: '44'}]});
+    expect(spyAjax).toHaveBeenCalled();
+    expect(spyAjax.calls.mostRecent().args[0]).toEqual('/mails/recover');
+    expect(spyAjax.calls.mostRecent().args[1].type).toEqual('POST');
+    expect(spyAjax.calls.all()[0].args[1].data).toEqual(JSON.stringify({ idents: ['43', '44'] } ));
+  });
+
+  describe('when successfuly recovers emails', function () {
+    var displayMessageEvent, uncheckAllEvent, mailsRecoveredEvent;
+
+    beforeEach(function () {
+      displayMessageEvent = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
+      uncheckAllEvent = spyOnEvent(document, Pixelated.events.ui.mails.uncheckAll);
+      spyOn(this.component, 'refreshMails');
+
+      this.component.triggerRecovered({
+        successMessage: 'A success message',
+        mails: {1: 'email 1', 2: 'email 2'}
+      })();
+    });
+
+    it('will trigger that a message has been recovered when it is done recovering', function() {
+      expect(this.component.refreshMails).toHaveBeenCalled();
+    });
+
+    it('displays a success message', function () {
+      expect(displayMessageEvent).toHaveBeenTriggeredOnAndWith(document, {message: 'A success message'});
+    });
+
+    it('unchecks all checked mails', function () {
+      expect(uncheckAllEvent).toHaveBeenTriggeredOn(document);
+    });
+  });
+
   it('triggers mails:available with received mails and keeps that tag as the current tag', function() {
     var eventSpy = spyOnEvent(document, Pixelated.events.mails.available);
 

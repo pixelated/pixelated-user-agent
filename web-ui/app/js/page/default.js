@@ -28,6 +28,7 @@ define(
     'mail_view/data/mail_sender',
     'services/mail_service',
     'services/delete_service',
+    'services/recover_service',
     'tags/ui/tag_list',
     'tags/data/tags',
     'page/router',
@@ -58,6 +59,7 @@ define(
     mailSender,
     mailService,
     deleteService,
+    recoverService,
     tagList,
     tags,
     router,
@@ -92,6 +94,7 @@ define(
 
       mailService.attachTo(document);
       deleteService.attachTo(document);
+      recoverService.attachTo(document);
 
       tags.attachTo(document);
       tagList.attachTo('#tag-list');

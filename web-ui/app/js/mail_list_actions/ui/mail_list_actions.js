@@ -28,6 +28,7 @@ define(
     'mail_list_actions/ui/toggle_check_all_trigger',
     'mail_list_actions/ui/pagination_trigger',
     'mail_list_actions/ui/delete_many_trigger',
+    'mail_list_actions/ui/recover_many_trigger',
     'mail_list_actions/ui/mark_many_as_read_trigger',
     'mail_list_actions/ui/mark_as_unread_trigger'
   ],
@@ -43,6 +44,7 @@ define(
     toggleCheckAllMailTrigger,
     paginationTrigger,
     deleteManyTrigger,
+    recoverManyTrigger,
     markManyAsReadTrigger,
     markAsUnreadTrigger
   ) {
@@ -67,14 +69,6 @@ define(
         return this.attr.currentTag || urlParams.getTag();
       };
 
-      this.getTxtDeleteButton = function() {
-        if(this.getCurrentTag() === 'trash') {
-          return 'Delete permanently';
-        } else {
-          return 'Delete';
-        }
-      };
-
       this.updateCurrentTag = function (ev, data) {
         this.attr.currentTag = data.tag;
         this.render();
@@ -84,9 +78,7 @@ define(
         if(this.getCurrentTag() === 'trash') {
           return templates.mailActions.trashActionsBox();
         } else {
-          return templates.mailActions.actionsBox({
-            txtDeleteButton: this.getTxtDeleteButton();
-          });
+          return templates.mailActions.actionsBox();
         }
       };
 

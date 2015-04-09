@@ -28,6 +28,24 @@ describeComponent('mail_list_actions/ui/mail_list_actions', function () {
 
       expect(this.component.$node.html()).toMatch('<li><input type="button" id="delete-selected" value="Delete permanently" disabled="disabled"></li>');
     });
+
+    it('should render move to inbox if on trash', function () {
+      var urlParams = require('page/router/url_params');
+      spyOn(urlParams, 'getTag').and.returnValue('trash');
+
+      this.setupComponent();
+
+      expect(this.component.$node.html()).toMatch('<li><input type="button" id="recover-selected" value="Move to Inbox" disabled="disabled"></li>');
+    });
+
+    it('should not render move to inbox if on trash', function () {
+      var urlParams = require('page/router/url_params');
+      spyOn(urlParams, 'getTag').and.returnValue('inbox');
+
+      this.setupComponent();
+
+      expect(this.component.$node.html()).not.toMatch('<li><input type="button" id="recover-selected" value="Move to Inbox" disabled="disabled"></li>');
+    });
   });
 });
 
