@@ -81,6 +81,12 @@
 }
 
 @mixin tags {
+  i.tags-label {
+    vertical-align: bottom;
+    font-size: medium;
+    color: #999;
+  }
+
   ul.tags {
     li {
       font-size: 0.6rem;
@@ -105,7 +111,7 @@
         background: transparent;
         border: 1px solid #DDD;
         line-height: 0;
-        padding: 3px 2px 2px 2px;
+        padding: 1px 2px;
         @include border-radius(2px);
         &:hover {
           opacity: 1;
@@ -114,6 +120,7 @@
         i {
           &:before {
             vertical-align: middle;
+            font-size: smaller;
           }
         }
       }
