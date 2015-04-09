@@ -10,7 +10,7 @@
 
       <div style="display:inline-block;padding-top: 5px;width:95%;flex-shrink:1" >
 
-        <div class="column large-10 no-padding security-status">
+        <div class="column large-12 no-padding security-status">
             {{#if signatureStatus}}
             <span class="{{signatureStatus}}">
               {{t signatureStatus }}
@@ -22,10 +22,7 @@
             </span>
             {{/if}}
         </div>
-        <div class="column large-2 no-padding text-right">
-            <span class="received-date">{{ header.formattedDate }}</span>
-        </div>
-        <div class="recipients column large-12 no-padding">
+        <div class="recipients column large-10 no-padding">
             <span class="from">
               {{#if header.from }}
                 {{ header.from }}
@@ -36,7 +33,9 @@
             <i class="fa fa-long-arrow-right"></i>
             {{{formatRecipients header}}}
         </div>
-
+        <div class="recipients column large-2 text-right">
+            <span class="received-date">{{ header.formattedDate }}</span>
+        </div>
         <div>
             <h3 class="subjectArea column large-10 no-padding">
                 <span class="subject">{{ header.subject }}</span>
