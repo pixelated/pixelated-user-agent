@@ -28,7 +28,7 @@ define(['helpers/view_helper'], function (viewHelper) {
     describe('formatDate', function() {
       var template;
       beforeEach(function () {
-        template = Handlebars.compile("{{formatDate date}}");
+        template = Handlebars.compile('{{formatDate date}}');
       });
 
       it('formats correctly a Date for today', function() {
