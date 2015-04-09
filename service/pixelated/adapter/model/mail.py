@@ -240,20 +240,27 @@ class PixelatedMail(Mail):
 
         try:
             decoding_map = {
-                'quoted-printable': lambda content, content_type: unicode(content.decode('quopri'), content_type),
+                'quoted-printable': lambda content, content_type: content.decode('quopri').decode(content_type),
                 'base64': lambda content, content_type: content.decode('base64').decode('utf-8'),
                 '7bit': lambda content, content_type: content.encode(content_type),
                 '8bit': lambda content, content_type: content.encode(content_type)
             }
             if encoding:
-                return decoding_map[encoding](part['content'], content_type)
+                return self._decode_content_with_fallback(part['content'], decoding_map[encoding], content_type)
             else:
-                return part['content']
+                return self._decode_content_with_fallback(part['content'], lambda content, content_type: content.encode(content_type), 'ascii')
         except Exception:
             logger.error('Failed to decode mail part with:')
             logger.error('Content-Transfer-Encoding: %s' % encoding)
             logger.error('Content-Type: %s' % part['headers'].get('Content-Type'))
             raise
+
+    def _decode_content_with_fallback(self, content, decode_func, content_type):
+        try:
+            return decode_func(content, content_type)
+            # return content.encode(content_type)
+        except ValueError:
+            return content.encode('ascii', 'ignore')
 
     @property
     def alternatives(self):
