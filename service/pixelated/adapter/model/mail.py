@@ -239,21 +239,25 @@ class PixelatedMail(Mail):
         content_type = self._parse_charset_header(part['headers'].get('Content-Type'))
 
         try:
-            decoding_map = {
-                'quoted-printable': lambda content, content_type: content.decode('quopri').decode(content_type),
-                'base64': lambda content, content_type: content.decode('base64').decode('utf-8'),
-                '7bit': lambda content, content_type: content.encode(content_type),
-                '8bit': lambda content, content_type: content.encode(content_type)
-            }
-            if encoding:
-                return self._decode_content_with_fallback(part['content'], decoding_map[encoding], content_type)
-            else:
-                return self._decode_content_with_fallback(part['content'], lambda content, content_type: content.encode(content_type), 'ascii')
+            decoding_func = self._decoding_function_for_encoding(encoding)
+            return self._decode_content_with_fallback(part['content'], decoding_func, content_type)
         except Exception:
             logger.error('Failed to decode mail part with:')
             logger.error('Content-Transfer-Encoding: %s' % encoding)
             logger.error('Content-Type: %s' % part['headers'].get('Content-Type'))
             raise
+
+    def _decoding_function_for_encoding(self, encoding):
+        decoding_map = {
+            'quoted-printable': lambda content, content_type: content.decode('quopri').decode(content_type),
+            'base64': lambda content, content_type: content.decode('base64').decode('utf-8'),
+            '7bit': lambda content, content_type: content.encode(content_type),
+            '8bit': lambda content, content_type: content.encode(content_type)
+        }
+        if encoding in decoding_map:
+            return decoding_map[encoding]
+        else:
+            return decoding_map['8bit']
 
     def _decode_content_with_fallback(self, content, decode_func, content_type):
         try:
