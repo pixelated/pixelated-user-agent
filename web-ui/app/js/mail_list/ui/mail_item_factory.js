@@ -26,12 +26,14 @@ define(
 
     var MAIL_ITEM_TYPE = {
       'drafts': DraftItem,
-      'sent': SentItem
+      'sent': SentItem,
+      'trash': GenericMailItem
     };
 
     var TEMPLATE_TYPE = {
       'drafts': 'draft',
-      'sent': 'sent'
+      'sent': 'sent',
+      'trash': 'trash'
     };
 
     var createAndAttach = function (nodeToAttachTo, mail, currentMailIdent, currentTag, isChecked) {

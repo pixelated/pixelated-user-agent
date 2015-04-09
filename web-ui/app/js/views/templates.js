@@ -41,7 +41,8 @@ define(['hbs/templates'], function (templates) {
       fullView: window.Pixelated['app/templates/mails/full_view.hbs'],
       mailActions: window.Pixelated['app/templates/mails/mail_actions.hbs'],
       draft: window.Pixelated['app/templates/mails/draft.hbs'],
-      sent: window.Pixelated['app/templates/mails/sent.hbs']
+      sent: window.Pixelated['app/templates/mails/sent.hbs'],
+      trash: window.Pixelated['app/templates/mails/trash.hbs']
     },
     mailActions: {
       actionsBox: window.Pixelated['app/templates/mail_actions/actions_box.hbs'],
