@@ -15,6 +15,14 @@ define(['helpers/view_helper'], function (viewHelper) {
 
         expect(quotedMail).toContain('> First Line\n> Second Line');
       });
+
+      it('should add the mail sender information', function() {
+        testData.rawMail.mail.textPlainBody = 'First Line\nSecond Line';
+
+        var quotedMail = viewHelper.quoteMail(testData.rawMail.mail);
+
+        expect(quotedMail).toContain('On Wed Jun 04 2014 17:41:13 GMT+0000 (UTC), <laurel@hamill.info> wrote');
+      });
     });
 
     describe('getFormmattedDate', function() {
