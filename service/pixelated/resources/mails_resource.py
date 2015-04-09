@@ -52,6 +52,7 @@ class MailsDeleteResource(Resource):
             self._mail_service.delete_mail(ident)
         return respond_json(None, request)
 
+
 class MailsRecoverResource(Resource):
     isLeaf = True
 
