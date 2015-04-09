@@ -10,6 +10,7 @@ describeMixin('mail_list/ui/mail_items/mail_item', function () {
       selected: false,
       tag: 'inbox'
     });
+    this.component.attachListeners();
   });
 
   describe('mail checkbox', function () {
@@ -18,6 +19,14 @@ describeMixin('mail_list/ui/mail_items/mail_item', function () {
       mailCheckedEvent = spyOnEvent(document, Pixelated.events.ui.mail.checked);
       mailUncheckedEvent = spyOnEvent(document, Pixelated.events.ui.mail.unchecked);
       checkbox = this.component.$node.find('input[type=checkbox]');
+    });
+
+    it('unchecks itself when another tag is selected', function () {
+      this.component.checkCheckbox();
+      this.component.trigger(document, Pixelated.events.ui.tag.select, { tag: 'amazing'});
+
+      expect(mailUncheckedEvent).toHaveBeenTriggeredOn(document);
+      expect(checkbox.prop('checked')).toBe(false);
     });
 
     it('checkCheckbox checks it and triggers events.ui.mail.checked', function () {

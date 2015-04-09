@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014 ThoughtWorks, Inc.
-   *
+ *
  * Pixelated is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -26,7 +26,7 @@ define(
 
   function mailItem() {
     this.updateSelected = function (ev, data) {
-      if(data.ident === this.attr.ident) { this.doSelect(); }
+      if (data.ident === this.attr.ident) { this.doSelect(); }
       else { this.doUnselect(); }
     };
 
@@ -46,9 +46,12 @@ define(
       this.$node.removeClass('selected');
     };
 
-    this.triggerMailChecked = function (ev, data) {
-      var eventToTrigger = ev.target.checked ? events.ui.mail.checked : events.ui.mail.unchecked;
-      this.trigger(document, eventToTrigger, { mail: this.attr.mail});
+    this.doMailChecked = function (ev) {
+      if (ev.target.checked) {
+        this.checkCheckbox();
+      } else {
+        this.uncheckCheckbox();
+      }
     };
 
     this.checkboxElement = function () {
@@ -57,12 +60,12 @@ define(
 
     this.checkCheckbox = function () {
       this.checkboxElement().prop('checked', true);
-      this.triggerMailChecked({'target': {'checked': true}});
+      this.trigger(document, events.ui.mail.checked, { mail: this.attr.mail});
     };
 
     this.uncheckCheckbox = function () {
       this.checkboxElement().prop('checked', false);
-      this.triggerMailChecked({'target': {'checked': false}});
+      this.trigger(document, events.ui.mail.unchecked, { mail: this.attr.mail});
     };
 
     this.render = function () {
@@ -87,9 +90,10 @@ define(
     };
 
     this.attachListeners = function () {
-      this.on(this.$node.find('input[type=checkbox]'), 'change', this.triggerMailChecked);
+      this.on(this.$node.find('input[type=checkbox]'), 'change', this.doMailChecked);
       this.on(document, events.ui.mails.cleanSelected, this.doUnselect);
       this.on(document, events.ui.tag.select, this.doUnselect);
+      this.on(document, events.ui.tag.select, this.uncheckCheckbox);
       this.on(document, events.ui.mails.uncheckAll, this.uncheckCheckbox);
       this.on(document, events.ui.mails.checkAll, this.checkCheckbox);
     };
