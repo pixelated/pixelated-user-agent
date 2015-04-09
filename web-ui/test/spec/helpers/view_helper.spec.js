@@ -9,19 +9,19 @@ define(['helpers/view_helper'], function (viewHelper) {
 
     describe('quote email', function() {
       it('should add > to body text', function() {
-        testData.rawMail.mail.textPlainBody = 'First Line\nSecond Line';
+        testData.parsedMail.simpleTextPlain.textPlainBody = 'First Line\nSecond Line';
 
-        var quotedMail = viewHelper.quoteMail(testData.rawMail.mail);
+        var quotedMail = viewHelper.quoteMail(testData.parsedMail.simpleTextPlain);
 
         expect(quotedMail).toContain('> First Line\n> Second Line');
       });
 
       it('should add the mail sender information', function() {
-        testData.rawMail.mail.textPlainBody = 'First Line\nSecond Line';
+        testData.parsedMail.simpleTextPlain.textPlainBody = 'First Line\nSecond Line';
 
-        var quotedMail = viewHelper.quoteMail(testData.rawMail.mail);
+        var quotedMail = viewHelper.quoteMail(testData.parsedMail.simpleTextPlain);
 
-        expect(quotedMail).toContain('On Wed Jun 04 2014 17:41:13 GMT+0000 (UTC), <laurel@hamill.info> wrote');
+        expect(quotedMail).toContain('<laurel@hamill.info>');
       });
     });
 
