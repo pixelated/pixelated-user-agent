@@ -170,6 +170,38 @@ define(function() {
     }
   };
 
+  var draftMail = {
+    status: [],
+    header: {'from': 'jed_waelchi@cummerata.info',
+      cc: [],
+      bcc: [],
+      to: [],
+      date: '2015-04-09T18:30:18.998999-03:00',
+      subject: 'bla'},
+    ident: 'B2432',
+    replying: {'single': 'jed_waelchi@cummerata.info',
+      all: {
+        'to-field': ['jed_waelchi@cummerata.info'],
+        'cc-field': []
+      }
+    },
+    attachments: [],
+    textPlainBody: 'bla',
+    tags: [],
+    htmlBody: null,
+    mailbox: 'drafts',
+    security_casing: {'locks': [],
+      imprints: [{'state': 'no_signature_information'}]
+    },
+    isSentMail: function() { return false; },
+    isDraftMail: function() { return false; },
+    replyToAddress: function() { return { to: ['jed_waelchi@cummerata.info'], cc: [] }; },
+    replyToAllAddress: function() { return { to: ['jed_waelchi@cummerata.info'], cc: [] }; },
+    isMailMultipartAlternative: function () { return false; },
+    availableBodyPartsContentType: function () { return []; },
+    getMailPartByContentType: function () { return; }
+  };
+
   var testData = {
     rawMail: {
       mail: rawMail,
@@ -182,7 +214,8 @@ define(function() {
     },
     parsedMail: {
       simpleTextPlain: simpleTextPlainMail,
-      html: htmlNoEncodingMail
+      html: htmlNoEncodingMail,
+      draft: draftMail
     }
   };
 

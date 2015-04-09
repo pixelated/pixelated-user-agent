@@ -32,16 +32,16 @@ define(
         if (this.isOpeningOnANewTab(ev)) {
           return;
         }
-        this.trigger(document, events.ui.mail.open, { ident: this.attr.ident });
-        this.trigger(document, events.router.pushState, { mailIdent: this.attr.ident });
+        this.trigger(document, events.ui.mail.open, { ident: this.attr.mail.ident });
+        this.trigger(document, events.router.pushState, { mailIdent: this.attr.mail.ident });
         ev.preventDefault(); // don't let the hashchange trigger a popstate
       };
 
       this.openMail = function (ev, data) {
-        if (data.ident !== this.attr.ident) {
+        if (data.ident !== this.attr.mail.ident) {
           return;
         }
-        this.trigger(document, events.ui.mail.updateSelected, { ident: this.attr.ident });
+        this.trigger(document, events.ui.mail.updateSelected, { ident: this.attr.mail.ident });
       };
 
       this.after('initialize', function () {
