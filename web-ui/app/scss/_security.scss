@@ -12,35 +12,35 @@
     }
     &.encrypted {
       &:before {
-        content: "\f023  \f00c";
+        content: "\f023 ";
       }
       &.encryption-error {
         background: $attention;
         &:before {
-          content: "\f023  \f12a";
+          content: "\f023 \f057";
         }
       }
     }
     &.signed {
       &:before {
-        content: "\f007  \f00c";
+        content: "\f00c";
       }
       &.signature-not-trusted {
         background: $error;
         &:before {
-          content: "\f007  \f05e";
+          content: "\f05e";
         }
       }
     }
     &[class^=not-], &.signature-expired, &.signature-revoked {
       background: $attention;
       &:before {
-        content: "\f007  \f12a"
+        content: "\f05e"
       }
     }
     &.not-encrypted {
       &:before {
-        content: "\f023  \f12a";
+        content: "\f13e ";
       }
     }
   }
