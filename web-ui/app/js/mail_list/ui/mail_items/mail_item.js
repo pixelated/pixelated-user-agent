@@ -26,7 +26,7 @@ define(
 
   function mailItem() {
     this.updateSelected = function (ev, data) {
-      if (data.ident === this.attr.ident) { this.doSelect(); }
+      if (data.ident === this.attr.mail.ident) { this.doSelect(); }
       else { this.doUnselect(); }
     };
 
@@ -69,34 +69,22 @@ define(
     };
 
     this.render = function () {
-      this.attr.tagsForListView = _.without(this.attr.tags, this.attr.tag);
-      var mailItemHtml = templates.mails[this.attr.templateType](this.attr);
+      this.attr.mail.tagsForListView = _.without(this.attr.mail.tags, this.attr.tag);
+      var mailItemHtml = templates.mails[this.attr.templateType](this.attr.mail);
       this.$node.html(mailItemHtml);
       this.$node.addClass(this.attr.statuses);
       if(this.attr.selected) { this.doSelect(); }
       this.on(this.$node.find('a'), 'click', this.triggerOpenMail);
     };
 
-    this.initializeAttributes = function () {
-      var mail = this.attr.mail;
-      this.attr.ident = mail.ident;
-      this.attr.header = mail.header;
-      this.attr.ident = mail.ident;
-      this.attr.statuses = viewHelper.formatStatusClasses(mail.status);
-      this.attr.tags = mail.tags;
-      this.attr.attachments = mail.attachments;
-      this.attr.mailbox = mail.mailbox;
-      this.attr.header.formattedDate = this.formattedDate(mail.header.date);
-    };
-
-    this.attachListeners = function () {
+    this.after('initialize', function () {
       this.on(this.$node.find('input[type=checkbox]'), 'change', this.doMailChecked);
       this.on(document, events.ui.mails.cleanSelected, this.doUnselect);
       this.on(document, events.ui.tag.select, this.doUnselect);
       this.on(document, events.ui.tag.select, this.uncheckCheckbox);
       this.on(document, events.ui.mails.uncheckAll, this.uncheckCheckbox);
       this.on(document, events.ui.mails.checkAll, this.checkCheckbox);
-    };
+    });
   }
 
   return mailItem;

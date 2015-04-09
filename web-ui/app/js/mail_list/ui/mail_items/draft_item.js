@@ -40,9 +40,7 @@ define(
       };
 
       this.after('initialize', function () {
-        this.initializeAttributes();
         this.render();
-        this.attachListeners();
 
         if (this.attr.isChecked) {
           this.checkCheckbox();

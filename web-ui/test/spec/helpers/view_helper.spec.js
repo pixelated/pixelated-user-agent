@@ -25,25 +25,29 @@ define(['helpers/view_helper'], function (viewHelper) {
       });
     });
 
-    describe('getFormmattedDate', function() {
+    describe('formatDate', function() {
+      var template;
+      beforeEach(function () {
+        template = Handlebars.compile("{{formatDate date}}");
+      });
+
       it('formats correctly a Date for today', function() {
         var d = new Date();
-        var dtest = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 14, 2, 36);
+        var mailDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 14, 2, 36);
 
-        var res = viewHelper.getFormattedDate(dtest);
+        var result = template({ date: mailDate.toISOString() });
 
-        expect(res).toEqual('14:02');
-
+        expect(result).toEqual('14:02');
       });
 
       it('formats correctly a Date for a specific day', function() {
-        var dtest = new Date(2013, 2, 13, 7, 56, 1);
+        var mailDate = new Date(2013, 2, 13, 7, 56, 1);
 
-        var res = viewHelper.getFormattedDate(dtest);
+        var result = template({ date: mailDate.toISOString() });
 
         // This expectation is weird for the month - JS Dates have date numbers be zero-indexed, thus the discrepancy
         // Specifically, the 2 in the constructor DOES match the 3 in the expectation below.
-        expect(res).toEqual('2013-03-13');
+        expect(result).toEqual('2013-03-13');
       });
     });
 

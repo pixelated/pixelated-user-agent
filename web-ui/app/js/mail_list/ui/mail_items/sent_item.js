@@ -45,10 +45,7 @@ define(
       };
 
       this.after('initialize', function () {
-        this.initializeAttributes();
-        this.attr.tagsForListView = _.without(this.attr.tags, this.attr.tag);
         this.render();
-        this.attachListeners();
 
         if (this.attr.isChecked) {
           this.checkCheckbox();

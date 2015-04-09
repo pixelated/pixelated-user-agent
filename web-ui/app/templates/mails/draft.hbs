@@ -2,8 +2,8 @@
   <input type="checkbox"/>
 </span>
 <span>
-  <a href="/#/{{ tag }}/mail/{{ ident }}">
-    <span class="sent-date">{{ header.formattedDate }}</span>
+  <a href="/#/{{ currentTag }}/mail/{{ ident }}">
+    <span class="sent-date">{{ formatDate header.date }}</span>
 
     <div class="from">
       {{t 'to:'}}

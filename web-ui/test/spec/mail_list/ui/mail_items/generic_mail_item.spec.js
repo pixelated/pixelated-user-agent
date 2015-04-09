@@ -7,11 +7,11 @@ describeComponent('mail_list/ui/mail_items/generic_mail_item', function () {
     mail = Pixelated.testData().parsedMail.simpleTextPlain;
     mail.tags = [];
     mail.mailbox = 'inbox';
+    mail.currentTag = 'inbox';
 
     this.setupComponent('<li></li>', {
       mail: mail,
       selected: false,
-      tag: 'inbox',
       templateType: 'single'
     });
   });
