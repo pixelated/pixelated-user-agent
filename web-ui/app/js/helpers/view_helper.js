@@ -22,7 +22,7 @@ define(
     'quoted-printable/quoted-printable',
     'utf8/utf8'
   ],
-  function(contentType, htmlWhitelister, i18n_lib, quotedPrintable, utf8) {
+  function(contentType, htmlWhitelister, i18n, quotedPrintable, utf8) {
   'use strict';
 
   function formatStatusClasses(ss) {
@@ -109,12 +109,15 @@ define(
     }, 1);
   }
 
-  function quoteMail(mail) {
-    return '\n\n' + mail.textPlainBody.replace(/^/mg, '> ');
+  function prependFrom(mail) {
+    return i18n(
+      'On __date__, <__from__> wrote:\n',
+      {'date': new Date(mail.header.date).toString(), 'from': mail.header.from}
+    );
   }
 
-  function i18n(text) {
-    return i18n_lib.get(text);
+  function quoteMail(mail) {
+    return '\n\n' + prependFrom(mail) + mail.textPlainBody.replace(/^/mg, '> ');
   }
 
   return {
