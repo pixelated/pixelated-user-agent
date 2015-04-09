@@ -12,7 +12,7 @@
     }
     &.encrypted {
       &:before {
-        content: "\f023 ";
+        content: "\f023";
       }
       &.encryption-error {
         background: $attention;
