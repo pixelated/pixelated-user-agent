@@ -134,7 +134,7 @@ define(
         } else {
           this.trigger(
             events.ui.userAlerts.displayMessage,
-            {message: i18n.get('One or more of the recipients are not valid emails')}
+            {message: i18n('One or more of the recipients are not valid emails')}
           );
           this.trigger(events.mail.send_failed);
         }
@@ -176,7 +176,7 @@ define(
       this.draftSaved = function(event, data) {
         this.attr.ident = data.ident;
         if(!this.attr.silent) {
-          this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n.get('Saved as draft.') });
+          this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n('Saved as draft.') });
         }
         delete this.attr.silent;
       };

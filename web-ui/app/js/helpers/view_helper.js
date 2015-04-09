@@ -22,7 +22,7 @@ define(
     'quoted-printable/quoted-printable',
     'utf8/utf8'
   ],
-  function(contentType, htmlWhitelister, i18n_lib, quotedPrintable, utf8) {
+  function(contentType, htmlWhitelister, i18n, quotedPrintable, utf8) {
   'use strict';
 
   function formatStatusClasses(ss) {
