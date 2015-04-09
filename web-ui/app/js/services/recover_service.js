@@ -21,7 +21,6 @@ define(['flight/lib/component', 'page/events', 'views/i18n'], function (defineCo
   return defineComponent(function() {
 
     this.recoverManyEmails = function (event, data) {
-      debugger;
       var emails = _.values(data.checkedMails);
 
       this.trigger(document, events.mail.recoverMany, {
