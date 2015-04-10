@@ -19,10 +19,12 @@ To compose a message look for the big blue button on the top left. You can add t
 A bit more about Pixelated
 Pixelated is an open source project licensed under AGPL 3.0. It is composed of 3 main parts, the User Agent (what you are using right now), the Dispatcher (what allows you to log in with different accounts to the same instance) and the Platform (which provides the email service you will use to send and receive messages - the server behind the @ sign on your new mail address). You can learn more by visiting https://pixelated-project.org/.
 
-About this message and understanding examples of message status
-This message was not encrypted, in other words, it could have been read by others at some point during transmission.
-However you can check the authenticity of this message, because the message has a certified sender.
-Whether it is green, it means that the text you are reading has not changed on the way until delivered to you.
+About this message and encryption status
+This message was not encrypted, in other words, it could have been read by others at some point during transmission, like any other email client.
+To send encrypted messages you have to have the public keys of the recipients, in Pixelated you have 2 options:
+send an email to another Pixelated account: public keys are exchanged by default.
+send an email to another email provider: you should had exchanged public keys with the recipients previously.
+
 
 Enjoy your secure messaging!
 
@@ -60,10 +62,11 @@ s). You can learn more by visiting <a src=3D"https://pixelated-project.org/=
 ">https://pixelated-project.org/</a>.
 </p>
 <p>
-<b>About this message and understanding examples of message status</b><br>
-This message was not encrypted, in other words, it could have been read by others at some point during transmission.
-However you can check the authenticity of this message, because the message has a certified sender.
-Whether it is green, it means that the text you are reading has not changed on the way until delivered to you.
+<b>About this message and encryption status</b><br>
+This message was not encrypted, in other words, it could have been read by others at some point during transmission like any other email client.
+To send encrypted messages you have to have the public Keys of the recipients, in Pixelated you have 2 options:
+<p>- sending an email to another Pixelated account: public keys are exchanged by default. 
+<br>- sending an email to another email provider: you should had exchanged public keys with the recipients previously.
 </p>
 <p>
 Enjoy your secure messaging!
