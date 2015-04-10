@@ -30,6 +30,6 @@ def register(username, server_name):
 
 
 def validate_username(username):
-    accepted_characters = '^[a-z0-9\-\_]*$'
+    accepted_characters = '^[a-z0-9\-\_\.]*$'
     if not re.match(accepted_characters, username):
         raise ValueError

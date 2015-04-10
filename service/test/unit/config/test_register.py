@@ -15,6 +15,6 @@ class TestRegister(unittest.TestCase):
 
     def test_username_pass_when_valid(self):
         try:
-            validate_username('valid_username-123')
+            validate_username('a.valid_username-123')
         except:
             self.fail('Valid username should not raise an exception')
