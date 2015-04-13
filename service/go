@@ -125,6 +125,8 @@ elif [ "$1" == 'coverage_unit' ]; then
 elif [ "$1" == 'coverage_integration' ]; then
         runCoverageIntegration "${@:2}"
 elif [ "$1" == 'coverage_all' ]; then
+        set -e
+        runPep8
         runCoverageUnitAndIntegration "${@:2}"
 elif [ "$1" == 'start' ]; then
         /usr/bin/env pixelated-user-agent "${@:2}"
