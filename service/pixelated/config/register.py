@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+import re
 
 from pixelated.bitmask_libraries.leap_srp import LeapAuthException
 from pixelated.bitmask_libraries.register import register_new_user
@@ -20,6 +21,15 @@ from pixelated.bitmask_libraries.register import register_new_user
 
 def register(username, server_name):
     try:
+        validate_username(username)
         register_new_user(username, server_name)
     except LeapAuthException:
         print('User already exists')
+    except ValueError:
+        print('Only lowercase letters, digits, . - and _ allowed.')
+
+
+def validate_username(username):
+    accepted_characters = '^[a-z0-9\-\_\.]*$'
+    if not re.match(accepted_characters, username):
+        raise ValueError
