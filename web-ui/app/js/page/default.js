@@ -20,7 +20,6 @@ define(
     'mail_list_actions/ui/mail_list_actions',
     'user_alerts/ui/user_alerts',
     'mail_list/ui/mail_list',
-    'mail_list/ui/mail_syncing_progress_bar',
     'mail_view/ui/no_message_selected_pane',
     'mail_view/ui/mail_view',
     'mail_view/ui/mail_actions',

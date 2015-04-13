@@ -53,9 +53,8 @@ def init_index_and_remove_dupes(querier, search_engine, mail_service):
     return wrapper
 
 
-def update_info_sync_and_index_partial(sync_info_controller, search_engine, mail_service):
+def update_index_partial(search_engine, mail_service):
     def wrapper(soledad_sync_status):
-        sync_info_controller.set_sync_info(soledad_sync_status)
         search_engine.index_mails(mails=mail_service.all_mails())
 
     return wrapper

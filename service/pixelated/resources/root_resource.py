@@ -4,7 +4,6 @@ from pixelated.resources.contacts_resource import ContactsResource
 from pixelated.resources.features_resource import FeaturesResource
 from pixelated.resources.mail_resource import MailResource
 from pixelated.resources.mails_resource import MailsResource
-from pixelated.resources.sync_info_resource import SyncInfoResource
 from pixelated.resources.tags_resource import TagsResource
 from pixelated.resources.keys_resource import KeysResource
 from twisted.web.resource import Resource
@@ -28,7 +27,6 @@ class RootResource(Resource):
         self.putChild('attachment', AttachmentsResource(querier))
         self.putChild('contacts', ContactsResource(search_engine))
         self.putChild('features', FeaturesResource())
-        self.putChild('sync_info', SyncInfoResource())
         self.putChild('tags', TagsResource(search_engine))
         self.putChild('mails', MailsResource(mail_service, draft_service))
         self.putChild('mail', MailResource(mail_service))
