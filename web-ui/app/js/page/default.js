@@ -49,7 +49,6 @@ define(
     mailListActions,
     userAlerts,
     mailList,
-    mailSyncingProgressBar,
     noMessageSelectedPane,
     mailView,
     mailViewActions,
@@ -81,7 +80,6 @@ define(
       userAlerts.attachTo('#user-alerts');
 
       mailList.attachTo('#mail-list');
-      mailSyncingProgressBar.attachTo('#mail-syncing-progress-bar');
       mailListActions.attachTo('#list-actions');
 
       searchTrigger.attachTo('#search-trigger');
