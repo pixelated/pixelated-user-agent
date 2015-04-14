@@ -30,10 +30,6 @@ define(
       else { this.doUnselect(); }
     };
 
-    this.formattedDate = function (date) {
-      return viewHelper.getFormattedDate(new Date(date));
-    };
-
     this.isOpeningOnANewTab = function (ev) {
       return ev.metaKey || ev.ctrlKey || ev.which === 2;
     };
@@ -72,8 +68,8 @@ define(
       this.attr.mail.tagsForListView = _.without(this.attr.mail.tags, this.attr.tag);
       var mailItemHtml = templates.mails[this.attr.templateType](this.attr.mail);
       this.$node.html(mailItemHtml);
-      this.$node.addClass(this.attr.statuses);
-      if(this.attr.selected) { this.doSelect(); }
+      this.$node.addClass(viewHelper.formatStatusClasses(this.attr.mail.status));
+      if (this.attr.selected) { this.doSelect(); }
       this.on(this.$node.find('a'), 'click', this.triggerOpenMail);
     };
 
