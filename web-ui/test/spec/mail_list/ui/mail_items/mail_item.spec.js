@@ -10,7 +10,6 @@ describeMixin('mail_list/ui/mail_items/mail_item', function () {
       selected: false,
       tag: 'inbox'
     });
-    this.component.attachListeners();
   });
 
   describe('mail checkbox', function () {

@@ -47,9 +47,6 @@ define(
       this.displayMail = function (event, data) {
         this.attr.mail = data.mail;
 
-        var date = new Date(data.mail.header.date);
-        data.mail.header.formattedDate = viewHelpers.getFormattedDate(date);
-
         var signed, encrypted;
 
         data.mail.security_casing = data.mail.security_casing || {};

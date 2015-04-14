@@ -21,13 +21,13 @@ def click_first_element_with_class(context, classname):
     elements[0].click()
 
 
-def is_side_nax_expanded(context):
+def is_side_nav_expanded(context):
     e = context.browser.find_elements_by_class_name('content')[0].get_attribute('class').count(u'move-right') == 1
     return e
 
 
 def expand_side_nav(context):
-    if is_side_nax_expanded(context):
+    if is_side_nav_expanded(context):
         return
 
     toggle = context.browser.find_elements_by_class_name('side-nav-toggle')[0]

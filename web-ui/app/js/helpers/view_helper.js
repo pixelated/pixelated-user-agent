@@ -83,15 +83,6 @@ define(
     return res;
   }
 
-  function getFormattedDate(date){
-    var today = createTodayDate();
-    if (date.getTime() > today.getTime()) {
-      return fixedSizeNumber(date.getHours(), 2) + ':' + fixedSizeNumber(date.getMinutes(), 2);
-    } else {
-      return '' + date.getFullYear() + '-' + fixedSizeNumber(date.getMonth() + 1, 2) + '-' + fixedSizeNumber(date.getDate(), 2);
-    }
-  }
-
   function createTodayDate() {
     var today = new Date();
     today.setHours(0);
@@ -120,11 +111,23 @@ define(
     return '\n\n' + prependFrom(mail) + mail.textPlainBody.replace(/^/mg, '> ');
   }
 
+  function formatDate(dateString) {
+    var date = new Date(dateString);
+    var today = createTodayDate();
+    if (date.getTime() > today.getTime()) {
+      return fixedSizeNumber(date.getHours(), 2) + ':' + fixedSizeNumber(date.getMinutes(), 2);
+    } else {
+      return '' + date.getFullYear() + '-' + fixedSizeNumber(date.getMonth() + 1, 2) + '-' + fixedSizeNumber(date.getDate(), 2);
+    }
+  }
+
+  Handlebars.registerHelper('formatDate', formatDate);
+  Handlebars.registerHelper('formatStatusClasses', formatStatusClasses);
+
   return {
     formatStatusClasses: formatStatusClasses,
     formatMailBody: formatMailBody,
     moveCaretToEndOfText: moveCaretToEndOfText,
-    getFormattedDate: getFormattedDate,
     quoteMail: quoteMail,
     i18n: i18n
   };

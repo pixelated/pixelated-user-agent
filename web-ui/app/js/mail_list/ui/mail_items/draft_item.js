@@ -33,16 +33,14 @@ define(
         if (this.isOpeningOnANewTab(ev)) {
           return;
         }
-        this.trigger(document, events.dispatchers.rightPane.openDraft, { ident: this.attr.ident });
-        this.trigger(document, events.ui.mail.updateSelected, { ident: this.attr.ident });
-        this.trigger(document, events.router.pushState, { mailIdent: this.attr.ident });
+        this.trigger(document, events.dispatchers.rightPane.openDraft, { ident: this.attr.mail.ident });
+        this.trigger(document, events.ui.mail.updateSelected, { ident: this.attr.mail.ident });
+        this.trigger(document, events.router.pushState, { mailIdent: this.attr.mail.ident });
         ev.preventDefault(); // don't let the hashchange trigger a popstate
       };
 
       this.after('initialize', function () {
-        this.initializeAttributes();
         this.render();
-        this.attachListeners();
 
         if (this.attr.isChecked) {
           this.checkCheckbox();

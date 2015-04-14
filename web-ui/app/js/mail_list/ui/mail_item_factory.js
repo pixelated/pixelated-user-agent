@@ -40,6 +40,7 @@ define(
       var mailItemContainer = $('<li>', { id: 'mail-' + mail.ident});
       nodeToAttachTo.append(mailItemContainer);
 
+      mail.currentTag = currentTag;
       var mailToCreate = MAIL_ITEM_TYPE[mail.mailbox] || GenericMailItem;
       mailToCreate.attachTo(mailItemContainer, {
         mail: mail,

@@ -2,8 +2,8 @@
   <input type="checkbox" {{#if isChecked }}checked="true"{{/if}} />
 </span>
 <span>
-  <a href="/#/{{ tag }}/mail/{{ ident }}">
-    <span class="received-date">{{ header.formattedDate }}
+  <a href="/#/{{ currentTag }}/mail/{{ ident }}">
+    <span class="received-date">{{ formatDate header.date }}
       {{#if attachments}}
         <div class="attachment-indicator">
           <i class="fa fa-paperclip"></i>

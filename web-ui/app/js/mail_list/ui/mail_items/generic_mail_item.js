@@ -38,14 +38,14 @@ define(
           updateMailStatusToRead.call(this);
           return;
         }
-        this.trigger(document, events.ui.mail.open, { ident: this.attr.ident });
-        this.trigger(document, events.router.pushState, { mailIdent: this.attr.ident });
+        this.trigger(document, events.ui.mail.open, { ident: this.attr.mail.ident });
+        this.trigger(document, events.router.pushState, { mailIdent: this.attr.mail.ident });
         ev.preventDefault(); // don't let the hashchange trigger a popstate
       };
 
       function updateMailStatusToRead() {
         if (!_.contains(this.attr.mail.status, this.status.READ)) {
-          var mail_read_data = { ident: this.attr.ident, tags: this.attr.tags, mailbox: this.attr.mailbox };
+          var mail_read_data = { ident: this.attr.mail.ident, tags: this.attr.mail.tags, mailbox: this.attr.mail.mailbox };
           this.trigger(document, events.mail.read, mail_read_data);
           this.attr.mail.status.push(this.status.READ);
           this.$node.addClass(viewHelpers.formatStatusClasses(this.attr.mail.status));
@@ -53,16 +53,16 @@ define(
       }
 
       this.openMail = function (ev, data) {
-        if (data.ident !== this.attr.ident) {
+        if (data.ident !== this.attr.mail.ident) {
           return;
         }
         updateMailStatusToRead.call(this);
 
-        this.trigger(document, events.ui.mail.updateSelected, { ident: this.attr.ident });
+        this.trigger(document, events.ui.mail.updateSelected, { ident: this.attr.mail.ident });
       };
 
       this.updateTags = function(ev, data) {
-        if(data.ident === this.attr.ident){
+        if(data.ident === this.attr.mail.ident){
           this.attr.tags = data.tags;
           if(!_.contains(this.attr.tags, this.attr.tag)) {
             this.teardown();
@@ -73,16 +73,13 @@ define(
       };
 
       this.deleteMail = function(ev, data) {
-        if(data.mail.ident === this.attr.ident){
+        if(data.mail.ident === this.attr.mail.ident){
           this.teardown();
         }
       };
 
       this.after('initialize', function () {
-        this.initializeAttributes();
-        this.attr.tagsForListView = _.without(this.attr.tags, this.attr.tag);
         this.render();
-        this.attachListeners();
 
         if (this.attr.isChecked) {
           this.checkCheckbox();
