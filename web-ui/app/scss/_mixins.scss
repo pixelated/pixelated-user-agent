@@ -202,12 +202,16 @@
         &.selected {
           border: 1px solid #666666;
         }
+
+        &:before {
+          font-family: FontAwesome;
+          padding-right: 4px;
+
+        }
         &.encrypted {
           border-bottom-color: $will_be_encrypted;
           
           &:before {
-            font-family: FontAwesome;
-            padding-right: 4px;
             color: $will_be_encrypted;
             content: "\f023 ";
           }
@@ -216,8 +220,6 @@
           border-bottom-color: $wont_be_encrypted;
           
           &:before {
-            font-family: FontAwesome;
-            padding-right: 4px;
             color: $wont_be_encrypted;
             content: "\f13e ";
           }
