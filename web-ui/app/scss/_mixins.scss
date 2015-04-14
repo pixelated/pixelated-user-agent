@@ -204,9 +204,23 @@
         }
         &.encrypted {
           border-bottom-color: $will_be_encrypted;
+          
+          &:before {
+            font-family: FontAwesome;
+            padding-right: 4px;
+            color: $will_be_encrypted;
+            content: "\f023 ";
+          }
         }
         &.not-encrypted {
           border-bottom-color: $wont_be_encrypted;
+          
+          &:before {
+            font-family: FontAwesome;
+            padding-right: 4px;
+            color: $wont_be_encrypted;
+            content: "\f13e ";
+          }
         }
         background-color: #F5F5F5;
         border: 1px solid #D9D9D9;
