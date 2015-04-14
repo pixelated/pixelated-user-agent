@@ -34,5 +34,5 @@ $error: #D93C38;
 $attention: #F6A41C;
 $success: #50BA5B;
 
-$will_be_encrypted: #41cd60;
-$wont_be_encrypted: #F6A40A;
+$will_be_encrypted: $success;
+$wont_be_encrypted: $attention;
