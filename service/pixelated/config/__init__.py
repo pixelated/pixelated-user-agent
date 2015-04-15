@@ -38,6 +38,7 @@ import pixelated.support.ext_esmtp_sender_factory
 import pixelated.support.ext_fetch
 import pixelated.support.ext_keymanager_fetch_key
 import pixelated.support.ext_requests_urllib3
+from pixelated.support.error_handler import error_handler
 
 
 def initialize():
@@ -74,6 +75,7 @@ def initialize():
 
         d = deferToThread(init_soledad)
         d.addCallback(stop_loading_app)
+        d.addErrback(error_handler)
 
     reactor.callWhenRunning(load_app)
     reactor.run()
