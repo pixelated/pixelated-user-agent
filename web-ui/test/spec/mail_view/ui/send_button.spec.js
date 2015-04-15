@@ -25,6 +25,14 @@ describeComponent('mail_view/ui/send_button', function () {
 
         expect(this.$node).not.toBeDisabled();
       });
+
+      it('gets enabled if recipients:updated also with invalid email', function () {
+        $(document).trigger(Pixelated.events.ui.recipients.inputFieldHasCharacters, { name: 'to' });
+        $(document).trigger(Pixelated.events.ui.recipients.updated, { newRecipients: ['InvalidEmail']});
+
+        expect(this.$node).not.toBeDisabled();
+        expect(this.$node.text()).toBe('Send');
+      });
     });
 
     describe('multiple events', function () {
@@ -62,14 +70,6 @@ describeComponent('mail_view/ui/send_button', function () {
         $(document).trigger(Pixelated.events.ui.recipients.updated, { newRecipients: []});
 
         expect(this.$node).toBeDisabled();
-      });
-
-      it('gets disabled if recipients:updated with invalid email', function () {
-        $(document).trigger(Pixelated.events.ui.recipients.inputFieldHasCharacters, { name: 'to' });
-        $(document).trigger(Pixelated.events.ui.recipients.updated, { newRecipients: ['InvalidEmail']});
-
-        expect(this.$node).not.toBeDisabled();
-        expect(this.$node.text()).toBe('Send');
       });
     });
 
