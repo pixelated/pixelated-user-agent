@@ -25,7 +25,6 @@ def parse():
 
     parser.add_argument('--host', default='127.0.0.1', help='the host to run the user agent on')
     parser.add_argument('--port', type=int, default=3333, help='the port to run the user agent on')
-    parser.add_argument('-c', '--config', metavar='<configfile>', default=None, help='use specified file for credentials (for test purposes only)')
     parser.add_argument('-sk', '--sslkey', metavar='<server.key>', default=None, help='use specified file as web server\'s SSL key (when using the user-agent together with the pixelated-dispatcher)')
     parser.add_argument('-sc', '--sslcert', metavar='<server.crt>', default=None, help='use specified file as web server\'s SSL certificate (when using the user-agent together with the pixelated-dispatcher)')
     parser.add_argument('--register', metavar=('provider', 'username'),
@@ -38,6 +37,7 @@ def parser_add_default_arguments(parser):
     parser.add_argument('--debug', action='store_true', help='DEBUG mode.')
     parser.add_argument('--dispatcher', help='run in organization mode, the credentials will be read from specified file', metavar='file')
     parser.add_argument('--dispatcher-stdin', help='run in organization mode, the credentials will be read from stdin', default=False, action='store_true', dest='dispatcher_stdin')
+    parser.add_argument('-c', '--config', metavar='<configfile>', default=None, help='use specified file for credentials (for test purposes only)')
     parser.add_argument('--home', help='The folder where the user agent stores its data. Defaults to ~/.leap', default=DEFAULT_LEAP_HOME)
     parser.add_argument('-lc', '--leap-provider-cert', metavar='<leap-provider.crt>', default=None, help='use specified file for LEAP provider cert authority certificate (url https://<LEAP-provider-domain>/ca.crt)')
     parser.add_argument('-lf', '--leap-provider-cert-fingerprint', metavar='<leap provider certificate fingerprint>', default=None, help='use specified fingerprint to validate connection with LEAP provider', dest='leap_provider_cert_fingerprint')

@@ -67,9 +67,12 @@ def initialize():
     init_logging(args)
     init_leap_cert(args)
 
-    init_events_server()
+    if args.dispatcher or args.dispatcher_stdin:
+        config_dispatcher(app, args)
+    else:
+        config_user_agent(app, args)
 
-    config_dispatcher(app, args)
+    init_events_server()
 
     def execute_command():
 
