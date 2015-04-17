@@ -15,7 +15,6 @@ The Pixelated User Agent is the mail client of the Pixelated ecosystem. It is co
 ## Getting started
 
 ### Registering with a LEAP provider
-  * 
   * You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/).
   * If you want to run your own LEAP provider, see [pixelated-platform](https://github.com/pixelated-project/pixelated-platform).
 
