@@ -21,6 +21,7 @@ def error_handler(excp):
         print """
             SSL Error: Please check your certificates or read our wiki for further info:
             https://github.com/pixelated-project/pixelated-user-agent/wiki/Configuring-and-using-SSL-Certificates-for-LEAP-provider
-            """
+            Error reference: %s
+            """ % excp.getErrorMessage()
     else:
         raise excp
