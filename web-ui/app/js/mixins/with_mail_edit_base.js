@@ -74,7 +74,7 @@ define(
             if (!_.isUndefined(recipients) && !_.isEmpty(recipients)) {
               var recipientsUpdatedData = {
                 newRecipients: recipients,
-                name: recipientsType
+                recipientsName: recipientsType
               };
               this.trigger(document, events.ui.recipients.updated, recipientsUpdatedData);
             }

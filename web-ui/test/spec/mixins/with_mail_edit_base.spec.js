@@ -18,8 +18,8 @@ describeMixin('mixins/with_mail_edit_base', function () {
         recipients: { to: ['foobar@mail.com'], cc: [] }
       });
 
-      expect(recipientsUpdatedEvent).toHaveBeenTriggeredOnAndWith(document, { newRecipients: ['foobar@mail.com'], name: 'to'});
-      expect(recipientsUpdatedEvent).not.toHaveBeenTriggeredOnAndWith(document, { newRecipients: [], name: 'cc'});
+      expect(recipientsUpdatedEvent).toHaveBeenTriggeredOnAndWith(document, { newRecipients: ['foobar@mail.com'], recipientsName: 'to'});
+      expect(recipientsUpdatedEvent).not.toHaveBeenTriggeredOnAndWith(document, { newRecipients: [], recipientsName: 'cc'});
     });
 
   });
