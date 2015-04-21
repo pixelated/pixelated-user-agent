@@ -14,11 +14,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+import os
 from functools import partial
 import sys
 import json
 import argparse
+import email
 
+from os.path import join
+from mailbox import mboxMessage
 from pixelated.config.app import App
 from pixelated.config import app_factory
 from pixelated.config.args import parser_add_default_arguments
@@ -32,6 +36,11 @@ from pixelated.config.leap_cert import init_leap_cert
 from pixelated.config.soledad import init_soledad_and_user_key
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
+from progressbar import ProgressBar
+
+from leap.mail.imap.memorystore import MemoryStore
+from leap.mail.imap.soledadstore import SoledadStore
+from leap.common.events import register, unregister, events_pb2 as proto
 
 # monkey patching some specifics
 import pixelated.support.ext_protobuf
@@ -53,13 +62,49 @@ def delete_all_mails(args):
     return args
 
 
+@defer.inlineCallbacks
+def load_mails(args, mail_paths):
+    leap_session, soledad = args
+    account = leap_session.account
+
+    for path in mail_paths:
+        print 'Loading mails from %s' % path
+        for root, dirs, files in os.walk(path):
+            mbx = account.getMailbox('INBOX')
+            for f in files:
+                with open(join(root, f), 'r') as fp:
+                    m = email.message_from_file(fp)
+                    flags = ("\\RECENT",)
+                    r = yield mbx.addMessage(m.as_string(), flags=flags, notify_on_disk=False)
+                    print 'Added message %s' % m.get('subject')
+                    print m.as_string()
+
+    defer.returnValue(args)
+    return
+
+
+def dump_soledad(args):
+    leap_session, soledad = args
+
+    generation, docs = soledad.get_all_docs()
+
+    for doc in docs:
+        print doc
+        print '\n'
+
+    return args
+
+
 def initialize():
     parser = argparse.ArgumentParser(description='pixelated maintenance')
     parser_add_default_arguments(parser)
-    subparsers = parser.add_subparsers(help='commands')
+    subparsers = parser.add_subparsers(help='commands', dest='command')
     subparsers.add_parser('reset', help='reset account command')
     mails_parser = subparsers.add_parser('load-mails', help='load mails into account')
     mails_parser.add_argument('file', nargs='+', help='file(s) with mail data')
+
+    subparsers.add_parser('dump-soledad', help='dump the soledad database')
+    subparsers.add_parser('sync', help='sync the soledad database')
 
     args = parser.parse_args()
     app = App()
@@ -94,7 +139,17 @@ def initialize():
         d = deferToThread(init_soledad)
         d.addCallback(get_soledad_handle)
         d.addCallback(soledad_sync)
-        d.addCallback(delete_all_mails)
+        if args.command == 'reset':
+            d.addCallback(delete_all_mails)
+        elif args.command == 'load-mails':
+            d.addCallback(load_mails, args.file)
+        elif args.command == 'dump-soledad':
+            d.addCallback(dump_soledad)
+        elif args.command == 'sync':
+            # nothing to do here, sync is already part of the chain
+            pass
+        else:
+            print 'Unsupported command: %s' % args.command
         d.addCallback(soledad_sync)
         d.addCallback(shutdown)
         d.addErrback(shutdown_on_error)

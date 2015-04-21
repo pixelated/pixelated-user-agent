@@ -14,12 +14,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
+import email
 
-from pixelated.maintenance import delete_all_mails
+from pixelated.maintenance import delete_all_mails, load_mails
 from pixelated.bitmask_libraries.session import LeapSession
+from leap.mail.imap.account import SoledadBackedAccount
 from leap.soledad.client import Soledad
 from leap.soledad.common.document import SoledadDocument
-from mock import MagicMock
+from mock import MagicMock, ANY
+from os.path import join, dirname
 
 
 class TestCommands(unittest.TestCase):
@@ -27,6 +30,11 @@ class TestCommands(unittest.TestCase):
         def setUp(self):
             self.leap_session = MagicMock(spec=LeapSession)
             self.soledad = MagicMock(spec=Soledad)
+            self.account = MagicMock(spec=SoledadBackedAccount)
+            self.mailbox = MagicMock()
+            self.leap_session.account = self.account
+            self.account.getMailbox.return_value = self.mailbox
+
             self.args = (self.leap_session, self.soledad)
 
         def test_delete_all_mails_supports_empty_doclist(self):
@@ -63,3 +71,22 @@ class TestCommands(unittest.TestCase):
             doc = MagicMock(spec=SoledadDocument)
             doc.content = {'type': doc_type}
             return doc
+
+        def test_load_mails_empty_path_list(self):
+            load_mails(self.args, [])
+
+            self.assertFalse(self.mailbox.called)
+
+        def test_load_mails_adds_mails(self):
+            mail_root = join(dirname(__file__), '..', 'fixtures', 'mailset')
+
+            foo = load_mails(self.args, [mail_root])
+
+            self.assertTrue(self.mailbox.addMessage.called)
+            self.mailbox.addMessage.assert_any_call(self._mail_content(join(mail_root, 'mbox00000000')), flags=("\\RECENT",), notify_on_disk=False)
+            self.mailbox.addMessage.assert_any_call(self._mail_content(join(mail_root, 'mbox00000001')), flags=("\\RECENT",), notify_on_disk=False)
+
+        def _mail_content(self, mail_file):
+            with open(mail_file, 'r') as fp:
+                m = email.message_from_file(fp)
+                return m.as_string()
