@@ -36,7 +36,6 @@ from pixelated.config.leap_cert import init_leap_cert
 from pixelated.config.soledad import init_soledad_and_user_key
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
-from progressbar import ProgressBar
 
 from leap.mail.imap.memorystore import MemoryStore
 from leap.mail.imap.soledadstore import SoledadStore
