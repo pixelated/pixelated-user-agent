@@ -344,7 +344,7 @@ section {
         visibility: hidden;
         opacity: 0;
         transition-duration: 500ms;
-        height: 220px;
+        height: 100%;
         overflow: auto;
         background-color: lighten($navigation_background,1);
 
