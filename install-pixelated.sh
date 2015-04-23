@@ -44,12 +44,14 @@ done
 shift $((OPTIND-1))
 
 function check_installed() {
+        set +e
         which $1
         if [ $? -ne 0 ]; then
                 echo "## You must have ${1} installed and in the PATH to run Pixelated-User-Agent"
                 echo "## exiting..."
                 exit 1
         fi
+        set -e
 }
 
 function install_node_modules_at_custom_location() {
