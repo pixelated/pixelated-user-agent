@@ -25,6 +25,7 @@ class LeapProvider(object):
     def __init__(self, server_name, config):
         self.server_name = server_name
         self.config = config
+        self.local_ca_crt = '%s/ca.crt' % self.config.leap_home
 
         self.provider_json = self.fetch_provider_json()
 
@@ -62,12 +63,13 @@ class LeapProvider(object):
         if 'mx' not in self.services:
             raise Exception
 
-    def download_certificate_to(self, filename):
+    def download_certificate(self, filename=None):
         """
         Downloads the server certificate, validates it against the provided fingerprint and stores it to file
         """
+        path = filename or self.local_ca_crt
         cert = self.fetch_valid_certificate()
-        with open(filename, 'w') as out:
+        with open(path, 'w') as out:
             out.write(cert)
 
     def fetch_valid_certificate(self):
