@@ -24,7 +24,8 @@
 
 // COMPOSE PANE
 #compose-box, #draft-box, #reply-box {
-  margin: 0 0 50px 10px;
+  margin: 5px 0 50px 30px;
+  padding: 0;
   .input-container {
     border-bottom: 1px solid #DDD;
     padding: 1px;
@@ -44,7 +45,6 @@
     &#subject {
       font-size: 1.6875rem;
       line-height: 1.4;
-      margin-top: 26px;
     }
   }
   textarea {

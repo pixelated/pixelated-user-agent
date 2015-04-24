@@ -32,6 +32,13 @@
         height: 27px;
         margin-right: 3px;
       }
+      
+      .full-view-header {
+        display:inline-block;
+        padding-top: 5px;
+        width:95%;
+        flex-shrink:1;
+      }
     }
     h3 {
       margin-bottom: 0;
