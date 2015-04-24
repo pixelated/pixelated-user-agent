@@ -85,6 +85,10 @@
     }
   }
 
+  button.close-mail-button {
+    margin: 1px;
+  }
+
   @include recipients;
 }
 
