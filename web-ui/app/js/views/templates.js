@@ -46,6 +46,7 @@ define(['hbs/templates'], function (templates) {
     },
     mailActions: {
       actionsBox: window.Pixelated['app/templates/mail_actions/actions_box.hbs'],
+      trashActionsBox: window.Pixelated['app/templates/mail_actions/trash_actions_box.hbs'],
       composeTrigger: window.Pixelated['app/templates/mail_actions/compose_trigger.hbs'],
       refreshTrigger: window.Pixelated['app/templates/mail_actions/refresh_trigger.hbs'],
       paginationTrigger: window.Pixelated['app/templates/mail_actions/pagination_trigger.hbs']

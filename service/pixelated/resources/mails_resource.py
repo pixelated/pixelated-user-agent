@@ -53,6 +53,20 @@ class MailsDeleteResource(Resource):
         return respond_json(None, request)
 
 
+class MailsRecoverResource(Resource):
+    isLeaf = True
+
+    def __init__(self, mail_service):
+        Resource.__init__(self)
+        self._mail_service = mail_service
+
+    def render_POST(self, request):
+        idents = json.loads(request.content.read())['idents']
+        for ident in idents:
+            self._mail_service.recover_mail(ident)
+        return respond_json(None, request)
+
+
 class MailsResource(Resource):
 
     def _register_smtp_error_handler(self):
@@ -66,6 +80,7 @@ class MailsResource(Resource):
     def __init__(self, mail_service, draft_service):
         Resource.__init__(self)
         self.putChild('delete', MailsDeleteResource(mail_service))
+        self.putChild('recover', MailsRecoverResource(mail_service))
         self.putChild('read', MailsReadResource(mail_service))
         self.putChild('unread', MailsUnreadResource(mail_service))
 

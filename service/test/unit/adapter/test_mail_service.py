@@ -101,3 +101,13 @@ class TestMailService(unittest.TestCase):
         self.mail_service.delete_mail(1)
 
         verify(self.mailboxes).move_to_trash(1)
+
+    def test_recover_mail(self):
+        mail_to_recover = PixelatedMail.from_soledad(*leap_mail(), soledad_querier=None)
+        when(self.mail_service).mail(1).thenReturn(mail_to_recover)
+        when(self.mailboxes).move_to_inbox(1).thenReturn(mail_to_recover)
+
+        self.mail_service.recover_mail(1)
+
+        verify(self.mailboxes).move_to_inbox(1)
+        verify(self.search_engine).index_mail(mail_to_recover)

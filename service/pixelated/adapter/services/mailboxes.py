@@ -49,8 +49,14 @@ class Mailboxes(object):
         return [self._create_or_get(leap_mailbox_name) for leap_mailbox_name in self.account.mailboxes]
 
     def move_to_trash(self, mail_id):
+        return self._move_to(mail_id, self.trash())
+
+    def move_to_inbox(self, mail_id):
+        return self._move_to(mail_id, self.inbox())
+
+    def _move_to(self, mail_id, mailbox):
         mail = self.querier.mail(mail_id)
-        mail.set_mailbox(self.trash().mailbox_name)
+        mail.set_mailbox(mailbox.mailbox_name)
         mail.save()
         return mail
 

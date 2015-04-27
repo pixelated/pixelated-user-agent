@@ -123,6 +123,16 @@ define(
         }, this);
       };
 
+      this.triggerRecovered = function (dataToRecover) {
+        return _.bind(function () {
+          var mails = dataToRecover.mails || [dataToRecover.mail];
+
+          this.refreshMails();
+          this.trigger(document, events.ui.userAlerts.displayMessage, { message: dataToRecover.successMessage});
+          this.trigger(document, events.ui.mails.uncheckAll);
+        }, this);
+      };
+
       this.deleteMail = function (ev, data) {
         monitoredAjax(this, '/mail/' + data.mail.ident,
           {type: 'DELETE'})
@@ -143,6 +153,21 @@ define(
           data: JSON.stringify({idents: mailIdents})
         }).done(this.triggerDeleted(dataToDelete))
           .fail(this.errorMessage(i18n('Could not delete emails')));
+      };
+
+      this.recoverManyMails = function (ev, data) {
+        var dataToRecover = data;
+        var mailIdents = _.map(data.mails, function (mail) {
+          return mail.ident;
+        });
+
+        monitoredAjax(this, '/mails/recover', {
+          type: 'POST',
+          dataType: 'json',
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify({idents: mailIdents})
+        }).done(this.triggerRecovered(dataToRecover))
+          .fail(this.errorMessage(i18n('Could not move emails to inbox')));
       };
 
       function compileQuery(data) {
@@ -273,6 +298,7 @@ define(
         this.on(document, events.mail.unread, this.unreadMail);
         this.on(document, events.mail.delete, this.deleteMail);
         this.on(document, events.mail.deleteMany, this.deleteManyMails);
+        this.on(document, events.mail.recoverMany, this.recoverManyMails);
         this.on(document, events.search.perform, this.newSearch);
         this.on(document, events.ui.tag.selected, this.fetchByTag);
         this.on(document, events.ui.tag.select, this.fetchByTag);
