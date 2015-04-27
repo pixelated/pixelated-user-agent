@@ -165,5 +165,5 @@ def shutdown_on_error(error):
     print error
     reactor.stop()
 
-if __name__ == 'main':
+if __name__ == '__main__':
     initialize()
