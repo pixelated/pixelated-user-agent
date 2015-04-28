@@ -146,11 +146,11 @@ def load_mails(args, mail_paths):
         print 'Loading mails from %s' % path
         for root, dirs, files in os.walk(path):
             mbx = account.getMailbox('INBOX')
-            for f in files:
-                with open(join(root, f), 'r') as fp:
-                    m = email.message_from_file(fp)
+            for file_name in files:
+                with open(join(root, file_name), 'r') as email_file:
+                    m = email.message_from_file(email_file)
                     flags = ("\\RECENT",)
-                    r = yield mbx.addMessage(m.as_string(), flags=flags, notify_on_disk=False)
+                    yield mbx.addMessage(m.as_string(), flags=flags, notify_on_disk=False)
                     print 'Added message %s' % m.get('subject')
                     print m.as_string()
 
