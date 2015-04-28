@@ -27,14 +27,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # see https://leap.se/en/docs/platform/details/development#Verify.vagrantbox.download
   # for details
 
-  config.vm.box = "leap-wheezy"
+  config.vm.box = "boxcutter/debian80"
 
   config.vbguest.auto_update = false
 
   config.vm.define "source", primary: true do |source|
-    source.vm.provider :virtualbox do |v, override|
-      override.vm.box_url = "https://downloads.leap.se/platform/vagrant/virtualbox/leap-wheezy.box"
-    end
     source.vm.provider "libvirt" do |v, override|
       override.vm.box_url = "https://downloads.leap.se/platform/vagrant/libvirt/leap-wheezy.box"
     end
@@ -49,10 +46,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # until https://github.com/pixelated-project/pixelated-user-agent/issues/226 is not fixed,
     # we depend on a debian testing box
 
-    config.vm.box = "leap-wheezy"
-    deb.vm.provider "virtualbox" do |v, override|
-      override.vm.box_url = "https://downloads.leap.se/platform/vagrant/virtualbox/leap-wheezy.box"
-    end
+    config.vm.box = "boxcutter/debian80"
     deb.vm.provider "libvirt" do |v, override|
       override.vm.box_url = "https://downloads.leap.se/platform/vagrant/libvirt/leap-wheezy.box"
     end

@@ -7,6 +7,7 @@ class pixelated::source {
     'python-dev',
     'python-virtualenv',
     'libffi-dev',
+    'libssl-dev',
     'g++',
     'ruby-dev',
     'libsqlite3-dev',
