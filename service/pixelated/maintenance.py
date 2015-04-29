@@ -20,6 +20,7 @@ import sys
 import json
 import argparse
 import email
+import re
 
 from os.path import join
 from mailbox import mboxMessage
@@ -147,15 +148,21 @@ def load_mails(args, mail_paths):
         for root, dirs, files in os.walk(path):
             mbx = account.getMailbox('INBOX')
             for file_name in files:
+                if not is_mail_file_name_valid(file_name):
+                    continue
                 with open(join(root, file_name), 'r') as email_file:
                     m = email.message_from_file(email_file)
                     flags = ("\\RECENT",)
-                    yield mbx.addMessage(m.as_string(), flags=flags, notify_on_disk=False)
                     print 'Added message %s' % m.get('subject')
                     print m.as_string()
+                    yield mbx.addMessage(m.as_string(), flags=flags, notify_on_disk=False)
 
     defer.returnValue(args)
     return
+
+
+def is_mail_file_name_valid(file_name):
+    return re.match('mbox[0-9]+$', file_name)
 
 
 def dump_soledad(args):
