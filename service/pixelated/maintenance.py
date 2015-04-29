@@ -112,7 +112,7 @@ def create_execute_command(args, app):
     return execute_command
 
 
-def add_callback(args, defer):
+def add_command_callback(args, defer):
     if args.command == 'reset':
         defer.addCallback(delete_all_mails)
     elif args.command == 'load-mails':
