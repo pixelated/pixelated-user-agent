@@ -1,4 +1,4 @@
-#
+
 # Copyright (c) 2014 ThoughtWorks, Inc.
 #
 # Pixelated is free software: you can redistribute it and/or modify
@@ -156,12 +156,8 @@ def load_mails(args, mail_paths):
         for root, dirs, files in os.walk(path):
             mbx = account.getMailbox('INBOX')
             for file_name in files:
-                with open(join(root, file_name), 'r') as email_file:
-                    m = email.message_from_file(email_file)
-                    flags = ("\\RECENT",)
-                    print 'Added message %s' % m.get('subject')
-                    print m.as_string()
-                    yield mbx.addMessage(m.as_string(), flags=flags, notify_on_disk=False)
+                if is_mail_file_name_valid(file_name):
+                    yield add_message_into_mailbox(join(root, file_name), mbx)
 
     defer.returnValue(args)
     return
@@ -184,6 +180,19 @@ def flush_to_soledad(args, finalize):
     d.addCallback(check_flushed)
 
     return args
+
+
+def add_message_into_mailbox(file_path, mbx):
+    with open(file_path, 'r') as email_file:
+        m = email.message_from_file(email_file)
+        flags = ("\\RECENT",)
+        print 'Added message %s' % m.get('subject')
+        print m.as_string()
+        return mbx.addMessage(m.as_string(), flags=flags, notify_on_disk=False)
+
+
+def is_mail_file_name_valid(file_name):
+    return re.match('mbox[0-9]+$', file_name)
 
 
 def dump_soledad(args):
