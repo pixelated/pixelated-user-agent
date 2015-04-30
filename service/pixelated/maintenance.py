@@ -156,8 +156,7 @@ def load_mails(args, mail_paths):
         for root, dirs, files in os.walk(path):
             mbx = account.getMailbox('INBOX')
             for file_name in files:
-                if is_mail_file_name_valid(file_name):
-                    yield add_message_into_mailbox(join(root, file_name), mbx)
+                yield add_message_into_mailbox(join(root, file_name), mbx)
 
     defer.returnValue(args)
     return
@@ -189,10 +188,6 @@ def add_message_into_mailbox(file_path, mbx):
         print 'Added message %s' % m.get('subject')
         print m.as_string()
         return mbx.addMessage(m.as_string(), flags=flags, notify_on_disk=False)
-
-
-def is_mail_file_name_valid(file_name):
-    return re.match('mbox[0-9]+$', file_name)
 
 
 def dump_soledad(args):
