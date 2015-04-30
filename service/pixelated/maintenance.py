@@ -102,29 +102,37 @@ def create_execute_command(args, app):
 
             return args
 
-        d = deferToThread(init_soledad)
-        d.addCallback(get_soledad_handle)
-        d.addCallback(soledad_sync)
-        add_command_callback(args, d)
-        d.addCallback(soledad_sync)
-        d.addCallback(shutdown)
-        d.addErrback(shutdown_on_error)
+        tearDown = defer.Deferred()
+
+        prepare = deferToThread(init_soledad)
+        prepare.addCallback(get_soledad_handle)
+        prepare.addCallback(soledad_sync)
+        add_command_callback(args, prepare, tearDown)
+        tearDown.addCallback(soledad_sync)
+        tearDown.addCallback(shutdown)
+        tearDown.addErrback(shutdown_on_error)
 
     return execute_command
 
 
-def add_command_callback(args, defer):
+def add_command_callback(args, prepareDeferred, finalizeDeferred):
     if args.command == 'reset':
-        defer.addCallback(delete_all_mails)
+        prepareDeferred.addCallback(delete_all_mails)
+        prepareDeferred.addCallback(flush_to_soledad, finalizeDeferred)
     elif args.command == 'load-mails':
-        defer.addCallback(load_mails, args.file)
+        prepareDeferred.addCallback(load_mails, args.file)
+        prepareDeferred.addCallback(flush_to_soledad, finalizeDeferred)
     elif args.command == 'dump-soledad':
-        defer.addCallback(dump_soledad)
+        prepareDeferred.addCallback(dump_soledad)
+        prepareDeferred.chainDeferred(finalize)
     elif args.command == 'sync':
         # nothing to do here, sync is already part of the chain
-        pass
+        prepareDeferred.chainDeferred(finalize)
     else:
         print 'Unsupported command: %s' % args.command
+        prepareDeferred.chainDeferred(finalize)
+
+    return finalizeDeferred
 
 
 def delete_all_mails(args):
@@ -159,6 +167,25 @@ def load_mails(args, mail_paths):
 
     defer.returnValue(args)
     return
+
+
+def flush_to_soledad(args, finalize):
+    leap_session, soledad = args
+    account = leap_session.account
+    memstore = account._memstore
+    permanent_store = memstore._permanent_store
+
+    d = memstore.write_messages(permanent_store)
+
+    def check_flushed(args):
+        if memstore.is_writing:
+            reactor.callLater(1, check_flushed, args)
+        else:
+            finalize.callback((leap_session, soledad))
+
+    d.addCallback(check_flushed)
+
+    return args
 
 
 def is_mail_file_name_valid(file_name):
