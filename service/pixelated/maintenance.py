@@ -124,13 +124,13 @@ def add_command_callback(args, prepareDeferred, finalizeDeferred):
         prepareDeferred.addCallback(flush_to_soledad, finalizeDeferred)
     elif args.command == 'dump-soledad':
         prepareDeferred.addCallback(dump_soledad)
-        prepareDeferred.chainDeferred(finalize)
+        prepareDeferred.chainDeferred(finalizeDeferred)
     elif args.command == 'sync':
         # nothing to do here, sync is already part of the chain
-        prepareDeferred.chainDeferred(finalize)
+        prepareDeferred.chainDeferred(finalizeDeferred)
     else:
         print 'Unsupported command: %s' % args.command
-        prepareDeferred.chainDeferred(finalize)
+        prepareDeferred.chainDeferred(finalizeDeferred)
 
     return finalizeDeferred
 
