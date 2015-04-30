@@ -16,7 +16,7 @@
 import unittest
 import email
 
-from pixelated.maintenance import delete_all_mails, load_mails, is_mail_file_name_valid
+from pixelated.maintenance import delete_all_mails, load_mails
 from pixelated.bitmask_libraries.session import LeapSession
 from leap.mail.imap.account import SoledadBackedAccount
 from leap.soledad.client import Soledad
@@ -80,7 +80,7 @@ class TestCommands(unittest.TestCase):
     def test_load_mails_adds_mails(self):
         mail_root = join(dirname(__file__), '..', 'fixtures', 'mailset')
 
-        load_mails(self.args, [mail_root])
+        foo = load_mails(self.args, [mail_root])
 
         self.assertTrue(self.mailbox.addMessage.called)
         self.mailbox.addMessage.assert_any_call(self._mail_content(join(mail_root, 'mbox00000000')), flags=("\\RECENT",), notify_on_disk=False)
@@ -90,10 +90,3 @@ class TestCommands(unittest.TestCase):
         with open(mail_file, 'r') as fp:
             m = email.message_from_file(fp)
             return m.as_string()
-
-    def test_the_filter_should_validate_right_file_naming(self):
-        file_name = 'mbox00000'
-
-        validation = is_mail_file_name_valid(file_name)
-
-        self.assertTrue(validation)

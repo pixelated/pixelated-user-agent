@@ -156,8 +156,6 @@ def load_mails(args, mail_paths):
         for root, dirs, files in os.walk(path):
             mbx = account.getMailbox('INBOX')
             for file_name in files:
-                if not is_mail_file_name_valid(file_name):
-                    continue
                 with open(join(root, file_name), 'r') as email_file:
                     m = email.message_from_file(email_file)
                     flags = ("\\RECENT",)
@@ -186,10 +184,6 @@ def flush_to_soledad(args, finalize):
     d.addCallback(check_flushed)
 
     return args
-
-
-def is_mail_file_name_valid(file_name):
-    return re.match('mbox[0-9]+$', file_name)
 
 
 def dump_soledad(args):
