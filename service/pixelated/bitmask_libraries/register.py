@@ -21,14 +21,15 @@ import os.path
 import pixelated.bitmask_libraries.session as LeapSession
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
-from pixelated.bitmask_libraries.auth import LeapAuthenticator, LeapCredentials
+from leap.auth import SRPAuth
 
 
 def register_new_user(username, server_name):
     config = LeapConfig()
     provider = LeapProvider(server_name, config)
     password = getpass.getpass('Please enter password for %s: ' % username)
-    LeapAuthenticator(provider).register(LeapCredentials(username, password))
+    srp_auth = SRPAuth(provider, provider.local_ca_crt)
+    srp_auth.register(username, password)
 
     session = LeapSession.open(username, password, server_name)
     session.nicknym.generate_openpgp_key()

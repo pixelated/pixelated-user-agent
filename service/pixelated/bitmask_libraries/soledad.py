@@ -46,15 +46,16 @@ class LeapKeyManager(object):
 
 class SoledadSessionFactory(object):
     @classmethod
-    def create(cls, provider, srp_session, encryption_passphrase):
-        return SoledadSession(provider, encryption_passphrase, srp_session)
+    def create(cls, provider, user_token, user_uuid, encryption_passphrase):
+        return SoledadSession(provider, encryption_passphrase, user_token, user_uuid)
 
 
 class SoledadSession(object):
-    def __init__(self, provider, encryption_passphrase, leap_srp_session):
+    def __init__(self, provider, encryption_passphrase, user_token, user_uuid):
         self.provider = provider
         self.config = provider.config
-        self.leap_srp_session = leap_srp_session
+        self.user_uuid = user_uuid
+        self.user_token = user_token
 
         self.soledad = self._init_soledad(encryption_passphrase)
 
@@ -66,8 +67,8 @@ class SoledadSession(object):
             secrets = self._secrets_path()
             local_db = self._local_db_path()
 
-            return Soledad(self.leap_srp_session.uuid, unicode(encryption_passphrase), secrets,
-                           local_db, server_url, which_api_CA_bundle(self.provider), self.leap_srp_session.token, defer_encryption=False)
+            return Soledad(self.user_uuid, unicode(encryption_passphrase), secrets,
+                           local_db, server_url, which_api_CA_bundle(self.provider), self.user_token, defer_encryption=False)
 
         except (WrongMac, UnknownMacMethod), e:
             raise SoledadWrongPassphraseException(e)
@@ -76,10 +77,10 @@ class SoledadSession(object):
         return "%s/soledad" % self.config.leap_home
 
     def _secrets_path(self):
-        return "%s/%s.secret" % (self._leap_path(), self.leap_srp_session.uuid)
+        return "%s/%s.secret" % (self._leap_path(), self.user_uuid)
 
     def _local_db_path(self):
-        return "%s/%s.db" % (self._leap_path(), self.leap_srp_session.uuid)
+        return "%s/%s.db" % (self._leap_path(), self.user_uuid)
 
     def _create_database_dir(self):
         try:
@@ -102,7 +103,7 @@ class SoledadSession(object):
             host = hosts.keys()[0]
             server_url = 'https://%s:%d/user-%s' % \
                          (hosts[host]['hostname'], hosts[host]['port'],
-                          self.leap_srp_session.uuid)
+                          self.user_uuid)
             return server_url
         except Exception, e:
             raise SoledadDiscoverException(e)

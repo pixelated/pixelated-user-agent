@@ -27,7 +27,7 @@ from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.certs import refresh_ca_bundle
 from twisted.internet import reactor
 from .nicknym import NickNym
-from .auth import LeapAuthenticator, LeapCredentials
+from leap.auth import SRPAuth
 from .soledad import SoledadSessionFactory, SoledadSession
 from .smtp import LeapSmtp
 from .config import DEFAULT_LEAP_HOME
@@ -40,7 +40,7 @@ def open(username, password, server_name, leap_home=DEFAULT_LEAP_HOME):
     config = LeapConfig(leap_home=leap_home)
     provider = LeapProvider(server_name, config)
     refresh_ca_bundle(provider)
-    session = LeapSessionFactory(provider).create(LeapCredentials(username, password))
+    session = LeapSessionFactory(provider).create(username, password)
 
     return session
 
@@ -65,7 +65,7 @@ class LeapSession(object):
     - ``incoming_mail_fetcher`` Background job for fetching incoming mails from LEAP server (LeapIncomingMail)
     """
 
-    def __init__(self, provider, srp_session, soledad_session, nicknym, soledad_account, incoming_mail_fetcher, smtp):
+    def __init__(self, provider, user_auth, soledad_session, nicknym, soledad_account, incoming_mail_fetcher, smtp):
         """
         Constructor.
 
@@ -76,7 +76,7 @@ class LeapSession(object):
         self.smtp = smtp
         self.config = provider.config
         self.provider = provider
-        self.srp_session = srp_session
+        self.user_auth = user_auth
         self.soledad_session = soledad_session
         self.nicknym = nicknym
         self.account = soledad_account
@@ -87,7 +87,7 @@ class LeapSession(object):
 
     def account_email(self):
         domain = self.provider.domain
-        name = self.srp_session.user_name
+        name = self.user_auth.username
         return '%s@%s' % (name, domain)
 
     def close(self):
@@ -112,28 +112,29 @@ class LeapSessionFactory(object):
         self._provider = provider
         self._config = provider.config
 
-    def create(self, credentials):
-        key = self._session_key(credentials)
+    def create(self, username, password):
+        key = self._session_key(username)
         session = self._lookup_session(key)
         if not session:
-            session = self._create_new_session(credentials)
+            session = self._create_new_session(username, password)
             self._remember_session(key, session)
 
         return session
 
-    def _create_new_session(self, credentials):
+    def _create_new_session(self, username, password):
         self._create_dir(self._provider.config.leap_home)
-        self._provider.download_certificate_to('%s/ca.crt' % self._provider.config.leap_home)
+        self._provider.download_certificate()
 
-        auth = LeapAuthenticator(self._provider).authenticate(credentials)
-        soledad = SoledadSessionFactory.create(self._provider, auth, credentials.db_passphrase)
+        srp_auth = SRPAuth(self._provider.api_uri, self._provider.local_ca_crt)
+        auth = srp_auth.authenticate(username, password)
 
-        nicknym = self._create_nicknym(auth, soledad)
-        account = self._create_account(auth, soledad)
-        incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad,
-                                                                   account, auth)
+        soledad = SoledadSessionFactory.create(self._provider, auth.token, auth.uuid, password)
 
-        smtp = LeapSmtp(self._provider, nicknym.keymanager, auth)
+        nicknym = self._create_nicknym(auth.username, auth.token, auth.uuid, soledad)
+        account = self._create_account(auth.uuid, soledad)
+        incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad, account, auth.username)
+
+        smtp = LeapSmtp(self._provider, auth.username, auth.session_id, nicknym.keymanager)
 
         smtp.ensure_running()
 
@@ -150,8 +151,8 @@ class LeapSessionFactory(object):
         global SESSIONS
         SESSIONS[key] = session
 
-    def _session_key(self, credentials):
-        return hash((self._provider, credentials.user_name))
+    def _session_key(self, username):
+        return hash((self._provider, username))
 
     def _create_dir(self, path):
         try:
@@ -162,21 +163,17 @@ class LeapSessionFactory(object):
             else:
                 raise
 
-    def _create_soledad_session(self, srp_session, db_passphrase):
-        return SoledadSession(self._provider, db_passphrase, srp_session)
+    def _create_nicknym(self, username, token, uuid, soledad_session):
+        return NickNym(self._provider, self._config, soledad_session, username, token, uuid)
 
-    def _create_nicknym(self, srp_session, soledad_session):
-        return NickNym(self._provider, self._config, soledad_session, srp_session)
-
-    def _create_account(self, srp_session, soledad_session):
+    def _create_account(self, uuid, soledad_session):
         memstore = MemoryStore(permanent_store=SoledadStore(soledad_session.soledad))
-        return SoledadBackedAccount(srp_session.uuid, soledad_session.soledad, memstore)
+        return SoledadBackedAccount(uuid, soledad_session.soledad, memstore)
 
-    def _create_incoming_mail_fetcher(self, nicknym, soledad_session, account, auth):
+    def _create_incoming_mail_fetcher(self, nicknym, soledad_session, account, username):
         return LeapIncomingMail(nicknym.keymanager, soledad_session.soledad, account,
-                                self._config.fetch_interval_in_s, self._account_email(auth))
+                                self._config.fetch_interval_in_s, self._account_email(username))
 
-    def _account_email(self, auth):
+    def _account_email(self, username):
         domain = self._provider.domain
-        name = auth.user_name
-        return '%s@%s' % (name, domain)
+        return '%s@%s' % (username, domain)

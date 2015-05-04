@@ -34,19 +34,19 @@ class SoledadSessionTest(AbstractLeapTest):
     @patch('pixelated.bitmask_libraries.soledad.Soledad.__init__')
     def test_that_soledad_is_created_with_required_params(self, soledad_mock, init_mock):
         # when
-        SoledadSession(self.provider, 'any-passphrase', self.srp_session)
+        SoledadSession(self.provider, 'any-passphrase', self.auth.token, self.auth.uuid)
 
         # then
-        init_mock.assert_called_with(self.uuid, 'any-passphrase', '%s/soledad/%s.secret' % (self.leap_home, self.uuid),
-                                     '%s/soledad/%s.db' % (self.leap_home, self.uuid),
-                                     'https://couch1.some-server.test:1234/user-%s' % self.uuid,
+        init_mock.assert_called_with(self.auth.uuid, 'any-passphrase', '%s/soledad/%s.secret' % (self.leap_home, self.auth.uuid),
+                                     '%s/soledad/%s.db' % (self.leap_home, self.auth.uuid),
+                                     'https://couch1.some-server.test:1234/user-%s' % self.auth.uuid,
                                      '/some/path/to/ca_cert', self.token, defer_encryption=False)
 
     def test_that_sync_is_called(self, soledad_mock):
             instance = soledad_mock.return_value
             instance.server_url = '/foo/bar'
             instance.need_sync.return_value = True
-            soledad_session = SoledadSession(self.provider, 'any-passphrase', self.srp_session)
+            soledad_session = SoledadSession(self.provider, 'any-passphrase', self.auth.token, self.auth.uuid)
 
             # when
             soledad_session.sync()
@@ -59,7 +59,7 @@ class SoledadSessionTest(AbstractLeapTest):
             instance = mock.return_value
             instance.server_url = '/foo/bar'
             instance.need_sync.return_value = False
-            soledad_session = SoledadSession(self.provider, 'any-passphrase', self.srp_session)
+            soledad_session = SoledadSession(self.provider, 'any-passphrase', self.auth.token, self.auth.uuid)
 
             # when
             soledad_session.sync()

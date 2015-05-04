@@ -27,10 +27,11 @@ class LeapSmtp(object):
 
     TWISTED_PORT = 4650
 
-    def __init__(self, provider, keymanager=None, leap_srp_session=None):
+    def __init__(self, provider, username, session_id, keymanager=None):
         self._provider = provider
+        self.username = username
+        self.session_id = session_id
         self._keymanager = keymanager
-        self._srp_session = leap_srp_session
         self._hostname, self._port = self._discover_smtp_server()
         self._smtp_port = None
         self._smtp_service = None
@@ -56,7 +57,7 @@ class LeapSmtp(object):
             os.makedirs(os.path.dirname(cert_path))
 
         cert_url = '%s/%s/cert' % (self._provider.api_uri, self._provider.api_version)
-        cookies = {"_session_id": self._srp_session.session_id}
+        cookies = {"_session_id": self.session_id}
 
         response = requests.get(cert_url, verify=which_api_CA_bundle(self._provider), cookies=cookies, timeout=self._provider.config.timeout_in_s)
         response.raise_for_status()
@@ -76,7 +77,7 @@ class LeapSmtp(object):
     def start(self):
         self._download_client_certificates()
         cert_path = self._client_cert_path()
-        email = '%s@%s' % (self._srp_session.user_name, self._provider.domain)
+        email = '%s@%s' % (self.username, self._provider.domain)
 
         self._smtp_service, self._smtp_port = setup_smtp_gateway(
             port=self.TWISTED_PORT,

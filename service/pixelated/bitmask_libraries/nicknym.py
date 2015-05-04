@@ -18,14 +18,14 @@ from .certs import which_api_CA_bundle
 
 
 class NickNym(object):
-    def __init__(self, provider, config, soledad_session, srp_session):
+    def __init__(self, provider, config, soledad_session, username, token, uuid):
         nicknym_url = _discover_nicknym_server(provider)
-        self._email = '%s@%s' % (srp_session.user_name, provider.domain)
-        self.keymanager = KeyManager('%s@%s' % (srp_session.user_name, provider.domain), nicknym_url,
+        self._email = '%s@%s' % (username, provider.domain)
+        self.keymanager = KeyManager('%s@%s' % (username, provider.domain), nicknym_url,
                                      soledad_session.soledad,
-                                     srp_session.token, which_api_CA_bundle(provider), provider.api_uri,
+                                     token, which_api_CA_bundle(provider), provider.api_uri,
                                      provider.api_version,
-                                     srp_session.uuid, config.gpg_binary)
+                                     uuid, config.gpg_binary)
 
     def generate_openpgp_key(self):
         if not self._key_exists(self._email):
