@@ -65,7 +65,7 @@ class SessionTest(AbstractLeapTest):
         self.assertEqual('test_user@some-server.test', session.account_email())
 
     def _create_session(self):
-        return LeapSession(self.provider, self.srp_session, self.soledad_session, self.nicknym, self.soledad_account,
+        return LeapSession(self.provider, self.auth, self.soledad_session, self.nicknym, self.soledad_account,
                            self.mail_fetcher_mock, self.smtp_mock)
 
 

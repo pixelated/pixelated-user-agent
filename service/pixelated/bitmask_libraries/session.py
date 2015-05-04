@@ -27,8 +27,7 @@ from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.certs import refresh_ca_bundle
 from twisted.internet import reactor
 from .nicknym import NickNym
-from leap.srp_auth import SRPAuth
-# from .auth import LeapAuthenticator, LeapCredentials
+from leap.auth import SRPAuth
 from .soledad import SoledadSessionFactory, SoledadSession
 from .smtp import LeapSmtp
 from .config import DEFAULT_LEAP_HOME

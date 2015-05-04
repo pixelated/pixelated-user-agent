@@ -21,7 +21,7 @@ import os.path
 import pixelated.bitmask_libraries.session as LeapSession
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
-from leap.srp_auth import SRPAuth
+from leap.auth import SRPAuth
 
 
 def register_new_user(username, server_name):
