@@ -19,10 +19,12 @@ import email
 from pixelated.maintenance import delete_all_mails, load_mails
 from pixelated.bitmask_libraries.session import LeapSession
 from leap.mail.imap.account import SoledadBackedAccount
+from leap.mail.imap.fields import WithMsgFields
 from leap.soledad.client import Soledad
 from leap.soledad.common.document import SoledadDocument
 from mock import MagicMock, ANY
 from os.path import join, dirname
+from twisted.internet import defer, reactor
 
 
 class TestCommands(unittest.TestCase):
@@ -78,13 +80,33 @@ class TestCommands(unittest.TestCase):
         self.assertFalse(self.mailbox.called)
 
     def test_load_mails_adds_mails(self):
+        # given
         mail_root = join(dirname(__file__), '..', 'fixtures', 'mailset')
+        firstMailDeferred = defer.Deferred()
+        secondMailDeferred = defer.Deferred()
+        self.mailbox.addMessage.side_effect = [firstMailDeferred, secondMailDeferred]
 
-        foo = load_mails(self.args, [mail_root])
+        # when
+        d = load_mails(self.args, [mail_root])
 
-        self.assertTrue(self.mailbox.addMessage.called)
-        self.mailbox.addMessage.assert_any_call(self._mail_content(join(mail_root, 'mbox00000000')), flags=("\\RECENT",), notify_on_disk=False)
-        self.mailbox.addMessage.assert_any_call(self._mail_content(join(mail_root, 'mbox00000001')), flags=("\\RECENT",), notify_on_disk=False)
+        # then
+        def assert_mails_added(_):
+            self.assertTrue(self.mailbox.addMessage.called)
+            self.mailbox.addMessage.assert_any_call(self._mail_content(join(mail_root, 'new', 'mbox00000000')), flags=(WithMsgFields.RECENT_FLAG,), notify_on_disk=False)
+            self.mailbox.addMessage.assert_any_call(self._mail_content(join(mail_root, 'new', 'mbox00000001')), flags=(WithMsgFields.RECENT_FLAG,), notify_on_disk=False)
+
+        def error_callack(err):
+            print err
+            self.assertTrue(False)
+
+        d.addCallback(assert_mails_added)
+        d.addErrback(error_callack)
+
+        # trigger callbacks for both mails
+        reactor.callLater(0, firstMailDeferred.callback, None)
+        reactor.callLater(0, secondMailDeferred.callback, None)
+
+        return d
 
     def _mail_content(self, mail_file):
         with open(mail_file, 'r') as fp:

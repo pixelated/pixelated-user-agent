@@ -23,7 +23,7 @@ import email
 import re
 
 from os.path import join
-from mailbox import mboxMessage
+from mailbox import mboxMessage, Maildir
 from pixelated.config.app import App
 from pixelated.config import app_factory
 from pixelated.config.args import parser_add_default_arguments
@@ -40,6 +40,7 @@ from twisted.internet.threads import deferToThread
 
 from leap.mail.imap.memorystore import MemoryStore
 from leap.mail.imap.soledadstore import SoledadStore
+from leap.mail.imap.fields import WithMsgFields
 from leap.common.events import register, unregister, events_pb2 as proto
 
 # monkey patching some specifics
@@ -146,20 +147,34 @@ def delete_all_mails(args):
     return args
 
 
+def add_mail_folder(account, maildir, folder_name, deferreds):
+    mbx = account.getMailbox(folder_name)
+    for mail in maildir:
+        flags = (WithMsgFields.RECENT_FLAG,) if mail.get_subdir() == 'new' else ()
+        if 'S' in mail.get_flags():
+            flags = (WithMsgFields.SEEN_FLAG,) + flags
+        if 'R' in mail.get_flags():
+            flags = (WithMsgFields.ANSWERED_FLAG,) + flags
+
+        deferreds.append(mbx.addMessage(mail.as_string(), flags=flags, notify_on_disk=False))
+
+
 @defer.inlineCallbacks
 def load_mails(args, mail_paths):
     leap_session, soledad = args
     account = leap_session.account
 
-    for path in mail_paths:
-        print 'Loading mails from %s' % path
-        for root, dirs, files in os.walk(path):
-            mbx = account.getMailbox('INBOX')
-            for file_name in files:
-                yield add_message_into_mailbox(join(root, file_name), mbx)
+    deferreds = []
 
+    for path in mail_paths:
+        maildir = Maildir(path, factory=None)
+        add_mail_folder(account, maildir, 'INBOX', deferreds)
+        for mail_folder_name in maildir.list_folders():
+            mail_folder = maildir.get_folder(mail_folder_name)
+            add_mail_folder(account, mail_folder, mail_folder_name, deferreds)
+
+    yield defer.DeferredList(deferreds)
     defer.returnValue(args)
-    return
 
 
 def flush_to_soledad(args, finalize):
@@ -179,15 +194,6 @@ def flush_to_soledad(args, finalize):
     d.addCallback(check_flushed)
 
     return args
-
-
-def add_message_into_mailbox(file_path, mbx):
-    with open(file_path, 'r') as email_file:
-        m = email.message_from_file(email_file)
-        flags = ("\\RECENT",)
-        print 'Added message %s' % m.get('subject')
-        print m.as_string()
-        return mbx.addMessage(m.as_string(), flags=flags, notify_on_disk=False)
 
 
 def dump_soledad(args):

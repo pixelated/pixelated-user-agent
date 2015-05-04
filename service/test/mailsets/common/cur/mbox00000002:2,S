@@ -1,0 +1,19 @@
+Subject: A read mail
+From: bob@try.pixelated-project.org
+To: alice@try.pixelated-project.org
+X-Pixelated-encryption-status: true
+Date: Tue, 08 Apr 2015 18:32:05 +0000 (UTC)
+
+Q:	How many hardware engineers does it take to change a lightbulb?
+A:	None.  We'll fix it in software.
+
+Q:	How many system programmers does it take to change a light bulb?
+A:	None.  The application can work around it.
+
+Q:	How many software engineers does it take to change a lightbulb?
+A:	None.  We'll document it in the manual.
+
+Q:	How many tech writers does it take to change a lightbulb?
+A:	None.  The user can figure it out.
+
+
