@@ -28,7 +28,7 @@ def register_new_user(username, server_name):
     config = LeapConfig()
     provider = LeapProvider(server_name, config)
     password = getpass.getpass('Please enter password for %s: ' % username)
-    srp_auth = SRPAuth(provider, provider.local_ca_crt)
+    srp_auth = SRPAuth(provider.api_uri, provider.local_ca_crt)
     srp_auth.register(username, password)
 
     session = LeapSession.open(username, password, server_name)
