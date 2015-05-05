@@ -148,6 +148,9 @@ def delete_all_mails(args):
 
 
 def add_mail_folder(account, maildir, folder_name, deferreds):
+    if folder_name not in account.mailboxes:
+        account.addMailbox(folder_name)
+
     mbx = account.getMailbox(folder_name)
     for mail in maildir:
         flags = (WithMsgFields.RECENT_FLAG,) if mail.get_subdir() == 'new' else ()
