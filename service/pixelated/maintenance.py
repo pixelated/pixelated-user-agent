@@ -159,6 +159,7 @@ def add_mail_folder(account, maildir, folder_name, deferreds):
         if 'R' in mail.get_flags():
             flags = (WithMsgFields.ANSWERED_FLAG,) + flags
 
+        mail.set_payload(mail.get_payload() + '\n' + folder_name)
         deferreds.append(mbx.addMessage(mail.as_string(), flags=flags, notify_on_disk=False))
 
 
@@ -172,6 +173,7 @@ def load_mails(args, mail_paths):
     for path in mail_paths:
         maildir = Maildir(path, factory=None)
         add_mail_folder(account, maildir, 'INBOX', deferreds)
+        add_mail_folder(account, maildir, 'DRAFTS', deferreds)
         for mail_folder_name in maildir.list_folders():
             mail_folder = maildir.get_folder(mail_folder_name)
             add_mail_folder(account, mail_folder, mail_folder_name, deferreds)
