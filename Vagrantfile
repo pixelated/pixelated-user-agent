@@ -1,40 +1,12 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
-new_plugin_installed = false
-unless Vagrant.has_plugin?('vagrant-vbguest')
-  plugin = 'vagrant-vbguest'
-  puts "Missing plugin #{plugin}, installing..."
-
-  `vagrant plugin install #{plugin}`
-
-  new_plugin_installed = true
-end
-exec "vagrant #{ARGV.join' '}" if new_plugin_installed
-
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # All Vagrant configuration is done here. The most common configuration
-  # options are documented and commented below. For a complete reference,
-  # please see the online documentation at vagrantup.com.
-
-  # 1024 mb ram is required on the source vm so that all tests can run fine
-  # 512  mb ram is probably enough for the deb vm
-
-  # Please verify the sha512 sum of the downloaded box before importing it into vagrant !
-  # see https://leap.se/en/docs/platform/details/development#Verify.vagrantbox.download
-  # for details
-
-  config.vm.box = "boxcutter/debian80"
-
-  config.vbguest.auto_update = false
+  config.vm.box = "LEAP/jessie"
 
   config.vm.define "source", primary: true do |source|
-    source.vm.provider "libvirt" do |v, override|
-      override.vm.box_url = "https://downloads.leap.se/platform/vagrant/libvirt/leap-wheezy.box"
-    end
     source.vm.provision "puppet" do |puppet|
       puppet.manifests_path = "provisioning/manifests"
       puppet.module_path    = "provisioning/modules"
@@ -43,13 +15,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "deb", autostart: false do |deb|
-    # until https://github.com/pixelated-project/pixelated-user-agent/issues/226 is not fixed,
-    # we depend on a debian testing box
-
-    config.vm.box = "boxcutter/debian80"
-    deb.vm.provider "libvirt" do |v, override|
-      override.vm.box_url = "https://downloads.leap.se/platform/vagrant/libvirt/leap-wheezy.box"
-    end
     deb.vm.provision "puppet" do |puppet|
       puppet.manifests_path = "provisioning/manifests"
       puppet.module_path    = "provisioning/modules"
