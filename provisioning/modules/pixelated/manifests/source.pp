@@ -11,7 +11,8 @@ class pixelated::source {
     'g++',
     'ruby-dev',
     'libsqlite3-dev',
-    'libfontconfig1']:
+    'libfontconfig1',
+    'build-essential']:
     ensure => latest
   }
 
