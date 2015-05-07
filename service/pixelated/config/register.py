@@ -14,16 +14,35 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import re
+import os
+import os.path
+import getpass
+import logging
+import pixelated.bitmask_libraries.session as LeapSession
+from pixelated.bitmask_libraries.certs import which_api_CA_bundle
+from pixelated.bitmask_libraries.config import LeapConfig
+from pixelated.bitmask_libraries.provider import LeapProvider
+from leap.auth import SRPAuth
 
-from pixelated.bitmask_libraries.register import register_new_user
+logger = logging.getLogger(__name__)
 
 
-def register(username, server_name):
+def register(server_name, username):
     try:
         validate_username(username)
-        register_new_user(username, server_name)
-    except ValueError:
+    except ValueError, e:
         print('Only lowercase letters, digits, . - and _ allowed.')
+
+    config = LeapConfig()
+    provider = LeapProvider(server_name, config)
+    password = getpass.getpass('Please enter password for %s: ' % username)
+    srp_auth = SRPAuth(provider.api_uri, which_api_CA_bundle(provider))
+
+    if srp_auth.register(username, password):
+        session = LeapSession.open(username, password, server_name)
+        session.nicknym.generate_openpgp_key()
+    else:
+        logger.error("Register failed")
 
 
 def validate_username(username):

@@ -50,7 +50,7 @@ def initialize():
     init_leap_cert(args)
 
     if args.register:
-        register(*args.register[::-1])
+        register(*args.register)
         sys.exit(0)
 
     if args.dispatcher or args.dispatcher_stdin:
