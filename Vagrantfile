@@ -4,7 +4,7 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "LEAP/jessie"
+  config.vm.box = "LEAP/wheezy"
 
   config.vm.define "source", primary: true do |source|
     source.vm.provision "puppet" do |puppet|
