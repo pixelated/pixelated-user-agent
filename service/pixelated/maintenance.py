@@ -174,6 +174,7 @@ def load_mails(args, mail_paths):
         maildir = Maildir(path, factory=None)
         add_mail_folder(account, maildir, 'INBOX', deferreds)
         add_mail_folder(account, maildir, 'DRAFTS', deferreds)
+        add_mail_folder(account, maildir, 'SENT', deferreds)
         for mail_folder_name in maildir.list_folders():
             mail_folder = maildir.get_folder(mail_folder_name)
             add_mail_folder(account, mail_folder, mail_folder_name, deferreds)
