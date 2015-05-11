@@ -147,19 +147,25 @@ def delete_all_mails(args):
     return args
 
 
+def is_keep_file(mail):
+    return mail['subject'] is None
+
+
 def add_mail_folder(account, maildir, folder_name, deferreds):
     if folder_name not in account.mailboxes:
         account.addMailbox(folder_name)
 
     mbx = account.getMailbox(folder_name)
     for mail in maildir:
+        if is_keep_file(mail):
+            continue
+
         flags = (WithMsgFields.RECENT_FLAG,) if mail.get_subdir() == 'new' else ()
         if 'S' in mail.get_flags():
             flags = (WithMsgFields.SEEN_FLAG,) + flags
         if 'R' in mail.get_flags():
             flags = (WithMsgFields.ANSWERED_FLAG,) + flags
 
-        mail.set_payload(mail.get_payload() + '\n' + folder_name)
         deferreds.append(mbx.addMessage(mail.as_string(), flags=flags, notify_on_disk=False))
 
 
@@ -173,8 +179,6 @@ def load_mails(args, mail_paths):
     for path in mail_paths:
         maildir = Maildir(path, factory=None)
         add_mail_folder(account, maildir, 'INBOX', deferreds)
-        add_mail_folder(account, maildir, 'DRAFTS', deferreds)
-        add_mail_folder(account, maildir, 'SENT', deferreds)
         for mail_folder_name in maildir.list_folders():
             mail_folder = maildir.get_folder(mail_folder_name)
             add_mail_folder(account, mail_folder, mail_folder_name, deferreds)

@@ -111,5 +111,4 @@ class TestCommands(unittest.TestCase):
     def _mail_content(self, mail_file):
         with open(mail_file, 'r') as fp:
             m = email.message_from_file(fp)
-            m.set_payload(m.get_payload() + '\nINBOX')
             return m.as_string()
