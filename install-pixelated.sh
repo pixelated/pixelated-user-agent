@@ -48,6 +48,8 @@ function check_installed() {
         which $1
         if [ $? -ne 0 ]; then
                 echo "## You must have ${1} installed and in the PATH to run Pixelated-User-Agent"
+                echo "## Check our wiki for more information on dependencies:"
+                echo "## https://github.com/pixelated-project/pixelated-user-agent/wiki/Installing-dependencies"
                 echo "## exiting..."
                 exit 1
         fi
