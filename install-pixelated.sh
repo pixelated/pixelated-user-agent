@@ -24,7 +24,7 @@ then
   export USERNAME=`whoami`
 fi
 
-usage() { echo "Usage: $0 [-v <virtualenv path>]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-v <virtualenv path>] [-n <custom node modules directory>]" 1>&2; exit 1; }
 
 VIRTUALENV_PATH=".virtualenv"
 CUSTOM_NODE_MODULES_LOCATION=""
