@@ -15,10 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-# next line is a fix to this error that occurs with nose > 1.1.2 and the debian
-# python: http://bugs.python.org/issue15881#msg170215
-import multiprocessing
-
 from setuptools import setup
 import os
 
@@ -49,7 +45,6 @@ setup(name='pixelated-user-agent',
           'pixelated.support',
           'pixelated.resources'
       ],
-      test_suite='nose.collector',
       install_requires=[
            'pyasn1==0.1.3',
            'gnupg==1.2.5',
