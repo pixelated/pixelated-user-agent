@@ -15,51 +15,21 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-import socket
-import sys
 import os
 from twisted.python import log
-from twisted.python import util
 
 
 def init_logging(args):
     debug_enabled = args.debug or os.environ.get('DEBUG', False)
+    logging_level = logging.DEBUG if debug_enabled else logging.INFO
+    log_format = "%(asctime)s [%(name)s] %(levelname)s %(message)s"
+    date_format = '%Y-%m-%d %H:%M:%S'
 
-    logging.basicConfig(level=logging.DEBUG if debug_enabled else logging.WARNING,
-                        format='[%(asctime)s] ' + socket.gethostname() + ' %(name)-12s %(levelname)-8s %(message)s',
-                        datefmt='%m-%d %H:%M:%S',
+
+    logging.basicConfig(level=logging_level,
+                        format=log_format,
+                        datefmt=date_format,
                         filemode='a')
 
-    if debug_enabled:
-        init_debugger()
-
-    log.startLogging(sys.stdout)
-
-
-def init_debugger():
-    formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
-    console = logging.StreamHandler()
-    console.setLevel(logging.DEBUG)
-    console.setFormatter(formatter)
-    logging.getLogger('').addHandler(console)
-
-
-class PixelatedLogObserver(log.FileLogObserver):
-
-    """ FileLogObserver with a customized format """
-    def emit(self, event):
-        text = log.textFromEventDict(event)
-
-        if text is None:
-            return
-
-        self.timeFormat = '[%Y-%m-%d %H:%M:%S]'
-        time_str = self.formatTime(event['time'])
-
-        fmt_dict = {'text': text.replace('\n', '\n\t')}
-        msg_str = log._safeFormat('%(text)s\n', fmt_dict)
-
-        logging.debug(str(event))
-
-        util.untilConcludes(self.write, time_str + ' ' + socket.gethostname() + ' ' + msg_str)
-        util.untilConcludes(self.flush)
+    observer = log.PythonLoggingObserver()
+    observer.start()
