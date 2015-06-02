@@ -26,28 +26,22 @@ from pixelated.config.events_server import init_events_server
 from pixelated.config.loading_page import loading
 from pixelated.config.register import register
 from pixelated.config.logging_setup import init_logging
-from pixelated.config.leap_cert import init_leap_cert
 from pixelated.config.soledad import init_soledad_and_user_key
 from twisted.internet import reactor
 from twisted.internet.threads import deferToThread
-
-# monkey patching some specifics
-import pixelated.support.ext_protobuf
-import pixelated.support.ext_sqlcipher
-import pixelated.support.ext_esmtp_sender_factory
-import pixelated.support.ext_fetch
-import pixelated.support.ext_sync
-import pixelated.support.ext_keymanager_fetch_key
-import pixelated.support.ext_requests_urllib3
 from pixelated.support.error_handler import error_handler
+
+from pixelated.config.initialize_leap import initialize_leap
 
 
 def initialize():
     args = parse_args()
-    app = App()
-
     init_logging(debug=args.debug)
-    init_leap_cert(args)
+
+    initialize_leap(args.leap_provider_cert,
+                    args.leap_provider_cert_fingerprint)
+
+    app = App()
 
     if args.register:
         register(*args.register)

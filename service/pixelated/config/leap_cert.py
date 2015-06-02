@@ -17,10 +17,10 @@
 import pixelated.bitmask_libraries.certs as certs
 
 
-def init_leap_cert(args):
-    if args.leap_provider_cert_fingerprint is None:
-        certs.LEAP_CERT = args.leap_provider_cert or True
+def init_leap_cert(leap_provider_cert, leap_provider_cert_fingerprint):
+    if leap_provider_cert_fingerprint is None:
+        certs.LEAP_CERT = leap_provider_cert or True
         certs.LEAP_FINGERPRINT = None
     else:
-        certs.LEAP_FINGERPRINT = args.leap_provider_cert_fingerprint
+        certs.LEAP_FINGERPRINT = leap_provider_cert_fingerprint
         certs.LEAP_CERT = False
