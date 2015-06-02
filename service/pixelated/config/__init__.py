@@ -46,7 +46,7 @@ def initialize():
     args = parse_args()
     app = App()
 
-    init_logging(args)
+    init_logging(debug=args.debug)
     init_leap_cert(args)
 
     if args.register:
