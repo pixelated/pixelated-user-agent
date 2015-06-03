@@ -134,13 +134,9 @@ def create_app(leap_home, leap_session, host, port, sslkey=None, sslcert=None):
     resource = RootResource()
     init_app(resource, leap_home, leap_session)
     if sslkey and sslcert:
-        listen_with_ssl(resource, host, port, sslkey, sslcert)
+        reactor.listenSSL(port, Site(resource), _ssl_options(sslkey, sslcert), interface=host)
     else:
-        listen_without_ssl(resource, host, port)
-
-
-def listen_without_ssl(resource, host, port):
-    reactor.listenTCP(port, Site(resource), interface=host)
+        reactor.listenTCP(port, Site(resource), interface=host)
 
 
 def _ssl_options(sslkey, sslcert):
@@ -156,18 +152,3 @@ def _ssl_options(sslkey, sslcert):
                                      method=SSL.TLSv1_2_METHOD,
                                      acceptableCiphers=acceptable)
     return options
-
-
-def listen_with_ssl(resource, host, port, sslkey, sslcert):
-    reactor.listenSSL(port, Site(resource), _ssl_options(sslkey, sslcert), interface=host)
-
-
-class RedirectToSSL(resource.Resource):
-    isLeaf = True
-
-    def __init__(self, ssl_port):
-        self.ssl_port = ssl_port
-
-    def render_GET(self, request):
-        host = request.getHost().host
-        return redirectTo("https://%s:%s" % (host, self.ssl_port), request)
