@@ -18,18 +18,18 @@ import os
 from functools import partial
 import sys
 import json
-import argparse
 import email
 import re
 
 from os.path import join
 from mailbox import mboxMessage, Maildir
-from pixelated.config.app import App
+from pixelated.config.config import Config
 from pixelated.config import app_factory
-from pixelated.config.args import parser_add_default_arguments
+from pixelated.config.args import parse_maintenance_args
 from pixelated.config.config_ua import config_user_agent
 from pixelated.config.dispatcher import config_dispatcher
 from pixelated.config.events_server import init_events_server
+from pixelated.config.initialize_leap import initialize_leap
 from pixelated.config.loading_page import loading
 from pixelated.config.register import register
 from pixelated.config.logging_setup import init_logging
@@ -53,36 +53,22 @@ import pixelated.support.ext_requests_urllib3
 
 
 def initialize():
-    args = parse_args()
-    app = App()
+    args = parse_maintenance_args()
+    app = Config()
 
-    init_logging(args)
-    init_leap_cert(args)
+    init_logging(debug=args.debug)
 
-    if args.dispatcher or args.dispatcher_stdin:
-        config_dispatcher(app, args)
-    else:
-        config_user_agent(app, args)
+    app = initialize_leap(args.leap_provider_cert,
+                          args.leap_provider_cert_fingerprint,
+                          args.config,
+                          args.dispatcher,
+                          args.dispatcher_stdin)
 
     init_events_server()
     execute_command = create_execute_command(args, app)
 
     reactor.callWhenRunning(execute_command)
     reactor.run()
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description='pixelated maintenance')
-    parser_add_default_arguments(parser)
-    subparsers = parser.add_subparsers(help='commands', dest='command')
-    subparsers.add_parser('reset', help='reset account command')
-    mails_parser = subparsers.add_parser('load-mails', help='load mails into account')
-    mails_parser.add_argument('file', nargs='+', help='file(s) with mail data')
-
-    subparsers.add_parser('dump-soledad', help='dump the soledad database')
-    subparsers.add_parser('sync', help='sync the soledad database')
-
-    return parser.parse_args()
 
 
 def create_execute_command(args, app):

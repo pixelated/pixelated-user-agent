@@ -18,7 +18,7 @@ import argparse
 from pixelated.bitmask_libraries.config import DEFAULT_LEAP_HOME
 
 
-def parse():
+def parse_user_agent_args():
     parser = argparse.ArgumentParser(description='Pixelated user agent.')
 
     parser_add_default_arguments(parser)
@@ -31,6 +31,20 @@ def parse():
                         nargs=2, help='register a new username on the desired LEAP provider')
     args = parser.parse_args()
     return args
+
+
+def parse_maintenance_args():
+    parser = argparse.ArgumentParser(description='pixelated maintenance')
+    parser_add_default_arguments(parser)
+    subparsers = parser.add_subparsers(help='commands', dest='command')
+    subparsers.add_parser('reset', help='reset account command')
+    mails_parser = subparsers.add_parser('load-mails', help='load mails into account')
+    mails_parser.add_argument('file', nargs='+', help='file(s) with mail data')
+
+    subparsers.add_parser('dump-soledad', help='dump the soledad database')
+    subparsers.add_parser('sync', help='sync the soledad database')
+
+    return parser.parse_args()
 
 
 def parser_add_default_arguments(parser):
