@@ -33,7 +33,6 @@ from pixelated.config.initialize_leap import initialize_leap
 from pixelated.config.loading_page import loading
 from pixelated.config.register import register
 from pixelated.config.logging_setup import init_logging
-from pixelated.config.leap_cert import init_leap_cert
 from pixelated.config.soledad import init_soledad_and_user_key
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread

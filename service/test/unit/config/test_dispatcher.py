@@ -5,7 +5,7 @@ import sys
 from mockito import mock, when
 import os
 from pixelated.config.config import Config
-from pixelated.config.args import parse as parse_args
+from pixelated.config.args import parse_user_agent_args
 
 from pixelated.config.dispatcher import config_dispatcher
 
@@ -20,7 +20,7 @@ class TestConfigDispatcher(unittest.TestCase):
         fifo_path = '/tmp/credentials-pipe'
 
         sys.argv = ['tmp/does_not_exist', '--dispatcher', fifo_path]
-        args = parse_args()
+        args = parse_user_agent_args()
 
         self._mkfifo(fifo_path)
 
@@ -38,7 +38,7 @@ class TestConfigDispatcher(unittest.TestCase):
 
         try:
             sys.argv = ['tmp/does_not_exist', '--dispatcher-stdin']
-            args = parse_args()
+            args = parse_user_agent_args()
 
             provider, user, password = config_dispatcher(args.dispatcher)
 
