@@ -85,15 +85,7 @@ def look_for_user_key_and_create_if_cant_find(leap_session):
     return wrapper
 
 
-def stop_incoming_mail_fetcher(reactor_stop_function, leap_session):
-    def wrapper():
-        leap_session.stop_background_jobs()
-        reactor.threadpool.stop()
-        reactor_stop_function()
-    return wrapper
-
-
-def init_app(resource, leap_home, leap_session):
+def init_app(leap_home, leap_session):
     leap_session.start_background_jobs()
     keymanager = leap_session.nicknym.keymanager
 
@@ -110,6 +102,7 @@ def init_app(resource, leap_home, leap_session):
     MailboxIndexerListener.SEARCH_ENGINE = search_engine
     InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
 
+    resource = RootResource()
     resource.initialize(soledad_querier, keymanager, search_engine, mail_service, draft_service)
 
     register(signal=proto.SOLEDAD_DONE_DATA_SYNC,
@@ -126,29 +119,4 @@ def init_app(resource, leap_home, leap_session):
              uid=CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK,
              callback=look_for_user_key_and_create_if_cant_find(leap_session))
 
-    reactor.threadpool.adjustPoolsize(20, 40)
-    reactor.stop = stop_incoming_mail_fetcher(reactor.stop, leap_session)
-
-
-def create_app(leap_home, leap_session, host, port, sslkey=None, sslcert=None):
-    resource = RootResource()
-    init_app(resource, leap_home, leap_session)
-    if sslkey and sslcert:
-        reactor.listenSSL(port, Site(resource), _ssl_options(sslkey, sslcert), interface=host)
-    else:
-        reactor.listenTCP(port, Site(resource), interface=host)
-
-
-def _ssl_options(sslkey, sslcert):
-    with open(sslkey) as keyfile:
-        pkey = crypto.load_privatekey(crypto.FILETYPE_PEM, keyfile.read())
-    with open(sslcert) as certfile:
-        cert = crypto.load_certificate(crypto.FILETYPE_PEM, certfile.read())
-
-    acceptable = ssl.AcceptableCiphers.fromOpenSSLCipherString(
-        u'ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:!RC4:HIGH:!MD5:!aNULL:!EDH')
-    options = ssl.CertificateOptions(privateKey=pkey,
-                                     certificate=cert,
-                                     method=SSL.TLSv1_2_METHOD,
-                                     acceptableCiphers=acceptable)
-    return options
+    return resource
