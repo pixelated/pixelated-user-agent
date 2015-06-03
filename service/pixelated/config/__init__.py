@@ -53,20 +53,22 @@ def initialize():
     loading_app = reactor.listenTCP(args.port, Site(LoadingResource()), interface=args.host)
 
     deferred = deferToThread(
-        lambda: initialize_leap(args.leap_provider_cert,
-                                args.leap_provider_cert_fingerprint,
-                                args.config_file,
-                                args.dispatcher,
-                                args.dispatcher_stdin,
-                                args.leap_home))
+        lambda: initialize_leap(
+            args.leap_provider_cert,
+            args.leap_provider_cert_fingerprint,
+            args.config_file,
+            args.dispatcher,
+            args.dispatcher_stdin,
+            args.leap_home))
 
     deferred.addCallback(
-        lambda leap_session: start_user_agent(loading_app,
-                                              args.host,
-                                              args.port,
-                                              args.sslkey,
-                                              args.sslcert,
-                                              args.leap_home,
-                                              leap_session))
+        lambda leap_session: start_user_agent(
+            loading_app,
+            args.host,
+            args.port,
+            args.sslkey,
+            args.sslcert,
+            args.leap_home,
+            leap_session))
 
     reactor.run()
