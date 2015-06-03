@@ -36,7 +36,7 @@ from .config import DEFAULT_LEAP_HOME
 SESSIONS = {}
 
 
-def open(username, password, server_name, leap_home=DEFAULT_LEAP_HOME):
+def open_leap_session(username, password, server_name, leap_home=DEFAULT_LEAP_HOME):
     config = LeapConfig(leap_home=leap_home)
     provider = LeapProvider(server_name, config)
     refresh_ca_bundle(provider)

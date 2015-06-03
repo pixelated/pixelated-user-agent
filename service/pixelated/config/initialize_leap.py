@@ -2,6 +2,7 @@ from pixelated.config.config import Config
 from pixelated.config.config_ua import config_user_agent
 from pixelated.config.dispatcher import config_dispatcher
 import pixelated.bitmask_libraries.certs as certs
+from pixelated.bitmask_libraries.session import open_leap_session
 
 
 def initialize_leap(leap_provider_cert,
