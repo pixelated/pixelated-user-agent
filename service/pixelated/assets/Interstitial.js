@@ -11,7 +11,7 @@ if ($('#hive').length) {
   var rows = $(window).height() / height;
   var cols = (($(window).width() / width) / 2) + 1;
 
-  for(var j = 0; j < rows; j++) {
+  for (var j = 0; j < rows; j++) {
     for (var i = 0; i < cols; i++) {
       x = i * width + (j%2*width/2);
       y = j * height;
@@ -21,37 +21,37 @@ if ($('#hive').length) {
 
   all.add(pixelated);
 
-  function brightenLogo() {
-	  var glowPosition = Math.floor(Math.random()*rows*cols);
+  var brightenLogo = function () {
+    var glowPosition = Math.floor(Math.random()*rows*cols);
 
-	  all[glowPosition].animate({fill: "#FFF"}, 1000, function() {
-			  darkenLogo(all[glowPosition]);
-	  });
-  }
+    all[glowPosition].animate({fill: "#FFF"}, 1000, function() {
+      darkenLogo(all[glowPosition]);
+    });
+  };
 
-  function darkenLogo(el) {
-      el.animate({fill: "#908e8e"}, 1000, brightenLogo);
-  }
+  var darkenLogo = function (el) {
+    el.animate({fill: "#908e8e"}, 1000, brightenLogo);
+  };
 
   brightenLogo();
 
 }
 
-$(function(){
-    var handler = setInterval(function () {
-            $.ajax({
-                method: 'GET',
-                url: '/'
-            }).success(function (data) {
-                if (/Pixelated Mail/g.test(data)) {
-                    window.location.reload(true);
-                }
-            });
-        }, 5000);
-
-    $('#hive-section').height($(window).height())
-
-    $(window).resize(function() {
-      window.location.reload(true);
+$(function () {
+  var handler = setInterval(function () {
+    $.ajax({
+      method: 'GET',
+      url: '/'
+    }).success(function (data) {
+      if (/Pixelated Mail/g.test(data)) {
+        window.location.reload(true);
+      }
     });
+  }, 5000);
+
+  $('#hive-section').height($(window).height());
+
+  $(window).resize(function() {
+    window.location.reload(true);
+  });
 });
