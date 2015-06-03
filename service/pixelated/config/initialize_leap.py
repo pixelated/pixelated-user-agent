@@ -1,4 +1,3 @@
-from pixelated.config.leap_cert import init_leap_cert
 from pixelated.config.config import Config
 from pixelated.config.config_ua import config_user_agent
 from pixelated.config.dispatcher import config_dispatcher
