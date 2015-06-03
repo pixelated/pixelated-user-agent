@@ -4,6 +4,7 @@ from pixelated.config.config_ua import config_user_agent
 from pixelated.config.dispatcher import config_dispatcher
 import pixelated.bitmask_libraries.certs as certs
 
+
 def initialize_leap(leap_provider_cert,
                     leap_provider_cert_fingerprint,
                     config_file,
@@ -32,6 +33,7 @@ def gather_credentials(dispatcher, dispatcher_stdin, config_file):
     else:
         return config_user_agent(config_file)
 
+
 def init_leap_cert(leap_provider_cert, leap_provider_cert_fingerprint):
     if leap_provider_cert_fingerprint is None:
         certs.LEAP_CERT = leap_provider_cert or True
@@ -39,6 +41,7 @@ def init_leap_cert(leap_provider_cert, leap_provider_cert_fingerprint):
     else:
         certs.LEAP_FINGERPRINT = leap_provider_cert_fingerprint
         certs.LEAP_CERT = False
+
 
 def init_monkeypatches():
     import pixelated.support.ext_protobuf

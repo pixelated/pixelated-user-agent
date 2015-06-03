@@ -35,7 +35,7 @@ from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.services.mail_service import MailService
 from pixelated.adapter.services.mailboxes import Mailboxes
 from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
-from pixelated.config import App
+from pixelated.config.config import Config
 from pixelated.resources.root_resource import RootResource
 from test.support.integration.model import MailBuilder
 from test.support.test_helper import request_mock
@@ -73,9 +73,9 @@ class AppTestClient(object):
         self.mail_service = self._create_mail_service(self.mailboxes, self.mail_sender, self.soledad_querier, self.search_engine)
         self.search_engine.index_mails(self.mail_service.all_mails())
 
-        self.app = App()
-        self.app.resource = RootResource()
-        self.app.resource.initialize(self.soledad_querier, self.keymanager, self.search_engine, self.mail_service, self.draft_service)
+        self.config = Config()
+        self.config.resource = RootResource()
+        self.config.resource.initialize(self.soledad_querier, self.keymanager, self.search_engine, self.mail_service, self.draft_service)
 
     def _render(self, request, as_json=True):
         def get_str(_str):
@@ -86,7 +86,7 @@ class AppTestClient(object):
             if written_data:
                 return get_str(written_data)
 
-        resource = getChildForRequest(self.app.resource, request)
+        resource = getChildForRequest(self.config.resource, request)
         result = resource.render(request)
 
         if isinstance(result, basestring):
@@ -99,7 +99,7 @@ class AppTestClient(object):
 
     def run_on_a_thread(self, logfile='/tmp/app_test_client.log', port=4567, host='0.0.0.0'):
         def _start():
-            reactor.listenTCP(port, Site(self.app.resource), interface=host)
+            reactor.listenTCP(port, Site(self.config.resource), interface=host)
             reactor.run()
         process = multiprocessing.Process(target=_start)
         process.start()

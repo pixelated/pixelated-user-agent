@@ -4,7 +4,7 @@ import thread
 import sys
 from mockito import mock, when
 import os
-from pixelated.config import App
+from pixelated.config.config import Config
 from pixelated.config.args import parse as parse_args
 
 from pixelated.config.dispatcher import config_dispatcher
@@ -13,7 +13,7 @@ from pixelated.config.dispatcher import config_dispatcher
 class TestConfigDispatcher(unittest.TestCase):
 
     def setUp(self):
-        self.app = App()
+        self.config = Config()
         self.test_data = {'leap_provider_hostname': 'test_provider', 'user': 'test_user', 'password': 'test_password'}
 
     def test_that_organization_switch_reads_the_credentials_from_pipe(self):
@@ -24,11 +24,11 @@ class TestConfigDispatcher(unittest.TestCase):
 
         self._mkfifo(fifo_path)
 
-        config_dispatcher(self.app, args)
+        provider, user, password = config_dispatcher(args.dispatcher)
 
-        self.assertEquals('test_provider', self.app['LEAP_SERVER_NAME'])
-        self.assertEquals('test_user', self.app['LEAP_USERNAME'])
-        self.assertEquals('test_password', self.app['LEAP_PASSWORD'])
+        self.assertEquals('test_provider', provider)
+        self.assertEquals('test_user', user)
+        self.assertEquals('test_password', password)
 
     def test_that_organization_switch_reads_the_credentials_from_stdin(self):
         data = json.dumps({'leap_provider_hostname': 'test_provider', 'user': 'test_user', 'password': 'test_password'})
@@ -40,11 +40,11 @@ class TestConfigDispatcher(unittest.TestCase):
             sys.argv = ['tmp/does_not_exist', '--dispatcher-stdin']
             args = parse_args()
 
-            config_dispatcher(self.app, args)
+            provider, user, password = config_dispatcher(args.dispatcher)
 
-            self.assertEquals('test_provider', self.app['LEAP_SERVER_NAME'])
-            self.assertEquals('test_user', self.app['LEAP_USERNAME'])
-            self.assertEquals('test_password', self.app['LEAP_PASSWORD'])
+            self.assertEquals('test_provider', provider)
+            self.assertEquals('test_user', user)
+            self.assertEquals('test_password', password)
         finally:
             sys.stdin = orig_stdin
 
