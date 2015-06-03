@@ -16,7 +16,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 
-FROM debian:testing
+FROM debian:jessie
 
 MAINTAINER fbernitt@thoughtworks.com
 
