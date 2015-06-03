@@ -48,7 +48,3 @@ class LoadingResource(Resource):
         if path == '':
             return self
         return Resource.getChild(self, path, request)
-
-
-def loading(args):
-    return reactor.listenTCP(args.port, Site(LoadingResource()), interface=args.host)

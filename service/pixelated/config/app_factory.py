@@ -93,7 +93,7 @@ def stop_incoming_mail_fetcher(reactor_stop_function, leap_session):
     return wrapper
 
 
-def init_app(app, leap_home, leap_session):
+def init_app(resource, leap_home, leap_session):
     leap_session.start_background_jobs()
     keymanager = leap_session.nicknym.keymanager
 
@@ -110,7 +110,7 @@ def init_app(app, leap_home, leap_session):
     MailboxIndexerListener.SEARCH_ENGINE = search_engine
     InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
 
-    app.resource.initialize(soledad_querier, keymanager, search_engine, mail_service, draft_service)
+    resource.initialize(soledad_querier, keymanager, search_engine, mail_service, draft_service)
 
     register(signal=proto.SOLEDAD_DONE_DATA_SYNC,
              uid=INIT_INDEX_AND_REMOVE_DUPES_CALLBACK,
@@ -130,33 +130,36 @@ def init_app(app, leap_home, leap_session):
     reactor.stop = stop_incoming_mail_fetcher(reactor.stop, leap_session)
 
 
-def create_app(app, args, leap_session):
-    app.resource = RootResource()
-    init_app(app, args.home, leap_session)
-    if args.sslkey and args.sslcert:
-        listen_with_ssl(app, args)
+def create_app(leap_home, leap_session, host, port, sslkey=None, sslcert=None):
+    resource = RootResource()
+    init_app(resource, leap_home, leap_session)
+    if sslkey and sslcert:
+        listen_with_ssl(resource, host, port, sslkey, sslcert)
     else:
-        listen_without_ssl(app, args)
+        listen_without_ssl(resource, host, port)
 
 
-def listen_without_ssl(app, args):
-    reactor.listenTCP(args.port, Site(app.resource), interface=args.host)
+def listen_without_ssl(resource, host, port):
+    reactor.listenTCP(port, Site(resource), interface=host)
 
 
-def _ssl_options(args):
-    with open(args.sslkey) as keyfile:
+def _ssl_options(sslkey, sslcert):
+    with open(sslkey) as keyfile:
         pkey = crypto.load_privatekey(crypto.FILETYPE_PEM, keyfile.read())
-    with open(args.sslcert) as certfile:
+    with open(sslcert) as certfile:
         cert = crypto.load_certificate(crypto.FILETYPE_PEM, certfile.read())
+
     acceptable = ssl.AcceptableCiphers.fromOpenSSLCipherString(
         u'ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:!RC4:HIGH:!MD5:!aNULL:!EDH')
-    options = ssl.CertificateOptions(privateKey=pkey, certificate=cert, method=SSL.TLSv1_2_METHOD,
+    options = ssl.CertificateOptions(privateKey=pkey,
+                                     certificate=cert,
+                                     method=SSL.TLSv1_2_METHOD,
                                      acceptableCiphers=acceptable)
     return options
 
 
-def listen_with_ssl(app, args):
-    reactor.listenSSL(args.port, Site(app.resource), _ssl_options(args), interface=args.host)
+def listen_with_ssl(resource, host, port, sslkey, sslcert):
+    reactor.listenSSL(port, Site(resource), _ssl_options(sslkey, sslcert), interface=host)
 
 
 class RedirectToSSL(resource.Resource):

@@ -28,12 +28,9 @@ from pixelated.config import app_factory
 from pixelated.config.args import parse_maintenance_args
 from pixelated.config.config_ua import config_user_agent
 from pixelated.config.dispatcher import config_dispatcher
-from pixelated.config.events_server import init_events_server
 from pixelated.config.initialize_leap import initialize_leap
-from pixelated.config.loading_page import loading
 from pixelated.config.register import register
 from pixelated.config.logging_setup import init_logging
-from pixelated.config.soledad import init_soledad_and_user_key
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
 
@@ -57,24 +54,24 @@ def initialize():
 
     init_logging(debug=args.debug)
 
-    app = initialize_leap(args.leap_provider_cert,
-                          args.leap_provider_cert_fingerprint,
-                          args.config,
-                          args.dispatcher,
-                          args.dispatcher_stdin)
+    leap_session = initialize_leap(
+        args.leap_provider_cert,
+        args.leap_provider_cert_fingerprint,
+        args.config,
+        args.dispatcher,
+        args.dispatcher_stdin)
 
-    init_events_server()
-    execute_command = create_execute_command(args, app)
+    execute_command = create_execute_command(args, leap_session)
 
     reactor.callWhenRunning(execute_command)
     reactor.run()
 
 
-def create_execute_command(args, app):
+def create_execute_command(args, leap_session):
     def execute_command():
 
         def init_soledad():
-            return init_soledad_and_user_key(app, args.home)
+            return leap_session
 
         def get_soledad_handle(leap_session):
             soledad = leap_session.soledad_session.soledad

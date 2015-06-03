@@ -19,51 +19,54 @@ import sys
 
 from pixelated.config import app_factory
 from pixelated.config.args import parse_user_agent_args
-from pixelated.config.events_server import init_events_server
-from pixelated.config.loading_page import loading
+from pixelated.config.loading_page import LoadingResource
 from pixelated.config.register import register
 from pixelated.config.logging_setup import init_logging
-from pixelated.config.soledad import init_soledad_and_user_key
 from twisted.internet import reactor
 from twisted.internet.threads import deferToThread
-from pixelated.support.error_handler import error_handler
+from twisted.internet import defer
+from twisted.web.server import Site
 
 from pixelated.config.initialize_leap import initialize_leap
+
+
+@defer.inlineCallbacks
+def start_user_agent(loading_app, host, port, sslkey, sslcert, leap_home, leap_session):
+    yield loading_app.stopListening()
+
+    app_factory.create_app(leap_home,
+                           leap_session,
+                           host,
+                           port,
+                           sslkey=sslkey,
+                           sslcert=sslcert)
 
 
 def initialize():
     args = parse_user_agent_args()
     init_logging(debug=args.debug)
 
-    app = initialize_leap(args.leap_provider_cert,
-                          args.leap_provider_cert_fingerprint,
-                          args.config,
-                          args.dispatcher,
-                          args.dispatcher_stdin)
-
     if args.register:
         register(*args.register)
         sys.exit(0)
 
-    init_events_server()
+    loading_app = reactor.listenTCP(args.port, Site(LoadingResource()), interface=args.host)
 
-    def load_app():
-        # welcome to deferred hell. Or maybe you'll be welcomed later, who knows.
-        loading_app = loading(args)
+    deferred = deferToThread(
+        lambda: initialize_leap(args.leap_provider_cert,
+                                args.leap_provider_cert_fingerprint,
+                                args.config_file,
+                                args.dispatcher,
+                                args.dispatcher_stdin,
+                                args.leap_home))
 
-        def init_soledad():
-            return init_soledad_and_user_key(app, args.home)
+    deferred.addCallback(
+        lambda leap_session: start_user_agent(loading_app,
+                                              args.host,
+                                              args.port,
+                                              args.sslkey,
+                                              args.sslcert,
+                                              args.leap_home,
+                                              leap_session))
 
-        def stop_loading_app(leap_session):
-            d = loading_app.stopListening()
-            d.addCallback(partial(start_user_agent_app, leap_session))
-
-        def start_user_agent_app(leap_session, _):
-            app_factory.create_app(app, args, leap_session)
-
-        d = deferToThread(init_soledad)
-        d.addCallback(stop_loading_app)
-        d.addErrback(error_handler)
-
-    reactor.callWhenRunning(load_app)
     reactor.run()
