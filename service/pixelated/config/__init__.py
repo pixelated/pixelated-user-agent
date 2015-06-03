@@ -18,7 +18,7 @@ from functools import partial
 import sys
 
 from pixelated.config import app_factory
-from pixelated.config.args import parse as parse_args
+from pixelated.config.args import parse_user_agent_args
 from pixelated.config.events_server import init_events_server
 from pixelated.config.loading_page import loading
 from pixelated.config.register import register
@@ -32,7 +32,7 @@ from pixelated.config.initialize_leap import initialize_leap
 
 
 def initialize():
-    args = parse_args()
+    args = parse_user_agent_args()
     init_logging(debug=args.debug)
 
     app = initialize_leap(args.leap_provider_cert,
