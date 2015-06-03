@@ -28,7 +28,6 @@ def parse_config_from_file(config_file):
         config_parser.get('pixelated', 'leap_username'), \
         config_parser.get('pixelated', 'leap_password')
 
-    # TODO: add error messages in case one of the parameters are empty
     return provider, user, password
 
 
@@ -39,10 +38,7 @@ def prompt_for_credentials():
     return provider, username, password
 
 
-def config_user_agent(app, args):
-    config_file = args.config
+def config_user_agent(config_file):
     provider, user, password = parse_config_from_file(config_file) if config_file else prompt_for_credentials()
 
-    app.config['LEAP_SERVER_NAME'] = provider
-    app.config['LEAP_USERNAME'] = user
-    app.config['LEAP_PASSWORD'] = password
+    return (provider, user, password)

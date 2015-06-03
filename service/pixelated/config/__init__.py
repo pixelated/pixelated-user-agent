@@ -17,11 +17,8 @@
 from functools import partial
 import sys
 
-from pixelated.config.app import App
 from pixelated.config import app_factory
 from pixelated.config.args import parse as parse_args
-from pixelated.config.config_ua import config_user_agent
-from pixelated.config.dispatcher import config_dispatcher
 from pixelated.config.events_server import init_events_server
 from pixelated.config.loading_page import loading
 from pixelated.config.register import register
@@ -38,19 +35,15 @@ def initialize():
     args = parse_args()
     init_logging(debug=args.debug)
 
-    initialize_leap(args.leap_provider_cert,
-                    args.leap_provider_cert_fingerprint)
-
-    app = App()
+    app = initialize_leap(args.leap_provider_cert,
+                          args.leap_provider_cert_fingerprint,
+                          args.config,
+                          args.dispatcher,
+                          args.dispatcher_stdin)
 
     if args.register:
         register(*args.register)
         sys.exit(0)
-
-    if args.dispatcher or args.dispatcher_stdin:
-        config_dispatcher(app, args)
-    else:
-        config_user_agent(app, args)
 
     init_events_server()
 

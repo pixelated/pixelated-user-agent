@@ -19,7 +19,7 @@ import sys
 import os
 
 
-def config_dispatcher(app, args):
+def config_dispatcher(dispatcher):
 
     def fetch_credentials_from_dispatcher(filename):
         if not os.path.exists(filename):
@@ -31,8 +31,8 @@ def config_dispatcher(app, args):
     def fetch_credentials_from_dispatcher_stdin():
         return json.loads(sys.stdin.read())
 
-    config = fetch_credentials_from_dispatcher(args.dispatcher) if args.dispatcher else fetch_credentials_from_dispatcher_stdin()
+    config = fetch_credentials_from_dispatcher(dispatcher) if dispatcher else fetch_credentials_from_dispatcher_stdin()
 
-    app.config['LEAP_SERVER_NAME'] = config['leap_provider_hostname']
-    app.config['LEAP_USERNAME'] = config['user']
-    app.config['LEAP_PASSWORD'] = config['password']
+    return (config['leap_provider_hostname'],
+            config['user'],
+            config['password'])
