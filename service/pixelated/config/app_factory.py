@@ -34,7 +34,6 @@ from leap.common.events import (
 )
 from .welcome_mail import check_welcome_mail
 
-CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK = 12345
 INIT_INDEX_AND_REMOVE_DUPES_CALLBACK = 12346
 CHECK_WELCOME_MAIL_CALLBACK = 12347
 
@@ -71,14 +70,6 @@ def init_leap_session(app, leap_home):
     return leap_session
 
 
-def look_for_user_key_and_create_if_cant_find(leap_session):
-    def wrapper(*args, **kwargs):
-        leap_session.nicknym.generate_openpgp_key()
-        unregister(proto.SOLEDAD_DONE_DATA_SYNC, uid=CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK)
-
-    return wrapper
-
-
 def init_app(leap_home, leap_session):
     leap_session.start_background_jobs()
     keymanager = leap_session.nicknym.keymanager
@@ -108,9 +99,5 @@ def init_app(leap_home, leap_session):
     register(signal=proto.SOLEDAD_DONE_DATA_SYNC,
              uid=CHECK_WELCOME_MAIL_CALLBACK,
              callback=check_welcome_mail_wrapper(pixelated_mailboxes.inbox()))
-
-    register(signal=proto.SOLEDAD_DONE_DATA_SYNC,
-             uid=CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK,
-             callback=look_for_user_key_and_create_if_cant_find(leap_session))
 
     return resource
