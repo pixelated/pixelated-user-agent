@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from functools import partial
 import sys
 
 from pixelated.config import app_factory
@@ -26,6 +25,9 @@ from twisted.internet import reactor
 from twisted.internet.threads import deferToThread
 from twisted.internet import defer
 from twisted.web.server import Site
+from OpenSSL import SSL
+from twisted.internet import ssl
+from OpenSSL import crypto
 
 from pixelated.config.initialize_leap import initialize_leap
 

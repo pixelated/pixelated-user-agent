@@ -15,13 +15,8 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import sys
 
-from OpenSSL import SSL
-from OpenSSL import crypto
 from twisted.internet import reactor
-from twisted.internet import ssl
 from pixelated.resources.root_resource import RootResource
-from twisted.web import resource
-from twisted.web.util import redirectTo
 from pixelated.adapter.services.mail_service import MailService
 from pixelated.adapter.model.mail import InputMail
 from pixelated.adapter.services.mail_sender import MailSender
@@ -37,7 +32,6 @@ from leap.common.events import (
     unregister,
     events_pb2 as proto
 )
-from twisted.web.server import Site
 from .welcome_mail import check_welcome_mail
 
 CREATE_KEYS_IF_KEYS_DONT_EXISTS_CALLBACK = 12345
