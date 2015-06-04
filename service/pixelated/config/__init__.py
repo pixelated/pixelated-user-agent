@@ -43,16 +43,8 @@ def start_user_agent(loading_app, host, port, sslkey, sslcert, leap_home, leap_s
     else:
         reactor.listenTCP(port, Site(resource), interface=host)
 
-    reactor.threadpool.adjustPoolsize(20, 40)
-    reactor.stop = stop_incoming_mail_fetcher(reactor.stop, leap_session)
-
-
-def stop_incoming_mail_fetcher(reactor_stop_function, leap_session):
-    def wrapper():
-        leap_session.stop_background_jobs()
-        reactor.threadpool.stop()
-        reactor_stop_function()
-    return wrapper
+    # soledad needs lots of threads
+    reactor.threadpool.adjustPoolsize(5, 15)
 
 
 def _ssl_options(sslkey, sslcert):
