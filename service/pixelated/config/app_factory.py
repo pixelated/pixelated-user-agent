@@ -34,9 +34,6 @@ from leap.common.events import (
 )
 from .welcome_mail import check_welcome_mail
 
-INIT_INDEX_AND_REMOVE_DUPES_CALLBACK = 12346
-CHECK_WELCOME_MAIL_CALLBACK = 12347
-
 
 def init_app(leap_home, leap_session):
     leap_session.start_background_jobs()
