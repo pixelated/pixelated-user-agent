@@ -38,19 +38,6 @@ INIT_INDEX_AND_REMOVE_DUPES_CALLBACK = 12346
 CHECK_WELCOME_MAIL_CALLBACK = 12347
 
 
-def init_leap_session(app, leap_home):
-    try:
-        leap_session = LeapSession.open(app.config['LEAP_USERNAME'],
-                                        app.config['LEAP_PASSWORD'],
-                                        app.config['LEAP_SERVER_NAME'],
-                                        leap_home=leap_home)
-    except ConnectionError, error:
-        print("Can't connect to the requested provider", error)
-        reactor.stop()
-        sys.exit(1)
-    return leap_session
-
-
 def init_app(leap_home, leap_session):
     leap_session.start_background_jobs()
     keymanager = leap_session.nicknym.keymanager
