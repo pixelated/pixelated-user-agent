@@ -98,7 +98,6 @@ class MailService(object):
             self.search_engine.index_mail(trashed_mail)
 
     def recover_mail(self, mail_id):
-        mail = self.mail(mail_id)
         recovered_mail = self.mailboxes.move_to_inbox(mail_id)
         self.search_engine.index_mail(recovered_mail)
 
