@@ -63,3 +63,4 @@ def init_monkeypatches():
     import pixelated.support.ext_sync
     import pixelated.support.ext_keymanager_fetch_key
     import pixelated.support.ext_requests_urllib3
+    import pixelated.support.ext_shared_db
