@@ -14,30 +14,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import os
-from functools import partial
-import sys
-import json
-import email
-import re
-
-from os.path import join
-from mailbox import mboxMessage, Maildir
+from mailbox import Maildir
 from pixelated.config.config import Config
-from pixelated.config import app_factory
 from pixelated.config.args import parse_maintenance_args
-from pixelated.config.config_ua import config_user_agent
-from pixelated.config.dispatcher import config_dispatcher
 from pixelated.config.initialize_leap import initialize_leap
-from pixelated.config.register import register
 from pixelated.config.logging_setup import init_logging
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
 
-from leap.mail.imap.memorystore import MemoryStore
-from leap.mail.imap.soledadstore import SoledadStore
 from leap.mail.imap.fields import WithMsgFields
-from leap.common.events import register, unregister, events_pb2 as proto
 
 # monkey patching some specifics
 import pixelated.support.ext_protobuf
