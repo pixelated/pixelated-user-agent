@@ -38,25 +38,6 @@ INIT_INDEX_AND_REMOVE_DUPES_CALLBACK = 12346
 CHECK_WELCOME_MAIL_CALLBACK = 12347
 
 
-def init_index_and_remove_dupes(querier, search_engine, mail_service):
-    def wrapper(*args, **kwargs):
-        querier.remove_duplicates()
-        search_engine.index_mails(mails=mail_service.all_mails(),
-                                  callback=querier.mark_all_as_not_recent)
-        unregister(proto.SOLEDAD_DONE_DATA_SYNC,
-                   uid=INIT_INDEX_AND_REMOVE_DUPES_CALLBACK)
-
-    return wrapper
-
-
-def check_welcome_mail_wrapper(mailbox):
-    def wrapper(*args, **kwargs):
-        check_welcome_mail(mailbox)
-        unregister(proto.SOLEDAD_DONE_DATA_SYNC,
-                   uid=CHECK_WELCOME_MAIL_CALLBACK)
-    return wrapper
-
-
 def init_leap_session(app, leap_home):
     try:
         leap_session = LeapSession.open(app.config['LEAP_USERNAME'],
@@ -81,23 +62,18 @@ def init_app(leap_home, leap_session):
                                        lambda: leap_session.smtp.ensure_running())
 
     pixelated_mailboxes = Mailboxes(leap_session.account, soledad_querier, search_engine)
+    check_welcome_mail(pixelated_mailboxes.inbox())
+
     draft_service = DraftService(pixelated_mailboxes)
     mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, soledad_querier, search_engine)
+    soledad_querier.remove_duplicates()
+    search_engine.index_mails(mails=mail_service.all_mails(),
+                              callback=soledad_querier.mark_all_as_not_recent)
 
     MailboxIndexerListener.SEARCH_ENGINE = search_engine
     InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
 
     resource = RootResource()
     resource.initialize(soledad_querier, keymanager, search_engine, mail_service, draft_service)
-
-    register(signal=proto.SOLEDAD_DONE_DATA_SYNC,
-             uid=INIT_INDEX_AND_REMOVE_DUPES_CALLBACK,
-             callback=init_index_and_remove_dupes(querier=soledad_querier,
-                                                  search_engine=search_engine,
-                                                  mail_service=mail_service))
-
-    register(signal=proto.SOLEDAD_DONE_DATA_SYNC,
-             uid=CHECK_WELCOME_MAIL_CALLBACK,
-             callback=check_welcome_mail_wrapper(pixelated_mailboxes.inbox()))
 
     return resource
