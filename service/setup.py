@@ -62,7 +62,7 @@ setup(name='pixelated-user-agent',
       ],
       entry_points={
           'console_scripts': [
-              'pixelated-user-agent = pixelated.config:initialize',
+              'pixelated-user-agent = pixelated.application:initialize',
               'pixelated-maintenance = pixelated.maintenance:initialize'
           ]
       },
