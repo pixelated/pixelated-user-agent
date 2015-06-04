@@ -1,4 +1,3 @@
-from pixelated.config.config import Config
 from pixelated.config import credentials
 from leap.common.events import server as events_server
 import pixelated.bitmask_libraries.certs as certs

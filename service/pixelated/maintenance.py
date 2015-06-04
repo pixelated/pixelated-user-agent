@@ -15,7 +15,6 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 from mailbox import Maildir
-from pixelated.config.config import Config
 from pixelated.config.args import parse_maintenance_args
 from pixelated.config.initialize_leap import initialize_leap
 from pixelated.config.logging_setup import init_logging
@@ -35,7 +34,6 @@ import pixelated.support.ext_requests_urllib3
 
 def initialize():
     args = parse_maintenance_args()
-    app = Config()
 
     init_logging(debug=args.debug)
 
