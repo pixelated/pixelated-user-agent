@@ -21,7 +21,6 @@ from email.header import decode_header
 from leap.mail.imap.fields import fields
 import leap.mail.walk as walk
 import dateutil.parser as dateparser
-from datetime import datetime
 from pixelated.adapter.model.status import Status
 import pixelated.support.date
 from email.MIMEMultipart import MIMEMultipart

@@ -13,7 +13,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import sys
 
 from pixelated.resources.root_resource import RootResource
 from pixelated.adapter.services.mail_service import MailService

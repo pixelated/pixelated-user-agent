@@ -1,5 +1,4 @@
 import leap.soledad.client as client
-import logging
 import urlparse
 from leap.soledad.client.events import (
     SOLEDAD_DONE_DATA_SYNC,

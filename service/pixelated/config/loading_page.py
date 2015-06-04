@@ -15,10 +15,9 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from twisted.internet import reactor
 from twisted.internet.threads import deferToThread
 from twisted.web.resource import Resource
-from twisted.web.server import Site, NOT_DONE_YET
+from twisted.web.server import NOT_DONE_YET
 from twisted.web.static import File
 
 
