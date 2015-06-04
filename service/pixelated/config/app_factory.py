@@ -15,7 +15,6 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import sys
 
-from twisted.internet import reactor
 from pixelated.resources.root_resource import RootResource
 from pixelated.adapter.services.mail_service import MailService
 from pixelated.adapter.model.mail import InputMail
@@ -25,13 +24,6 @@ from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerListener
-import pixelated.bitmask_libraries.session as LeapSession
-from requests.exceptions import ConnectionError
-from leap.common.events import (
-    register,
-    unregister,
-    events_pb2 as proto
-)
 from .welcome_mail import check_welcome_mail
 
 
