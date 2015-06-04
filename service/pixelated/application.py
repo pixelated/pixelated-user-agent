@@ -76,9 +76,8 @@ def initialize():
         lambda: initialize_leap(
             args.leap_provider_cert,
             args.leap_provider_cert_fingerprint,
-            args.config_file,
-            args.dispatcher,
-            args.dispatcher_stdin,
+            args.credentials_file,
+            args.organization_mode,
             args.leap_home))
 
     deferred.addCallback(

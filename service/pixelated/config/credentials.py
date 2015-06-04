@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014 ThoughtWorks, Inc.
+# Copyright (c) 2015 ThoughtWorks, Inc.
 #
 # Pixelated is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -14,21 +14,20 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import ConfigParser
 import os
 import getpass
+import json
+import sys
+import ConfigParser
 
 
-def parse_config_from_file(config_file):
-    config_parser = ConfigParser.ConfigParser()
-    config_file_path = os.path.abspath(os.path.expanduser(config_file))
-    config_parser.read(config_file_path)
-    provider, user, password = \
-        config_parser.get('pixelated', 'leap_server_name'), \
-        config_parser.get('pixelated', 'leap_username'), \
-        config_parser.get('pixelated', 'leap_password')
-
-    return provider, user, password
+def read(organization_mode, credentials_file):
+    if organization_mode:
+        return read_from_dispatcher()
+    else:
+        if credentials_file:
+            return read_from_file(credentials_file)
+        return prompt_for_credentials()
 
 
 def prompt_for_credentials():
@@ -38,7 +37,18 @@ def prompt_for_credentials():
     return provider, username, password
 
 
-def config_user_agent(config_file):
-    provider, user, password = parse_config_from_file(config_file) if config_file else prompt_for_credentials()
+def read_from_file(credentials_file):
+    config_parser = ConfigParser.ConfigParser()
+    credentials_file_path = os.path.abspath(os.path.expanduser(credentials_file))
+    config_parser.read(credentials_file_path)
+    provider, user, password = \
+        config_parser.get('pixelated', 'leap_server_name'), \
+        config_parser.get('pixelated', 'leap_username'), \
+        config_parser.get('pixelated', 'leap_password')
+    return provider, user, password
 
-    return (provider, user, password)
+
+def read_from_dispatcher():
+    config = json.loads(sys.stdin.read())
+
+    return config['leap_provider_hostname'], config['user'], config['password']
