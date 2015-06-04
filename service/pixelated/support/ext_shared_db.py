@@ -1,5 +1,6 @@
 from leap.soledad.client.auth import TokenBasedAuth
 import base64
+from u1db import errors
 
 
 def patched_sign_request(self, method, url_query, params):
