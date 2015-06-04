@@ -99,4 +99,10 @@ def initialize():
             args.leap_home,
             leap_session))
 
+    def _quit_on_error(failure):
+        failure.printTraceback()
+        reactor.stop()
+
+    deferred.addErrback(_quit_on_error)
+
     reactor.run()
