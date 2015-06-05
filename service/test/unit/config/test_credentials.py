@@ -2,7 +2,7 @@ import json
 import unittest
 import sys
 from mockito import mock, when
-from pixelated.config.args import parse_user_agent_args
+from pixelated.config import arguments
 from pixelated.config import credentials
 
 
@@ -19,7 +19,7 @@ class TestReadCredentials(unittest.TestCase):
 
         try:
             sys.argv = ['tmp/does_not_exist', '--organization-mode']
-            args = parse_user_agent_args()
+            args = arguments.parse_user_agent_args()
 
             provider, user, password = credentials.read(args.organization_mode, 'not_used')
 

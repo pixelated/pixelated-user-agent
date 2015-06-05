@@ -15,27 +15,18 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 from mailbox import Maildir
-from pixelated.config.args import parse_maintenance_args
-from pixelated.config.initialize_leap import initialize_leap
-from pixelated.config.logging_setup import init_logging
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
+from pixelated.config.initialize_leap import initialize_leap
+from pixelated.config import logger, arguments
 
 from leap.mail.imap.fields import WithMsgFields
 
-# monkey patching some specifics
-import pixelated.support.ext_protobuf
-import pixelated.support.ext_sqlcipher
-import pixelated.support.ext_esmtp_sender_factory
-import pixelated.support.ext_fetch
-import pixelated.support.ext_keymanager_fetch_key
-import pixelated.support.ext_requests_urllib3
-
 
 def initialize():
-    args = parse_maintenance_args()
+    args = arguments.parse_maintenance_args()
 
-    init_logging(debug=args.debug)
+    logger.init(debug=args.debug)
 
     leap_session = initialize_leap(
         args.leap_provider_cert,

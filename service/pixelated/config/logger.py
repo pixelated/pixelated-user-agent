@@ -19,7 +19,7 @@ import os
 from twisted.python import log
 
 
-def init_logging(debug=False):
+def init(debug=False):
     debug_enabled = debug or os.environ.get('DEBUG', False)
     logging_level = logging.DEBUG if debug_enabled else logging.INFO
     log_format = "%(asctime)s [%(name)s] %(levelname)s %(message)s"
