@@ -26,7 +26,7 @@ from OpenSSL import crypto
 
 from pixelated.config import app_factory
 from pixelated.config.args import parse_user_agent_args
-from pixelated.config.loading_page import LoadingResource
+from pixelated.resources import loading_page
 from pixelated.config.initialize_leap import initialize_leap
 from pixelated.config.register import register
 from pixelated.config.logging_setup import init_logging
@@ -70,7 +70,7 @@ def initialize():
         register(*args.register)
         sys.exit(0)
 
-    loading_app = reactor.listenTCP(args.port, Site(LoadingResource()), interface=args.host)
+    loading_app = reactor.listenTCP(args.port, Site(loading_page.LoadingResource()), interface=args.host)
 
     deferred = deferToThread(
         lambda: initialize_leap(
