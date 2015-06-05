@@ -304,7 +304,7 @@ class PixelatedMail(Mail):
 
         try:
             _headers['Date'] = self._get_date()
-        except Exception, e:
+        except Exception:
             _headers['Date'] = pixelated.support.date.iso_now()
 
         if self.parts and len(self.parts['alternatives']) > 1:
@@ -320,7 +320,7 @@ class PixelatedMail(Mail):
     def _decode_header_with_fallback(self, entry):
         try:
             return decode_header(entry)[0][0]
-        except Exception, e:
+        except Exception:
             return entry.encode('ascii', 'ignore')
 
     def _decode_header(self, header):
@@ -343,7 +343,7 @@ class PixelatedMail(Mail):
                     logger.warning('Encountered a mail with missing date and received header fields. ID %s' % self.fdoc.content.get('uid', None))
                     date = pixelated.support.date.iso_now()
             return dateparser.parse(date).isoformat()
-        except (ValueError, TypeError) as e:
+        except (ValueError, TypeError):
             date = pixelated.support.date.iso_now()
             return dateparser.parse(date).isoformat()
 

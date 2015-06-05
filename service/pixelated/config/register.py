@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 def register(server_name, username):
     try:
         validate_username(username)
-    except ValueError, e:
+    except ValueError:
         print('Only lowercase letters, digits, . - and _ allowed.')
 
     config = LeapConfig()
