@@ -45,28 +45,6 @@ class SearchEngineTest(unittest.TestCase):
     def tearDown(self):
         self.tempdir.dissolve()
 
-    def test_index_mail_secured_by_lock(self):
-        # given
-        soledad_querier = mock()
-        lock_stub = LockStub()
-        when(soledad_querier).get_index_masterkey().thenReturn(INDEX_KEY)
-
-        self.assertEqual(INDEX_KEY, soledad_querier.get_index_masterkey())
-        se = SearchEngine(soledad_querier, self.agent_home)
-        se._write_lock = lock_stub
-
-        headers = {
-            'From': 'from@bar.tld',
-            'To': 'to@bar.tld',
-            'Subject': 'Some test mail',
-        }
-
-        # when
-        se.index_mail(test_helper.pixelated_mail(extra_headers=headers))
-
-        # then
-        self.assertTrue(lock_stub.called)
-
     def test_encoding(self):
         # given
         soledad_querier = mock()

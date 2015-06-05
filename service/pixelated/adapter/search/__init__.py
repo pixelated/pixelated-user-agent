@@ -24,10 +24,10 @@ from whoosh.index import FileIndex
 from whoosh.fields import Schema, ID, KEYWORD, TEXT, NUMERIC
 from whoosh.qparser import QueryParser
 from whoosh.qparser import MultifieldParser
+from whoosh.writing import AsyncWriter
 from whoosh import sorting
 from pixelated.support.functional import unique
 from pixelated.support.date import milliseconds
-from threading import Lock
 import traceback
 
 
@@ -41,7 +41,6 @@ class SearchEngine(object):
         if not os.path.exists(self.index_folder):
             os.makedirs(self.index_folder)
         self._index = self._create_index()
-        self._write_lock = Lock()
 
     def _add_to_tags(self, tags, group, skip_default_tags, count_type, query=None):
         query_matcher = re.compile(".*%s.*" % query.lower()) if query else re.compile(".*")
@@ -117,8 +116,7 @@ class SearchEngine(object):
         return FileIndex.create(storage, self._mail_schema(), indexname='mails')
 
     def index_mail(self, mail):
-        with self._write_lock:
-            with self._index.writer() as writer:
+        with AsyncWriter(self._index) as writer:
                 self._index_mail(writer, mail)
 
     def _index_mail(self, writer, mail):
@@ -153,10 +151,9 @@ class SearchEngine(object):
 
     def index_mails(self, mails, callback=None):
         try:
-            with self._write_lock:
-                with self._index.writer() as writer:
-                    for mail in mails:
-                        self._index_mail(writer, mail)
+            with AsyncWriter(self._index) as writer:
+                for mail in mails:
+                    self._index_mail(writer, mail)
             if callback:
                 callback()
         except Exception, e:
@@ -198,12 +195,8 @@ class SearchEngine(object):
         return MultifieldParser(['raw', 'body'], self._index.schema).parse(query)
 
     def remove_from_index(self, mail_id):
-        with self._write_lock:
-            writer = self._index.writer()
-            try:
-                writer.delete_by_term('ident', mail_id)
-            finally:
-                writer.commit()
+        with AsyncWriter(self._index) as writer:
+            writer.delete_by_term('ident', mail_id)
 
     def contacts(self, query):
         with self._index.searcher() as searcher:
