@@ -15,6 +15,7 @@ def initialize_leap(leap_provider_cert,
     init_leap_cert(leap_provider_cert, leap_provider_cert_fingerprint)
     events_server.ensure_server(port=8090)
     leap_session = create_leap_session(provider, user, password, leap_home)
+    leap_session.start_background_jobs()
     return leap_session
 
 

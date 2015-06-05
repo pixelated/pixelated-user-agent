@@ -26,7 +26,6 @@ from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerL
 
 
 def init_app(leap_home, leap_session):
-    leap_session.start_background_jobs()
     keymanager = leap_session.nicknym.keymanager
 
     soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
