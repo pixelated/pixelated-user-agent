@@ -27,14 +27,13 @@ def parse_user_agent_args():
     parser.add_argument('--port', type=int, default=3333, help='the port to run the user agent on')
     parser.add_argument('-sk', '--sslkey', metavar='<server.key>', default=None, help='use specified file as web server\'s SSL key (when using the user-agent together with the pixelated-dispatcher)')
     parser.add_argument('-sc', '--sslcert', metavar='<server.crt>', default=None, help='use specified file as web server\'s SSL certificate (when using the user-agent together with the pixelated-dispatcher)')
-    parser.add_argument('--register', metavar=('provider', 'username'),
-                        nargs=2, help='register a new username on the desired LEAP provider')
+
     args = parser.parse_args()
     return args
 
 
 def parse_maintenance_args():
-    parser = argparse.ArgumentParser(description='pixelated maintenance')
+    parser = argparse.ArgumentParser(description='Pixelated maintenance')
     parser_add_default_arguments(parser)
     subparsers = parser.add_subparsers(help='commands', dest='command')
     subparsers.add_parser('reset', help='reset account command')
@@ -44,6 +43,13 @@ def parse_maintenance_args():
     subparsers.add_parser('dump-soledad', help='dump the soledad database')
     subparsers.add_parser('sync', help='sync the soledad database')
 
+    return parser.parse_args()
+
+
+def parse_register_args():
+    parser = argparse.ArgumentParser(description='Pixelated register')
+    parser.add_argument('provider', metavar='provider', action='store')
+    parser.add_argument('username', metavar='username', action='store')
     return parser.parse_args()
 
 

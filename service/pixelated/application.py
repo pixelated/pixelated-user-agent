@@ -27,7 +27,6 @@ from OpenSSL import crypto
 from pixelated.config import arguments
 from pixelated.resources import loading_page
 from pixelated.config.initialize_leap import initialize_leap
-from pixelated.config.register import register
 from pixelated.config import logger, app_factory
 
 
@@ -64,10 +63,6 @@ def _ssl_options(sslkey, sslcert):
 def initialize():
     args = arguments.parse_user_agent_args()
     logger.init(debug=args.debug)
-
-    if args.register:
-        register(*args.register)
-        sys.exit(0)
 
     loading_app = reactor.listenTCP(args.port, Site(loading_page.LoadingResource()), interface=args.host)
 

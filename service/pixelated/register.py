@@ -16,7 +16,10 @@
 import re
 import getpass
 import logging
-import pixelated.bitmask_libraries.session as LeapSession
+
+from pixelated.bitmask_libraries import session as leap_session
+from pixelated.config import arguments
+from pixelated.config import logger as logger_config
 from pixelated.bitmask_libraries.certs import which_api_CA_bundle
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
@@ -37,7 +40,7 @@ def register(server_name, username):
     srp_auth = SRPAuth(provider.api_uri, which_api_CA_bundle(provider))
 
     if srp_auth.register(username, password):
-        session = LeapSession.open(username, password, server_name)
+        session = leap_session.open_leap_session(username, password, server_name)
         session.nicknym.generate_openpgp_key()
     else:
         logger.error("Register failed")
@@ -47,3 +50,9 @@ def validate_username(username):
     accepted_characters = '^[a-z0-9\-\_\.]*$'
     if not re.match(accepted_characters, username):
         raise ValueError
+
+
+def initialize():
+    logger_config.init(debug=False)
+    args = arguments.parse_register_args()
+    register(args.provider, args.username)

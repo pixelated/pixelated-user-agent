@@ -1,6 +1,6 @@
 import unittest
 
-from pixelated.config.register import validate_username
+from pixelated.register import validate_username
 
 
 class TestRegister(unittest.TestCase):
