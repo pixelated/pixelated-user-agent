@@ -37,11 +37,11 @@ def init_leap_cert(leap_provider_cert, leap_provider_cert_fingerprint):
 
 
 def init_monkeypatches():
-    import pixelated.support.ext_protobuf
-    import pixelated.support.ext_sqlcipher
-    import pixelated.support.ext_esmtp_sender_factory
-    import pixelated.support.ext_fetch
-    import pixelated.support.ext_sync
-    import pixelated.support.ext_keymanager_fetch_key
-    import pixelated.support.ext_requests_urllib3
-    import pixelated.support.ext_shared_db
+    import pixelated.extensions.protobuf_socket
+    import pixelated.extensions.sqlcipher_wal
+    import pixelated.extensions.esmtp_sender_factory
+    import pixelated.extensions.incoming_decrypt_header
+    import pixelated.extensions.soledad_sync_exception
+    import pixelated.extensions.keymanager_fetch_key
+    import pixelated.extensions.requests_urllib3
+    import pixelated.extensions.shared_db
