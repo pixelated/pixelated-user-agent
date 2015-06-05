@@ -14,20 +14,21 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
+import os
+import re
+import logging
+import dateutil.parser as dateparser
 from uuid import uuid4
+from email import message_from_file
 from email.mime.text import MIMEText
 from email.header import decode_header
-
-from leap.mail.imap.fields import fields
-import leap.mail.walk as walk
-import dateutil.parser as dateparser
-from pixelated.adapter.model.status import Status
-import pixelated.support.date
 from email.MIMEMultipart import MIMEMultipart
 from pycryptopp.hash import sha256
-import re
+from leap.mail.imap.fields import fields
+import leap.mail.walk as walk
+from pixelated.adapter.model.status import Status
+from pixelated.support import date
 from pixelated.support.functional import compact
-import logging
 
 
 logger = logging.getLogger(__name__)
@@ -207,7 +208,7 @@ class InputMail(Mail):
         input_mail.headers = {key.capitalize(): value for key, value in mail_dict.get('header', {}).items()}
 
         # XXX this is overriding the property in PixelatedMail
-        input_mail.headers['Date'] = pixelated.support.date.iso_now()
+        input_mail.headers['Date'] = date.iso_now()
 
         # XXX this is overriding the property in PixelatedMail
         input_mail.body = mail_dict.get('body', '')
@@ -216,6 +217,20 @@ class InputMail(Mail):
         input_mail.tags = set(mail_dict.get('tags', []))
 
         input_mail._status = set(mail_dict.get('status', []))
+        return input_mail
+
+    @staticmethod
+    def from_python_mail(mail):
+        input_mail = InputMail()
+        input_mail.headers = {key.capitalize(): value for key, value in mail.items()}
+        input_mail.headers['Date'] = date.iso_now()
+        input_mail.headers['Subject'] = mail['Subject']
+        input_mail.headers['To'] = InputMail.FROM_EMAIL_ADDRESS
+        input_mail._mime = MIMEMultipart()
+        for payload in mail.get_payload():
+            input_mail._mime.attach(payload)
+            if payload.get_content_type() == 'text/plain':
+                input_mail.body = payload.as_string()
         return input_mail
 
 
@@ -305,7 +320,7 @@ class PixelatedMail(Mail):
         try:
             _headers['Date'] = self._get_date()
         except Exception:
-            _headers['Date'] = pixelated.support.date.iso_now()
+            _headers['Date'] = date.iso_now()
 
         if self.parts and len(self.parts['alternatives']) > 1:
             _headers['content_type'] = 'multipart/alternative; boundary="%s"' % self.boundary
@@ -341,10 +356,10 @@ class PixelatedMail(Mail):
                 else:
                     # we can't get a date for this mail, so lets just use now
                     logger.warning('Encountered a mail with missing date and received header fields. ID %s' % self.fdoc.content.get('uid', None))
-                    date = pixelated.support.date.iso_now()
+                    date = date.iso_now()
             return dateparser.parse(date).isoformat()
         except (ValueError, TypeError):
-            date = pixelated.support.date.iso_now()
+            date = date.iso_now()
             return dateparser.parse(date).isoformat()
 
     @property
@@ -487,3 +502,10 @@ class PixelatedMail(Mail):
         dict_mail['replying']['all']['to-field'] = recipients
         dict_mail['replying']['all']['cc-field'] = ccs
         return dict_mail
+
+
+def welcome_mail():
+    current_path = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(current_path, '..', '..', 'assets', 'welcome.mail')) as mail_template_file:
+        mail_template = message_from_file(mail_template_file)
+    return InputMail.from_python_mail(mail_template)

@@ -26,7 +26,7 @@ from OpenSSL import crypto
 
 from pixelated.config import arguments
 from pixelated.resources import loading_page
-from pixelated.config.initialize_leap import initialize_leap
+from pixelated.config.leap import initialize_leap
 from pixelated.config import logger, app_factory
 
 

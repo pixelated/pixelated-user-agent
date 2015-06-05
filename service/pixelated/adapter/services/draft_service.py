@@ -22,13 +22,10 @@ class DraftService(object):
         self._mailboxes = mailboxes
 
     def create_draft(self, input_mail):
-        pixelated_mail = self._drafts().add(input_mail)
+        pixelated_mail = self._mailboxes.drafts.add(input_mail)
         return pixelated_mail
 
     def update_draft(self, ident, input_mail):
         pixelated_mail = self.create_draft(input_mail)
-        self._drafts().remove(ident)
+        self._mailboxes.drafts.remove(ident)
         return pixelated_mail
-
-    def _drafts(self):
-        return self._mailboxes.drafts()

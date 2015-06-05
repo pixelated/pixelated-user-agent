@@ -23,6 +23,7 @@ from mock import MagicMock
 
 
 class PixelatedMailboxesTest(unittest.TestCase):
+
     def setUp(self):
         self.querier = mock()
         self.search_engine = mock()

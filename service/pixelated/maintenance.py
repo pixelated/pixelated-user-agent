@@ -17,7 +17,7 @@
 from mailbox import Maildir
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
-from pixelated.config.initialize_leap import initialize_leap
+from pixelated.config.leap import initialize_leap
 from pixelated.config import logger, arguments
 
 from leap.mail.imap.fields import WithMsgFields

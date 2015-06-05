@@ -15,21 +15,20 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 from test.support.integration import SoledadTestBase
-from pixelated.config.welcome_mail import check_welcome_mail
 
 
 class TestWelcomeMail(SoledadTestBase):
 
-    def test_that_a_fresh_INBOX_will_receive_a_welcome_mail_only_once(self):
-        inbox = self.mailboxes.inbox()
-        check_welcome_mail(inbox)  # adds a mail
-        check_welcome_mail(inbox)  # should not repeat
-
+    def test_welcome_mail_is_added_only_once(self):
+        self.mailboxes.add_welcome_mail_for_fresh_user()
+        self.mailboxes.add_welcome_mail_for_fresh_user()
         inbox_mails = self.get_mails_by_tag('inbox')
         self.assertEquals(1, len(inbox_mails))
 
+    def test_empty_mailbox_doesnt_mean_fresh_mailbox(self):
+        self.mailboxes.add_welcome_mail_for_fresh_user()
+        inbox_mails = self.get_mails_by_tag('inbox')
         self.delete_mail(inbox_mails[0].ident)
-        check_welcome_mail(inbox)  # it is empty, but not fresh anymore
-
+        self.mailboxes.add_welcome_mail_for_fresh_user()
         inbox_mails = self.get_mails_by_tag('inbox')
         self.assertEquals(0, len(inbox_mails))

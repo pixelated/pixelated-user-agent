@@ -76,8 +76,8 @@ class MailService(object):
 
     def move_to_sent(self, last_draft_ident, mail):
         if last_draft_ident:
-            self.mailboxes.drafts().remove(last_draft_ident)
-        return self.mailboxes.sent().add(mail)
+            self.mailboxes.drafts.remove(last_draft_ident)
+        return self.mailboxes.sent.add(mail)
 
     def mark_as_read(self, mail_id):
         mail = self.mail(mail_id)

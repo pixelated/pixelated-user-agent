@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.services.mailbox import Mailbox
 from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerListener
+from pixelated.adapter.model.mail import welcome_mail
 
 
 class Mailboxes(object):
@@ -33,15 +34,19 @@ class Mailboxes(object):
         MailboxIndexerListener.listen(self.account, mailbox_name, self.querier)
         return Mailbox.create(mailbox_name, self.querier, self.search_engine)
 
+    @property
     def inbox(self):
         return self._create_or_get('INBOX')
 
+    @property
     def drafts(self):
         return self._create_or_get('DRAFTS')
 
+    @property
     def trash(self):
         return self._create_or_get('TRASH')
 
+    @property
     def sent(self):
         return self._create_or_get('SENT')
 
@@ -49,10 +54,10 @@ class Mailboxes(object):
         return [self._create_or_get(leap_mailbox_name) for leap_mailbox_name in self.account.mailboxes]
 
     def move_to_trash(self, mail_id):
-        return self._move_to(mail_id, self.trash())
+        return self._move_to(mail_id, self.trash)
 
     def move_to_inbox(self, mail_id):
-        return self._move_to(mail_id, self.inbox())
+        return self._move_to(mail_id, self.inbox)
 
     def _move_to(self, mail_id, mailbox):
         mail = self.querier.mail(mail_id)
@@ -62,3 +67,8 @@ class Mailboxes(object):
 
     def mail(self, mail_id):
         return self.querier.mail(mail_id)
+
+    def add_welcome_mail_for_fresh_user(self):
+        if self.inbox.fresh:
+            mail = welcome_mail()
+            self.inbox.add(mail)

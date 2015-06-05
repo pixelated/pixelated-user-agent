@@ -23,7 +23,6 @@ from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerListener
-from .welcome_mail import check_welcome_mail
 
 
 def init_app(leap_home, leap_session):
@@ -37,7 +36,8 @@ def init_app(leap_home, leap_session):
                                        lambda: leap_session.smtp.ensure_running())
 
     pixelated_mailboxes = Mailboxes(leap_session.account, soledad_querier, search_engine)
-    check_welcome_mail(pixelated_mailboxes.inbox())
+
+    pixelated_mailboxes.add_welcome_mail_for_fresh_user()
 
     draft_service = DraftService(pixelated_mailboxes)
     mail_service = MailService(pixelated_mailboxes, pixelated_mail_sender, soledad_querier, search_engine)

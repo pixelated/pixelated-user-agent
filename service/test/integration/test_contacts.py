@@ -87,7 +87,7 @@ class ContactsTest(SoledadTestBase):
         self.add_mail_to_inbox(to_be_bounced)
 
         bounced_mail_template = MailBuilder().build_input_mail()
-        bounced_mail = self.mailboxes.inbox().add(bounced_mail_template)
+        bounced_mail = self.mailboxes.inbox.add(bounced_mail_template)
         bounced_mail.hdoc.content = self._bounced_mail_hdoc_content()
         bounced_mail.save()
         self.search_engine.index_mail(bounced_mail)

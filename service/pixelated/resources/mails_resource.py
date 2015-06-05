@@ -73,7 +73,7 @@ class MailsResource(Resource):
 
         def on_error(event):
             delivery_error_mail = InputMail.delivery_error_template(delivery_address=event.content)
-            self._mail_service.mailboxes.inbox().add(delivery_error_mail)
+            self._mail_service.mailboxes.inbox.add(delivery_error_mail)
 
         register(signal=proto.SMTP_SEND_MESSAGE_ERROR, callback=on_error)
 

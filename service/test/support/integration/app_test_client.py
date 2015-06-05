@@ -125,7 +125,7 @@ class AppTestClient(object):
         self.soledad_querier.soledad.create_doc(_dict)
 
     def add_mail_to_inbox(self, input_mail):
-        mail = self.mailboxes.inbox().add(input_mail)
+        mail = self.mailboxes.inbox.add(input_mail)
         if input_mail.tags:
             mail.update_tags(input_mail.tags)
             self.search_engine.index_mail(mail)

@@ -12,7 +12,7 @@ class DraftServiceTest(unittest.TestCase):
         self.mailboxes = mock()
         self.drafts_mailbox = mock()
         self.draft_service = DraftService(self.mailboxes)
-        when(self.mailboxes).drafts().thenReturn(self.drafts_mailbox)
+        self.mailboxes.drafts = self.drafts_mailbox
 
     def test_add_draft(self):
         mail = InputMail()

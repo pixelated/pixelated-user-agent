@@ -27,9 +27,9 @@ class TestMailService(unittest.TestCase):
         self.drafts = mock()
         self.querier = mock()
         self.mailboxes = mock()
-        self.mailboxes.drafts = lambda: self.drafts
-        self.mailboxes.trash = lambda: mock()
-        self.mailboxes.sent = lambda: mock()
+        self.mailboxes.drafts = self.drafts
+        self.mailboxes.trash = mock()
+        self.mailboxes.sent = mock()
 
         self.mail_sender = mock()
         self.search_engine = mock()
