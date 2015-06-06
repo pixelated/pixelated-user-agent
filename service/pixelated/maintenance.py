@@ -31,9 +31,9 @@ def initialize():
     leap_session = initialize_leap(
         args.leap_provider_cert,
         args.leap_provider_cert_fingerprint,
-        args.config,
-        args.dispatcher,
-        args.dispatcher_stdin)
+        args.credentials_file,
+        args.organization_mode,
+        args.leap_home)
 
     execute_command = create_execute_command(args, leap_session)
 
