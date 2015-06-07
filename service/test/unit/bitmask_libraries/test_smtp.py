@@ -69,7 +69,7 @@ class LeapSmtpTest(AbstractLeapTest):
         smtp = LeapSmtp(self.provider, self.auth.username, self.auth.session_id, self.keymanager)
 
         port = 500
-        smtp.TWISTED_PORT = port
+        smtp.local_smtp_port_number = port
         gateway_mock.return_value = (None, None)
         with HTTMock(ca_cert_mock, not_found_mock):
             smtp.ensure_running()
