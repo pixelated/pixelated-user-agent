@@ -24,6 +24,9 @@
 
 // COMPOSE PANE
 #compose-box, #draft-box, #reply-box {
+  div.compose {
+    position: relative;
+  }
   margin: 5px 0 50px 30px;
   padding: 0;
   .input-container {
@@ -37,9 +40,26 @@
     display: inline-block;
     padding: 10px;
   }
+  label.floatlabel {
+    padding: 0.4rem !important;
+    position: absolute;
+    font-size: 0.6rem;
+    transition: all 0.1s linear;
+    opacity: 0;
+    font-weight: bold;
+  }
+  label.showfloatlabel {
+    color: #64BCD0 !important;
+    top: -0.3rem;
+    opacity: 1;
+  }
   input, textarea {
     margin: 0;
     border: none;
+    transition: all 0.1s linear;
+  }
+  input.showfloatlabel, textarea.showfloatlabel {
+    padding-top: 1rem !important;
   }
   input {
     &#subject {

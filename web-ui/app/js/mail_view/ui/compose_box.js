@@ -57,6 +57,26 @@ define(
         this.select('recipientsFields').show();
         this.on(this.select('closeButton'), 'click', this.showNoMessageSelected);
         this.enableAutoSave();
+
+        function floatlabelHandler(element) {
+          $(function() {
+            var showClass = "showfloatlabel";
+            $(element).bind("checkval", function() {
+              var label = $(this).prev("label");
+              if (this.value !== "") {
+                label.addClass(showClass);
+                $(this).addClass(showClass);
+              } else {
+                label.removeClass(showClass);
+                $(this).removeClass(showClass);
+              }
+            }).on("keyup",function() {
+              $(this).trigger("checkval");
+            }).trigger("checkval");
+          });
+        }
+        floatlabelHandler("input.floatlabel");
+        floatlabelHandler("textarea.floatlabel");
       };
 
       this.mailDeleted = function(event, data) {
