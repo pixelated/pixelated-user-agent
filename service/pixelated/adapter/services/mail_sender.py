@@ -29,12 +29,12 @@ class SMTPDownException(Exception):
 
 class MailSender(object):
 
-    def __init__(self, account_email_address, ensure_smtp_is_running_cb):
-        self.ensure_smtp_is_running_cb = ensure_smtp_is_running_cb
+    def __init__(self, account_email_address, smtp):
+        self.smtp = smtp
         self.account_email_address = account_email_address
 
     def sendmail(self, mail):
-        if self.ensure_smtp_is_running_cb():
+        if self.smtp.ensure_running():
             recipients = flatten([mail.to, mail.cc, mail.bcc])
             result_deferred = Deferred()
             sender_factory = SMTPSenderFactory(
@@ -43,7 +43,8 @@ class MailSender(object):
                 file=StringIO(mail.to_smtp_format()),
                 deferred=result_deferred)
 
-            reactor.connectTCP('localhost', 4650, sender_factory)
+            reactor.connectTCP('localhost', self.smtp.local_smtp_port_number,
+                               sender_factory)
 
             return result_deferred
         return fail(SMTPDownException())
