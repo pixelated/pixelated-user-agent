@@ -38,12 +38,6 @@ def which_bootstrap_cert_fingerprint():
     return LEAP_FINGERPRINT
 
 
-def which_bootstrap_CA_bundle(provider):
-    if LEAP_CERT is not None:
-        return LEAP_CERT
-    return str(LeapCertificate(provider).auto_detect_bootstrap_ca_bundle())
-
-
 def refresh_ca_bundle(provider):
     LeapCertificate(provider).refresh_ca_bundle()
 
