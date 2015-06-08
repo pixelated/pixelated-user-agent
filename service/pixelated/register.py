@@ -37,7 +37,7 @@ def register(server_name, username):
     config = LeapConfig()
     provider = LeapProvider(server_name, config)
     password = getpass.getpass('Please enter password for %s: ' % username)
-    srp_auth = SRPAuth(provider.api_uri, LeapCertificate(provider).api_ca_bundle())
+    srp_auth = SRPAuth(provider.api_uri, LeapCertificate(provider).api_ca_bundle)
 
     if srp_auth.register(username, password):
         session = leap_session.open_leap_session(username, password, server_name)

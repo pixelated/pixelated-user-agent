@@ -67,7 +67,7 @@ class SoledadSession(object):
             local_db = self._local_db_path()
 
             return Soledad(self.user_uuid, unicode(encryption_passphrase), secrets,
-                           local_db, server_url, LeapCertificate(self.provider).api_ca_bundle(), self.user_token, defer_encryption=False)
+                           local_db, server_url, LeapCertificate(self.provider).api_ca_bundle, self.user_token, defer_encryption=False)
 
         except (WrongMac, UnknownMacMethod), e:
             raise SoledadWrongPassphraseException(e)

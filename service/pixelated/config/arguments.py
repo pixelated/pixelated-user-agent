@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import argparse
-from pixelated.bitmask_libraries.config import DEFAULT_LEAP_HOME
 
 
 def parse_user_agent_args():
@@ -57,6 +57,6 @@ def parser_add_default_arguments(parser):
     parser.add_argument('--debug', action='store_true', help='DEBUG mode.')
     parser.add_argument('--organization-mode', help='Runs the user agent in organization mode, the credentials will be received from the stdin', default=False, action='store_true', dest='organization_mode')
     parser.add_argument('-c', '--config', dest='credentials_file', metavar='<credentials_file>', default=None, help='use specified file for credentials (for test purposes only)')
-    parser.add_argument('--leap-home', help='The folder where the user agent stores its data. Defaults to ~/.leap', dest='leap_home', default=DEFAULT_LEAP_HOME)
+    parser.add_argument('--leap-home', help='The folder where the user agent stores its data. Defaults to ~/.leap', dest='leap_home', default=os.path.join(os.path.expanduser("~"), '.leap'))
     parser.add_argument('-lc', '--leap-provider-cert', metavar='<leap-provider.crt>', default=None, help='use specified file for LEAP provider cert authority certificate (url https://<LEAP-provider-domain>/ca.crt)')
     parser.add_argument('-lf', '--leap-provider-cert-fingerprint', metavar='<leap provider certificate fingerprint>', default=None, help='use specified fingerprint to validate connection with LEAP provider', dest='leap_provider_cert_fingerprint')

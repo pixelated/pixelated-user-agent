@@ -100,7 +100,7 @@ class LeapProvider(object):
         session = requests.session()
         try:
             session.mount('https://', EnforceTLSv1Adapter(assert_fingerprint=LeapCertificate.LEAP_FINGERPRINT))
-            response = session.get(url, verify=LeapCertificate(self).auto_detect_bootstrap_ca_bundle(), timeout=self.config.timeout_in_s)
+            response = session.get(url, verify=LeapCertificate.LEAP_CERT, timeout=self.config.timeout_in_s)
             response.raise_for_status()
             return response
         finally:
@@ -115,14 +115,14 @@ class LeapProvider(object):
     def fetch_soledad_json(self):
         service_url = "%s/%s/config/soledad-service.json" % (
             self.api_uri, self.api_version)
-        response = requests.get(service_url, verify=LeapCertificate(self).api_ca_bundle(), timeout=self.config.timeout_in_s)
+        response = requests.get(service_url, verify=LeapCertificate(self).api_ca_bundle, timeout=self.config.timeout_in_s)
         response.raise_for_status()
         return json.loads(response.content)
 
     def fetch_smtp_json(self):
         service_url = '%s/%s/config/smtp-service.json' % (
             self.api_uri, self.api_version)
-        response = requests.get(service_url, verify=LeapCertificate(self).api_ca_bundle(), timeout=self.config.timeout_in_s)
+        response = requests.get(service_url, verify=LeapCertificate(self).api_ca_bundle, timeout=self.config.timeout_in_s)
         response.raise_for_status()
         return json.loads(response.content)
 
