@@ -2,7 +2,7 @@ from __future__ import absolute_import
 import random
 from pixelated.config import credentials
 from leap.common.events import server as events_server
-from pixelated.bitmask_libraries import certs
+from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.session import open_leap_session
 
 
@@ -13,7 +13,7 @@ def initialize_leap(leap_provider_cert,
                     leap_home):
     init_monkeypatches()
     provider, user, password = credentials.read(organization_mode, credentials_file)
-    certs.init_leap_cert(leap_provider_cert, leap_provider_cert_fingerprint)
+    LeapCertificate.set_cert_and_fingerprint(leap_provider_cert, leap_provider_cert_fingerprint)
     events_server.ensure_server(random.randrange(8000, 11999))
     leap_session = create_leap_session(provider, user, password, leap_home)
     leap_session.start_background_jobs()

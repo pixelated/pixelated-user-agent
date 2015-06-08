@@ -219,7 +219,7 @@ class LeapProviderTest(AbstractLeapTest):
         session = MagicMock(wraps=requests.session())
         session_func = MagicMock(return_value=session)
 
-        with patch('pixelated.bitmask_libraries.provider.which_bootstrap_cert_fingerprint', return_value='some fingerprint'):
+        with patch('pixelated.bitmask_libraries.certs.LeapCertificate.LEAP_FINGERPRINT', return_value='some fingerprint'):
                 with patch('pixelated.bitmask_libraries.provider.requests.session', new=session_func):
                     with patch('pixelated.bitmask_libraries.certs.LeapCertificate.auto_detect_bootstrap_ca_bundle', return_value=False):
                         with HTTMock(provider_json_mock, ca_cert_mock, not_found_mock):

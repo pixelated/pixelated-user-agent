@@ -24,7 +24,7 @@ from leap.mail.imap.memorystore import MemoryStore
 from leap.mail.imap.soledadstore import SoledadStore
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
-from pixelated.bitmask_libraries.certs import refresh_ca_bundle
+from pixelated.bitmask_libraries.certs import LeapCertificate
 from twisted.internet import reactor
 from .nicknym import NickNym
 from leap.auth import SRPAuth
@@ -39,7 +39,7 @@ SESSIONS = {}
 def open_leap_session(username, password, server_name, leap_home=DEFAULT_LEAP_HOME):
     config = LeapConfig(leap_home=leap_home)
     provider = LeapProvider(server_name, config)
-    refresh_ca_bundle(provider)
+    LeapCertificate(provider).refresh_ca_bundle()
     session = LeapSessionFactory(provider).create(username, password)
 
     return session

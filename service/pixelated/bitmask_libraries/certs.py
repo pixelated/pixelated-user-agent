@@ -20,37 +20,29 @@ from leap.common import ca_bundle
 
 from .config import AUTO_DETECT_CA_BUNDLE
 
-LEAP_CERT = None
-LEAP_FINGERPRINT = None
-PACKAGED_CERTS_HOME = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "certificates"))
-
-
-def init_leap_cert(leap_provider_cert, leap_provider_cert_fingerprint):
-    if leap_provider_cert_fingerprint is None:
-        LEAP_CERT = leap_provider_cert or True
-        LEAP_FINGERPRINT = None
-    else:
-        LEAP_FINGERPRINT = leap_provider_cert_fingerprint
-        LEAP_CERT = False
-
-
-def which_bootstrap_cert_fingerprint():
-    return LEAP_FINGERPRINT
-
-
-def refresh_ca_bundle(provider):
-    LeapCertificate(provider).refresh_ca_bundle()
-
 
 class LeapCertificate(object):
+
+    LEAP_CERT = None
+    LEAP_FINGERPRINT = None
+
     def __init__(self, provider):
         self._config = provider.config
         self._server_name = provider.server_name
         self._provider = provider
 
+    @staticmethod
+    def set_cert_and_fingerprint(cert_file=None, cert_fingerprint=None):
+        if cert_fingerprint is None:
+            LeapCertificate.LEAP_CERT = cert_file or True
+            LeapCertificate.LEAP_FINGERPRINT = None
+        else:
+            LeapCertificate.LEAP_FINGERPRINT = cert_fingerprint
+            LeapCertificate.LEAP_CERT = False
+
     def auto_detect_bootstrap_ca_bundle(self):
-        if LEAP_CERT is not None:
-            return LEAP_CERT
+        if self.LEAP_CERT is not None:
+            return self.LEAP_CERT
 
         if self._config.bootstrap_ca_cert_bundle == AUTO_DETECT_CA_BUNDLE:
             local_cert = self._local_bootstrap_server_cert()
@@ -91,12 +83,6 @@ class LeapCertificate(object):
         if os.path.isfile(cert_file):
             return cert_file
 
-        cert_file = os.path.join(PACKAGED_CERTS_HOME, '%s.ca.crt' % self._server_name)
-        if os.path.exists(cert_file):
-            return cert_file
-
-        # else download the file
-        cert_file = self._bootstrap_certs_cert_file()
         response = requests.get('https://%s/provider.json' % self._server_name)
         provider_data = json.loads(response.content)
         ca_cert_uri = str(provider_data['ca_cert_uri'])

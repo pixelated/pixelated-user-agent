@@ -17,7 +17,6 @@ import json
 
 from leap.common.certs import get_digest
 import requests
-from .certs import which_bootstrap_cert_fingerprint
 from .certs import LeapCertificate
 from pixelated.support.tls_adapter import EnforceTLSv1Adapter
 
@@ -100,7 +99,7 @@ class LeapProvider(object):
     def _validated_get(self, url):
         session = requests.session()
         try:
-            session.mount('https://', EnforceTLSv1Adapter(assert_fingerprint=which_bootstrap_cert_fingerprint()))
+            session.mount('https://', EnforceTLSv1Adapter(assert_fingerprint=LeapCertificate.LEAP_FINGERPRINT))
             response = session.get(url, verify=LeapCertificate(self).auto_detect_bootstrap_ca_bundle(), timeout=self.config.timeout_in_s)
             response.raise_for_status()
             return response
