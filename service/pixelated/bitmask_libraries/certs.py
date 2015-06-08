@@ -25,6 +25,15 @@ LEAP_FINGERPRINT = None
 PACKAGED_CERTS_HOME = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "certificates"))
 
 
+def init_leap_cert(leap_provider_cert, leap_provider_cert_fingerprint):
+    if leap_provider_cert_fingerprint is None:
+        LEAP_CERT = leap_provider_cert or True
+        LEAP_FINGERPRINT = None
+    else:
+        LEAP_FINGERPRINT = leap_provider_cert_fingerprint
+        LEAP_CERT = False
+
+
 def which_api_CA_bundle(provider):
     return str(LeapCertificate(provider).api_ca_bundle())
 
