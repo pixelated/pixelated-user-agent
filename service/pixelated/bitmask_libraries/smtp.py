@@ -17,8 +17,8 @@ import logging
 import os
 import requests
 import random
-from .certs import which_api_CA_bundle
 from leap.mail.smtp import setup_smtp_gateway
+from pixelated.bitmask_libraries.certs import LeapCertificate
 
 
 logger = logging.getLogger(__name__)
@@ -59,7 +59,11 @@ class LeapSmtp(object):
         cert_url = '%s/%s/cert' % (self._provider.api_uri, self._provider.api_version)
         cookies = {"_session_id": self.session_id}
 
-        response = requests.get(cert_url, verify=which_api_CA_bundle(self._provider), cookies=cookies, timeout=self._provider.config.timeout_in_s)
+        response = requests.get(
+            cert_url,
+            verify=LeapCertificate(self._provider).api_ca_bundle(),
+            cookies=cookies,
+            timeout=self._provider.config.timeout_in_s)
         response.raise_for_status()
 
         client_cert = response.content

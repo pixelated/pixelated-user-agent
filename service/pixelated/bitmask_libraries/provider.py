@@ -17,7 +17,8 @@ import json
 
 from leap.common.certs import get_digest
 import requests
-from .certs import which_bootstrap_CA_bundle, which_api_CA_bundle, which_bootstrap_cert_fingerprint
+from .certs import which_bootstrap_cert_fingerprint
+from .certs import LeapCertificate
 from pixelated.support.tls_adapter import EnforceTLSv1Adapter
 
 
@@ -100,7 +101,7 @@ class LeapProvider(object):
         session = requests.session()
         try:
             session.mount('https://', EnforceTLSv1Adapter(assert_fingerprint=which_bootstrap_cert_fingerprint()))
-            response = session.get(url, verify=which_bootstrap_CA_bundle(self), timeout=self.config.timeout_in_s)
+            response = session.get(url, verify=LeapCertificate(self).auto_detect_bootstrap_ca_bundle(), timeout=self.config.timeout_in_s)
             response.raise_for_status()
             return response
         finally:
@@ -115,14 +116,14 @@ class LeapProvider(object):
     def fetch_soledad_json(self):
         service_url = "%s/%s/config/soledad-service.json" % (
             self.api_uri, self.api_version)
-        response = requests.get(service_url, verify=which_api_CA_bundle(self), timeout=self.config.timeout_in_s)
+        response = requests.get(service_url, verify=LeapCertificate(self).api_ca_bundle(), timeout=self.config.timeout_in_s)
         response.raise_for_status()
         return json.loads(response.content)
 
     def fetch_smtp_json(self):
         service_url = '%s/%s/config/smtp-service.json' % (
             self.api_uri, self.api_version)
-        response = requests.get(service_url, verify=which_api_CA_bundle(self), timeout=self.config.timeout_in_s)
+        response = requests.get(service_url, verify=LeapCertificate(self).api_ca_bundle(), timeout=self.config.timeout_in_s)
         response.raise_for_status()
         return json.loads(response.content)
 

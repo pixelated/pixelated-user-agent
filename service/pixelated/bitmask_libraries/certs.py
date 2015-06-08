@@ -34,10 +34,6 @@ def init_leap_cert(leap_provider_cert, leap_provider_cert_fingerprint):
         LEAP_CERT = False
 
 
-def which_api_CA_bundle(provider):
-    return str(LeapCertificate(provider).api_ca_bundle())
-
-
 def which_bootstrap_cert_fingerprint():
     return LEAP_FINGERPRINT
 
@@ -59,6 +55,9 @@ class LeapCertificate(object):
         self._provider = provider
 
     def auto_detect_bootstrap_ca_bundle(self):
+        if LEAP_CERT is not None:
+            return LEAP_CERT
+
         if self._config.bootstrap_ca_cert_bundle == AUTO_DETECT_CA_BUNDLE:
             local_cert = self._local_bootstrap_server_cert()
             if local_cert:

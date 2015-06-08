@@ -20,7 +20,7 @@ import logging
 from pixelated.bitmask_libraries import session as leap_session
 from pixelated.config import arguments
 from pixelated.config import logger as logger_config
-from pixelated.bitmask_libraries.certs import which_api_CA_bundle
+from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
 from leap.auth import SRPAuth
@@ -37,7 +37,7 @@ def register(server_name, username):
     config = LeapConfig()
     provider = LeapProvider(server_name, config)
     password = getpass.getpass('Please enter password for %s: ' % username)
-    srp_auth = SRPAuth(provider.api_uri, which_api_CA_bundle(provider))
+    srp_auth = SRPAuth(provider.api_uri, LeapCertificate(provider).api_ca_bundle())
 
     if srp_auth.register(username, password):
         session = leap_session.open_leap_session(username, password, server_name)

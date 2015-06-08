@@ -19,8 +19,7 @@ import os
 from leap.keymanager import KeyManager
 from leap.soledad.client import Soledad
 from leap.soledad.common.crypto import WrongMac, UnknownMacMethod
-from .certs import which_api_CA_bundle
-
+from pixelated.bitmask_libraries.certs import LeapCertificate
 
 SOLEDAD_TIMEOUT = 120
 SOLEDAD_CERT = '/tmp/ca.crt'
@@ -68,7 +67,7 @@ class SoledadSession(object):
             local_db = self._local_db_path()
 
             return Soledad(self.user_uuid, unicode(encryption_passphrase), secrets,
-                           local_db, server_url, which_api_CA_bundle(self.provider), self.user_token, defer_encryption=False)
+                           local_db, server_url, LeapCertificate(self.provider).api_ca_bundle(), self.user_token, defer_encryption=False)
 
         except (WrongMac, UnknownMacMethod), e:
             raise SoledadWrongPassphraseException(e)
