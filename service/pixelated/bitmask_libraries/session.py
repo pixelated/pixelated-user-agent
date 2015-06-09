@@ -73,9 +73,8 @@ class LeapSession(object):
             self.start_background_jobs()
 
     def account_email(self):
-        domain = self.provider.domain
         name = self.user_auth.username
-        return '%s@%s' % (name, domain)
+        return self.provider.address_for(name)
 
     def close(self):
         self.stop_background_jobs()
@@ -114,12 +113,13 @@ class LeapSessionFactory(object):
 
         srp_auth = SRPAuth(self._provider.api_uri, self._provider.local_ca_crt)
         auth = srp_auth.authenticate(username, password)
+        account_email = self._provider.address_for(username)
 
         soledad = SoledadSessionFactory.create(self._provider, auth.token, auth.uuid, password)
 
-        nicknym = self._create_nicknym(auth.username, auth.token, auth.uuid, soledad)
+        nicknym = self._create_nicknym(account_email, auth.token, auth.uuid, soledad)
         account = self._create_account(auth.uuid, soledad)
-        incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad, account, auth.username)
+        incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad, account, account_email)
 
         smtp = LeapSmtp(self._provider, auth.username, auth.session_id, nicknym.keymanager)
 
@@ -150,17 +150,13 @@ class LeapSessionFactory(object):
             else:
                 raise
 
-    def _create_nicknym(self, username, token, uuid, soledad_session):
-        return NickNym(self._provider, self._config, soledad_session, username, token, uuid)
+    def _create_nicknym(self, email_address, token, uuid, soledad_session):
+        return NickNym(self._provider, self._config, soledad_session, email_address, token, uuid)
 
     def _create_account(self, uuid, soledad_session):
         memstore = MemoryStore(permanent_store=SoledadStore(soledad_session.soledad))
         return SoledadBackedAccount(uuid, soledad_session.soledad, memstore)
 
-    def _create_incoming_mail_fetcher(self, nicknym, soledad_session, account, username):
+    def _create_incoming_mail_fetcher(self, nicknym, soledad_session, account, email_address):
         return LeapIncomingMail(nicknym.keymanager, soledad_session.soledad, account,
-                                self._config.fetch_interval_in_s, self._account_email(username))
-
-    def _account_email(self, username):
-        domain = self._provider.domain
-        return '%s@%s' % (username, domain)
+                                self._config.fetch_interval_in_s, email_address)

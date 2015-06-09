@@ -128,3 +128,6 @@ class LeapProvider(object):
 
     def _provider_base_url(self):
         return 'https://%s' % self.server_name
+
+    def address_for(self, username):
+        return '%s@%s' % (username, self.domain)

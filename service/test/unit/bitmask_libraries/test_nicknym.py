@@ -30,7 +30,7 @@ class NickNymTest(AbstractLeapTest):
         NickNym(self.provider,
                 self.config,
                 self.soledad_session,
-                self.auth.username,
+                'test_user@some-server.test',
                 self.auth.token,
                 self.auth.uuid)
 
@@ -54,7 +54,7 @@ class NickNymTest(AbstractLeapTest):
         nicknym = NickNym(self.provider,
                           self.config,
                           self.soledad_session,
-                          self.auth.username,
+                          'test_user@some-server.test',
                           self.auth.token,
                           self.auth.uuid)
 
