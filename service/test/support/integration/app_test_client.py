@@ -73,7 +73,7 @@ class AppTestClient(object):
         self.search_engine.index_mails(self.mail_service.all_mails())
 
         self.resource = RootResource()
-        self.resource.initialize(self.soledad_querier, self.keymanager, self.search_engine, self.mail_service, self.draft_service)
+        self.resource.initialize(self.keymanager, self.search_engine, self.mail_service, self.draft_service)
 
     def _render(self, request, as_json=True):
         def get_str(_str):
