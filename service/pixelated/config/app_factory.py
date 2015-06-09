@@ -47,6 +47,6 @@ def init_app(leap_home, leap_session):
     InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
 
     resource = RootResource()
-    resource.initialize(soledad_querier, keymanager, search_engine, mail_service, draft_service)
+    resource.initialize(keymanager, search_engine, mail_service, draft_service)
 
     return resource

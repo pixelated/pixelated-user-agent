@@ -60,6 +60,9 @@ class MailService(object):
     def mail(self, mail_id):
         return self.querier.mail(mail_id)
 
+    def attachment(self, attachment_id, encoding):
+        return self.querier.attachment(attachment_id, encoding)
+
     def mail_exists(self, mail_id):
         return not(not(self.querier.get_header_by_chash(mail_id)))
 
