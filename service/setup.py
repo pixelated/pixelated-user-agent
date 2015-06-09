@@ -43,7 +43,8 @@ setup(name='pixelated-user-agent',
           'pixelated.assets',
           'pixelated.certificates',
           'pixelated.support',
-          'pixelated.resources'
+          'pixelated.resources',
+          'pixelated.extensions'
       ],
       install_requires=[
            'pyasn1==0.1.3',
