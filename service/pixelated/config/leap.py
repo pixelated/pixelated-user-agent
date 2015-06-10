@@ -18,14 +18,11 @@ def initialize_leap(leap_provider_cert,
     provider, username, password = credentials.read(organization_mode, credentials_file)
     LeapCertificate.set_cert_and_fingerprint(leap_provider_cert, leap_provider_cert_fingerprint)
 
-    config = LeapConfig(leap_home=leap_home)
+    config = LeapConfig(leap_home=leap_home, start_background_jobs=True)
     provider = LeapProvider(provider, config)
     LeapCertificate(provider).setup_ca_bundle()
     leap_session = LeapSessionFactory(provider).create(username, password)
 
-    leap_session.soledad_session.soledad.sync(defer_decryption=False)
-    leap_session.nicknym.generate_openpgp_key()
-    leap_session.start_background_jobs()
     return leap_session
 
 

@@ -71,6 +71,8 @@ class LeapSession(object):
 
         if self.config.start_background_jobs:
             self.start_background_jobs()
+            self.soledad_session.soledad.sync(defer_decryption=False)
+            self.nicknym.generate_openpgp_key()
 
     def account_email(self):
         name = self.user_auth.username
