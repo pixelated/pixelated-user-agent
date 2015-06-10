@@ -25,7 +25,7 @@ class NickNymTest(AbstractLeapTest):
     @patch('pixelated.bitmask_libraries.nicknym.KeyManager.__init__', return_value=None)
     def test_that_keymanager_is_created(self, keymanager_init_mock):
         # given
-        LeapCertificate.api_ca_bundle = '/some/path/to/provider_ca_cert'
+        LeapCertificate.provider_api_cert = '/some/path/to/provider_ca_cert'
         # when
         NickNym(self.provider,
                 self.config,

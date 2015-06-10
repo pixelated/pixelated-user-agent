@@ -61,7 +61,7 @@ class LeapSmtp(object):
 
         response = requests.get(
             cert_url,
-            verify=LeapCertificate(self._provider).api_ca_bundle,
+            verify=LeapCertificate(self._provider).provider_api_cert,
             cookies=cookies,
             timeout=self._provider.config.timeout_in_s)
         response.raise_for_status()

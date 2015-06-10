@@ -35,14 +35,6 @@ class SoledadWrongPassphraseException(Exception):
         super(SoledadWrongPassphraseException, self).__init__(*args, **kwargs)
 
 
-class LeapKeyManager(object):
-    def __init__(self, soledad, leap_session, nicknym_url):
-        provider = leap_session.provider
-        self.keymanager = KeyManager(leap_session.account_email(), nicknym_url, soledad,
-                                     leap_session.session_id, leap_session.leap_home + '/ca.crt', provider.api_uri, leap_session.api_version,
-                                     leap_session.uuid, leap_session.leap_config.gpg_binary)
-
-
 class SoledadSessionFactory(object):
     @classmethod
     def create(cls, provider, user_token, user_uuid, encryption_passphrase):
@@ -67,7 +59,7 @@ class SoledadSession(object):
             local_db = self._local_db_path()
 
             return Soledad(self.user_uuid, unicode(encryption_passphrase), secrets,
-                           local_db, server_url, LeapCertificate(self.provider).api_ca_bundle, self.user_token, defer_encryption=False)
+                           local_db, server_url, LeapCertificate(self.provider).provider_api_cert, self.user_token, defer_encryption=False)
 
         except (WrongMac, UnknownMacMethod), e:
             raise SoledadWrongPassphraseException(e)

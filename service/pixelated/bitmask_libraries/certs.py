@@ -29,21 +29,25 @@ class LeapCertificate(object):
     @staticmethod
     def set_cert_and_fingerprint(cert_file=None, cert_fingerprint=None):
         if cert_fingerprint is None:
-            LeapCertificate.LEAP_CERT = cert_file or True
+            LeapCertificate.LEAP_CERT = str(cert_file) or True
             LeapCertificate.LEAP_FINGERPRINT = None
         else:
             LeapCertificate.LEAP_FINGERPRINT = cert_fingerprint
             LeapCertificate.LEAP_CERT = False
 
     @property
-    def api_ca_bundle(self):
-        return os.path.join(self._provider.config.leap_home, 'providers', self._server_name, 'keys', 'client', 'api.pem')
+    def provider_web_cert(self):
+        return self.LEAP_CERT
+
+    @property
+    def provider_api_cert(self):
+        return str(os.path.join(self._provider.config.leap_home, 'providers', self._server_name, 'keys', 'client', 'api.pem'))
 
     def setup_ca_bundle(self):
         path = os.path.join(self._provider.config.leap_home, 'providers', self._server_name, 'keys', 'client')
         if not os.path.isdir(path):
             os.makedirs(path, 0700)
-        self._download_cert(self.api_ca_bundle)
+        self._download_cert(self.provider_api_cert)
 
     def _download_cert(self, cert_file_name):
         cert = self._provider.fetch_valid_certificate()

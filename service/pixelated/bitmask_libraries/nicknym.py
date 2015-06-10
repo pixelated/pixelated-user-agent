@@ -23,7 +23,7 @@ class NickNym(object):
         self._email = email_address
         self.keymanager = KeyManager(self._email, nicknym_url,
                                      soledad_session.soledad,
-                                     token, LeapCertificate(provider).api_ca_bundle, provider.api_uri,
+                                     token, LeapCertificate(provider).provider_api_cert, provider.api_uri,
                                      provider.api_version,
                                      uuid, config.gpg_binary)
 
