@@ -1,7 +1,7 @@
 import unittest
 
 from pixelated.bitmask_libraries.certs import LeapCertificate
-from mock import MagicMock, patch
+from mock import MagicMock
 
 
 class CertsTest(unittest.TestCase):
@@ -25,6 +25,14 @@ class CertsTest(unittest.TestCase):
 
         self.assertEqual('fingerprint', LeapCertificate.LEAP_FINGERPRINT)
         self.assertFalse(certs.provider_web_cert)
+
+    def test_set_cert_and_fingerprint_when_none_are_passed(self):
+        LeapCertificate.set_cert_and_fingerprint(None, None)
+
+        certs = LeapCertificate(self.provider)
+
+        self.assertIsNone(certs.LEAP_FINGERPRINT)
+        self.assertEqual(True, certs.provider_web_cert)
 
     def test_provider_api_cert(self):
         certs = LeapCertificate(self.provider).provider_api_cert

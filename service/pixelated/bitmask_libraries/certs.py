@@ -29,7 +29,7 @@ class LeapCertificate(object):
     @staticmethod
     def set_cert_and_fingerprint(cert_file=None, cert_fingerprint=None):
         if cert_fingerprint is None:
-            LeapCertificate.LEAP_CERT = str(cert_file) or True
+            LeapCertificate.LEAP_CERT = str(cert_file) if cert_file else True
             LeapCertificate.LEAP_FINGERPRINT = None
         else:
             LeapCertificate.LEAP_FINGERPRINT = cert_fingerprint
