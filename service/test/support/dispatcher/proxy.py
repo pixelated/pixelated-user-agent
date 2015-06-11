@@ -20,7 +20,6 @@ import traceback
 import sys
 import time
 
-from tornado.httpclient import AsyncHTTPClient
 from tornado.httpserver import HTTPServer
 import tornado.ioloop
 import tornado.web

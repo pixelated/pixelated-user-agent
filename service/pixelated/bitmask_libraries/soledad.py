@@ -16,7 +16,6 @@
 import errno
 
 import os
-from leap.keymanager import KeyManager
 from leap.soledad.client import Soledad
 from leap.soledad.common.crypto import WrongMac, UnknownMacMethod
 from pixelated.bitmask_libraries.certs import LeapCertificate

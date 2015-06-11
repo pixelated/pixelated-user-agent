@@ -1,4 +1,3 @@
-from pixelated.resources.root_resource import RootResource
 from pixelated.adapter.services.mail_service import MailService
 from pixelated.adapter.model.mail import InputMail
 from pixelated.adapter.services.mail_sender import MailSender

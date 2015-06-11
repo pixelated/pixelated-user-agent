@@ -22,7 +22,6 @@ from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from test_abstract_leap import AbstractLeapTest
-from requests import Session
 import requests
 
 

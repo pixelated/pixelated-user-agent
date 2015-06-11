@@ -17,7 +17,7 @@ import logging
 import uuid
 
 from test.support.dispatcher.proxy import Proxy
-from test.support.integration import AppTestClient, MailBuilder
+from test.support.integration import AppTestClient
 from selenium import webdriver
 
 from pixelated.resources.features_resource import FeaturesResource
