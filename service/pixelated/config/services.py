@@ -12,7 +12,7 @@ class Services(object):
 
     def __init__(self, leap_home, leap_session):
 
-        soledad_querier = SoledadQuerier(soledad=leap_session.account._soledad)
+        soledad_querier = SoledadQuerier(soledad=leap_session.soledad_session.soledad)
 
         self.search_engine = self.setup_search_engine(
             leap_home,
