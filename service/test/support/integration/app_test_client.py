@@ -62,7 +62,7 @@ class AppTestClient(object):
         self.soledad_querier = self._create_soledad_querier(self.soledad, self.INDEX_KEY)
         self.keymanager = mock()
 
-        self.search_engine = SearchEngine(self.soledad_querier, agent_home=soledad_test_folder)
+        self.search_engine = SearchEngine(self.INDEX_KEY, agent_home=soledad_test_folder)
         self.mail_sender = self._create_mail_sender()
 
         self.account = SoledadBackedAccount(self.ACCOUNT, self.soledad, MagicMock())

@@ -16,7 +16,6 @@
 
 
 import unittest
-from mockito import mock, when
 from pixelated.adapter.search import SearchEngine
 from tempdir import TempDir
 from test.support import test_helper
@@ -47,10 +46,7 @@ class SearchEngineTest(unittest.TestCase):
 
     def test_encoding(self):
         # given
-        soledad_querier = mock()
-        when(soledad_querier).get_index_masterkey().thenReturn(INDEX_KEY)
-
-        se = SearchEngine(soledad_querier, self.agent_home)
+        se = SearchEngine(INDEX_KEY, self.agent_home)
 
         headers = {
             'From': 'foo@bar.tld',

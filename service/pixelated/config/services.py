@@ -45,7 +45,8 @@ class Services(object):
         return leap_session.nicknym.keymanager
 
     def setup_search_engine(self, leap_home, soledad_querier):
-        search_engine = SearchEngine(soledad_querier, agent_home=leap_home)
+        key = self.soledad_querier.get_index_masterkey()
+        search_engine = SearchEngine(key, agent_home=leap_home)
         MailboxIndexerListener.SEARCH_ENGINE = search_engine
         return search_engine
 

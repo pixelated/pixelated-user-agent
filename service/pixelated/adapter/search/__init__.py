@@ -35,8 +35,8 @@ class SearchEngine(object):
     DEFAULT_INDEX_HOME = os.path.join(os.environ['HOME'], '.leap')
     DEFAULT_TAGS = ['inbox', 'sent', 'drafts', 'trash']
 
-    def __init__(self, soledad_querier, agent_home=DEFAULT_INDEX_HOME):
-        self.soledad_querier = soledad_querier
+    def __init__(self, key, agent_home=DEFAULT_INDEX_HOME):
+        self.key = key
         self.index_folder = os.path.join(agent_home, 'search_index')
         if not os.path.exists(self.index_folder):
             os.makedirs(self.index_folder)
@@ -111,8 +111,7 @@ class SearchEngine(object):
             raw=TEXT(stored=False))
 
     def _create_index(self):
-        masterkey = self.soledad_querier.get_index_masterkey()
-        storage = EncryptedFileStorage(self.index_folder, masterkey)
+        storage = EncryptedFileStorage(self.index_folder, self.key)
         return FileIndex.create(storage, self._mail_schema(), indexname='mails')
 
     def index_mail(self, mail):
