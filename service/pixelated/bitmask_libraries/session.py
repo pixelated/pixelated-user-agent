@@ -39,9 +39,13 @@ class LeapSession(object):
 
     Properties:
 
-    - ``leap_config`` the configuration for this session (LeapClientConfig).
+    - ``smtp`` the smtp gateway instance (LeapSmtp).
 
-    - ``srp_session`` the secure remote password session to authenticate with LEAP. See http://en.wikipedia.org/wiki/Secure_Remote_Password_protocol (LeapSecureRemotePassword)
+    - ``config`` the configuration for this session (LeapClientConfig).
+
+    - ``provider`` the responsible for interacting with provider.json (LeapProvider).
+
+    - ``user_auth`` the secure remote password session data after authenticating with LEAP. See http://en.wikipedia.org/wiki/Secure_Remote_Password_protocol (SRPSession)
 
     - ``soledad_session`` the soledad session. See https://leap.se/soledad (LeapSecureRemotePassword)
 
