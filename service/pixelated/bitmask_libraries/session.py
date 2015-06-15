@@ -57,13 +57,6 @@ class LeapSession(object):
     """
 
     def __init__(self, provider, user_auth, soledad_session, nicknym, soledad_account, incoming_mail_fetcher, smtp):
-        """
-        Constructor.
-
-        :param leap_config: The config for this LEAP session
-        :type leap_config: LeapConfig
-
-        """
         self.smtp = smtp
         self.config = provider.config
         self.provider = provider
