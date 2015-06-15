@@ -72,11 +72,11 @@ class LeapSession(object):
         self.nicknym = nicknym
         self.account = soledad_account
         self.incoming_mail_fetcher = incoming_mail_fetcher
+        self.soledad_session.soledad.sync(defer_decryption=False)
+        self.nicknym.generate_openpgp_key()
 
         if self.config.start_background_jobs:
             self.start_background_jobs()
-            self.soledad_session.soledad.sync(defer_decryption=False)
-            self.nicknym.generate_openpgp_key()
 
     def account_email(self):
         name = self.user_auth.username
