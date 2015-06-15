@@ -26,7 +26,6 @@ class LeapProvider(object):
         self.server_name = server_name
         self.config = config
         self.local_ca_crt = '%s/ca.crt' % self.config.leap_home
-
         self.provider_json = self.fetch_provider_json()
 
     @property
