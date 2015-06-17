@@ -49,7 +49,7 @@ def register(
     srp_auth = SRPAuth(provider.api_uri, LeapCertificate(provider).provider_api_cert)
 
     if srp_auth.register(username, password):
-        session = LeapSessionFactory(provider).create(username, password)
+        LeapSessionFactory(provider).create(username, password)
     else:
         logger.error("Register failed")
 
