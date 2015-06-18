@@ -26,11 +26,12 @@ logger = logging.getLogger(__name__)
 
 class LeapSmtp(object):
 
-    def __init__(self, provider, username, session_id, keymanager=None):
+    def __init__(self, provider, username, session_id, user_token, keymanager=None):
         self.local_smtp_port_number = random.randrange(12000, 16000)
         self._provider = provider
         self.username = username
         self.session_id = session_id
+        self.user_token = user_token
         self._keymanager = keymanager
         self._remote_hostname, self._remote_port = self._discover_remote_smtp_server()
         self._local_smtp_service_socket = None
@@ -58,12 +59,14 @@ class LeapSmtp(object):
 
         cert_url = '%s/%s/cert' % (self._provider.api_uri, self._provider.api_version)
         cookies = {"_session_id": self.session_id}
-
+        headers = {}
+        headers["Authorization"] = 'Token token="{0}"'.format(self.user_token)
         response = requests.get(
             cert_url,
             verify=LeapCertificate(self._provider).provider_api_cert,
             cookies=cookies,
-            timeout=self._provider.config.timeout_in_s)
+            timeout=self._provider.config.timeout_in_s,
+            headers=headers)
         response.raise_for_status()
 
         client_cert = response.content

@@ -66,7 +66,7 @@ class LeapSmtpTest(AbstractLeapTest):
 
     @patch('pixelated.bitmask_libraries.smtp.setup_smtp_gateway')
     def test_that_start_calls_setup_smtp_gateway(self, gateway_mock):
-        smtp = LeapSmtp(self.provider, self.auth.username, self.auth.session_id, self.keymanager)
+        smtp = LeapSmtp(self.provider, self.auth.username, self.auth.session_id, self.auth.token, self.keymanager)
 
         port = 500
         smtp.local_smtp_port_number = port

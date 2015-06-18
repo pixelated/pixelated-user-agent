@@ -122,7 +122,7 @@ class LeapSessionFactory(object):
         account = self._create_account(auth.uuid, soledad)
         incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad, account, account_email)
 
-        smtp = LeapSmtp(self._provider, auth.username, auth.session_id, nicknym.keymanager)
+        smtp = LeapSmtp(self._provider, auth.username, auth.session_id, auth.token, nicknym.keymanager)
 
         return LeapSession(self._provider, auth, soledad, nicknym, account, incoming_mail_fetcher, smtp)
 
