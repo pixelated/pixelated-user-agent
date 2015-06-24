@@ -21,9 +21,11 @@ from pixelated.config.leap import initialize_leap
 from pixelated.config import logger, arguments
 
 from leap.mail.imap.fields import WithMsgFields
+import time
 
 
 def initialize():
+    import time
     args = arguments.parse_maintenance_args()
 
     logger.init(debug=args.debug)
@@ -175,6 +177,7 @@ def dump_soledad(args):
 
 
 def shutdown(args):
+    time.sleep(30)
     reactor.stop()
 
 
