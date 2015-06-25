@@ -393,6 +393,10 @@ class PixelatedMail(Mail):
     def uid(self):
         return self.fdoc.content['uid']
 
+    @property
+    def flags(self):
+        return self.fdoc.content['flags']
+
     def save(self):
         return self.querier.save_mail(self)
 
@@ -407,21 +411,21 @@ class PixelatedMail(Mail):
         return self.tags
 
     def mark_as_read(self):
-        if Status.SEEN in self.fdoc.content['flags']:
+        if Status.SEEN in self.flags:
             return self
-        self.fdoc.content['flags'].append(Status.SEEN)
+        self.flags.append(Status.SEEN)
         self.save()
         return self
 
     def mark_as_unread(self):
-        if Status.SEEN in self.fdoc.content['flags']:
-            self.fdoc.content['flags'].remove(Status.SEEN)
+        if Status.SEEN in self.flags:
+            self.flags.remove(Status.SEEN)
             self.save()
         return self
 
     def mark_as_not_recent(self):
-        if Status.RECENT in self.fdoc.content['flags']:
-            self.fdoc.content['flags'].remove(Status.RECENT)
+        if Status.RECENT in self.flags:
+            self.flags.remove(Status.RECENT)
             self.save()
         return self
 

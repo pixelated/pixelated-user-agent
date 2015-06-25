@@ -14,16 +14,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from leap.keymanager import KeyManager, openpgp, KeyNotFound
-from .certs import which_api_CA_bundle
+from .certs import LeapCertificate
 
 
 class NickNym(object):
-    def __init__(self, provider, config, soledad_session, username, token, uuid):
+    def __init__(self, provider, config, soledad_session, email_address, token, uuid):
         nicknym_url = _discover_nicknym_server(provider)
-        self._email = '%s@%s' % (username, provider.domain)
-        self.keymanager = KeyManager('%s@%s' % (username, provider.domain), nicknym_url,
+        self._email = email_address
+        self.keymanager = KeyManager(self._email, nicknym_url,
                                      soledad_session.soledad,
-                                     token, which_api_CA_bundle(provider), provider.api_uri,
+                                     token, LeapCertificate(provider).provider_api_cert, provider.api_uri,
                                      provider.api_version,
                                      uuid, config.gpg_binary)
 

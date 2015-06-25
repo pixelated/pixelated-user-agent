@@ -1,35 +1,40 @@
 import unittest
 
-from pixelated.bitmask_libraries.certs import which_bootstrap_CA_bundle, which_api_CA_bundle
-from pixelated.bitmask_libraries.config import AUTO_DETECT_CA_BUNDLE
-from mock import MagicMock, patch
+from pixelated.bitmask_libraries.certs import LeapCertificate
+from mock import MagicMock
 
 
 class CertsTest(unittest.TestCase):
 
-    @patch('pixelated.bitmask_libraries.certs.os.path.isfile')
-    @patch('pixelated.bitmask_libraries.certs.os.path.isdir')
-    def test_that_which_bootstrap_cert_bundle_returns_byte_string(self, mock_isdir, mock_isfile):
-        mock_isfile.return_value = True
-        mock_isdir.return_value = True
-        config = MagicMock(bootstrap_ca_cert_bundle=AUTO_DETECT_CA_BUNDLE, leap_home='/leap/home')
-        provider = MagicMock(server_name=u'test.leap.net', config=config)
+    def setUp(self):
+        config = MagicMock(leap_home='/some/leap/home')
+        self.provider = MagicMock(server_name=u'test.leap.net', config=config)
 
-        bundle = which_bootstrap_CA_bundle(provider)
+    def test_set_cert_and_fingerprint_sets_cert(self):
+        LeapCertificate.set_cert_and_fingerprint('some cert', None)
 
-        self.assertEqual('/leap/home/providers/test.leap.net/test.leap.net.ca.crt', bundle)
-        self.assertEqual(str, type(bundle))
+        certs = LeapCertificate(self.provider)
 
-    @patch('pixelated.bitmask_libraries.certs.os.path.isfile')
-    @patch('pixelated.bitmask_libraries.certs.os.path.isdir')
-    def test_that_which_bundle_returns_byte_string(self, mock_isdir, mock_isfile):
-        mock_isfile.return_value = True
-        mock_isdir.return_value = True
+        self.assertIsNone(certs.LEAP_FINGERPRINT)
+        self.assertEqual('some cert', certs.provider_web_cert)
 
-        config = MagicMock(bootstrap_ca_cert_bundle=AUTO_DETECT_CA_BUNDLE, ca_cert_bundle=None, leap_home='/some/leap/home')
-        provider = MagicMock(server_name=u'test.leap.net', config=config)
+    def test_set_cert_and_fingerprint_sets_fingerprint(self):
+        LeapCertificate.set_cert_and_fingerprint(None, 'fingerprint')
 
-        bundle = which_api_CA_bundle(provider)
+        certs = LeapCertificate(self.provider)
 
-        self.assertEqual('/some/leap/home/providers/test.leap.net/keys/client/api.pem', bundle)
-        self.assertEqual(str, type(bundle))
+        self.assertEqual('fingerprint', LeapCertificate.LEAP_FINGERPRINT)
+        self.assertFalse(certs.provider_web_cert)
+
+    def test_set_cert_and_fingerprint_when_none_are_passed(self):
+        LeapCertificate.set_cert_and_fingerprint(None, None)
+
+        certs = LeapCertificate(self.provider)
+
+        self.assertIsNone(certs.LEAP_FINGERPRINT)
+        self.assertEqual(True, certs.provider_web_cert)
+
+    def test_provider_api_cert(self):
+        certs = LeapCertificate(self.provider).provider_api_cert
+
+        self.assertEqual('/some/leap/home/providers/test.leap.net/keys/client/api.pem', certs)

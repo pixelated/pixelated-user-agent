@@ -21,9 +21,11 @@ from pixelated.config.leap import initialize_leap
 from pixelated.config import logger, arguments
 
 from leap.mail.imap.fields import WithMsgFields
+import time
 
 
 def initialize():
+    import time
     args = arguments.parse_maintenance_args()
 
     logger.init(debug=args.debug)
@@ -32,8 +34,8 @@ def initialize():
         args.leap_provider_cert,
         args.leap_provider_cert_fingerprint,
         args.credentials_file,
-        args.organization_mode,
-        args.leap_home)
+        organization_mode=False,
+        leap_home=args.leap_home)
 
     execute_command = create_execute_command(args, leap_session)
 
@@ -175,6 +177,7 @@ def dump_soledad(args):
 
 
 def shutdown(args):
+    time.sleep(30)
     reactor.stop()
 
 

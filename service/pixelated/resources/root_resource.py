@@ -21,10 +21,10 @@ class RootResource(Resource):
             return self
         return Resource.getChild(self, path, request)
 
-    def initialize(self, querier, keymanager, search_engine, mail_service, draft_service):
+    def initialize(self, keymanager, search_engine, mail_service, draft_service):
         self.putChild('assets', File(self._static_folder))
         self.putChild('keys', KeysResource(keymanager))
-        self.putChild('attachment', AttachmentsResource(querier))
+        self.putChild('attachment', AttachmentsResource(mail_service))
         self.putChild('contacts', ContactsResource(search_engine))
         self.putChild('features', FeaturesResource())
         self.putChild('tags', TagsResource(search_engine))
@@ -32,7 +32,6 @@ class RootResource(Resource):
         self.putChild('mail', MailResource(mail_service))
 
     def _get_static_folder(self):
-
         static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))
         # this is a workaround for packaging
         if not os.path.exists(static_folder):

@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-
 from twisted.internet import reactor
 from twisted.internet.threads import deferToThread
 from twisted.internet import defer
@@ -25,16 +23,26 @@ from OpenSSL import SSL
 from OpenSSL import crypto
 
 from pixelated.config import arguments
-from pixelated.resources import loading_page
+from pixelated.config.services import Services
 from pixelated.config.leap import initialize_leap
-from pixelated.config import logger, app_factory
+from pixelated.config import logger
+from pixelated.resources.loading_page import LoadingResource
+from pixelated.resources.root_resource import RootResource
 
 
 @defer.inlineCallbacks
 def start_user_agent(loading_app, host, port, sslkey, sslcert, leap_home, leap_session):
     yield loading_app.stopListening()
 
-    resource = app_factory.init_app(leap_home, leap_session)
+    services = Services(leap_home, leap_session)
+
+    resource = RootResource()
+
+    resource.initialize(
+        services.keymanager,
+        services.search_engine,
+        services.mail_service,
+        services.draft_service)
 
     if sslkey and sslcert:
         reactor.listenSSL(port, Site(resource), _ssl_options(sslkey, sslcert), interface=host)
@@ -64,7 +72,7 @@ def initialize():
     args = arguments.parse_user_agent_args()
     logger.init(debug=args.debug)
 
-    loading_app = reactor.listenTCP(args.port, Site(loading_page.LoadingResource()), interface=args.host)
+    loading_app = reactor.listenTCP(args.port, Site(LoadingResource()), interface=args.host)
 
     deferred = deferToThread(
         lambda: initialize_leap(

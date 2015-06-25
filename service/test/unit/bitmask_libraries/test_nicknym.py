@@ -15,29 +15,36 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from mock import patch
 
+from test_abstract_leap import AbstractLeapTest
 from leap.keymanager import openpgp, KeyNotFound
 from pixelated.bitmask_libraries.nicknym import NickNym
-from test_abstract_leap import AbstractLeapTest
+from pixelated.bitmask_libraries.certs import LeapCertificate
 
 
 class NickNymTest(AbstractLeapTest):
     @patch('pixelated.bitmask_libraries.nicknym.KeyManager.__init__', return_value=None)
-    def test_that_keymanager_is_created(self, init_mock):
+    def test_that_keymanager_is_created(self, keymanager_init_mock):
         # given
-
+        LeapCertificate.provider_api_cert = '/some/path/to/provider_ca_cert'
         # when
         NickNym(self.provider,
                 self.config,
                 self.soledad_session,
-                self.auth.username,
+                'test_user@some-server.test',
                 self.auth.token,
                 self.auth.uuid)
 
         # then
-        init_mock.assert_called_with('test_user@some-server.test', 'https://nicknym.some-server.test:6425/',
-                                     self.soledad, self.auth.token, '/some/path/to/provider_ca_cert',
-                                     'https://api.some-server.test:4430', '1', self.auth.uuid,
-                                     '/path/to/gpg')
+        keymanager_init_mock.assert_called_with(
+            'test_user@some-server.test',
+            'https://nicknym.some-server.test:6425/',
+            self.soledad,
+            self.auth.token,
+            '/some/path/to/provider_ca_cert',
+            'https://api.some-server.test:4430',
+            '1',
+            self.auth.uuid,
+            '/path/to/gpg')
 
     @patch('pixelated.bitmask_libraries.nicknym.KeyManager')
     def test_gen_key(self, keymanager_mock):
@@ -47,7 +54,7 @@ class NickNymTest(AbstractLeapTest):
         nicknym = NickNym(self.provider,
                           self.config,
                           self.soledad_session,
-                          self.auth.username,
+                          'test_user@some-server.test',
                           self.auth.token,
                           self.auth.uuid)
 

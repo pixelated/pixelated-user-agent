@@ -17,31 +17,39 @@ import re
 import getpass
 import logging
 
-from pixelated.bitmask_libraries import session as leap_session
 from pixelated.config import arguments
 from pixelated.config import logger as logger_config
-from pixelated.bitmask_libraries.certs import which_api_CA_bundle
+from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
+from pixelated.bitmask_libraries.session import LeapSessionFactory
 from leap.auth import SRPAuth
 
 logger = logging.getLogger(__name__)
 
 
-def register(server_name, username):
+def register(
+        server_name,
+        username,
+        leap_home,
+        provider_cert,
+        provider_cert_fingerprint):
+
     try:
         validate_username(username)
     except ValueError:
         print('Only lowercase letters, digits, . - and _ allowed.')
 
-    config = LeapConfig()
-    provider = LeapProvider(server_name, config)
     password = getpass.getpass('Please enter password for %s: ' % username)
-    srp_auth = SRPAuth(provider.api_uri, which_api_CA_bundle(provider))
+
+    LeapCertificate.set_cert_and_fingerprint(provider_cert, provider_cert_fingerprint)
+    config = LeapConfig(leap_home=leap_home)
+    provider = LeapProvider(server_name, config)
+    LeapCertificate(provider).setup_ca_bundle()
+    srp_auth = SRPAuth(provider.api_uri, LeapCertificate(provider).provider_api_cert)
 
     if srp_auth.register(username, password):
-        session = leap_session.open_leap_session(username, password, server_name)
-        session.nicknym.generate_openpgp_key()
+        LeapSessionFactory(provider).create(username, password)
     else:
         logger.error("Register failed")
 
@@ -55,4 +63,9 @@ def validate_username(username):
 def initialize():
     logger_config.init(debug=False)
     args = arguments.parse_register_args()
-    register(args.provider, args.username)
+    register(
+        args.provider,
+        args.username,
+        args.leap_home,
+        args.leap_provider_cert,
+        args.leap_provider_cert_fingerprint)

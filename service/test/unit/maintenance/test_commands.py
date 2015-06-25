@@ -22,7 +22,7 @@ from leap.mail.imap.account import SoledadBackedAccount
 from leap.mail.imap.fields import WithMsgFields
 from leap.soledad.client import Soledad
 from leap.soledad.common.document import SoledadDocument
-from mock import MagicMock, ANY
+from mock import MagicMock
 from os.path import join, dirname
 from twisted.internet import defer, reactor
 

@@ -27,15 +27,15 @@ class AttachmentResource(Resource):
 
     isLeaf = True
 
-    def __init__(self, attachment_id, querier):
+    def __init__(self, mail_service, attachment_id):
         Resource.__init__(self)
         self.attachment_id = attachment_id
-        self.querier = querier
+        self.mail_service = mail_service
 
     def render_GET(self, request):
         encoding = request.args.get('encoding', [None])[0]
         filename = request.args.get('filename', [self.attachment_id])[0]
-        attachment = self.querier.attachment(self.attachment_id, encoding)
+        attachment = self.mail_service.attachment(self.attachment_id, encoding)
 
         request.setHeader(b'Content-Type', b'application/force-download')
         request.setHeader(b'Content-Disposition', bytes('attachment; filename=' + filename))
@@ -57,9 +57,9 @@ class AttachmentResource(Resource):
 
 class AttachmentsResource(Resource):
 
-    def __init__(self, querier):
+    def __init__(self, mail_service):
         Resource.__init__(self)
-        self.querier = querier
+        self.mail_service = mail_service
 
     def getChild(self, attachment_id, request):
-        return AttachmentResource(attachment_id, self.querier)
+        return AttachmentResource(self.mail_service, attachment_id)

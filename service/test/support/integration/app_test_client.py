@@ -62,7 +62,7 @@ class AppTestClient(object):
         self.soledad_querier = self._create_soledad_querier(self.soledad, self.INDEX_KEY)
         self.keymanager = mock()
 
-        self.search_engine = SearchEngine(self.soledad_querier, agent_home=soledad_test_folder)
+        self.search_engine = SearchEngine(self.INDEX_KEY, agent_home=soledad_test_folder)
         self.mail_sender = self._create_mail_sender()
 
         self.account = SoledadBackedAccount(self.ACCOUNT, self.soledad, MagicMock())
@@ -73,7 +73,7 @@ class AppTestClient(object):
         self.search_engine.index_mails(self.mail_service.all_mails())
 
         self.resource = RootResource()
-        self.resource.initialize(self.soledad_querier, self.keymanager, self.search_engine, self.mail_service, self.draft_service)
+        self.resource.initialize(self.keymanager, self.search_engine, self.mail_service, self.draft_service)
 
     def _render(self, request, as_json=True):
         def get_str(_str):

@@ -53,7 +53,7 @@ class LeapSmtpTest(AbstractLeapTest):
         self.config.timeout_in_s = 15
 
     def test_that_client_cert_gets_downloaded(self):
-        smtp = LeapSmtp(self.provider, self.auth.username, self.auth.session_id, self.keymanager)
+        smtp = LeapSmtp(self.provider, self.auth, self.keymanager)
 
         with HTTMock(ca_cert_mock, not_found_mock):
             smtp._download_client_certificates()
@@ -66,7 +66,7 @@ class LeapSmtpTest(AbstractLeapTest):
 
     @patch('pixelated.bitmask_libraries.smtp.setup_smtp_gateway')
     def test_that_start_calls_setup_smtp_gateway(self, gateway_mock):
-        smtp = LeapSmtp(self.provider, self.auth.username, self.auth.session_id, self.keymanager)
+        smtp = LeapSmtp(self.provider, self.auth, self.keymanager)
 
         port = 500
         smtp.local_smtp_port_number = port
@@ -78,14 +78,14 @@ class LeapSmtpTest(AbstractLeapTest):
         gateway_mock.assert_called_with(keymanager=self.keymanager, smtp_cert=cert_path, smtp_key=cert_path, userid='test_user@some-server.test', smtp_port='1234', encrypted_only=False, smtp_host='smtp.some-sever.test', port=port)
 
     def test_that_client_stop_does_nothing_if_not_started(self):
-        smtp = LeapSmtp(self.provider, self.auth.username, self.auth.session_id, self.keymanager)
+        smtp = LeapSmtp(self.provider, self.auth, self.keymanager)
 
         with HTTMock(not_found_mock):
             smtp.stop()
 
     @patch('pixelated.bitmask_libraries.smtp.setup_smtp_gateway')
     def test_that_running_smtp_sevice_is_stopped(self, gateway_mock):
-        smtp = LeapSmtp(self.provider, self.auth.username, self.auth.session_id, self.keymanager)
+        smtp = LeapSmtp(self.provider, self.auth, self.keymanager)
 
         smtp_service = MagicMock()
         smtp_port = MagicMock()

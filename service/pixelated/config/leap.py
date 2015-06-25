@@ -2,8 +2,10 @@ from __future__ import absolute_import
 import random
 from pixelated.config import credentials
 from leap.common.events import server as events_server
-import pixelated.bitmask_libraries.certs as certs
-from pixelated.bitmask_libraries.session import open_leap_session
+from pixelated.bitmask_libraries.config import LeapConfig
+from pixelated.bitmask_libraries.certs import LeapCertificate
+from pixelated.bitmask_libraries.provider import LeapProvider
+from pixelated.bitmask_libraries.session import LeapSessionFactory
 
 
 def initialize_leap(leap_provider_cert,
@@ -12,31 +14,16 @@ def initialize_leap(leap_provider_cert,
                     organization_mode,
                     leap_home):
     init_monkeypatches()
-    provider, user, password = credentials.read(organization_mode, credentials_file)
-    init_leap_cert(leap_provider_cert, leap_provider_cert_fingerprint)
     events_server.ensure_server(random.randrange(8000, 11999))
-    leap_session = create_leap_session(provider, user, password, leap_home)
-    leap_session.start_background_jobs()
+    provider, username, password = credentials.read(organization_mode, credentials_file)
+    LeapCertificate.set_cert_and_fingerprint(leap_provider_cert, leap_provider_cert_fingerprint)
+
+    config = LeapConfig(leap_home=leap_home, start_background_jobs=True)
+    provider = LeapProvider(provider, config)
+    LeapCertificate(provider).setup_ca_bundle()
+    leap_session = LeapSessionFactory(provider).create(username, password)
+
     return leap_session
-
-
-def create_leap_session(provider, username, password, leap_home):
-    leap_session = open_leap_session(username,
-                                     password,
-                                     provider,
-                                     leap_home)
-    leap_session.soledad_session.soledad.sync(defer_decryption=False)
-    leap_session.nicknym.generate_openpgp_key()
-    return leap_session
-
-
-def init_leap_cert(leap_provider_cert, leap_provider_cert_fingerprint):
-    if leap_provider_cert_fingerprint is None:
-        certs.LEAP_CERT = leap_provider_cert or True
-        certs.LEAP_FINGERPRINT = None
-    else:
-        certs.LEAP_FINGERPRINT = leap_provider_cert_fingerprint
-        certs.LEAP_CERT = False
 
 
 def init_monkeypatches():

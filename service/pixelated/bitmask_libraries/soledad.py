@@ -16,11 +16,9 @@
 import errno
 
 import os
-from leap.keymanager import KeyManager
 from leap.soledad.client import Soledad
 from leap.soledad.common.crypto import WrongMac, UnknownMacMethod
-from .certs import which_api_CA_bundle
-
+from pixelated.bitmask_libraries.certs import LeapCertificate
 
 SOLEDAD_TIMEOUT = 120
 SOLEDAD_CERT = '/tmp/ca.crt'
@@ -34,14 +32,6 @@ class SoledadDiscoverException(Exception):
 class SoledadWrongPassphraseException(Exception):
     def __init__(self, *args, **kwargs):
         super(SoledadWrongPassphraseException, self).__init__(*args, **kwargs)
-
-
-class LeapKeyManager(object):
-    def __init__(self, soledad, leap_session, nicknym_url):
-        provider = leap_session.provider
-        self.keymanager = KeyManager(leap_session.account_email(), nicknym_url, soledad,
-                                     leap_session.session_id, leap_session.leap_home + '/ca.crt', provider.api_uri, leap_session.api_version,
-                                     leap_session.uuid, leap_session.leap_config.gpg_binary)
 
 
 class SoledadSessionFactory(object):
@@ -68,7 +58,7 @@ class SoledadSession(object):
             local_db = self._local_db_path()
 
             return Soledad(self.user_uuid, unicode(encryption_passphrase), secrets,
-                           local_db, server_url, which_api_CA_bundle(self.provider), self.user_token, defer_encryption=False)
+                           local_db, server_url, LeapCertificate(self.provider).provider_api_cert, self.user_token, defer_encryption=False)
 
         except (WrongMac, UnknownMacMethod), e:
             raise SoledadWrongPassphraseException(e)

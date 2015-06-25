@@ -32,6 +32,10 @@ RUN echo "deb http://deb.leap.se/experimental wheezy main" >> /etc/apt/sources.l
 RUN apt-key adv --keyserver pool.sks-keyservers.net --recv-key 1E34A1828E207901 && \
     apt-key adv --keyserver pool.sks-keyservers.net --recv-key 287A1542472DC0E3
 
+RUN echo "Package: python-sqlcipher" > /etc/apt/preferences.d/python-sqlcipher
+RUN echo "Pin: version 2.6.3.3+0~20141111222659.14+wheezy~1.gbp2d164a+pix1" >> /etc/apt/preferences.d/python-sqlcipher
+RUN echo "Pin-Priority: 1000" >> /etc/apt/preferences.d/python-sqlcipher
+
 # Update packages lists
 RUN apt-get update -y --force-yes
 

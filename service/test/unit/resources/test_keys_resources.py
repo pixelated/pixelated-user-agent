@@ -1,4 +1,3 @@
-import json
 from mockito import mock, when
 from leap.keymanager import OpenPGPKey, KeyNotFound
 from pixelated.resources.keys_resource import KeysResource
