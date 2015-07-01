@@ -24,6 +24,7 @@ from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.session import LeapSessionFactory
 from leap.auth import SRPAuth
+import pixelated.extensions.shared_db
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +32,7 @@ logger = logging.getLogger(__name__)
 def register(
         server_name,
         username,
+        password,
         leap_home,
         provider_cert,
         provider_cert_fingerprint):
@@ -40,7 +42,8 @@ def register(
     except ValueError:
         print('Only lowercase letters, digits, . - and _ allowed.')
 
-    password = getpass.getpass('Please enter password for %s: ' % username)
+    if not password:
+        password = getpass.getpass('Please enter password for %s: ' % username)
 
     LeapCertificate.set_cert_and_fingerprint(provider_cert, provider_cert_fingerprint)
     config = LeapConfig(leap_home=leap_home)
@@ -66,6 +69,7 @@ def initialize():
     register(
         args.provider,
         args.username,
+        args.password,
         args.leap_home,
         args.leap_provider_cert,
         args.leap_provider_cert_fingerprint)
