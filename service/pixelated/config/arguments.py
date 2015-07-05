@@ -51,6 +51,7 @@ def parse_register_args():
     parser = argparse.ArgumentParser(description='Pixelated register')
     parser.add_argument('provider', metavar='provider', action='store')
     parser.add_argument('username', metavar='username', action='store')
+    parser.add_argument('-p', '--password', metavar='password', action='store', default=None, help='used just to register account automatically by scripts')
     parser.add_argument('-lc', '--leap-provider-cert', metavar='<leap-provider.crt>', default=None, help='use specified file for LEAP provider cert authority certificate (url https://<LEAP-provider-domain>/ca.crt)')
     parser.add_argument('-lf', '--leap-provider-cert-fingerprint', metavar='<leap provider certificate fingerprint>', default=None, help='use specified fingerprint to validate connection with LEAP provider', dest='leap_provider_cert_fingerprint')
     parser.add_argument('--leap-home', help='The folder where the user agent stores its data. Defaults to ~/.leap', dest='leap_home', default=os.path.join(os.path.expanduser("~"), '.leap'))
