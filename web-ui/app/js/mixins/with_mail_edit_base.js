@@ -203,6 +203,22 @@ define(
         this.trigger(document, events.ui.userAlerts.displayMessage, { message: 'Your message was sent!' });
       };
 
+      this.enableFloatlabel = function(element) {
+        var showClass = 'showfloatlabel';
+        $(element).bind('checkval', function() {
+          var label = $(this).prev('label');
+          if (this.value !== '') {
+            label.addClass(showClass);
+            $(this).addClass(showClass);
+          } else {
+            label.removeClass(showClass);
+            $(this).removeClass(showClass);
+          }
+        }).on('keyup', function() {
+          $(this).trigger('checkval');
+        }).trigger('checkval');
+      };
+
       this.after('initialize', function () {
         this.on(document, events.dispatchers.rightPane.clear, this.teardown);
         this.on(document, events.ui.recipients.updated, this.recipientsUpdated);

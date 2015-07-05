@@ -66,32 +66,14 @@ define(
           body: body
         });
 
+        this.enableFloatlabel('input.floatlabel');
+        this.enableFloatlabel('textarea.floatlabel');
         this.select('recipientsFields').show();
         this.select('bodyBox').focus();
         this.select('tipMsg').hide();
         this.enableAutoSave();
         this.on(this.select('cancelButton'), 'click', this.showNoMessageSelected);
         this.on(this.select('closeMailButton'), 'click', this.showNoMessageSelected);
-
-        function floatlabelHandler(element) {
-          $(function() {
-            var showClass = 'showfloatlabel';
-            $(element).bind('checkval', function() {
-              var label = $(this).prev('label');
-              if (this.value !== '') {
-                label.addClass(showClass);
-                $(this).addClass(showClass);
-              } else {
-                label.removeClass(showClass);
-                $(this).removeClass(showClass);
-              }
-            }).on('keyup',function() {
-              $(this).trigger('checkval');
-            }).trigger('checkval');
-          });
-        }
-        floatlabelHandler('input.floatlabel');
-        floatlabelHandler('textarea.floatlabel');
       };
 
       this.mailDeleted = function(event, data) {
