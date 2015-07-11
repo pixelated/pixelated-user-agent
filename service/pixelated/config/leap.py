@@ -14,7 +14,7 @@ def initialize_leap(leap_provider_cert,
                     organization_mode,
                     leap_home):
     init_monkeypatches()
-    events_server.ensure_server(random.randrange(8000, 11999))
+    events_server.ensure_server()
     provider, username, password = credentials.read(organization_mode, credentials_file)
     LeapCertificate.set_cert_and_fingerprint(leap_provider_cert, leap_provider_cert_fingerprint)
 
@@ -27,11 +27,4 @@ def initialize_leap(leap_provider_cert,
 
 
 def init_monkeypatches():
-    import pixelated.extensions.protobuf_socket
-    import pixelated.extensions.sqlcipher_wal
-    import pixelated.extensions.esmtp_sender_factory
-    import pixelated.extensions.incoming_decrypt_header
-    import pixelated.extensions.soledad_sync_exception
-    import pixelated.extensions.keymanager_fetch_key
     import pixelated.extensions.requests_urllib3
-    import pixelated.extensions.shared_db

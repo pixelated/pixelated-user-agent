@@ -6,7 +6,7 @@ from twisted.web.resource import Resource
 from twisted.web import server
 from leap.common.events import (
     register,
-    events_pb2 as proto
+    catalog as events
 )
 
 
@@ -75,7 +75,7 @@ class MailsResource(Resource):
             delivery_error_mail = InputMail.delivery_error_template(delivery_address=event.content)
             self._mail_service.mailboxes.inbox.add(delivery_error_mail)
 
-        register(signal=proto.SMTP_SEND_MESSAGE_ERROR, callback=on_error)
+        register(events.SMTP_SEND_MESSAGE_ERROR, callback=on_error)
 
     def __init__(self, mail_service, draft_service):
         Resource.__init__(self)

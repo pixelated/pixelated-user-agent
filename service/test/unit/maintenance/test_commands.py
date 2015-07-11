@@ -18,8 +18,7 @@ import email
 
 from pixelated.maintenance import delete_all_mails, load_mails
 from pixelated.bitmask_libraries.session import LeapSession
-from leap.mail.imap.account import SoledadBackedAccount
-from leap.mail.imap.fields import WithMsgFields
+from leap.mail.constants import MessageFlags
 from leap.soledad.client import Soledad
 from leap.soledad.common.document import SoledadDocument
 from mock import MagicMock
@@ -32,10 +31,7 @@ class TestCommands(unittest.TestCase):
     def setUp(self):
         self.leap_session = MagicMock(spec=LeapSession)
         self.soledad = MagicMock(spec=Soledad)
-        self.account = MagicMock(spec=SoledadBackedAccount)
         self.mailbox = MagicMock()
-        self.leap_session.account = self.account
-        self.account.getMailbox.return_value = self.mailbox
 
         self.args = (self.leap_session, self.soledad)
 
@@ -92,8 +88,8 @@ class TestCommands(unittest.TestCase):
         # then
         def assert_mails_added(_):
             self.assertTrue(self.mailbox.addMessage.called)
-            self.mailbox.addMessage.assert_any_call(self._mail_content(join(mail_root, 'new', 'mbox00000000')), flags=(WithMsgFields.RECENT_FLAG,), notify_on_disk=False)
-            self.mailbox.addMessage.assert_any_call(self._mail_content(join(mail_root, 'new', 'mbox00000001')), flags=(WithMsgFields.RECENT_FLAG,), notify_on_disk=False)
+            self.mailbox.addMessage.assert_any_call(self._mail_content(join(mail_root, 'new', 'mbox00000000')), flags=(MessageFlags.RECENT_FLAG,), notify_on_disk=False)
+            self.mailbox.addMessage.assert_any_call(self._mail_content(join(mail_root, 'new', 'mbox00000001')), flags=(MessageFlags.RECENT_FLAG,), notify_on_disk=False)
 
         def error_callack(err):
             print err

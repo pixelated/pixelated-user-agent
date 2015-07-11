@@ -24,7 +24,7 @@ from email.mime.text import MIMEText
 from email.header import decode_header
 from email.MIMEMultipart import MIMEMultipart
 from pycryptopp.hash import sha256
-from leap.mail.imap.fields import fields
+from leap.mail.adaptors import soledad_indexes as fields
 import leap.mail.walk as walk
 from pixelated.adapter.model.status import Status
 from pixelated.support import date
@@ -128,14 +128,14 @@ class InputMail(Mail):
             return self._fd
 
         fd = {}
-        fd[fields.MBOX_KEY] = mailbox
-        fd[fields.UID_KEY] = next_uid
-        fd[fields.CONTENT_HASH_KEY] = self._get_chash()
-        fd[fields.SIZE_KEY] = len(self.raw)
-        fd[fields.MULTIPART_KEY] = True
-        fd[fields.RECENT_KEY] = True
-        fd[fields.TYPE_KEY] = fields.TYPE_FLAGS_VAL
-        fd[fields.FLAGS_KEY] = Status.to_flags(self._status)
+        fd[fields.MBOX] = mailbox
+        fd[fields.MBOX_UUID] = next_uid
+        fd[fields.CONTENT_HASH] = self._get_chash()
+        # fd[fields.SIZE_KEY] = len(self.raw)
+        # fd[fields.MULTIPART_KEY] = True
+        fd[fields.RECENT] = True
+        fd[fields.TYPE] = fields.TYPE_FLAGS_VAL
+        fd[fields.FLAGS] = Status.to_flags(self._status)
         self._fd = fd
         return fd
 

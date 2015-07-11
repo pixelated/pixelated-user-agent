@@ -17,7 +17,7 @@ import errno
 
 import os
 from leap.soledad.client import Soledad
-from leap.soledad.common.crypto import WrongMac, UnknownMacMethod
+from leap.soledad.common.crypto import WrongMacError, UnknownMacMethodError
 from pixelated.bitmask_libraries.certs import LeapCertificate
 
 SOLEDAD_TIMEOUT = 120
@@ -57,10 +57,16 @@ class SoledadSession(object):
             secrets = self._secrets_path()
             local_db = self._local_db_path()
 
-            return Soledad(self.user_uuid, unicode(encryption_passphrase), secrets,
-                           local_db, server_url, LeapCertificate(self.provider).provider_api_cert, self.user_token, defer_encryption=False)
+            return Soledad(self.user_uuid,
+                           unicode(encryption_passphrase),
+                           secrets,
+                           local_db, server_url,
+                           LeapCertificate(self.provider).provider_api_cert,
+                           shared_db=None,
+                           auth_token=self.user_token,
+                           defer_encryption=False)
 
-        except (WrongMac, UnknownMacMethod), e:
+        except (WrongMacError, UnknownMacMethodError), e:
             raise SoledadWrongPassphraseException(e)
 
     def _leap_path(self):

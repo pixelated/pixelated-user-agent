@@ -20,7 +20,7 @@ from twisted.internet.threads import deferToThread
 from pixelated.config.leap import initialize_leap
 from pixelated.config import logger, arguments
 
-from leap.mail.imap.fields import WithMsgFields
+from leap.mail.constants import MessageFlags
 import time
 
 
@@ -118,11 +118,11 @@ def add_mail_folder(account, maildir, folder_name, deferreds):
         if is_keep_file(mail):
             continue
 
-        flags = (WithMsgFields.RECENT_FLAG,) if mail.get_subdir() == 'new' else ()
+        flags = (MessageFlags.RECENT_FLAG,) if mail.get_subdir() == 'new' else ()
         if 'S' in mail.get_flags():
-            flags = (WithMsgFields.SEEN_FLAG,) + flags
+            flags = (MessageFlags.SEEN_FLAG,) + flags
         if 'R' in mail.get_flags():
-            flags = (WithMsgFields.ANSWERED_FLAG,) + flags
+            flags = (MessageFlags.ANSWERED_FLAG,) + flags
 
         deferreds.append(mbx.addMessage(mail.as_string(), flags=flags, notify_on_disk=False))
 

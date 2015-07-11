@@ -22,7 +22,7 @@ from mockito import mock, unstub, when
 from test.support import test_helper
 import dateutil.parser as dateparser
 import base64
-from leap.mail.imap.fields import fields
+from leap.mail.adaptors import soledad_indexes as fields
 from datetime import datetime
 import os
 import json
