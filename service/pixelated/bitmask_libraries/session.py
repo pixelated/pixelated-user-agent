@@ -73,12 +73,10 @@ class LeapSession(object):
         self.stop_background_jobs()
 
     def start_background_jobs(self):
-        self.smtp.ensure_running()
-        reactor.callFromThread(self.incoming_mail_fetcher.start_loop)
+        reactor.callFromThread(self.incoming_mail_fetcher.startService)
 
     def stop_background_jobs(self):
-        self.smtp.stop()
-        reactor.callFromThread(self.incoming_mail_fetcher.stop)
+        reactor.callFromThread(self.incoming_mail_fetcher.stopService)
 
     def sync(self):
         try:
@@ -113,7 +111,7 @@ class LeapSessionFactory(object):
         soledad = SoledadSessionFactory.create(self._provider, auth.token, auth.uuid, password)
 
         nicknym = self._create_nicknym(account_email, auth.token, auth.uuid, soledad)
-        incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad, account_email)
+        incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad, auth, auth.username)
 
         smtp = LeapSmtp(self._provider, auth, nicknym.keymanager)
 
