@@ -6,6 +6,7 @@ from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerListener
+from twisted.internet import defer
 
 
 class Services(object):
@@ -14,7 +15,7 @@ class Services(object):
 
         soledad_querier = SoledadQuerier(soledad=leap_session.soledad_session.soledad)
 
-        self.search_engine = self.setup_search_engine(
+        self.setup_search_engine(
             leap_home,
             soledad_querier)
 
@@ -44,11 +45,12 @@ class Services(object):
     def setup_keymanager(self, leap_session):
         return leap_session.nicknym.keymanager
 
+    @defer.inlineCallbacks
     def setup_search_engine(self, leap_home, soledad_querier):
-        key = soledad_querier.get_index_masterkey()
+        key = yield soledad_querier.get_index_masterkey()
         search_engine = SearchEngine(key, agent_home=leap_home)
         MailboxIndexerListener.SEARCH_ENGINE = search_engine
-        return search_engine
+        self.search_engine = search_engine
 
     def setup_mail_service(self, leap_session, soledad_querier, search_engine, pixelated_mailboxes):
         pixelated_mailboxes.add_welcome_mail_for_fresh_user()
