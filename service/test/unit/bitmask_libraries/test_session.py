@@ -35,7 +35,7 @@ class SessionTest(AbstractLeapTest):
         with patch('pixelated.bitmask_libraries.session.reactor.callFromThread', new=_execute_func) as _:
             self._create_session()
 
-            self.mail_fetcher_mock.start_loop.assert_called_once_with()
+            self.mail_fetcher_mock.startService.assert_called_once_with()
 
     def test_background_jobs_are_not_started(self):
         self.config.start_background_jobs = False
@@ -51,7 +51,7 @@ class SessionTest(AbstractLeapTest):
 
             session.close()
 
-            self.mail_fetcher_mock.stop.assert_called_once_with()
+            self.mail_fetcher_mock.stopService.assert_called_once_with()
 
     def test_that_sync_deferes_to_soledad(self):
         session = self._create_session()
@@ -61,7 +61,7 @@ class SessionTest(AbstractLeapTest):
         self.soledad_session.sync.assert_called_once_with()
 
     def _create_session(self):
-        return LeapSession(self.provider, self.auth, self.soledad_session, self.nicknym,
+        return LeapSession(self.provider, self.auth, self.soledad_session, self.nicknym, self.soledad_account,
                            self.mail_fetcher_mock, self.smtp_mock)
 
 
