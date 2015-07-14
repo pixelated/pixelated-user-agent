@@ -60,10 +60,10 @@ class LeapSession(object):
         self.nicknym = nicknym
         self.account = soledad_account
         self.incoming_mail_fetcher = incoming_mail_fetcher
-        # self.soledad_session.soledad.sync(defer_decryption=False)
+        self.soledad_session.soledad.sync(defer_decryption=False)
         # self.nicknym.generate_openpgp_key()
 
-        if self.config.start_background_jobs and False:
+        if self.config.start_background_jobs:
             self.start_background_jobs()
 
     def account_email(self):
@@ -113,8 +113,7 @@ class LeapSessionFactory(object):
 
         nicknym = self._create_nicknym(account_email, auth.token, auth.uuid, soledad)
         account = self._create_account(account_email, soledad)
-        # incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad, auth, auth.username)
-        incoming_mail_fetcher = None
+        incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad, auth, auth.username)
 
         # smtp = LeapSmtp(self._provider, auth, nicknym.keymanager)
         smtp = None
