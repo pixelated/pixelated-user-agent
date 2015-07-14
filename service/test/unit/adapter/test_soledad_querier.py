@@ -20,11 +20,13 @@ import quopri
 
 from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
 from mockito import mock, when, any
+from twisted.internet import defer
 import os
 
 
 class SoledadQuerierTest(unittest.TestCase):
 
+    @defer.inlineCallbacks
     def test_extract_parts(self):
         soledad = mock()
         bdoc = mock()
@@ -35,7 +37,7 @@ class SoledadQuerierTest(unittest.TestCase):
             hdoc = json.loads(f.read())
         querier = SoledadQuerier(soledad)
 
-        parts = querier._extract_parts(hdoc)
+        parts = yield querier._extract_parts(hdoc)
 
         self.assertIn('alternatives', parts.keys())
         self.assertIn('attachments', parts.keys())
@@ -56,6 +58,7 @@ class SoledadQuerierTest(unittest.TestCase):
             self.assertIn('ident', attachment)
             self.assertIn('name', attachment)
 
+    @defer.inlineCallbacks
     def test_extract_part_without_headers(self):
         soledad = mock()
         bdoc = mock()
@@ -64,10 +67,11 @@ class SoledadQuerierTest(unittest.TestCase):
         hdoc = {'multi': True, 'part_map': {'1': {'multi': False, 'phash': u'0400BEBACAFE'}}}
         querier = SoledadQuerier(soledad)
 
-        parts = querier._extract_parts(hdoc)
+        parts = yield querier._extract_parts(hdoc)
 
         self.assertEquals(bdoc.content['raw'], parts['alternatives'][0]['content'])
 
+    @defer.inlineCallbacks
     def test_extract_handles_missing_part_map(self):
         soledad = mock()
         hdoc = {u'multi': True,
@@ -78,11 +82,12 @@ class SoledadQuerierTest(unittest.TestCase):
                 u'size': 554}
         querier = SoledadQuerier(soledad)
 
-        parts = querier._extract_parts(hdoc)
+        parts = yield querier._extract_parts(hdoc)
 
         self.assertEquals(0, len(parts['alternatives']))
         self.assertEquals(0, len(parts['attachments']))
 
+    @defer.inlineCallbacks
     def test_attachment_base64(self):
         soledad = mock()
         bdoc = mock()
@@ -90,10 +95,11 @@ class SoledadQuerierTest(unittest.TestCase):
         when(soledad).get_from_index('by-type-and-payloadhash', 'cnt', any(unicode)).thenReturn([bdoc])
         querier = SoledadQuerier(soledad)
 
-        attachment = querier.attachment(u'0400BEBACAFE', 'base64')
+        attachment = yield querier.attachment(u'0400BEBACAFE', 'base64')
 
         self.assertEquals('esse papo seu ta qualquer coisa', attachment['content'])
 
+    @defer.inlineCallbacks
     def test_attachment_quoted_printable(self):
         soledad = mock()
         bdoc = mock()
@@ -101,10 +107,11 @@ class SoledadQuerierTest(unittest.TestCase):
         when(soledad).get_from_index('by-type-and-payloadhash', 'cnt', any(unicode)).thenReturn([bdoc])
         querier = SoledadQuerier(soledad)
 
-        attachment = querier.attachment(u'0400BEBACAFE', 'quoted-printable')
+        attachment = yield querier.attachment(u'0400BEBACAFE', 'quoted-printable')
 
         self.assertEquals('esse papo seu ta qualquer coisa', attachment['content'])
 
+    @defer.inlineCallbacks
     def test_empty_or_null_queries_are_ignored(self):
         soledad = mock()
         when(soledad).get_from_index(any(), any(), any()).thenReturn(['nonempty', 'list'])
@@ -113,16 +120,20 @@ class SoledadQuerierTest(unittest.TestCase):
         test_parameters = ['', None]
 
         def call_with_bad_parameters(funct):
+            deferreds = []
             for param in test_parameters:
-                self.assertFalse(funct(param))
+                d = defer.maybeDeferred(funct, param)
+                d.addCallback(self.assertFalse)
+                deferreds.append(d)
+            return defer.DeferredList(deferreds)
 
-        call_with_bad_parameters(querier.get_all_flags_by_mbox)
-        call_with_bad_parameters(querier.get_content_by_phash)
-        call_with_bad_parameters(querier.get_flags_by_chash)
-        call_with_bad_parameters(querier.get_header_by_chash)
-        call_with_bad_parameters(querier.get_recent_by_mbox)
-        call_with_bad_parameters(querier.idents_by_mailbox)
-        call_with_bad_parameters(querier.get_mbox)
+        yield call_with_bad_parameters(querier.get_all_flags_by_mbox)
+        yield call_with_bad_parameters(querier.get_content_by_phash)
+        yield call_with_bad_parameters(querier.get_flags_by_chash)
+        yield call_with_bad_parameters(querier.get_header_by_chash)
+        yield call_with_bad_parameters(querier.get_recent_by_mbox)
+        yield call_with_bad_parameters(querier.idents_by_mailbox)
+        yield call_with_bad_parameters(querier.get_mbox)
 
     def test_get_lastuid(self):
         soledad = mock()
