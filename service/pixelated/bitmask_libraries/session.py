@@ -111,8 +111,7 @@ class LeapSessionFactory(object):
 
         soledad = SoledadSessionFactory.create(self._provider, auth.token, auth.uuid, password)
 
-        # nicknym = self._create_nicknym(account_email, auth.token, auth.uuid, soledad)
-        nicknym = None
+        nicknym = self._create_nicknym(account_email, auth.token, auth.uuid, soledad)
         account = self._create_account(account_email, soledad)
         # incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad, auth, auth.username)
         incoming_mail_fetcher = None

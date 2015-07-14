@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+from twisted.internet import defer
 
 class MailboxIndexerListener(object):
     """ Listens for new mails, keeping the index updated """
@@ -21,10 +22,12 @@ class MailboxIndexerListener(object):
     SEARCH_ENGINE = None
 
     @classmethod
+    @defer.inlineCallbacks
     def listen(cls, account, mailbox_name, soledad_querier):
         listener = MailboxIndexerListener(mailbox_name, soledad_querier)
-        if listener not in account.getMailbox(mailbox_name).listeners:
-            account.getMailbox(mailbox_name).addListener(listener)
+        if listener not in (yield account.getMailbox(mailbox_name)).listeners:
+            mbx = yield account.getMailbox(mailbox_name)
+            mbx.addListener(listener)
 
     def __init__(self, mailbox_name, soledad_querier):
         self.mailbox_name = mailbox_name

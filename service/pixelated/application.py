@@ -35,6 +35,7 @@ def start_user_agent(loading_app, host, port, sslkey, sslcert, leap_home, leap_s
     yield loading_app.stopListening()
 
     services = Services(leap_home, leap_session)
+    yield services.setup(leap_home, leap_session)
 
     resource = RootResource()
 

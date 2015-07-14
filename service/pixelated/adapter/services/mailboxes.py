@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from twisted.internet import defer
 from pixelated.adapter.services.mailbox import Mailbox
 from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerListener
 from pixelated.adapter.model.mail import welcome_mail
@@ -24,15 +25,27 @@ class Mailboxes(object):
         self.account = account
         self.querier = soledad_querier
         self.search_engine = search_engine
-        for mailbox_name in account.mailboxes:
-            MailboxIndexerListener.listen(self.account, mailbox_name, soledad_querier)
+        # for mailbox_name in account.mailboxes:
+            # MailboxIndexerListener.listen(self.account, mailbox_name, soledad_querier)
 
+    @defer.inlineCallbacks
+    def index_mailboxes(self):
+        mailboxes = yield self.account.account.list_all_mailbox_names()
+        yield self._index_mailboxes(mailboxes)
+
+    @defer.inlineCallbacks
+    def _index_mailboxes(self, mailboxes):
+        for mailbox_name in mailboxes:
+            yield MailboxIndexerListener.listen(self.account, mailbox_name, self.querier)
+
+    @defer.inlineCallbacks
     def _create_or_get(self, mailbox_name):
         mailbox_name = mailbox_name.upper()
-        if mailbox_name not in self.account.mailboxes:
-            self.account.addMailbox(mailbox_name)
-        MailboxIndexerListener.listen(self.account, mailbox_name, self.querier)
-        return Mailbox.create(mailbox_name, self.querier, self.search_engine)
+        # if mailbox_name not in self.account.mailboxes:
+        if mailbox_name not in (yield self.account.account.list_all_mailbox_names()):
+            yield self.account.addMailbox(mailbox_name)
+        yield MailboxIndexerListener.listen(self.account, mailbox_name, self.querier)
+        defer.returnValue(Mailbox.create(mailbox_name, self.querier, self.search_engine))
 
     @property
     def inbox(self):
@@ -68,7 +81,9 @@ class Mailboxes(object):
     def mail(self, mail_id):
         return self.querier.mail(mail_id)
 
+    @defer.inlineCallbacks
     def add_welcome_mail_for_fresh_user(self):
-        if self.inbox.fresh:
+        inbox = yield self._create_or_get('INBOX')
+        if inbox.fresh:
             mail = welcome_mail()
             self.inbox.add(mail)
