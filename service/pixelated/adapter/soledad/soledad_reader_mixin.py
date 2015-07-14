@@ -75,10 +75,11 @@ class SoledadReaderMixin(SoledadDbFacadeMixin, object):
         fdocs_chash = [(result, ident) for result, ident in fdocs_chash if result]
         return self._build_mails_from_fdocs(fdocs_chash)
 
+    @defer.inlineCallbacks
     def attachment(self, attachment_ident, encoding):
-        bdoc = self.get_content_by_phash(attachment_ident)
-        return {'content': self._try_decode(bdoc.content['raw'], encoding),
-                'content-type': bdoc.content['content-type']}
+        bdoc = yield self.get_content_by_phash(attachment_ident)
+        defer.returnValue({'content': self._try_decode(bdoc.content['raw'], encoding),
+                           'content-type': bdoc.content['content-type']})
 
     def _try_decode(self, raw, encoding):
         encoding = encoding.lower()
