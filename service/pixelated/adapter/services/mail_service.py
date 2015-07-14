@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from twisted.internet import defer
 from pixelated.adapter.model.mail import InputMail
 from pixelated.adapter.services.tag_service import extract_reserved_tags
 
@@ -25,8 +26,9 @@ class MailService(object):
         self.search_engine = search_engine
         self.mail_sender = mail_sender
 
+    @defer.inlineCallbacks
     def all_mails(self):
-        return self.querier.all_mails()
+        defer.returnValue((yield self.querier.all_mails()))
 
     def mails(self, query, window_size, page):
         mail_ids, total = self.search_engine.search(query, window_size, page)

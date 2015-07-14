@@ -14,29 +14,35 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+from twisted.internet import defer
 
 class SoledadDbFacadeMixin(object):
 
+    @defer.inlineCallbacks
     def get_all_flags(self):
-        return self.soledad.get_from_index('by-type', 'flags')
+        flags = yield self.soledad.get_from_index('by-type', 'flags')
+        defer.returnValue(flags)
 
     def get_all_flags_by_mbox(self, mbox):
         return self.soledad.get_from_index('by-type-and-mbox', 'flags', mbox) if mbox else []
 
+    @defer.inlineCallbacks
     def get_content_by_phash(self, phash):
-        content = self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', phash) if phash else []
+        content = yield self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', phash) if phash else []
         if len(content):
-            return content[0]
+            defer.returnValue(content[0])
 
+    @defer.inlineCallbacks
     def get_flags_by_chash(self, chash):
-        flags = self.soledad.get_from_index('by-type-and-contenthash', 'flags', chash) if chash else []
+        flags = yield self.soledad.get_from_index('by-type-and-contenthash', 'flags', chash) if chash else []
         if len(flags):
-            return flags[0]
+            defer.returnValue(flags[0])
 
+    @defer.inlineCallbacks
     def get_header_by_chash(self, chash):
-        header = self.soledad.get_from_index('by-type-and-contenthash', 'head', chash) if chash else []
+        header = yield self.soledad.get_from_index('by-type-and-contenthash', 'head', chash) if chash else []
         if len(header):
-            return header[0]
+            defer.returnValue(header[0])
 
     def get_recent_by_mbox(self, mbox):
         return self.soledad.get_from_index('by-type-and-mbox', 'rct', mbox) if mbox else []

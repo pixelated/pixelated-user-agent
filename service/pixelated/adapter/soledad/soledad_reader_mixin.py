@@ -18,6 +18,7 @@ import logging
 import quopri
 import re
 
+from twisted.internet import defer
 from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.soledad.soledad_facade_mixin import SoledadDbFacadeMixin
 
@@ -27,19 +28,21 @@ logger = logging.getLogger(__name__)
 
 class SoledadReaderMixin(SoledadDbFacadeMixin, object):
 
+    @defer.inlineCallbacks
     def all_mails(self):
-        fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in self.get_all_flags()]
+        fdocs_chash = [(fdoc, fdoc.content['chash']) for fdoc in (yield self.get_all_flags())]
         if len(fdocs_chash) == 0:
-            return []
-        return self._build_mails_from_fdocs(fdocs_chash)
+            defer.returnValue([])
+        defer.returnValue((yield self._build_mails_from_fdocs(fdocs_chash)))
 
+    @defer.inlineCallbacks
     def _build_mails_from_fdocs(self, fdocs_chash):
         if len(fdocs_chash) == 0:
-            return []
+            defer.returnValue([])
 
         fdocs_hdocs = []
         for fdoc, chash in fdocs_chash:
-            hdoc = self.get_header_by_chash(chash)
+            hdoc = yield self.get_header_by_chash(chash)
             if not hdoc:
                 continue
             fdocs_hdocs.append((fdoc, hdoc))
@@ -50,10 +53,10 @@ class SoledadReaderMixin(SoledadDbFacadeMixin, object):
             bdoc = self.get_content_by_phash(body_phash)
             if not bdoc:
                 continue
-            parts = self._extract_parts(hdoc.content)
+            parts = yield self._extract_parts(hdoc.content)
             fdocs_hdocs_bdocs_parts.append((fdoc, hdoc, bdoc, parts))
 
-        return [PixelatedMail.from_soledad(*raw_mail, soledad_querier=self) for raw_mail in fdocs_hdocs_bdocs_parts]
+        defer.returnValue([PixelatedMail.from_soledad(*raw_mail, soledad_querier=self) for raw_mail in fdocs_hdocs_bdocs_parts])
 
     def mail_exists(self, ident):
         return self.get_flags_by_chash(ident)
@@ -86,23 +89,25 @@ class SoledadReaderMixin(SoledadDbFacadeMixin, object):
         else:
             return str(raw)
 
+    @defer.inlineCallbacks
     def _extract_parts(self, hdoc, parts=None):
         if not parts:
             parts = {'alternatives': [], 'attachments': []}
 
         if hdoc['multi']:
             for part_key in hdoc.get('part_map', {}).keys():
-                self._extract_parts(hdoc['part_map'][part_key], parts)
+                yield self._extract_parts(hdoc['part_map'][part_key], parts)
         else:
             headers_dict = {elem[0]: elem[1] for elem in hdoc.get('headers', [])}
             if 'attachment' in headers_dict.get('Content-Disposition', ''):
                 parts['attachments'].append(self._extract_attachment(hdoc, headers_dict))
             else:
-                parts['alternatives'].append(self._extract_alternative(hdoc, headers_dict))
-        return parts
+                parts['alternatives'].append((yield self._extract_alternative(hdoc, headers_dict)))
+        defer.returnValue(parts)
 
+    @defer.inlineCallbacks
     def _extract_alternative(self, hdoc, headers_dict):
-        bdoc = self.get_content_by_phash(hdoc['phash'])
+        bdoc = yield self.get_content_by_phash(hdoc['phash'])
 
         if bdoc is None:
             logger.warning("No BDOC content found for message!!!")
@@ -110,7 +115,7 @@ class SoledadReaderMixin(SoledadDbFacadeMixin, object):
         else:
             raw_content = bdoc.content['raw']
 
-        return {'headers': headers_dict, 'content': raw_content}
+        defer.returnValue({'headers': headers_dict, 'content': raw_content})
 
     def _extract_attachment(self, hdoc, headers_dict):
         content_disposition = headers_dict['Content-Disposition']

@@ -38,13 +38,14 @@ class Services(object):
         self.keymanager = self.setup_keymanager(leap_session)
         self.draft_service = self.setup_draft_service(pixelated_mailboxes)
 
-        self.post_setup(soledad_querier, leap_session)
+        yield self.post_setup(soledad_querier, leap_session)
 
 
 
+    @defer.inlineCallbacks
     def post_setup(self, soledad_querier, leap_session):
         self.search_engine.index_mails(
-            mails=self.mail_service.all_mails(),
+            mails=(yield self.mail_service.all_mails()),
             callback=soledad_querier.mark_all_as_not_recent)
         soledad_querier.remove_duplicates()
         InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
