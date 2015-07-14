@@ -26,7 +26,7 @@ class Mailboxes(object):
         self.querier = soledad_querier
         self.search_engine = search_engine
         # for mailbox_name in account.mailboxes:
-            # MailboxIndexerListener.listen(self.account, mailbox_name, soledad_querier)
+        # MailboxIndexerListener.listen(self.account, mailbox_name, soledad_querier)
 
     @defer.inlineCallbacks
     def index_mailboxes(self):

@@ -17,6 +17,7 @@ from pixelated.adapter.soledad.soledad_facade_mixin import SoledadDbFacadeMixin
 
 from twisted.internet import defer
 
+
 class SoledadWriterMixin(SoledadDbFacadeMixin, object):
 
     @defer.inlineCallbacks

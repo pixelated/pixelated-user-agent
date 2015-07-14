@@ -16,6 +16,7 @@
 
 from twisted.internet import defer
 
+
 class MailboxIndexerListener(object):
     """ Listens for new mails, keeping the index updated """
 

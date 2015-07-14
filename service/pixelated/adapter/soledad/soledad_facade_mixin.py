@@ -16,6 +16,7 @@
 
 from twisted.internet import defer
 
+
 class SoledadDbFacadeMixin(object):
 
     @defer.inlineCallbacks
@@ -47,7 +48,7 @@ class SoledadDbFacadeMixin(object):
     @defer.inlineCallbacks
     def get_recent_by_mbox(self, mbox):
         defer.returnValue(
-                (yield self.soledad.get_from_index('by-type-and-mbox', 'rct', mbox) if mbox else []))
+            (yield self.soledad.get_from_index('by-type-and-mbox', 'rct', mbox) if mbox else []))
 
     def put_doc(self, doc):
         return self.soledad.put_doc(doc)

@@ -40,8 +40,6 @@ class Services(object):
 
         yield self.post_setup(soledad_querier, leap_session)
 
-
-
     @defer.inlineCallbacks
     def post_setup(self, soledad_querier, leap_session):
         self.search_engine.index_mails(
