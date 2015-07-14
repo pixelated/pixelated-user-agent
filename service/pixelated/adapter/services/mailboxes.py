@@ -72,11 +72,13 @@ class Mailboxes(object):
     def move_to_inbox(self, mail_id):
         return self._move_to(mail_id, self.inbox)
 
+    @defer.inlineCallbacks
     def _move_to(self, mail_id, mailbox):
+        mailbox = yield mailbox
         mail = self.querier.mail(mail_id)
         mail.set_mailbox(mailbox.mailbox_name)
         mail.save()
-        return mail
+        defer.returnValue(mail)
 
     def mail(self, mail_id):
         return self.querier.mail(mail_id)

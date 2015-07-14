@@ -18,6 +18,7 @@ import unittest
 from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.services.mailboxes import Mailboxes
 from mockito import mock, when, verify
+from twisted.internet import defer
 from test.support import test_helper
 from mock import MagicMock
 
@@ -30,12 +31,13 @@ class PixelatedMailboxesTest(unittest.TestCase):
         self.account = MagicMock()
         self.mailboxes = Mailboxes(self.account, self.querier, self.search_engine)
 
+    @defer.inlineCallbacks
     def test_move_to_inbox(self):
         mail = PixelatedMail.from_soledad(*test_helper.leap_mail(), soledad_querier=self.querier)
         when(self.querier).mail(1).thenReturn(mail)
         when(mail).save().thenReturn(None)
 
         mail.set_mailbox('TRASH')
-        recovered_mail = self.mailboxes.move_to_inbox(1)
+        recovered_mail = yield self.mailboxes.move_to_inbox(1)
         self.assertEquals('INBOX', recovered_mail.mailbox_name)
         verify(mail).save()
