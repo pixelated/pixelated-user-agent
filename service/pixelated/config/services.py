@@ -47,7 +47,7 @@ class Services(object):
         self.search_engine.index_mails(
             mails=(yield self.mail_service.all_mails()))
         yield soledad_querier.mark_all_as_not_recent()
-        soledad_querier.remove_duplicates()
+        # soledad_querier.remove_duplicates() FIXME should be re-enabled
         InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
 
     def setup_keymanager(self, leap_session):
