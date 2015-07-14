@@ -58,10 +58,10 @@ class SoledadSession(object):
             local_db = self._local_db_path()
 
             return Soledad(self.user_uuid,
-                           unicode(encryption_passphrase),
-                           secrets,
-                           local_db, server_url,
-                           LeapCertificate(self.provider).provider_api_cert,
+                           passphrase=unicode(encryption_passphrase),
+                           secrets_path=secrets,
+                           local_db_path=local_db, server_url=server_url,
+                           cert_file=LeapCertificate(self.provider).provider_api_cert,
                            shared_db=None,
                            auth_token=self.user_token,
                            defer_encryption=False)

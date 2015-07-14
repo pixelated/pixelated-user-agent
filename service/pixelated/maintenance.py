@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 from mailbox import Maildir
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
@@ -22,6 +23,7 @@ from pixelated.config import logger, arguments
 
 from leap.mail.constants import MessageFlags
 import time
+from twisted.mail import imap4
 
 
 def initialize():
@@ -54,12 +56,21 @@ def create_execute_command(args, leap_session):
 
             return leap_session, soledad
 
+        @defer.inlineCallbacks
         def soledad_sync(args):
             leap_session, soledad = args
+            log = logging.getLogger('some logger')
 
-            soledad.sync()
+            log.warn('Before sync')
 
-            return args
+            yield soledad.sync()
+
+            log.warn('after sync')
+
+            defer.returnValue(args)
+
+            # return args
+            return
 
         tearDown = defer.Deferred()
 
@@ -109,11 +120,17 @@ def is_keep_file(mail):
     return mail['subject'] is None
 
 
+@defer.inlineCallbacks
 def add_mail_folder(account, maildir, folder_name, deferreds):
-    if folder_name not in account.mailboxes:
+    try:
+        mbx = yield account.getMailbox(folder_name)
+    except imap4.MailboxException:
         account.addMailbox(folder_name)
+        mbx = yield account.getMailbox(folder_name)
+    # if folder_name not in account.mailboxes:
+        # account.addMailbox(folder_name)
 
-    mbx = account.getMailbox(folder_name)
+    mbx = yield account.getMailbox(folder_name)
     for mail in maildir:
         if is_keep_file(mail):
             continue
@@ -124,7 +141,7 @@ def add_mail_folder(account, maildir, folder_name, deferreds):
         if 'R' in mail.get_flags():
             flags = (MessageFlags.ANSWERED_FLAG,) + flags
 
-        deferreds.append(mbx.addMessage(mail.as_string(), flags=flags, notify_on_disk=False))
+        deferreds.append(mbx.addMessage(mail.as_string(), flags=flags, notify_just_mdoc=False))
 
 
 @defer.inlineCallbacks
@@ -164,20 +181,21 @@ def flush_to_soledad(args, finalize):
     return args
 
 
+@defer.inlineCallbacks
 def dump_soledad(args):
     leap_session, soledad = args
 
-    generation, docs = soledad.get_all_docs()
+    generation, docs = yield soledad.get_all_docs()
 
     for doc in docs:
         print doc
         print '\n'
 
-    return args
+    defer.returnValue(args)
 
 
 def shutdown(args):
-    time.sleep(30)
+    # time.sleep(30)
     reactor.stop()
 
 

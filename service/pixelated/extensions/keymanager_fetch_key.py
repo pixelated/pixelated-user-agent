@@ -57,4 +57,4 @@ def patched_fetch_keys_from_server(self, address):
         raise KeyNotFound(address)
 
 
-leap.keymanager.KeyManager._fetch_keys_from_server = patched_fetch_keys_from_server
+# leap.keymanager.KeyManager._fetch_keys_from_server = patched_fetch_keys_from_server

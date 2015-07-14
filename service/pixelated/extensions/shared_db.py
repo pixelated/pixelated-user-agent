@@ -13,4 +13,4 @@ def patched_sign_request(self, method, url_query, params):
             'Wrong credentials: %s' % self._creds)
 
 
-TokenBasedAuth._sign_request = patched_sign_request
+# TokenBasedAuth._sign_request = patched_sign_request

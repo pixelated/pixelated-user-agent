@@ -19,4 +19,4 @@ def patched_sync(self, defer_decryption=True):
             client.logger.error("Soledad exception when syncing: %s - %s" % (e.__class__.__name__, e.message))
 
 
-client.Soledad.sync = patched_sync
+# client.Soledad.sync = patched_sync
