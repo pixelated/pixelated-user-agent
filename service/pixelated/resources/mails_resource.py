@@ -1,6 +1,7 @@
 import json
 from pixelated.adapter.services.mail_sender import SMTPDownException
 from pixelated.adapter.model.mail import InputMail
+from twisted.web.server import NOT_DONE_YET
 from pixelated.resources import respond_json, respond_json_deferred
 from twisted.web.resource import Resource
 from twisted.web import server
@@ -90,16 +91,18 @@ class MailsResource(Resource):
 
     def render_GET(self, request):
         query, window_size, page = request.args.get('q')[0], request.args.get('w')[0], request.args.get('p')[0]
-        mails, total = self._mail_service.mails(query, window_size, page)
+        d, total = self._mail_service.mails(query, window_size, page)
 
-        response = {
+        response = lambda mails: {
             "stats": {
                 "total": total,
             },
             "mails": [mail.as_dict() for mail in mails]
         }
+        d.addCallback(response)
+        d.addCallback(lambda res: respond_json_deferred(res, request))
 
-        return respond_json(response, request)
+        return NOT_DONE_YET
 
     def render_POST(self, request):
         content_dict = json.loads(request.content.read())
