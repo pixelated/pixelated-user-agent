@@ -383,7 +383,8 @@ class PixelatedMail(Mail):
 
     @property
     def mailbox_name(self):
-        return self.fdoc.content.get('mbox')
+        # FIXME mbox is no longer available, instead we now have mbox_uuid
+        return self.fdoc.content.get('mbox_uuid')
 
     @property
     def is_recent(self):

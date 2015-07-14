@@ -15,12 +15,14 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from pixelated.adapter.soledad.soledad_facade_mixin import SoledadDbFacadeMixin
 
+from twisted.internet import defer
 
 class SoledadWriterMixin(SoledadDbFacadeMixin, object):
 
+    @defer.inlineCallbacks
     def mark_all_as_not_recent(self):
         for mailbox in ['INBOX', 'DRAFTS', 'SENT', 'TRASH']:
-            rct = self.get_recent_by_mbox(mailbox)
+            rct = yield self.get_recent_by_mbox(mailbox)
             if not rct or not rct[0].content['rct']:
                 return
             rct = rct[0]

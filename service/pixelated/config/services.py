@@ -45,8 +45,8 @@ class Services(object):
     @defer.inlineCallbacks
     def post_setup(self, soledad_querier, leap_session):
         self.search_engine.index_mails(
-            mails=(yield self.mail_service.all_mails()),
-            callback=soledad_querier.mark_all_as_not_recent)
+            mails=(yield self.mail_service.all_mails()))
+        yield soledad_querier.mark_all_as_not_recent()
         soledad_querier.remove_duplicates()
         InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
 

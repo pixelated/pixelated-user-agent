@@ -50,7 +50,7 @@ class SoledadReaderMixin(SoledadDbFacadeMixin, object):
         fdocs_hdocs_bodyphash = [(f[0], f[1], f[1].content.get('body')) for f in fdocs_hdocs]
         fdocs_hdocs_bdocs_parts = []
         for fdoc, hdoc, body_phash in fdocs_hdocs_bodyphash:
-            bdoc = self.get_content_by_phash(body_phash)
+            bdoc = yield self.get_content_by_phash(body_phash)
             if not bdoc:
                 continue
             parts = yield self._extract_parts(hdoc.content)

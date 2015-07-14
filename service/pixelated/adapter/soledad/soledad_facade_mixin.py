@@ -44,8 +44,10 @@ class SoledadDbFacadeMixin(object):
         if len(header):
             defer.returnValue(header[0])
 
+    @defer.inlineCallbacks
     def get_recent_by_mbox(self, mbox):
-        return self.soledad.get_from_index('by-type-and-mbox', 'rct', mbox) if mbox else []
+        defer.returnValue(
+                (yield self.soledad.get_from_index('by-type-and-mbox', 'rct', mbox) if mbox else []))
 
     def put_doc(self, doc):
         return self.soledad.put_doc(doc)
