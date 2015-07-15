@@ -61,13 +61,15 @@ class SoledadReaderMixin(SoledadDbFacadeMixin, object):
     def mail_exists(self, ident):
         return self.get_flags_by_chash(ident)
 
+    @defer.inlineCallbacks
     def mail(self, ident):
-        fdoc = self.get_flags_by_chash(ident)
-        hdoc = self.get_header_by_chash(ident)
-        bdoc = self.get_content_by_phash(hdoc.content['body'])
-        parts = self._extract_parts(hdoc.content)
+        fdoc = yield self.get_flags_by_chash(ident)
+        hdoc = yield self.get_header_by_chash(ident)
+        bdoc = yield self.get_content_by_phash(hdoc.content['body'])
+        parts = yield self._extract_parts(hdoc.content)
 
-        return PixelatedMail.from_soledad(fdoc, hdoc, bdoc, parts=parts, soledad_querier=self)
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, parts=parts, soledad_querier=self)
+        defer.returnValue(mail)
 
     @defer.inlineCallbacks
     def mails(self, idents):
