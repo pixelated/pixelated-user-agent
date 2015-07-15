@@ -39,7 +39,7 @@ class NickNym(object):
     @defer.inlineCallbacks
     def _key_exists(self, email):
         try:
-            yield self.keymanager.get_key(email, openpgp.OpenPGPKey, private=True)
+            yield self.keymanager.get_key(email, openpgp.OpenPGPKey)
             defer.returnValue(True)
         except KeyNotFound:
             defer.returnValue(False)
