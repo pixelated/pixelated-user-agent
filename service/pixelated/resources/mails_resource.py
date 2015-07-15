@@ -91,9 +91,9 @@ class MailsResource(Resource):
 
     def render_GET(self, request):
         query, window_size, page = request.args.get('q')[0], request.args.get('w')[0], request.args.get('p')[0]
-        d, total = self._mail_service.mails(query, window_size, page)
+        d = self._mail_service.mails(query, window_size, page)
 
-        response = lambda mails: {
+        response = lambda (mails, total): {
             "stats": {
                 "total": total,
             },

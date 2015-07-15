@@ -69,11 +69,12 @@ class SoledadReaderMixin(SoledadDbFacadeMixin, object):
 
         return PixelatedMail.from_soledad(fdoc, hdoc, bdoc, parts=parts, soledad_querier=self)
 
+    @defer.inlineCallbacks
     def mails(self, idents):
-        fdocs_chash = [(self.get_flags_by_chash(ident), ident) for ident in
+        fdocs_chash = [((yield self.get_flags_by_chash(ident)), ident) for ident in
                        idents]
         fdocs_chash = [(result, ident) for result, ident in fdocs_chash if result]
-        return self._build_mails_from_fdocs(fdocs_chash)
+        defer.returnValue((yield self._build_mails_from_fdocs(fdocs_chash)))
 
     @defer.inlineCallbacks
     def attachment(self, attachment_ident, encoding):

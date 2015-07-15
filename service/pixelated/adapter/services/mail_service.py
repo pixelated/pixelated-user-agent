@@ -30,10 +30,13 @@ class MailService(object):
     def all_mails(self):
         defer.returnValue((yield self.querier.all_mails()))
 
+    @defer.inlineCallbacks
     def mails(self, query, window_size, page):
         mail_ids, total = self.search_engine.search(query, window_size, page)
 
-        return self.querier.mails(mail_ids), total
+        mails = yield self.querier.mails(mail_ids)
+
+        defer.returnValue((mails, total))
 
     def update_tags(self, mail_id, new_tags):
         new_tags = self._filter_white_space_tags(new_tags)

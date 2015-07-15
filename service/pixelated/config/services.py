@@ -54,6 +54,7 @@ class Services(object):
     @defer.inlineCallbacks
     def setup_search_engine(self, leap_home, soledad_querier):
         key = yield soledad_querier.get_index_masterkey()
+        print 'The key len is: %s' % len(key)
         search_engine = SearchEngine(key, agent_home=leap_home)
         MailboxIndexerListener.SEARCH_ENGINE = search_engine
         self.search_engine = search_engine
