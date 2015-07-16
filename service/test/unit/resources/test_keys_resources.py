@@ -1,3 +1,5 @@
+import json
+import ast
 from mockito import mock, when
 from leap.keymanager import OpenPGPKey, KeyNotFound
 from pixelated.resources.keys_resource import KeysResource
@@ -32,13 +34,26 @@ class TestKeysResource(unittest.TestCase):
 
         d = self.web.get(request)
 
+        expected = {
+            "tags": ["keymanager-key"],
+            "fingerprint": '',
+            "private": False,
+            'sign_used': False,
+            'refreshed_at': 0,
+            "expiry_date": 0,
+            "address": 'some@key',
+            'encr_used': False,
+            'last_audited_at': 0,
+            'key_data': '',
+            'length': 0,
+            'key_id': '',
+            'validation': 'Weak_Chain',
+            'type': 'OpenPGPKey',
+        }
+
         def assert_response(_):
-            self.assertEquals('"{\\"tags\\": [\\"keymanager-key\\"], \\"fingerprint\\": null, '
-                              '\\"private\\": null, \\"expiry_date\\": null, \\"address\\": '
-                              '\\"some@key\\", \\"last_audited_at\\": null, \\"key_data\\": null, '
-                              '\\"length\\": null, \\"key_id\\": null, \\"validation\\": null, '
-                              '\\"type\\": \\"<class \'leap.keymanager.openpgp.OpenPGPKey\'>\\", '
-                              '\\"first_seen_at\\": null}"', request.written[0])
+            actual = json.loads(ast.literal_eval(request.written[0]))
+            self.assertEquals(expected, actual)
 
         d.addCallback(assert_response)
         return d

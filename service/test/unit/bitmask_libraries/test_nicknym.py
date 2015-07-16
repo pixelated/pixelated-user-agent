@@ -61,5 +61,5 @@ class NickNymTest(AbstractLeapTest):
         # when/then
         nicknym.generate_openpgp_key()
 
-        keyman.get_key.assert_called_with('test_user@some-server.test', openpgp.OpenPGPKey, fetch_remote=False, private=True)
+        keyman.get_key.assert_called_with('test_user@some-server.test', openpgp.OpenPGPKey)
         keyman.gen_key.assert_called_with(openpgp.OpenPGPKey)

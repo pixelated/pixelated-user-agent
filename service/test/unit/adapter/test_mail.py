@@ -17,7 +17,7 @@
 import unittest
 
 import pixelated.support.date
-from pixelated.adapter.model.mail import PixelatedMail, InputMail
+from pixelated.adapter.model.mail import PixelatedMail, InputMail, HEADERS_KEY
 from mockito import mock, unstub, when
 from test.support import test_helper
 import dateutil.parser as dateparser
@@ -119,7 +119,7 @@ class TestPixelatedMail(unittest.TestCase):
         input_mail = InputMail()
         input_mail.headers = headers
 
-        self.assertEqual('me@pixelated.org', input_mail.get_for_save(1, 'SENT')[1][fields.HEADERS_KEY]['From'])
+        self.assertEqual('me@pixelated.org', input_mail.get_for_save(1, 'SENT')[1][HEADERS_KEY]['From'])
 
     def test_as_dict(self):
         headers = {'Subject': 'The subject',

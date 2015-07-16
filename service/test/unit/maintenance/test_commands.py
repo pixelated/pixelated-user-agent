@@ -19,6 +19,7 @@ import email
 from pixelated.maintenance import delete_all_mails, load_mails
 from pixelated.bitmask_libraries.session import LeapSession
 from leap.mail.constants import MessageFlags
+from leap.mail.imap.account import IMAPAccount
 from leap.soledad.client import Soledad
 from leap.soledad.common.document import SoledadDocument
 from mock import MagicMock
@@ -31,7 +32,9 @@ class TestCommands(unittest.TestCase):
     def setUp(self):
         self.leap_session = MagicMock(spec=LeapSession)
         self.soledad = MagicMock(spec=Soledad)
+        self.account = MagicMock(spec=IMAPAccount)
         self.mailbox = MagicMock()
+        self.leap_session.account = self.account
 
         self.args = (self.leap_session, self.soledad)
 

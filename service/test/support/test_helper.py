@@ -53,9 +53,9 @@ class TestDoc(object):
         return self.content[key]
 
 
-def leap_mail(uid=0, flags=LEAP_FLAGS, headers=None, extra_headers={}, mbox='INBOX', body='body',
+def leap_mail(uid=0, flags=LEAP_FLAGS, headers=None, extra_headers={}, mbox_uuid='INBOX', body='body',
               chash='chash'):
-    fdoc = TestDoc({'flags': flags, 'mbox': mbox, 'type': 'flags', 'uid': uid, 'chash': chash})
+    fdoc = TestDoc({'flags': flags, 'mbox_uuid': mbox_uuid, 'type': 'flags', 'uid': uid, 'chash': chash})
 
     if headers is None:
         headers = {}
@@ -69,8 +69,8 @@ def leap_mail(uid=0, flags=LEAP_FLAGS, headers=None, extra_headers={}, mbox='INB
     return (fdoc, hdoc, bdoc)
 
 
-def pixelated_mail(uid=0, flags=LEAP_FLAGS, headers=None, extra_headers={}, mbox='INBOX', body='body', chash='chash'):
-    fdoc, hdoc, bdoc = leap_mail(uid, flags, headers, extra_headers, mbox, body, chash)
+def pixelated_mail(uid=0, flags=LEAP_FLAGS, headers=None, extra_headers={}, mbox_uuid='INBOX', body='body', chash='chash'):
+    fdoc, hdoc, bdoc = leap_mail(uid, flags, headers, extra_headers, mbox_uuid, body, chash)
 
     return PixelatedMail.from_soledad(fdoc, hdoc, bdoc)
 

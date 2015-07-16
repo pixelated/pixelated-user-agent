@@ -33,6 +33,17 @@ from pixelated.support.functional import compact
 
 logger = logging.getLogger(__name__)
 
+TYPE_KEY = 'type'
+CONTENT_HASH_KEY = 'chash'
+HEADERS_KEY = 'headers'
+DATE_KEY = 'date'
+SUBJECT_KEY = 'subject'
+PARTS_MAP_KEY = 'part_map'
+BODY_KEY = 'body'
+MSGID_KEY = 'msgid'
+MULTIPART_KEY = 'multi'
+SIZE_KEY = 'size'
+
 
 class Mail(object):
     @property
@@ -61,7 +72,8 @@ class Mail(object):
 
     @property
     def mailbox_name(self):
-        return self.fdoc.content.get('mbox')
+        # FIXME mbox is no longer available, instead we now have mbox_uuid
+        return self.fdoc.content.get('mbox_uuid')
 
     @property
     def _mime_multipart(self):
@@ -131,16 +143,16 @@ class InputMail(Mail):
         fd[fields.MBOX] = mailbox
         fd[fields.MBOX_UUID] = next_uid
         fd[fields.CONTENT_HASH] = self._get_chash()
-        # fd[fields.SIZE_KEY] = len(self.raw)
-        # fd[fields.MULTIPART_KEY] = True
+        fd[SIZE_KEY] = len(self.raw)
+        fd[MULTIPART_KEY] = True
         fd[fields.RECENT] = True
-        fd[fields.TYPE] = fields.TYPE_FLAGS_VAL
+        fd[fields.TYPE] = fields.FLAGS
         fd[fields.FLAGS] = Status.to_flags(self._status)
         self._fd = fd
         return fd
 
     def _get_body_phash(self):
-        return walk.get_body_phash_multi(walk.get_payloads(self._mime_multipart))
+        return walk.get_body_phash(self._mime_multipart)
 
     def _hdoc(self):
         if self._hd:
@@ -151,15 +163,15 @@ class InputMail(Mail):
         headers['From'] = InputMail.FROM_EMAIL_ADDRESS
 
         hd = {}
-        hd[fields.HEADERS_KEY] = headers
-        hd[fields.DATE_KEY] = headers['Date']
-        hd[fields.CONTENT_HASH_KEY] = self._get_chash()
-        hd[fields.MSGID_KEY] = ''
-        hd[fields.MULTIPART_KEY] = True
-        hd[fields.SUBJECT_KEY] = headers.get('Subject')
-        hd[fields.TYPE_KEY] = fields.TYPE_HEADERS_VAL
-        hd[fields.BODY_KEY] = self._get_body_phash()
-        hd[fields.PARTS_MAP_KEY] = \
+        hd[HEADERS_KEY] = headers
+        hd[DATE_KEY] = headers['Date']
+        hd[CONTENT_HASH_KEY] = self._get_chash()
+        hd[MSGID_KEY] = ''
+        hd[MULTIPART_KEY] = True
+        hd[SUBJECT_KEY] = headers.get('Subject')
+        hd[TYPE_KEY] = fields.HEADERS
+        hd[BODY_KEY] = self._get_body_phash()
+        hd[PARTS_MAP_KEY] = \
             walk.walk_msg_tree(walk.get_parts(self._mime_multipart), body_phash=self._get_body_phash())['part_map']
 
         self._hd = hd
