@@ -3,6 +3,7 @@ from pixelated.resources import respond_json, respond_json_deferred
 from twisted.web.resource import Resource
 from twisted.web.server import NOT_DONE_YET
 
+
 class MailTags(Resource):
 
     isLeaf = True
@@ -33,8 +34,7 @@ class Mail(Resource):
     def render_GET(self, request):
         d = self._mail_service.mail(self._mail_id)
 
-        response = lambda mail: respond_json_deferred(mail.as_dict(), request)
-        d.addCallback(response)
+        d.addCallback(lambda mail: respond_json_deferred(mail.as_dict(), request))
 
         return NOT_DONE_YET
 

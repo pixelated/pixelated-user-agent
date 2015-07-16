@@ -93,13 +93,12 @@ class MailsResource(Resource):
         query, window_size, page = request.args.get('q')[0], request.args.get('w')[0], request.args.get('p')[0]
         d = self._mail_service.mails(query, window_size, page)
 
-        response = lambda (mails, total): {
+        d.addCallback(lambda (mails, total): {
             "stats": {
                 "total": total,
             },
             "mails": [mail.as_dict() for mail in mails]
-        }
-        d.addCallback(response)
+        })
         d.addCallback(lambda res: respond_json_deferred(res, request))
 
         return NOT_DONE_YET
