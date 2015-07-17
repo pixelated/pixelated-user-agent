@@ -21,10 +21,10 @@ import shutil
 import time
 import uuid
 
-from leap.mail.imap.account import SoledadBackedAccount
+from leap.mail.imap.account import IMAPAccount
 from leap.soledad.client import Soledad
 from mock import MagicMock, Mock
-from twisted.internet import reactor
+from twisted.internet import reactor, defer
 from twisted.internet.defer import succeed
 from twisted.web.resource import getChildForRequest
 from twisted.web.server import Site
@@ -50,6 +50,7 @@ class AppTestClient(object):
     def __init__(self):
         self.start_client()
 
+    @defer.inlineCallbacks
     def start_client(self):
         soledad_test_folder = self._generate_soledad_test_folder_name()
         SearchEngine.DEFAULT_INDEX_HOME = soledad_test_folder
@@ -65,12 +66,12 @@ class AppTestClient(object):
         self.search_engine = SearchEngine(self.INDEX_KEY, agent_home=soledad_test_folder)
         self.mail_sender = self._create_mail_sender()
 
-        self.account = SoledadBackedAccount(self.ACCOUNT, self.soledad, MagicMock())
+        self.account = IMAPAccount(self.ACCOUNT, self.soledad, MagicMock())
         self.mailboxes = Mailboxes(self.account, self.soledad_querier, self.search_engine)
         self.draft_service = DraftService(self.mailboxes)
 
         self.mail_service = self._create_mail_service(self.mailboxes, self.mail_sender, self.soledad_querier, self.search_engine)
-        self.search_engine.index_mails(self.mail_service.all_mails())
+        self.search_engine.index_mails((yield self.mail_service.all_mails()))
 
         self.resource = RootResource()
         self.resource.initialize(self.keymanager, self.search_engine, self.mail_service, self.draft_service)
@@ -124,21 +125,26 @@ class AppTestClient(object):
     def add_document_to_soledad(self, _dict):
         self.soledad_querier.soledad.create_doc(_dict)
 
+    @defer.inlineCallbacks
     def add_mail_to_inbox(self, input_mail):
-        mail = self.mailboxes.inbox.add(input_mail)
+        inbox = yield self.mailboxes.inbox
+        mail = yield inbox.add(input_mail)
         if input_mail.tags:
             mail.update_tags(input_mail.tags)
             self.search_engine.index_mail(mail)
 
+    @defer.inlineCallbacks
     def add_multiple_to_mailbox(self, num, mailbox='', flags=[], tags=[], to='recipient@to.com', cc='recipient@cc.com', bcc='recipient@bcc.com'):
         mails = []
         for _ in range(num):
             input_mail = MailBuilder().with_status(flags).with_tags(tags).with_to(to).with_cc(cc).with_bcc(bcc).build_input_mail()
-            mail = self.mailboxes._create_or_get(mailbox).add(input_mail)
+            mbx = yield self.mailboxes._create_or_get(mailbox)
+            mail = yield mbx.add(input_mail)
             mails.append(mail)
             mail.update_tags(input_mail.tags) if tags else None
         self.search_engine.index_mails(mails) if tags else None
-        return mails
+
+        defer.returnValue(mails)
 
     def _create_soledad_querier(self, soledad, index_key):
         soledad_querier = SoledadQuerier(soledad)
@@ -240,5 +246,6 @@ def initialize_soledad(tempdir):
         local_db_path,
         server_url,
         cert_file,
-        defer_encryption=False)
+        defer_encryption=False,
+        syncable=False)
     return _soledad

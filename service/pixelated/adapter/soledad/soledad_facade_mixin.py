@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 from twisted.internet import defer
+from leap.mail.mailbox_indexer import MailboxIndexer
 
 
 class SoledadDbFacadeMixin(object):
@@ -72,10 +73,15 @@ class SoledadDbFacadeMixin(object):
     def get_mbox(self, mbox):
         return self.soledad.get_from_index('by-type-and-mbox', 'mbox', mbox) if mbox else []
 
+    @defer.inlineCallbacks
     def get_lastuid(self, mbox):
         if isinstance(mbox, str):
-            mbox = self.get_mbox(mbox)[0]
-        return mbox.content['lastuid']
+            mbox = (yield defer.maybeDeferred(self.get_mbox(mbox)))[0]
+
+        indexer = MailboxIndexer(self.soledad)
+        last_uuid = yield indexer.get_last_uid(mbox.content['uuid'])
+
+        defer.returnValue(last_uuid)
 
     def get_search_index_masterkey(self):
         return self.soledad.get_from_index('by-type', 'index_key')

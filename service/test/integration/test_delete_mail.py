@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-
+from twisted.internet import defer
 from test.support.integration import SoledadTestBase, MailBuilder
 
 
@@ -33,8 +33,9 @@ class DeleteMailTest(SoledadTestBase):
         trash_mails = self.get_mails_by_tag('trash')
         self.assertEquals(1, len(trash_mails))
 
+    @defer.inlineCallbacks
     def test_delete_mail_when_trashing_mail_from_trash_mailbox(self):
-        mails = self.add_multiple_to_mailbox(1, 'trash')
+        mails = yield self.add_multiple_to_mailbox(1, 'trash')
         self.delete_mails([mails[0].ident])
 
         trash_mails = self.get_mails_by_tag('trash')
