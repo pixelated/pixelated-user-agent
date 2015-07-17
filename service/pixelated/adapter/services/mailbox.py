@@ -36,7 +36,6 @@ class Mailbox(object):
     def add(self, mail):
         added_mail = yield self.querier.create_mail(mail, self.mailbox_name)
 
-        import pdb; pdb.set_trace()
         self.search_engine.index_mail(added_mail)
         defer.returnValue(added_mail)
 

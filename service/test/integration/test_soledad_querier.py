@@ -14,37 +14,39 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import copy
 import time
 
 from test.support.integration import SoledadTestBase, MailBuilder
-from leap.mail.imap.fields import WithMsgFields
+from leap.mail.adaptors.soledad import MailboxWrapper
+from twisted.internet import defer
 
 
-class SoledadQuerierTest(SoledadTestBase, WithMsgFields):
+class SoledadQuerierTest(SoledadTestBase):
 
     def setUp(self):
         SoledadTestBase.setUp(self)
         self.maxDiff = None
 
     def _get_empty_mailbox(self):
-        return copy.deepcopy(self.EMPTY_MBOX)
+        return MailboxWrapper()
 
     def _create_mailbox(self, mailbox_name):
         new_mailbox = self._get_empty_mailbox()
-        new_mailbox['mbox'] = mailbox_name
-        new_mailbox['created'] = int(time.time() * 10E2)
-        return self.soledad.create_doc(new_mailbox)
+        new_mailbox.mbox = mailbox_name
+        new_mailbox.created = int(time.time() * 10E2)
+        return self.soledad.create_doc(new_mailbox.serialize())
 
+    @defer.inlineCallbacks
     def _get_mailboxes_from_soledad(self, mailbox_name):
-        return [m for m in self.soledad.get_from_index('by-type', 'mbox') if m.content['mbox'] == mailbox_name]
+        defer.returnValue([m for m in (yield self.soledad.get_from_index('by-type', 'mbox')) if m.content['mbox'] == mailbox_name])
 
+    @defer.inlineCallbacks
     def test_remove_dup_mailboxes_keeps_the_one_with_the_highest_last_uid(self):
         self.add_multiple_to_mailbox(3, 'INBOX')  # by now we already have one inbox with 3 mails
-        self._create_mailbox('INBOX')  # now we have a duplicate
+        yield self._create_mailbox('INBOX')  # now we have a duplicate
 
         # make sure we have two
-        inboxes = self._get_mailboxes_from_soledad('INBOX')
+        inboxes = yield self._get_mailboxes_from_soledad('INBOX')
         self.assertEqual(2, len(inboxes))
 
         self.soledad_querier.remove_duplicates()
