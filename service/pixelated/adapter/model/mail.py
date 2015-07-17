@@ -73,7 +73,7 @@ class Mail(object):
     @property
     def mailbox_name(self):
         # FIXME mbox is no longer available, instead we now have mbox_uuid
-        return self.fdoc.content.get('mbox_uuid')
+        return self.fdoc.content.get('mbox')
 
     @property
     def _mime_multipart(self):
@@ -395,6 +395,7 @@ class PixelatedMail(Mail):
 
     @property
     def mailbox_name(self):
+        # FIXME mbox is no longer available, instead we now have mbox_uuid
         return self.fdoc.content.get('mbox')
 
     @property
