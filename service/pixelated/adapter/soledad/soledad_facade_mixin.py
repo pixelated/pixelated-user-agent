@@ -57,9 +57,10 @@ class SoledadDbFacadeMixin(object):
     def create_doc(self, doc):
         return self.soledad.create_doc(doc)
 
+    @defer.inlineCallbacks
     def create_docs(self, docs):
         for doc in docs:
-            self.create_doc(doc)
+            yield self.create_doc(doc)
 
     def delete_doc(self, doc):
         return self.soledad.delete_doc(doc)

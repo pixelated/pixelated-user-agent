@@ -42,7 +42,7 @@ class SoledadQuerierTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_remove_dup_mailboxes_keeps_the_one_with_the_highest_last_uid(self):
-        self.add_multiple_to_mailbox(3, 'INBOX')  # by now we already have one inbox with 3 mails
+        yield self.add_multiple_to_mailbox(3, 'INBOX')  # by now we already have one inbox with 3 mails
         yield self._create_mailbox('INBOX')  # now we have a duplicate
 
         # make sure we have two

@@ -38,7 +38,7 @@ class SoledadWriterMixin(SoledadDbFacadeMixin, object):
         mbox_doc = (yield self.get_mbox(mailbox_name))[0]
         uid = 1 + (yield self.get_lastuid(mbox_doc))
 
-        self.create_docs(mail.get_for_save(next_uid=uid, mailbox=mailbox_name))
+        yield self.create_docs(mail.get_for_save(next_uid=uid, mailbox=mailbox_name))
 
         # FIXME need to update meta message (mdoc)
         # mbox_doc.content['lastuid'] = uid + 1
