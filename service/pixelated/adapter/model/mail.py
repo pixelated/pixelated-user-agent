@@ -30,6 +30,8 @@ from pixelated.adapter.model.status import Status
 from pixelated.support import date
 from pixelated.support.functional import compact
 
+from twisted.internet import defer
+
 
 logger = logging.getLogger(__name__)
 
@@ -419,9 +421,10 @@ class PixelatedMail(Mail):
     def remove_all_tags(self):
         self.update_tags(set([]))
 
+    @defer.inlineCallbacks
     def update_tags(self, tags):
-        self._persist_mail_tags(tags)
-        return self.tags
+        yield self._persist_mail_tags(tags)
+        defer.returnValue(self.tags)
 
     def mark_as_read(self):
         if Status.SEEN in self.flags:
@@ -444,7 +447,7 @@ class PixelatedMail(Mail):
 
     def _persist_mail_tags(self, current_tags):
         self.fdoc.content['tags'] = json.dumps(list(current_tags))
-        self.save()
+        return self.save()
 
     def has_tag(self, tag):
         return tag in self.tags

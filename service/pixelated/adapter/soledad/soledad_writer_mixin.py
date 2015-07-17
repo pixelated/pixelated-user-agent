@@ -31,7 +31,7 @@ class SoledadWriterMixin(SoledadDbFacadeMixin, object):
             self.put_doc(rct)
 
     def save_mail(self, mail):
-        self.put_doc(mail.fdoc)
+        return self.put_doc(mail.fdoc)
 
     @defer.inlineCallbacks
     def create_mail(self, mail, mailbox_name):

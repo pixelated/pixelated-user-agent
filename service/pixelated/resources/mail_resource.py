@@ -16,11 +16,14 @@ class MailTags(Resource):
     def render_POST(self, request):
         new_tags = json.loads(request.content.read()).get('newtags')
 
-        try:
-            mail = self._mail_service.update_tags(self._mail_id, new_tags)
-        except ValueError as ve:
-            return respond_json(ve.message, request, 403)
-        return respond_json(mail.as_dict(), request)
+        d = self._mail_service.update_tags(self._mail_id, new_tags)
+        d.addCallback(lambda mail: respond_json_deferred(mail.as_dict(), request))
+
+        def handle403(failure):
+            failure.trap(ValueError)
+            return respond_json_deferred(failure.getErrorMessage(), request, 403)
+        d.addErrback(handle403)
+        return NOT_DONE_YET
 
 
 class Mail(Resource):

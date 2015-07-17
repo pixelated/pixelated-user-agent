@@ -38,17 +38,18 @@ class MailService(object):
 
         defer.returnValue((mails, total))
 
+    @defer.inlineCallbacks
     def update_tags(self, mail_id, new_tags):
         new_tags = self._filter_white_space_tags(new_tags)
         reserved_words = extract_reserved_tags(new_tags)
         if len(reserved_words):
             raise ValueError('None of the following words can be used as tags: ' + ' '.join(reserved_words))
         new_tags = self._favor_existing_tags_casing(new_tags)
-        mail = self.mail(mail_id)
-        mail.update_tags(set(new_tags))
+        mail = yield self.mail(mail_id)
+        yield mail.update_tags(set(new_tags))
         self.search_engine.index_mail(mail)
 
-        return mail
+        defer.returnValue(mail)
 
     def _filter_white_space_tags(self, tags):
         return [tag.strip() for tag in tags if not tag.isspace()]
