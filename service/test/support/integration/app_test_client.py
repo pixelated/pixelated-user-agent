@@ -23,7 +23,7 @@ import uuid
 
 from leap.mail.imap.account import IMAPAccount
 from leap.soledad.client import Soledad
-from mock import MagicMock, Mock
+from mock import Mock
 from twisted.internet import reactor, defer
 from twisted.internet.defer import succeed
 from twisted.web.resource import getChildForRequest
@@ -66,12 +66,15 @@ class AppTestClient(object):
         self.search_engine = SearchEngine(self.INDEX_KEY, agent_home=soledad_test_folder)
         self.mail_sender = self._create_mail_sender()
 
-        self.account = IMAPAccount(self.ACCOUNT, self.soledad, MagicMock())
+        account_ready_cb = defer.Deferred()
+        self.account = IMAPAccount(self.ACCOUNT, self.soledad, account_ready_cb)
+        yield account_ready_cb
         self.mailboxes = Mailboxes(self.account, self.soledad_querier, self.search_engine)
         self.draft_service = DraftService(self.mailboxes)
 
         self.mail_service = self._create_mail_service(self.mailboxes, self.mail_sender, self.soledad_querier, self.search_engine)
-        self.search_engine.index_mails((yield self.mail_service.all_mails()))
+        mails = yield self.mail_service.all_mails()
+        self.search_engine.index_mails(mails)
 
         self.resource = RootResource()
         self.resource.initialize(self.keymanager, self.search_engine, self.mail_service, self.draft_service)

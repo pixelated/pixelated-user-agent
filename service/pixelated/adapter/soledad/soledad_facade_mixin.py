@@ -77,7 +77,7 @@ class SoledadDbFacadeMixin(object):
     @defer.inlineCallbacks
     def get_lastuid(self, mbox):
         if isinstance(mbox, str):
-            mbox = (yield defer.maybeDeferred(self.get_mbox(mbox)))[0]
+            mbox = (yield defer.maybeDeferred(self.get_mbox, mbox))[0]
 
         indexer = MailboxIndexer(self.soledad)
         last_uuid = yield indexer.get_last_uid(mbox.content['uuid'])

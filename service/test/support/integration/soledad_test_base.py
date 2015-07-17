@@ -23,7 +23,7 @@ class SoledadTestBase(unittest.TestCase, AppTestClient):
     DEFERRED_TIMEOUT_LONG = 300
 
     def setUp(self):
-        self.start_client()
+        return self.start_client()
 
     def tearDown(self):
         self.cleanup()

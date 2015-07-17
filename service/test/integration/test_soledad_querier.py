@@ -24,8 +24,8 @@ from twisted.internet import defer
 class SoledadQuerierTest(SoledadTestBase):
 
     def setUp(self):
-        SoledadTestBase.setUp(self)
         self.maxDiff = None
+        return SoledadTestBase.setUp(self)
 
     def _get_empty_mailbox(self):
         return MailboxWrapper()
@@ -43,43 +43,46 @@ class SoledadQuerierTest(SoledadTestBase):
     @defer.inlineCallbacks
     def test_remove_dup_mailboxes_keeps_the_one_with_the_highest_last_uid(self):
         yield self.add_multiple_to_mailbox(3, 'INBOX')  # by now we already have one inbox with 3 mails
-        yield self._create_mailbox('INBOX')  # now we have a duplicate
+        duplicated_mbox = yield self._create_mailbox('INBOX')  # now we have a duplicate
 
-        # make sure we have two
+        # make sure we have two and duplicated is one of them
         inboxes = yield self._get_mailboxes_from_soledad('INBOX')
         self.assertEqual(2, len(inboxes))
+        self.assertIn(duplicated_mbox, inboxes)
 
-        self.soledad_querier.remove_duplicates()
+        yield self.soledad_querier.remove_duplicates()
 
-        # make sure we only have one, and the one with the right lastuid
-        inboxes = self._get_mailboxes_from_soledad('INBOX')
+        # make sure we only have one, and it is not the duplicated one
+        inboxes = yield self._get_mailboxes_from_soledad('INBOX')
         self.assertEqual(1, len(inboxes))
-        self.assertEqual(3, inboxes[0].content['lastuid'])
+        self.assertNotIn(duplicated_mbox, inboxes)
 
+    @defer.inlineCallbacks
     def test_all_mails_skips_incomplete_mails(self):
         # creating incomplete mail, we will only save the fdoc
         fdoc, hdoc, bdoc = MailBuilder().build_input_mail().get_for_save(1, 'INBOX')
-        self.soledad.create_doc(fdoc)
+        yield self.soledad.create_doc(fdoc)
 
-        mails = self.soledad_querier.all_mails()
+        mails = yield self.soledad_querier.all_mails()
         self.assertEqual(0, len(mails))  # mail is incomplete since it only has fdoc
 
         # adding the hdoc still doesn't complete the mail
-        self.soledad.create_doc(hdoc)
+        yield self.soledad.create_doc(hdoc)
 
-        mails = self.soledad_querier.all_mails()
+        mails = yield self.soledad_querier.all_mails()
         self.assertEqual(0, len(mails))
 
         # now the mail is complete
-        self.soledad.create_doc(bdoc)
+        yield self.soledad.create_doc(bdoc)
 
-        mails = self.soledad_querier.all_mails()
+        mails = yield self.soledad_querier.all_mails()
         self.assertEqual(1, len(mails))
 
+    @defer.inlineCallbacks
     def test_get_mails_by_chash(self):
-        mails = self.add_multiple_to_mailbox(3, 'INBOX')
+        mails = yield self.add_multiple_to_mailbox(3, 'INBOX')
         chashes = [mail.ident for mail in mails]
 
-        fetched_mails = self.soledad_querier.mails(chashes)
+        fetched_mails = yield self.soledad_querier.mails(chashes)
 
         self.assertEquals([m.as_dict() for m in fetched_mails], [m.as_dict() for m in mails])
