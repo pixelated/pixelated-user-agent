@@ -419,7 +419,7 @@ class PixelatedMail(Mail):
         self.fdoc.content['mbox'] = mailbox_name
 
     def remove_all_tags(self):
-        self.update_tags(set([]))
+        return self.update_tags(set([]))
 
     @defer.inlineCallbacks
     def update_tags(self, tags):

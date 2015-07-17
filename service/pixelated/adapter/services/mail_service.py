@@ -69,24 +69,23 @@ class MailService(object):
     def attachment(self, attachment_id, encoding):
         return self.querier.attachment(attachment_id, encoding)
 
+    @defer.inlineCallbacks
     def mail_exists(self, mail_id):
-        return not(not(self.querier.get_header_by_chash(mail_id)))
+        defer.returnValue(not(not((yield self.querier.get_header_by_chash(mail_id)))))
 
+    @defer.inlineCallbacks
     def send_mail(self, content_dict):
         mail = InputMail.from_dict(content_dict)
         draft_id = content_dict.get('ident')
 
-        def move_to_sent(_):
-            return self.move_to_sent(draft_id, mail)
+        yield self.mail_sender.sendmail(mail)
+        yield self.move_to_sent(draft_id, mail)
 
-        deferred = self.mail_sender.sendmail(mail)
-        deferred.addCallback(move_to_sent)
-        return deferred
-
+    @defer.inlineCallbacks
     def move_to_sent(self, last_draft_ident, mail):
         if last_draft_ident:
-            self.mailboxes.drafts.remove(last_draft_ident)
-        return self.mailboxes.sent.add(mail)
+            yield (yield self.mailboxes.drafts).remove(last_draft_ident)
+        defer.returnValue((yield (yield self.mailboxes.sent).add(mail)))
 
     def mark_as_read(self, mail_id):
         mail = self.mail(mail_id)

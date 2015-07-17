@@ -39,11 +39,12 @@ class Mailbox(object):
         self.search_engine.index_mail(added_mail)
         defer.returnValue(added_mail)
 
+    @defer.inlineCallbacks
     def remove(self, ident):
-        mail = self.querier.mail(ident)
+        mail = yield self.querier.mail(ident)
         self.search_engine.remove_from_index(mail.ident)
-        mail.remove_all_tags()
-        self.querier.remove_mail(mail)
+        yield mail.remove_all_tags()
+        yield self.querier.remove_mail(mail)
 
     @classmethod
     def create(cls, mailbox_name, soledad_querier, search_engine):

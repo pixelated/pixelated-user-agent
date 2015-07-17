@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from twisted.internet import defer
 
 
 class DraftService(object):
@@ -21,11 +22,13 @@ class DraftService(object):
     def __init__(self, mailboxes):
         self._mailboxes = mailboxes
 
+    @defer.inlineCallbacks
     def create_draft(self, input_mail):
-        pixelated_mail = self._mailboxes.drafts.add(input_mail)
-        return pixelated_mail
+        pixelated_mail = yield (yield self._mailboxes.drafts).add(input_mail)
+        defer.returnValue(pixelated_mail)
 
+    @defer.inlineCallbacks
     def update_draft(self, ident, input_mail):
-        pixelated_mail = self.create_draft(input_mail)
-        self._mailboxes.drafts.remove(ident)
-        return pixelated_mail
+        pixelated_mail = yield self.create_draft(input_mail)
+        yield (yield self._mailboxes.drafts).remove(ident)
+        defer.returnValue(pixelated_mail)

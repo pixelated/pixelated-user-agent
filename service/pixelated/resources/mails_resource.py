@@ -128,11 +128,19 @@ class MailsResource(Resource):
         _mail = InputMail.from_dict(content_dict)
         draft_id = content_dict.get('ident')
 
-        if draft_id:
-            if not self._mail_service.mail_exists(draft_id):
-                return respond_json("", request, status_code=422)
-            pixelated_mail = self._draft_service.update_draft(draft_id, _mail)
-        else:
-            pixelated_mail = self._draft_service.create_draft(_mail)
+        def defer_response(deferred):
+            deferred.addCallback(lambda pixelated_mail: respond_json_deferred({'ident': pixelated_mail.ident}, request))
 
-        return respond_json({'ident': pixelated_mail.ident}, request)
+        if draft_id:
+            deferred_check = self._mail_service.mail_exists(draft_id)
+
+            def return422otherwise(mail_exists):
+                if not mail_exists:
+                    respond_json_deferred("", request, status_code=422)
+                else:
+                    defer_response(self._draft_service.update_draft(draft_id, _mail))
+            deferred_check.addCallback(return422otherwise)
+        else:
+            defer_response(self._draft_service.create_draft(_mail))
+
+        return server.NOT_DONE_YET

@@ -46,8 +46,9 @@ class SoledadWriterMixin(SoledadDbFacadeMixin, object):
 
         defer.returnValue((yield self.mail(mail.ident)))
 
+    @defer.inlineCallbacks
     def remove_mail(self, mail):
         # FIX-ME: Must go through all the part_map phash to delete all the cdocs
-        self.delete_doc(mail.fdoc)
-        self.delete_doc(mail.hdoc)
-        self.delete_doc(mail.bdoc)
+        yield self.delete_doc(mail.fdoc)
+        yield self.delete_doc(mail.hdoc)
+        yield self.delete_doc(mail.bdoc)
