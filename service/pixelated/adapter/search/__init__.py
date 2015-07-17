@@ -152,7 +152,6 @@ class SearchEngine(object):
         try:
             with AsyncWriter(self._index) as writer:
                 for mail in mails:
-                    print 'Mail fdoc: %s' % mail.fdoc
                     self._index_mail(writer, mail)
             if callback:
                 callback()

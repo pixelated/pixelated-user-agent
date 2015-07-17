@@ -170,13 +170,15 @@ class AppTestClient(object):
         tags = 'tag:%s' % tag
         return self.search(tags, page, window)
 
+    @defer.inlineCallbacks
     def search(self, query, page=1, window=100):
-        res, req = self.get("/mails", {
+        res, _ = self.get("/mails", {
             'q': [query],
             'w': [str(window)],
             'p': [str(page)]
         })
-        return [ResponseMail(m) for m in res['mails']]
+        res = yield res
+        defer.returnValue([ResponseMail(m) for m in res['mails']])
 
     def get_attachment(self, ident, encoding):
         res, req = self.get("/attachment/%s" % ident, {'encoding': [encoding]}, as_json=False)
