@@ -88,7 +88,7 @@ class LeapSmtp(object):
 
         self._local_smtp_service, self._local_smtp_service_socket = setup_smtp_gateway(
             port=self.local_smtp_port_number,
-            userid=email,
+            userid=str(email),
             keymanager=self._keymanager,
             smtp_host=self._remote_hostname.encode('UTF-8'),
             smtp_port=self._remote_port,

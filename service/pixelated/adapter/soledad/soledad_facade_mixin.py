@@ -80,6 +80,7 @@ class SoledadDbFacadeMixin(object):
             mbox = (yield defer.maybeDeferred(self.get_mbox, mbox))[0]
 
         indexer = MailboxIndexer(self.soledad)
+        indexer.create_table(mbox.content['uuid'])
         last_uuid = yield indexer.get_last_uid(mbox.content['uuid'])
 
         defer.returnValue(last_uuid)

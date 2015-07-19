@@ -25,6 +25,7 @@ from leap.auth import SRPAuth
 from .soledad import SoledadSessionFactory
 from .smtp import LeapSmtp
 from leap.mail.imap.account import IMAPAccount
+from twisted.internet import defer
 
 SESSIONS = {}
 
@@ -114,8 +115,7 @@ class LeapSessionFactory(object):
         account = self._create_account(account_email, soledad)
         incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad, auth, auth.username)
 
-        # smtp = LeapSmtp(self._provider, auth, nicknym.keymanager)
-        smtp = None
+        smtp = LeapSmtp(self._provider, auth, nicknym.keymanager)
 
         return LeapSession(self._provider, auth, soledad, nicknym, account, incoming_mail_fetcher, smtp)
 

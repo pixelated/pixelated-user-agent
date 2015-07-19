@@ -79,7 +79,8 @@ class MailService(object):
         draft_id = content_dict.get('ident')
 
         yield self.mail_sender.sendmail(mail)
-        yield self.move_to_sent(draft_id, mail)
+        sent_mail = yield self.move_to_sent(draft_id, mail)
+        defer.returnValue(sent_mail)
 
     @defer.inlineCallbacks
     def move_to_sent(self, last_draft_ident, mail):
