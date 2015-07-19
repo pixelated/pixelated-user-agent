@@ -61,10 +61,12 @@ class LeapSession(object):
         self.nicknym = nicknym
         self.account = soledad_account
         self.incoming_mail_fetcher = incoming_mail_fetcher
-        self.nicknym.generate_openpgp_key()
+
+        d = self.sync()
+        d.addCallback(lambda _: self.nicknym.generate_openpgp_key())
 
         if self.config.start_background_jobs:
-            self.start_background_jobs()
+            d.addCallback(lambda _: self.start_background_jobs())
 
     def account_email(self):
         name = self.user_auth.username
@@ -73,7 +75,9 @@ class LeapSession(object):
     def close(self):
         self.stop_background_jobs()
 
+    @defer.inlineCallbacks
     def start_background_jobs(self):
+        self.incoming_mail_fetcher = yield self.incoming_mail_fetcher
         reactor.callFromThread(self.incoming_mail_fetcher.startService)
 
     def stop_background_jobs(self):
@@ -81,7 +85,7 @@ class LeapSession(object):
 
     def sync(self):
         try:
-            self.soledad_session.sync()
+            return self.soledad_session.sync()
         except:
             traceback.print_exc(file=sys.stderr)
             raise
@@ -113,11 +117,11 @@ class LeapSessionFactory(object):
 
         nicknym = self._create_nicknym(account_email, auth.token, auth.uuid, soledad)
         account = self._create_account(account_email, soledad)
-        incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad, auth, auth.username)
+        deferred_incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad, account, account_email)
 
         smtp = LeapSmtp(self._provider, auth, nicknym.keymanager)
 
-        return LeapSession(self._provider, auth, soledad, nicknym, account, incoming_mail_fetcher, smtp)
+        return LeapSession(self._provider, auth, soledad, nicknym, account, deferred_incoming_mail_fetcher, smtp)
 
     def _lookup_session(self, key):
         global SESSIONS
@@ -151,8 +155,11 @@ class LeapSessionFactory(object):
         # memstore = MemoryStore(permanent_store=SoledadStore(soledad_session.soledad))
         # return SoledadBackedAccount(uuid, soledad_session.soledad, memstore)
 
-    def _create_incoming_mail_fetcher(self, nicknym, soledad_session, auth, username):
-        return IncomingMail(nicknym.keymanager,
-                            soledad_session.soledad,
-                            auth.uuid,
-                            self._config.fetch_interval_in_s)
+    @defer.inlineCallbacks
+    def _create_incoming_mail_fetcher(self, nicknym, soledad_session, account, user_mail):
+        # FIXME Replace inbox collection by our own mailbox indexer
+        inbox = yield account.getMailbox('INBOX')
+        defer.returnValue(IncomingMail(nicknym.keymanager,
+                          soledad_session.soledad,
+                          inbox,
+                          user_mail))

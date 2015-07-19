@@ -36,7 +36,6 @@ class LeapConfig(object):
 
     def __init__(self,
                  leap_home=None,
-                 fetch_interval_in_s=30,
                  timeout_in_s=15,
                  start_background_jobs=False,
                  gpg_binary=discover_gpg_binary()):
@@ -45,4 +44,3 @@ class LeapConfig(object):
         self.timeout_in_s = timeout_in_s
         self.start_background_jobs = start_background_jobs
         self.gpg_binary = gpg_binary
-        self.fetch_interval_in_s = fetch_interval_in_s

@@ -88,8 +88,7 @@ class SoledadSession(object):
                 raise
 
     def sync(self):
-        if self.soledad.need_sync(self.soledad.server_url):
-            self.soledad.sync()
+        return self.soledad.sync()
 
     def _discover_soledad_server(self):
         try:
