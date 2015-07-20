@@ -1,5 +1,4 @@
 from __future__ import absolute_import
-import random
 from pixelated.config import credentials
 from leap.common.events import server as events_server
 from pixelated.bitmask_libraries.config import LeapConfig
@@ -7,6 +6,7 @@ from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.session import LeapSessionFactory
 from twisted.internet import defer
+
 
 @defer.inlineCallbacks
 def initialize_leap(leap_provider_cert,
