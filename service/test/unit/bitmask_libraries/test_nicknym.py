@@ -39,12 +39,12 @@ class NickNymTest(AbstractLeapTest):
             'test_user@some-server.test',
             'https://nicknym.some-server.test:6425/',
             self.soledad,
-            self.auth.token,
-            '/some/path/to/provider_ca_cert',
-            'https://api.some-server.test:4430',
-            '1',
-            self.auth.uuid,
-            '/path/to/gpg')
+            token=self.auth.token,
+            ca_cert_path='/some/path/to/provider_ca_cert',
+            api_uri='https://api.some-server.test:4430',
+            api_version='1',
+            uid=self.auth.uuid,
+            gpgbinary='/path/to/gpg')
 
     @patch('pixelated.bitmask_libraries.nicknym.KeyManager')
     def test_gen_key(self, keymanager_mock):
@@ -61,5 +61,5 @@ class NickNymTest(AbstractLeapTest):
         # when/then
         nicknym.generate_openpgp_key()
 
-        keyman.get_key.assert_called_with('test_user@some-server.test', openpgp.OpenPGPKey)
+        keyman.get_key.assert_called_with('test_user@some-server.test', openpgp.OpenPGPKey, private=True, fetch_remote=False)
         keyman.gen_key.assert_called_with(openpgp.OpenPGPKey)
