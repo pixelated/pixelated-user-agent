@@ -62,11 +62,12 @@ class LeapSession(object):
         self.account = soledad_account
         self.incoming_mail_fetcher = incoming_mail_fetcher
 
-        d = self.sync()
-        d.addCallback(lambda _: self.nicknym.generate_openpgp_key())
-
-        if self.config.start_background_jobs:
-            d.addCallback(lambda _: self.start_background_jobs())
+    @defer.inlineCallbacks
+    def initial_sync(self):
+        yield self.sync()
+        yield self.nicknym.generate_openpgp_key()
+        yield self.start_background_jobs()
+        defer.returnValue(self)
 
     def account_email(self):
         name = self.user_auth.username
@@ -78,6 +79,7 @@ class LeapSession(object):
     @defer.inlineCallbacks
     def start_background_jobs(self):
         self.incoming_mail_fetcher = yield self.incoming_mail_fetcher
+
         reactor.callFromThread(self.incoming_mail_fetcher.startService)
 
     def stop_background_jobs(self):

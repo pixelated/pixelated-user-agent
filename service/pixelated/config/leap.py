@@ -6,8 +6,9 @@ from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.session import LeapSessionFactory
+from twisted.internet import defer
 
-
+@defer.inlineCallbacks
 def initialize_leap(leap_provider_cert,
                     leap_provider_cert_fingerprint,
                     credentials_file,
@@ -23,7 +24,9 @@ def initialize_leap(leap_provider_cert,
     LeapCertificate(provider).setup_ca_bundle()
     leap_session = LeapSessionFactory(provider).create(username, password)
 
-    return leap_session
+    yield leap_session.initial_sync()
+
+    defer.returnValue(leap_session)
 
 
 def init_monkeypatches():

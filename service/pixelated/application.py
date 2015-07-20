@@ -84,6 +84,9 @@ def initialize():
             args.leap_home))
 
     deferred.addCallback(
+        lambda leap_session: leap_session.initial_sync())
+
+    deferred.addCallback(
         lambda leap_session: start_user_agent(
             loading_app,
             args.host,
