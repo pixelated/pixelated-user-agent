@@ -63,8 +63,10 @@ class Mailboxes(object):
     def sent(self):
         return self._create_or_get('SENT')
 
+    @defer.inlineCallbacks
     def mailboxes(self):
-        return [self._create_or_get(leap_mailbox_name) for leap_mailbox_name in self.account.mailboxes]
+        mailboxes_names = yield self.account.account.list_all_mailbox_names()
+        defer.returnValue([(yield self._create_or_get(leap_mailbox_name)) for leap_mailbox_name in mailboxes_names])
 
     def move_to_trash(self, mail_id):
         return self._move_to(mail_id, self.trash)

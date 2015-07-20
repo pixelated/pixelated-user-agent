@@ -65,8 +65,10 @@ class SoledadDbFacadeMixin(object):
     def delete_doc(self, doc):
         return self.soledad.delete_doc(doc)
 
+    @defer.inlineCallbacks
     def idents_by_mailbox(self, mbox):
-        return set(doc.content['chash'] for doc in self.soledad.get_from_index('by-type-and-mbox-and-deleted', 'flags', mbox, '0')) if mbox else set()
+        mbox_docs = (yield self.soledad.get_from_index('by-type-and-mbox-and-deleted', 'flags', mbox, '0')) if mbox else []
+        defer.returnValue(set(doc.content['chash'] for doc in mbox_docs))
 
     def get_all_mbox(self):
         return self.soledad.get_from_index('by-type', 'mbox')
