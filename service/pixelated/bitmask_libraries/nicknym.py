@@ -24,9 +24,9 @@ class NickNym(object):
         self._email = email_address
         self.keymanager = KeyManager(self._email, nicknym_url,
                                      soledad_session.soledad,
-                                     token, LeapCertificate(provider).provider_api_cert, provider.api_uri,
-                                     provider.api_version,
-                                     uuid, config.gpg_binary)
+                                     token=token, ca_cert_path=LeapCertificate(provider).provider_api_cert, api_uri=provider.api_uri,
+                                     api_version=provider.api_version,
+                                     uid=uuid, gpgbinary=config.gpg_binary)
 
     @defer.inlineCallbacks
     def generate_openpgp_key(self):
@@ -34,7 +34,8 @@ class NickNym(object):
         if not key_present:
             print "Generating keys - this could take a while..."
             yield self._gen_key()
-            yield self._send_key_to_leap()
+        # Sending it anyway for now. TODO: This can be better with real checking (downloading pubkey from nicknym)
+        yield self._send_key_to_leap()
 
     @defer.inlineCallbacks
     def _key_exists(self, email):
