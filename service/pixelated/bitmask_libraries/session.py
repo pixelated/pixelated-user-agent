@@ -159,9 +159,8 @@ class LeapSessionFactory(object):
 
     @defer.inlineCallbacks
     def _create_incoming_mail_fetcher(self, nicknym, soledad_session, account, user_mail):
-        # FIXME Replace inbox collection by our own mailbox indexer
-        inbox = yield account.getMailbox('INBOX')
+        inbox = yield account.callWhenReady(lambda _: account.getMailbox('INBOX'))
         defer.returnValue(IncomingMail(nicknym.keymanager,
                           soledad_session.soledad,
-                          inbox,
+                          inbox.collection,
                           user_mail))
