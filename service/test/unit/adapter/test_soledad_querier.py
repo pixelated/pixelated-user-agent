@@ -140,18 +140,6 @@ class SoledadQuerierTest(unittest.TestCase):
         yield call_with_bad_parameters(querier.idents_by_mailbox)
         yield call_with_bad_parameters(querier.get_mbox)
 
-    def test_get_lastuid_broken(self):
-        # FIXME this is completely out of sync with the new implementation
-        soledad = mock()
-        mbox = mock()
-        mbox.content = {'lastuid': 0}
-        when(soledad).get_from_index('by-type-and-mbox', 'mbox', 'INBOX').thenReturn([mbox])
-        querier = SoledadQuerier(soledad)
-
-        self.assertEquals(querier.get_lastuid(querier.get_mbox('INBOX')), 0)
-        mbox.content = {'lastuid': 1}
-        self.assertEquals(querier.get_lastuid(querier.get_mbox('INBOX')), 1)
-
     @defer.inlineCallbacks
     def test_get_lastuid(self):
         soledad = mock()
