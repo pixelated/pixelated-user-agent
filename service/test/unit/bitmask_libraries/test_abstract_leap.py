@@ -22,25 +22,27 @@ from mock import Mock, MagicMock
 
 
 class AbstractLeapTest(unittest.TestCase):
-    _uuid = str(uuid4())
-    _session_id = str(uuid4())
-    _token = str(uuid4())
 
-    leap_home = os.path.join(tempfile.mkdtemp(), 'leap')
+    def setUp(self):
+        self._uuid = str(uuid4())
+        self._session_id = str(uuid4())
+        self._token = str(uuid4())
 
-    config = Mock(leap_home=leap_home, bootstrap_ca_cert_bundle='/some/path/to/ca_cert', ca_cert_bundle='/some/path/to/provider_ca_cert', gpg_binary='/path/to/gpg')
-    provider = Mock(config=config, server_name='some-server.test', domain='some-server.test',
-                    api_uri='https://api.some-server.test:4430', api_version='1')
-    soledad = Mock()
-    soledad_session = Mock(soledad=soledad)
-    auth = Mock(username='test_user',
-                api_server_name='some-server.test',
-                uuid=_uuid,
-                session_id=_session_id,
-                token=_token)
+        self.leap_home = os.path.join(tempfile.mkdtemp(), 'leap')
 
-    nicknym = MagicMock()
+        self.config = Mock(leap_home=self.leap_home, bootstrap_ca_cert_bundle='/some/path/to/ca_cert', ca_cert_bundle='/some/path/to/provider_ca_cert', gpg_binary='/path/to/gpg')
+        self.provider = Mock(config=self.config, server_name='some-server.test', domain='some-server.test',
+                             api_uri='https://api.some-server.test:4430', api_version='1')
+        self.soledad = Mock()
+        self.soledad_session = Mock(soledad=self.soledad)
+        self.auth = Mock(username='test_user',
+                         api_server_name='some-server.test',
+                         uuid=self._uuid,
+                         session_id=self._session_id,
+                         token=self._token)
 
-    soledad_account = MagicMock()
+        self.nicknym = MagicMock()
 
-    mail_fetcher_mock = MagicMock()
+        self.soledad_account = MagicMock()
+
+        self.mail_fetcher_mock = MagicMock()

@@ -42,6 +42,7 @@ class LeapSmtpTest(AbstractLeapTest):
     keymanager = MagicMock()
 
     def setUp(self):
+        super(LeapSmtpTest, self).setUp()
         self.provider.fetch_smtp_json.return_value = {
             'hosts': {
                 'leap-mx': {

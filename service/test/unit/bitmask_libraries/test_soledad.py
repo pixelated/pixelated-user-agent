@@ -23,6 +23,8 @@ from test_abstract_leap import AbstractLeapTest
 class SoledadSessionTest(AbstractLeapTest):
 
     def setUp(self):
+        super(SoledadSessionTest, self).setUp()
+
         # given
         self.provider.fetch_soledad_json.return_value = {'hosts': {
             'couch1': {

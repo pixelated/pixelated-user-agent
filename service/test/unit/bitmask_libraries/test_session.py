@@ -18,22 +18,26 @@ from mock import MagicMock
 
 from pixelated.bitmask_libraries.session import LeapSession
 from test_abstract_leap import AbstractLeapTest
+from twisted.internet import defer
 
 
 class SessionTest(AbstractLeapTest):
 
     def setUp(self):
+        super(SessionTest, self).setUp()
         self.mail_fetcher_mock = MagicMock()
         self.smtp_mock = MagicMock()
 
     def tearDown(self):
         self.mail_fetcher_mock = MagicMock()
 
-    def test_background_jobs_are_started(self):
+    @defer.inlineCallbacks
+    def test_background_jobs_are_started_during_initial_sync(self):
         self.config.start_background_jobs = True
 
         with patch('pixelated.bitmask_libraries.session.reactor.callFromThread', new=_execute_func) as _:
-            self._create_session()
+            session = self._create_session()
+            yield session.initial_sync()
 
             self.mail_fetcher_mock.startService.assert_called_once_with()
 
