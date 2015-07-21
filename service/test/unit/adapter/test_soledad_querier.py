@@ -18,12 +18,12 @@ import json
 import base64
 import quopri
 from uuid import uuid4
+import pkg_resources
 
 import pixelated.adapter.soledad.soledad_facade_mixin
 from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
 from mockito import mock, when, any, unstub
 from twisted.internet import defer
-import os
 
 
 class SoledadQuerierTest(unittest.TestCase):
@@ -37,7 +37,7 @@ class SoledadQuerierTest(unittest.TestCase):
         bdoc = mock()
         bdoc.content = {'raw': 'esse papo seu ta qualquer coisa'}
         when(soledad).get_from_index('by-type-and-payloadhash', 'cnt', any(unicode)).thenReturn([bdoc])
-        multipart_attachment_file = os.path.join(os.path.dirname(__file__), '..', 'fixtures', 'multipart_attachment.json')
+        multipart_attachment_file = pkg_resources.resource_filename('test.unit.fixtures', 'multipart_attachment.json')
         with open(multipart_attachment_file) as f:
             hdoc = json.loads(f.read())
         querier = SoledadQuerier(soledad)
