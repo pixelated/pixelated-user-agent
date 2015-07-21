@@ -21,6 +21,7 @@ from twisted.protocols.basic import FileSender
 from twisted.python.log import err
 from twisted.web import server
 from twisted.web.resource import Resource
+from twisted.internet import defer
 
 
 class AttachmentResource(Resource):
@@ -35,20 +36,25 @@ class AttachmentResource(Resource):
     def render_GET(self, request):
         encoding = request.args.get('encoding', [None])[0]
         filename = request.args.get('filename', [self.attachment_id])[0]
-        attachment = self.mail_service.attachment(self.attachment_id, encoding)
-
         request.setHeader(b'Content-Type', b'application/force-download')
         request.setHeader(b'Content-Disposition', bytes('attachment; filename=' + filename))
-        bytes_io = io.BytesIO(attachment['content'])
-        d = FileSender().beginFileTransfer(bytes_io, request)
 
-        def cb_finished(_):
-            bytes_io.close()
-            request.finish()
-
-        d.addErrback(err).addCallback(cb_finished)
+        d = self._send_attachment(encoding, filename, request)
+        d.addErrback(err)
 
         return server.NOT_DONE_YET
+
+    @defer.inlineCallbacks
+    def _send_attachment(self, encoding, filename, request):
+        attachment = yield self.mail_service.attachment(self.attachment_id, encoding)
+
+        bytes_io = io.BytesIO(attachment['content'])
+
+        try:
+            yield FileSender().beginFileTransfer(bytes_io, request)
+        finally:
+            bytes_io.close()
+            request.finish()
 
     def _extract_mimetype(self, content_type):
         match = re.compile('([A-Za-z-]+\/[A-Za-z-]+)').search(content_type)
