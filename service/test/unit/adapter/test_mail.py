@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import unittest
+from twisted.trial import unittest
 
 import pixelated.support.date
 from pixelated.adapter.model.mail import PixelatedMail, InputMail, HEADERS_KEY
@@ -27,6 +27,7 @@ from datetime import datetime
 import os
 import json
 import pkg_resources
+from twisted.internet import defer
 
 
 class TestPixelatedMail(unittest.TestCase):
@@ -90,11 +91,12 @@ class TestPixelatedMail(unittest.TestCase):
 
         self.assertEqual(mail.headers['Date'], date_expected)
 
+    @defer.inlineCallbacks
     def test_update_tags_return_a_set_with_the_current_tags(self):
         soledad_docs = test_helper.leap_mail(extra_headers={'X-tags': '["custom_1", "custom_2"]'})
         pixelated_mail = PixelatedMail.from_soledad(*soledad_docs, soledad_querier=self.querier)
 
-        current_tags = pixelated_mail.update_tags({'custom_1', 'custom_3'})
+        current_tags = yield pixelated_mail.update_tags({'custom_1', 'custom_3'})
         self.assertEquals({'custom_3', 'custom_1'}, current_tags)
 
     def test_mark_as_read(self):
