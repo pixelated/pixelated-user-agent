@@ -26,6 +26,7 @@ from leap.mail.adaptors import soledad_indexes as fields
 from datetime import datetime
 import os
 import json
+import pkg_resources
 
 
 class TestPixelatedMail(unittest.TestCase):
@@ -301,7 +302,7 @@ class TestPixelatedMail(unittest.TestCase):
         self.assertEquals(body, mail.text_plain_body)
 
     def test_bounced_mails_are_recognized(self):
-        bounced_mail_hdoc = os.path.join(os.path.dirname(__file__), '..', 'fixtures', 'bounced_mail_hdoc.json')
+        bounced_mail_hdoc = pkg_resources.resource_filename('test.unit.fixtures', 'bounced_mail_hdoc.json')
         with open(bounced_mail_hdoc) as f:
             hdoc = json.loads(f.read())
 
@@ -322,7 +323,7 @@ class TestPixelatedMail(unittest.TestCase):
         Persistent errors should start with 5.
         See: http://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xhtml
         """
-        bounced_mail_hdoc = os.path.join(os.path.dirname(__file__), '..', 'fixtures', 'bounced_mail_hdoc.json')
+        bounced_mail_hdoc = pkg_resources.resource_filename('test.unit.fixtures', 'bounced_mail_hdoc.json')
         with open(bounced_mail_hdoc) as f:
             content = f.read()
             # Change status to 4.XXX.YYY (only the first number is relevant here)
