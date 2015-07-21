@@ -13,18 +13,23 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import unittest
+from twisted.trial import unittest
 import json
 import base64
 import quopri
+from uuid import uuid4
 
+import pixelated.adapter.soledad.soledad_facade_mixin
 from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
-from mockito import mock, when, any
+from mockito import mock, when, any, unstub
 from twisted.internet import defer
 import os
 
 
 class SoledadQuerierTest(unittest.TestCase):
+
+    def tearDown(self):
+        unstub()
 
     @defer.inlineCallbacks
     def test_extract_parts(self):
@@ -135,27 +140,51 @@ class SoledadQuerierTest(unittest.TestCase):
         yield call_with_bad_parameters(querier.idents_by_mailbox)
         yield call_with_bad_parameters(querier.get_mbox)
 
+    def test_get_lastuid_broken(self):
+        # FIXME this is completely out of sync with the new implementation
+        soledad = mock()
+        mbox = mock()
+        mbox.content = {'lastuid': 0}
+        when(soledad).get_from_index('by-type-and-mbox', 'mbox', 'INBOX').thenReturn([mbox])
+        querier = SoledadQuerier(soledad)
+
+        self.assertEquals(querier.get_lastuid(querier.get_mbox('INBOX')), 0)
+        mbox.content = {'lastuid': 1}
+        self.assertEquals(querier.get_lastuid(querier.get_mbox('INBOX')), 1)
+
+    @defer.inlineCallbacks
     def test_get_lastuid(self):
         soledad = mock()
         mbox = mock()
-        mbox.content = {'lastuid': 0}
-        when(soledad).get_from_index('by-type-and-mbox', 'mbox', 'INBOX').thenReturn([mbox])
+        indexer = mock()
+        mbox.content = {'uuid': str(uuid4())}
+        when(soledad).get_from_index('by-type-and-mbox', 'mbox', 'INBOX').thenReturn(defer.succeed([mbox]))
         querier = SoledadQuerier(soledad)
 
-        self.assertEquals(querier.get_lastuid(querier.get_mbox('INBOX')[0]), 0)
-        mbox.content = {'lastuid': 1}
-        self.assertEquals(querier.get_lastuid(querier.get_mbox('INBOX')[0]), 1)
+        when(pixelated.adapter.soledad.soledad_facade_mixin).MailboxIndexer(soledad).thenReturn(indexer)
+        when(indexer).create_table(any()).thenReturn(defer.succeed(None))
+        when(indexer).get_last_uid(any()).thenReturn(defer.succeed(42))
 
-    def test_create_mail_increments_uid(self):
+        last_uid = (yield querier.get_lastuid('INBOX'))
+
+        self.assertEquals(42, last_uid)
+
+    @defer.inlineCallbacks
+    def test_create_mail(self):
         soledad = mock()
         mbox = mock()
         mail = mock()
+        indexer = mock()
+        mbox.content = {'uuid': 'some uuid'}
         when(mail).get_for_save(next_uid=any(), mailbox='INBOX').thenReturn([])
-        mbox.content = {'lastuid': 0}
-        when(soledad).get_from_index('by-type-and-mbox', 'mbox', 'INBOX').thenReturn([mbox])
+        when(soledad).get_from_index('by-type-and-mbox', 'mbox', 'INBOX').thenReturn(defer.succeed([mbox]))
         querier = SoledadQuerier(soledad)
         when(querier).mail(any()).thenReturn([])
 
-        self.assertEquals(querier.get_lastuid(querier.get_mbox('INBOX')[0]), 0)
-        querier.create_mail(mail, 'INBOX')
-        self.assertEquals(querier.get_lastuid(querier.get_mbox('INBOX')[0]), 1)
+        when(pixelated.adapter.soledad.soledad_facade_mixin).MailboxIndexer(soledad).thenReturn(indexer)
+        when(indexer).create_table(any()).thenReturn('')
+        when(indexer).get_last_uid('some uuid').thenReturn(defer.succeed(42))
+
+        mail_result = yield querier.create_mail(mail, 'INBOX')
+
+        self.assertEquals([], mail_result)
