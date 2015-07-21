@@ -88,13 +88,15 @@ class MailService(object):
             yield (yield self.mailboxes.drafts).remove(last_draft_ident)
         defer.returnValue((yield (yield self.mailboxes.sent).add(mail)))
 
+    @defer.inlineCallbacks
     def mark_as_read(self, mail_id):
-        mail = self.mail(mail_id)
-        mail.mark_as_read()
+        mail = yield self.mail(mail_id)
+        yield mail.mark_as_read()
         self.search_engine.index_mail(mail)
 
+    @defer.inlineCallbacks
     def mark_as_unread(self, mail_id):
-        mail = self.mail(mail_id)
+        mail = yield self.mail(mail_id)
         mail.mark_as_unread()
         self.search_engine.index_mail(mail)
 

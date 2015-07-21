@@ -14,22 +14,25 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+from twisted.internet import defer
+
 from test.support.integration import SoledadTestBase, MailBuilder
 from pixelated.adapter.model.status import Status
 
 
 class MarkAsReadUnreadTest(SoledadTestBase):
 
+    @defer.inlineCallbacks
     def test_mark_single_as_read(self):
         input_mail = MailBuilder().build_input_mail()
-        self.add_mail_to_inbox(input_mail)
+        yield self.add_mail_to_inbox(input_mail)
 
-        mails = self.get_mails_by_tag('inbox')
+        mails = yield self.get_mails_by_tag('inbox')
         self.assertNotIn('read', mails[0].status)
 
-        self.mark_many_as_read([input_mail.ident])
+        yield self.mark_many_as_read([input_mail.ident])
 
-        mails = self.get_mails_by_tag('inbox')
+        mails = yield self.get_mails_by_tag('inbox')
         self.assertIn('read', mails[0].status)
 
     def test_mark_single_as_unread(self):

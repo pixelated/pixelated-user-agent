@@ -426,18 +426,21 @@ class PixelatedMail(Mail):
         yield self._persist_mail_tags(tags)
         defer.returnValue(self.tags)
 
+    @defer.inlineCallbacks
     def mark_as_read(self):
         if Status.SEEN in self.flags:
-            return self
-        self.flags.append(Status.SEEN)
-        self.save()
-        return self
+            defer.returnValue(self)
+        else:
+            self.flags.append(Status.SEEN)
+            yield self.save()
+            defer.returnValue(self)
 
+    @defer.inlineCallbacks
     def mark_as_unread(self):
         if Status.SEEN in self.flags:
             self.flags.remove(Status.SEEN)
-            self.save()
-        return self
+            yield self.save()
+        defer.returnValue(self)
 
     def mark_as_not_recent(self):
         if Status.RECENT in self.flags:

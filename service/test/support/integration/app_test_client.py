@@ -214,7 +214,7 @@ class AppTestClient(object):
 
     def mark_many_as_read(self, idents):
         res, req = self.post('/mails/read', json.dumps({'idents': idents}))
-        return req
+        return res
 
     def get_contacts(self, query):
         res, req = self.get('/contacts', get_args={'q': query})
