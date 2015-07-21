@@ -21,9 +21,15 @@ class MailsUnreadResource(Resource):
 
     def render_POST(self, request):
         idents = json.load(request.content).get('idents')
+        deferreds = []
         for ident in idents:
-            self._mail_service.mark_as_unread(ident)
-        return respond_json(None, request)
+            deferreds.append(self._mail_service.mark_as_unread(ident))
+
+        d = defer.gatherResults(deferreds, consumeErrors=True)
+        d.addCallback(lambda _: respond_json_deferred(None, request))
+        d.addErrback(lambda _: respond_json_deferred(None, request, status_code=500))
+
+        return NOT_DONE_YET
 
 
 class MailsReadResource(Resource):

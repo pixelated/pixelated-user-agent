@@ -47,8 +47,8 @@ class AppTestClient(object):
     ACCOUNT = 'test'
     MAIL_ADDRESS = 'test@pixelated.org'
 
-    def __init__(self):
-        self.start_client()
+    # def __init__(self):
+    #     self.start_client()
 
     @defer.inlineCallbacks
     def start_client(self):
@@ -210,7 +210,7 @@ class AppTestClient(object):
 
     def mark_many_as_unread(self, idents):
         res, req = self.post('/mails/unread', json.dumps({'idents': idents}))
-        return req
+        return res
 
     def mark_many_as_read(self, idents):
         res, req = self.post('/mails/read', json.dumps({'idents': idents}))

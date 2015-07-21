@@ -35,67 +35,69 @@ class MarkAsReadUnreadTest(SoledadTestBase):
         mails = yield self.get_mails_by_tag('inbox')
         self.assertIn('read', mails[0].status)
 
+    @defer.inlineCallbacks
     def test_mark_single_as_unread(self):
         input_mail = MailBuilder().with_status([Status.SEEN]).build_input_mail()
-        self.add_mail_to_inbox(input_mail)
+        yield self.add_mail_to_inbox(input_mail)
 
-        self.mark_many_as_unread([input_mail.ident])
-        mail = self.get_mails_by_tag('inbox')[0]
+        yield self.mark_many_as_unread([input_mail.ident])
+        mail = (yield self.get_mails_by_tag('inbox'))[0]
 
         self.assertNotIn('read', mail.status)
 
+    @defer.inlineCallbacks
     def test_mark_many_mails_as_unread(self):
         input_mail = MailBuilder().with_status([Status.SEEN]).build_input_mail()
         input_mail2 = MailBuilder().with_status([Status.SEEN]).build_input_mail()
 
-        self.add_mail_to_inbox(input_mail)
-        self.add_mail_to_inbox(input_mail2)
+        yield self.add_mail_to_inbox(input_mail)
+        yield self.add_mail_to_inbox(input_mail2)
 
-        self.mark_many_as_unread([input_mail.ident, input_mail2.ident])
+        yield self.mark_many_as_unread([input_mail.ident, input_mail2.ident])
 
-        mails = self.get_mails_by_tag('inbox')
+        mails = yield self.get_mails_by_tag('inbox')
 
         self.assertNotIn('read', mails[0].status)
         self.assertNotIn('read', mails[1].status)
 
+    @defer.inlineCallbacks
     def test_mark_many_mails_as_read(self):
         input_mail = MailBuilder().build_input_mail()
         input_mail2 = MailBuilder().build_input_mail()
 
-        self.add_mail_to_inbox(input_mail)
-        self.add_mail_to_inbox(input_mail2)
+        yield self.add_mail_to_inbox(input_mail)
+        yield self.add_mail_to_inbox(input_mail2)
 
-        mails = self.get_mails_by_tag('inbox')
+        mails = yield self.get_mails_by_tag('inbox')
 
         self.assertNotIn('read', mails[0].status)
         self.assertNotIn('read', mails[1].status)
 
-        response = self.mark_many_as_read([input_mail.ident, input_mail2.ident])
-        self.assertEquals(200, response.code)
+        yield self.mark_many_as_read([input_mail.ident, input_mail2.ident])
 
-        mails = self.get_mails_by_tag('inbox')
+        mails = yield self.get_mails_by_tag('inbox')
 
         self.assertIn('read', mails[0].status)
         self.assertIn('read', mails[1].status)
 
+    @defer.inlineCallbacks
     def test_mark_mixed_status_as_read(self):
         input_mail = MailBuilder().build_input_mail()
         input_mail2 = MailBuilder().with_status([Status.SEEN]).build_input_mail()
 
-        self.add_mail_to_inbox(input_mail)
-        self.add_mail_to_inbox(input_mail2)
+        yield self.add_mail_to_inbox(input_mail)
+        yield self.add_mail_to_inbox(input_mail2)
 
-        mails = self.get_mails_by_tag('inbox')
+        mails = yield self.get_mails_by_tag('inbox')
 
         read_mails = filter(lambda x: 'read' in x.status, mails)
         unread_mails = filter(lambda x: 'read' not in x.status, mails)
         self.assertEquals(1, len(unread_mails))
         self.assertEquals(1, len(read_mails))
 
-        response = self.mark_many_as_read([input_mail.ident, input_mail2.ident])
-        self.assertEquals(200, response.code)
+        yield self.mark_many_as_read([input_mail.ident, input_mail2.ident])
 
-        mails = self.get_mails_by_tag('inbox')
+        mails = yield self.get_mails_by_tag('inbox')
 
         self.assertIn('read', mails[0].status)
         self.assertIn('read', mails[1].status)

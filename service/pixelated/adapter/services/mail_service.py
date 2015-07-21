@@ -97,7 +97,7 @@ class MailService(object):
     @defer.inlineCallbacks
     def mark_as_unread(self, mail_id):
         mail = yield self.mail(mail_id)
-        mail.mark_as_unread()
+        yield mail.mark_as_unread()
         self.search_engine.index_mail(mail)
 
     def delete_mail(self, mail_id):
