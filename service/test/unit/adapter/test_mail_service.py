@@ -19,7 +19,7 @@ from pixelated.adapter.model.mail import InputMail, PixelatedMail
 from pixelated.adapter.services.mail_service import MailService
 from test.support.test_helper import mail_dict, leap_mail
 from mockito import mock, unstub, when, verify, verifyNoMoreInteractions, any
-from twisted.internet.defer import Deferred
+from twisted.internet import defer
 
 
 class TestMailService(unittest.TestCase):
@@ -27,7 +27,9 @@ class TestMailService(unittest.TestCase):
         self.drafts = mock()
         self.querier = mock()
         self.mailboxes = mock()
-        self.mailboxes.drafts = self.drafts
+
+        self.mailboxes.drafts = defer.succeed(self.drafts)
+
         self.mailboxes.trash = mock()
         self.mailboxes.sent = mock()
 
@@ -40,7 +42,7 @@ class TestMailService(unittest.TestCase):
 
     def test_send_mail(self):
         when(InputMail).from_dict(any()).thenReturn('inputmail')
-        when(self.mail_sender).sendmail(any()).thenReturn(Deferred())
+        when(self.mail_sender).sendmail(any()).thenReturn(defer.Deferred())
 
         sent_deferred = self.mail_service.send_mail(mail_dict())
 
@@ -50,42 +52,31 @@ class TestMailService(unittest.TestCase):
 
         return sent_deferred
 
+    @defer.inlineCallbacks
     def test_send_mail_removes_draft(self):
-        mail_ident = 'Some ident'
-        mail = mail_dict()
-        mail['ident'] = mail_ident
         when(InputMail).from_dict(any()).thenReturn('inputmail')
-        deferred = Deferred()
-        when(self.mail_sender).sendmail(any()).thenReturn(deferred)
 
-        sent_deferred = self.mail_service.send_mail(mail)
+        deferred_success = defer.succeed(None)
+        when(self.mail_sender).sendmail(any()).thenReturn(deferred_success)
+
+        yield self.mail_service.send_mail({'ident': '12'})
 
         verify(self.mail_sender).sendmail("inputmail")
+        verify(self.drafts).remove(any())
 
-        def assert_removed_from_drafts(_):
-            verify(self.drafts).remove(any())
-
-        sent_deferred.addCallback(assert_removed_from_drafts)
-        sent_deferred.callback('Assume sending mail succeeded')
-
-        return sent_deferred
-
+    @defer.inlineCallbacks
     def test_send_mail_does_not_delete_draft_on_error(self):
         when(InputMail).from_dict(any()).thenReturn('inputmail')
-        when(self.mail_sender).sendmail(any()).thenReturn(Deferred())
 
-        send_deferred = self.mail_service.send_mail(mail_dict())
+        deferred_failure = defer.fail(Exception("Assume sending mail failed"))
+        when(self.mail_sender).sendmail(any()).thenReturn(deferred_failure)
 
-        verify(self.mail_sender).sendmail("inputmail")
-
-        def assert_not_removed_from_drafts(_):
+        try:
+            yield self.mail_service.send_mail({'ident': '12'})
+            self.fail("send_mail is expected to raise if underlying call fails")
+        except:
+            verify(self.mail_sender).sendmail("inputmail")
             verifyNoMoreInteractions(self.drafts)
-
-        send_deferred.addErrback(assert_not_removed_from_drafts)
-
-        send_deferred.errback(Exception('Assume sending mail failed'))
-
-        return send_deferred
 
     def test_mark_as_read(self):
         mail = mock()
