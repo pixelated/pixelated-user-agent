@@ -2,6 +2,7 @@ import json
 from pixelated.resources import respond_json, respond_json_deferred
 from twisted.web.resource import Resource
 from twisted.web.server import NOT_DONE_YET
+from twisted.python.log import err
 
 
 class MailTags(Resource):
@@ -42,8 +43,14 @@ class Mail(Resource):
         return NOT_DONE_YET
 
     def render_DELETE(self, request):
-        self._mail_service.delete_mail(self._mail_id)
-        return respond_json(None, request)
+        def response_failed(failure):
+            err(failure, 'something failed')
+            request.finish()
+
+        d = self._mail_service.delete_mail(self._mail_id)
+        d.addCallback(lambda _: respond_json_deferred(None, request))
+        d.addErrback(response_failed)
+        return NOT_DONE_YET
 
 
 class MailResource(Resource):

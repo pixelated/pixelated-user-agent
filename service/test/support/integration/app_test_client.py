@@ -20,6 +20,8 @@ import os
 import shutil
 import time
 import uuid
+import random
+
 
 from leap.mail.imap.account import IMAPAccount
 from leap.soledad.client import Soledad
@@ -140,7 +142,9 @@ class AppTestClient(object):
     def add_multiple_to_mailbox(self, num, mailbox='', flags=[], tags=[], to='recipient@to.com', cc='recipient@cc.com', bcc='recipient@bcc.com'):
         mails = []
         for _ in range(num):
-            input_mail = MailBuilder().with_status(flags).with_tags(tags).with_to(to).with_cc(cc).with_bcc(bcc).build_input_mail()
+            builder = MailBuilder().with_status(flags).with_tags(tags).with_to(to).with_cc(cc).with_bcc(bcc)
+            builder.with_body(str(random.random()))
+            input_mail = builder.build_input_mail()
             mbx = yield self.mailboxes._create_or_get(mailbox)
             mail = yield mbx.add(input_mail)
             mails.append(mail)
@@ -202,11 +206,11 @@ class AppTestClient(object):
 
     def delete_mail(self, mail_ident):
         res, req = self.delete("/mail/%s" % mail_ident)
-        return req
+        return res
 
     def delete_mails(self, idents):
         res, req = self.post("/mails/delete", json.dumps({'idents': idents}))
-        return req
+        return res
 
     def mark_many_as_unread(self, idents):
         res, req = self.post('/mails/unread', json.dumps({'idents': idents}))

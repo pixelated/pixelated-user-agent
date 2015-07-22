@@ -100,19 +100,21 @@ class MailService(object):
         yield mail.mark_as_unread()
         self.search_engine.index_mail(mail)
 
+    @defer.inlineCallbacks
     def delete_mail(self, mail_id):
-        mail = self.mail(mail_id)
+        mail = yield self.mail(mail_id)
         if mail.mailbox_name == 'TRASH':
-            self.delete_permanent(mail_id)
+            yield self.delete_permanent(mail_id)
         else:
-            trashed_mail = self.mailboxes.move_to_trash(mail_id)
+            trashed_mail = yield self.mailboxes.move_to_trash(mail_id)
             self.search_engine.index_mail(trashed_mail)
 
     def recover_mail(self, mail_id):
         recovered_mail = self.mailboxes.move_to_inbox(mail_id)
         self.search_engine.index_mail(recovered_mail)
 
+    @defer.inlineCallbacks
     def delete_permanent(self, mail_id):
-        mail = self.mail(mail_id)
+        mail = yield self.mail(mail_id)
         self.search_engine.remove_from_index(mail_id)
-        self.querier.remove_mail(mail)
+        yield self.querier.remove_mail(mail)

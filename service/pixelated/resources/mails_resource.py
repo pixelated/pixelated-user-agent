@@ -6,6 +6,7 @@ from pixelated.resources import respond_json, respond_json_deferred
 from twisted.web.resource import Resource
 from twisted.web import server
 from twisted.internet import defer
+from twisted.python.log import err
 from leap.common.events import (
     register,
     catalog as events
@@ -60,10 +61,19 @@ class MailsDeleteResource(Resource):
         self._mail_service = mail_service
 
     def render_POST(self, request):
+        def response_failed(failure):
+            err(failure, 'something failed')
+            request.finish()
+
         idents = json.loads(request.content.read())['idents']
+        deferreds = []
         for ident in idents:
-            self._mail_service.delete_mail(ident)
-        return respond_json(None, request)
+            deferreds.append(self._mail_service.delete_mail(ident))
+
+        d = defer.gatherResults(deferreds, consumeErrors=True)
+        d.addCallback(lambda _: respond_json_deferred(None, request))
+        d.addErrback(response_failed)
+        return NOT_DONE_YET
 
 
 class MailsRecoverResource(Resource):
