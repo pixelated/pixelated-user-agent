@@ -13,12 +13,13 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import unittest
+from twisted.trial import unittest
 
 from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.services.mailbox import Mailbox
 from mockito import mock, when, verify
 from test.support import test_helper
+from twisted.internet import defer
 
 
 class PixelatedMailboxTest(unittest.TestCase):
@@ -35,8 +36,9 @@ class PixelatedMailboxTest(unittest.TestCase):
 
         verify(self.querier).remove_mail(mail)
 
+    @defer.inlineCallbacks
     def test_fresh_mailbox_checking_lastuid(self):
         when(self.querier).get_lastuid('INBOX').thenReturn(0)
         self.assertTrue(self.mailbox.fresh)
         when(self.querier).get_lastuid('INBOX').thenReturn(1)
-        self.assertFalse(self.mailbox.fresh)
+        self.assertFalse((yield self.mailbox.fresh))

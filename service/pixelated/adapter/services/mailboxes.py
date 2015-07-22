@@ -88,6 +88,6 @@ class Mailboxes(object):
     @defer.inlineCallbacks
     def add_welcome_mail_for_fresh_user(self):
         inbox = yield self._create_or_get('INBOX')
-        if inbox.fresh:
+        if (yield inbox.fresh):
             mail = welcome_mail()
-            self.inbox.add(mail)
+            yield inbox.add(mail)
