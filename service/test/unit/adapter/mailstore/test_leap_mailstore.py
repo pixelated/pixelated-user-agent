@@ -13,9 +13,11 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+import json
 from uuid import uuid4
 from email.parser import Parser
 import os
+from leap.soledad.common.document import SoledadDocument
 
 from twisted.internet.defer import FirstError
 from twisted.trial.unittest import TestCase
@@ -50,9 +52,16 @@ class TestLeapMail(TestCase):
             },
             'ident': 'doc id',
             'tags': ('foo', 'bar'),
+            'body': None
         }
 
         self.assertEqual(expected, mail.as_dict())
+
+    def test_as_dict_with_body(self):
+        body = 'some body content'
+        mail = LeapMail('doc id', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test'}, ('foo', 'bar'), body=body)
+
+        self.assertEqual(body, mail.as_dict()['body'])
 
 
 class TestLeapMailStore(TestCase):
@@ -120,6 +129,18 @@ class TestLeapMailStore(TestCase):
         except FirstError:
             pass
 
+    @defer.inlineCallbacks
+    def test_get_mail_with_body(self):
+        mdoc_id = self._add_mail_fixture_to_soledad('mbox00000000')
+
+        store = LeapMailStore(self.account, self.soledad)
+
+        mail = yield store.get_mail(mdoc_id, include_body=True)
+
+        expeted_body = 'Dignissimos ducimus veritatis. Est tenetur consequatur quia occaecati. Vel sit sit voluptas.\n\nEarum distinctio eos. Accusantium qui sint ut quia assumenda. Facere dignissimos inventore autem sit amet. Pariatur voluptatem sint est.\n\nUt recusandae praesentium aspernatur. Exercitationem amet placeat deserunt quae consequatur eum. Unde doloremque suscipit quia.\n\n'
+
+        self.assertEqual(expeted_body, mail.body)
+
     def _add_mail_fixture_to_soledad(self, mail_file):
         mail = self._load_mail_from_file(mail_file)
 
@@ -135,7 +156,11 @@ class TestLeapMailStore(TestCase):
         when(self.soledad).get_doc(mdoc_id).thenReturn(defer.succeed(msg.get_wrapper().mdoc.serialize()))
         when(self.soledad).get_doc(fdoc_id).thenReturn(defer.succeed(msg.get_wrapper().fdoc.serialize()))
         when(self.soledad).get_doc(hdoc_id).thenReturn(defer.succeed(msg.get_wrapper().hdoc.serialize()))
-        when(self.soledad).get_doc(cdoc_id).thenReturn(defer.succeed(msg.get_wrapper().cdocs[1].serialize()))
+
+        content = SoledadDocument(doc_id=cdoc_id, json=json.dumps(msg.get_wrapper().cdocs[1].serialize()))
+
+        when(self.soledad).get_doc(cdoc_id).thenReturn(defer.succeed(content))
+        # when(self.soledad).get_doc(cdoc_id).thenReturn(defer.succeed(msg.get_wrapper().cdocs[1].serialize()))
 
         return mdoc_id
 

@@ -38,6 +38,7 @@ class LeapMail(Mail):
             'header': {k.lower(): v for k, v in self.headers.items()},
             'ident': self._mail_id,
             'tags': self._tags,
+            'body': self._body
         }
 
 
@@ -49,12 +50,13 @@ class LeapMailStore(MailStore):
         self.soledad = soledad
 
     @defer.inlineCallbacks
-    def get_mail(self, mail_id):
+    def get_mail(self, mail_id, include_body=False):
         try:
             message = yield SoledadMailAdaptor().get_msg_from_mdoc_id(Message, self.soledad, mail_id)
+            leap_mail = yield self._leap_message_to_leap_mail(mail_id, message, include_body)
 
-            defer.returnValue(self._leap_message_to_leap_mail(mail_id, message))
-        except AttributeError:
+            defer.returnValue(leap_mail)
+        except AttributeError, e:
             defer.returnValue(None)
 
     def get_mails(self, mail_ids):
@@ -64,6 +66,13 @@ class LeapMailStore(MailStore):
 
         return defer.gatherResults(deferreds, consumeErrors=True)
 
-    def _leap_message_to_leap_mail(self, mail_id, message):
-        return LeapMail(mail_id, message.get_headers(), message.get_tags())
+    @defer.inlineCallbacks
+    def _leap_message_to_leap_mail(self, mail_id, message, include_body):
+        if include_body:
+            body = (yield message._wrapper.get_body(self.soledad)).raw
+        else:
+            body = None
+        mail = LeapMail(mail_id, message.get_headers(), message.get_tags(), body=body)
+
+        defer.returnValue(mail)
 
