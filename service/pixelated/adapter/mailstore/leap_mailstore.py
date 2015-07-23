@@ -23,13 +23,23 @@ from pixelated.adapter.model.mail import Mail
 
 class LeapMail(Mail):
 
-    def __init__(self, headers, body=None):
+    def __init__(self, mail_id, headers, tags=tuple(), body=None):
+        self._mail_id = mail_id
         self.headers = headers
         self._body = body
+        self._tags = tags
 
     @property
     def body(self):
         return self._body
+
+    def as_dict(self):
+        return {
+            'header': {k.lower(): v for k, v in self.headers.items()},
+            'ident': self._mail_id,
+            'tags': self._tags,
+        }
+
 
 class LeapMailStore(MailStore):
     __slots__ = ('account', 'soledad')
@@ -43,10 +53,17 @@ class LeapMailStore(MailStore):
         try:
             message = yield SoledadMailAdaptor().get_msg_from_mdoc_id(Message, self.soledad, mail_id)
 
-            defer.returnValue(self._leap_message_to_leap_mail(message))
+            defer.returnValue(self._leap_message_to_leap_mail(mail_id, message))
         except AttributeError:
             defer.returnValue(None)
 
-    def _leap_message_to_leap_mail(self, message):
-        return LeapMail(message.get_headers())
+    def get_mails(self, mail_ids):
+        deferreds = []
+        for mail_id in mail_ids:
+            deferreds.append(self.get_mail(mail_id))
+
+        return defer.gatherResults(deferreds, consumeErrors=True)
+
+    def _leap_message_to_leap_mail(self, mail_id, message):
+        return LeapMail(mail_id, message.get_headers(), message.get_tags())
 

@@ -13,26 +13,53 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from twisted.trial.unittest import TestCase
+from uuid import uuid4
+from email.parser import Parser
+import os
 
+from twisted.internet.defer import FirstError
+from twisted.trial.unittest import TestCase
 from leap.mail import constants
 from leap.mail.imap.account import IMAPAccount
 from twisted.internet import defer
-
-from mockito import mock, when, any, unstub
-from uuid import uuid4
-from pixelated.adapter.mailstore.leap_mailstore import LeapMailStore, LeapMail
+from mockito import mock, when
 from leap.mail.adaptors.soledad import SoledadMailAdaptor
 import pkg_resources
-from email.parser import Parser
-import os
 from leap.mail.mail import Message
+
+from pixelated.adapter.mailstore.leap_mailstore import LeapMailStore, LeapMail
+
+
+class TestLeapMail(TestCase):
+    def test_leap_mail(self):
+        mail = LeapMail('', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test'})
+
+        self.assertEqual('test@example.test', mail.from_sender)
+        self.assertEqual('receiver@example.test', mail.to)
+        self.assertEqual('A test Mail', mail.subject)
+
+    def test_as_dict(self):
+        mail = LeapMail('doc id', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test'}, ('foo', 'bar'))
+
+        expected = {
+            'header': {
+                'from': 'test@example.test',
+                'subject': 'A test Mail',
+                'to': 'receiver@example.test',
+
+            },
+            'ident': 'doc id',
+            'tags': ('foo', 'bar'),
+        }
+
+        self.assertEqual(expected, mail.as_dict())
 
 
 class TestLeapMailStore(TestCase):
     def setUp(self):
         self.account = mock(mocked_obj=IMAPAccount)
         self.soledad = mock()
+        self.mbox_uuid = str(uuid4())
 
     @defer.inlineCallbacks
     def test_get_mail_not_exist(self):
@@ -44,9 +71,7 @@ class TestLeapMailStore(TestCase):
 
     @defer.inlineCallbacks
     def test_get_mail(self):
-        mbox_uuid = str(uuid4())
-
-        mdoc_id = self._add_mail_fixture_to_soledad(mbox_uuid)
+        mdoc_id = self._add_mail_fixture_to_soledad('mbox00000000')
 
         store = LeapMailStore(self.account, self.soledad)
 
@@ -58,12 +83,49 @@ class TestLeapMailStore(TestCase):
         self.assertEqual('Itaque consequatur repellendus provident sunt quia.', mail.subject)
         self.assertIsNone(mail.body)
 
-    def _add_mail_fixture_to_soledad(self, mbox_uuid, mail_file='mbox00000000'):
+    @defer.inlineCallbacks
+    def test_get_two_different_mails(self):
+        first_mdoc_id = self._add_mail_fixture_to_soledad('mbox00000000')
+        second_mdoc_id = self._add_mail_fixture_to_soledad('mbox00000001')
+
+        store = LeapMailStore(self.account, self.soledad)
+
+        mail1 = yield store.get_mail(first_mdoc_id)
+        mail2 = yield store.get_mail(second_mdoc_id)
+
+        self.assertNotEqual(mail1, mail2)
+        self.assertEqual('Itaque consequatur repellendus provident sunt quia.', mail1.subject)
+        self.assertEqual('Error illum dignissimos autem eos aspernatur.', mail2.subject)
+
+    @defer.inlineCallbacks
+    def test_get_mails(self):
+        first_mdoc_id = self._add_mail_fixture_to_soledad('mbox00000000')
+        second_mdoc_id = self._add_mail_fixture_to_soledad('mbox00000001')
+
+        store = LeapMailStore(self.account, self.soledad)
+
+        mails = yield store.get_mails([first_mdoc_id,second_mdoc_id])
+
+        self.assertEqual(2, len(mails))
+        self.assertEqual('Itaque consequatur repellendus provident sunt quia.', mails[0].subject)
+        self.assertEqual('Error illum dignissimos autem eos aspernatur.', mails[1].subject)
+
+    @defer.inlineCallbacks
+    def test_get_mails_fails_for_invalid_mail_id(self):
+        store = LeapMailStore(self.account, self.soledad)
+
+        try:
+            yield store.get_mails(['invalid'])
+            self.fail('Exception expected')
+        except FirstError:
+            pass
+
+    def _add_mail_fixture_to_soledad(self, mail_file):
         mail = self._load_mail_from_file(mail_file)
 
         msg = SoledadMailAdaptor().get_msg_from_string(Message, mail.as_string())
 
-        msg.get_wrapper().mdoc.set_mbox_uuid(mbox_uuid)
+        msg.get_wrapper().mdoc.set_mbox_uuid(self.mbox_uuid)
 
         mdoc_id = msg.get_wrapper().mdoc.future_doc_id
         fdoc_id = msg.get_wrapper().mdoc.fdoc
