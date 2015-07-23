@@ -49,6 +49,10 @@ SIZE_KEY = 'size'
 
 class Mail(object):
     @property
+    def from_sender(self):
+        return self.headers['From']
+
+    @property
     def to(self):
         return self.headers['To']
 
@@ -59,6 +63,10 @@ class Mail(object):
     @property
     def bcc(self):
         return self.headers['Bcc']
+
+    @property
+    def subject(self):
+        return self.headers['Subject']
 
     @property
     def date(self):
