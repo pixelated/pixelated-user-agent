@@ -30,6 +30,7 @@ class LeapMailStoreTest(SoledadTestBase):
         super(LeapMailStoreTest, self).setUp()
         self.adaptor = SoledadMailAdaptor()
         self.mbox_uuid = str(uuid4())
+        self.store = LeapMailStore(self.soledad)
 
     @defer.inlineCallbacks
     def test_get_mail_with_body(self):
@@ -37,11 +38,19 @@ class LeapMailStoreTest(SoledadTestBase):
         mail_id = yield self._create_mail_in_soledad(mail)
         expected_mail_dict = {'body': u'Dignissimos ducimus veritatis. Est tenetur consequatur quia occaecati. Vel sit sit voluptas.\n\nEarum distinctio eos. Accusantium qui sint ut quia assumenda. Facere dignissimos inventore autem sit amet. Pariatur voluptatem sint est.\n\nUt recusandae praesentium aspernatur. Exercitationem amet placeat deserunt quae consequatur eum. Unde doloremque suscipit quia.\n\n', 'header': {u'date': u'Tue, 21 Apr 2015 08:43:27 +0000 (UTC)', u'to': u'carmel@murazikortiz.name', u'x-tw-pixelated-tags': u'nite, macro, trash', u'from': u'darby.senger@zemlak.biz', u'subject': u'Itaque consequatur repellendus provident sunt quia.'}, 'ident': mail_id, 'tags': set([])}
 
-        store = LeapMailStore(self.soledad)
-
-        result = yield store.get_mail(mail_id, include_body=True)
+        result = yield self.store.get_mail(mail_id, include_body=True)
         self.assertIsNotNone(result)
         self.assertEqual(expected_mail_dict, result.as_dict())
+
+    @defer.inlineCallbacks
+    def test_all_mails(self):
+        mail = _load_mail_from_file('mbox00000000')
+        yield self._create_mail_in_soledad(mail)
+
+        mails = yield self.store.all_mails()
+
+        self.assertEqual(1, len(mails))
+        self.assertEqual('Itaque consequatur repellendus provident sunt quia.', mails[0].subject)
 
     @defer.inlineCallbacks
     def _create_mail_in_soledad(self, mail):
