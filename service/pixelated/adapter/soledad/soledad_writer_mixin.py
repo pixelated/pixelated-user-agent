@@ -28,7 +28,7 @@ class SoledadWriterMixin(SoledadDbFacadeMixin, object):
                 return
             rct = rct[0]
             rct.content['rct'] = []
-            self.put_doc(rct)
+            yield self.put_doc(rct)
 
     def save_mail(self, mail):
         return self.put_doc(mail.fdoc)
