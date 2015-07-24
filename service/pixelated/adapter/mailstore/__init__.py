@@ -22,6 +22,9 @@ class MailStore(object):
     def get_mails(self, mail_ids):
         pass
 
+    def all_mails(self):
+        pass
+
     def delete_mail(self, mail_id):
         pass
 

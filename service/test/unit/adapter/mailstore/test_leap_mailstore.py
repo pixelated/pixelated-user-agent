@@ -156,6 +156,21 @@ class TestLeapMailStore(TestCase):
         verify(self.soledad).put_doc(soledad_fdoc)
         self.assertTrue('new_tag' in soledad_fdoc.content['tags'])
 
+    @defer.inlineCallbacks
+    def test_all_mails(self):
+        first_mdoc_id, _ = self._add_mail_fixture_to_soledad('mbox00000000')
+        second_mdoc_id, _ = self._add_mail_fixture_to_soledad('mbox00000001')
+        when(self.soledad).get_from_index('by-type', 'meta').thenReturn(defer.succeed([self.doc_by_id[first_mdoc_id], self.doc_by_id[second_mdoc_id]]))
+
+        store = LeapMailStore(self.soledad)
+
+        mails = yield store.all_mails()
+
+        self.assertIsNotNone(mails)
+        self.assertEqual(2, len(mails))
+        self.assertEqual('Itaque consequatur repellendus provident sunt quia.', mails[0].subject)
+        self.assertEqual('Error illum dignissimos autem eos aspernatur.', mails[1].subject)
+
     def _add_mail_fixture_to_soledad(self, mail_file):
         mail = self._load_mail_from_file(mail_file)
         msg = self._convert_mail_to_leap_message(mail)

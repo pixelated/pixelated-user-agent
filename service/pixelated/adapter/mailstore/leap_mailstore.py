@@ -77,6 +77,15 @@ class LeapMailStore(MailStore):
         pass
 
     @defer.inlineCallbacks
+    def all_mails(self):
+        mdocs = yield self.soledad.get_from_index('by-type', 'meta')
+
+        mail_ids = map(lambda doc: doc.doc_id, mdocs)
+
+        mails = yield self.get_mails(mail_ids)
+        defer.returnValue(mails)
+
+    @defer.inlineCallbacks
     def _leap_message_to_leap_mail(self, mail_id, message, include_body):
         if include_body:
             body = (yield message._wrapper.get_body(self.soledad)).raw
