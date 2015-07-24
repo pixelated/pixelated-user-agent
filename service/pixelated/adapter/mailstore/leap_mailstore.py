@@ -23,11 +23,15 @@ from pixelated.adapter.model.mail import Mail
 
 class LeapMail(Mail):
 
-    def __init__(self, mail_id, headers, tags=tuple(), body=None):
+    def __init__(self, mail_id, headers, tags=set(), body=None):
         self._mail_id = mail_id
         self.headers = headers
         self._body = body
-        self._tags = tags
+        self.tags = tags
+
+    @property
+    def mail_id(self):
+        return self._mail_id
 
     @property
     def body(self):
@@ -37,22 +41,21 @@ class LeapMail(Mail):
         return {
             'header': {k.lower(): v for k, v in self.headers.items()},
             'ident': self._mail_id,
-            'tags': self._tags,
+            'tags': self.tags,
             'body': self._body
         }
 
 
 class LeapMailStore(MailStore):
-    __slots__ = ('account', 'soledad')
+    __slots__ = ('soledad')
 
-    def __init__(self, imapAccount, soledad):
-        self.account = imapAccount
+    def __init__(self, soledad):
         self.soledad = soledad
 
     @defer.inlineCallbacks
     def get_mail(self, mail_id, include_body=False):
         try:
-            message = yield SoledadMailAdaptor().get_msg_from_mdoc_id(Message, self.soledad, mail_id)
+            message = yield self._fetch_msg_from_soledad(mail_id)
             leap_mail = yield self._leap_message_to_leap_mail(mail_id, message, include_body)
 
             defer.returnValue(leap_mail)
@@ -67,12 +70,21 @@ class LeapMailStore(MailStore):
         return defer.gatherResults(deferreds, consumeErrors=True)
 
     @defer.inlineCallbacks
+    def update_mail(self, mail):
+        message = yield self._fetch_msg_from_soledad(mail.mail_id)
+        message.get_wrapper().set_tags(tuple(mail.tags))
+        message.get_wrapper().update(self.soledad)
+        pass
+
+    @defer.inlineCallbacks
     def _leap_message_to_leap_mail(self, mail_id, message, include_body):
         if include_body:
             body = (yield message._wrapper.get_body(self.soledad)).raw
         else:
             body = None
-        mail = LeapMail(mail_id, message.get_headers(), message.get_tags(), body=body)
+        mail = LeapMail(mail_id, message.get_headers(), set(message.get_tags()), body=body)
 
         defer.returnValue(mail)
 
+    def _fetch_msg_from_soledad(self, mail_id):
+        return SoledadMailAdaptor().get_msg_from_mdoc_id(Message, self.soledad, mail_id)
