@@ -67,6 +67,7 @@ class TestLeapMailStore(TestCase):
     def setUp(self):
         self.soledad = mock()
         self.mbox_uuid = str(uuid4())
+        self.doc_by_id = {}
 
     @defer.inlineCallbacks
     def test_get_mail_not_exist(self):
@@ -140,8 +141,9 @@ class TestLeapMailStore(TestCase):
 
     @defer.inlineCallbacks
     def test_update_mail(self):
-        mdoc_id, flags_doc = self._add_mail_fixture_to_soledad('mbox00000000')
-        when(self.soledad).put_doc(flags_doc).thenReturn(defer.succeed(None))
+        mdoc_id, fdoc_id = self._add_mail_fixture_to_soledad('mbox00000000')
+        soledad_fdoc = self.doc_by_id[fdoc_id]
+        when(self.soledad).put_doc(soledad_fdoc).thenReturn(defer.succeed(None))
 
         store = LeapMailStore(self.soledad)
 
@@ -151,34 +153,37 @@ class TestLeapMailStore(TestCase):
 
         yield store.update_mail(mail)
 
-        verify(self.soledad).put_doc(flags_doc)
-        self.assertTrue('new_tag' in flags_doc.content['tags'])
+        verify(self.soledad).put_doc(soledad_fdoc)
+        self.assertTrue('new_tag' in soledad_fdoc.content['tags'])
 
     def _add_mail_fixture_to_soledad(self, mail_file):
         mail = self._load_mail_from_file(mail_file)
+        msg = self._convert_mail_to_leap_message(mail)
+        wrapper = msg.get_wrapper()
 
+        mdoc_id = wrapper.mdoc.future_doc_id
+        fdoc_id = wrapper.mdoc.fdoc
+        hdoc_id = wrapper.mdoc.hdoc
+        cdoc_id = wrapper.mdoc.cdocs[0]
+
+        self._mock_soledad_doc(mdoc_id, wrapper.mdoc)
+        self._mock_soledad_doc(fdoc_id, wrapper.fdoc)
+        self._mock_soledad_doc(hdoc_id, wrapper.hdoc)
+        self._mock_soledad_doc(cdoc_id, wrapper.cdocs[1])
+
+        return mdoc_id, fdoc_id
+
+    def _convert_mail_to_leap_message(self, mail):
         msg = SoledadMailAdaptor().get_msg_from_string(Message, mail.as_string())
-
         msg.get_wrapper().mdoc.set_mbox_uuid(self.mbox_uuid)
+        return msg
 
-        mdoc_id = msg.get_wrapper().mdoc.future_doc_id
-        fdoc_id = msg.get_wrapper().mdoc.fdoc
-        hdoc_id = msg.get_wrapper().mdoc.hdoc
-        cdoc_id = msg.get_wrapper().mdoc.cdocs[0]
+    def _mock_soledad_doc(self, doc_id, doc):
+        soledad_doc = SoledadDocument(doc_id, json=json.dumps(doc.serialize()))
 
-        when(self.soledad).get_doc(mdoc_id).thenReturn(defer.succeed(msg.get_wrapper().mdoc.serialize()))
+        when(self.soledad).get_doc(doc_id).thenReturn(defer.succeed(soledad_doc))
 
-        flags_doc = SoledadDocument(doc_id=fdoc_id, json=json.dumps(msg.get_wrapper().fdoc.serialize()))
-        when(self.soledad).get_doc(fdoc_id).thenReturn(defer.succeed(flags_doc))
-
-        # when(self.soledad).get_doc(fdoc_id).thenReturn(defer.succeed(msg.get_wrapper().fdoc.serialize()))
-        when(self.soledad).get_doc(hdoc_id).thenReturn(defer.succeed(msg.get_wrapper().hdoc.serialize()))
-
-        content = SoledadDocument(doc_id=cdoc_id, json=json.dumps(msg.get_wrapper().cdocs[1].serialize()))
-
-        when(self.soledad).get_doc(cdoc_id).thenReturn(defer.succeed(content))
-
-        return mdoc_id, flags_doc
+        self.doc_by_id[doc_id] = soledad_doc
 
     def _load_mail_from_file(self, mail_file):
         mailset_dir = pkg_resources.resource_filename('test.unit.fixtures', 'mailset')

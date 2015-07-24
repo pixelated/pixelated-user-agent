@@ -45,12 +45,16 @@ class LeapMailStoreTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def _create_mail_in_soledad(self, mail):
-        message = self.adaptor.get_msg_from_string(Message, mail.as_string())
-        message.get_wrapper().set_mbox_uuid(self.mbox_uuid)
+        message = self._convert_mail_to_leap_message(mail)
         yield self.adaptor.initialize_store(self.soledad)
         yield self.adaptor.create_msg(self.soledad, message)
 
         defer.returnValue(message.get_wrapper().mdoc.doc_id)
+
+    def _convert_mail_to_leap_message(self, mail):
+        message = self.adaptor.get_msg_from_string(Message, mail.as_string())
+        message.get_wrapper().set_mbox_uuid(self.mbox_uuid)
+        return message
 
 
 def _load_mail_from_file(mail_file):
