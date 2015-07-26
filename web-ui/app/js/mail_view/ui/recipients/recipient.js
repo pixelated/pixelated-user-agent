@@ -70,7 +70,7 @@ define(
 
       this.isSelected = function () {
         return this.$node.find('.recipient-value').hasClass('selected');
-      }
+      };
 
       this.discoverEncryption = function () {
         this.$node.addClass('discorver-encryption');
