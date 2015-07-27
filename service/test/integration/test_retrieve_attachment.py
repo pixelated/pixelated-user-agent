@@ -15,10 +15,12 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 from test.support.integration.soledad_test_base import SoledadTestBase
+from twisted.internet import defer
 
 
 class RetrieveAttachmentTest(SoledadTestBase):
 
+    @defer.inlineCallbacks
     def test_attachment_content_is_retrieved(self):
         ident = 'F4E99C1CEC4D300A4223A96CCABBE0304BDBC31C550A5A03E207A5E4C3C71A22'
         attachment_dict = {'content-disposition': 'attachment',
@@ -28,12 +30,8 @@ class RetrieveAttachmentTest(SoledadTestBase):
                            'phash': ident,
                            'content-type': 'text/plain; charset=US-ASCII; name="attachment_pequeno.txt"'}
 
-        self.add_document_to_soledad(attachment_dict)
+        yield self.add_document_to_soledad(attachment_dict)
 
-        d = self.get_attachment(ident, 'base64')
+        attachment = yield self.get_attachment(ident, 'base64')
 
-        def _assert(attachment):
-            self.assertEquals('pequeno anexo :D\n', attachment)
-        d.addCallback(_assert)
-
-        return d
+        self.assertEquals('pequeno anexo :D\n', attachment)

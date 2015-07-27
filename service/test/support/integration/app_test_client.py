@@ -130,7 +130,7 @@ class AppTestClient(object):
         return self._render(request)
 
     def add_document_to_soledad(self, _dict):
-        self.soledad_querier.soledad.create_doc(_dict)
+        return self.soledad_querier.soledad.create_doc(_dict)
 
     @defer.inlineCallbacks
     def add_mail_to_inbox(self, input_mail):
