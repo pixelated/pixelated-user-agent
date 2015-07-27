@@ -187,22 +187,22 @@ class TestLeapMailStore(TestCase):
 
     @defer.inlineCallbacks
     def test_add_mail(self):
-        {'multi': False, 'tags': [], 'deleted': False, 'mbox_uuid': '6e8e5a30_b784_43d4_a262_ad81962e5196', 'chash': 'DDE33BCB72DC69A0011CB1D4D4EF5A5F85E703C7C66C551AA51ED50334348A90', 'flags': [], 'seen': False, 'recent': False, 'type': 'flags', 'size': 566}
-        {'multi': False, 'tags': [], 'deleted': False, 'mbox_uuid': '', 'chash': 'DDE33BCB72DC69A0011CB1D4D4EF5A5F85E703C7C66C551AA51ED50334348A90', 'flags': [], 'seen': False, 'recent': False, 'type': 'flags', 'size': 566}
-
         self._add_create_mail_mocks_to_soledad('mbox00000000')
-
         mail = self._load_mail_from_file('mbox00000000')
-        when(self.soledad).list_indexes().thenReturn(defer.succeed(MAIL_INDEXES)).thenReturn(defer.succeed(MAIL_INDEXES))
-        mbox = MailboxWrapper(doc_id=self.mbox_uuid, mbox='INBOX')
-        soledad_doc = SoledadDocument(self.mbox_uuid, json=json.dumps(mbox.serialize()))
-        when(self.soledad).get_from_index('by-type-and-mbox', 'mbox', 'INBOX').thenReturn(defer.succeed([soledad_doc]))
+        self._mock_get_mailbox('INBOX')
 
         store = LeapMailStore(self.soledad)
 
         mbx = yield store.add_mail('INBOX', mail.as_string())
 
         self.assertEqual(self.mbox_uuid, mbx.doc_id)
+
+    def _mock_get_mailbox(self, mailbox_name):
+        when(self.soledad).list_indexes().thenReturn(defer.succeed(MAIL_INDEXES)).thenReturn(
+            defer.succeed(MAIL_INDEXES))
+        mbox = MailboxWrapper(doc_id=self.mbox_uuid, mbox=mailbox_name)
+        soledad_doc = SoledadDocument(self.mbox_uuid, json=json.dumps(mbox.serialize()))
+        when(self.soledad).get_from_index('by-type-and-mbox', 'mbox', mailbox_name).thenReturn(defer.succeed([soledad_doc]))
 
     def _add_mail_fixture_to_soledad(self, mail_file):
         mail = self._load_mail_from_file(mail_file)
