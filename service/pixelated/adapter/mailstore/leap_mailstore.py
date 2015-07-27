@@ -86,6 +86,21 @@ class LeapMailStore(MailStore):
         defer.returnValue(mails)
 
     @defer.inlineCallbacks
+    def add_mailbox(self, mailbox_name):
+        mailbox = yield self._get_or_create_mailbox(mailbox_name)
+        defer.returnValue(mailbox)
+
+    @defer.inlineCallbacks
+    def add_mail(self, mailbox_name, raw_msg):
+        mailbox = yield self._get_or_create_mailbox(mailbox_name)
+        message = SoledadMailAdaptor().get_msg_from_string(Message, raw_msg)
+        message.get_wrapper().set_mbox_uuid(mailbox.doc_id)
+        message.get_wrapper().create(self.soledad)
+
+        # add behavious from insert_mdoc_id from mail.py
+        defer.returnValue(mailbox)
+
+    @defer.inlineCallbacks
     def _leap_message_to_leap_mail(self, mail_id, message, include_body):
         if include_body:
             body = (yield message._wrapper.get_body(self.soledad)).raw
@@ -94,6 +109,9 @@ class LeapMailStore(MailStore):
         mail = LeapMail(mail_id, message.get_headers(), set(message.get_tags()), body=body)
 
         defer.returnValue(mail)
+
+    def _get_or_create_mailbox(self, mailbox_name):
+        return SoledadMailAdaptor().get_or_create_mbox(self.soledad, mailbox_name)
 
     def _fetch_msg_from_soledad(self, mail_id):
         return SoledadMailAdaptor().get_msg_from_mdoc_id(Message, self.soledad, mail_id)

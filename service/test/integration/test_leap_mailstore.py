@@ -26,8 +26,9 @@ from uuid import uuid4
 
 class LeapMailStoreTest(SoledadTestBase):
 
+    @defer.inlineCallbacks
     def setUp(self):
-        super(LeapMailStoreTest, self).setUp()
+        yield super(LeapMailStoreTest, self).setUp()
         self.adaptor = SoledadMailAdaptor()
         self.mbox_uuid = str(uuid4())
         self.store = LeapMailStore(self.soledad)
@@ -51,6 +52,14 @@ class LeapMailStoreTest(SoledadTestBase):
 
         self.assertEqual(1, len(mails))
         self.assertEqual('Itaque consequatur repellendus provident sunt quia.', mails[0].subject)
+
+    @defer.inlineCallbacks
+    def test_add_mail(self):
+        yield self.adaptor.initialize_store(self.soledad)
+        mail = _load_mail_from_file('mbox00000000')
+        mailbox = yield self.store.add_mailbox('INBOX')
+
+        msg = yield self.store.add_mail('INBOX', mail.as_string())
 
     @defer.inlineCallbacks
     def _create_mail_in_soledad(self, mail):

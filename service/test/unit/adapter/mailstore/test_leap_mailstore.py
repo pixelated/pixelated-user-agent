@@ -18,13 +18,13 @@ from uuid import uuid4
 from email.parser import Parser
 import os
 from leap.soledad.common.document import SoledadDocument
-
+from leap.mail.adaptors.soledad_indexes import MAIL_INDEXES
 from twisted.internet.defer import FirstError
 from twisted.trial.unittest import TestCase
 from leap.mail import constants
 from twisted.internet import defer
 from mockito import mock, when, verify, any
-from leap.mail.adaptors.soledad import SoledadMailAdaptor
+from leap.mail.adaptors.soledad import SoledadMailAdaptor, MailboxWrapper
 import pkg_resources
 from leap.mail.mail import Message
 
@@ -171,6 +171,39 @@ class TestLeapMailStore(TestCase):
         self.assertEqual('Itaque consequatur repellendus provident sunt quia.', mails[0].subject)
         self.assertEqual('Error illum dignissimos autem eos aspernatur.', mails[1].subject)
 
+    @defer.inlineCallbacks
+    def test_add_mailbox(self):
+        when(self.soledad).list_indexes().thenReturn(defer.succeed(MAIL_INDEXES)).thenReturn(defer.succeed(MAIL_INDEXES))
+        when(self.soledad).get_from_index('by-type-and-mbox', 'mbox', 'TEST').thenReturn(defer.succeed([]))
+        when(self.soledad).create_doc(any()).thenReturn(defer.succeed(None))
+        self._mock_create_doc(self.mbox_uuid, MailboxWrapper(mbox='TEST'))
+        store = LeapMailStore(self.soledad)
+
+        mbox = yield store.add_mailbox('TEST')
+
+        self.assertIsNotNone(mbox)
+        self.assertEqual(self.mbox_uuid, mbox.doc_id)
+        self.assertEqual('TEST', mbox.mbox)
+
+    @defer.inlineCallbacks
+    def test_add_mail(self):
+        {'multi': False, 'tags': [], 'deleted': False, 'mbox_uuid': '6e8e5a30_b784_43d4_a262_ad81962e5196', 'chash': 'DDE33BCB72DC69A0011CB1D4D4EF5A5F85E703C7C66C551AA51ED50334348A90', 'flags': [], 'seen': False, 'recent': False, 'type': 'flags', 'size': 566}
+        {'multi': False, 'tags': [], 'deleted': False, 'mbox_uuid': '', 'chash': 'DDE33BCB72DC69A0011CB1D4D4EF5A5F85E703C7C66C551AA51ED50334348A90', 'flags': [], 'seen': False, 'recent': False, 'type': 'flags', 'size': 566}
+
+        self._add_create_mail_mocks_to_soledad('mbox00000000')
+
+        mail = self._load_mail_from_file('mbox00000000')
+        when(self.soledad).list_indexes().thenReturn(defer.succeed(MAIL_INDEXES)).thenReturn(defer.succeed(MAIL_INDEXES))
+        mbox = MailboxWrapper(doc_id=self.mbox_uuid, mbox='INBOX')
+        soledad_doc = SoledadDocument(self.mbox_uuid, json=json.dumps(mbox.serialize()))
+        when(self.soledad).get_from_index('by-type-and-mbox', 'mbox', 'INBOX').thenReturn(defer.succeed([soledad_doc]))
+
+        store = LeapMailStore(self.soledad)
+
+        mbx = yield store.add_mail('INBOX', mail.as_string())
+
+        self.assertEqual(self.mbox_uuid, mbx.doc_id)
+
     def _add_mail_fixture_to_soledad(self, mail_file):
         mail = self._load_mail_from_file(mail_file)
         msg = self._convert_mail_to_leap_message(mail)
@@ -188,9 +221,24 @@ class TestLeapMailStore(TestCase):
 
         return mdoc_id, fdoc_id
 
+    def _add_create_mail_mocks_to_soledad(self, mail_file):
+        mail = self._load_mail_from_file(mail_file)
+        msg = self._convert_mail_to_leap_message(mail)
+        wrapper = msg.get_wrapper()
+
+        mdoc_id = wrapper.mdoc.future_doc_id
+        fdoc_id = wrapper.mdoc.fdoc
+        hdoc_id = wrapper.mdoc.hdoc
+        cdoc_id = wrapper.mdoc.cdocs[0]
+
+        self._mock_create_doc(mdoc_id, wrapper.mdoc)
+        self._mock_create_doc(fdoc_id, wrapper.fdoc)
+        self._mock_create_doc(hdoc_id, wrapper.hdoc)
+        self._mock_create_doc(cdoc_id, wrapper.cdocs[1])
+
     def _convert_mail_to_leap_message(self, mail):
         msg = SoledadMailAdaptor().get_msg_from_string(Message, mail.as_string())
-        msg.get_wrapper().mdoc.set_mbox_uuid(self.mbox_uuid)
+        msg.get_wrapper().set_mbox_uuid(self.mbox_uuid)
         return msg
 
     def _mock_soledad_doc(self, doc_id, doc):
@@ -199,6 +247,13 @@ class TestLeapMailStore(TestCase):
         when(self.soledad).get_doc(doc_id).thenReturn(defer.succeed(soledad_doc))
 
         self.doc_by_id[doc_id] = soledad_doc
+
+    def _mock_create_doc(self, doc_id, doc):
+        soledad_doc = SoledadDocument(doc_id, json=json.dumps(doc.serialize()))
+        if doc.future_doc_id:
+            when(self.soledad).create_doc(doc.serialize(), doc_id=doc_id).thenReturn(defer.succeed(soledad_doc))
+        else:
+            when(self.soledad).create_doc(doc.serialize()).thenReturn(defer.succeed(soledad_doc))
 
     def _load_mail_from_file(self, mail_file):
         mailset_dir = pkg_resources.resource_filename('test.unit.fixtures', 'mailset')

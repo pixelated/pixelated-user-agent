@@ -37,5 +37,8 @@ class MailStore(object):
     def get_mailbox_names(self):
         pass
 
+    def add_mailbox(self, mailbox_name):
+        pass
+
     def get_mailbox_mail_ids(self, mailbox_name):
         pass

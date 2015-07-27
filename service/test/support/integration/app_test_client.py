@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 import multiprocessing
+from leap.mail.adaptors.soledad import SoledadMailAdaptor
 from mockito import mock
 import os
 import shutil
@@ -61,7 +62,8 @@ class AppTestClient(object):
 
         PixelatedMail.from_email_address = self.MAIL_ADDRESS
 
-        self.soledad = initialize_soledad(tempdir=soledad_test_folder)
+        self.soledad = yield initialize_soledad(tempdir=soledad_test_folder)
+
         self.soledad_querier = self._create_soledad_querier(self.soledad, self.INDEX_KEY)
         self.keymanager = mock()
 
@@ -225,6 +227,7 @@ class AppTestClient(object):
         return res
 
 
+@defer.inlineCallbacks
 def initialize_soledad(tempdir):
     if os.path.isdir(tempdir):
         shutil.rmtree(tempdir)
@@ -257,4 +260,7 @@ def initialize_soledad(tempdir):
         cert_file,
         defer_encryption=False,
         syncable=False)
-    return _soledad
+
+    yield SoledadMailAdaptor().initialize_store(_soledad)
+
+    defer.returnValue(_soledad)
