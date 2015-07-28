@@ -68,6 +68,16 @@ class LeapMailStoreTest(SoledadTestBase):
         self.assertIsNone(deleted_msg)
 
     @defer.inlineCallbacks
+    def test_get_mailbox_mail_ids(self):
+        mail = _load_mail_from_file('mbox00000000')
+        yield self.store.add_mailbox('INBOX')
+        yield self.store.add_mail('INBOX', mail.as_string())
+
+        mails = yield self.store.get_mailbox_mail_ids('INBOX')
+
+        self.assertEqual(1, len(mails))
+
+    @defer.inlineCallbacks
     def _create_mail_in_soledad(self, mail):
         message = self._convert_mail_to_leap_message(mail)
         yield self.adaptor.initialize_store(self.soledad)

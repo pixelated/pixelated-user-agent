@@ -27,6 +27,7 @@ from mockito import mock, when, verify, any
 from leap.mail.adaptors.soledad import SoledadMailAdaptor, MailboxWrapper
 import pkg_resources
 from leap.mail.mail import Message
+from pixelated.adapter.mailstore import underscore_uuid
 
 from pixelated.adapter.mailstore.leap_mailstore import LeapMailStore, LeapMail
 
@@ -209,6 +210,18 @@ class TestLeapMailStore(TestCase):
         verify(self.soledad).delete_doc(self.doc_by_id[mdoc_id])
         verify(self.soledad).delete_doc(self.doc_by_id[fdoc_id])
 
+    @defer.inlineCallbacks
+    def test_get_mailbox_mail_ids(self):
+        mdoc_id, fdoc_id = self._add_mail_fixture_to_soledad('mbox00000000')
+        when(self.soledad).get_from_index('by-type-and-mbox-uuid', 'flags', underscore_uuid(self.mbox_uuid)).thenReturn(defer.succeed([self.doc_by_id[fdoc_id]]))
+        self._mock_get_mailbox('INBOX')
+        store = LeapMailStore(self.soledad)
+
+        mail_ids = yield store.get_mailbox_mail_ids('INBOX')
+
+        self.assertEqual(1, len(mail_ids))
+        self.assertEqual(mdoc_id, mail_ids[0])
+
     def _assert_message_docs_created(self, expected_message, actual_message):
         wrapper = expected_message.get_wrapper()
 
@@ -221,7 +234,7 @@ class TestLeapMailStore(TestCase):
     def _mock_get_mailbox(self, mailbox_name):
         when(self.soledad).list_indexes().thenReturn(defer.succeed(MAIL_INDEXES)).thenReturn(
             defer.succeed(MAIL_INDEXES))
-        mbox = MailboxWrapper(doc_id=self.mbox_uuid, mbox=mailbox_name)
+        mbox = MailboxWrapper(doc_id=self.mbox_uuid, mbox=mailbox_name, uuid=self.mbox_uuid)
         soledad_doc = SoledadDocument(self.mbox_uuid, json=json.dumps(mbox.serialize()))
         when(self.soledad).get_from_index('by-type-and-mbox', 'mbox', mailbox_name).thenReturn(defer.succeed([soledad_doc]))
 

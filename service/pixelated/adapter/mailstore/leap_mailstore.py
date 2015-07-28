@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from leap.mail.adaptors.soledad import SoledadMailAdaptor
 from twisted.internet import defer
-from pixelated.adapter.mailstore import MailStore
+from pixelated.adapter.mailstore import MailStore, underscore_uuid
 
 from leap.mail.mail import Message
 from pixelated.adapter.model.mail import Mail
@@ -97,7 +97,7 @@ class LeapMailStore(MailStore):
     def add_mail(self, mailbox_name, raw_msg):
         mailbox = yield self._get_or_create_mailbox(mailbox_name)
         message = SoledadMailAdaptor().get_msg_from_string(Message, raw_msg)
-        message.get_wrapper().set_mbox_uuid(mailbox.doc_id)
+        message.get_wrapper().set_mbox_uuid(mailbox.uuid)
         yield message.get_wrapper().create(self.soledad)
 
         # add behavious from insert_mdoc_id from mail.py
@@ -108,6 +108,15 @@ class LeapMailStore(MailStore):
     def delete_mail(self, mail_id):
         message = yield self._fetch_msg_from_soledad(mail_id)
         yield message.get_wrapper().delete(self.soledad)
+
+    @defer.inlineCallbacks
+    def get_mailbox_mail_ids(self, mailbox_name):
+        mailbox = yield self._get_or_create_mailbox(mailbox_name)
+        fdocs = yield self.soledad.get_from_index('by-type-and-mbox-uuid', 'flags', underscore_uuid(mailbox.uuid))
+
+        mail_ids = map(lambda doc: _fdoc_id_to_mdoc_id(doc.doc_id), fdocs)
+
+        defer.returnValue(mail_ids)
 
     @defer.inlineCallbacks
     def _leap_message_to_leap_mail(self, mail_id, message, include_body):
@@ -128,3 +137,7 @@ class LeapMailStore(MailStore):
 
 def _is_empty_message(message):
     return (message is None) or (message.get_wrapper().mdoc.doc_id is None)
+
+
+def _fdoc_id_to_mdoc_id(fdoc_id):
+    return 'M' + fdoc_id[1:]

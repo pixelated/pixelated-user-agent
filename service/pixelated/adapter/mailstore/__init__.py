@@ -42,3 +42,7 @@ class MailStore(object):
 
     def get_mailbox_mail_ids(self, mailbox_name):
         pass
+
+
+def underscore_uuid(uuid):
+    return uuid.replace('-', '_')
