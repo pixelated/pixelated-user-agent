@@ -71,11 +71,12 @@ class LeapMailStoreTest(SoledadTestBase):
     def test_get_mailbox_mail_ids(self):
         mail = _load_mail_from_file('mbox00000000')
         yield self.store.add_mailbox('INBOX')
-        yield self.store.add_mail('INBOX', mail.as_string())
+        mail = yield self.store.add_mail('INBOX', mail.as_string())
 
         mails = yield self.store.get_mailbox_mail_ids('INBOX')
 
         self.assertEqual(1, len(mails))
+        self.assertEqual(mail.mail_id, mails[0])
 
     @defer.inlineCallbacks
     def _create_mail_in_soledad(self, mail):

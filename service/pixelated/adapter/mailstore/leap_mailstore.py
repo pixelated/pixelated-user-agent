@@ -119,6 +119,11 @@ class LeapMailStore(MailStore):
         defer.returnValue(mail_ids)
 
     @defer.inlineCallbacks
+    def delete_mailbox(self, mailbox_name):
+        mbx_wrapper = yield self._get_or_create_mailbox(mailbox_name)
+        yield SoledadMailAdaptor().delete_mbox(self.soledad, mbx_wrapper)
+
+    @defer.inlineCallbacks
     def _leap_message_to_leap_mail(self, mail_id, message, include_body):
         if include_body:
             body = (yield message._wrapper.get_body(self.soledad)).raw

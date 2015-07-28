@@ -40,6 +40,9 @@ class MailStore(object):
     def add_mailbox(self, mailbox_name):
         pass
 
+    def delete_mailbox(self, mailbox_name):
+        pass
+
     def get_mailbox_mail_ids(self, mailbox_name):
         pass
 

@@ -222,6 +222,17 @@ class TestLeapMailStore(TestCase):
         self.assertEqual(1, len(mail_ids))
         self.assertEqual(mdoc_id, mail_ids[0])
 
+    @defer.inlineCallbacks
+    def test_delete_mailbox(self):
+        _, mbox_soledad_doc = self._mock_get_mailbox('INBOX')
+        store = LeapMailStore(self.soledad)
+        when(self.soledad).delete_doc(mbox_soledad_doc).thenReturn(defer.succeed(None))
+
+        yield store.delete_mailbox('INBOX')
+
+        verify(self.soledad).delete_doc(self.doc_by_id[mbox_soledad_doc.doc_id])
+        # should also verify index is updated
+
     def _assert_message_docs_created(self, expected_message, actual_message):
         wrapper = expected_message.get_wrapper()
 
@@ -237,6 +248,9 @@ class TestLeapMailStore(TestCase):
         mbox = MailboxWrapper(doc_id=self.mbox_uuid, mbox=mailbox_name, uuid=self.mbox_uuid)
         soledad_doc = SoledadDocument(self.mbox_uuid, json=json.dumps(mbox.serialize()))
         when(self.soledad).get_from_index('by-type-and-mbox', 'mbox', mailbox_name).thenReturn(defer.succeed([soledad_doc]))
+        self._mock_soledad_doc(self.mbox_uuid, mbox)
+
+        return mbox, soledad_doc
 
     def _add_mail_fixture_to_soledad(self, mail_file):
         mail = self._load_mail_from_file(mail_file)
