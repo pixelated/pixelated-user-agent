@@ -24,11 +24,8 @@ describeComponent('mail_view/ui/draft_box', function () {
   });
 
   describe('after initialize', function () {
-    beforeEach(function () {
-      this.setupComponent({mailIdent: '1'});
-    });
-
     it('renders the compose box when mail is received', function () {
+      this.setupComponent({mailIdent: '1'});
       var templates = require('views/templates');
 
       spyOn(this.component, 'render');
