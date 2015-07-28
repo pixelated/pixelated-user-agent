@@ -54,12 +54,18 @@ class LeapMailStoreTest(SoledadTestBase):
         self.assertEqual('Itaque consequatur repellendus provident sunt quia.', mails[0].subject)
 
     @defer.inlineCallbacks
-    def test_add_mail(self):
+    def test_add_and_remove_mail(self):
         yield self.adaptor.initialize_store(self.soledad)
         mail = _load_mail_from_file('mbox00000000')
-        mailbox = yield self.store.add_mailbox('INBOX')
+        yield self.store.add_mailbox('INBOX')
 
         msg = yield self.store.add_mail('INBOX', mail.as_string())
+
+        yield self.store.delete_mail(msg.mail_id)
+
+        deleted_msg = yield self.store.get_mail(msg.mail_id)
+
+        self.assertIsNone(deleted_msg)
 
     @defer.inlineCallbacks
     def _create_mail_in_soledad(self, mail):

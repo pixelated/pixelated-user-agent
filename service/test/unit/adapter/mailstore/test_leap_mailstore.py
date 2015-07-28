@@ -195,17 +195,28 @@ class TestLeapMailStore(TestCase):
 
         message = yield store.add_mail('INBOX', mail.as_string())
 
+        self.assertIsInstance(message, LeapMail)
         self._assert_message_docs_created(expected_message, message)
 
-    def _assert_message_docs_created(self, expected_message, actual_message):
-        expected_wrapper = expected_message.get_wrapper()
-        actual_wrapper = actual_message.get_wrapper()
+    @defer.inlineCallbacks
+    def test_delete_mail(self):
+        mdoc_id, fdoc_id = self._add_mail_fixture_to_soledad('mbox00000000')
 
-        verify(self.soledad).create_doc(expected_wrapper.mdoc.serialize(), doc_id=actual_wrapper.mdoc.doc_id)
-        verify(self.soledad).create_doc(expected_wrapper.fdoc.serialize(), doc_id=actual_wrapper.fdoc.doc_id)
-        verify(self.soledad).create_doc(expected_wrapper.hdoc.serialize(), doc_id=actual_wrapper.hdoc.doc_id)
-        for nr, cdoc in expected_wrapper.cdocs.items():
-            verify(self.soledad).create_doc(cdoc.serialize(), doc_id=actual_wrapper.cdocs[nr].doc_id)
+        store = LeapMailStore(self.soledad)
+
+        yield store.delete_mail(mdoc_id)
+
+        verify(self.soledad).delete_doc(self.doc_by_id[mdoc_id])
+        verify(self.soledad).delete_doc(self.doc_by_id[fdoc_id])
+
+    def _assert_message_docs_created(self, expected_message, actual_message):
+        wrapper = expected_message.get_wrapper()
+
+        verify(self.soledad).create_doc(wrapper.mdoc.serialize(), doc_id=actual_message.mail_id)
+        verify(self.soledad).create_doc(wrapper.fdoc.serialize(), doc_id=wrapper.fdoc.future_doc_id)
+        verify(self.soledad).create_doc(wrapper.hdoc.serialize(), doc_id=wrapper.hdoc.future_doc_id)
+        for nr, cdoc in wrapper.cdocs.items():
+            verify(self.soledad).create_doc(cdoc.serialize(), doc_id=wrapper.cdocs[nr].future_doc_id)
 
     def _mock_get_mailbox(self, mailbox_name):
         when(self.soledad).list_indexes().thenReturn(defer.succeed(MAIL_INDEXES)).thenReturn(

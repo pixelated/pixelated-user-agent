@@ -56,7 +56,10 @@ class LeapMailStore(MailStore):
     def get_mail(self, mail_id, include_body=False):
         try:
             message = yield self._fetch_msg_from_soledad(mail_id)
-            leap_mail = yield self._leap_message_to_leap_mail(mail_id, message, include_body)
+            if not _is_empty_message(message):
+                leap_mail = yield self._leap_message_to_leap_mail(mail_id, message, include_body)
+            else:
+                leap_mail = None
 
             defer.returnValue(leap_mail)
         except AttributeError, e:
@@ -98,7 +101,13 @@ class LeapMailStore(MailStore):
         yield message.get_wrapper().create(self.soledad)
 
         # add behavious from insert_mdoc_id from mail.py
-        defer.returnValue(message)
+        mail = yield self._leap_message_to_leap_mail(message.get_wrapper().mdoc.doc_id, message, include_body=False)
+        defer.returnValue(mail)
+
+    @defer.inlineCallbacks
+    def delete_mail(self, mail_id):
+        message = yield self._fetch_msg_from_soledad(mail_id)
+        yield message.get_wrapper().delete(self.soledad)
 
     @defer.inlineCallbacks
     def _leap_message_to_leap_mail(self, mail_id, message, include_body):
@@ -115,3 +124,7 @@ class LeapMailStore(MailStore):
 
     def _fetch_msg_from_soledad(self, mail_id):
         return SoledadMailAdaptor().get_msg_from_mdoc_id(Message, self.soledad, mail_id)
+
+
+def _is_empty_message(message):
+    return (message is None) or (message.get_wrapper().mdoc.doc_id is None)
