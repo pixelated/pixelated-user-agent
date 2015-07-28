@@ -99,6 +99,15 @@ describeComponent('mail_view/ui/compose_box', function () {
 
       expect(openNoMessageSelectedPaneEvent).not.toHaveBeenTriggeredOn(document);
     });
+
+    it('should call the enableFloatlabel method when events.mail.here is trigged', function() {
+      spyOn(this.component, 'enableFloatlabel');
+
+      this.component.renderComposeBox();
+
+      expect(this.component.enableFloatlabel).toHaveBeenCalledWith('input.floatlabel');
+      expect(this.component.enableFloatlabel).toHaveBeenCalledWith('textarea.floatlabel');
+    });
   });
 
   describe('close button behavior', function() {

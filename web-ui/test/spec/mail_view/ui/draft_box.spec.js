@@ -65,4 +65,14 @@ describeComponent('mail_view/ui/draft_box', function () {
     expect(openNoMessageSelectedEvent).toHaveBeenTriggeredOn(document);
   });
 
+  it('should call the enableFloatlabel method when events.mail.here is trigged', function() {
+    this.setupComponent({mailIdent: mail.ident});
+    spyOn(this.component, 'enableFloatlabel');
+
+    this.component.trigger(this.component, Pixelated.events.mail.here, { mail: mail });
+
+    expect(this.component.enableFloatlabel).toHaveBeenCalledWith('input.floatlabel');
+    expect(this.component.enableFloatlabel).toHaveBeenCalledWith('textarea.floatlabel');
+  });
+
 });
