@@ -1,8 +1,14 @@
 <button class="close-mail-button">
   <i class="fa fa-times"></i>
 </button>
-<input type="text" id="subject" value="{{subject}}" placeholder="{{t 'Subject'}}" tabindex="1"/>
-<textarea id="text-box" placeholder="{{t 'Body'}}" tabindex="2">{{body}}</textarea>
+<div class="floatlabel">
+  <label class="floatlabel" for="subject">Subject</label>
+  <input class="floatlabel" name="subject" type="text" id="subject" value="{{subject}}" placeholder="{{t 'Subject'}}" tabindex="1"/>
+</div>
+<div class="floatlabel">
+  <label class="floatlabel" for="body">Body</label>
+  <textarea class="floatlabel" name="body" id="text-box" placeholder="{{t 'Body'}}" tabindex="2">{{body}}</textarea>
+</div>
 
 {{> recipients }}
 

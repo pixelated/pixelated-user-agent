@@ -66,6 +66,8 @@ define(
           body: body
         });
 
+        this.enableFloatlabel('input.floatlabel');
+        this.enableFloatlabel('textarea.floatlabel');
         this.select('recipientsFields').show();
         this.select('bodyBox').focus();
         this.select('tipMsg').hide();

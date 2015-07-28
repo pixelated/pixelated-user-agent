@@ -54,6 +54,8 @@ define(
 
       this.renderComposeBox = function() {
         this.render(templates.compose.box, {});
+        this.enableFloatlabel('input.floatlabel');
+        this.enableFloatlabel('textarea.floatlabel');
         this.select('recipientsFields').show();
         this.on(this.select('closeButton'), 'click', this.showNoMessageSelected);
         this.enableAutoSave();
