@@ -38,7 +38,7 @@ function setupjs {
 function runIntegrationTests {
         echo "Executing Integration Tests."
         resolveNumOfCores
-        trial --reporter=text $* test.integration
+        trial -j $NUM_OF_CORES --reporter=text $* test.integration
         echo "Done."
 }
 
