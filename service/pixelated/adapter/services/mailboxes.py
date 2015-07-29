@@ -17,6 +17,7 @@ from twisted.internet import defer
 from pixelated.adapter.services.mailbox import Mailbox
 from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerListener
 from pixelated.adapter.model.mail import welcome_mail
+from twisted.mail.imap4 import MailboxCollision
 
 
 class Mailboxes(object):
@@ -43,7 +44,11 @@ class Mailboxes(object):
         mailbox_name = mailbox_name.upper()
         # if mailbox_name not in self.account.mailboxes:
         if mailbox_name not in (yield self.account.account.list_all_mailbox_names()):
-            yield self.account.addMailbox(mailbox_name)
+            try:
+                yield self.account.addMailbox(mailbox_name)
+            except MailboxCollision:
+                pass
+                # It means that it is already created. FIXME Why list_all fails to tell?
         yield MailboxIndexerListener.listen(self.account, mailbox_name, self.querier)
         defer.returnValue(Mailbox.create(mailbox_name, self.querier, self.search_engine))
 
