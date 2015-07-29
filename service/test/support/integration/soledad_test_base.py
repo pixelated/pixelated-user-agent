@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from twisted.trial import unittest
 from test.support.integration.app_test_client import AppTestClient
-from leap.common.events import set_events_enabled
+from leap.common.events.flags import set_events_enabled
 
 
 class SoledadTestBase(unittest.TestCase, AppTestClient):
