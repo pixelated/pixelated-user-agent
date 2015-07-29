@@ -14,9 +14,11 @@ class ApplicationTest(unittest.TestCase):
             self.sslcert = sslcert
             self.home = 'leap_home'
 
+    @patch('leap.common.events.client')
     @patch('pixelated.application.reactor')
     @patch('pixelated.application.Services')
-    def test_that_create_app_binds_to_tcp_port_if_no_ssl_options(self, services_mock, reactor_mock):
+    def test_that_create_app_binds_to_tcp_port_if_no_ssl_options(self, services_mock, reactor_mock, _):
+        # FIXME patch something closer, instead of leap.common
         app_mock = MagicMock()
         leap_session = MagicMock()
         config = ApplicationTest.MockConfig(12345, '127.0.0.1', leap_session)
@@ -32,9 +34,11 @@ class ApplicationTest(unittest.TestCase):
         d.addCallback(_assert)
         return d
 
+    @patch('leap.common.events.client')
     @patch('pixelated.application.reactor')
     @patch('pixelated.application.Services')
-    def test_that_create_app_binds_to_ssl_if_ssl_options(self, services_mock, reactor_mock):
+    def test_that_create_app_binds_to_ssl_if_ssl_options(self, services_mock, reactor_mock, _):
+        # FIXME patch something closer, instead of leap.common
         app_mock = MagicMock()
         leap_session = MagicMock()
         pixelated.application._ssl_options = lambda x, y: 'options'
