@@ -52,6 +52,7 @@ setup(name='pixelated-user-agent',
            'srp==1.0.4',
            'dirspec==4.2.0',
            'u1db==13.09',
+#           'leap.mail>=0.4.0',  # not in a stable repo yet, see requirements.txt
            'leap.auth==0.1.2',
            'whoosh==2.5.7'
       ],
