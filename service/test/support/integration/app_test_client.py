@@ -42,6 +42,7 @@ from pixelated.resources.root_resource import RootResource
 from test.support.integration.model import MailBuilder
 from test.support.test_helper import request_mock
 from test.support.integration.model import ResponseMail
+from leap.common.events.flags import set_events_enabled
 
 
 class AppTestClient(object):
@@ -55,6 +56,8 @@ class AppTestClient(object):
 
     @defer.inlineCallbacks
     def start_client(self):
+        # This class wont work with zmq events for now, check again on future
+        set_events_enabled(False)
         soledad_test_folder = self._generate_soledad_test_folder_name()
         SearchEngine.DEFAULT_INDEX_HOME = soledad_test_folder
 

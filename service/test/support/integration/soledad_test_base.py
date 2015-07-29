@@ -15,7 +15,6 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from twisted.trial import unittest
 from test.support.integration.app_test_client import AppTestClient
-from leap.common.events.flags import set_events_enabled
 
 
 class SoledadTestBase(unittest.TestCase, AppTestClient):
@@ -24,9 +23,7 @@ class SoledadTestBase(unittest.TestCase, AppTestClient):
     DEFERRED_TIMEOUT_LONG = 300
 
     def setUp(self):
-        set_events_enabled(False)
         return self.start_client()
 
     def tearDown(self):
-        set_events_enabled(True)
         self.cleanup()
