@@ -135,4 +135,60 @@ describeComponent('mail_view/ui/compose_box', function () {
       }));
     });
   });
+
+  describe('subject label', function() {
+    var input;
+    var label;
+
+    beforeEach(function() {
+      input = $(this.component.$node).find('input');
+      label = input.prev('label');
+
+      this.component.enableFloatlabel(input);
+    });
+
+    it('should show the subject label after the user starts typing', function() {
+      input.val('test');
+      input.trigger('keyup');
+
+      expect(input.hasClass('showfloatlabel')).toEqual(true);
+      expect(label.hasClass('showfloatlabel')).toEqual(true);
+    });
+
+    it('should not show the subject label if the field is empty', function() {
+      input.val('');
+      input.trigger('keyup');
+
+      expect(input.hasClass('showfloatlabel')).toEqual(false);
+      expect(label.hasClass('showfloatlabel')).toEqual(false);
+    });
+  });
+
+  describe('body label', function() {
+    var textarea;
+    var label;
+
+    beforeEach(function() {
+      textarea = $(this.component.$node).find('textarea');
+      label = textarea.prev('label');
+
+      this.component.enableFloatlabel(textarea);
+    });
+
+    it('should show the subject label after the user starts typing', function() {
+      textarea.text('test');
+      textarea.trigger('keyup');
+
+      expect(textarea.hasClass('showfloatlabel')).toEqual(true);
+      expect(label.hasClass('showfloatlabel')).toEqual(true);
+    });
+
+    it('should not show the subject label if the field is empty', function() {
+      textarea.text('');
+      textarea.trigger('keyup');
+
+      expect(textarea.hasClass('showfloatlabel')).toEqual(false);
+      expect(label.hasClass('showfloatlabel')).toEqual(false);
+    });
+  });
 });
