@@ -205,7 +205,7 @@ define(
 
       this.enableFloatlabel = function(element) {
         var showClass = 'showfloatlabel';
-        $(element).bind('checkval', function() {
+        $(element).bind('keyup', function() {
           var label = $(this).prev('label');
           if (this.value !== '') {
             label.addClass(showClass);
@@ -214,9 +214,7 @@ define(
             label.removeClass(showClass);
             $(this).removeClass(showClass);
           }
-        }).on('keyup', function() {
-          $(this).trigger('checkval');
-        }).trigger('checkval');
+        });
       };
 
       this.after('initialize', function () {
