@@ -103,9 +103,12 @@ class AppTestClient(object):
         d.addCallback(get_request_written_data)
         return d, request
 
+    def listenTCP(self, port=4567, host='0.0.0.0'):
+        reactor.listenTCP(port, Site(self.resource), interface=host)
+
     def run_on_a_thread(self, logfile='/tmp/app_test_client.log', port=4567, host='0.0.0.0'):
         def _start():
-            reactor.listenTCP(port, Site(self.resource), interface=host)
+            self.listenTCP(port, host)
             reactor.run()
         process = multiprocessing.Process(target=_start)
         process.start()

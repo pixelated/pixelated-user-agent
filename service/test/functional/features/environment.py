@@ -16,6 +16,9 @@
 import logging
 import uuid
 
+from crochet import setup, wait_for
+setup()
+
 from test.support.dispatcher.proxy import Proxy
 from test.support.integration import AppTestClient
 from selenium import webdriver
@@ -23,18 +26,23 @@ from selenium import webdriver
 from pixelated.resources.features_resource import FeaturesResource
 
 
+@wait_for(timeout=5.0)
+def start_app_test_client(client):
+    return client.start_client()
+
+
 def before_all(context):
     logging.disable('INFO')
     client = AppTestClient()
+    start_app_test_client(client)
+    client.listenTCP()
     proxy = Proxy(proxy_port='8889', app_port='4567')
     FeaturesResource.DISABLED_FEATURES.append('autoRefresh')
     context.client = client
     context.call_to_terminate_proxy = proxy.run_on_a_thread()
-    context.call_to_terminate = client.run_on_a_thread(logfile='/tmp/behave-tests.log')
 
 
 def after_all(context):
-    context.call_to_terminate()
     context.call_to_terminate_proxy()
 
 
