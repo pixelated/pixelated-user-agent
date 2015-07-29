@@ -17,13 +17,13 @@ import logging
 import uuid
 
 from crochet import setup, wait_for
-setup()
-
 from test.support.dispatcher.proxy import Proxy
 from test.support.integration import AppTestClient
 from selenium import webdriver
 
 from pixelated.resources.features_resource import FeaturesResource
+
+setup()
 
 
 @wait_for(timeout=5.0)
