@@ -14,7 +14,38 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from pixelated.adapter.mailstore.mailstore import MailStore, underscore_uuid
-from pixelated.adapter.mailstore.leap_mailstore import LeapMailStore
 
-__all__ = ['MailStore', 'LeapMailStore', 'underscore_uuid']
+class MailStore(object):
+    def get_mail(self, mail_id):
+        pass
+
+    def get_mails(self, mail_ids):
+        pass
+
+    def all_mails(self):
+        pass
+
+    def delete_mail(self, mail_id):
+        pass
+
+    def update_mail(self, mail):
+        pass
+
+    def add_mail(self, mailbox_name, mail):
+        pass
+
+    def get_mailbox_names(self):
+        pass
+
+    def add_mailbox(self, mailbox_name):
+        pass
+
+    def delete_mailbox(self, mailbox_name):
+        pass
+
+    def get_mailbox_mail_ids(self, mailbox_name):
+        pass
+
+
+def underscore_uuid(uuid):
+    return uuid.replace('-', '_')

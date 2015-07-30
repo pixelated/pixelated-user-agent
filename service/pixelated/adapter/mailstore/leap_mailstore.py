@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from leap.mail.adaptors.soledad import SoledadMailAdaptor
 from twisted.internet import defer
-from pixelated.adapter.mailstore import MailStore, underscore_uuid
+from pixelated.adapter.mailstore.mailstore import MailStore, underscore_uuid
 
 from leap.mail.mail import Message
 from pixelated.adapter.model.mail import Mail
