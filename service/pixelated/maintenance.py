@@ -22,12 +22,9 @@ from pixelated.config.leap import initialize_leap
 from pixelated.config import logger, arguments
 
 from leap.mail.constants import MessageFlags
-import time
-from twisted.mail import imap4
 
 
 def initialize():
-    import time
     args = arguments.parse_maintenance_args()
 
     logger.init(debug=args.debug)
@@ -121,16 +118,9 @@ def is_keep_file(mail):
 
 
 @defer.inlineCallbacks
-def add_mail_folder(account, maildir, folder_name, deferreds):
-    try:
-        mbx = yield account.getMailbox(folder_name)
-    except imap4.MailboxException:
-        account.addMailbox(folder_name)
-        mbx = yield account.getMailbox(folder_name)
-    # if folder_name not in account.mailboxes:
-        # account.addMailbox(folder_name)
+def add_mail_folder(store, maildir, folder_name, deferreds):
+    store.add_mailbox(folder_name)
 
-    mbx = yield account.getMailbox(folder_name)
     for mail in maildir:
         if is_keep_file(mail):
             continue
@@ -141,22 +131,23 @@ def add_mail_folder(account, maildir, folder_name, deferreds):
         if 'R' in mail.get_flags():
             flags = (MessageFlags.ANSWERED_FLAG,) + flags
 
-        deferreds.append(mbx.addMessage(mail.as_string(), flags=flags, notify_just_mdoc=False))
+        deferreds.append(store.add_mail(folder_name, mail.as_string()))
+        # FIXME support flags
 
 
 @defer.inlineCallbacks
 def load_mails(args, mail_paths):
     leap_session, soledad = args
-    account = leap_session.account
+    store = leap_session.mail_store
 
     deferreds = []
 
     for path in mail_paths:
         maildir = Maildir(path, factory=None)
-        add_mail_folder(account, maildir, 'INBOX', deferreds)
+        add_mail_folder(store, maildir, 'INBOX', deferreds)
         for mail_folder_name in maildir.list_folders():
             mail_folder = maildir.get_folder(mail_folder_name)
-            add_mail_folder(account, mail_folder, mail_folder_name, deferreds)
+            add_mail_folder(store, mail_folder, mail_folder_name, deferreds)
 
     yield defer.DeferredList(deferreds)
     defer.returnValue(args)
