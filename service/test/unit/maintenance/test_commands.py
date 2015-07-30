@@ -25,6 +25,7 @@ from leap.soledad.common.document import SoledadDocument
 from mock import MagicMock
 from os.path import join, dirname
 from twisted.internet import defer, reactor
+import pkg_resources
 
 
 class TestCommands(unittest.TestCase):
@@ -80,7 +81,7 @@ class TestCommands(unittest.TestCase):
 
     def test_load_mails_adds_mails(self):
         # given
-        mail_root = join(dirname(__file__), '..', 'fixtures', 'mailset')
+        mail_root = pkg_resources.resource_filename('test.unit.fixtures', 'mailset')
         firstMailDeferred = defer.Deferred()
         secondMailDeferred = defer.Deferred()
         self.mailbox.addMessage.side_effect = [firstMailDeferred, secondMailDeferred]

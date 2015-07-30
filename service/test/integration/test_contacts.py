@@ -15,8 +15,8 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from test.support.integration import SoledadTestBase, MailBuilder
 from twisted.internet import defer
-import os
 import json
+import pkg_resources
 
 
 class ContactsTest(SoledadTestBase):
@@ -97,7 +97,7 @@ class ContactsTest(SoledadTestBase):
         self.assertIn('this_mail_was_not@bounced.com', contacts)
 
     def _bounced_mail_hdoc_content(self):
-        hdoc_file = os.path.join(os.path.dirname(__file__), '..', 'unit', 'fixtures', 'bounced_mail_hdoc.json')
+        hdoc_file = pkg_resources.resource_filename('test.unit.fixtures', 'bounced_mail_hdoc.json')
         with open(hdoc_file) as f:
             hdoc = json.loads(f.read())
         return hdoc
