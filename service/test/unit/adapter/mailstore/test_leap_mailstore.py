@@ -69,6 +69,7 @@ class TestLeapMailStore(TestCase):
         self.soledad = mock()
         self.mbox_uuid = str(uuid4())
         self.doc_by_id = {}
+        self.mbox_uuid_by_name = {}
 
     @defer.inlineCallbacks
     def test_get_mail_not_exist(self):
@@ -185,6 +186,7 @@ class TestLeapMailStore(TestCase):
         self.assertIsNotNone(mbox)
         self.assertEqual(self.mbox_uuid, mbox.doc_id)
         self.assertEqual('TEST', mbox.mbox)
+        # assert index got updated
 
     @defer.inlineCallbacks
     def test_add_mail(self):
@@ -233,22 +235,37 @@ class TestLeapMailStore(TestCase):
         verify(self.soledad).delete_doc(self.doc_by_id[mbox_soledad_doc.doc_id])
         # should also verify index is updated
 
-    def _assert_message_docs_created(self, expected_message, actual_message):
+    @defer.inlineCallbacks
+    def test_copy_mail_to_mailbox(self):
+        expected_message = self._add_create_mail_mocks_to_soledad('mbox00000000')
+        mail_id, fdoc_id = self._add_mail_fixture_to_soledad('mbox00000000')
+        self._mock_get_mailbox('TRASH')
+        store = LeapMailStore(self.soledad)
+
+        mail = yield store.copy_mail_to_mailbox(mail_id, 'TRASH')
+
+        self._assert_message_docs_created(expected_message, mail, only_mdoc_and_fdoc=True)
+
+    def _assert_message_docs_created(self, expected_message, actual_message, only_mdoc_and_fdoc=False):
         wrapper = expected_message.get_wrapper()
 
         verify(self.soledad).create_doc(wrapper.mdoc.serialize(), doc_id=actual_message.mail_id)
         verify(self.soledad).create_doc(wrapper.fdoc.serialize(), doc_id=wrapper.fdoc.future_doc_id)
-        verify(self.soledad).create_doc(wrapper.hdoc.serialize(), doc_id=wrapper.hdoc.future_doc_id)
-        for nr, cdoc in wrapper.cdocs.items():
-            verify(self.soledad).create_doc(cdoc.serialize(), doc_id=wrapper.cdocs[nr].future_doc_id)
+        if not only_mdoc_and_fdoc:
+            verify(self.soledad).create_doc(wrapper.hdoc.serialize(), doc_id=wrapper.hdoc.future_doc_id)
+            for nr, cdoc in wrapper.cdocs.items():
+                verify(self.soledad).create_doc(cdoc.serialize(), doc_id=wrapper.cdocs[nr].future_doc_id)
 
-    def _mock_get_mailbox(self, mailbox_name):
+    def _mock_get_mailbox(self, mailbox_name, create_new_uuid=False):
+        mbox_uuid = self.mbox_uuid if not create_new_uuid else str(uuid4())
         when(self.soledad).list_indexes().thenReturn(defer.succeed(MAIL_INDEXES)).thenReturn(
             defer.succeed(MAIL_INDEXES))
-        mbox = MailboxWrapper(doc_id=self.mbox_uuid, mbox=mailbox_name, uuid=self.mbox_uuid)
-        soledad_doc = SoledadDocument(self.mbox_uuid, json=json.dumps(mbox.serialize()))
+        mbox = MailboxWrapper(doc_id=mbox_uuid, mbox=mailbox_name, uuid=mbox_uuid)
+        soledad_doc = SoledadDocument(mbox_uuid, json=json.dumps(mbox.serialize()))
         when(self.soledad).get_from_index('by-type-and-mbox', 'mbox', mailbox_name).thenReturn(defer.succeed([soledad_doc]))
-        self._mock_soledad_doc(self.mbox_uuid, mbox)
+        self._mock_soledad_doc(mbox_uuid, mbox)
+
+        self.mbox_uuid_by_name[mailbox_name] = mbox_uuid
 
         return mbox, soledad_doc
 

@@ -25,6 +25,7 @@ class Services(object):
 
         pixelated_mailboxes = Mailboxes(
             leap_session.account,
+            leap_session.soledad_session.soledad,
             soledad_querier,
             self.search_engine)
         yield pixelated_mailboxes.index_mailboxes()

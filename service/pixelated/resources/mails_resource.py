@@ -146,6 +146,7 @@ class MailsResource(Resource):
         return server.NOT_DONE_YET
 
     def render_PUT(self, request):
+        print '\nrender_PUT\n'
         content_dict = json.loads(request.content.read())
         _mail = InputMail.from_dict(content_dict)
         draft_id = content_dict.get('ident')
@@ -163,6 +164,7 @@ class MailsResource(Resource):
                     defer_response(self._draft_service.update_draft(draft_id, _mail))
             deferred_check.addCallback(return422otherwise)
         else:
+            print '\nCreating draft\n'
             defer_response(self._draft_service.create_draft(_mail))
 
         return server.NOT_DONE_YET

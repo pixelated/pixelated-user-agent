@@ -76,8 +76,7 @@ class LeapMailStore(MailStore):
     def update_mail(self, mail):
         message = yield self._fetch_msg_from_soledad(mail.mail_id)
         message.get_wrapper().set_tags(tuple(mail.tags))
-        message.get_wrapper().update(self.soledad)
-        pass
+        self._update_mail(message)
 
     @defer.inlineCallbacks
     def all_mails(self):
@@ -124,6 +123,22 @@ class LeapMailStore(MailStore):
         yield SoledadMailAdaptor().delete_mbox(self.soledad, mbx_wrapper)
 
     @defer.inlineCallbacks
+    def copy_mail_to_mailbox(self, mail_id, mailbox_name):
+        message = yield self._fetch_msg_from_soledad(mail_id, load_body=True)
+        mailbox = yield self._get_or_create_mailbox(mailbox_name)
+
+        copy_wrapper = yield message.get_wrapper().copy(self.soledad, mailbox.uuid)
+
+        leap_message = Message(copy_wrapper)
+
+        mail = yield self._leap_message_to_leap_mail(copy_wrapper.mdoc.doc_id, leap_message, include_body=False)
+
+        defer.returnValue(mail)
+
+    def _update_mail(self, message):
+        return message.get_wrapper().update(self.soledad)
+
+    @defer.inlineCallbacks
     def _leap_message_to_leap_mail(self, mail_id, message, include_body):
         if include_body:
             body = (yield message._wrapper.get_body(self.soledad)).raw
@@ -136,8 +151,8 @@ class LeapMailStore(MailStore):
     def _get_or_create_mailbox(self, mailbox_name):
         return SoledadMailAdaptor().get_or_create_mbox(self.soledad, mailbox_name)
 
-    def _fetch_msg_from_soledad(self, mail_id):
-        return SoledadMailAdaptor().get_msg_from_mdoc_id(Message, self.soledad, mail_id)
+    def _fetch_msg_from_soledad(self, mail_id, load_body=False):
+        return SoledadMailAdaptor().get_msg_from_mdoc_id(Message, self.soledad, mail_id, get_cdocs=load_body)
 
 
 def _is_empty_message(message):

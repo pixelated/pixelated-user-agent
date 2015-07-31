@@ -22,10 +22,11 @@ from twisted.mail.imap4 import MailboxCollision
 
 class Mailboxes(object):
 
-    def __init__(self, account, soledad_querier, search_engine):
+    def __init__(self, account, mail_store, soledad_querier, search_engine):
         self.account = account
         self.querier = soledad_querier
         self.search_engine = search_engine
+        self.mail_store = mail_store
         # for mailbox_name in account.mailboxes:
         # MailboxIndexerListener.listen(self.account, mailbox_name, soledad_querier)
 

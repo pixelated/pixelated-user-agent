@@ -29,13 +29,13 @@ class MailService(object):
 
     @defer.inlineCallbacks
     def all_mails(self):
-        defer.returnValue((yield self.querier.all_mails()))
+        defer.returnValue((yield self.mail_store.all_mails()))
 
     @defer.inlineCallbacks
     def mails(self, query, window_size, page):
         mail_ids, total = self.search_engine.search(query, window_size, page)
 
-        mails = yield self.querier.mails(mail_ids)
+        mails = yield self.mail_store.get_mails(mail_ids)
 
         defer.returnValue((mails, total))
 
@@ -72,7 +72,7 @@ class MailService(object):
 
     @defer.inlineCallbacks
     def mail_exists(self, mail_id):
-        defer.returnValue(not(not((yield self.querier.get_header_by_chash(mail_id)))))
+        defer.returnValue(not (yield self.mail_store.get_mail(mail_id)))
 
     @defer.inlineCallbacks
     def send_mail(self, content_dict):
