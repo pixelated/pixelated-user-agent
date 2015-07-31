@@ -18,6 +18,7 @@ import logging
 from mailbox import Maildir
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
+from pixelated.adapter.mailstore import LeapMailStore
 from pixelated.config.leap import initialize_leap
 from pixelated.config import logger, arguments
 
@@ -29,57 +30,54 @@ def initialize():
 
     logger.init(debug=args.debug)
 
-    leap_session = initialize_leap(
-        args.leap_provider_cert,
-        args.leap_provider_cert_fingerprint,
-        args.credentials_file,
-        organization_mode=False,
-        leap_home=args.leap_home)
+    @defer.inlineCallbacks
+    def _run():
+        leap_session = yield initialize_leap(
+            args.leap_provider_cert,
+            args.leap_provider_cert_fingerprint,
+            args.credentials_file,
+            organization_mode=False,
+            leap_home=args.leap_home)
 
-    execute_command = create_execute_command(args, leap_session)
+        execute_command(args, leap_session)
 
-    reactor.callWhenRunning(execute_command)
+    reactor.callWhenRunning(_run)
     reactor.run()
 
 
-def create_execute_command(args, leap_session):
-    def execute_command():
+def execute_command(args, leap_session):
 
-        def init_soledad():
-            return leap_session
+    def init_soledad():
+        leap_session.mail_store = LeapMailStore(leap_session.soledad_session.soledad)
+        return leap_session
 
-        def get_soledad_handle(leap_session):
-            soledad = leap_session.soledad_session.soledad
+    def get_soledad_handle(leap_session):
+        soledad = leap_session.soledad_session.soledad
 
-            return leap_session, soledad
+        return leap_session, soledad
 
-        @defer.inlineCallbacks
-        def soledad_sync(args):
-            leap_session, soledad = args
-            log = logging.getLogger('some logger')
+    @defer.inlineCallbacks
+    def soledad_sync(args):
+        leap_session, soledad = args
+        log = logging.getLogger('some logger')
 
-            log.warn('Before sync')
+        log.warn('Before sync')
 
-            yield soledad.sync()
+        yield soledad.sync()
 
-            log.warn('after sync')
+        log.warn('after sync')
 
-            defer.returnValue(args)
+        defer.returnValue(args)
 
-            # return args
-            return
+    tearDown = defer.Deferred()
 
-        tearDown = defer.Deferred()
-
-        prepare = deferToThread(init_soledad)
-        prepare.addCallback(get_soledad_handle)
-        prepare.addCallback(soledad_sync)
-        add_command_callback(args, prepare, tearDown)
-        tearDown.addCallback(soledad_sync)
-        tearDown.addCallback(shutdown)
-        tearDown.addErrback(shutdown_on_error)
-
-    return execute_command
+    prepare = deferToThread(init_soledad)
+    prepare.addCallback(get_soledad_handle)
+    prepare.addCallback(soledad_sync)
+    add_command_callback(args, prepare, tearDown)
+    tearDown.addCallback(soledad_sync)
+    tearDown.addCallback(shutdown)
+    tearDown.addErrback(shutdown_on_error)
 
 
 def add_command_callback(args, prepareDeferred, finalizeDeferred):
@@ -156,19 +154,12 @@ def load_mails(args, mail_paths):
 
 def flush_to_soledad(args, finalize):
     leap_session, soledad = args
-    account = leap_session.account
-    memstore = account._memstore
-    permanent_store = memstore._permanent_store
 
-    d = memstore.write_messages(permanent_store)
+    def after_sync():
+        finalize.callback((leap_session, soledad))
 
-    def check_flushed(args):
-        if memstore.is_writing:
-            reactor.callLater(1, check_flushed, args)
-        else:
-            finalize.callback((leap_session, soledad))
-
-    d.addCallback(check_flushed)
+    d = soledad.sync()
+    d.addCallback(after_sync)
 
     return args
 
