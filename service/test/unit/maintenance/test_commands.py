@@ -35,7 +35,6 @@ class TestCommands(unittest.TestCase):
         self.leap_session = MagicMock(spec=LeapSession)
         self.soledad = MagicMock(spec=Soledad)
         self.account = MagicMock(spec=IMAPAccount)
-        self.mailbox = MagicMock()
         self.mail_store = MagicMock(spec=MailStore)
         self.leap_session.account = self.account
         self.leap_session.mail_store = self.mail_store
@@ -85,18 +84,20 @@ class TestCommands(unittest.TestCase):
     def test_load_mails_adds_mails(self):
         # given
         mail_root = pkg_resources.resource_filename('test.unit.fixtures', 'mailset')
-        firstMailDeferred = defer.Deferred()
-        secondMailDeferred = defer.Deferred()
-        self.mailbox.addMessage.side_effect = [firstMailDeferred, secondMailDeferred]
+        firstMailDeferred = defer.succeed(None)
+        secondMailDeferred = defer.succeed(None)
+        self.mail_store.add_mail.side_effect = [firstMailDeferred, secondMailDeferred]
+        self.mail_store.add_mailbox.return_value = defer.succeed(None)
 
         # when
         d = load_mails(self.args, [mail_root])
 
         # then
         def assert_mails_added(_):
-            self.assertTrue(self.mailbox.addMessage.called)
-            self.mailbox.addMessage.assert_any_call(self._mail_content(join(mail_root, 'new', 'mbox00000000')), flags=(MessageFlags.RECENT_FLAG,), notify_on_disk=False)
-            self.mailbox.addMessage.assert_any_call(self._mail_content(join(mail_root, 'new', 'mbox00000001')), flags=(MessageFlags.RECENT_FLAG,), notify_on_disk=False)
+            self.assertTrue(self.mail_store.add_mail.called)
+            self.mail_store.add_mail.assert_any_call('INBOX', self._mail_content(join(mail_root, 'new', 'mbox00000000')))
+            self.mail_store.add_mail.assert_any_call('INBOX', self._mail_content(join(mail_root, 'new', 'mbox00000001')))
+            # TODO Should we check for flags?
 
         def error_callack(err):
             print err
@@ -104,10 +105,6 @@ class TestCommands(unittest.TestCase):
 
         d.addCallback(assert_mails_added)
         d.addErrback(error_callack)
-
-        # trigger callbacks for both mails
-        reactor.callLater(0, firstMailDeferred.callback, None)
-        reactor.callLater(0, secondMailDeferred.callback, None)
 
         return d
 

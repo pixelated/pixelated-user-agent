@@ -119,7 +119,7 @@ def is_keep_file(mail):
 
 @defer.inlineCallbacks
 def add_mail_folder(store, maildir, folder_name, deferreds):
-    store.add_mailbox(folder_name)
+    yield store.add_mailbox(folder_name)
 
     for mail in maildir:
         if is_keep_file(mail):
@@ -144,12 +144,13 @@ def load_mails(args, mail_paths):
 
     for path in mail_paths:
         maildir = Maildir(path, factory=None)
-        add_mail_folder(store, maildir, 'INBOX', deferreds)
+        yield add_mail_folder(store, maildir, 'INBOX', deferreds)
         for mail_folder_name in maildir.list_folders():
             mail_folder = maildir.get_folder(mail_folder_name)
-            add_mail_folder(store, mail_folder, mail_folder_name, deferreds)
+            yield add_mail_folder(store, mail_folder, mail_folder_name, deferreds)
 
-    yield defer.DeferredList(deferreds)
+    yield defer.gatherResults(deferreds, consumeErrors=True)
+
     defer.returnValue(args)
 
 
