@@ -20,8 +20,9 @@ from pixelated.adapter.services.tag_service import extract_reserved_tags
 
 class MailService(object):
 
-    def __init__(self, mailboxes, mail_sender, soledad_querier, search_engine):
+    def __init__(self, mailboxes, mail_sender, mail_store, soledad_querier, search_engine):
         self.mailboxes = mailboxes
+        self.mail_store = mail_store
         self.querier = soledad_querier
         self.search_engine = search_engine
         self.mail_sender = mail_sender

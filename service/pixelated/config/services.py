@@ -69,6 +69,7 @@ class Services(object):
         defer.returnValue(MailService(
             pixelated_mailboxes,
             pixelated_mail_sender,
+            leap_session.mail_store,
             soledad_querier,
             search_engine))
 

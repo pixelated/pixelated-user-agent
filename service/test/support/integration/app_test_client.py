@@ -31,6 +31,7 @@ from twisted.internet import reactor, defer
 from twisted.internet.defer import succeed
 from twisted.web.resource import getChildForRequest
 from twisted.web.server import Site
+from pixelated.adapter.mailstore import LeapMailStore
 
 from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.search import SearchEngine
@@ -64,6 +65,8 @@ class AppTestClient(object):
 
         self.soledad = yield initialize_soledad(tempdir=soledad_test_folder)
 
+        self.mail_store = LeapMailStore(self.soledad)
+
         self.soledad_querier = self._create_soledad_querier(self.soledad, self.INDEX_KEY)
         self.keymanager = mock()
 
@@ -76,7 +79,7 @@ class AppTestClient(object):
         self.mailboxes = Mailboxes(self.account, self.soledad_querier, self.search_engine)
         self.draft_service = DraftService(self.mailboxes)
 
-        self.mail_service = self._create_mail_service(self.mailboxes, self.mail_sender, self.soledad_querier, self.search_engine)
+        self.mail_service = self._create_mail_service(self.mailboxes, self.mail_sender, self.mail_store, self.soledad_querier, self.search_engine)
         mails = yield self.mail_service.all_mails()
         self.search_engine.index_mails(mails)
 
@@ -168,8 +171,8 @@ class AppTestClient(object):
         mail_sender.sendmail.side_effect = lambda mail: succeed(mail)
         return mail_sender
 
-    def _create_mail_service(self, mailboxes, mail_sender, soledad_querier, search_engine):
-        mail_service = MailService(mailboxes, mail_sender, soledad_querier, search_engine)
+    def _create_mail_service(self, mailboxes, mail_sender, mail_store, soledad_querier, search_engine):
+        mail_service = MailService(mailboxes, mail_sender, mail_store, soledad_querier, search_engine)
         return mail_service
 
     def _generate_soledad_test_folder_name(self, soledad_test_folder='/tmp/soledad-test/test'):
