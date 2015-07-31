@@ -19,13 +19,11 @@ import email
 from pixelated.maintenance import delete_all_mails, load_mails
 from pixelated.bitmask_libraries.session import LeapSession
 from pixelated.adapter.mailstore import MailStore
-from leap.mail.constants import MessageFlags
-from leap.mail.imap.account import IMAPAccount
 from leap.soledad.client import Soledad
 from leap.soledad.common.document import SoledadDocument
 from mock import MagicMock
 from os.path import join
-from twisted.internet import defer, reactor
+from twisted.internet import defer
 import pkg_resources
 
 
@@ -34,9 +32,7 @@ class TestCommands(unittest.TestCase):
     def setUp(self):
         self.leap_session = MagicMock(spec=LeapSession)
         self.soledad = MagicMock(spec=Soledad)
-        self.account = MagicMock(spec=IMAPAccount)
         self.mail_store = MagicMock(spec=MailStore)
-        self.leap_session.account = self.account
         self.leap_session.mail_store = self.mail_store
 
         self.args = (self.leap_session, self.soledad)
