@@ -22,6 +22,7 @@ from leap.mail.incoming.service import IncomingMail
 from twisted.internet import reactor
 from .nicknym import NickNym
 from leap.auth import SRPAuth
+from pixelated.adapter.mailstore import LeapMailStore
 from .soledad import SoledadSessionFactory
 from .smtp import LeapSmtp
 from leap.mail.imap.account import IMAPAccount
@@ -45,6 +46,8 @@ class LeapSession(object):
 
     - ``user_auth`` the secure remote password session data after authenticating with LEAP. See http://en.wikipedia.org/wiki/Secure_Remote_Password_protocol (SRPSession)
 
+    - ``mail_store`` the MailStore to access the users mails
+
     - ``soledad_session`` the soledad session. See https://leap.se/soledad (LeapSecureRemotePassword)
 
     - ``nicknym`` the nicknym instance. See https://leap.se/nicknym (NickNym)
@@ -52,11 +55,12 @@ class LeapSession(object):
     - ``incoming_mail_fetcher`` Background job for fetching incoming mails from LEAP server (LeapIncomingMail)
     """
 
-    def __init__(self, provider, user_auth, soledad_session, nicknym, soledad_account, incoming_mail_fetcher, smtp):
+    def __init__(self, provider, user_auth, mail_store, soledad_session, nicknym, soledad_account, incoming_mail_fetcher, smtp):
         self.smtp = smtp
         self.config = provider.config
         self.provider = provider
         self.user_auth = user_auth
+        self.mail_store = mail_store
         self.soledad_session = soledad_session
         self.nicknym = nicknym
         self.account = soledad_account
@@ -116,6 +120,7 @@ class LeapSessionFactory(object):
         account_email = self._provider.address_for(username)
 
         soledad = SoledadSessionFactory.create(self._provider, auth.token, auth.uuid, password)
+        mail_store = LeapMailStore(soledad.soledad)
 
         nicknym = self._create_nicknym(account_email, auth.token, auth.uuid, soledad)
         account = self._create_account(account_email, soledad)
@@ -123,7 +128,7 @@ class LeapSessionFactory(object):
 
         smtp = LeapSmtp(self._provider, auth, nicknym.keymanager)
 
-        return LeapSession(self._provider, auth, soledad, nicknym, account, deferred_incoming_mail_fetcher, smtp)
+        return LeapSession(self._provider, auth, mail_store, soledad, nicknym, account, deferred_incoming_mail_fetcher, smtp)
 
     def _lookup_session(self, key):
         global SESSIONS

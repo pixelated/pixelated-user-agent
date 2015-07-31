@@ -18,7 +18,6 @@ import logging
 from mailbox import Maildir
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
-from pixelated.adapter.mailstore import LeapMailStore
 from pixelated.config.leap import initialize_leap
 from pixelated.config import logger, arguments
 
@@ -48,7 +47,6 @@ def initialize():
 def execute_command(args, leap_session):
 
     def init_soledad():
-        leap_session.mail_store = LeapMailStore(leap_session.soledad_session.soledad)
         return leap_session
 
     def get_soledad_handle(leap_session):

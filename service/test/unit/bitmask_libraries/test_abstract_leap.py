@@ -19,6 +19,7 @@ from uuid import uuid4
 
 import os
 from mock import Mock, MagicMock
+from pixelated.adapter.mailstore import MailStore
 
 
 class AbstractLeapTest(unittest.TestCase):
@@ -46,3 +47,5 @@ class AbstractLeapTest(unittest.TestCase):
         self.soledad_account = MagicMock()
 
         self.mail_fetcher_mock = MagicMock()
+
+        self.mail_store = MagicMock(spec=MailStore)
