@@ -67,4 +67,3 @@ class LeapMailStoreTest(SoledadTestBase):
 
         self.assertEqual(1, len(mails))
         self.assertEqual(mail.mail_id, mails[0])
-
