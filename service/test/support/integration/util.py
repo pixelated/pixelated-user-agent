@@ -13,7 +13,14 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from .app_test_client import AppTestClient
-from .model import MailBuilder, ResponseMail
-from .soledad_test_base import SoledadTestBase
-from .util import load_mail_from_file
+from email.parser import Parser
+import os
+import pkg_resources
+
+
+def load_mail_from_file(mail_file):
+    mailset_dir = pkg_resources.resource_filename('test.unit.fixtures', 'mailset')
+    mail_file = os.path.join(mailset_dir, 'new', mail_file)
+    with open(mail_file) as f:
+        mail = Parser().parse(f)
+    return mail

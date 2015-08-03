@@ -13,15 +13,8 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from email.parser import Parser
-from leap.mail.mail import Message
-import pkg_resources
-import os
-from pixelated.adapter.mailstore.leap_mailstore import LeapMailStore
-from test.support.integration import SoledadTestBase
-from leap.mail.adaptors.soledad import SoledadMailAdaptor
+from test.support.integration import SoledadTestBase, load_mail_from_file
 from twisted.internet import defer
-from uuid import uuid4
 
 
 class LeapMailStoreTest(SoledadTestBase):
@@ -29,13 +22,10 @@ class LeapMailStoreTest(SoledadTestBase):
     @defer.inlineCallbacks
     def setUp(self):
         yield super(LeapMailStoreTest, self).setUp()
-        self.adaptor = SoledadMailAdaptor()
-        self.mbox_uuid = str(uuid4())
-        self.store = LeapMailStore(self.soledad)
 
     @defer.inlineCallbacks
     def test_get_mail_with_body(self):
-        mail = _load_mail_from_file('mbox00000000')
+        mail = load_mail_from_file('mbox00000000')
         mail_id = yield self._create_mail_in_soledad(mail)
         expected_mail_dict = {'body': u'Dignissimos ducimus veritatis. Est tenetur consequatur quia occaecati. Vel sit sit voluptas.\n\nEarum distinctio eos. Accusantium qui sint ut quia assumenda. Facere dignissimos inventore autem sit amet. Pariatur voluptatem sint est.\n\nUt recusandae praesentium aspernatur. Exercitationem amet placeat deserunt quae consequatur eum. Unde doloremque suscipit quia.\n\n', 'header': {u'date': u'Tue, 21 Apr 2015 08:43:27 +0000 (UTC)', u'to': u'carmel@murazikortiz.name', u'x-tw-pixelated-tags': u'nite, macro, trash', u'from': u'darby.senger@zemlak.biz', u'subject': u'Itaque consequatur repellendus provident sunt quia.'}, 'ident': mail_id, 'tags': set([])}
 
@@ -45,7 +35,7 @@ class LeapMailStoreTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_all_mails(self):
-        mail = _load_mail_from_file('mbox00000000')
+        mail = load_mail_from_file('mbox00000000')
         yield self._create_mail_in_soledad(mail)
 
         mails = yield self.store.all_mails()
@@ -56,7 +46,7 @@ class LeapMailStoreTest(SoledadTestBase):
     @defer.inlineCallbacks
     def test_add_and_remove_mail(self):
         yield self.adaptor.initialize_store(self.soledad)
-        mail = _load_mail_from_file('mbox00000000')
+        mail = load_mail_from_file('mbox00000000')
         yield self.store.add_mailbox('INBOX')
 
         msg = yield self.store.add_mail('INBOX', mail.as_string())
@@ -69,7 +59,7 @@ class LeapMailStoreTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_get_mailbox_mail_ids(self):
-        mail = _load_mail_from_file('mbox00000000')
+        mail = load_mail_from_file('mbox00000000')
         yield self.store.add_mailbox('INBOX')
         mail = yield self.store.add_mail('INBOX', mail.as_string())
 
@@ -78,23 +68,3 @@ class LeapMailStoreTest(SoledadTestBase):
         self.assertEqual(1, len(mails))
         self.assertEqual(mail.mail_id, mails[0])
 
-    @defer.inlineCallbacks
-    def _create_mail_in_soledad(self, mail):
-        message = self._convert_mail_to_leap_message(mail)
-        yield self.adaptor.initialize_store(self.soledad)
-        yield self.adaptor.create_msg(self.soledad, message)
-
-        defer.returnValue(message.get_wrapper().mdoc.doc_id)
-
-    def _convert_mail_to_leap_message(self, mail):
-        message = self.adaptor.get_msg_from_string(Message, mail.as_string())
-        message.get_wrapper().set_mbox_uuid(self.mbox_uuid)
-        return message
-
-
-def _load_mail_from_file(mail_file):
-    mailset_dir = pkg_resources.resource_filename('test.unit.fixtures', 'mailset')
-    mail_file = os.path.join(mailset_dir, 'new', mail_file)
-    with open(mail_file) as f:
-        mail = Parser().parse(f)
-    return mail
