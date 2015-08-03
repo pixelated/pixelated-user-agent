@@ -126,7 +126,6 @@ class LeapMailStore(MailStore):
     def copy_mail_to_mailbox(self, mail_id, mailbox_name):
         message = yield self._fetch_msg_from_soledad(mail_id, load_body=True)
         mailbox = yield self._get_or_create_mailbox(mailbox_name)
-
         copy_wrapper = yield message.get_wrapper().copy(self.soledad, mailbox.uuid)
 
         leap_message = Message(copy_wrapper)
@@ -134,6 +133,12 @@ class LeapMailStore(MailStore):
         mail = yield self._leap_message_to_leap_mail(copy_wrapper.mdoc.doc_id, leap_message, include_body=False)
 
         defer.returnValue(mail)
+
+    @defer.inlineCallbacks
+    def move_mail_to_mailbox(self, mail_id, mailbox_name):
+        mail_copy = yield self.copy_mail_to_mailbox(mail_id, mailbox_name)
+        yield self.delete_mail(mail_id)
+        defer.returnValue(mail_copy)
 
     def _update_mail(self, message):
         return message.get_wrapper().update(self.soledad)

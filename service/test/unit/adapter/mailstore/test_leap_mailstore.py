@@ -24,6 +24,7 @@ from twisted.trial.unittest import TestCase
 from leap.mail import constants
 from twisted.internet import defer
 from mockito import mock, when, verify, any
+import test.support.mockito
 from leap.mail.adaptors.soledad import SoledadMailAdaptor, MailboxWrapper
 import pkg_resources
 from leap.mail.mail import Message
@@ -246,6 +247,19 @@ class TestLeapMailStore(TestCase):
 
         self._assert_message_docs_created(expected_message, mail, only_mdoc_and_fdoc=True)
 
+    @defer.inlineCallbacks
+    def test_move_to_mailbox(self):
+        expected_message = self._add_create_mail_mocks_to_soledad('mbox00000000')
+        mail_id, fdoc_id = self._add_mail_fixture_to_soledad('mbox00000000')
+        self._mock_get_mailbox('TRASH')
+        store = LeapMailStore(self.soledad)
+
+        mail = yield store.move_mail_to_mailbox(mail_id, 'TRASH')
+
+        self._assert_message_docs_created(expected_message, mail, only_mdoc_and_fdoc=True)
+        # verify(self.soledad).delete_doc(self.doc_by_id[mail_id])
+        # verify(self.soledad).delete_doc(self.doc_by_id[fdoc_id])
+
     def _assert_message_docs_created(self, expected_message, actual_message, only_mdoc_and_fdoc=False):
         wrapper = expected_message.get_wrapper()
 
@@ -311,7 +325,8 @@ class TestLeapMailStore(TestCase):
     def _mock_soledad_doc(self, doc_id, doc):
         soledad_doc = SoledadDocument(doc_id, json=json.dumps(doc.serialize()))
 
-        when(self.soledad).get_doc(doc_id).thenReturn(defer.succeed(soledad_doc))
+        # when(self.soledad).get_doc(doc_id).thenReturn(defer.succeed(soledad_doc))
+        when(self.soledad).get_doc(doc_id).thenAnswer(lambda: defer.succeed(soledad_doc))
 
         self.doc_by_id[doc_id] = soledad_doc
 

@@ -49,6 +49,9 @@ class MailStore(object):
     def copy_mail_to_mailbox(self, mail_id, mailbox_name):
         pass
 
+    def move_mail_to_mailbox(self, mail_id, mailbox_name):
+        pass
+
 
 def underscore_uuid(uuid):
     return uuid.replace('-', '_')
