@@ -23,9 +23,9 @@ from pixelated.adapter.model.mail import Mail
 
 class LeapMail(Mail):
 
-    def __init__(self, mail_id, headers, tags=set(), body=None):
+    def __init__(self, mail_id, headers=None, tags=set(), body=None):
         self._mail_id = mail_id
-        self.headers = headers
+        self.headers = headers if headers is not None else {}
         self._body = body
         self.tags = tags
 

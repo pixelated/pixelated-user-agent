@@ -13,13 +13,12 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import unittest
+from twisted.trial import unittest
+from pixelated.adapter.mailstore.leap_mailstore import LeapMail
 
-from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.services.mailboxes import Mailboxes
-from mockito import mock, when, verify, any as ANY
+from mockito import mock, when, verify
 from twisted.internet import defer
-from test.support import test_helper
 from mock import MagicMock
 
 
@@ -34,11 +33,8 @@ class PixelatedMailboxesTest(unittest.TestCase):
 
     @defer.inlineCallbacks
     def test_move_to_inbox(self):
-        mail = PixelatedMail.from_soledad(*test_helper.leap_mail(), soledad_querier=self.querier)
-        when(self.mail_store).mail(1).thenReturn(defer.succeed(mail))
-        when(self.mail_store).update_mail(ANY()).thenReturn(defer.succeed(None))
+        when(self.mail_store).move_mail_to_mailbox(1, 'INBOX').thenReturn(defer.succeed(LeapMail('2', None)))
 
-        mail.set_mailbox('TRASH')
-        recovered_mail = yield self.mailboxes.move_to_inbox(1)
-        self.assertEquals('INBOX', recovered_mail.mailbox_name)
-        verify(mail).save()
+        moved_mail = yield self.mailboxes.move_to_inbox(1)
+
+        self.assertEqual('2', moved_mail.mail_id)
