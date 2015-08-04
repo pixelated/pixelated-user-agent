@@ -35,7 +35,7 @@ class Services(object):
             self.search_engine,
             pixelated_mailboxes)
 
-        self.keymanager = self.setup_keymanager(leap_session)
+        self.keymanager = leap_session.nicknym
         self.draft_service = self.setup_draft_service(pixelated_mailboxes)
 
         yield self.post_setup(soledad_querier, leap_session)
@@ -47,9 +47,6 @@ class Services(object):
         # yield soledad_querier.mark_all_as_not_recent()
         # yield soledad_querier.remove_duplicates()
         InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
-
-    def setup_keymanager(self, leap_session):
-        return leap_session.nicknym.keymanager
 
     @defer.inlineCallbacks
     def setup_search_engine(self, leap_home, soledad_querier):
