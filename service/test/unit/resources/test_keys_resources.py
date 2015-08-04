@@ -5,6 +5,7 @@ from leap.keymanager import OpenPGPKey, KeyNotFound
 from pixelated.resources.keys_resource import KeysResource
 import twisted.trial.unittest as unittest
 from twisted.web.test.requesthelper import DummyRequest
+from twisted.internet import defer
 from test.unit.resources import DummySite
 
 
@@ -17,7 +18,7 @@ class TestKeysResource(unittest.TestCase):
     def test_returns_404_if_key_not_found(self):
         request = DummyRequest(['/keys'])
         request.addArg('search', 'some@inexistent.key')
-        when(self.keymanager).get_key_from_cache('some@inexistent.key', OpenPGPKey).thenRaise(KeyNotFound())
+        when(self.keymanager).fetch_key('some@inexistent.key').thenReturn(defer.fail(KeyNotFound()))
 
         d = self.web.get(request)
 
@@ -30,7 +31,7 @@ class TestKeysResource(unittest.TestCase):
     def test_returns_the_key_as_json_if_found(self):
         request = DummyRequest(['/keys'])
         request.addArg('search', 'some@key')
-        when(self.keymanager).get_key_from_cache('some@key', OpenPGPKey).thenReturn(OpenPGPKey('some@key'))
+        when(self.keymanager).fetch_key('some@key').thenReturn(defer.succeed(OpenPGPKey('some@key')))
 
         d = self.web.get(request)
 
@@ -61,7 +62,7 @@ class TestKeysResource(unittest.TestCase):
     def test_returns_unauthorized_if_key_is_private(self):
         request = DummyRequest(['/keys'])
         request.addArg('search', 'some@key')
-        when(self.keymanager).get_key_from_cache('some@key', OpenPGPKey).thenReturn(OpenPGPKey('some@key', private=True))
+        when(self.keymanager).fetch_key('some@key').thenReturn(defer.succeed(OpenPGPKey('some@key', private=True)))
 
         d = self.web.get(request)
 
