@@ -43,13 +43,14 @@ class SoledadTestBase(unittest.TestCase, AppTestClient):
 
     @defer.inlineCallbacks
     def _create_mail_in_soledad(self, mail):
-        message = self._convert_mail_to_leap_message(mail)
         yield self.adaptor.initialize_store(self.soledad)
+        mbox = yield self.adaptor.get_or_create_mbox(self.soledad, 'INBOX')
+        message = self._convert_mail_to_leap_message(mail, mbox.uuid)
         yield self.adaptor.create_msg(self.soledad, message)
 
         defer.returnValue(message.get_wrapper().mdoc.doc_id)
 
-    def _convert_mail_to_leap_message(self, mail):
+    def _convert_mail_to_leap_message(self, mail, mbox_uuid):
         message = self.adaptor.get_msg_from_string(Message, mail.as_string())
-        message.get_wrapper().set_mbox_uuid(self.mbox_uuid)
+        message.get_wrapper().set_mbox_uuid(mbox_uuid)
         return message
