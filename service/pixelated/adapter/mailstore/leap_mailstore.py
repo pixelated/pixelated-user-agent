@@ -23,8 +23,9 @@ from pixelated.adapter.model.mail import Mail
 
 class LeapMail(Mail):
 
-    def __init__(self, mail_id, headers=None, tags=set(), body=None):
+    def __init__(self, mail_id, mailbox_name, headers=None, tags=set(), body=None):
         self._mail_id = mail_id
+        self._mailbox_name = mailbox_name
         self.headers = headers if headers is not None else {}
         self._body = body
         self.tags = tags
@@ -36,6 +37,10 @@ class LeapMail(Mail):
     @property
     def body(self):
         return self._body
+
+    @property
+    def mailbox_name(self):
+        return self._mailbox_name
 
     def as_dict(self):
         return {
@@ -94,16 +99,16 @@ class LeapMailStore(MailStore):
 
     @defer.inlineCallbacks
     def get_mailbox_names(self):
-        mbox_map = set((yield self._mailbox_uuid_to_name()).values())
+        mbox_map = set((yield self._mailbox_uuid_to_name_map()).values())
 
         defer.returnValue(mbox_map.union({'INBOX'}))
 
     @defer.inlineCallbacks
-    def _mailbox_uuid_to_name(self):
+    def _mailbox_uuid_to_name_map(self):
         map = {}
         mbox_docs = yield self.soledad.get_from_index('by-type', 'mbox')
         for doc in mbox_docs:
-            map[doc.doc_id] = doc.content.get('mbox')
+            map[underscore_uuid(doc.content.get('uuid'))] = doc.content.get('mbox')
 
         defer.returnValue(map)
 
@@ -161,12 +166,22 @@ class LeapMailStore(MailStore):
     @defer.inlineCallbacks
     def _leap_message_to_leap_mail(self, mail_id, message, include_body):
         if include_body:
-            body = (yield message._wrapper.get_body(self.soledad)).raw
+            body = (yield message.get_wrapper().get_body(self.soledad)).raw
         else:
             body = None
-        mail = LeapMail(mail_id, message.get_headers(), set(message.get_tags()), body=body)
+
+        # fetch mailbox name by mbox_uuid
+        mbox_uuid = message.get_wrapper().fdoc.mbox_uuid
+        mbox_name = yield self._mailbox_name_from_uuid(mbox_uuid)
+
+        mail = LeapMail(mail_id, mbox_name, message.get_headers(), set(message.get_tags()), body=body)
 
         defer.returnValue(mail)
+
+    @defer.inlineCallbacks
+    def _mailbox_name_from_uuid(self, uuid):
+        map = (yield self._mailbox_uuid_to_name_map())
+        defer.returnValue(map[uuid])
 
     def _get_or_create_mailbox(self, mailbox_name):
         return SoledadMailAdaptor().get_or_create_mbox(self.soledad, mailbox_name)

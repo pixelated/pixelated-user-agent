@@ -33,7 +33,7 @@ class PixelatedMailboxesTest(unittest.TestCase):
 
     @defer.inlineCallbacks
     def test_move_to_inbox(self):
-        when(self.mail_store).move_mail_to_mailbox(1, 'INBOX').thenReturn(defer.succeed(LeapMail('2', None)))
+        when(self.mail_store).move_mail_to_mailbox(1, 'INBOX').thenReturn(defer.succeed(LeapMail('2', None, 'OTHER')))
 
         moved_mail = yield self.mailboxes.move_to_inbox(1)
 

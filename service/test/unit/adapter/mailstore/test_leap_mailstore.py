@@ -35,14 +35,14 @@ from pixelated.adapter.mailstore.leap_mailstore import LeapMailStore, LeapMail
 
 class TestLeapMail(TestCase):
     def test_leap_mail(self):
-        mail = LeapMail('', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test'})
+        mail = LeapMail('', 'INBOX', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test'})
 
         self.assertEqual('test@example.test', mail.from_sender)
         self.assertEqual('receiver@example.test', mail.to)
         self.assertEqual('A test Mail', mail.subject)
 
     def test_as_dict(self):
-        mail = LeapMail('doc id', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test'}, ('foo', 'bar'))
+        mail = LeapMail('doc id', 'INBOX', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test'}, ('foo', 'bar'))
 
         expected = {
             'header': {
@@ -60,7 +60,7 @@ class TestLeapMail(TestCase):
 
     def test_as_dict_with_body(self):
         body = 'some body content'
-        mail = LeapMail('doc id', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test'}, ('foo', 'bar'), body=body)
+        mail = LeapMail('doc id', 'INBOX', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test'}, ('foo', 'bar'), body=body)
 
         self.assertEqual(body, mail.as_dict()['body'])
 
@@ -74,6 +74,7 @@ class TestLeapMailStore(TestCase):
         self.mbox_soledad_docs = []
 
         when(self.soledad).get_from_index('by-type', 'mbox').thenAnswer(lambda: defer.succeed(self.mbox_soledad_docs))
+        self._mock_get_mailbox('INBOX')
 
     @defer.inlineCallbacks
     def test_get_mail_not_exist(self):
@@ -96,6 +97,18 @@ class TestLeapMailStore(TestCase):
         self.assertEqual('carmel@murazikortiz.name', mail.to)
         self.assertEqual('Itaque consequatur repellendus provident sunt quia.', mail.subject)
         self.assertIsNone(mail.body)
+        self.assertEqual('INBOX', mail.mailbox_name)
+
+    @defer.inlineCallbacks
+    def test_get_mail_from_mailbox(self):
+        other, _ = self._mock_get_mailbox('OTHER', create_new_uuid=True)
+        mdoc_id, _ = self._add_mail_fixture_to_soledad('mbox00000000', other.uuid)
+
+        store = LeapMailStore(self.soledad)
+
+        mail = yield store.get_mail(mdoc_id)
+
+        self.assertEqual('OTHER', mail.mailbox_name)
 
     @defer.inlineCallbacks
     def test_get_two_different_mails(self):
@@ -296,19 +309,20 @@ class TestLeapMailStore(TestCase):
         mbox_uuid = self.mbox_uuid if not create_new_uuid else str(uuid4())
         when(self.soledad).list_indexes().thenReturn(defer.succeed(MAIL_INDEXES)).thenReturn(
             defer.succeed(MAIL_INDEXES))
-        mbox = MailboxWrapper(doc_id=mbox_uuid, mbox=mailbox_name, uuid=mbox_uuid)
-        soledad_doc = SoledadDocument(mbox_uuid, json=json.dumps(mbox.serialize()))
+        doc_id = str(uuid4())
+        mbox = MailboxWrapper(doc_id=doc_id, mbox=mailbox_name, uuid=mbox_uuid)
+        soledad_doc = SoledadDocument(doc_id, json=json.dumps(mbox.serialize()))
         when(self.soledad).get_from_index('by-type-and-mbox', 'mbox', mailbox_name).thenReturn(defer.succeed([soledad_doc]))
-        self._mock_soledad_doc(mbox_uuid, mbox)
+        self._mock_soledad_doc(doc_id, mbox)
 
         self.mbox_uuid_by_name[mailbox_name] = mbox_uuid
         self.mbox_soledad_docs.append(soledad_doc)
 
         return mbox, soledad_doc
 
-    def _add_mail_fixture_to_soledad(self, mail_file):
+    def _add_mail_fixture_to_soledad(self, mail_file, mbox_uuid=None):
         mail = self._load_mail_from_file(mail_file)
-        msg = self._convert_mail_to_leap_message(mail)
+        msg = self._convert_mail_to_leap_message(mail, mbox_uuid)
         wrapper = msg.get_wrapper()
 
         mdoc_id = wrapper.mdoc.future_doc_id
@@ -340,9 +354,13 @@ class TestLeapMailStore(TestCase):
 
         return msg
 
-    def _convert_mail_to_leap_message(self, mail):
+    def _convert_mail_to_leap_message(self, mail, mbox_uuid=None):
         msg = SoledadMailAdaptor().get_msg_from_string(Message, mail.as_string())
-        msg.get_wrapper().set_mbox_uuid(self.mbox_uuid)
+        if mbox_uuid is None:
+            msg.get_wrapper().set_mbox_uuid(self.mbox_uuid)
+        else:
+            msg.get_wrapper().set_mbox_uuid(mbox_uuid)
+
         return msg
 
     def _mock_soledad_doc(self, doc_id, doc):
