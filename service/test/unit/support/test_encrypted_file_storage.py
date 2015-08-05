@@ -25,9 +25,13 @@ class EncryptedFileStorageTest(unittest.TestCase):
         self.key = '2\x06\xf87F:\xd2\xe2]w\xc9\x0c\xb8\x9b\x8e\xd3\x92\t\xabHu\xa6\xa3\x9a\x8d\xec\x0c\xab<8\xbb\x12\xfbP\xf2\x83"\xa1\xcf7\x92\xb0!\xfe\xebM\x80\x8a\x14\xe6\xf9xr\xf5#\x8f\x1bs\xb3#\x0e)a\xd8'
         self.msg = 'this is a very, very secret binary message: \xbe\xba\xca\xfe'
         self.path = os.path.join('tmp', 'search_test')
+        self._cleanup_path()
         self.storage = EncryptedFileStorage(self.path, self.key)
 
     def tearDown(self):
+        self._cleanup_path()
+
+    def _cleanup_path(self):
         if os.path.exists(self.path):
             shutil.rmtree(self.path)
 

@@ -56,16 +56,16 @@ class EncryptedFileStorage(FileStorage):
         return hmac.new(self.signkey, verifiable_payload, sha256).digest()
 
     def encrypt(self, content):
-        iv, ciphertext = encrypt_sym(content, self.masterkey, EncryptionMethods.XSALSA20)
+        iv, ciphertext = encrypt_sym(content, self.masterkey)
         mac = self.gen_mac(iv, ciphertext)
         return ''.join((mac, iv, ciphertext))
 
     def decrypt(self, payload):
-        payload_mac, iv, ciphertext = payload[:32], payload[32:65], payload[65:]
+        payload_mac, iv, ciphertext = payload[:32], payload[32:57], payload[57:]
         generated_mac = self.gen_mac(iv, ciphertext)
         if sha256(payload_mac).digest() != sha256(generated_mac).digest():
             raise Exception("EncryptedFileStorage  - Error opening file. Wrong MAC")
-        return decrypt_sym(ciphertext, self.masterkey, EncryptionMethods.XSALSA20, iv=iv)
+        return decrypt_sym(ciphertext, self.masterkey, iv)
 
     def _encrypt_index_on_close(self, name):
         def wrapper(struct_file):
