@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from twisted.internet import defer
 from pixelated.adapter.mailstore.mailstore import MailStore
 
 
@@ -22,6 +23,8 @@ class SearchableMailStore(MailStore):
         self._delegate = delegate
         self._search_engine = search_engine
 
+    @defer.inlineCallbacks
     def add_mail(self, mailbox_name, mail):
-        self._delegate.add_mail(mailbox_name, mail)
-        self._search_engine.index_mail(mail)
+        stored_mail = yield self._delegate.add_mail(mailbox_name, mail)
+        self._search_engine.index_mail(stored_mail)
+        defer.returnValue(stored_mail)

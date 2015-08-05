@@ -15,24 +15,46 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from email.parser import Parser
 import os
-from mockito import verify, mock
+from mockito import verify, mock, when
 import pkg_resources
+from twisted.internet import defer
 from twisted.trial.unittest import TestCase
+from pixelated.adapter.mailstore.leap_mailstore import LeapMail
 from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
 from pixelated.adapter.search import SearchEngine
 
 
+ANY_MAILBOX = 'INBOX'
+
+
 class TestLeapMail(TestCase):
+
+    def setUp(self):
+        super(TestLeapMail, self).setUp()
+        self.search_index = mock(mocked_obj=SearchEngine)
+        self.delegate_mail_store = mock()
+        self.store = SearchableMailStore(self.delegate_mail_store, self.search_index)
+
+    @defer.inlineCallbacks
     def test_add_mail_delegates_to_mail_store_and_updates_index(self):
         mail = self._load_mail_from_file('mbox00000000')
-        search_index = mock(mocked_obj=SearchEngine)
-        delegate_mail_store = mock()
-        store = SearchableMailStore(delegate_mail_store, search_index)
+        leap_mail = LeapMail('id', ANY_MAILBOX)
+        when(self.delegate_mail_store).add_mail(ANY_MAILBOX, mail).thenReturn(defer.succeed(leap_mail))
 
-        store.add_mail('INBOX', mail)
+        yield self.store.add_mail(ANY_MAILBOX, mail)
 
-        verify(search_index).index_mail(mail)
-        verify(delegate_mail_store).add_mail('INBOX', mail)
+        verify(self.delegate_mail_store).add_mail(ANY_MAILBOX, mail)
+        verify(self.search_index).index_mail(leap_mail)
+
+    @defer.inlineCallbacks
+    def test_add_mail_returns_stored_mail(self):
+        mail = self._load_mail_from_file('mbox00000000')
+        leap_mail = LeapMail('id', ANY_MAILBOX)
+        when(self.delegate_mail_store).add_mail(ANY_MAILBOX, mail).thenReturn(defer.succeed(leap_mail))
+
+        result = yield self.store.add_mail(ANY_MAILBOX, mail)
+
+        self.assertEqual(leap_mail, result)
 
     def _load_mail_from_file(self, mail_file):
         mailset_dir = pkg_resources.resource_filename('test.unit.fixtures', 'mailset')
@@ -40,3 +62,4 @@ class TestLeapMail(TestCase):
         with open(mail_file) as f:
             mail = Parser().parse(f)
         return mail
+
