@@ -71,6 +71,9 @@ class TestLeapMailStore(TestCase):
         self.mbox_uuid = str(uuid4())
         self.doc_by_id = {}
         self.mbox_uuid_by_name = {}
+        self.mbox_soledad_docs = []
+
+        when(self.soledad).get_from_index('by-type', 'mbox').thenAnswer(lambda: defer.succeed(self.mbox_soledad_docs))
 
     @defer.inlineCallbacks
     def test_get_mail_not_exist(self):
@@ -190,6 +193,23 @@ class TestLeapMailStore(TestCase):
         # assert index got updated
 
     @defer.inlineCallbacks
+    def test_get_mailbox_names_always_contains_inbox(self):
+        store = LeapMailStore(self.soledad)
+
+        names = yield store.get_mailbox_names()
+
+        self.assertEqual({'INBOX'}, names)
+
+    @defer.inlineCallbacks
+    def test_get_mailbox_names(self):
+        self._mock_get_mailbox('OTHER', create_new_uuid=True)
+        store = LeapMailStore(self.soledad)
+
+        names = yield store.get_mailbox_names()
+
+        self.assertEqual({'INBOX', 'OTHER'}, names)
+
+    @defer.inlineCallbacks
     def test_add_mail(self):
         expected_message = self._add_create_mail_mocks_to_soledad('mbox00000000')
         mail = self._load_mail_from_file('mbox00000000')
@@ -210,8 +230,7 @@ class TestLeapMailStore(TestCase):
 
         yield store.delete_mail(mdoc_id)
 
-        verify(self.soledad).delete_doc(self.doc_by_id[mdoc_id])
-        verify(self.soledad).delete_doc(self.doc_by_id[fdoc_id])
+        self._assert_mail_got_deleted(fdoc_id, mdoc_id)
 
     @defer.inlineCallbacks
     def test_get_mailbox_mail_ids(self):
@@ -257,8 +276,11 @@ class TestLeapMailStore(TestCase):
         mail = yield store.move_mail_to_mailbox(mail_id, 'TRASH')
 
         self._assert_message_docs_created(expected_message, mail, only_mdoc_and_fdoc=True)
-        # verify(self.soledad).delete_doc(self.doc_by_id[mail_id])
-        # verify(self.soledad).delete_doc(self.doc_by_id[fdoc_id])
+        self._assert_mail_got_deleted(fdoc_id, mail_id)
+
+    def _assert_mail_got_deleted(self, fdoc_id, mail_id):
+        verify(self.soledad).delete_doc(self.doc_by_id[mail_id])
+        verify(self.soledad).delete_doc(self.doc_by_id[fdoc_id])
 
     def _assert_message_docs_created(self, expected_message, actual_message, only_mdoc_and_fdoc=False):
         wrapper = expected_message.get_wrapper()
@@ -280,6 +302,7 @@ class TestLeapMailStore(TestCase):
         self._mock_soledad_doc(mbox_uuid, mbox)
 
         self.mbox_uuid_by_name[mailbox_name] = mbox_uuid
+        self.mbox_soledad_docs.append(soledad_doc)
 
         return mbox, soledad_doc
 

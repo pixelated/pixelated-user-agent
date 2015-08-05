@@ -93,6 +93,21 @@ class LeapMailStore(MailStore):
         defer.returnValue(mailbox)
 
     @defer.inlineCallbacks
+    def get_mailbox_names(self):
+        mbox_map = set((yield self._mailbox_uuid_to_name()).values())
+
+        defer.returnValue(mbox_map.union({'INBOX'}))
+
+    @defer.inlineCallbacks
+    def _mailbox_uuid_to_name(self):
+        map = {}
+        mbox_docs = yield self.soledad.get_from_index('by-type', 'mbox')
+        for doc in mbox_docs:
+            map[doc.doc_id] = doc.content.get('mbox')
+
+        defer.returnValue(map)
+
+    @defer.inlineCallbacks
     def add_mail(self, mailbox_name, raw_msg):
         mailbox = yield self._get_or_create_mailbox(mailbox_name)
         message = SoledadMailAdaptor().get_msg_from_string(Message, raw_msg)
