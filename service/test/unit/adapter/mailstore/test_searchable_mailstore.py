@@ -96,6 +96,14 @@ class TestSearchableMailStore(TestCase):
 
         self.assertEqual(mail, result)
 
+    @defer.inlineCallbacks
+    def test_delete_mailbox_is_not_implemented(self):
+        try:
+            yield self.store.delete_mailbox(ANY_MAILBOX)
+            self.fail("Should raise NotImplementedError")
+        except NotImplementedError:
+            pass
+
     def _load_mail_from_file(self, mail_file):
         mailset_dir = pkg_resources.resource_filename('test.unit.fixtures', 'mailset')
         mail_file = os.path.join(mailset_dir, 'new', mail_file)

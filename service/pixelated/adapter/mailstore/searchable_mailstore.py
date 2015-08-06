@@ -60,6 +60,9 @@ class SearchableMailStore(object):  # implementes MailStore
         self._search_engine.index_mail(copied_mail)
         defer.returnValue(copied_mail)
 
+    def delete_mailbox(self, mailbox_name):
+        raise NotImplementedError()
+
     def __getattr__(self, name):
         """
         Acts like method missing. If a method of MailStore is not implemented in this class,
