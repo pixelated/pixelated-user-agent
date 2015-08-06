@@ -77,6 +77,18 @@ class TestSearchableMailStore(TestCase):
         verify(self.search_index).index_mail(leap_mail)
 
     @defer.inlineCallbacks
+    def test_move_mail_delegates_to_mail_store_and_updates_index(self):
+        moved_mail = LeapMail('new id', ANY_MAILBOX)
+        when(self.delegate_mail_store).move_mail_to_mailbox('mail id', ANY_MAILBOX).thenReturn(defer.succeed(moved_mail))
+
+        result = yield self.store.move_mail_to_mailbox('mail id', ANY_MAILBOX)
+
+        verify(self.delegate_mail_store).move_mail_to_mailbox('mail id', ANY_MAILBOX)
+        verify(self.search_index).remove_from_index('mail id')
+        verify(self.search_index).index_mail(moved_mail)
+        self.assertEqual(moved_mail, result)
+
+    @defer.inlineCallbacks
     def test_other_methods_are_delegated(self):
         mail = LeapMail('mail id', ANY_MAILBOX)
         when(self.delegate_mail_store).get_mail('mail id').thenReturn(defer.succeed(mail), defer.succeed(mail))
