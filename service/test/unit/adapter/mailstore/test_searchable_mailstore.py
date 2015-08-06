@@ -28,10 +28,10 @@ from pixelated.adapter.search import SearchEngine
 ANY_MAILBOX = 'INBOX'
 
 
-class TestLeapMail(TestCase):
+class TestSearchableMailStore(TestCase):
 
     def setUp(self):
-        super(TestLeapMail, self).setUp()
+        super(TestSearchableMailStore, self).setUp()
         self.search_index = mock(mocked_obj=SearchEngine)
         self.delegate_mail_store = mock(mocked_obj=MailStore)
         self.store = SearchableMailStore(self.delegate_mail_store, self.search_index)
