@@ -54,6 +54,12 @@ class SearchableMailStore(object):  # implementes MailStore
         self._search_engine.index_mail(moved_mail)
         defer.returnValue(moved_mail)
 
+    @defer.inlineCallbacks
+    def copy_mail_to_mailbox(self, mail_id, mailbox_name):
+        copied_mail = yield self._delegate.copy_mail_to_mailbox(mail_id, mailbox_name)
+        self._search_engine.index_mail(copied_mail)
+        defer.returnValue(copied_mail)
+
     def __getattr__(self, name):
         """
         Acts like method missing. If a method of MailStore is not implemented in this class,
