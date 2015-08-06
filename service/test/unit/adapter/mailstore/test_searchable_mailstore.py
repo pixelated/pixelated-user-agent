@@ -42,19 +42,10 @@ class TestSearchableMailStore(TestCase):
         leap_mail = LeapMail('id', ANY_MAILBOX)
         when(self.delegate_mail_store).add_mail(ANY_MAILBOX, mail).thenReturn(defer.succeed(leap_mail))
 
-        yield self.store.add_mail(ANY_MAILBOX, mail)
+        result = yield self.store.add_mail(ANY_MAILBOX, mail)
 
         verify(self.delegate_mail_store).add_mail(ANY_MAILBOX, mail)
         verify(self.search_index).index_mail(leap_mail)
-
-    @defer.inlineCallbacks
-    def test_add_mail_returns_stored_mail(self):
-        mail = self._load_mail_from_file('mbox00000000')
-        leap_mail = LeapMail('id', ANY_MAILBOX)
-        when(self.delegate_mail_store).add_mail(ANY_MAILBOX, mail).thenReturn(defer.succeed(leap_mail))
-
-        result = yield self.store.add_mail(ANY_MAILBOX, mail)
-
         self.assertEqual(leap_mail, result)
 
     @defer.inlineCallbacks
