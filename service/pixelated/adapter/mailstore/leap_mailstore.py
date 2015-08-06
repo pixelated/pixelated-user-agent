@@ -23,12 +23,13 @@ from pixelated.adapter.model.mail import Mail
 
 class LeapMail(Mail):
 
-    def __init__(self, mail_id, mailbox_name, headers=None, tags=set(), body=None):
+    def __init__(self, mail_id, mailbox_name, headers=None, tags=set(), flags=set(), body=None):
         self._mail_id = mail_id
         self._mailbox_name = mailbox_name
         self.headers = headers if headers is not None else {}
         self._body = body
         self.tags = tags
+        self._flags = flags
 
     @property
     def mail_id(self):
@@ -39,8 +40,23 @@ class LeapMail(Mail):
         return self._body
 
     @property
+    def flags(self):
+        return self._flags
+
+    @property
     def mailbox_name(self):
         return self._mailbox_name
+
+    @property
+    def raw(self):
+        result = ''
+        for k, v in self.headers.items():
+            result = result + '%s: %s\n' % (k, v)
+        result = result + '\n'
+        if self._body:
+            result = result + self._body
+
+        return result
 
     def as_dict(self):
         return {

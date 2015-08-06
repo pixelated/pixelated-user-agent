@@ -32,6 +32,7 @@ from twisted.internet.defer import succeed
 from twisted.web.resource import getChildForRequest
 from twisted.web.server import Site
 from pixelated.adapter.mailstore import LeapMailStore
+from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
 
 from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.search import SearchEngine
@@ -65,13 +66,13 @@ class AppTestClient(object):
 
         self.soledad = yield initialize_soledad(tempdir=soledad_test_folder)
 
-        self.mail_store = LeapMailStore(self.soledad)
-
         self.soledad_querier = self._create_soledad_querier(self.soledad, self.INDEX_KEY)
         self.keymanager = mock()
 
         self.search_engine = SearchEngine(self.INDEX_KEY, agent_home=soledad_test_folder)
         self.mail_sender = self._create_mail_sender()
+
+        self.mail_store = SearchableMailStore(LeapMailStore(self.soledad), self.search_engine)
 
         account_ready_cb = defer.Deferred()
         self.account = IMAPAccount(self.ACCOUNT, self.soledad, account_ready_cb)

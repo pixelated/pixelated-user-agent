@@ -86,6 +86,10 @@ class Mail(object):
         return self.fdoc.content.get('mbox', 'INBOX')
 
     @property
+    def bounced(self):
+        return False
+
+    @property
     def _mime_multipart(self):
         if self._mime:
             return self._mime

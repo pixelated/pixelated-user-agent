@@ -64,6 +64,15 @@ class TestLeapMail(TestCase):
 
         self.assertEqual(body, mail.as_dict()['body'])
 
+    def test_raw_constructed_by_headers_and_body(self):
+        body = 'some body content'
+        mail = LeapMail('doc id', 'INBOX', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test'}, ('foo', 'bar'), body=body)
+
+        result = mail.raw
+
+        expected_raw = 'To: receiver@example.test\nFrom: test@example.test\nSubject: A test Mail\n\nsome body content'
+        self.assertEqual(expected_raw, result)
+
 
 class TestLeapMailStore(TestCase):
     def setUp(self):

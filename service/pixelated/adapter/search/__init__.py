@@ -121,8 +121,8 @@ class SearchEngine(object):
     def _index_mail(self, writer, mail):
         mdict = mail.as_dict()
         header = mdict['header']
-        tags = mdict.get('tags', [])
-        tags.append(mail.mailbox_name.lower())
+        tags = set(mdict.get('tags', {}))
+        tags.add(mail.mailbox_name.lower())
         bounced = mail.bounced if mail.bounced else ['']
 
         index_data = {
@@ -134,7 +134,7 @@ class SearchEngine(object):
             'bcc': u','.join([h.decode('utf-8') for h in header.get('bcc', [''])]),
             'tag': u','.join(unique(tags)),
             'bounced': u','.join(bounced),
-            'body': unicode(mdict['textPlainBody']),
+            'body': unicode(mdict['textPlainBody'] if 'textPlainBody' in mdict else mdict['body']),
             'ident': unicode(mdict['ident']),
             'flags': unicode(','.join(unique(mail.flags))),
             'raw': unicode(mail.raw.decode('utf-8'))

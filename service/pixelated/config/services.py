@@ -1,3 +1,4 @@
+from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
 from pixelated.adapter.services.mail_service import MailService
 from pixelated.adapter.model.mail import InputMail
 from pixelated.adapter.services.mail_sender import MailSender
@@ -23,6 +24,8 @@ class Services(object):
             leap_home,
             soledad_querier)
 
+        self.wrap_mail_store_with_indexing_mail_store(leap_session)
+
         pixelated_mailboxes = Mailboxes(
             leap_session.account,
             leap_session.soledad_session.soledad,
@@ -40,6 +43,9 @@ class Services(object):
         self.draft_service = self.setup_draft_service(pixelated_mailboxes)
 
         yield self.post_setup(soledad_querier, leap_session)
+
+    def wrap_mail_store_with_indexing_mail_store(self, leap_session):
+        leap_session.mail_store = SearchableMailStore(leap_session.mail_store, self.search_engine)
 
     @defer.inlineCallbacks
     def post_setup(self, soledad_querier, leap_session):

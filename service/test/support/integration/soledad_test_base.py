@@ -35,7 +35,6 @@ class SoledadTestBase(unittest.TestCase, AppTestClient):
         self.adaptor = SoledadMailAdaptor()
         self.mbox_uuid = str(uuid4())
         yield self.start_client()
-        self.store = LeapMailStore(self.soledad)
 
     def tearDown(self):
         set_events_enabled(True)
