@@ -17,15 +17,22 @@
 import json
 
 
+class SetEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, set):
+            return list(obj)
+        return super(SetEncoder, self).default(obj)
+
+
 def respond_json(entity, request, status_code=200):
-    json_response = json.dumps(entity)
+    json_response = json.dumps(entity, cls=SetEncoder)
     request.responseHeaders.addRawHeader(b"content-type", b"application/json")
     request.code = status_code
     return json_response
 
 
 def respond_json_deferred(entity, request, status_code=200):
-    json_response = json.dumps(entity)
+    json_response = json.dumps(entity, cls=SetEncoder)
     request.responseHeaders.addRawHeader(b"content-type", b"application/json")
     request.code = status_code
     request.write(json_response)

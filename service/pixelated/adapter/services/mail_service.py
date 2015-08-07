@@ -29,15 +29,20 @@ class MailService(object):
 
     @defer.inlineCallbacks
     def all_mails(self):
-        defer.returnValue((yield self.querier.all_mails()))
+        mails = yield self.mail_store.all_mails()
+        defer.returnValue(mails)
 
     @defer.inlineCallbacks
     def mails(self, query, window_size, page):
         mail_ids, total = self.search_engine.search(query, window_size, page)
 
-        mails = yield self.querier.mails(mail_ids)
-
-        defer.returnValue((mails, total))
+        try:
+            mails = yield self.mail_store.get_mails(mail_ids)
+            defer.returnValue((mails, total))
+        except Exception, e:
+            import traceback
+            traceback.print_exc()
+            raise
 
     @defer.inlineCallbacks
     def update_tags(self, mail_id, new_tags):
@@ -65,7 +70,7 @@ class MailService(object):
         return [_use_current_casing(new_tag.lower()) if new_tag.lower() in current_tags_lower else new_tag for new_tag in new_tags]
 
     def mail(self, mail_id):
-        return self.querier.mail(mail_id)
+        return self.mail_store.get_mail(mail_id)
 
     def attachment(self, attachment_id, encoding):
         return self.querier.attachment(attachment_id, encoding)
@@ -104,10 +109,10 @@ class MailService(object):
     @defer.inlineCallbacks
     def delete_mail(self, mail_id):
         mail = yield self.mail(mail_id)
-        if mail.mailbox_name == 'TRASH':
-            yield self.delete_permanent(mail_id)
+        if mail.mailbox_name.upper() == u'TRASH':
+            yield self.mail_store.delete_mail(mail_id)
         else:
-            trashed_mail = yield self.mailboxes.move_to_trash(mail_id)
+            trashed_mail = yield self.mail_store.move_mail_to_mailbox(mail_id, 'TRASH')
             self.search_engine.index_mail(trashed_mail)
 
     def recover_mail(self, mail_id):

@@ -123,6 +123,11 @@ class MailsResource(Resource):
         })
         d.addCallback(lambda res: respond_json_deferred(res, request))
 
+        def error_handler(error):
+            print error
+
+        d.addErrback(error_handler)
+
         return NOT_DONE_YET
 
     def render_POST(self, request):
@@ -146,7 +151,6 @@ class MailsResource(Resource):
         return server.NOT_DONE_YET
 
     def render_PUT(self, request):
-        print '\nrender_PUT\n'
         content_dict = json.loads(request.content.read())
         _mail = InputMail.from_dict(content_dict)
         draft_id = content_dict.get('ident')

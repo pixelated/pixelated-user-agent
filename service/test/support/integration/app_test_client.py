@@ -141,24 +141,33 @@ class AppTestClient(object):
 
     @defer.inlineCallbacks
     def add_mail_to_inbox(self, input_mail):
-        inbox = yield self.mailboxes.inbox
-        mail = yield inbox.add(input_mail)
-        if input_mail.tags:
-            mail.update_tags(input_mail.tags)
-            self.search_engine.index_mail(mail)
+        mail = yield self.mail_store.add_mail('INBOX', input_mail.raw)
+        defer.returnValue(mail)
+        # inbox = yield self.mailboxes.inbox
+        # mail = yield inbox.add(input_mail)
+        # if input_mail.tags:
+        #     mail.update_tags(input_mail.tags)
+        #     self.search_engine.index_mail(mail)
 
     @defer.inlineCallbacks
     def add_multiple_to_mailbox(self, num, mailbox='', flags=[], tags=[], to='recipient@to.com', cc='recipient@cc.com', bcc='recipient@bcc.com'):
         mails = []
+        yield self.mail_store.add_mailbox(mailbox)
         for _ in range(num):
             builder = MailBuilder().with_status(flags).with_tags(tags).with_to(to).with_cc(cc).with_bcc(bcc)
             builder.with_body(str(random.random()))
             input_mail = builder.build_input_mail()
-            mbx = yield self.mailboxes._create_or_get(mailbox)
-            mail = yield mbx.add(input_mail)
+            mail = yield self.mail_store.add_mail(mailbox, input_mail.raw)
+            if tags:
+                mail.tags.add(tags)
+                yield self.mail_store.update_mail(mail)
             mails.append(mail)
-            mail.update_tags(input_mail.tags) if tags else None
-        self.search_engine.index_mails(mails) if tags else None
+
+        #     mbx = yield self.mailboxes._create_or_get(mailbox)
+        #     mail = yield mbx.add(input_mail)
+        #     mails.append(mail)
+        #     mail.update_tags(input_mail.tags) if tags else None
+        # self.search_engine.index_mails(mails) if tags else None
 
         defer.returnValue(mails)
 

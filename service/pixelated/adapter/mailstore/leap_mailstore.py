@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from uuid import uuid4
 from leap.mail.adaptors.soledad import SoledadMailAdaptor
 from twisted.internet import defer
 from pixelated.adapter.mailstore.mailstore import MailStore, underscore_uuid
@@ -30,6 +31,10 @@ class LeapMail(Mail):
         self._body = body
         self.tags = tags
         self._flags = flags
+
+    @property
+    def ident(self):
+        return self._mail_id
 
     @property
     def mail_id(self):
@@ -84,6 +89,8 @@ class LeapMailStore(MailStore):
 
             defer.returnValue(leap_mail)
         except AttributeError, e:
+            import traceback
+            traceback.print_exc()
             defer.returnValue(None)
 
     def get_mails(self, mail_ids):
@@ -199,11 +206,23 @@ class LeapMailStore(MailStore):
         map = (yield self._mailbox_uuid_to_name_map())
         defer.returnValue(map[uuid])
 
+    @defer.inlineCallbacks
     def _get_or_create_mailbox(self, mailbox_name):
-        return SoledadMailAdaptor().get_or_create_mbox(self.soledad, mailbox_name)
+        mailbox_name_upper = mailbox_name.upper()
+        mbx = yield SoledadMailAdaptor().get_or_create_mbox(self.soledad, mailbox_name_upper)
+        if mbx.uuid is None:
+            mbx.uuid = str(uuid4())
+            yield mbx.update(self.soledad)
+        defer.returnValue(mbx)
 
     def _fetch_msg_from_soledad(self, mail_id, load_body=False):
         return SoledadMailAdaptor().get_msg_from_mdoc_id(Message, self.soledad, mail_id, get_cdocs=load_body)
+
+    @defer.inlineCallbacks
+    def _dump_soledad(self):
+        gen, docs = yield self.soledad.get_all_docs()
+        for doc in docs:
+            print '\n%s\n' % doc
 
 
 def _is_empty_message(message):

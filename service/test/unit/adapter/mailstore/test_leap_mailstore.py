@@ -23,7 +23,7 @@ from twisted.internet.defer import FirstError
 from twisted.trial.unittest import TestCase
 from leap.mail import constants
 from twisted.internet import defer
-from mockito import mock, when, verify, any
+from mockito import mock, when, verify, any as ANY
 import test.support.mockito
 from leap.mail.adaptors.soledad import SoledadMailAdaptor, MailboxWrapper
 import pkg_resources
@@ -31,7 +31,7 @@ from leap.mail.mail import Message
 from pixelated.adapter.mailstore import underscore_uuid
 
 from pixelated.adapter.mailstore.leap_mailstore import LeapMailStore, LeapMail
-
+import test.support.mockito
 
 class TestLeapMail(TestCase):
     def test_leap_mail(self):
@@ -203,8 +203,9 @@ class TestLeapMailStore(TestCase):
     def test_add_mailbox(self):
         when(self.soledad).list_indexes().thenReturn(defer.succeed(MAIL_INDEXES)).thenReturn(defer.succeed(MAIL_INDEXES))
         when(self.soledad).get_from_index('by-type-and-mbox', 'mbox', 'TEST').thenReturn(defer.succeed([]))
-        when(self.soledad).create_doc(any()).thenReturn(defer.succeed(None))
         self._mock_create_doc(self.mbox_uuid, MailboxWrapper(mbox='TEST'))
+        when(self.soledad).get_doc(self.mbox_uuid).thenAnswer(lambda: defer.succeed(self.doc_by_id[self.mbox_uuid]))
+        when(self.soledad).put_doc(ANY()).thenAnswer(lambda: defer.succeed(None))
         store = LeapMailStore(self.soledad)
 
         mbox = yield store.add_mailbox('TEST')
@@ -212,6 +213,7 @@ class TestLeapMailStore(TestCase):
         self.assertIsNotNone(mbox)
         self.assertEqual(self.mbox_uuid, mbox.doc_id)
         self.assertEqual('TEST', mbox.mbox)
+        self.assertIsNotNone(mbox.uuid)
         # assert index got updated
 
     @defer.inlineCallbacks

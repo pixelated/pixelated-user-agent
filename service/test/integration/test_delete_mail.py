@@ -22,12 +22,12 @@ class DeleteMailTest(SoledadTestBase):
     @defer.inlineCallbacks
     def test_move_mail_to_trash_when_deleting(self):
         input_mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        yield self.add_mail_to_inbox(input_mail)
+        mail = yield self.add_mail_to_inbox(input_mail)
 
         inbox_mails = yield self.get_mails_by_tag('inbox')
         self.assertEquals(1, len(inbox_mails))
 
-        yield self.delete_mail(input_mail.ident)
+        yield self.delete_mail(mail.mail_id)
 
         inbox_mails = yield self.get_mails_by_tag('inbox')
         self.assertEquals(0, len(inbox_mails))
@@ -45,6 +45,7 @@ class DeleteMailTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_move_mail_to_trash_when_delete_multiple(self):
+        yield self.add_multiple_to_mailbox(1, 'trash')
         mails = yield self.add_multiple_to_mailbox(5, 'inbox')
         mail_idents = [m.ident for m in mails]
 
