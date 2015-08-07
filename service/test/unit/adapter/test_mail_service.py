@@ -89,7 +89,7 @@ class TestMailService(unittest.TestCase):
 
     def test_delete_mail(self):
         mail_to_delete = LeapMail(1, 'INBOX')
-        when(self.mail_store).get_mail(1).thenReturn(mail_to_delete)
+        when(self.mail_store).get_mail(1).thenReturn(defer.succeed(mail_to_delete))
 
         self.mail_service.delete_mail(1)
 

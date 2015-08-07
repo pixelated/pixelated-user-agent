@@ -27,11 +27,22 @@ class LeapMailStoreTest(SoledadTestBase):
     def test_get_mail_with_body(self):
         mail = load_mail_from_file('mbox00000000')
         mail_id = yield self._create_mail_in_soledad(mail)
-        expected_mail_dict = {'body': u'Dignissimos ducimus veritatis. Est tenetur consequatur quia occaecati. Vel sit sit voluptas.\n\nEarum distinctio eos. Accusantium qui sint ut quia assumenda. Facere dignissimos inventore autem sit amet. Pariatur voluptatem sint est.\n\nUt recusandae praesentium aspernatur. Exercitationem amet placeat deserunt quae consequatur eum. Unde doloremque suscipit quia.\n\n', 'header': {u'date': u'Tue, 21 Apr 2015 08:43:27 +0000 (UTC)', u'to': u'carmel@murazikortiz.name', u'x-tw-pixelated-tags': u'nite, macro, trash', u'from': u'darby.senger@zemlak.biz', u'subject': u'Itaque consequatur repellendus provident sunt quia.'}, 'ident': mail_id, 'tags': set([])}
+        expected_mail_dict = {'body': u'Dignissimos ducimus veritatis. Est tenetur consequatur quia occaecati. Vel sit sit voluptas.\n\nEarum distinctio eos. Accusantium qui sint ut quia assumenda. Facere dignissimos inventore autem sit amet. Pariatur voluptatem sint est.\n\nUt recusandae praesentium aspernatur. Exercitationem amet placeat deserunt quae consequatur eum. Unde doloremque suscipit quia.\n\n', 'header': {u'date': u'Tue, 21 Apr 2015 08:43:27 +0000 (UTC)', u'to': [u'carmel@murazikortiz.name'], u'x-tw-pixelated-tags': u'nite, macro, trash', u'from': u'darby.senger@zemlak.biz', u'subject': u'Itaque consequatur repellendus provident sunt quia.'}, 'ident': mail_id, 'tags': set([])}
 
         result = yield self.mail_store.get_mail(mail_id, include_body=True)
         self.assertIsNotNone(result)
         self.assertEqual(expected_mail_dict, result.as_dict())
+
+    @defer.inlineCallbacks
+    def test_round_trip_through_soledad_does_not_modify_content(self):
+        mail = load_mail_from_file('mbox00000000')
+        mail_id = yield self._create_mail_in_soledad(mail)
+        expected_mail_dict = {'body': u'Dignissimos ducimus veritatis. Est tenetur consequatur quia occaecati. Vel sit sit voluptas.\n\nEarum distinctio eos. Accusantium qui sint ut quia assumenda. Facere dignissimos inventore autem sit amet. Pariatur voluptatem sint est.\n\nUt recusandae praesentium aspernatur. Exercitationem amet placeat deserunt quae consequatur eum. Unde doloremque suscipit quia.\n\n', 'header': {u'date': u'Tue, 21 Apr 2015 08:43:27 +0000 (UTC)', u'to': [u'carmel@murazikortiz.name'], u'x-tw-pixelated-tags': u'nite, macro, trash', u'from': u'darby.senger@zemlak.biz', u'subject': u'Itaque consequatur repellendus provident sunt quia.'}, 'ident': mail_id, 'tags': set([])}
+
+        mail = yield self.mail_store.add_mail('INBOX', mail.as_string())
+        fetched_mail = yield self.mail_store.get_mail(mail_id, include_body=True)
+        self.assertEqual(expected_mail_dict['header'], mail.as_dict()['header'])
+        self.assertEqual(expected_mail_dict['header'], fetched_mail.as_dict()['header'])
 
     @defer.inlineCallbacks
     def test_all_mails(self):

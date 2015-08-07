@@ -112,8 +112,7 @@ class MailService(object):
         if mail.mailbox_name.upper() == u'TRASH':
             yield self.mail_store.delete_mail(mail_id)
         else:
-            trashed_mail = yield self.mail_store.move_mail_to_mailbox(mail_id, 'TRASH')
-            self.search_engine.index_mail(trashed_mail)
+            yield self.mail_store.move_mail_to_mailbox(mail_id, 'TRASH')
 
     def recover_mail(self, mail_id):
         recovered_mail = self.mailboxes.move_to_inbox(mail_id)

@@ -27,10 +27,19 @@ class LeapMail(Mail):
     def __init__(self, mail_id, mailbox_name, headers=None, tags=set(), flags=set(), body=None):
         self._mail_id = mail_id
         self._mailbox_name = mailbox_name
-        self.headers = headers if headers is not None else {}
+        self._headers = headers if headers is not None else {}
         self._body = body
         self.tags = tags
         self._flags = flags
+
+    @property
+    def headers(self):
+        cpy = dict(self._headers)
+
+        for name in set(self._headers.keys()).intersection(['To', 'Cc', 'Bcc']):
+            cpy[name] = self._headers[name].split(',') if self._headers[name] else None
+
+        return cpy
 
     @property
     def ident(self):
@@ -55,7 +64,7 @@ class LeapMail(Mail):
     @property
     def raw(self):
         result = ''
-        for k, v in self.headers.items():
+        for k, v in self._headers.items():
             result = result + '%s: %s\n' % (k, v)
         result = result + '\n'
         if self._body:
@@ -197,7 +206,7 @@ class LeapMailStore(MailStore):
         mbox_uuid = message.get_wrapper().fdoc.mbox_uuid
         mbox_name = yield self._mailbox_name_from_uuid(mbox_uuid)
 
-        mail = LeapMail(mail_id, mbox_name, message.get_headers(), set(message.get_tags()), body=body)
+        mail = LeapMail(mail_id, mbox_name, message.get_wrapper().hdoc.headers, set(message.get_tags()), body=body)
 
         defer.returnValue(mail)
 

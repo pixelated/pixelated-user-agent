@@ -438,6 +438,21 @@ class InputMailTest(unittest.TestCase):
         self.assertNotRegexpMatches(mime_multipart.as_string(), "\nCc: \n")
         self.assertNotRegexpMatches(mime_multipart.as_string(), "\nSubject: \n")
 
+    def test_single_recipient(self):
+        mail_single_recipient = {
+            'body': '',
+            'header': {
+                'to': ['to@pixelated.org'],
+                'cc': [''],
+                'bcc': [''],
+                'subject': 'Oi'
+            }
+        }
+
+        result = InputMail.from_dict(mail_single_recipient).raw
+
+        self.assertRegexpMatches(result, 'To: to@pixelated.org')
+
     def test_to_mime_multipart(self):
         pixelated.support.date.iso_now = lambda: 'date now'
 

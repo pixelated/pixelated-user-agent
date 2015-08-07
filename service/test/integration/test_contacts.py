@@ -34,7 +34,7 @@ class ContactsTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_FROM_address_is_being_searched(self):
-        input_mail = MailBuilder().with_tags(['important']).build_input_mail()
+        input_mail = MailBuilder().with_tags(['important']).with_from('Formatted Sender <sender@from.com>').build_input_mail()
         yield self.add_mail_to_inbox(input_mail)
 
         contacts = yield self.get_contacts(query='Sender')

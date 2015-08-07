@@ -95,7 +95,10 @@ class Mail(object):
             return self._mime
         mime = MIMEMultipart()
         for key, value in self.headers.items():
-            mime[str(key)] = str(value)
+            if isinstance(value, list):
+                mime[str(key)] = ', '.join(value)
+            else:
+                mime[str(key)] = str(value)
 
         try:
             body_to_use = self.body

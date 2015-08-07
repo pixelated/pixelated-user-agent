@@ -17,6 +17,7 @@ import json
 from uuid import uuid4
 from email.parser import Parser
 import os
+from leap.mail.utils import CaseInsensitiveDict
 from leap.soledad.common.document import SoledadDocument
 from leap.mail.adaptors.soledad_indexes import MAIL_INDEXES
 from twisted.internet.defer import FirstError
@@ -31,24 +32,44 @@ from leap.mail.mail import Message
 from pixelated.adapter.mailstore import underscore_uuid
 
 from pixelated.adapter.mailstore.leap_mailstore import LeapMailStore, LeapMail
-import test.support.mockito
+
 
 class TestLeapMail(TestCase):
     def test_leap_mail(self):
         mail = LeapMail('', 'INBOX', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test'})
 
         self.assertEqual('test@example.test', mail.from_sender)
-        self.assertEqual('receiver@example.test', mail.to)
+        self.assertEqual(['receiver@example.test'], mail.to)
         self.assertEqual('A test Mail', mail.subject)
 
+    def test_email_addresses_in_to_are_split_into_a_list(self):
+        mail = LeapMail('', 'INBOX', {'To': 'first@example.test,second@example.test'})
+
+        self.assertEqual(['first@example.test', 'second@example.test'],mail.headers['To'])
+
+    def test_email_addresses_in_cc_are_split_into_a_list(self):
+        mail = LeapMail('', 'INBOX', {'Cc': 'first@example.test,second@example.test'})
+
+        self.assertEqual(['first@example.test', 'second@example.test'],mail.headers['Cc'])
+
+    def test_email_addresses_in_bcc_are_split_into_a_list(self):
+        mail = LeapMail('', 'INBOX', {'Bcc': 'first@example.test,second@example.test'})
+
+        self.assertEqual(['first@example.test', 'second@example.test'],mail.headers['Bcc'])
+
+    def test_email_addresses_might_be_none(self):
+        mail = LeapMail('', 'INBOX', {'Cc': None})
+
+        self.assertEqual(None, mail.headers['Cc'])
+
     def test_as_dict(self):
-        mail = LeapMail('doc id', 'INBOX', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test'}, ('foo', 'bar'))
+        mail = LeapMail('doc id', 'INBOX', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test,receiver2@other.test'}, ('foo', 'bar'))
 
         expected = {
             'header': {
                 'from': 'test@example.test',
                 'subject': 'A test Mail',
-                'to': 'receiver@example.test',
+                'to': ['receiver@example.test', 'receiver2@other.test'],
 
             },
             'ident': 'doc id',
@@ -87,6 +108,7 @@ class TestLeapMailStore(TestCase):
 
     @defer.inlineCallbacks
     def test_get_mail_not_exist(self):
+        when(self.soledad).get_doc(ANY()).thenAnswer(lambda: defer.succeed(None))
         store = LeapMailStore(self.soledad)
 
         mail = yield store.get_mail(_format_mdoc_id(uuid4(), 1))
@@ -103,7 +125,7 @@ class TestLeapMailStore(TestCase):
 
         self.assertIsInstance(mail, LeapMail)
         self.assertEqual('darby.senger@zemlak.biz', mail.from_sender)
-        self.assertEqual('carmel@murazikortiz.name', mail.to)
+        self.assertEqual(['carmel@murazikortiz.name'], mail.to)
         self.assertEqual('Itaque consequatur repellendus provident sunt quia.', mail.subject)
         self.assertIsNone(mail.body)
         self.assertEqual('INBOX', mail.mailbox_name)

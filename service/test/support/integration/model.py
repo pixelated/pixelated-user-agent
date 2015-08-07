@@ -45,6 +45,10 @@ class MailBuilder:
         self.mail['header']['subject'] = subject
         return self
 
+    def with_from(self, sender):
+        self.mail['header']['from'] = sender
+        return self
+
     def with_to(self, to):
         self.mail['header']['to'] = to
         return self
