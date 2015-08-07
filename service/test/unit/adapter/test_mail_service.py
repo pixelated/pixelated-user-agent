@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from twisted.trial import unittest
+from pixelated.adapter.mailstore.leap_mailstore import LeapMail
 from pixelated.adapter.model.mail import InputMail, PixelatedMail
 
 from pixelated.adapter.services.mail_service import MailService
@@ -87,12 +88,12 @@ class TestMailService(unittest.TestCase):
         verify(mail).mark_as_read()
 
     def test_delete_mail(self):
-        mail_to_delete = PixelatedMail.from_soledad(*leap_mail(), soledad_querier=None)
-        when(self.mail_service).mail(1).thenReturn(mail_to_delete)
+        mail_to_delete = LeapMail(1, 'INBOX')
+        when(self.mail_store).get_mail(1).thenReturn(mail_to_delete)
 
         self.mail_service.delete_mail(1)
 
-        verify(self.mailboxes).move_to_trash(1)
+        verify(self.mail_store).move_mail_to_mailbox(1, 'TRASH')
 
     def test_recover_mail(self):
         mail_to_recover = PixelatedMail.from_soledad(*leap_mail(), soledad_querier=None)
