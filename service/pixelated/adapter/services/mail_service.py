@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from twisted.internet import defer
 from pixelated.adapter.model.mail import InputMail
+from pixelated.adapter.model.status import Status
 from pixelated.adapter.services.tag_service import extract_reserved_tags
 
 
@@ -77,7 +78,11 @@ class MailService(object):
 
     @defer.inlineCallbacks
     def mail_exists(self, mail_id):
-        defer.returnValue(not(not((yield self.querier.get_header_by_chash(mail_id)))))
+        try:
+            mail = yield self.mail_store.get_mail(mail_id)
+            defer.returnValue(mail is not None)
+        except Exception, e:
+            defer.returnValue(False)
 
     @defer.inlineCallbacks
     def send_mail(self, content_dict):
@@ -91,20 +96,21 @@ class MailService(object):
     @defer.inlineCallbacks
     def move_to_sent(self, last_draft_ident, mail):
         if last_draft_ident:
-            yield (yield self.mailboxes.drafts).remove(last_draft_ident)
-        defer.returnValue((yield (yield self.mailboxes.sent).add(mail)))
+            yield self.mail_store.delete_mail(last_draft_ident)
+        sent_mail = yield self.mail_store.add_mail('SENT', mail.raw)
+        defer.returnValue(sent_mail)
 
     @defer.inlineCallbacks
     def mark_as_read(self, mail_id):
         mail = yield self.mail(mail_id)
-        yield mail.mark_as_read()
-        self.search_engine.index_mail(mail)
+        mail.flags.add(Status.SEEN)
+        yield self.mail_store.update_mail(mail)
 
     @defer.inlineCallbacks
     def mark_as_unread(self, mail_id):
         mail = yield self.mail(mail_id)
-        yield mail.mark_as_unread()
-        self.search_engine.index_mail(mail)
+        mail.flags.remove(Status.SEEN)
+        yield self.mail_store.update_mail(mail)
 
     @defer.inlineCallbacks
     def delete_mail(self, mail_id):

@@ -17,18 +17,23 @@ from twisted.internet import defer
 
 
 class DraftService(object):
-    __slots__ = '_mailboxes'
+    __slots__ = '_mail_store'
 
-    def __init__(self, mailboxes):
-        self._mailboxes = mailboxes
+    def __init__(self, mail_store):
+        self._mail_store = mail_store
 
     @defer.inlineCallbacks
     def create_draft(self, input_mail):
-        pixelated_mail = yield (yield self._mailboxes.drafts).add(input_mail)
-        defer.returnValue(pixelated_mail)
+        mail = yield self._mail_store.add_mail('DRAFTS', input_mail.raw)
+        defer.returnValue(mail)
+        # pixelated_mail = yield (yield self._mailboxes.drafts).add(input_mail)
+        # defer.returnValue(pixelated_mail)
 
     @defer.inlineCallbacks
     def update_draft(self, ident, input_mail):
-        pixelated_mail = yield self.create_draft(input_mail)
-        yield (yield self._mailboxes.drafts).remove(ident)
-        defer.returnValue(pixelated_mail)
+        new_draft = yield self.create_draft(input_mail)
+        yield self._mail_store.delete_mail(ident)
+        defer.returnValue(new_draft)
+        # pixelated_mail = yield self.create_draft(input_mail)
+        # yield (yield self._mailboxes.drafts).remove(ident)
+        # defer.returnValue(pixelated_mail)

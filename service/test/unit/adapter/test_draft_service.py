@@ -1,4 +1,6 @@
 import unittest
+from twisted.internet import defer
+from pixelated.adapter.mailstore.leap_mailstore import LeapMail
 
 from pixelated.adapter.model.mail import InputMail
 from pixelated.adapter.services.draft_service import DraftService
@@ -10,21 +12,20 @@ class DraftServiceTest(unittest.TestCase):
 
     def setUp(self):
         self.mailboxes = mock()
-        self.drafts_mailbox = mock()
-        self.draft_service = DraftService(self.mailboxes)
-        self.mailboxes.drafts = self.drafts_mailbox
+        self.mail_store = mock()
+        self.draft_service = DraftService(self.mail_store)
 
     def test_add_draft(self):
         mail = InputMail()
         self.draft_service.create_draft(mail)
 
-        verify(self.drafts_mailbox).add(mail)
+        verify(self.mail_store).add_mail('DRAFTS', mail.raw)
 
     def test_update_draft(self):
         mail = InputMail.from_dict(test_helper.mail_dict())
-        when(self.drafts_mailbox).add(mail).thenReturn(mail)
+        when(self.mail_store).add_mail('DRAFTS', mail.raw).thenReturn(defer.succeed(LeapMail('id', 'DRAFTS')))
 
         self.draft_service.update_draft(mail.ident, mail)
 
-        inorder.verify(self.drafts_mailbox).add(mail)
-        inorder.verify(self.drafts_mailbox).remove(mail.ident)
+        inorder.verify(self.mail_store).add_mail('DRAFTS', mail.raw)
+        inorder.verify(self.mail_store).delete_mail(mail.ident)

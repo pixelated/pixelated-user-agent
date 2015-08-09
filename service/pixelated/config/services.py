@@ -40,7 +40,7 @@ class Services(object):
             pixelated_mailboxes)
 
         self.keymanager = leap_session.nicknym
-        self.draft_service = self.setup_draft_service(pixelated_mailboxes)
+        self.draft_service = self.setup_draft_service(leap_session.mail_store)
 
         yield self.post_setup(soledad_querier, leap_session)
 
@@ -77,5 +77,5 @@ class Services(object):
             soledad_querier,
             search_engine))
 
-    def setup_draft_service(self, pixelated_mailboxes):
-        return DraftService(pixelated_mailboxes)
+    def setup_draft_service(self, mail_store):
+        return DraftService(mail_store)

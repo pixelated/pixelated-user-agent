@@ -78,7 +78,7 @@ class AppTestClient(object):
         self.account = IMAPAccount(self.ACCOUNT, self.soledad, account_ready_cb)
         yield account_ready_cb
         self.mailboxes = Mailboxes(self.account, self.mail_store, self.soledad_querier, self.search_engine)
-        self.draft_service = DraftService(self.mailboxes)
+        self.draft_service = DraftService(self.mail_store)
 
         self.mail_service = self._create_mail_service(self.mailboxes, self.mail_sender, self.mail_store, self.soledad_querier, self.search_engine)
         mails = yield self.mail_service.all_mails()

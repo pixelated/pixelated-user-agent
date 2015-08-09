@@ -29,8 +29,8 @@ class LeapMail(Mail):
         self._mailbox_name = mailbox_name
         self._headers = headers if headers is not None else {}
         self._body = body
-        self.tags = tags
-        self._flags = flags
+        self.tags = set(tags)   # TODO test that asserts copy
+        self._flags = set(flags) # TODO test that asserts copy
 
     @property
     def headers(self):
@@ -77,6 +77,7 @@ class LeapMail(Mail):
             'header': {k.lower(): v for k, v in self.headers.items()},
             'ident': self._mail_id,
             'tags': self.tags,
+            'status': list(self.status),
             'body': self._body
         }
 
@@ -113,7 +114,8 @@ class LeapMailStore(MailStore):
     def update_mail(self, mail):
         message = yield self._fetch_msg_from_soledad(mail.mail_id)
         message.get_wrapper().set_tags(tuple(mail.tags))
-        self._update_mail(message)
+        message.get_wrapper().set_flags(tuple(mail.flags))
+        yield self._update_mail(message) # TODO assert this is yielded (otherwise asynchronous)
 
     @defer.inlineCallbacks
     def all_mails(self):
@@ -206,7 +208,7 @@ class LeapMailStore(MailStore):
         mbox_uuid = message.get_wrapper().fdoc.mbox_uuid
         mbox_name = yield self._mailbox_name_from_uuid(mbox_uuid)
 
-        mail = LeapMail(mail_id, mbox_name, message.get_wrapper().hdoc.headers, set(message.get_tags()), body=body)
+        mail = LeapMail(mail_id, mbox_name, message.get_wrapper().hdoc.headers, set(message.get_tags()), set(message.get_flags()), body=body)   # TODO assert flags are passed on
 
         defer.returnValue(mail)
 
