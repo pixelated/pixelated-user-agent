@@ -159,7 +159,7 @@ class LeapMailStore(MailStore):
         message = SoledadMailAdaptor().get_msg_from_string(Message, raw_msg)
         message.get_wrapper().set_mbox_uuid(mailbox.uuid)
 
-        yield message.get_wrapper().create(self.soledad)
+        yield SoledadMailAdaptor().create_msg(self.soledad, message)
 
         # add behavious from insert_mdoc_id from mail.py
         mail = yield self._leap_message_to_leap_mail(message.get_wrapper().mdoc.doc_id, message, include_body=True)  # TODO test that asserts include_body

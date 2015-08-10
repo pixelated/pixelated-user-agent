@@ -14,13 +14,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from email.parser import Parser
+from email.utils import make_msgid
 import os
 import pkg_resources
 
 
-def load_mail_from_file(mail_file):
+def load_mail_from_file(mail_file, enforceUniqueMessageId=False):
     mailset_dir = pkg_resources.resource_filename('test.unit.fixtures', 'mailset')
     mail_file = os.path.join(mailset_dir, 'new', mail_file)
     with open(mail_file) as f:
         mail = Parser().parse(f)
+
+    if enforceUniqueMessageId:
+        mail.add_header('Message-Id', make_msgid())
+
     return mail
