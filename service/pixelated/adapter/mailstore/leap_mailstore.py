@@ -16,6 +16,7 @@
 from uuid import uuid4
 from leap.mail.adaptors.soledad import SoledadMailAdaptor
 from twisted.internet import defer
+from pixelated.adapter.mailstore.body_parser import BodyParser
 from pixelated.adapter.mailstore.mailstore import MailStore, underscore_uuid
 
 from leap.mail.mail import Message
@@ -65,8 +66,9 @@ class LeapMail(Mail):
     def raw(self):
         result = ''
         for k, v in self._headers.items():
-            result = result + '%s: %s\n' % (k, v)
-        result = result + '\n'
+            result += '%s: %s\n' % (k, v)
+        result += '\n'
+
         if self._body:
             result = result + self._body
 
@@ -151,10 +153,11 @@ class LeapMailStore(MailStore):
         mailbox = yield self._get_or_create_mailbox(mailbox_name)
         message = SoledadMailAdaptor().get_msg_from_string(Message, raw_msg)
         message.get_wrapper().set_mbox_uuid(mailbox.uuid)
+
         yield message.get_wrapper().create(self.soledad)
 
         # add behavious from insert_mdoc_id from mail.py
-        mail = yield self._leap_message_to_leap_mail(message.get_wrapper().mdoc.doc_id, message, include_body=False)
+        mail = yield self._leap_message_to_leap_mail(message.get_wrapper().mdoc.doc_id, message, include_body=True)  # TODO test that asserts include_body
         defer.returnValue(mail)
 
     @defer.inlineCallbacks
@@ -200,7 +203,8 @@ class LeapMailStore(MailStore):
     @defer.inlineCallbacks
     def _leap_message_to_leap_mail(self, mail_id, message, include_body):
         if include_body:
-            body = (yield message.get_wrapper().get_body(self.soledad)).raw
+            # TODO use body from message if available
+            body = yield self._raw_message_body(message)
         else:
             body = None
 
@@ -211,6 +215,12 @@ class LeapMailStore(MailStore):
         mail = LeapMail(mail_id, mbox_name, message.get_wrapper().hdoc.headers, set(message.get_tags()), set(message.get_flags()), body=body)   # TODO assert flags are passed on
 
         defer.returnValue(mail)
+
+    @defer.inlineCallbacks
+    def _raw_message_body(self, message):
+        content_doc = (yield message.get_wrapper().get_body(self.soledad))
+        parser = BodyParser(content_doc.raw, content_type=content_doc.content_type, content_transfer_encoding=content_doc.content_transfer_encoding)
+        defer.returnValue(parser.parsed_content())
 
     @defer.inlineCallbacks
     def _mailbox_name_from_uuid(self, uuid):

@@ -13,17 +13,39 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from email.parser import Parser
+from leap.mail import walk
+from leap.mail.utils import first
+from leap.mail.walk import get_hash, get_payloads
 
 from test.support.integration import SoledadTestBase, MailBuilder
 from twisted.internet import defer
 
 
+def get_raw_docs(msg, parts):
+    return (
+        {
+            "type": "cnt",  # type content they'll be
+            "raw": payload,
+            "phash": get_hash(payload),
+            "content-disposition": first(headers.get(
+                'content-disposition', '').split(';')),
+            "content-type": headers.get(
+                'content-type', ''),
+            "content-transfer-encoding": headers.get(
+                'content-transfer-encoding', '')
+        } for payload, headers in get_payloads(msg)
+        if not isinstance(payload, list))
+
+walk.get_raw_docs = get_raw_docs
+
 class SearchTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_that_tags_returns_all_tags(self):
-        input_mail = MailBuilder().with_tags(['important']).build_input_mail()
-        yield self.add_mail_to_inbox(input_mail)
+        input_mail = MailBuilder().build_input_mail()
+        mail = yield self.add_mail_to_inbox(input_mail)
+        yield self.mail_service.update_tags(mail.ident, ['important'])
 
         all_tags = yield self.get_tags()
 
@@ -36,8 +58,9 @@ class SearchTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_that_tags_are_filtered_by_query(self):
-        input_mail = MailBuilder().with_tags(['ateu', 'catoa', 'luat', 'zuado']).build_input_mail()
-        yield self.add_mail_to_inbox(input_mail)
+        input_mail = MailBuilder().build_input_mail()
+        mail = yield self.add_mail_to_inbox(input_mail)
+        yield self.mail_service.update_tags(mail.ident, ['ateu', 'catoa', 'luat', 'zuado'])
 
         all_tags = yield self.get_tags(q=["at"], skipDefaultTags=["true"])
 
@@ -49,8 +72,9 @@ class SearchTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_tags_with_multiple_words_are_searchable(self):
-        input_mail = MailBuilder().with_tags(['one tag four words']).build_input_mail()
-        yield self.add_mail_to_inbox(input_mail)
+        input_mail = MailBuilder().build_input_mail()
+        mail = yield self.add_mail_to_inbox(input_mail)
+        yield self.mail_service.update_tags(mail.ident, ['one tag four words'])
 
         first_page = yield self.get_mails_by_tag('"one tag four words"', page=1, window=1)
 
@@ -58,8 +82,9 @@ class SearchTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_that_default_tags_are_ignorable(self):
-        input_mail = MailBuilder().with_tags(['sometag']).build_input_mail()
-        yield self.add_mail_to_inbox(input_mail)
+        input_mail = MailBuilder().build_input_mail()
+        mail = yield self.add_mail_to_inbox(input_mail)
+        yield self.mail_service.update_tags(mail.ident, ['sometag'])
 
         all_tags = yield self.get_tags(skipDefaultTags=["true"])
 
@@ -96,13 +121,13 @@ class SearchTest(SoledadTestBase):
     def test_search_mails_with_multiple_pages(self):
         input_mail = MailBuilder().build_input_mail()
         input_mail2 = MailBuilder().build_input_mail()
-        yield self.add_mail_to_inbox(input_mail)
-        yield self.add_mail_to_inbox(input_mail2)
+        mail1 = yield self.add_mail_to_inbox(input_mail)
+        mail2 = yield self.add_mail_to_inbox(input_mail2)
 
         first_page = yield self.get_mails_by_tag('inbox', page=1, window=1)
         second_page = yield self.get_mails_by_tag('inbox', page=2, window=1)
 
-        idents = [input_mail.ident, input_mail2.ident]
+        idents = [mail1.ident, mail2.ident]
 
         self.assertIn(first_page[0].ident, idents)
         self.assertIn(second_page[0].ident, idents)
@@ -110,9 +135,9 @@ class SearchTest(SoledadTestBase):
     @defer.inlineCallbacks
     def test_page_zero_fetches_first_page(self):
         input_mail = MailBuilder().build_input_mail()
-        yield self.add_mail_to_inbox(input_mail)
+        mail = yield self.add_mail_to_inbox(input_mail)
         page = yield self.get_mails_by_tag('inbox', page=0, window=1)
-        self.assertEqual(page[0].ident, input_mail.ident)
+        self.assertEqual(page[0].ident, mail.ident)
 
     def get_count(self, tags_count, mailbox):
         for tag in tags_count:
@@ -124,19 +149,20 @@ class SearchTest(SoledadTestBase):
         input_mail = MailBuilder().with_date('2014-10-15T15:15').build_input_mail()
         input_mail2 = MailBuilder().with_date('2014-10-15T15:16').build_input_mail()
 
-        yield self.add_mail_to_inbox(input_mail)
-        yield self.add_mail_to_inbox(input_mail2)
+        mail1 = yield self.add_mail_to_inbox(input_mail)
+        mail2 = yield self.add_mail_to_inbox(input_mail2)
 
         results = yield self.get_mails_by_tag('inbox')
-        self.assertEqual(results[0].ident, input_mail2.ident)
-        self.assertEqual(results[1].ident, input_mail.ident)
+        self.assertEqual(results[0].ident, mail2.ident)
+        self.assertEqual(results[1].ident, mail1.ident)
 
     @defer.inlineCallbacks
     def test_search_base64_body(self):
         body = u'bl\xe1'
         input_mail = MailBuilder().with_body(body.encode('utf-8')).build_input_mail()
-        yield self.add_mail_to_inbox(input_mail)
+
+        mail = yield self.add_mail_to_inbox(input_mail)
         results = yield self.search(body)
 
         self.assertGreater(len(results), 0, 'No results returned from search')
-        self.assertEquals(results[0].ident, input_mail.ident)
+        self.assertEquals(results[0].ident, mail.ident)

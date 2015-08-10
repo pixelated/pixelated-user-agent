@@ -137,7 +137,7 @@ class SearchEngine(object):
             'body': unicode(mdict['textPlainBody'] if 'textPlainBody' in mdict else mdict['body']),
             'ident': unicode(mdict['ident']),
             'flags': unicode(','.join(unique(mail.flags))),
-            'raw': unicode(mail.raw.decode('utf-8'))
+            'raw': unicode(mail.raw)
         }
 
         writer.update_document(**index_data)

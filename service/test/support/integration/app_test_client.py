@@ -159,7 +159,11 @@ class AppTestClient(object):
             input_mail = builder.build_input_mail()
             mail = yield self.mail_store.add_mail(mailbox, input_mail.raw)
             if tags:
-                mail.tags.add(tags)
+                mail.tags |= set(tags)
+            if flags:
+                for flag in flags:
+                    mail.flags.add(flag)
+            if tags or flags:
                 yield self.mail_store.update_mail(mail)
             mails.append(mail)
 
