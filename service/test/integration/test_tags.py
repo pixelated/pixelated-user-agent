@@ -28,8 +28,8 @@ class TagsTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_add_tag_to_an_inbox_mail_and_query(self):
-        mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        yield self.add_mail_to_inbox(mail)
+        input_mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
+        mail = yield self.add_mail_to_inbox(input_mail)
 
         yield self.post_tags(mail.ident, self._tags_json(['IMPORTANT']))
 
@@ -41,14 +41,14 @@ class TagsTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_use_old_casing_when_same_tag_with_different_casing_is_posted(self):
-        mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        yield self.add_mail_to_inbox(mail)
+        input_mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
+        mail = yield self.add_mail_to_inbox(input_mail)
         yield self.post_tags(mail.ident, self._tags_json(['ImPoRtAnT']))
         mails = yield self.get_mails_by_tag('ImPoRtAnT')
         self.assertEquals({'ImPoRtAnT'}, set(mails[0].tags))
 
-        another_mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        yield self.add_mail_to_inbox(another_mail)
+        another_input_mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
+        another_mail = yield self.add_mail_to_inbox(another_input_mail)
         yield self.post_tags(another_mail.ident, self._tags_json(['IMPORTANT']))
         mails = yield self.get_mails_by_tag('IMPORTANT')
         self.assertEquals(0, len(mails))
@@ -59,8 +59,8 @@ class TagsTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_tags_are_case_sensitive(self):
-        mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        yield self.add_mail_to_inbox(mail)
+        input_mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
+        mail = yield self.add_mail_to_inbox(input_mail)
 
         yield self.post_tags(mail.ident, self._tags_json(['ImPoRtAnT']))
 
@@ -75,8 +75,8 @@ class TagsTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_empty_tags_are_not_allowed(self):
-        mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        yield self.add_mail_to_inbox(mail)
+        input_mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
+        mail = yield self.add_mail_to_inbox(input_mail)
 
         yield self.post_tags(mail.ident, self._tags_json(['tag1', '   ']))
 
@@ -86,12 +86,12 @@ class TagsTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_addition_of_reserved_tags_is_not_allowed(self):
-        mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
-        yield self.add_mail_to_inbox(mail)
+        input_mail = MailBuilder().with_subject('Mail with tags').build_input_mail()
+        mail = yield self.add_mail_to_inbox(input_mail)
 
         for tag in SPECIAL_TAGS:
             response = yield self.post_tags(mail.ident, self._tags_json([tag.name.upper()]))
             self.assertEquals("None of the following words can be used as tags: %s" % tag.name, response)
 
-        mail = yield (yield self.mailboxes.inbox).mail(mail.ident)
+        mail = yield self.mail_store.get_mail(mail.ident)
         self.assertNotIn('drafts', mail.tags)
