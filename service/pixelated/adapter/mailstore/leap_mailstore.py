@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from email.header import decode_header
 from uuid import uuid4
 from leap.mail.adaptors.soledad import SoledadMailAdaptor
 from twisted.internet import defer
@@ -64,9 +65,13 @@ class LeapMail(Mail):
 
     @property
     def raw(self):
-        result = ''
+        result = u''
         for k, v in self._headers.items():
-            result += '%s: %s\n' % (k, v)
+            content, encoding = decode_header(v)[0]
+            if encoding:
+                result += '%s: %s\n' % (k, unicode(content, encoding=encoding))
+            else:
+                result += '%s: %s\n' % (k, v)
         result += '\n'
 
         if self._body:

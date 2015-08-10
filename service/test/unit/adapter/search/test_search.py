@@ -16,6 +16,7 @@
 
 
 import unittest
+from pixelated.adapter.mailstore.leap_mailstore import LeapMail
 from pixelated.adapter.search import SearchEngine
 from tempdir import TempDir
 from test.support import test_helper
@@ -56,7 +57,7 @@ class SearchEngineTest(unittest.TestCase):
         }
 
         # when
-        se.index_mail(test_helper.pixelated_mail(extra_headers=headers, chash='mailid'))
+        se.index_mail(LeapMail('mailid', 'INBOX', headers=headers))   #  test_helper.pixelated_mail(extra_headers=headers, chash='mailid'))
 
         result = se.search('folker')
 

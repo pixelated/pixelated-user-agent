@@ -386,6 +386,8 @@ class TestLeapMailStore(TestCase):
         self._mock_create_doc(hdoc_id, wrapper.hdoc)
         self._mock_create_doc(cdoc_id, wrapper.cdocs[1])
 
+        self._mock_soledad_doc(cdoc_id, wrapper.cdocs[1])
+
         return msg
 
     def _convert_mail_to_leap_message(self, mail, mbox_uuid=None):

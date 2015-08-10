@@ -15,12 +15,14 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import time
+from unittest import skip
 
 from test.support.integration import SoledadTestBase, MailBuilder
 from leap.mail.adaptors.soledad import MailboxWrapper
 from twisted.internet import defer
 
 
+@skip('No longer needed')
 class SoledadQuerierTest(SoledadTestBase):
 
     def setUp(self):
