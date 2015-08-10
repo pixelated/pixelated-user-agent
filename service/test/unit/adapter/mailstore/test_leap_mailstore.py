@@ -73,7 +73,8 @@ class TestLeapMail(TestCase):
 
             },
             'ident': 'doc id',
-            'tags': ('foo', 'bar'),
+            'tags': {'foo', 'bar'},
+            'status': [],
             'body': None
         }
 

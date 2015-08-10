@@ -16,10 +16,11 @@
 from twisted.trial import unittest
 from pixelated.adapter.mailstore.leap_mailstore import LeapMail
 from pixelated.adapter.model.mail import InputMail, PixelatedMail
+from pixelated.adapter.model.status import Status
 
 from pixelated.adapter.services.mail_service import MailService
 from test.support.test_helper import mail_dict, leap_mail
-from mockito import mock, unstub, when, verify, verifyNoMoreInteractions, any
+from mockito import mock, unstub, when, verify, verifyNoMoreInteractions, any, any as ANY
 from twisted.internet import defer
 
 
@@ -56,15 +57,20 @@ class TestMailService(unittest.TestCase):
 
     @defer.inlineCallbacks
     def test_send_mail_removes_draft(self):
-        when(InputMail).from_dict(any()).thenReturn('inputmail')
+        mail = mock()
+        when(mail).raw = 'raw mail'
+        when(InputMail).from_dict(any()).thenReturn(mail)
+        when(self.mail_store).delete_mail('12').thenReturn(defer.succeed(None))
+        when(self.mail_store).add_mail('SENT', ANY()).thenReturn(defer.succeed(None))
 
         deferred_success = defer.succeed(None)
         when(self.mail_sender).sendmail(any()).thenReturn(deferred_success)
 
         yield self.mail_service.send_mail({'ident': '12'})
 
-        verify(self.mail_sender).sendmail("inputmail")
-        verify(self.drafts).remove(any())
+        verify(self.mail_sender).sendmail(mail)
+        verify(self.mail_store).add_mail('SENT', 'raw mail')
+        verify(self.mail_store).delete_mail('12')
 
     @defer.inlineCallbacks
     def test_send_mail_does_not_delete_draft_on_error(self):
@@ -81,11 +87,12 @@ class TestMailService(unittest.TestCase):
             verifyNoMoreInteractions(self.drafts)
 
     def test_mark_as_read(self):
-        mail = mock()
-        when(self.mail_service).mail(any()).thenReturn(mail)
+        mail = LeapMail('id', 'INBOX')
+        when(self.mail_store).get_mail(any()).thenReturn(mail)
         self.mail_service.mark_as_read(1)
 
-        verify(mail).mark_as_read()
+        verify(self.mail_store).update_mail(mail)
+        self.assertIn(Status.SEEN, mail.flags)
 
     def test_delete_mail(self):
         mail_to_delete = LeapMail(1, 'INBOX')
