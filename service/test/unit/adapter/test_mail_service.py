@@ -20,7 +20,7 @@ from pixelated.adapter.model.status import Status
 
 from pixelated.adapter.services.mail_service import MailService
 from test.support.test_helper import mail_dict, leap_mail
-from mockito import mock, unstub, when, verify, verifyNoMoreInteractions, any, any as ANY
+from mockito import mock, unstub, when, verify, verifyNoMoreInteractions, any as ANY
 from twisted.internet import defer
 
 
@@ -44,8 +44,8 @@ class TestMailService(unittest.TestCase):
         unstub()
 
     def test_send_mail(self):
-        when(InputMail).from_dict(any()).thenReturn('inputmail')
-        when(self.mail_sender).sendmail(any()).thenReturn(defer.Deferred())
+        when(InputMail).from_dict(ANY()).thenReturn('inputmail')
+        when(self.mail_sender).sendmail(ANY()).thenReturn(defer.Deferred())
 
         sent_deferred = self.mail_service.send_mail(mail_dict())
 
@@ -59,12 +59,12 @@ class TestMailService(unittest.TestCase):
     def test_send_mail_removes_draft(self):
         mail = mock()
         when(mail).raw = 'raw mail'
-        when(InputMail).from_dict(any()).thenReturn(mail)
+        when(InputMail).from_dict(ANY()).thenReturn(mail)
         when(self.mail_store).delete_mail('12').thenReturn(defer.succeed(None))
         when(self.mail_store).add_mail('SENT', ANY()).thenReturn(defer.succeed(None))
 
         deferred_success = defer.succeed(None)
-        when(self.mail_sender).sendmail(any()).thenReturn(deferred_success)
+        when(self.mail_sender).sendmail(ANY()).thenReturn(deferred_success)
 
         yield self.mail_service.send_mail({'ident': '12'})
 
@@ -74,10 +74,10 @@ class TestMailService(unittest.TestCase):
 
     @defer.inlineCallbacks
     def test_send_mail_does_not_delete_draft_on_error(self):
-        when(InputMail).from_dict(any()).thenReturn('inputmail')
+        when(InputMail).from_dict(ANY()).thenReturn('inputmail')
 
         deferred_failure = defer.fail(Exception("Assume sending mail failed"))
-        when(self.mail_sender).sendmail(any()).thenReturn(deferred_failure)
+        when(self.mail_sender).sendmail(ANY()).thenReturn(deferred_failure)
 
         try:
             yield self.mail_service.send_mail({'ident': '12'})
@@ -86,19 +86,21 @@ class TestMailService(unittest.TestCase):
             verify(self.mail_sender).sendmail("inputmail")
             verifyNoMoreInteractions(self.drafts)
 
+    @defer.inlineCallbacks
     def test_mark_as_read(self):
         mail = LeapMail('id', 'INBOX')
-        when(self.mail_store).get_mail(any()).thenReturn(mail)
-        self.mail_service.mark_as_read(1)
+        when(self.mail_store).get_mail(ANY(), include_body=True).thenReturn(mail)
+        yield self.mail_service.mark_as_read(1)
 
-        verify(self.mail_store).update_mail(mail)
         self.assertIn(Status.SEEN, mail.flags)
+        verify(self.mail_store).update_mail(mail)
 
+    @defer.inlineCallbacks
     def test_delete_mail(self):
         mail_to_delete = LeapMail(1, 'INBOX')
-        when(self.mail_store).get_mail(1).thenReturn(defer.succeed(mail_to_delete))
+        when(self.mail_store).get_mail(1, include_body=True).thenReturn(defer.succeed(mail_to_delete))
 
-        self.mail_service.delete_mail(1)
+        yield self.mail_service.delete_mail(1)
 
         verify(self.mail_store).move_mail_to_mailbox(1, 'TRASH')
 

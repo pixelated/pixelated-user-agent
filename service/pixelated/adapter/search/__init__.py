@@ -129,9 +129,9 @@ class SearchEngine(object):
             'sender': self._unicode_header_field(header.get('from', '')),
             'subject': self._unicode_header_field(header.get('subject', '')),
             'date': milliseconds(header.get('date', '')),
-            'to': u','.join([h for h in header.get('to', [''])]),
-            'cc': u','.join([h for h in header.get('cc', [''])]),
-            'bcc': u','.join([h for h in header.get('bcc', [''])]),
+            'to': self._format_recipient(header, 'to'),
+            'cc': self._format_recipient(header, 'cc'),
+            'bcc': self._format_recipient(header, 'bcc'),
             'tag': u','.join(unique(tags)),
             'bounced': u','.join(bounced),
             'body': unicode(mdict['textPlainBody'] if 'textPlainBody' in mdict else mdict['body']),
@@ -141,6 +141,10 @@ class SearchEngine(object):
         }
 
         writer.update_document(**index_data)
+
+    def _format_recipient(self, headers, name):
+        list = headers.get(name, [''])
+        return u','.join(list) if list else u''
 
     def _unicode_header_field(self, field_value):
         if not field_value:

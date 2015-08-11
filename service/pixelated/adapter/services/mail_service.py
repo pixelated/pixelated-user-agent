@@ -71,7 +71,7 @@ class MailService(object):
         return [_use_current_casing(new_tag.lower()) if new_tag.lower() in current_tags_lower else new_tag for new_tag in new_tags]
 
     def mail(self, mail_id):
-        return self.mail_store.get_mail(mail_id)
+        return self.mail_store.get_mail(mail_id, include_body=True)
 
     def attachment(self, attachment_id, encoding):
         return self.querier.attachment(attachment_id, encoding)
@@ -115,6 +115,7 @@ class MailService(object):
     @defer.inlineCallbacks
     def delete_mail(self, mail_id):
         mail = yield self.mail(mail_id)
+        print 'go mail %s' % mail
         if mail.mailbox_name.upper() == u'TRASH':
             yield self.mail_store.delete_mail(mail_id)
         else:

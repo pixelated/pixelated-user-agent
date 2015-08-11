@@ -75,7 +75,13 @@ class TestLeapMail(TestCase):
             'ident': 'doc id',
             'tags': {'foo', 'bar'},
             'status': [],
-            'body': None
+            'body': None,
+            'textPlainBody': None,
+            'replying': {'all': {'cc-field': [],
+                                 'to-field': ['receiver@example.test',
+                                              'receiver2@other.test',
+                                              'test@example.test']},
+                         'single': 'test@example.test'},
         }
 
         self.assertEqual(expected, mail.as_dict())
@@ -94,6 +100,13 @@ class TestLeapMail(TestCase):
 
         expected_raw = 'To: receiver@example.test\nFrom: test@example.test\nSubject: A test Mail\n\nsome body content'
         self.assertEqual(expected_raw, result)
+
+    def test_headers_none_recipients_are_converted_to_empty_array(self):
+        mail = LeapMail('id', 'INBOX', {'To':None, 'Cc': None, 'Bcc': None})
+
+        self.assertEquals([], mail.headers['To'])
+        self.assertEquals([], mail.headers['Cc'])
+        self.assertEquals([], mail.headers['Bcc'])
 
 
 class TestLeapMailStore(TestCase):

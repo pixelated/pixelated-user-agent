@@ -21,7 +21,7 @@ from pixelated.adapter.mailstore.body_parser import BodyParser
 from pixelated.adapter.mailstore.mailstore import MailStore, underscore_uuid
 
 from leap.mail.mail import Message
-from pixelated.adapter.model.mail import Mail
+from pixelated.adapter.model.mail import Mail, InputMail
 
 
 class LeapMail(Mail):
@@ -39,7 +39,7 @@ class LeapMail(Mail):
         cpy = dict(self._headers)
 
         for name in set(self._headers.keys()).intersection(['To', 'Cc', 'Bcc']):
-            cpy[name] = self._headers[name].split(',') if self._headers[name] else None
+            cpy[name] = self._headers[name].split(',') if self._headers[name] else []
 
         return cpy
 
@@ -85,8 +85,35 @@ class LeapMail(Mail):
             'ident': self._mail_id,
             'tags': self.tags,
             'status': list(self.status),
-            'body': self._body
+            'body': self._body,
+            'textPlainBody': self._body,
+            'replying': self._replying_dict(),
+            'mailbox': self._mailbox_name.lower()
         }
+
+    def _replying_dict(self):
+        result = {'single': None, 'all': {'to-field': [], 'cc-field': []}}
+
+        sender_mail = self.headers.get('Reply-To', self.headers.get('From'))
+        # Issue #215: Fix for existing mails without any from address.
+        if sender_mail is None:
+            sender_mail = InputMail.FROM_EMAIL_ADDRESS
+
+        recipients = self._reply_recipient('To')
+        recipients.append(sender_mail)
+        ccs = self._reply_recipient('Cc')
+
+        result['single'] = sender_mail
+        result['all']['to-field'] = recipients
+        result['all']['cc-field'] = ccs
+        return result
+
+    def _reply_recipient(self, kind):
+        recipients = self.headers.get(kind, [])
+        if not recipients:
+            recipients = []
+
+        return [recipient for recipient in recipients if recipient != InputMail.FROM_EMAIL_ADDRESS]
 
 
 class LeapMailStore(MailStore):
