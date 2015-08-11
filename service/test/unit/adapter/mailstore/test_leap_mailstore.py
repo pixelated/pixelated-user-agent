@@ -45,17 +45,17 @@ class TestLeapMail(TestCase):
     def test_email_addresses_in_to_are_split_into_a_list(self):
         mail = LeapMail('', 'INBOX', {'To': 'first@example.test,second@example.test'})
 
-        self.assertEqual(['first@example.test', 'second@example.test'],mail.headers['To'])
+        self.assertEqual(['first@example.test', 'second@example.test'], mail.headers['To'])
 
     def test_email_addresses_in_cc_are_split_into_a_list(self):
         mail = LeapMail('', 'INBOX', {'Cc': 'first@example.test,second@example.test'})
 
-        self.assertEqual(['first@example.test', 'second@example.test'],mail.headers['Cc'])
+        self.assertEqual(['first@example.test', 'second@example.test'], mail.headers['Cc'])
 
     def test_email_addresses_in_bcc_are_split_into_a_list(self):
         mail = LeapMail('', 'INBOX', {'Bcc': 'first@example.test,second@example.test'})
 
-        self.assertEqual(['first@example.test', 'second@example.test'],mail.headers['Bcc'])
+        self.assertEqual(['first@example.test', 'second@example.test'], mail.headers['Bcc'])
 
     def test_email_addresses_might_be_empty_array(self):
         mail = LeapMail('', 'INBOX', {'Cc': None})
@@ -103,7 +103,7 @@ class TestLeapMail(TestCase):
         self.assertEqual(expected_raw, result)
 
     def test_headers_none_recipients_are_converted_to_empty_array(self):
-        mail = LeapMail('id', 'INBOX', {'To':None, 'Cc': None, 'Bcc': None})
+        mail = LeapMail('id', 'INBOX', {'To': None, 'Cc': None, 'Bcc': None})
 
         self.assertEquals([], mail.headers['To'])
         self.assertEquals([], mail.headers['Cc'])

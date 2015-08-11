@@ -27,7 +27,7 @@ class BodyParser(object):
     def parsed_content(self):
         parser = Parser()
 
-        text=''
+        text = ''
         text += 'Content-Type: %s\n' % self._content_type
         if self._content_transfer_encoding is not None:
             text += 'Content-Transfer-Encoding: %s\n' % self._content_transfer_encoding

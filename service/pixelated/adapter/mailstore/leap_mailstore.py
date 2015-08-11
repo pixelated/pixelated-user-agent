@@ -32,7 +32,7 @@ class LeapMail(Mail):
         self._headers = headers if headers is not None else {}
         self._body = body
         self.tags = set(tags)   # TODO test that asserts copy
-        self._flags = set(flags) # TODO test that asserts copy
+        self._flags = set(flags)  # TODO test that asserts copy
 
     @property
     def headers(self):
@@ -149,7 +149,7 @@ class LeapMailStore(MailStore):
         message = yield self._fetch_msg_from_soledad(mail.mail_id)
         message.get_wrapper().set_tags(tuple(mail.tags))
         message.get_wrapper().set_flags(tuple(mail.flags))
-        yield self._update_mail(message) # TODO assert this is yielded (otherwise asynchronous)
+        yield self._update_mail(message)  # TODO assert this is yielded (otherwise asynchronous)
 
     @defer.inlineCallbacks
     def all_mails(self):

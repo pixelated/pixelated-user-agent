@@ -57,7 +57,7 @@ class SearchEngineTest(unittest.TestCase):
         }
 
         # when
-        se.index_mail(LeapMail('mailid', 'INBOX', headers=headers))   #  test_helper.pixelated_mail(extra_headers=headers, chash='mailid'))
+        se.index_mail(LeapMail('mailid', 'INBOX', headers=headers))   # test_helper.pixelated_mail(extra_headers=headers, chash='mailid'))
 
         result = se.search('folker')
 

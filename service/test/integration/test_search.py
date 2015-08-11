@@ -13,31 +13,10 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from email.parser import Parser
-from leap.mail import walk
-from leap.mail.utils import first
-from leap.mail.walk import get_hash, get_payloads
 
 from test.support.integration import SoledadTestBase, MailBuilder
 from twisted.internet import defer
 
-
-def get_raw_docs(msg, parts):
-    return (
-        {
-            "type": "cnt",  # type content they'll be
-            "raw": payload,
-            "phash": get_hash(payload),
-            "content-disposition": first(headers.get(
-                'content-disposition', '').split(';')),
-            "content-type": headers.get(
-                'content-type', ''),
-            "content-transfer-encoding": headers.get(
-                'content-transfer-encoding', '')
-        } for payload, headers in get_payloads(msg)
-        if not isinstance(payload, list))
-
-walk.get_raw_docs = get_raw_docs
 
 class SearchTest(SoledadTestBase):
 
