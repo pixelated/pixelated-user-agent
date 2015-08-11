@@ -13,11 +13,16 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from uuid import uuid4
 from test.support.integration import MailBuilder
 from behave import given
 
 
 @given('I have a mail in my inbox')
 def add_mail_impl(context):
-    input_mail = MailBuilder().build_input_mail()
+    subject = 'Hi! This the subject %s' % uuid4()
+
+    input_mail = MailBuilder().with_subject(subject).build_input_mail()
     context.client.add_mail_to_inbox(input_mail)
+
+    context.last_subject = subject

@@ -57,10 +57,10 @@ class TestLeapMail(TestCase):
 
         self.assertEqual(['first@example.test', 'second@example.test'],mail.headers['Bcc'])
 
-    def test_email_addresses_might_be_none(self):
+    def test_email_addresses_might_be_empty_array(self):
         mail = LeapMail('', 'INBOX', {'Cc': None})
 
-        self.assertEqual(None, mail.headers['Cc'])
+        self.assertEqual([], mail.headers['Cc'])
 
     def test_as_dict(self):
         mail = LeapMail('doc id', 'INBOX', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test,receiver2@other.test'}, ('foo', 'bar'))
@@ -73,6 +73,7 @@ class TestLeapMail(TestCase):
 
             },
             'ident': 'doc id',
+            'mailbox': 'inbox',
             'tags': {'foo', 'bar'},
             'status': [],
             'body': None,

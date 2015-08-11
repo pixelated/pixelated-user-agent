@@ -120,6 +120,10 @@ def click_button(context, title, element='button'):
     button.click()
 
 
+def mail_list_with_subject_exists(context, subject):
+    return find_element_by_xpath(context, "//*[@class='subject-and-tags' and contains(.,'%s')]" % subject)
+
+
 def mail_subject(context):
     e = find_element_by_css_selector(context, '#mail-view .subject')
     return e.text

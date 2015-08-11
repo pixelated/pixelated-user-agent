@@ -72,7 +72,7 @@ def impl(context):
 
 @then('the deleted mail is there')
 def impl(context):
-    find_current_mail(context)
+    mail_list_with_subject_exists(context, context.last_subject)
 
 
 @given('I have mails')
