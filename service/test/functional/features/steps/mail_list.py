@@ -102,7 +102,8 @@ def impl(context):
     context.current_mail_id = last_email().get_attribute('id')
     last_email().find_element_by_tag_name('input').click()
     find_element_by_id(context, 'delete-selected').click()
-    assert context.current_mail_id != find_elements_by_css_selector(context, '#mail-list li span a')[0]
+    spend_time_in_reactor()
+    assert 0 == len(context.browser.find_element_by_id('mail-list').find_elements_by_tag_name('li'))
 
 
 @when('I check all emails')
