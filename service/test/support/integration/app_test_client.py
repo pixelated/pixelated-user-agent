@@ -107,10 +107,10 @@ class AppTestClient(object):
         d.addCallback(get_request_written_data)
         return d, request
 
-    def listenTCP(self, port=4567, host='0.0.0.0'):
+    def listenTCP(self, port=4567, host='127.0.0.1'):
         reactor.listenTCP(port, Site(self.resource), interface=host)
 
-    def run_on_a_thread(self, logfile='/tmp/app_test_client.log', port=4567, host='0.0.0.0'):
+    def run_on_a_thread(self, logfile='/tmp/app_test_client.log', port=4567, host='127.0.0.1'):
         def _start():
             self.listenTCP(port, host)
             reactor.run()
