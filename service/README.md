@@ -60,3 +60,13 @@ pixelated-user-agent
 ```
 pixelated-user-agent --config=<config_file_path>
 ```
+
+Run a single unit or integration test
+```
+trial
+```
+Run a single functional test
+
+```
+behave test/functional/features/name_of_feature.feature
+```
