@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from email.header import decode_header
+import re
 from uuid import uuid4
 from leap.mail.adaptors.soledad import SoledadMailAdaptor
 from twisted.internet import defer
@@ -24,15 +25,24 @@ from leap.mail.mail import Message
 from pixelated.adapter.model.mail import Mail, InputMail
 
 
+class AttachmentInfo(object):
+    def __init__(self, ident, name, encoding, headers):
+        self.ident = ident
+        self.name = name
+        self.encoding = encoding
+        self.headers = headers
+
+
 class LeapMail(Mail):
 
-    def __init__(self, mail_id, mailbox_name, headers=None, tags=set(), flags=set(), body=None):
+    def __init__(self, mail_id, mailbox_name, headers=None, tags=set(), flags=set(), body=None, attachments=[]):
         self._mail_id = mail_id
         self._mailbox_name = mailbox_name
         self._headers = headers if headers is not None else {}
         self._body = body
         self.tags = set(tags)   # TODO test that asserts copy
         self._flags = set(flags)  # TODO test that asserts copy
+        self._attachments = attachments
 
     @property
     def headers(self):
@@ -88,7 +98,8 @@ class LeapMail(Mail):
             'body': self._body,
             'textPlainBody': self._body,
             'replying': self._replying_dict(),
-            'mailbox': self._mailbox_name.lower()
+            'mailbox': self._mailbox_name.lower(),
+            'attachments': [{'ident': attachment.ident, 'name': attachment.name, 'encoding': attachment.encoding, 'headers': attachment.headers} for attachment in self._attachments]
         }
 
     def _replying_dict(self):
@@ -114,6 +125,14 @@ class LeapMail(Mail):
             recipients = []
 
         return [recipient for recipient in recipients if recipient != InputMail.FROM_EMAIL_ADDRESS]
+
+
+def _extract_filename(content_disposition):
+    match = re.compile('.*name=\"(.*)\".*').search(content_disposition)
+    filename = ''
+    if match:
+        filename = match.group(1)
+    return filename
 
 
 class LeapMailStore(MailStore):
@@ -244,7 +263,7 @@ class LeapMailStore(MailStore):
         mbox_uuid = message.get_wrapper().fdoc.mbox_uuid
         mbox_name = yield self._mailbox_name_from_uuid(mbox_uuid)
 
-        mail = LeapMail(mail_id, mbox_name, message.get_wrapper().hdoc.headers, set(message.get_tags()), set(message.get_flags()), body=body)   # TODO assert flags are passed on
+        mail = LeapMail(mail_id, mbox_name, message.get_wrapper().hdoc.headers, set(message.get_tags()), set(message.get_flags()), body=body, attachments=self._extract_attachment_info_from(message))   # TODO assert flags are passed on
 
         defer.returnValue(mail)
 
@@ -276,6 +295,25 @@ class LeapMailStore(MailStore):
         gen, docs = yield self.soledad.get_all_docs()
         for doc in docs:
             print '\n%s\n' % doc
+
+    def _extract_attachment_info_from(self, message):
+        wrapper = message.get_wrapper()
+        part_maps = wrapper.hdoc.part_map
+
+        result = []
+
+        for nr, part_map in part_maps.items():
+            if 'headers' in part_map:
+                headers = {header[0]: header[1] for header in part_map['headers']}
+                phash = part_map['phash']
+                if 'Content-Disposition' in headers:
+                    disposition = headers['Content-Disposition']
+                    if 'attachment' in disposition:
+                        filename = _extract_filename(disposition)
+                        encoding = headers['Content-Transfer-Encoding']
+                        result.append(AttachmentInfo(phash, filename, encoding, headers))
+
+        return result
 
 
 def _is_empty_message(message):
