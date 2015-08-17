@@ -202,6 +202,32 @@ define(function() {
     getMailPartByContentType: function () { return; }
   };
 
+  var withAttachments = {
+    header: {
+      to:'jed_waelchi@cummerata.info',
+      from:'laurel@hamill.info',
+      subject:'Velit aut tempora animi ut nulla esse.',
+      date:'2014-06-04T14:41:13-03:00'
+    },
+    ident:1,
+    tags:['textplain'],
+    mailbox: ['inbox'],
+    status:[],
+    textPlainBody: 'Hello Everyone',
+    isSentMail: function() { return false; },
+    isDraftMail: function() { return false; },
+    replyToAddress: function() { return { to: ['laurel@hamill.info'], cc: [] }; },
+    replyToAllAddress: function() { return { to: ['laurel@hamill.info'], cc: [] }; },
+    isMailMultipartAlternative: function() { return false; },
+    availableBodyPartsContentType: function() { return []; },
+    getMailPartByContentType: function() { return; },
+    attachments: [{
+      ident: '912ec803b2ce49e4a541068d495ab570',
+      name: 'filename.txt',
+      encoding: 'base64'
+    }]
+  };
+
   var testData = {
     rawMail: {
       mail: rawMail,
@@ -215,7 +241,8 @@ define(function() {
     parsedMail: {
       simpleTextPlain: simpleTextPlainMail,
       html: htmlNoEncodingMail,
-      draft: draftMail
+      draft: draftMail,
+      withAttachments: withAttachments
     }
   };
 

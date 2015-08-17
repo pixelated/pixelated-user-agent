@@ -58,7 +58,7 @@ define(
         }
 
         var attachments = _.map(data.mail.attachments, function(a){
-            return { 'encoding': a.headers['Content-Transfer-Encoding'], 'name': a.name, 'ident': a.ident };
+            return { 'encoding': a.encoding, 'name': a.name, 'ident': a.ident };
         });
 
         this.$node.html(templates.mails.fullView({

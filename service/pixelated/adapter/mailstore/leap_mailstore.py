@@ -26,11 +26,10 @@ from pixelated.adapter.model.mail import Mail, InputMail
 
 
 class AttachmentInfo(object):
-    def __init__(self, ident, name, encoding, headers):
+    def __init__(self, ident, name, encoding):
         self.ident = ident
         self.name = name
         self.encoding = encoding
-        self.headers = headers
 
 
 class LeapMail(Mail):
@@ -99,7 +98,7 @@ class LeapMail(Mail):
             'textPlainBody': self._body,
             'replying': self._replying_dict(),
             'mailbox': self._mailbox_name.lower(),
-            'attachments': [{'ident': attachment.ident, 'name': attachment.name, 'encoding': attachment.encoding, 'headers': attachment.headers} for attachment in self._attachments]
+            'attachments': [{'ident': attachment.ident, 'name': attachment.name, 'encoding': attachment.encoding} for attachment in self._attachments]
         }
 
     def _replying_dict(self):
@@ -311,7 +310,7 @@ class LeapMailStore(MailStore):
                     if 'attachment' in disposition:
                         filename = _extract_filename(disposition)
                         encoding = headers['Content-Transfer-Encoding']
-                        result.append(AttachmentInfo(phash, filename, encoding, headers))
+                        result.append(AttachmentInfo(phash, filename, encoding))
 
         return result
 
