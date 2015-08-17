@@ -102,6 +102,8 @@ def impl(context):
     context.current_mail_id = last_email().get_attribute('id')
     last_email().find_element_by_tag_name('input').click()
     find_element_by_id(context, 'delete-selected').click()
+    wait_for_user_alert_to_appear_and_disapear(context) # Loading
+    wait_for_user_alert_to_disapear(context) # Success message
     spend_time_in_reactor()
     assert 0 == len(context.browser.find_element_by_id('mail-list').find_elements_by_tag_name('li'))
 

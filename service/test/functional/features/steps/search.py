@@ -23,6 +23,7 @@ from common import *
 def impl(context, search_term):
     search_field = find_element_by_css_selector(context, '#search-trigger input[type="search"]')
     search_field.send_keys(search_term)
+    sleep(5)
     search_field.send_keys(Keys.ENTER)
     sleep(1)
 

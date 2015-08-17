@@ -21,7 +21,8 @@ Feature: Checkboxes
 
   Scenario: User has a list of emails in each mailboxes that needs to be managed
     Given I have a mail in my inbox
-    When I mark the first unread email as read
+    When I select the tag 'inbox'
+      And I mark the first unread email as read
       And I delete the email
     When I select the tag 'trash'
     Then the deleted mail is there
