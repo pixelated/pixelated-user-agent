@@ -18,6 +18,7 @@ import uuid
 
 from crochet import setup, wait_for
 from leap.common.events.server import ensure_server
+from twisted.internet import defer
 from test.support.dispatcher.proxy import Proxy
 from test.support.integration import AppTestClient
 from selenium import webdriver
@@ -63,9 +64,21 @@ def after_step(context, step):
         context.browser.save_screenshot('failed ' + str(step.name) + '_' + id + ".png")
         save_source(context, 'failed ' + str(step.name) + '_' + id + ".html")
 
-
 def after_feature(context, feature):
     context.browser.quit()
+
+    cleanup_all_mails(context)
+    context.last_mail = None
+
+@wait_for(timeout=10.0)
+def cleanup_all_mails(context):
+    @defer.inlineCallbacks
+    def _delete_all_mails():
+        mails = yield context.client.mail_store.all_mails()
+        for mail in mails:
+            yield context.client.mail_store.delete_mail(mail.ident)
+
+    return _delete_all_mails()
 
 
 def save_source(context, filename='/tmp/source.html'):
