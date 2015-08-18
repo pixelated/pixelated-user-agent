@@ -64,11 +64,13 @@ def after_step(context, step):
         context.browser.save_screenshot('failed ' + str(step.name) + '_' + id + ".png")
         save_source(context, 'failed ' + str(step.name) + '_' + id + ".html")
 
+
 def after_feature(context, feature):
     context.browser.quit()
 
     cleanup_all_mails(context)
     context.last_mail = None
+
 
 @wait_for(timeout=10.0)
 def cleanup_all_mails(context):
