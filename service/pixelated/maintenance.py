@@ -153,7 +153,7 @@ def load_mails(args, mail_paths):
 def flush_to_soledad(args, finalize):
     leap_session, soledad = args
 
-    def after_sync():
+    def after_sync(_):
         finalize.callback((leap_session, soledad))
 
     d = soledad.sync()

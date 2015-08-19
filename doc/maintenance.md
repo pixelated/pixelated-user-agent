@@ -46,9 +46,9 @@ optional arguments:
 The commands you can run are:
 
 * reset - Use this to remove all mails from your account. Existing encryption keys like your GnuPG key is not affected
-* sync - Sync your soledad database
 * load-mails - Loads existing mails into your account
-* dump-soledad- Get a soledad database dump. Mostly for debugging use cases
+* dump-soledad - Get a soledad database dump. Mostly for debugging use cases
+* sync - Sync your soledad database
 
 Like with other such tools, to get detailed help for a single command, call it with the --help option.
 
