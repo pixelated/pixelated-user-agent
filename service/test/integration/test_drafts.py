@@ -77,11 +77,8 @@ class DraftsTest(SoledadTestBase):
     @defer.inlineCallbacks
     def test_put_creates_a_draft_if_it_does_not_exist(self):
         mail = MailBuilder().with_subject('A new draft').build_json()
-        print '\nAdding mail\n'
         yield self.put_mail(mail)[0]
-        print '\nAdded mail\n'
         mails = yield self.get_mails_by_tag('drafts')
-        print '\ngot mails by tag\n'
 
         self.assertEquals('A new draft', mails[0].subject)
 

@@ -115,7 +115,6 @@ class MailService(object):
     @defer.inlineCallbacks
     def delete_mail(self, mail_id):
         mail = yield self.mail(mail_id)
-        print 'go mail %s' % mail
         if mail.mailbox_name.upper() == u'TRASH':
             yield self.mail_store.delete_mail(mail_id)
         else:

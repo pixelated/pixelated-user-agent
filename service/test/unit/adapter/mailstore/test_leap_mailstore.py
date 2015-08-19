@@ -300,7 +300,6 @@ class TestLeapMailStore(TestCase):
         attachment = MIMEApplication('pretend to be binary attachment data')
         attachment.add_header('Content-Disposition', 'attachment', filename='filename.txt')
         input_mail.attach(attachment)
-        print input_mail.as_string()
         mocked_message = self._add_create_mail_mocks_to_soledad(input_mail)
         store = LeapMailStore(self.soledad)
 

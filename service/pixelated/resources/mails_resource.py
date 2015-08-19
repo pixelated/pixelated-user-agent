@@ -168,7 +168,6 @@ class MailsResource(Resource):
                     defer_response(self._draft_service.update_draft(draft_id, _mail))
             deferred_check.addCallback(return422otherwise)
         else:
-            print '\nCreating draft\n'
             defer_response(self._draft_service.create_draft(_mail))
 
         return server.NOT_DONE_YET
