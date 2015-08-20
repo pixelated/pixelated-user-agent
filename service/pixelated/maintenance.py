@@ -98,15 +98,16 @@ def add_command_callback(args, prepareDeferred, finalizeDeferred):
     return finalizeDeferred
 
 
+@defer.inlineCallbacks
 def delete_all_mails(args):
     leap_session, soledad = args
-    generation, docs = soledad.get_all_docs()
+    generation, docs = yield soledad.get_all_docs()
 
     for doc in docs:
         if doc.content.get('type', None) in ['head', 'cnt', 'flags']:
             soledad.delete_doc(doc)
 
-    return args
+    defer.returnValue(args)
 
 
 def is_keep_file(mail):
