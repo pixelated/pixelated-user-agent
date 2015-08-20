@@ -1,0 +1,10 @@
+--allow-external u1db  --allow-unverified u1db
+--allow-external dirspec  --allow-unverified dirspec
+-e 'git+https://github.com/pixelated-project/leap_pycommon.git@develop#egg=leap.common'
+-e 'git+https://github.com/pixelated-project/leap_auth.git#egg=leap.auth'
+-e 'git+https://github.com/pixelated-project/soledad.git@develop#egg=leap.soledad.common&subdirectory=common/'
+-e 'git+https://github.com/pixelated-project/soledad.git@develop#egg=leap.soledad.client&subdirectory=client/'
+-e 'git+https://github.com/pixelated-project/soledad.git@develop#egg=leap.soledad.server&subdirectory=server/'
+-e 'git+https://github.com/pixelated-project/keymanager.git@develop#egg=leap.keymanager'
+-e 'git+https://github.com/pixelated-project/leap_mail.git@develop#egg=leap.mail'
+

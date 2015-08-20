@@ -2,7 +2,7 @@ Source: pixelated-user-agent
 Maintainer: Pixelated Team <pixelated-team@thoughtworks.com>
 Section: python
 Priority: optional
-Build-Depends: python-setuptools (>= 0.6b3), python-all (>= 2.6.6-3), debhelper (>= 7.4.3), ruby-compass, nodejs
+Build-Depends: python-setuptools (>= 0.6b3), python-all (>= 2.6.6-3), debhelper (>= 7.4.3), ruby-compass, nodejs, nodejs-legacy, build-essential, libffi-dev, python-dev, pixpybuild
 Standards-Version: 3.9.1
 Homepage: http://pixelated-project.org
 Vcs-Git: https://github.com/pixelated-project/pixelated-user-agent.git
@@ -11,7 +11,7 @@ X-Python-Version: >= 2.7
 
 Package: pixelated-user-agent
 Architecture: all
-Depends: python (>= 2.7), python (<< 2.8), leap-keymanager, soledad-common, soledad-client, leap-mail, leap-auth, python-dirspec, python-u1db, python-whoosh (>=2.5.7), python-sqlcipher, python-twisted-web (>= 12.3.0), python-pyasn1, python-gnupg, python-requests (>= 2.0.0), python-twisted (>= 12.3.0)
+Depends: python (>= 2.7), python (<< 2.8), libffi5, python-gnupg
 Description: API to serve the pixelated front-end requests
  Pixelated User Agent Service
  ============================
