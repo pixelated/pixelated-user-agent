@@ -20,8 +20,8 @@ from funkload.FunkLoadTestCase import FunkLoadTestCase
 from test.support.integration import AppTestClient
 from test.support.dispatcher.proxy import Proxy
 from crochet import setup, wait_for
-setup()
 from leap.common.events.server import ensure_server
+setup()
 
 
 @wait_for(timeout=5.0)
