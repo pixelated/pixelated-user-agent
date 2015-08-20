@@ -14,22 +14,37 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
+import logging
 
 from funkload.FunkLoadTestCase import FunkLoadTestCase
 from test.support.integration import AppTestClient
+from test.support.dispatcher.proxy import Proxy
+from crochet import setup, wait_for
+setup()
+from leap.common.events.server import ensure_server
+
+
+@wait_for(timeout=5.0)
+def start_app_test_client(client):
+    ensure_server()
+    return client.start_client()
 
 
 class Contacts(FunkLoadTestCase):
 
     def setUpBench(self):
+        logging.disable('INFO')
         client = AppTestClient()
+        start_app_test_client(client)
+        client.listenTCP()
+        proxy = Proxy(proxy_port='8889', app_port='4567')
 
         # setup data
         client.add_multiple_to_mailbox(10, 'INBOX', to='to@inbox.com', cc='cc@inbox.com', bcc='bcc@inbox.com')
         client.add_multiple_to_mailbox(10, 'TRASH', to='to@trash.com', cc='cc@trash.com', bcc='bcc@trash.com')
         client.add_multiple_to_mailbox(10, 'DRAFTS', to='to@drafts.com', cc='cc@drafts.com', bcc='bcc@drafts.com')
 
-        self.call_to_terminate = client.run_on_a_thread(logfile='results/app.log')
+        self.call_to_terminate = proxy.run_on_a_thread()
 
     def tearDownBench(self):
         self.call_to_terminate()
