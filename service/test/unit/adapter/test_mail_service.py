@@ -66,11 +66,32 @@ class TestMailService(unittest.TestCase):
         deferred_success = defer.succeed(None)
         when(self.mail_sender).sendmail(ANY()).thenReturn(deferred_success)
 
+        sent_mail = LeapMail('id', 'INBOX')
+        add_mail_deferral = defer.succeed(sent_mail)
+        when(self.mail_store).add_mail('SENT', ANY()).thenReturn(add_mail_deferral)
+
         yield self.mail_service.send_mail({'ident': '12'})
 
         verify(self.mail_sender).sendmail(mail)
         verify(self.mail_store).add_mail('SENT', 'raw mail')
         verify(self.mail_store).delete_mail('12')
+
+    @defer.inlineCallbacks
+    def test_send_mail_marks_as_read(self):
+        mail = LeapMail('id', 'INBOX')
+        when(mail).raw = 'raw mail'
+        when(InputMail).from_dict(ANY()).thenReturn(mail)
+        when(self.mail_store).delete_mail('12').thenReturn(defer.succeed(None))
+        when(self.mail_sender).sendmail(ANY()).thenReturn(defer.succeed(None))
+
+        sent_mail = LeapMail('id', 'INBOX')
+        add_mail_deferral = defer.succeed(sent_mail)
+        when(self.mail_store).add_mail('SENT', ANY()).thenReturn(add_mail_deferral)
+
+        yield self.mail_service.send_mail({'ident': '12'})
+
+        self.assertIn(Status.SEEN, sent_mail.flags)
+        verify(self.mail_store).update_mail(sent_mail)
 
     @defer.inlineCallbacks
     def test_send_mail_does_not_delete_draft_on_error(self):
