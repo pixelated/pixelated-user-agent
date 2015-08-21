@@ -57,23 +57,19 @@ class TestMailService(unittest.TestCase):
 
     @defer.inlineCallbacks
     def test_send_mail_removes_draft(self):
-        mail = mock()
+        mail = LeapMail('id', 'INBOX')
         when(mail).raw = 'raw mail'
         when(InputMail).from_dict(ANY()).thenReturn(mail)
         when(self.mail_store).delete_mail('12').thenReturn(defer.succeed(None))
-        when(self.mail_store).add_mail('SENT', ANY()).thenReturn(defer.succeed(None))
+        when(self.mail_store).add_mail('SENT', ANY()).thenReturn(mail)
 
         deferred_success = defer.succeed(None)
         when(self.mail_sender).sendmail(ANY()).thenReturn(deferred_success)
 
-        sent_mail = LeapMail('id', 'INBOX')
-        add_mail_deferral = defer.succeed(sent_mail)
-        when(self.mail_store).add_mail('SENT', ANY()).thenReturn(add_mail_deferral)
-
         yield self.mail_service.send_mail({'ident': '12'})
 
         verify(self.mail_sender).sendmail(mail)
-        verify(self.mail_store).add_mail('SENT', 'raw mail')
+        verify(self.mail_store).add_mail('SENT', mail.raw)
         verify(self.mail_store).delete_mail('12')
 
     @defer.inlineCallbacks
