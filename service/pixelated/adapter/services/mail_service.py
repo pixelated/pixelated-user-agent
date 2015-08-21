@@ -98,6 +98,8 @@ class MailService(object):
         if last_draft_ident:
             yield self.mail_store.delete_mail(last_draft_ident)
         sent_mail = yield self.mail_store.add_mail('SENT', mail.raw)
+        sent_mail.flags.add(Status.SEEN)
+        yield self.mail_store.update_mail(sent_mail)
         defer.returnValue(sent_mail)
 
     @defer.inlineCallbacks
