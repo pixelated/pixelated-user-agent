@@ -18,7 +18,7 @@ DESTDIR=target
 
 compile:
 	npm install
-	node_modules/bower/bin/bower install
+	node_modules/bower/bin/bower --allow-root install
 	./go package
 
 clean:
