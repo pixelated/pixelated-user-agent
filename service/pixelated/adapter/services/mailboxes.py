@@ -38,7 +38,7 @@ class Mailboxes(object):
     @defer.inlineCallbacks
     def _index_mailboxes(self, mailboxes):
         for mailbox_name in mailboxes:
-            yield MailboxIndexerListener.listen(self.account, mailbox_name, self.querier)
+            yield MailboxIndexerListener.listen(self.account, mailbox_name, self.mail_store)
 
     @defer.inlineCallbacks
     def _create_or_get(self, mailbox_name):
@@ -50,7 +50,7 @@ class Mailboxes(object):
             except MailboxCollision:
                 pass
                 # It means that it is already created. FIXME Why list_all fails to tell?
-        yield MailboxIndexerListener.listen(self.account, mailbox_name, self.querier)
+        yield MailboxIndexerListener.listen(self.account, mailbox_name, self.mail_store)
         defer.returnValue(Mailbox.create(mailbox_name, self.querier, self.search_engine))
 
     @property
