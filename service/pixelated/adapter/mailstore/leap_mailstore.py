@@ -298,19 +298,23 @@ class LeapMailStore(MailStore):
     def _extract_attachment_info_from(self, message):
         wrapper = message.get_wrapper()
         part_maps = wrapper.hdoc.part_map
+        return self._extract_part_map(part_maps)
 
+    def _extract_part_map(self, part_maps):
         result = []
 
         for nr, part_map in part_maps.items():
-            if 'headers' in part_map:
+            if 'headers' in part_map and 'phash' in part_map:
                 headers = {header[0]: header[1] for header in part_map['headers']}
                 phash = part_map['phash']
                 if 'Content-Disposition' in headers:
                     disposition = headers['Content-Disposition']
                     if 'attachment' in disposition:
                         filename = _extract_filename(disposition)
-                        encoding = headers['Content-Transfer-Encoding']
+                        encoding = headers.get('Content-Transfer-Encoding', None)
                         result.append(AttachmentInfo(phash, filename, encoding))
+            if 'part_map' in part_map:
+                result += self._extract_part_map(part_map['part_map'])
 
         return result
 
