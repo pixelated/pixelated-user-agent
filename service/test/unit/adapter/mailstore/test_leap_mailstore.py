@@ -308,6 +308,23 @@ class TestLeapMailStore(TestCase):
         expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'filename.txt', 'encoding': 'base64'}]
         self.assertEqual(expected, message.as_dict()['attachments'])
 
+    @defer.inlineCallbacks
+    def test_add_mail_with_nested_attachments(self):
+        input_mail = MIMEMultipart()
+        input_mail.attach(MIMEText(u'a utf8 message', _charset='utf-8'))
+        attachment = MIMEApplication('pretend to be binary attachment data')
+        attachment.add_header('Content-Disposition', 'attachment', filename='filename.txt')
+        nested_attachment = MIMEMultipart()
+        nested_attachment.attach(attachment)
+        input_mail.attach(nested_attachment)
+        mocked_message = self._add_create_mail_mocks_to_soledad(input_mail)
+        store = LeapMailStore(self.soledad)
+
+        message = yield store.add_mail('INBOX', input_mail.as_string())
+
+        expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'filename.txt', 'encoding': 'base64'}]
+        self.assertEqual(expected, message.as_dict()['attachments'])
+
     def _cdoc_phash_from_message(self, mocked_message, attachment_nr):
         return mocked_message.get_wrapper().cdocs[attachment_nr].future_doc_id[2:]
 
