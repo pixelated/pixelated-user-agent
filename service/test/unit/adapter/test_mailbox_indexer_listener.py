@@ -21,7 +21,7 @@ from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerL
 
 class MailboxListenerTest(unittest.TestCase):
     def setUp(self):
-        self.querier = mock()
+        self.mail_store = mock()
         self.account = mock()
         self.account.mailboxes = []
 
@@ -32,11 +32,11 @@ class MailboxListenerTest(unittest.TestCase):
         mailbox.listeners = set()
         when(mailbox).addListener = lambda x: mailbox.listeners.add(x)
 
-        self.assertNotIn(MailboxIndexerListener('INBOX', self.querier), mailbox.listeners)
+        self.assertNotIn(MailboxIndexerListener('INBOX', self.mail_store), mailbox.listeners)
 
-        MailboxIndexerListener.listen(self.account, 'INBOX', self.querier)
+        MailboxIndexerListener.listen(self.account, 'INBOX', self.mail_store)
 
-        self.assertIn(MailboxIndexerListener('INBOX', self.querier), mailbox.listeners)
+        self.assertIn(MailboxIndexerListener('INBOX', self.mail_store), mailbox.listeners)
 
     def test_reindex_missing_idents(self):
         search_engine = mock()
@@ -44,11 +44,11 @@ class MailboxListenerTest(unittest.TestCase):
 
         MailboxIndexerListener.SEARCH_ENGINE = search_engine
 
-        listener = MailboxIndexerListener('INBOX', self.querier)
-        when(self.querier).idents_by_mailbox('INBOX').thenReturn({'ident1', 'ident2', 'missing_ident'})
-        self.querier.used_arguments = []
-        self.querier.mails = lambda x: self.querier.used_arguments.append(x)
+        listener = MailboxIndexerListener('INBOX', self.mail_store)
+        when(self.mail_store).get_mailbox_mail_ids('INBOX').thenReturn({'ident1', 'ident2', 'missing_ident'})
+        self.mail_store.used_arguments = []
+        self.mail_store.get_mails = lambda x: self.mail_store.used_arguments.append(x)
         listener.newMessages(10, 5)
 
-        verify(self.querier, times=1).idents_by_mailbox('INBOX')
-        self.assertIn({'missing_ident'}, self.querier.used_arguments)
+        verify(self.mail_store, times=1).get_mails('INBOX')
+        self.assertIn({'missing_ident'}, self.mail_store.used_arguments)

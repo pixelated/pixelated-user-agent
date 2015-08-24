@@ -24,23 +24,25 @@ class MailboxIndexerListener(object):
 
     @classmethod
     @defer.inlineCallbacks
-    def listen(cls, account, mailbox_name, soledad_querier):
-        listener = MailboxIndexerListener(mailbox_name, soledad_querier)
+    def listen(cls, account, mailbox_name, mail_store):
+        listener = MailboxIndexerListener(mailbox_name, mail_store)
         if listener not in (yield account.getMailbox(mailbox_name)).listeners:
             mbx = yield account.getMailbox(mailbox_name)
             mbx.addListener(listener)
 
-    def __init__(self, mailbox_name, soledad_querier):
+    def __init__(self, mailbox_name, mail_store):
         self.mailbox_name = mailbox_name
-        self.querier = soledad_querier
+        self.mail_store = mail_store
 
+    @defer.inlineCallbacks
     def newMessages(self, exists, recent):
         indexed_idents = set(self.SEARCH_ENGINE.search('tag:' + self.mailbox_name.lower(), all_mails=True))
-        soledad_idents = self.querier.idents_by_mailbox(self.mailbox_name)
+        soledad_idents = yield self.mail_store.get_mailbox_mail_ids(self.mailbox_name)
+        soledad_idents = set(soledad_idents)
 
         missing_idents = soledad_idents.difference(indexed_idents)
 
-        self.SEARCH_ENGINE.index_mails(self.querier.mails(missing_idents))
+        self.SEARCH_ENGINE.index_mails((yield self.mail_store.get_mails(missing_idents)))
 
     def __eq__(self, other):
         return other and other.mailbox_name == self.mailbox_name
