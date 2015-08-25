@@ -2,11 +2,10 @@ from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
 from pixelated.adapter.services.mail_service import MailService
 from pixelated.adapter.model.mail import InputMail
 from pixelated.adapter.services.mail_sender import MailSender
-from pixelated.adapter.services.mailboxes import Mailboxes
 from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.services.draft_service import DraftService
-from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerListener
+from pixelated.adapter.listeners.mailbox_indexer_listener import listen_all_mailboxes
 from twisted.internet import defer
 
 
@@ -26,18 +25,12 @@ class Services(object):
 
         self.wrap_mail_store_with_indexing_mail_store(leap_session)
 
-        pixelated_mailboxes = Mailboxes(
-            leap_session.account,
-            leap_session.mail_store,
-            soledad_querier,
-            self.search_engine)
-        yield pixelated_mailboxes.index_mailboxes()
+        yield listen_all_mailboxes(leap_session.account, self.search_engine, leap_session.mail_store)
 
-        self.mail_service = yield self.setup_mail_service(
+        self.mail_service = self.setup_mail_service(
             leap_session,
             soledad_querier,
-            self.search_engine,
-            pixelated_mailboxes)
+            self.search_engine)
 
         self.keymanager = leap_session.nicknym
         self.draft_service = self.setup_draft_service(leap_session.mail_store)
@@ -60,22 +53,19 @@ class Services(object):
         key = yield soledad_querier.get_index_masterkey()
         print 'The key len is: %s' % len(key)
         search_engine = SearchEngine(key, agent_home=leap_home)
-        MailboxIndexerListener.SEARCH_ENGINE = search_engine
         self.search_engine = search_engine
 
-    @defer.inlineCallbacks
-    def setup_mail_service(self, leap_session, soledad_querier, search_engine, pixelated_mailboxes):
-        if False:   # FIXME
-            yield pixelated_mailboxes.add_welcome_mail_for_fresh_user()
+    def setup_mail_service(self, leap_session, soledad_querier, search_engine):
+        # if False:   FIXME
+        #    yield pixelated_mailboxes.add_welcome_mail_for_fresh_user()
         pixelated_mail_sender = MailSender(
             leap_session.account_email(),
             leap_session.smtp)
-        defer.returnValue(MailService(
-            pixelated_mailboxes,
+        return MailService(
             pixelated_mail_sender,
             leap_session.mail_store,
             soledad_querier,
-            search_engine))
+            search_engine)
 
     def setup_draft_service(self, mail_store):
         return DraftService(mail_store)

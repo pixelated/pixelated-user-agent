@@ -21,8 +21,7 @@ from pixelated.adapter.services.tag_service import extract_reserved_tags
 
 class MailService(object):
 
-    def __init__(self, mailboxes, mail_sender, mail_store, soledad_querier, search_engine):
-        self.mailboxes = mailboxes
+    def __init__(self, mail_sender, mail_store, soledad_querier, search_engine):
         self.mail_store = mail_store
         self.querier = soledad_querier
         self.search_engine = search_engine
@@ -122,9 +121,9 @@ class MailService(object):
         else:
             yield self.mail_store.move_mail_to_mailbox(mail_id, 'TRASH')
 
+    @defer.inlineCallbacks
     def recover_mail(self, mail_id):
-        recovered_mail = self.mailboxes.move_to_inbox(mail_id)
-        self.search_engine.index_mail(recovered_mail)
+        yield self.mail_store.move_mail_to_mailbox(mail_id, 'INBOX')
 
     @defer.inlineCallbacks
     def delete_permanent(self, mail_id):

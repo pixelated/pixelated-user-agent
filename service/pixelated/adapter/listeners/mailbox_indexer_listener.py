@@ -52,3 +52,11 @@ class MailboxIndexerListener(object):
 
     def __repr__(self):
         return 'MailboxListener: ' + self.mailbox_name
+
+
+@defer.inlineCallbacks
+def listen_all_mailboxes(account, search_engine, mail_store):
+    MailboxIndexerListener.SEARCH_ENGINE = search_engine
+    mailboxes = yield account.account.list_all_mailbox_names()
+    for mailbox_name in mailboxes:
+        yield MailboxIndexerListener.listen(account, mailbox_name, mail_store)

@@ -38,7 +38,6 @@ from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.services.mail_service import MailService
-from pixelated.adapter.services.mailboxes import Mailboxes
 from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
 from pixelated.resources.root_resource import RootResource
 from test.support.integration.model import MailBuilder
@@ -77,10 +76,9 @@ class AppTestClient(object):
         account_ready_cb = defer.Deferred()
         self.account = IMAPAccount(self.ACCOUNT, self.soledad, account_ready_cb)
         yield account_ready_cb
-        self.mailboxes = Mailboxes(self.account, self.mail_store, self.soledad_querier, self.search_engine)
         self.draft_service = DraftService(self.mail_store)
 
-        self.mail_service = self._create_mail_service(self.mailboxes, self.mail_sender, self.mail_store, self.soledad_querier, self.search_engine)
+        self.mail_service = self._create_mail_service(self.mail_sender, self.mail_store, self.soledad_querier, self.search_engine)
         mails = yield self.mail_service.all_mails()
         self.search_engine.index_mails(mails)
 
@@ -143,11 +141,6 @@ class AppTestClient(object):
     def add_mail_to_inbox(self, input_mail):
         mail = yield self.mail_store.add_mail('INBOX', input_mail.raw)
         defer.returnValue(mail)
-        # inbox = yield self.mailboxes.inbox
-        # mail = yield inbox.add(input_mail)
-        # if input_mail.tags:
-        #     mail.update_tags(input_mail.tags)
-        #     self.search_engine.index_mail(mail)
 
     @defer.inlineCallbacks
     def add_multiple_to_mailbox(self, num, mailbox='', flags=[], tags=[], to='recipient@to.com', cc='recipient@cc.com', bcc='recipient@bcc.com'):
@@ -167,12 +160,6 @@ class AppTestClient(object):
                 yield self.mail_store.update_mail(mail)
             mails.append(mail)
 
-        #     mbx = yield self.mailboxes._create_or_get(mailbox)
-        #     mail = yield mbx.add(input_mail)
-        #     mails.append(mail)
-        #     mail.update_tags(input_mail.tags) if tags else None
-        # self.search_engine.index_mails(mails) if tags else None
-
         defer.returnValue(mails)
 
     def _create_soledad_querier(self, soledad, index_key):
@@ -185,8 +172,8 @@ class AppTestClient(object):
         mail_sender.sendmail.side_effect = lambda mail: succeed(mail)
         return mail_sender
 
-    def _create_mail_service(self, mailboxes, mail_sender, mail_store, soledad_querier, search_engine):
-        mail_service = MailService(mailboxes, mail_sender, mail_store, soledad_querier, search_engine)
+    def _create_mail_service(self, mail_sender, mail_store, soledad_querier, search_engine):
+        mail_service = MailService(mail_sender, mail_store, soledad_querier, search_engine)
         return mail_service
 
     def _generate_soledad_test_folder_name(self, soledad_test_folder='/tmp/soledad-test/test'):
