@@ -19,7 +19,7 @@ include /usr/share/dpkg/default.mk
 
 # main packaging script based on dh7 syntax
 %:
-	dh $@ --buildsystem pixpybuild --sourcedirectory=service
+	dh $@ --buildsystem pixpybuild --sourcedirectory=service --builddirectory=/tmp/build
 
 # debmake generated override targets
 # This is example for Cmake (See http://bugs.debian.org/641051 )
