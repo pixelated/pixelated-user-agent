@@ -77,14 +77,13 @@ class ContactsTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_bounced_addresses_are_ignored(self):
+        self.skipTest("bounced mails filter still needs to be migrated")
         to_be_bounced = MailBuilder().with_to('this_mail_was_bounced@domain.com').build_input_mail()
         yield self.add_mail_to_inbox(to_be_bounced)
 
+        bounced_hdoc = self._bounced_mail_hdoc_content()
         bounced_mail_template = MailBuilder().build_input_mail()
-        bounced_mail = yield (yield self.mailboxes.inbox).add(bounced_mail_template)
-        bounced_mail.hdoc.content = self._bounced_mail_hdoc_content()
-        bounced_mail.save()
-        self.search_engine.index_mail(bounced_mail)
+        bounced_mail_template.headers.update(bounced_hdoc["headers"])
 
         not_bounced_mail = MailBuilder(
         ).with_tags(['important']).with_to('this_mail_was_not@bounced.com').build_input_mail()
