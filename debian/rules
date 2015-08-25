@@ -7,6 +7,9 @@
 DPKG_EXPORT_BUILDFLAGS = 1
 include /usr/share/dpkg/default.mk
 
+ifdef GO_BUILDDIR
+	export DH_BUILDOPTIONS=--builddirectory=$(GO_BUILDDIR)
+endif
 # see FEATURE AREAS in dpkg-buildflags(1)
 #export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
@@ -19,7 +22,7 @@ include /usr/share/dpkg/default.mk
 
 # main packaging script based on dh7 syntax
 %:
-	dh $@ --buildsystem pixpybuild --sourcedirectory=service --builddirectory=/tmp/build
+	dh $@ --buildsystem pixpybuild --sourcedirectory=service $(DH_BUILDOPTIONS)
 
 # debmake generated override targets
 # This is example for Cmake (See http://bugs.debian.org/641051 )
