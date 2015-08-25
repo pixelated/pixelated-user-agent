@@ -121,12 +121,12 @@ class TestMailService(unittest.TestCase):
 
         verify(self.mail_store).move_mail_to_mailbox(1, 'TRASH')
 
+    @defer.inlineCallbacks
     def test_recover_mail(self):
         mail_to_recover = PixelatedMail.from_soledad(*leap_mail(), soledad_querier=None)
         when(self.mail_service).mail(1).thenReturn(mail_to_recover)
-        when(self.mailboxes).move_to_inbox(1).thenReturn(mail_to_recover)
+        when(self.mail_store).move_mail_to_mailbox(1, 'INBOX').thenReturn(mail_to_recover)
 
-        self.mail_service.recover_mail(1)
+        yield self.mail_service.recover_mail(1)
 
-        verify(self.mailboxes).move_to_inbox(1)
-        verify(self.search_engine).index_mail(mail_to_recover)
+        verify(self.mail_store).move_mail_to_mailbox(1, 'INBOX')
