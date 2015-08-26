@@ -47,4 +47,6 @@ ENV LANGUAGE en_US.UTF-8
 RUN apt-get install -y --force-yes python-gnupg
 RUN apt-get install -y --force-yes pixelated-user-agent
 
+RUN ln -s /mnt/user/ /.config
+
 EXPOSE 4567
