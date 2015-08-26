@@ -30,7 +30,8 @@ RUN echo "deb http://packages.pixelated-project.org/debian wheezy main" >> /etc/
 RUN echo "deb http://deb.bitmask.net/debian/ wheezy main" >> /etc/apt/sources.list
 RUN echo "deb http://deb.leap.se/experimental wheezy main" >> /etc/apt/sources.list
 RUN apt-key adv --keyserver pool.sks-keyservers.net --recv-key 1E34A1828E207901 && \
-    apt-key adv --keyserver pool.sks-keyservers.net --recv-key 287A1542472DC0E3
+    apt-key adv --keyserver pool.sks-keyservers.net --recv-key 287A1542472DC0E3 && \
+    apt-key adv --keyserver pool.sks-keyservers.net --recv-key 837C1AD5367429D9
 
 RUN echo "Package: python-sqlcipher" > /etc/apt/preferences.d/python-sqlcipher
 RUN echo "Pin: version 2.6.3.3+0~20141111222659.14+wheezy~1.gbp2d164a+pix1" >> /etc/apt/preferences.d/python-sqlcipher
