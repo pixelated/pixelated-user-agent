@@ -30,6 +30,8 @@ class MailboxIndexerListener(object):
             mbx = yield account.getMailbox(mailbox_name)
             mbx.addListener(listener)
 
+        defer.returnValue(listener)
+
     def __init__(self, mailbox_name, mail_store):
         self.mailbox_name = mailbox_name
         self.mail_store = mail_store
