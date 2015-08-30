@@ -78,7 +78,7 @@ class MailService(object):
     @defer.inlineCallbacks
     def mail_exists(self, mail_id):
         try:
-            mail = yield self.mail_store.get_mail(mail_id)
+            mail = yield self.mail_store.get_mail(mail_id, include_body=False)
             defer.returnValue(mail is not None)
         except Exception, e:
             defer.returnValue(False)
