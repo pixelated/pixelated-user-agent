@@ -31,7 +31,7 @@ class IncomingMailTest(SoledadTestBase):
 
         # when
         yield MailboxIndexerListener.listen(self.account, 'INBOX', self.mail_store)
-        yield mbx.addMessage(input_mail.raw, [])
+        yield mbx.addMessage(input_mail.raw, [], notify_just_mdoc=False)
 
         # then
         yield self.wait_in_reactor()  # event handlers are called async, wait for it
@@ -46,5 +46,5 @@ class IncomingMailTest(SoledadTestBase):
         def done_waiting():
             d.callback(None)
 
-        reactor.callLater(1.0, done_waiting)
+        reactor.callLater(1, done_waiting)
         return d
