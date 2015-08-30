@@ -82,7 +82,7 @@ class SoledadReaderMixin(SoledadDbFacadeMixin, object):
     def attachment(self, attachment_ident, encoding):
         bdoc = yield self.get_content_by_phash(attachment_ident)
         defer.returnValue({'content': self._try_decode(bdoc.content['raw'], encoding),
-                           'content-type': bdoc.content['content-type']})
+                           'content-type': bdoc.content['content_type']})
 
     def _try_decode(self, raw, encoding):
         encoding = encoding.lower()
