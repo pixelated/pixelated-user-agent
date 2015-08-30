@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from mock import patch
-from unittest import skip
 from pixelated.bitmask_libraries.soledad import SoledadSession
 from test_abstract_leap import AbstractLeapTest
 
@@ -55,17 +54,3 @@ class SoledadSessionTest(AbstractLeapTest):
 
             # then
             instance.sync.assert_called_with()
-
-    @skip("need_sync is gone, we need to find out what can replace it")
-    def test_that_sync_not_called_if_not_needed(self, mock):
-            instance = mock.return_value
-            instance.server_url = '/foo/bar'
-            instance.need_sync.return_value = False
-            soledad_session = SoledadSession(self.provider, 'any-passphrase', self.auth.token, self.auth.uuid)
-
-            # when
-            soledad_session.sync()
-
-            # then
-            instance.need_sync.assert_called_with('/foo/bar')
-            self.assertFalse(instance.sync.called)
