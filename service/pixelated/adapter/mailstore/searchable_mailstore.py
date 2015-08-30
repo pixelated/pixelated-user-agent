@@ -77,4 +77,4 @@ class SearchableMailStore(object):  # implementes MailStore
             SearchableMailStore._create_delegator(name)
             return super(SearchableMailStore, self).__getattribute__(name)
         else:
-            raise NotImplemented('No attribute %s' % name)
+            raise NotImplementedError('No attribute %s' % name)
