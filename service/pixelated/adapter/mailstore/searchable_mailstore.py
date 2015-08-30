@@ -32,6 +32,18 @@ class SearchableMailStore(object):  # implementes MailStore
         setattr(cls, method_name, delegator)
 
     @defer.inlineCallbacks
+    def search_mails(self, query, window_size, page):
+        mail_ids, total = self._search_engine.search(query, window_size, page)
+
+        try:
+            mails = yield self.get_mails(mail_ids)
+            defer.returnValue((mails, total))
+        except Exception, e:
+            import traceback
+            traceback.print_exc()
+            raise
+
+    @defer.inlineCallbacks
     def add_mail(self, mailbox_name, mail):
         stored_mail = yield self._delegate.add_mail(mailbox_name, mail)
         self._search_engine.index_mail(stored_mail)
