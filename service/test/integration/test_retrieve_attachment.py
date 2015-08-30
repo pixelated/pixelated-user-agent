@@ -28,7 +28,7 @@ class RetrieveAttachmentTest(SoledadTestBase):
                            'type': 'cnt',
                            'raw': 'cGVxdWVubyBhbmV4byA6RAo=',
                            'phash': ident,
-                           'content-type': 'text/plain; charset=US-ASCII; name="attachment_pequeno.txt"'}
+                           'content_type': 'text/plain; charset=US-ASCII; name="attachment_pequeno.txt"'}
 
         yield self.add_document_to_soledad(attachment_dict)
 

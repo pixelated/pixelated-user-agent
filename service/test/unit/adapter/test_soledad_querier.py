@@ -96,7 +96,7 @@ class SoledadQuerierTest(unittest.TestCase):
     def test_attachment_base64(self):
         soledad = mock()
         bdoc = mock()
-        bdoc.content = {'raw': base64.encodestring('esse papo seu ta qualquer coisa'), 'content-type': 'text/plain'}
+        bdoc.content = {'raw': base64.encodestring('esse papo seu ta qualquer coisa'), 'content_type': 'text/plain'}
         when(soledad).get_from_index('by-type-and-payloadhash', 'cnt', any(unicode)).thenReturn([bdoc])
         querier = SoledadQuerier(soledad)
 
@@ -108,7 +108,7 @@ class SoledadQuerierTest(unittest.TestCase):
     def test_attachment_quoted_printable(self):
         soledad = mock()
         bdoc = mock()
-        bdoc.content = {'raw': quopri.encodestring('esse papo seu ta qualquer coisa'), 'content-type': 'text/plain'}
+        bdoc.content = {'raw': quopri.encodestring('esse papo seu ta qualquer coisa'), 'content_type': 'text/plain'}
         when(soledad).get_from_index('by-type-and-payloadhash', 'cnt', any(unicode)).thenReturn([bdoc])
         querier = SoledadQuerier(soledad)
 
