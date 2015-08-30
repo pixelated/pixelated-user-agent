@@ -128,4 +128,3 @@ class MailService(object):
     @defer.inlineCallbacks
     def delete_permanent(self, mail_id):
         yield self.mail_store.delete_mail(mail_id)
-        self.search_engine.remove_from_index(mail_id)
