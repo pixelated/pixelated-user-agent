@@ -13,10 +13,13 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import unittest
+from twisted.trial import unittest
 
-from mockito import mock, when, verify
+from mockito import mock, when, verify, any as ANY
 from pixelated.adapter.listeners.mailbox_indexer_listener import MailboxIndexerListener
+from twisted.internet import defer
+
+from pixelated.adapter.listeners.mailbox_indexer_listener import logger
 
 
 class MailboxListenerTest(unittest.TestCase):
@@ -52,3 +55,12 @@ class MailboxListenerTest(unittest.TestCase):
 
         verify(self.mail_store, times=1).get_mails('INBOX')
         self.assertIn({'missing_ident'}, self.mail_store.used_arguments)
+
+    @defer.inlineCallbacks
+    def test_catches_exceptions_to_not_break_other_listeners(self):
+        when(logger).error(ANY()).thenReturn(None)
+        listener = MailboxIndexerListener('INBOX', self.mail_store)
+
+        yield listener.newMessages(1, 1)
+
+        verify(logger).error(ANY())

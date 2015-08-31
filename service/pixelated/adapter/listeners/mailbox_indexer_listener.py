@@ -13,8 +13,11 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-
+import logging
 from twisted.internet import defer
+
+
+logger = logging.getLogger(__name__)
 
 
 class MailboxIndexerListener(object):
@@ -38,13 +41,16 @@ class MailboxIndexerListener(object):
 
     @defer.inlineCallbacks
     def newMessages(self, exists, recent):
-        indexed_idents = set(self.SEARCH_ENGINE.search('tag:' + self.mailbox_name.lower(), all_mails=True))
-        soledad_idents = yield self.mail_store.get_mailbox_mail_ids(self.mailbox_name)
-        soledad_idents = set(soledad_idents)
+        try:
+            indexed_idents = set(self.SEARCH_ENGINE.search('tag:' + self.mailbox_name.lower(), all_mails=True))
+            soledad_idents = yield self.mail_store.get_mailbox_mail_ids(self.mailbox_name)
+            soledad_idents = set(soledad_idents)
 
-        missing_idents = soledad_idents.difference(indexed_idents)
+            missing_idents = soledad_idents.difference(indexed_idents)
 
-        self.SEARCH_ENGINE.index_mails((yield self.mail_store.get_mails(missing_idents)))
+            self.SEARCH_ENGINE.index_mails((yield self.mail_store.get_mails(missing_idents)))
+        except Exception, e:  # this is a event handler, don't let exceptions escape
+            logger.error(e)
 
     def __eq__(self, other):
         return other and other.mailbox_name == self.mailbox_name
