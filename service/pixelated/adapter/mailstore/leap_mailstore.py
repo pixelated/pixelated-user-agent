@@ -90,7 +90,7 @@ class LeapMail(Mail):
 
     def _decoded_header_utf_8(self, header_value):
         if isinstance(header_value, list):
-            return [self._decoded_header_utf_8(v) for v in header_value]
+            return self.remove_duplicates([self._decoded_header_utf_8(v) for v in header_value])
         else:
             content, encoding = decode_header(header_value)[0]
             if encoding:
@@ -114,19 +114,23 @@ class LeapMail(Mail):
     def _replying_dict(self):
         result = {'single': None, 'all': {'to-field': [], 'cc-field': []}}
 
-        sender_mail = self.headers.get('Reply-To', self.headers.get('From'))
+        sender_mail = self._decoded_header_utf_8(self.headers.get('Reply-To', self.headers.get('From')))
         # Issue #215: Fix for existing mails without any from address.
         if sender_mail is None:
             sender_mail = InputMail.FROM_EMAIL_ADDRESS
 
-        recipients = self._reply_recipient('To')
+        recipients = self._decoded_header_utf_8(self._reply_recipient('To'))
         recipients.append(sender_mail)
-        ccs = self._reply_recipient('Cc')
+        recipients = self.remove_duplicates(recipients)
+        ccs = self._decoded_header_utf_8(self._reply_recipient('Cc'))
 
         result['single'] = sender_mail
         result['all']['to-field'] = recipients
         result['all']['cc-field'] = ccs
         return result
+
+    def remove_duplicates(self, recipients):
+        return list(set(recipients))
 
     def _reply_recipient(self, kind):
         recipients = self.headers.get(kind, [])

@@ -48,7 +48,7 @@ class TestLeapMail(TestCase):
 
     def test_as_dict(self):
         mail = LeapMail('doc id', 'INBOX', {'From': 'test@example.test', 'Subject': 'A test Mail', 'To': 'receiver@example.test,receiver2@other.test'}, ('foo', 'bar'))
-
+        self.maxDiff = None
         expected = {
             'header': {
                 'from': 'test@example.test',
@@ -64,8 +64,8 @@ class TestLeapMail(TestCase):
             'textPlainBody': None,
             'replying': {'all': {'cc-field': [],
                                  'to-field': ['receiver@example.test',
-                                              'receiver2@other.test',
-                                              'test@example.test']},
+                                              'test@example.test',
+                                              'receiver2@other.test']},
                          'single': 'test@example.test'},
             'attachments': []
         }
@@ -97,6 +97,18 @@ class TestLeapMail(TestCase):
         self.assertEqual([expected_address], mail.as_dict()['header']['to'])
         self.assertEqual([expected_address], mail.as_dict()['header']['cc'])
         self.assertEqual(expected_subject, mail.as_dict()['header']['subject'])
+
+    def test_as_dict_replying_with_special_chars(self):
+        expected_address = u'"\xc4lbert \xdcbr\xf6" <\xe4\xfc\xf6@example.mail>'
+        mail = LeapMail('', 'INBOX',
+                        {'From': '=?iso-8859-1?q?=22=C4lbert_=DCbr=F6=22_=3C=E4=FC=F6=40example=2Email=3E?=',
+                         'To': '=?iso-8859-1?q?=22=C4lbert_=DCbr=F6=22_=3C=E4=FC=F6=40example=2Email=3E?=',
+                         'Cc': '=?iso-8859-1?q?=22=C4lbert_=DCbr=F6=22_=3C=E4=FC=F6=40example=2Email=3E?=',
+                         'Subject': '=?iso-8859-1?q?H=E4ll=F6_W=F6rld?='})
+
+        self.assertEqual([expected_address], mail.as_dict()['replying']['all']['to-field'])
+        self.assertEqual([expected_address], mail.as_dict()['replying']['all']['cc-field'])
+        self.assertEqual(expected_address, mail.as_dict()['replying']['single'])
 
     def test_raw_constructed_by_headers_and_body(self):
         body = 'some body content'
