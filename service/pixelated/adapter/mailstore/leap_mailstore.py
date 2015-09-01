@@ -88,9 +88,19 @@ class LeapMail(Mail):
 
         return result
 
+    def _decoded_header_utf_8(self, header_value):
+        if isinstance(header_value, list):
+            return [self._decoded_header_utf_8(v) for v in header_value]
+        else:
+            content, encoding = decode_header(header_value)[0]
+            if encoding:
+                return unicode(content, encoding=encoding)
+            else:
+                return unicode(content, encoding='ascii')
+
     def as_dict(self):
         return {
-            'header': {k.lower(): v for k, v in self.headers.items()},
+            'header': {k.lower(): self._decoded_header_utf_8(v) for k, v in self.headers.items()},
             'ident': self._mail_id,
             'tags': self.tags,
             'status': list(self.status),

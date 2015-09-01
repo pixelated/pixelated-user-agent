@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2015 ThoughtWorks, Inc.
 #
@@ -13,6 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from email.header import Header
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -241,6 +243,18 @@ class TestLeapMailStore(TestCase):
         expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'filename.txt', 'encoding': 'base64'}]
         self.assertEqual(expected, message.as_dict()['attachments'])
 
+    @defer.inlineCallbacks
+    def test_add_mail_with_special_chars(self):
+        input_mail = MIMEText(u'a utf8 message', _charset='utf-8')
+        input_mail['From'] = Header(u'"Älbert Übrö" <äüö@example.mail>', 'iso-8859-1')
+        input_mail['Subject'] = Header(u'Hällö Wörld', 'iso-8859-1')
+        self._add_create_mail_mocks_to_soledad(input_mail)
+        store = LeapMailStore(self.soledad)
+
+        message = yield store.add_mail('INBOX', input_mail.as_string())
+
+        self.assertEqual(u'"\xc4lbert \xdcbr\xf6" <\xe4\xfc\xf6@example.mail>', message.as_dict()['header']['from'])
+
     def _cdoc_phash_from_message(self, mocked_message, attachment_nr):
         return mocked_message.get_wrapper().cdocs[attachment_nr].future_doc_id[2:]
 
@@ -350,8 +364,8 @@ class TestLeapMailStore(TestCase):
         mail = self._load_mail_from_file(mail_file)
         return self._add_create_mail_mocks_to_soledad(mail)
 
-    def _add_create_mail_mocks_to_soledad(self, mail):
-        mail = self._convert_mail_to_leap_message(mail)
+    def _add_create_mail_mocks_to_soledad(self, example_mail):
+        mail = self._convert_mail_to_leap_message(example_mail)
         wrapper = mail.get_wrapper()
 
         mdoc_id = wrapper.mdoc.future_doc_id

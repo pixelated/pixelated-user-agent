@@ -126,8 +126,8 @@ class SearchEngine(object):
         bounced = mail.bounced if mail.bounced else ['']
 
         index_data = {
-            'sender': self._unicode_header_field(header.get('from', '')),
-            'subject': self._unicode_header_field(header.get('subject', '')),
+            'sender': self._empty_string_to_none(header.get('from', '')),
+            'subject': self._empty_string_to_none(header.get('subject', '')),
             'date': milliseconds(header.get('date', '')),
             'to': self._format_recipient(header, 'to'),
             'cc': self._format_recipient(header, 'cc'),
@@ -146,11 +146,11 @@ class SearchEngine(object):
         list = headers.get(name, [''])
         return u','.join(list) if list else u''
 
-    def _unicode_header_field(self, field_value):
+    def _empty_string_to_none(self, field_value):
         if not field_value:
             return None
-
-        return unicode(field_value.decode('utf-8'))
+        else:
+            return field_value
 
     def index_mails(self, mails, callback=None):
         try:
