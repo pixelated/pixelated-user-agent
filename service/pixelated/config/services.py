@@ -16,6 +16,7 @@ class Services(object):
 
     @defer.inlineCallbacks
     def setup(self, leap_home, leap_session):
+        InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
 
         soledad_querier = SoledadQuerier(soledad=leap_session.soledad_session.soledad)
 
@@ -46,7 +47,6 @@ class Services(object):
             mails=(yield self.mail_service.all_mails()))
         # yield soledad_querier.mark_all_as_not_recent()
         # yield soledad_querier.remove_duplicates()
-        InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
 
     @defer.inlineCallbacks
     def setup_search_engine(self, leap_home, soledad_querier):
