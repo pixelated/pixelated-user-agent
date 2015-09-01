@@ -21,7 +21,7 @@ import dateutil.parser as dateparser
 from uuid import uuid4
 from email import message_from_file
 from email.mime.text import MIMEText
-from email.header import decode_header
+from email.header import decode_header, Header
 from email.MIMEMultipart import MIMEMultipart
 from pycryptopp.hash import sha256
 from leap.mail.adaptors import soledad_indexes as fields
@@ -89,6 +89,15 @@ class Mail(object):
     def bounced(self):
         return False
 
+    def _encode_header_value_list(self, header_value_list):
+        return [self._encode_header_value(v) for v in header_value_list]
+
+    def _encode_header_value(self, header_value):
+        if isinstance(header_value, unicode):
+            return str(Header(header_value, 'utf-8'))
+        else:
+            return str(header_value)
+
     @property
     def _mime_multipart(self):
         if self._mime:
@@ -96,9 +105,9 @@ class Mail(object):
         mime = MIMEMultipart()
         for key, value in self.headers.items():
             if isinstance(value, list):
-                mime[str(key)] = ', '.join(value)
+                mime[str(key)] = ', '.join(self._encode_header_value_list(value))
             else:
-                mime[str(key)] = str(value)
+                mime[str(key)] = self._encode_header_value(value)
 
         try:
             body_to_use = self.body

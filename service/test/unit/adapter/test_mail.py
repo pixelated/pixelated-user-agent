@@ -465,6 +465,16 @@ class InputMailTest(unittest.TestCase):
         self.assertRegexpMatches(mime_multipart.as_string(), "\nSubject: Oi\n")
         self.assertRegexpMatches(mime_multipart.as_string(), base64.b64encode(simple_mail_dict()['body']))
 
+    def test_to_mime_multipart_with_special_chars(self):
+        mail_dict = simple_mail_dict()
+        mail_dict['header']['to'] = u'"Älbert Übrö \xF0\x9F\x92\xA9" <äüö@example.mail>'
+        pixelated.support.date.iso_now = lambda: 'date now'
+
+        mime_multipart = InputMail.from_dict(mail_dict).to_mime_multipart()
+
+        expected_part_of_encoded_to = 'Iiwgw4QsIGwsIGIsIGUsIHIsIHQsICAsIMOcLCBiLCByLCDDtiwgICwgw7As'
+        self.assertRegexpMatches(mime_multipart.as_string(), expected_part_of_encoded_to)
+
     def test_smtp_format(self):
         InputMail.FROM_EMAIL_ADDRESS = 'pixelated@org'
 
