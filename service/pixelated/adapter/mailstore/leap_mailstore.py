@@ -93,7 +93,7 @@ class LeapMail(Mail):
     def _decoded_header_utf_8(self, header_value):
         if isinstance(header_value, list):
             return self.remove_duplicates([self._decoded_header_utf_8(v) for v in header_value])
-        else:
+        elif header_value is not None:
             content, encoding = decode_header(header_value)[0]
             if encoding:
                 return unicode(content, encoding=encoding)
