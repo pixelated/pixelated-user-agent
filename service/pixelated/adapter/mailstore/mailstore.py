@@ -19,6 +19,9 @@ class MailStore(object):
     def get_mail(self, mail_id):
         pass
 
+    def get_mail_attachment(self, attachment_id):
+        pass
+
     def get_mails(self, mail_ids):
         pass
 

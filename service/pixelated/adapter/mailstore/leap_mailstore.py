@@ -13,7 +13,9 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+import base64
 from email.header import decode_header
+import quopri
 import re
 from uuid import uuid4
 from leap.mail.adaptors.soledad import SoledadMailAdaptor
@@ -175,6 +177,27 @@ class LeapMailStore(MailStore):
             deferreds.append(self.get_mail(mail_id))
 
         return defer.gatherResults(deferreds, consumeErrors=True)
+
+    @defer.inlineCallbacks
+    def get_mail_attachment(self, attachment_id):
+        results = yield self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', attachment_id) if attachment_id else []
+        if len(results):
+            content = results[0]
+            defer.returnValue({'content-type': content.content_type, 'content': self._try_decode(
+                content.raw, content.content_transfer_encoding)})
+        else:
+            raise ValueError('No attachment with id %s found!' % attachment_id)
+
+    def _try_decode(self, raw, encoding):
+        encoding = encoding.lower()
+        if encoding == 'base64':
+            data = base64.decodestring(raw)
+        elif encoding == 'quoted-printable':
+            data = quopri.decodestring(raw)
+        else:
+            data = str(raw)
+
+        return bytearray(data)
 
     @defer.inlineCallbacks
     def update_mail(self, mail):
