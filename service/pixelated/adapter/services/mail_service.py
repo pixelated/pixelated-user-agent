@@ -34,8 +34,15 @@ class MailService(object):
 
     @defer.inlineCallbacks
     def mails(self, query, window_size, page):
-        mails, total = yield self.mail_store.search_mails(query, window_size, page)
-        defer.returnValue((mails, total))
+        mail_ids, total = self.search_engine.search(query, window_size, page)
+
+        try:
+            mails = yield self.mail_store.get_mails(mail_ids)
+            defer.returnValue((mails, total))
+        except Exception, e:
+            import traceback
+            traceback.print_exc()
+            raise
 
     @defer.inlineCallbacks
     def update_tags(self, mail_id, new_tags):
