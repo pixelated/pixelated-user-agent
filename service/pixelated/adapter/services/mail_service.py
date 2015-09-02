@@ -65,8 +65,8 @@ class MailService(object):
     def mail(self, mail_id):
         return self.mail_store.get_mail(mail_id, include_body=True)
 
-    def attachment(self, attachment_id, encoding):
-        return self.querier.attachment(attachment_id, encoding)
+    def attachment(self, attachment_id):
+        return self.mail_store.get_mail_attachment(attachment_id)
 
     @defer.inlineCallbacks
     def mail_exists(self, mail_id):

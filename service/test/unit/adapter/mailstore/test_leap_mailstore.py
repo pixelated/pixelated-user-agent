@@ -137,7 +137,7 @@ class TestLeapMailStore(TestCase):
     @defer.inlineCallbacks
     def test_get_mail_attachment(self):
         attachment_id = 'AAAA9AAD9E153D24265395203C53884506ABA276394B9FEC02B214BF9E77E48E'
-        doc = ContentDocWrapper(content_type='foo/bar', raw='asdf')
+        doc = SoledadDocument(json=json.dumps({'content_type': 'foo/bar', 'raw': 'asdf'}))
         when(self.soledad).get_from_index('by-type-and-payloadhash', 'cnt', attachment_id).thenReturn(defer.succeed([doc]))
         store = LeapMailStore(self.soledad)
 
@@ -153,8 +153,8 @@ class TestLeapMailStore(TestCase):
                              ('quoted-printable', 'äsdf', '=C3=A4sdf')]
 
         for transfer_encoding, data, encoded_data in encoding_examples:
-            doc = ContentDocWrapper(content_type='foo/bar', raw=encoded_data,
-                                    content_transfer_encoding=transfer_encoding)
+            doc = SoledadDocument(json=json.dumps({'content_type': 'foo/bar', 'raw': encoded_data,
+                                                   'content_transfer_encoding': transfer_encoding}))
             when(self.soledad).get_from_index('by-type-and-payloadhash', 'cnt', attachment_id).thenReturn(defer.succeed([doc]))
             store = LeapMailStore(self.soledad)
 

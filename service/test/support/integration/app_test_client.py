@@ -193,9 +193,11 @@ class AppTestClient(object):
         res = yield res
         defer.returnValue([ResponseMail(m) for m in res['mails']])
 
+    @defer.inlineCallbacks
     def get_attachment(self, ident, encoding):
-        res, req = self.get("/attachment/%s" % ident, {'encoding': [encoding]}, as_json=False)
-        return res
+        deferred_result, req = self.get("/attachment/%s" % ident, {'encoding': [encoding]}, as_json=False)
+        res = yield deferred_result
+        defer.returnValue((res, req))
 
     def put_mail(self, data):
         res, req = self.put('/mails', data)

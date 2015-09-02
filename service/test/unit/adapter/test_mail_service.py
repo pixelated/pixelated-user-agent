@@ -130,3 +130,12 @@ class TestMailService(unittest.TestCase):
         yield self.mail_service.recover_mail(1)
 
         verify(self.mail_store).move_mail_to_mailbox(1, 'INBOX')
+
+    @defer.inlineCallbacks
+    def test_get_attachment(self):
+        attachment_dict = {'content': bytearray('data'), 'content-type': 'text/plain'}
+        when(self.mail_store).get_mail_attachment('some attachment id').thenReturn(defer.succeed(attachment_dict))
+
+        attachment = yield self.mail_service.attachment('some attachment id')
+
+        self.assertEqual(attachment_dict, attachment)

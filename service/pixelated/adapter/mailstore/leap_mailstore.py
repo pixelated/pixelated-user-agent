@@ -18,7 +18,7 @@ from email.header import decode_header
 import quopri
 import re
 from uuid import uuid4
-from leap.mail.adaptors.soledad import SoledadMailAdaptor
+from leap.mail.adaptors.soledad import SoledadMailAdaptor, ContentDocWrapper
 from twisted.internet import defer
 from pixelated.adapter.mailstore.body_parser import BodyParser
 from pixelated.adapter.mailstore.mailstore import MailStore, underscore_uuid
@@ -182,7 +182,7 @@ class LeapMailStore(MailStore):
     def get_mail_attachment(self, attachment_id):
         results = yield self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', attachment_id) if attachment_id else []
         if len(results):
-            content = results[0]
+            content = ContentDocWrapper(**results[0].content)
             defer.returnValue({'content-type': content.content_type, 'content': self._try_decode(
                 content.raw, content.content_transfer_encoding)})
         else:

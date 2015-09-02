@@ -18,7 +18,7 @@ import io
 
 import re
 from twisted.protocols.basic import FileSender
-from twisted.python.log import err
+from twisted.python.log import msg
 from twisted.web import server
 from twisted.web.resource import Resource
 from twisted.internet import defer
@@ -34,23 +34,28 @@ class AttachmentResource(Resource):
         self.mail_service = mail_service
 
     def render_GET(self, request):
+        def error_handler(failure):
+            msg(failure, 'attachment not found')
+            request.code = 404
+            request.finish()
         encoding = request.args.get('encoding', [None])[0]
         filename = request.args.get('filename', [self.attachment_id])[0]
         request.setHeader(b'Content-Type', b'application/force-download')
         request.setHeader(b'Content-Disposition', bytes('attachment; filename=' + filename))
 
         d = self._send_attachment(encoding, filename, request)
-        d.addErrback(err)
+        d.addErrback(error_handler)
 
         return server.NOT_DONE_YET
 
     @defer.inlineCallbacks
     def _send_attachment(self, encoding, filename, request):
-        attachment = yield self.mail_service.attachment(self.attachment_id, encoding)
+        attachment = yield self.mail_service.attachment(self.attachment_id)
 
         bytes_io = io.BytesIO(attachment['content'])
 
         try:
+            request.code = 200
             yield FileSender().beginFileTransfer(bytes_io, request)
         finally:
             bytes_io.close()
