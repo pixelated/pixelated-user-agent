@@ -25,11 +25,10 @@ define(
     'mixins/with_hide_and_show',
     'mixins/with_mail_tagging',
     'page/events',
-    'views/i18n',
-    'features'
+    'views/i18n'
   ],
 
-  function (defineComponent, templates, mailActions, viewHelpers, withHideAndShow, withMailTagging, events, i18n, features) {
+  function (defineComponent, templates, mailActions, viewHelpers, withHideAndShow, withMailTagging, events, i18n) {
 
     return defineComponent(mailView, mailActions, withHideAndShow, withMailTagging);
 
@@ -50,12 +49,8 @@ define(
         var signed, encrypted;
 
         data.mail.security_casing = data.mail.security_casing || {};
-        if(features.isEnabled('signatureStatus')) {
-          signed = this.checkSigned(data.mail);
-        }
-        if(features.isEnabled('encryptionStatus')) {
-          encrypted = this.checkEncrypted(data.mail);
-        }
+        signed = this.checkSigned(data.mail);
+        encrypted = this.checkEncrypted(data.mail);
 
         var attachments = _.map(data.mail.attachments, function(a){
             return { 'encoding': a.encoding, 'name': a.name, 'ident': a.ident };
@@ -69,7 +64,6 @@ define(
           tags: data.mail.tags,
           encryptionStatus: encrypted,
           signatureStatus: signed,
-          features: features,
           attachments: attachments
         }));
 
@@ -104,16 +98,29 @@ define(
 
         var status = ['encrypted'];
 
-        if(_.any(mail.security_casing.locks, function (lock) { return lock.state === 'valid'; })) { status.push('encryption-valid'); }
-        else { status.push('encryption-error'); }
+        var hasAnyEncryptionInfo = _.any(mail.security_casing.locks, function (lock) {
+          return lock.state === 'valid';
+        });
+
+        if(hasAnyEncryptionInfo) {
+          status.push('encryption-valid');
+        } else {
+          status.push('encryption-error');
+        }
 
         return status.join(' ');
       };
 
       this.checkSigned = function(mail) {
-        if(_.isEmpty(mail.security_casing.imprints)) { return 'not-signed'; }
+        if(_.isEmpty(mail.security_casing.imprints)) {
+          return 'not-signed';
+        }
 
-        if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'no_signature_information'; })) {
+        var hasNoSignatureInformation = _.any(mail.security_casing.imprints, function (imprint) {
+          return imprint.state === 'no_signature_information';
+        });
+
+        if(hasNoSignatureInformation) {
           return '';
         }
 
@@ -129,7 +136,6 @@ define(
         if(this.isNotTrusted(mail)) {
           status.push('signature-not-trusted');
         }
-
 
         return status.join(' ');
       };

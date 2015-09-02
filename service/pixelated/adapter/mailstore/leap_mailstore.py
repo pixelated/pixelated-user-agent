@@ -16,13 +16,13 @@
 import base64
 from email.header import decode_header
 import quopri
-import re
 from uuid import uuid4
+
+import re
 from leap.mail.adaptors.soledad import SoledadMailAdaptor, ContentDocWrapper
 from twisted.internet import defer
 from pixelated.adapter.mailstore.body_parser import BodyParser
 from pixelated.adapter.mailstore.mailstore import MailStore, underscore_uuid
-
 from leap.mail.mail import Message
 from pixelated.adapter.model.mail import Mail, InputMail
 
@@ -75,6 +75,26 @@ class LeapMail(Mail):
         return self._mailbox_name
 
     @property
+    def security_casing(self):
+        casing = dict(imprints=self._signature_information(), locks=[])
+        if self._encrypted() == "decrypted":
+            casing["locks"] = [{"state": "valid"}]
+        return casing
+
+    def _encrypted(self):
+        return self.headers.get("X-Leap-Encryption", "false")
+
+    def _signature_information(self):
+        signature = self.headers.get("X-Leap-Signature", None)
+        if signature is None or signature.startswith("could not verify"):
+            return [{"state": "no_signature_information"}]
+        else:
+            if signature.startswith("valid"):
+                return [{"state": "valid", "seal": {"validity": "valid"}}]
+            else:
+                return []
+
+    @property
     def raw(self):
         result = u''
         for k, v in self._headers.items():
@@ -107,6 +127,7 @@ class LeapMail(Mail):
             'tags': self.tags,
             'status': list(self.status),
             'body': self._body,
+            'security_casing': self.security_casing,
             'textPlainBody': self._body,
             'replying': self._replying_dict(),
             'mailbox': self._mailbox_name.lower(),

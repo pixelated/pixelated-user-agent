@@ -62,6 +62,10 @@ class TestLeapMail(TestCase):
             'status': [],
             'body': None,
             'textPlainBody': None,
+            'security_casing': {
+                'imprints': [{'state': 'no_signature_information'}],
+                'locks': []
+            },
             'replying': {'all': {'cc-field': [],
                                  'to-field': ['receiver@example.test',
                                               'test@example.test',
@@ -125,3 +129,22 @@ class TestLeapMail(TestCase):
         self.assertEquals([], mail.headers['To'])
         self.assertEquals([], mail.headers['Cc'])
         self.assertEquals([], mail.headers['Bcc'])
+
+    def test_security_casing(self):
+        # No Encryption, no Signature
+        mail = LeapMail('id', 'INBOX', {})
+        self.assertEqual({'locks': [], 'imprints': [{'state': 'no_signature_information'}]}, mail.security_casing)
+
+        # Encryption
+        mail = LeapMail('id', 'INBOX', {'X-Leap-Encryption': 'decrypted'})
+        self.assertEqual([{'state': 'valid'}], mail.security_casing['locks'])
+
+        mail = LeapMail('id', 'INBOX', {'X-Leap-Encryption': 'false'})
+        self.assertEqual([], mail.security_casing['locks'])
+
+        # Signature
+        mail = LeapMail('id', 'INBOX', {'X-Leap-Signature': 'valid'})
+        self.assertEqual([{'seal': {'validity': 'valid'}, 'state': 'valid'}], mail.security_casing['imprints'])
+
+        mail = LeapMail('id', 'INBOX', {'X-Leap-Signature': 'invalid'})
+        self.assertEqual([], mail.security_casing['imprints'])
