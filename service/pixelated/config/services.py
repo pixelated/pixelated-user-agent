@@ -7,6 +7,7 @@ from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.listeners.mailbox_indexer_listener import listen_all_mailboxes
 from twisted.internet import defer
+from pixelated.adapter.search.index_storage_key import SearchIndexStorageKey
 
 
 class Services(object):
@@ -20,9 +21,10 @@ class Services(object):
 
         soledad_querier = SoledadQuerier(soledad=leap_session.soledad_session.soledad)
 
+        search_index_storage_key = self.setup_search_index_storage_key(leap_session.soledad_session.soledad)
         yield self.setup_search_engine(
             leap_home,
-            soledad_querier)
+            search_index_storage_key)
 
         self.wrap_mail_store_with_indexing_mail_store(leap_session)
 
@@ -49,8 +51,9 @@ class Services(object):
         # yield soledad_querier.remove_duplicates()
 
     @defer.inlineCallbacks
-    def setup_search_engine(self, leap_home, soledad_querier):
-        key = yield soledad_querier.get_index_masterkey()
+    def setup_search_engine(self, leap_home, search_index_storage_key):
+        key_unicode = yield search_index_storage_key.get_or_create_key()
+        key = str(key_unicode)
         print 'The key len is: %s' % len(key)
         search_engine = SearchEngine(key, agent_home=leap_home)
         self.search_engine = search_engine
@@ -69,3 +72,6 @@ class Services(object):
 
     def setup_draft_service(self, mail_store):
         return DraftService(mail_store)
+
+    def setup_search_index_storage_key(self, soledad):
+        return SearchIndexStorageKey(soledad)
