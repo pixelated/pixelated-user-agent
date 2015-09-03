@@ -30,7 +30,9 @@ from mock import Mock
 from twisted.internet import reactor, defer
 from twisted.internet.defer import succeed
 from twisted.web.resource import getChildForRequest
-from twisted.web.server import Site
+# from twisted.web.server import Site as PixelatedSite
+from pixelated.config.site import PixelatedSite
+
 from pixelated.adapter.mailstore import LeapMailStore
 from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
 
@@ -106,7 +108,7 @@ class AppTestClient(object):
         return d, request
 
     def listenTCP(self, port=4567, host='127.0.0.1'):
-        reactor.listenTCP(port, Site(self.resource), interface=host)
+        reactor.listenTCP(port, PixelatedSite(self.resource), interface=host)
 
     def run_on_a_thread(self, logfile='/tmp/app_test_client.log', port=4567, host='127.0.0.1'):
         def _start():

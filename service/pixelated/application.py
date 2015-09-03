@@ -15,9 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 from twisted.internet import reactor
-from twisted.internet.threads import deferToThread
 from twisted.internet import defer
-from twisted.web.server import Site
 from twisted.internet import ssl
 from OpenSSL import SSL
 from OpenSSL import crypto
@@ -26,6 +24,7 @@ from pixelated.config import arguments
 from pixelated.config.services import Services
 from pixelated.config.leap import initialize_leap
 from pixelated.config import logger
+from pixelated.config.site import PixelatedSite
 from pixelated.resources.loading_page import LoadingResource
 from pixelated.resources.root_resource import RootResource
 
@@ -46,9 +45,9 @@ def start_user_agent(loading_app, host, port, sslkey, sslcert, leap_home, leap_s
         services.draft_service)
 
     if sslkey and sslcert:
-        reactor.listenSSL(port, Site(resource), _ssl_options(sslkey, sslcert), interface=host)
+        reactor.listenSSL(port, PixelatedSite(resource), _ssl_options(sslkey, sslcert), interface=host)
     else:
-        reactor.listenTCP(port, Site(resource), interface=host)
+        reactor.listenTCP(port, PixelatedSite(resource), interface=host)
 
     # soledad needs lots of threads
     reactor.threadpool.adjustPoolsize(5, 15)
@@ -73,7 +72,7 @@ def initialize():
     args = arguments.parse_user_agent_args()
     logger.init(debug=args.debug)
 
-    loading_app = reactor.listenTCP(args.port, Site(LoadingResource()), interface=args.host)
+    loading_app = reactor.listenTCP(args.port, PixelatedSite(LoadingResource()), interface=args.host)
 
     deferred = initialize_leap(args.leap_provider_cert,
                                args.leap_provider_cert_fingerprint,
