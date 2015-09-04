@@ -104,12 +104,24 @@ class TestMailService(unittest.TestCase):
 
     @defer.inlineCallbacks
     def test_mark_as_read(self):
-        mail = LeapMail('id', 'INBOX')
-        when(self.mail_store).get_mail(ANY(), include_body=True).thenReturn(mail)
+        mail = LeapMail(1, 'INBOX')
+        when(self.mail_store).get_mail(1, include_body=True).thenReturn(mail)
         yield self.mail_service.mark_as_read(1)
 
         self.assertIn(Status.SEEN, mail.flags)
         verify(self.mail_store).update_mail(mail)
+
+    @defer.inlineCallbacks
+    def test_mark_as_unread(self):
+        mail = LeapMail(1, 'INBOX')
+        mail.flags.add(Status.SEEN)
+
+        when(self.mail_store).get_mail(1, include_body=True).thenReturn(mail)
+        yield self.mail_service.mark_as_unread(1)
+
+        verify(self.mail_store).update_mail(mail)
+
+        self.assertNotEqual(mail.status, Status.SEEN)
 
     @defer.inlineCallbacks
     def test_delete_mail(self):
