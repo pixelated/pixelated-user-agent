@@ -436,45 +436,8 @@ class PixelatedMail(Mail):
     def flags(self):
         return self.fdoc.content['flags']
 
-    def save(self):
-        return self.querier.save_mail(self)
-
     def set_mailbox(self, mailbox_name):
         self.fdoc.content['mbox'] = mailbox_name
-
-    def remove_all_tags(self):
-        return self.update_tags(set([]))
-
-    @defer.inlineCallbacks
-    def update_tags(self, tags):
-        yield self._persist_mail_tags(tags)
-        defer.returnValue(self.tags)
-
-    @defer.inlineCallbacks
-    def mark_as_read(self):
-        if Status.SEEN in self.flags:
-            defer.returnValue(self)
-        else:
-            self.flags.append(Status.SEEN)
-            yield self.save()
-            defer.returnValue(self)
-
-    @defer.inlineCallbacks
-    def mark_as_unread(self):
-        if Status.SEEN in self.flags:
-            self.flags.remove(Status.SEEN)
-            yield self.save()
-        defer.returnValue(self)
-
-    def mark_as_not_recent(self):
-        if Status.RECENT in self.flags:
-            self.flags.remove(Status.RECENT)
-            self.save()
-        return self
-
-    def _persist_mail_tags(self, current_tags):
-        self.fdoc.content['tags'] = json.dumps(list(current_tags))
-        return self.save()
 
     def has_tag(self, tag):
         return tag in self.tags

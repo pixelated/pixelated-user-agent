@@ -91,28 +91,6 @@ class TestPixelatedMail(unittest.TestCase):
 
         self.assertEqual(mail.headers['Date'], date_expected)
 
-    @defer.inlineCallbacks
-    def test_update_tags_return_a_set_with_the_current_tags(self):
-        soledad_docs = test_helper.leap_mail(extra_headers={'X-tags': '["custom_1", "custom_2"]'})
-        pixelated_mail = PixelatedMail.from_soledad(*soledad_docs, soledad_querier=self.querier)
-
-        current_tags = yield pixelated_mail.update_tags({'custom_1', 'custom_3'})
-        self.assertEquals({'custom_3', 'custom_1'}, current_tags)
-
-    def test_mark_as_read(self):
-        mail = PixelatedMail.from_soledad(*test_helper.leap_mail(flags=[]), soledad_querier=self.querier)
-
-        mail.mark_as_read()
-
-        self.assertEquals(mail.fdoc.content['flags'], ['\\Seen'])
-
-    def test_mark_as_not_recent(self):
-        mail = PixelatedMail.from_soledad(*test_helper.leap_mail(flags=['\\Recent']), soledad_querier=self.querier)
-
-        mail.mark_as_not_recent()
-
-        self.assertEquals(mail.fdoc.content['flags'], [])
-
     def test_get_for_save_adds_from(self):
         InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
         headers = {'Subject': 'The subject',

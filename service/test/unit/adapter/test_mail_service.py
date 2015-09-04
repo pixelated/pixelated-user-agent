@@ -138,3 +138,14 @@ class TestMailService(unittest.TestCase):
         attachment = yield self.mail_service.attachment('some attachment id')
 
         self.assertEqual(attachment_dict, attachment)
+
+    @defer.inlineCallbacks
+    def test_update_tags_return_a_set_with_the_current_tags(self):
+        mail = LeapMail(1, 'INBOX', tags={'custom_1', 'custom_2'})
+        when(self.mail_store).get_mail(1, include_body=True).thenReturn(mail)
+        when(self.search_engine).tags(query='', skip_default_tags=True).thenReturn([])
+
+        updated_mail = yield self.mail_service.update_tags(1, {'custom_1', 'custom_3'})
+
+        verify(self.mail_store).update_mail(mail)
+        self.assertEqual({'custom_1', 'custom_3'}, updated_mail.tags)
