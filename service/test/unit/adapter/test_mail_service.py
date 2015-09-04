@@ -27,7 +27,6 @@ from twisted.internet import defer
 class TestMailService(unittest.TestCase):
     def setUp(self):
         self.drafts = mock()
-        self.querier = mock()
         self.mail_store = mock()
         self.mailboxes = mock()
 
@@ -38,7 +37,7 @@ class TestMailService(unittest.TestCase):
 
         self.mail_sender = mock()
         self.search_engine = mock()
-        self.mail_service = MailService(self.mail_sender, self.mail_store, self.querier, self.search_engine)
+        self.mail_service = MailService(self.mail_sender, self.mail_store, self.search_engine)
 
     def tearDown(self):
         unstub()

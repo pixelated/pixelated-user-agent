@@ -38,17 +38,15 @@ class Services(object):
         self.keymanager = leap_session.nicknym
         self.draft_service = self.setup_draft_service(leap_session.mail_store)
 
-        yield self.post_setup(soledad_querier, leap_session)
+        yield self.index_all_mails()
 
     def wrap_mail_store_with_indexing_mail_store(self, leap_session):
         leap_session.mail_store = SearchableMailStore(leap_session.mail_store, self.search_engine)
 
     @defer.inlineCallbacks
-    def post_setup(self, soledad_querier, leap_session):
-        self.search_engine.index_mails(
-            mails=(yield self.mail_service.all_mails()))
-        # yield soledad_querier.mark_all_as_not_recent()
-        # yield soledad_querier.remove_duplicates()
+    def index_all_mails(self):
+        all_mails = yield self.mail_service.all_mails()
+        self.search_engine.index_mails(all_mails)
 
     @defer.inlineCallbacks
     def setup_search_engine(self, leap_home, search_index_storage_key):
@@ -67,7 +65,6 @@ class Services(object):
         return MailService(
             pixelated_mail_sender,
             leap_session.mail_store,
-            soledad_querier,
             search_engine)
 
     def setup_draft_service(self, mail_store):
