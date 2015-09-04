@@ -9,7 +9,11 @@ class TestPixelatedSite(unittest.TestCase):
         request = self.create_request()
         request.process()
         headers = request.headers
-        self.assertEqual(headers.get("Content-Security-Policy"), "default-src 'self'; style-src 'self' 'unsafe-inline'")
+
+        header_value = "default-src 'self'; style-src 'self' 'unsafe-inline'"
+        self.assertEqual(headers.get("Content-Security-Policy"), header_value)
+        self.assertEqual(headers.get("X-Content-Security-Policy"), header_value)
+        self.assertEqual(headers.get("X-Webkit-CSP"), header_value)
 
     def create_request(self):
         channel = LineReceiver()
