@@ -80,7 +80,7 @@ class AppTestClient(object):
         yield account_ready_cb
         self.draft_service = DraftService(self.mail_store)
 
-        self.mail_service = self._create_mail_service(self.mail_sender, self.mail_store, self.soledad_querier, self.search_engine)
+        self.mail_service = self._create_mail_service(self.mail_sender, self.mail_store, self.search_engine)
         mails = yield self.mail_service.all_mails()
         self.search_engine.index_mails(mails)
 
@@ -136,9 +136,6 @@ class AppTestClient(object):
         request = request_mock(path=path, body=body, headers={'Content-Type': ['application/json']}, method="DELETE")
         return self._render(request)
 
-    def add_document_to_soledad(self, _dict):
-        return self.soledad_querier.soledad.create_doc(_dict)
-
     @defer.inlineCallbacks
     def add_mail_to_inbox(self, input_mail):
         mail = yield self.mail_store.add_mail('INBOX', input_mail.raw)
@@ -174,7 +171,7 @@ class AppTestClient(object):
         mail_sender.sendmail.side_effect = lambda mail: succeed(mail)
         return mail_sender
 
-    def _create_mail_service(self, mail_sender, mail_store, soledad_querier, search_engine):
+    def _create_mail_service(self, mail_sender, mail_store, search_engine):
         mail_service = MailService(mail_sender, mail_store, search_engine)
         return mail_service
 
