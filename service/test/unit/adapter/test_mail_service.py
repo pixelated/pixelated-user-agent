@@ -134,7 +134,7 @@ class TestMailService(unittest.TestCase):
 
     @defer.inlineCallbacks
     def test_recover_mail(self):
-        mail_to_recover = PixelatedMail.from_soledad(*leap_mail(), soledad_querier=None)
+        mail_to_recover = PixelatedMail.from_soledad(*leap_mail())
         when(self.mail_service).mail(1).thenReturn(mail_to_recover)
         when(self.mail_store).move_mail_to_mailbox(1, 'INBOX').thenReturn(mail_to_recover)
 

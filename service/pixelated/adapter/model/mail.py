@@ -275,14 +275,13 @@ class InputMail(Mail):
 class PixelatedMail(Mail):
 
     @staticmethod
-    def from_soledad(fdoc, hdoc, bdoc, parts=None, soledad_querier=None):
+    def from_soledad(fdoc, hdoc, bdoc, parts=None):
         mail = PixelatedMail()
         mail.parts = parts
         mail.boundary = str(uuid4()).replace('-', '')
         mail.bdoc = bdoc
         mail.fdoc = fdoc
         mail.hdoc = hdoc
-        mail.querier = soledad_querier
         mail._mime = None
         return mail
 

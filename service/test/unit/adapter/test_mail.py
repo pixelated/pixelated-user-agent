@@ -43,7 +43,7 @@ class TestPixelatedMail(unittest.TestCase):
 
         leap_mail = test_helper.leap_mail(headers={'date': leap_mail_date})
 
-        mail = PixelatedMail.from_soledad(*leap_mail, soledad_querier=self.querier)
+        mail = PixelatedMail.from_soledad(*leap_mail)
 
         self.assertEqual(str(mail.headers['Date']), leap_mail_date_in_iso_format)
 
@@ -54,7 +54,7 @@ class TestPixelatedMail(unittest.TestCase):
 
         leap_mail = test_helper.leap_mail(headers={'received': leap_mail_received_header})
 
-        mail = PixelatedMail.from_soledad(*leap_mail, soledad_querier=self.querier)
+        mail = PixelatedMail.from_soledad(*leap_mail)
 
         self.assertEqual(str(mail.headers['Date']), leap_mail_date_in_iso_format)
 
@@ -65,7 +65,7 @@ class TestPixelatedMail(unittest.TestCase):
         fdoc, hdoc, bdoc = test_helper.leap_mail()
         del hdoc.content['date']
 
-        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier)
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc)
 
         self.assertEqual(str(mail.headers['Date']), leap_mail_date_in_iso_format)
 
@@ -76,7 +76,7 @@ class TestPixelatedMail(unittest.TestCase):
         when(pixelated.support.date).iso_now().thenReturn(date_expected)
         leap_mail = test_helper.leap_mail(headers={'date': leap_mail_date})
 
-        mail = PixelatedMail.from_soledad(*leap_mail, soledad_querier=self.querier)
+        mail = PixelatedMail.from_soledad(*leap_mail)
 
         self.assertEqual(str(mail.headers['Date']), date_expected)
 
@@ -87,7 +87,7 @@ class TestPixelatedMail(unittest.TestCase):
         when(pixelated.support.date).iso_now().thenReturn(date_expected)
         leap_mail = test_helper.leap_mail(headers={'received': leap_mail_received_header})
 
-        mail = PixelatedMail.from_soledad(*leap_mail, soledad_querier=self.querier)
+        mail = PixelatedMail.from_soledad(*leap_mail)
 
         self.assertEqual(mail.headers['Date'], date_expected)
 
@@ -111,7 +111,7 @@ class TestPixelatedMail(unittest.TestCase):
 
         InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
 
-        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier)
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc)
 
         _dict = mail.as_dict()
 
@@ -151,7 +151,7 @@ class TestPixelatedMail(unittest.TestCase):
 
         InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
 
-        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier)
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc)
 
         _dict = mail.as_dict()
 
@@ -166,7 +166,7 @@ class TestPixelatedMail(unittest.TestCase):
         parts['alternatives'].append({'content': 'blablabla', 'headers': {'Content-Type': 'text/plain'}})
         parts['alternatives'].append({'content': '<p>blablabla</p>', 'headers': {'Content-Type': 'text/html'}})
 
-        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw='blablabla'), parts=parts, soledad_querier=None)
+        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw='blablabla'), parts=parts)
 
         self.assertRegexpMatches(mail.html_body, '^<p>blablabla</p>$')
         self.assertRegexpMatches(mail.text_plain_body, '^blablabla$')
@@ -178,7 +178,7 @@ class TestPixelatedMail(unittest.TestCase):
                 {'content': u'content', 'headers': {u'Content-Type': u'text/plain; charset=us-ascii'}},
                 {'content': u'', 'headers': {u'Some info': u'info'}}]}
 
-        mail = PixelatedMail.from_soledad(None, None, None, parts=parts, soledad_querier=None)
+        mail = PixelatedMail.from_soledad(None, None, None, parts=parts)
         self.assertIsNone(mail.html_body)
 
     def test_percent_character_is_allowed_on_body(self):
@@ -186,7 +186,7 @@ class TestPixelatedMail(unittest.TestCase):
         parts['alternatives'].append({'content': '100% happy with percentage symbol', 'headers': {'Content-Type': 'text/plain'}})
         parts['alternatives'].append({'content': '<p>100% happy with percentage symbol</p>', 'headers': {'Content-Type': 'text/html'}})
 
-        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw="100% happy with percentage symbol"), parts=parts, soledad_querier=None)
+        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw="100% happy with percentage symbol"), parts=parts)
 
         self.assertRegexpMatches(mail.text_plain_body, '([\s\S]*100%)')
         self.assertRegexpMatches(mail.html_body, '([\s\S]*100%)')
@@ -196,7 +196,7 @@ class TestPixelatedMail(unittest.TestCase):
         html_headers = {'Content-Type': 'text/html; charset=utf-8', 'Content-Transfer-Encoding': 'quoted-printable'}
         parts = {'alternatives': [{'content': 'H=E4llo', 'headers': plain_headers}, {'content': '<p>H=C3=A4llo</p>', 'headers': html_headers}]}
 
-        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw='some raw body'), parts=parts, soledad_querier=None)
+        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw='some raw body'), parts=parts)
 
         self.assertEqual(2, len(mail.alternatives))
         self.assertEquals(u'H\xe4llo', mail.text_plain_body)
@@ -207,7 +207,7 @@ class TestPixelatedMail(unittest.TestCase):
         html_headers = {'Content-Type': 'text/html;\ncharset=utf-8', 'Content-Transfer-Encoding': 'quoted-printable'}
         parts = {'alternatives': [{'content': 'H=E4llo', 'headers': plain_headers}, {'content': '<p>H=C3=A4llo</p>', 'headers': html_headers}]}
 
-        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw='some raw body'), parts=parts, soledad_querier=None)
+        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw='some raw body'), parts=parts)
 
         self.assertEqual(2, len(mail.alternatives))
         self.assertEquals(u'H\xe4llo', mail.text_plain_body)
@@ -218,7 +218,7 @@ class TestPixelatedMail(unittest.TestCase):
         html_headers = {'Content-Type': 'text/html;\ncharset=utf-8', 'Content-Transfer-Encoding': 'quoted-printable'}
         parts = {'alternatives': [{'content': 'H=E4llo', 'headers': plain_headers}, {'content': '<p>H=C3=A4llo</p>', 'headers': html_headers}]}
 
-        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw='some raw body'), parts=parts, soledad_querier=None)
+        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw='some raw body'), parts=parts)
 
         self.assertEquals(u'H=E4llo', mail.text_plain_body)
 
@@ -227,7 +227,7 @@ class TestPixelatedMail(unittest.TestCase):
         html_headers = {'Content-Type': 'text/html;\ncharset=utf-8', 'Content-Transfer-Encoding': 'quoted-printable'}
         parts = {'alternatives': [{'content': 'H=E4llo', 'headers': plain_headers}, {'content': '<p>H=C3=A4llo</p>', 'headers': html_headers}]}
 
-        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw='some raw body'), parts=parts, soledad_querier=None)
+        mail = PixelatedMail.from_soledad(None, None, self._create_bdoc(raw='some raw body'), parts=parts)
 
         self.assertEquals(u'H=E4llo', mail.text_plain_body)
         self.assertEquals(u'<p>H\xe4llo</p>', mail.html_body)
@@ -240,7 +240,7 @@ class TestPixelatedMail(unittest.TestCase):
         fdoc, hdoc, bdoc = test_helper.leap_mail(flags=['\\Recent'],
                                                  extra_headers=headers)
 
-        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier)
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc)
 
         for header_label in ['To', 'Cc', 'Bcc']:
             for address in mail.headers[header_label]:
@@ -255,7 +255,7 @@ class TestPixelatedMail(unittest.TestCase):
         fdoc, hdoc, bdoc = test_helper.leap_mail()
         parts = {'alternatives': []}
         parts['alternatives'].append({'content': encoded_body, 'headers': {'Content-Transfer-Encoding': 'base64'}})
-        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier, parts=parts)
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, parts=parts)
 
         self.assertEquals(body, mail.text_plain_body)
 
@@ -266,7 +266,7 @@ class TestPixelatedMail(unittest.TestCase):
         fdoc, hdoc, bdoc = test_helper.leap_mail()
         parts = {'alternatives': []}
         parts['alternatives'].append({'content': encoded_body, 'headers': {'Content-Transfer-Encoding': '7bit'}})
-        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier, parts=parts)
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, parts=parts)
 
         self.assertEquals(body, mail.text_plain_body)
 
@@ -277,7 +277,7 @@ class TestPixelatedMail(unittest.TestCase):
         fdoc, hdoc, bdoc = test_helper.leap_mail()
         parts = {'alternatives': []}
         parts['alternatives'].append({'content': encoded_body, 'headers': {'Content-Transfer-Encoding': '8bit'}})
-        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, soledad_querier=self.querier, parts=parts)
+        mail = PixelatedMail.from_soledad(fdoc, hdoc, bdoc, parts=parts)
 
         self.assertEquals(body, mail.text_plain_body)
 
@@ -288,10 +288,10 @@ class TestPixelatedMail(unittest.TestCase):
 
         bounced_leap_mail = test_helper.leap_mail()
         bounced_leap_mail[1].content = hdoc
-        bounced_mail = PixelatedMail.from_soledad(*bounced_leap_mail, soledad_querier=self.querier)
+        bounced_mail = PixelatedMail.from_soledad(*bounced_leap_mail)
 
         not_bounced_leap_mail = test_helper.leap_mail()
-        not_bounced_mail = PixelatedMail.from_soledad(*not_bounced_leap_mail, soledad_querier=self.querier)
+        not_bounced_mail = PixelatedMail.from_soledad(*not_bounced_leap_mail)
 
         self.assertTrue(bounced_mail.bounced)
         self.assertIn('this_mail_was_bounced@domain.com', bounced_mail.bounced)
@@ -312,10 +312,10 @@ class TestPixelatedMail(unittest.TestCase):
 
         temporary_bounced_leap_mail = test_helper.leap_mail()
         temporary_bounced_leap_mail[1].content = hdoc
-        temporary_bounced_mail = PixelatedMail.from_soledad(*temporary_bounced_leap_mail, soledad_querier=self.querier)
+        temporary_bounced_mail = PixelatedMail.from_soledad(*temporary_bounced_leap_mail)
 
         not_bounced_leap_mail = test_helper.leap_mail()
-        not_bounced_mail = PixelatedMail.from_soledad(*not_bounced_leap_mail, soledad_querier=self.querier)
+        not_bounced_mail = PixelatedMail.from_soledad(*not_bounced_leap_mail)
 
         self.assertFalse(temporary_bounced_mail.bounced)
         self.assertFalse(not_bounced_mail.bounced)
@@ -347,7 +347,7 @@ class TestPixelatedMail(unittest.TestCase):
 
         leap_mail = test_helper.leap_mail(extra_headers={'Subject': subject, 'From': email_from, 'To': email_to, 'Cc': email_cc, 'Bcc': email_bcc})
 
-        mail = PixelatedMail.from_soledad(*leap_mail, soledad_querier=self.querier)
+        mail = PixelatedMail.from_soledad(*leap_mail)
 
         self.assertEqual(str(mail.headers['Subject']), 'test encoding St\xc3\xa4ch')
         self.assertEqual(str(mail.headers['From']), 'St\xc3\xa4ch <stach@pixelated-project.org>')
@@ -363,7 +363,7 @@ class TestPixelatedMail(unittest.TestCase):
 
         leap_mail = test_helper.leap_mail(extra_headers={'From': leap_mail_from, 'Subject': "some subject", 'To': leap_mail_to})
 
-        mail = PixelatedMail.from_soledad(*leap_mail, soledad_querier=self.querier)
+        mail = PixelatedMail.from_soledad(*leap_mail)
 
         mail.headers['From'].encode('ascii')
         self.assertEqual(mail.headers['To'], ['"sme mluds" <lisa5@dev.pixelated-project.org>', '"sme mluds" <lisa5@dev.pixelated-project.org>'])
