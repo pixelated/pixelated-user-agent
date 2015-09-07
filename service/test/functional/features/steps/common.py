@@ -45,11 +45,6 @@ def wait_for_user_alert_to_disapear(context, timeout=TIMEOUT_IN_S):
     wait_until_element_is_invisible_by_locator(context, (By.ID, 'user-alerts'), timeout)
 
 
-def wait_for_user_alert_to_appear_and_disapear(context, timeout=TIMEOUT_IN_S):
-    wait_until_element_is_visible_by_locator(context, (By.ID, LOADING), timeout)
-    wait_until_element_is_invisible_by_locator(context, (By.ID, LOADING), timeout)
-
-
 def wait_until_elements_are_visible_by_locator(context, locator_tuple, timeout=TIMEOUT_IN_S):
     spend_time_in_reactor()
     wait = WebDriverWait(context.browser, timeout)
