@@ -103,6 +103,7 @@ def impl(context):
     last_email().find_element_by_tag_name('input').click()
     find_element_by_id(context, 'delete-selected').click()
     wait_for_user_alert_to_disapear(context)
+    wait_for_loading_to_finish(context)
     spend_time_in_reactor()
     assert 0 == len(context.browser.find_element_by_id('mail-list').find_elements_by_tag_name('li'))
 

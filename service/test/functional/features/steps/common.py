@@ -41,6 +41,9 @@ def wait_until_element_is_deleted(context, locator_tuple, timeout=TIMEOUT_IN_S):
     wait.until(lambda s: len(s.find_elements(locator_tuple[0], locator_tuple[1])) == 0)
 
 
+def wait_for_loading_to_finish(context, timeout=TIMEOUT_IN_S):
+    wait_until_element_is_invisible_by_locator(context, (By.ID, 'loading'), timeout)
+
 def wait_for_user_alert_to_disapear(context, timeout=TIMEOUT_IN_S):
     wait_until_element_is_invisible_by_locator(context, (By.ID, 'user-alerts'), timeout)
 
