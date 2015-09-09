@@ -31,9 +31,6 @@ from twisted.internet import defer
 
 
 class TestPixelatedMail(unittest.TestCase):
-    def setUp(self):
-        self.querier = mock()
-
     def tearDown(self):
         unstub()
 

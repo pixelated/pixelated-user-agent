@@ -40,7 +40,6 @@ from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.services.mail_service import MailService
-from pixelated.adapter.soledad.soledad_querier import SoledadQuerier
 from pixelated.resources.root_resource import RootResource
 from test.support.integration.model import MailBuilder
 from test.support.test_helper import request_mock
@@ -67,7 +66,6 @@ class AppTestClient(object):
 
         self.soledad = yield initialize_soledad(tempdir=soledad_test_folder)
 
-        self.soledad_querier = self._create_soledad_querier(self.soledad, self.INDEX_KEY)
         self.keymanager = mock()
 
         self.search_engine = SearchEngine(self.INDEX_KEY, agent_home=soledad_test_folder)
@@ -160,11 +158,6 @@ class AppTestClient(object):
             mails.append(mail)
 
         defer.returnValue(mails)
-
-    def _create_soledad_querier(self, soledad, index_key):
-        soledad_querier = SoledadQuerier(soledad)
-        soledad_querier.get_index_masterkey = lambda: index_key
-        return soledad_querier
 
     def _create_mail_sender(self):
         mail_sender = Mock()
