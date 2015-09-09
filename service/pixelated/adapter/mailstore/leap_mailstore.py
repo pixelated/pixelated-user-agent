@@ -162,6 +162,24 @@ class LeapMail(Mail):
 
         return [recipient for recipient in recipients if recipient != InputMail.FROM_EMAIL_ADDRESS]
 
+    @property
+    def bounced(self):
+        # TODO: Must be implemented for the search engine identify bounced mails
+        return False
+
+    @staticmethod
+    def from_dict(mail_dict):
+        # TODO: implement this method and also write tests for it
+        headers = {key.capitalize(): value for key, value in mail_dict.get('header', {}).items()}
+        headers['Date'] = date.iso_now()
+        body = mail_dict.get('body', '')
+        tags = set(mail_dict.get('tags', []))
+        status = set(mail_dict.get('status', []))
+        attachments = []
+
+        # mail_id, mailbox_name, headers=None, tags=set(), flags=set(), body=None, attachments=[]
+        return LeapMail(None, None, headers, tags, set(), body, attachments)
+
 
 def _extract_filename(content_disposition):
     match = re.compile('.*name=\"(.*)\".*').search(content_disposition)

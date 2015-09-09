@@ -84,11 +84,15 @@ class ContactsTest(SoledadTestBase):
         bounced_hdoc = self._bounced_mail_hdoc_content()
         bounced_mail_template = MailBuilder().build_input_mail()
         bounced_mail_template.headers.update(bounced_hdoc["headers"])
+        # TODO: must add attachments to bounced_mail_template
+        yield self.add_mail_to_inbox(bounced_mail_template)
 
         not_bounced_mail = MailBuilder(
         ).with_tags(['important']).with_to('this_mail_was_not@bounced.com').build_input_mail()
         yield self.add_mail_to_inbox(not_bounced_mail)
 
+        mails = yield self.mail_service.all_mails()
+        self.search_engine.index_mails(mails)
         contacts = yield self.get_contacts(query='this')
 
         self.assertNotIn('this_mail_was_bounced@domain.com', contacts)
