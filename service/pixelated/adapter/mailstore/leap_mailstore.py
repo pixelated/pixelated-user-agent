@@ -114,11 +114,11 @@ class LeapMail(Mail):
         if isinstance(header_value, list):
             return self.remove_duplicates([self._decoded_header_utf_8(v) for v in header_value])
         elif header_value is not None:
-            content, encoding = decode_header(header_value)[0]
-            if encoding:
-                return unicode(content, encoding=encoding)
-            else:
-                return unicode(content, encoding='ascii')
+            def encode_chunk(content, encoding):
+                return unicode(content, encoding=encoding or 'ascii')
+
+            encoded_chunks = [encode_chunk(content, encoding) for content, encoding in decode_header(header_value)]
+            return ' '.join(encoded_chunks)  # decode_header strips whitespaces on all chunks, joining over ' ' is only a workaround, not a proper fix
 
     def as_dict(self):
         return {
