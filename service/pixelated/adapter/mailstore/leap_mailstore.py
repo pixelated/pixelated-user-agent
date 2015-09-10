@@ -349,7 +349,7 @@ class LeapMailStore(MailStore):
     @defer.inlineCallbacks
     def _mailbox_name_from_uuid(self, uuid):
         map = (yield self._mailbox_uuid_to_name_map())
-        defer.returnValue(map[uuid])
+        defer.returnValue(map.get(uuid, ''))
 
     @defer.inlineCallbacks
     def _get_or_create_mailbox(self, mailbox_name):
