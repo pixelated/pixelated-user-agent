@@ -34,8 +34,6 @@ class SearchableMailStore(object):  # implementes MailStore
     @defer.inlineCallbacks
     def add_mail(self, mailbox_name, mail):
         stored_mail = yield self._delegate.add_mail(mailbox_name, mail)
-        # the stored_mail dont't have a content type needed for identify
-        # that the email is bounced or not, but this header is setted on input_mail
         self._search_engine.index_mail(stored_mail)
         defer.returnValue(stored_mail)
 

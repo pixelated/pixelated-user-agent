@@ -85,10 +85,6 @@ class Mail(object):
         # FIXME mbox is no longer available, instead we now have mbox_uuid
         return self.fdoc.content.get('mbox', 'INBOX')
 
-    @property
-    def bounced(self):
-        return False
-
     def _encode_header_value_list(self, header_value_list):
         return [self._encode_header_value(v) for v in header_value_list]
 

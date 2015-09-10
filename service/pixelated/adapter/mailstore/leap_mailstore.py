@@ -165,11 +165,6 @@ class LeapMail(Mail):
 
         return [recipient for recipient in recipients if recipient != InputMail.FROM_EMAIL_ADDRESS]
 
-    @property
-    def bounced(self):
-        # TODO: Must be implemented for the search engine identify bounced mails
-        return False
-
     @staticmethod
     def from_dict(mail_dict):
         # TODO: implement this method and also write tests for it
