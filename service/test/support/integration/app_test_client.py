@@ -36,7 +36,6 @@ from pixelated.config.site import PixelatedSite
 from pixelated.adapter.mailstore import LeapMailStore
 from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
 
-from pixelated.adapter.model.mail import PixelatedMail
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.services.mail_service import MailService
@@ -61,8 +60,6 @@ class AppTestClient(object):
         SearchEngine.DEFAULT_INDEX_HOME = soledad_test_folder
 
         self.cleanup = lambda: shutil.rmtree(soledad_test_folder)
-
-        PixelatedMail.from_email_address = self.MAIL_ADDRESS
 
         self.soledad = yield initialize_soledad(tempdir=soledad_test_folder)
 

@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from twisted.trial import unittest
 from pixelated.adapter.mailstore.leap_mailstore import LeapMail
-from pixelated.adapter.model.mail import InputMail, PixelatedMail
+from pixelated.adapter.model.mail import InputMail
 from pixelated.adapter.model.status import Status
 
 from pixelated.adapter.services.mail_service import MailService
@@ -134,7 +134,7 @@ class TestMailService(unittest.TestCase):
 
     @defer.inlineCallbacks
     def test_recover_mail(self):
-        mail_to_recover = PixelatedMail.from_soledad(*leap_mail())
+        mail_to_recover = LeapMail(1, 'TRASH')
         when(self.mail_service).mail(1).thenReturn(mail_to_recover)
         when(self.mail_store).move_mail_to_mailbox(1, 'INBOX').thenReturn(mail_to_recover)
 
