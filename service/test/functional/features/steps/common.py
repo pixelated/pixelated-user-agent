@@ -28,9 +28,22 @@ LOADING = 'loading'
 
 TIMEOUT_IN_S = 20
 
+DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S = 10.0
+
+
+class ImplicitWait(object):
+    def __init__(self, context, timeout=5.0):
+        self._context = context
+        self._timeout = timeout
+
+    def __enter__(self):
+        self._context.browser.implicitly_wait(self._timeout)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._context.browser.implicitly_wait(DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S)
+
 
 def wait_until_element_is_invisible_by_locator(context, locator_tuple, timeout=TIMEOUT_IN_S):
-    spend_time_in_reactor()
     wait = WebDriverWait(context.browser, timeout)
     wait.until(EC.invisibility_of_element_located(locator_tuple))
 

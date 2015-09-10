@@ -15,7 +15,6 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from common import *
 from selenium.common.exceptions import NoSuchElementException
-from time import sleep
 
 
 def find_current_mail(context):
@@ -94,16 +93,19 @@ def impl(context):
 @when('I delete the email')
 def impl(context):
     def last_email():
-        return wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-list li'))[0]
-    context.current_mail_id = last_email().get_attribute('id')
-    last_email().find_element_by_tag_name('input').click()
+        return wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-list li'))
+    mail = last_email()
+    context.current_mail_id = mail.get_attribute('id')
+    mail.find_element_by_tag_name('input').click()
     find_element_by_id(context, 'delete-selected').click()
     _wait_for_mail_list_to_be_empty(context)
 
 
 def _wait_for_mail_list_to_be_empty(context):
     wait_for_loading_to_finish(context)
-    assert 0 == len(context.browser.find_elements_by_css_selector('#mail-list li'))
+
+    with ImplicitWait(context, timeout=0.1):
+        assert 0 == len(context.browser.find_elements_by_css_selector('#mail-list li'))
 
 
 @when('I check all emails')
