@@ -28,7 +28,6 @@ def check_current_mail_is_visible(context):
 
 
 def open_current_mail(context):
-    sleep(2)
     e = find_current_mail(context)
     e.click()
 
@@ -41,7 +40,6 @@ def impl(context, tag):
 
 @when('I open that mail')
 def impl(context):
-    sleep(3)
     find_current_mail(context).click()
 
 
@@ -50,7 +48,6 @@ def impl(context):
     first_email = wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-list li span a'))[0]
     context.current_mail_id = 'mail-' + first_email.get_attribute('href').split('/')[-1]
     first_email.click()
-    sleep(5)
 
 
 @when('I open the first mail in the \'{tag}\'')
@@ -91,8 +88,7 @@ def impl(context):
             find_element_by_id(context, 'mark-selected-as-read').click()
             context.current_mail_id = email.get_attribute('id')
             break
-    sleep(2)
-    assert 'status-read' in context.browser.find_element_by_id(context.current_mail_id).get_attribute('class')
+    wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '#%s.status-read' % context.current_mail_id))
 
 
 @when('I delete the email')
@@ -102,10 +98,12 @@ def impl(context):
     context.current_mail_id = last_email().get_attribute('id')
     last_email().find_element_by_tag_name('input').click()
     find_element_by_id(context, 'delete-selected').click()
-    wait_for_user_alert_to_disapear(context)
+    _wait_for_mail_list_to_be_empty(context)
+
+
+def _wait_for_mail_list_to_be_empty(context):
     wait_for_loading_to_finish(context)
-    spend_time_in_reactor()
-    assert 0 == len(context.browser.find_element_by_id('mail-list').find_elements_by_tag_name('li'))
+    assert 0 == len(context.browser.find_elements_by_css_selector('#mail-list li'))
 
 
 @when('I check all emails')
@@ -120,9 +118,4 @@ def impl(context):
 
 @then('I should not see any email')
 def impl(context):
-    try:
-        context.browser.find_element(By.CSS_SELECTOR, '#mail-list li span a')
-    except NoSuchElementException:
-        assert True
-    except:
-        assert False
+    _wait_for_mail_list_to_be_empty(context)
