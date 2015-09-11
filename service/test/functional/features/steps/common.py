@@ -122,6 +122,10 @@ def find_element_by_css_selector(context, css_selector):
     return wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, css_selector))
 
 
+def find_element_by_class_name(context, class_name):
+    return wait_until_element_is_visible_by_locator(context, (By.CLASS_NAME, class_name))
+
+
 def find_elements_by_css_selector(context, css_selector):
     return wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, css_selector))
 
