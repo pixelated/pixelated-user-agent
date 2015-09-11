@@ -39,6 +39,8 @@ def impl(context, tag):
     wait_for_user_alert_to_disapear(context)
     expand_side_nav(context)
 
+    time.sleep(.5)  # need to find something that tells us that side nav is completely loaded
+
     wait_until_element_is_visible_by_locator(context, (By.ID, 'tag-%s' % tag), timeout=20)
 
     e = find_element_by_id(context, 'tag-%s' % tag)
