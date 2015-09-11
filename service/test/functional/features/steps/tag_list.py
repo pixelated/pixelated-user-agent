@@ -33,7 +33,7 @@ def expand_side_nav(context):
     toggle = find_element_by_class_name(context, 'side-nav-toggle')
     toggle.click()
 
-    context.browser.execute_script('true')  # execute something so that page hopefully is rendered
+    wait_for_browser_javascript_execution(context)
 
 
 @when('I select the tag \'{tag}\'')
@@ -43,9 +43,16 @@ def impl(context, tag):
 
     wait_until_element_is_visible_by_locator(context, (By.ID, 'tag-%s' % tag), timeout=20)
 
+    wait_for_browser_javascript_execution(context)
+
     e = find_element_by_id(context, 'tag-%s' % tag)
     e.click()
+
     wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, "#mail-list li span a[href*='%s']" % tag), timeout=20)
+
+
+def wait_for_browser_javascript_execution(context):
+    context.browser.execute_script('true')  # execute something so that page hopefully is rendered
 
 
 @when('I am in  \'{tag}\'')
