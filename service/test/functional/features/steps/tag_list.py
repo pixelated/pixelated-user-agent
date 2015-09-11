@@ -33,13 +33,13 @@ def expand_side_nav(context):
     toggle = find_element_by_class_name(context, 'side-nav-toggle')
     toggle.click()
 
+    context.browser.execute_script('true')  # execute something so that page hopefully is rendered
+
 
 @when('I select the tag \'{tag}\'')
 def impl(context, tag):
     wait_for_user_alert_to_disapear(context)
     expand_side_nav(context)
-
-    time.sleep(.5)  # need to find something that tells us that side nav is completely loaded
 
     wait_until_element_is_visible_by_locator(context, (By.ID, 'tag-%s' % tag), timeout=20)
 
