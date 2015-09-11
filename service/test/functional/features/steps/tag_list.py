@@ -33,26 +33,30 @@ def expand_side_nav(context):
     toggle = find_element_by_class_name(context, 'side-nav-toggle')
     toggle.click()
 
-    wait_for_browser_javascript_execution(context)
-
 
 @when('I select the tag \'{tag}\'')
 def impl(context, tag):
     wait_for_user_alert_to_disapear(context)
     expand_side_nav(context)
 
-    wait_until_element_is_visible_by_locator(context, (By.ID, 'tag-%s' % tag), timeout=20)
+    # try this multiple times as there are some race conditions
+    try_again = 2
+    success = False
+    while (not success) and (try_again > 0):
+        try:
+            wait_until_element_is_visible_by_locator(context, (By.ID, 'tag-%s' % tag), timeout=20)
 
-    wait_for_browser_javascript_execution(context)
+            e = find_element_by_id(context, 'tag-%s' % tag)
+            e.click()
 
-    e = find_element_by_id(context, 'tag-%s' % tag)
-    e.click()
+            wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, "#mail-list li span a[href*='%s']" % tag), timeout=20)
+            success = True
+        except TimeoutException:
+            pass
+        finally:
+            try_again -= 1
 
-    wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, "#mail-list li span a[href*='%s']" % tag), timeout=20)
-
-
-def wait_for_browser_javascript_execution(context):
-    context.browser.execute_script('true')  # execute something so that page hopefully is rendered
+    assert success
 
 
 @when('I am in  \'{tag}\'')
