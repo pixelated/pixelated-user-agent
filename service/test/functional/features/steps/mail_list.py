@@ -31,6 +31,10 @@ def open_current_mail(context):
     e.click()
 
 
+def get_first_email(context):
+    return wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-list li span a'))[0]
+
+
 @then('I see that mail under the \'{tag}\' tag')
 def impl(context, tag):
     context.execute_steps("when I select the tag '%s'" % tag)
@@ -44,9 +48,9 @@ def impl(context):
 
 @when('I open the first mail in the mail list')
 def impl(context):
-    first_email = wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-list li span a'))[0]
-    context.current_mail_id = 'mail-' + first_email.get_attribute('href').split('/')[-1]
-    first_email.click()
+    # it seems page is often still loading so staleness exceptions hapen often
+    context.current_mail_id = 'mail-' + execute_ignoring_staleness(lambda: get_first_email(context).get_attribute('href').split('/')[-1])
+    execute_ignoring_staleness(lambda: get_first_email(context).click())
 
 
 @when('I open the first mail in the \'{tag}\'')
@@ -83,9 +87,9 @@ def impl(context):
 
     for email in emails:
         if 'status-read' not in email.get_attribute('class'):
+            context.current_mail_id = email.get_attribute('id')  # we need to get the mail id before manipulating the page
             email.find_element_by_tag_name('input').click()
             find_element_by_id(context, 'mark-selected-as-read').click()
-            context.current_mail_id = email.get_attribute('id')
             break
     wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '#%s.status-read' % context.current_mail_id))
 
@@ -104,8 +108,14 @@ def impl(context):
 def _wait_for_mail_list_to_be_empty(context):
     wait_for_loading_to_finish(context)
 
-    with ImplicitWait(context, timeout=0.1):
-        assert 0 == len(context.browser.find_elements_by_css_selector('#mail-list li'))
+    def mail_list_is_empty(_):
+        with ImplicitWait(context, timeout=0.1):
+            try:
+                return 0 == len(context.browser.find_elements_by_css_selector('#mail-list li'))
+            except TimeoutException:
+                return False
+
+    wait_for_condition(context, mail_list_is_empty)
 
 
 @when('I check all emails')
