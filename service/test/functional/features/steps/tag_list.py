@@ -43,7 +43,7 @@ def impl(context, tag):
 
     e = find_element_by_id(context, 'tag-%s' % tag)
     e.click()
-    wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, "#mail-list li span a[href*='%s']" % tag))
+    wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, "#mail-list li span a[href*='%s']" % tag), timeout=20)
 
 
 @when('I am in  \'{tag}\'')
