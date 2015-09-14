@@ -42,7 +42,8 @@ define(
     'views/recipientListFormatter',
     'flight/lib/logger',
     'page/logout',
-    'page/logout_shortcut'
+    'page/logout_shortcut',
+    'page/feedback',
   ],
 
   function (
@@ -72,7 +73,8 @@ define(
     recipientListFormatter,
     withLogging,
     logout,
-    logoutShortcut) {
+    logoutShortcut,
+    feedback) {
 
     'use strict';
     function initialize(path) {
@@ -105,6 +107,8 @@ define(
       offCanvas.attachTo(document);
       logout.attachTo('#logout');
       logoutShortcut.attachTo('#logout-shortcut');
+
+      feedback.attachTo("#feedback");
     }
 
     return initialize;

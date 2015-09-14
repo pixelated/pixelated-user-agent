@@ -390,17 +390,15 @@ section {
         }
       }
 
-      ul#logout {
+      ul#logout, ul#feedback {
         li {
-          color: $action_buttons;
           background-color: $navigation_background;
           padding: 5px 10px;
           position: relative;
           @include searching(4px, 19px, #333, 0.7em);
 
           &:hover {
-          background-color: $action_buttons;
-          color: $navigation_background;
+            color: $navigation_background;
           }
 
           div {
@@ -413,6 +411,24 @@ section {
               position: relative;
               top: 2px;
             }
+          }
+        }
+      }
+
+      ul#logout li{
+        color: $action_buttons;
+        &:hover {
+          background-color: $action_buttons;
+        }
+      }
+
+      ul#feedback{
+        margin-bottom: 0;
+
+        li {
+          color: $light_orange;
+          &:hover {
+            background-color: $light_orange;
           }
         }
       }
