@@ -24,9 +24,12 @@ class FeaturesResource(Resource):
     isLeaf = True
 
     def render_GET(self, request):
-        dispatcher_features = {'logout': os.environ.get('DISPATCHER_LOGOUT_URL')}
+        dispatcher_features = {}
 
-        if os.environ.get('FEEDBACK_ENABLE') is None:
+        if os.environ.get('DISPATCHER_LOGOUT_URL'):
+            dispatcher_features['logout'] = os.environ.get('DISPATCHER_LOGOUT_URL')
+
+        if os.environ.get('FEEDBACK_ENABLED') is None:
             self.DISABLED_FEATURES.append('feedback')
 
         return respond_json(
