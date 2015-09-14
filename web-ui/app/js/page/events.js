@@ -69,6 +69,9 @@ define(function () {
         next: 'ui:page:next',
         changed: 'ui:page:changed'
       },
+      feedback: {
+        open: 'ui:feedback:open'
+      },
       composeBox: {
         newMessage: 'ui:composeBox:newMessage',
         newReply: 'ui:composeBox:newReply',

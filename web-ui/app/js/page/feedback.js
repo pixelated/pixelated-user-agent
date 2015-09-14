@@ -15,7 +15,7 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(['flight/lib/component', 'views/templates'], function (defineComponent, templates) {
+define(['flight/lib/component', 'views/templates', 'page/events'], function (defineComponent, templates, events) {
   'use strict';
 
   return defineComponent(function () {
@@ -23,8 +23,13 @@ define(['flight/lib/component', 'views/templates'], function (defineComponent, t
       this.$node.html(templates.page.feedback());
     };
 
+    this.onClick = function() {
+      this.trigger(document, events.ui.feedback.open);
+    }
+
     this.after('initialize', function () {
       this.render();
+      this.on('click', this.onClick);
     });
 
   });
