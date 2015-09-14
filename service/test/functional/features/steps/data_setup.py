@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from time import sleep
 from uuid import uuid4
 from test.support.integration import MailBuilder
 from behave import given
@@ -24,5 +25,6 @@ def add_mail_impl(context):
 
     input_mail = MailBuilder().with_subject(subject).build_input_mail()
     context.client.add_mail_to_inbox(input_mail)
+    sleep(5) # we need to wait for the mail to be indexed (3 secs at least)
 
     context.last_subject = subject
