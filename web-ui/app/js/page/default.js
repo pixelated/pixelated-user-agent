@@ -108,7 +108,7 @@ define(
       logout.attachTo('#logout');
       logoutShortcut.attachTo('#logout-shortcut');
 
-      feedback.attachTo("#feedback");
+      feedback.attachTo('#feedback');
     }
 
     return initialize;

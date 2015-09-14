@@ -26,7 +26,7 @@ define(['flight/lib/component', 'views/templates', 'page/events', 'features'],
 
     this.onClick = function() {
       this.trigger(document, events.ui.feedback.open);
-    }
+    };
 
     this.after('initialize', function () {
       if (features.isEnabled('feedback')) {
