@@ -41,9 +41,9 @@ define(
     'views/i18n',
     'views/recipientListFormatter',
     'flight/lib/logger',
+    'feedback/feedback',
     'page/logout',
     'page/logout_shortcut',
-    'page/feedback',
     'page/version',
   ],
 
@@ -73,9 +73,9 @@ define(
     viewI18n,
     recipientListFormatter,
     withLogging,
+    feedback,
     logout,
     logoutShortcut,
-    feedback,
     version) {
 
     'use strict';

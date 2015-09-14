@@ -1,4 +1,4 @@
-describeComponent('page/feedback', function () {
+describeComponent('feedback/feedback', function () {
   'use strict';
 
   describe('Feedback form', function () {

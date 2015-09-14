@@ -58,8 +58,10 @@ define(['hbs/templates'], function (templates) {
     page: {
       logout: window.Pixelated['app/templates/page/logout.hbs'],
       logoutShortcut: window.Pixelated['app/templates/page/logout_shortcut.hbs'],
-      feedback: window.Pixelated['app/templates/page/feedback.hbs'],
       version: window.Pixelated['app/templates/page/version.hbs']
+    },
+    feedback: {
+      feedback: window.Pixelated['app/templates/feedback/feedback.hbs']
     }
   };
 

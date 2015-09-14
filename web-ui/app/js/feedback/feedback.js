@@ -21,7 +21,7 @@ define(['flight/lib/component', 'views/templates', 'page/events', 'features'],
 
   return defineComponent(function () {
     this.render = function () {
-      this.$node.html(templates.page.feedback());
+      this.$node.html(templates.feedback.feedback());
     };
 
     this.onClick = function() {
