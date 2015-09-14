@@ -48,7 +48,7 @@ def impl(context):
 
 @when('I open the first mail in the mail list')
 def impl(context):
-    # it seems page is often still loading so staleness exceptions hapen often
+    # it seems page is often still loading so staleness exceptions happen often
     context.current_mail_id = 'mail-' + execute_ignoring_staleness(lambda: get_first_email(context).get_attribute('href').split('/')[-1])
     execute_ignoring_staleness(lambda: get_first_email(context).click())
 
