@@ -26,8 +26,8 @@ class FeaturesResource(Resource):
         disabled_features = ['draftReply']
         dispatcher_features = {'logout': os.environ.get('DISPATCHER_LOGOUT_URL')}
 
-        if not os.environ.get('FEEDBACK_ENABLE'):
-            self.DISABLED_FEATURES.append('feedback')
+        if os.environ.get('FEEDBACK_ENABLE') is None:
+            disabled_features.append('feedback')
 
         return respond_json(
             {'disabled_features': disabled_features, 'dispatcher_features': dispatcher_features}, request)
