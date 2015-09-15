@@ -23,10 +23,11 @@ define(
     'mail_view/ui/reply_section',
     'mail_view/ui/draft_box',
     'mail_view/ui/no_message_selected_pane',
+    'feedback/compose_feedback',
     'page/events'
   ],
 
-  function(defineComponent, ComposeBox, MailView, ReplySection, DraftBox, NoMessageSelectedPane, events) {
+  function(defineComponent, ComposeBox, MailView, ReplySection, DraftBox, NoMessageSelectedPane, FeedbackBox, events) {
     'use strict';
 
     return defineComponent(rightPaneDispatcher);
@@ -35,6 +36,7 @@ define(
       this.defaultAttrs({
         rightPane: '#right-pane',
         composeBox: 'compose-box',
+        feedbackBox: 'feedback-box',
         mailView: 'mail-view',
         noMessageSelectedPane: 'no-message-selected-pane',
         replySection: 'reply-section',
@@ -59,6 +61,11 @@ define(
         var stage = this.reset(this.attr.composeBox);
         ComposeBox.attachTo(stage, {currentTag: this.attr.currentTag});
       };
+
+      this.openFeedbackBox = function() {
+        var stage = this.reset(this.attr.feedbackBox);
+        FeedbackBox.attachTo(stage);
+      }
 
       this.openMail = function(ev, data) {
         var stage = this.reset(this.attr.mailView);
@@ -97,6 +104,7 @@ define(
         this.on(document, events.dispatchers.rightPane.openComposeBox, this.openComposeBox);
         this.on(document, events.dispatchers.rightPane.openDraft, this.openDraft);
         this.on(document, events.ui.mail.open, this.openMail);
+        this.on(document, events.ui.feedback.open, this.openFeedbackBox);
         this.on(document, events.dispatchers.rightPane.openNoMessageSelected, this.openNoMessageSelectedPane);
         this.on(document, events.dispatchers.rightPane.selectTag, this.selectTag);
         this.on(document, events.ui.tag.selected, this.saveTag);

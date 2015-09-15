@@ -53,6 +53,15 @@ describeComponent('dispatchers/right_pane_dispatcher', function () {
         expect(pushStateEvent).toHaveBeenTriggeredOnAndWith(document, jasmine.objectContaining({ isDisplayNoMessageSelected:  true }));
       });
 
+      it('listens to open feedback event and open feedback box', function () {
+        var feedbackBox = require('feedback/compose_feedback');
+        spyOn(feedbackBox, 'attachTo');
+
+        this.component.trigger(document, Pixelated.events.ui.feedback.open);
+
+        expect(feedbackBox.attachTo).toHaveBeenCalled();
+      });
+
 
     });
 
@@ -65,6 +74,7 @@ describeComponent('dispatchers/right_pane_dispatcher', function () {
       expect(draftBox.attachTo).toHaveBeenCalled();
     });
   });
+
 
   describe('on initialization', function () {
     var noMessageSelectedPane;
