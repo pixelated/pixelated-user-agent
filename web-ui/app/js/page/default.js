@@ -44,6 +44,7 @@ define(
     'page/logout',
     'page/logout_shortcut',
     'page/feedback',
+    'page/version',
   ],
 
   function (
@@ -74,7 +75,8 @@ define(
     withLogging,
     logout,
     logoutShortcut,
-    feedback) {
+    feedback,
+    version) {
 
     'use strict';
     function initialize(path) {
@@ -107,6 +109,7 @@ define(
       offCanvas.attachTo(document);
       logout.attachTo('#logout');
       logoutShortcut.attachTo('#logout-shortcut');
+      version.attachTo('.version');
 
       feedback.attachTo('#feedback');
     }

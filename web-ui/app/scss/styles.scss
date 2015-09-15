@@ -790,6 +790,11 @@ div.side-nav-bottom {
   position: fixed;
   bottom: 0;
   background-color: $navigation_background;
+
+  .version {
+    padding-left: 55px;
+    padding-bottom: 3px;
+  }
 }
 
 @import "mascot.scss";
