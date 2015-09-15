@@ -61,7 +61,7 @@ define(['hbs/templates'], function (templates) {
       version: window.Pixelated['app/templates/page/version.hbs']
     },
     feedback: {
-      feedback: window.Pixelated['app/templates/feedback/feedback.hbs'],
+      feedback: window.Pixelated['app/templates/feedback/feedback_trigger.hbs'],
       compose_feedback: window.Pixelated['app/templates/feedback/compose_feedback.hbs']
     }
   };

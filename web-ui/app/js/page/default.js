@@ -43,7 +43,7 @@ define(
     'flight/lib/logger',
     'page/logout',
     'page/logout_shortcut',
-    'feedback/feedback',
+    'feedback/feedback_trigger',
     'feedback/compose_feedback',
     'page/version',
   ],

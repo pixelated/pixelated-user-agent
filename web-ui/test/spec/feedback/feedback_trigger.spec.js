@@ -1,4 +1,4 @@
-describeComponent('feedback/feedback', function () {
+describeComponent('feedback/feedback_trigger', function () {
   'use strict';
 
   describe('Feedback link', function () {
