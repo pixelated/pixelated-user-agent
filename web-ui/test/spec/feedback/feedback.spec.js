@@ -1,7 +1,7 @@
 describeComponent('feedback/feedback', function () {
   'use strict';
 
-  describe('Feedback form', function () {
+  describe('Feedback link', function () {
    var features;
 
     beforeEach(function() {
