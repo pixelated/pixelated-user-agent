@@ -23,7 +23,7 @@ define(
     'mail_view/ui/reply_section',
     'mail_view/ui/draft_box',
     'mail_view/ui/no_message_selected_pane',
-    'feedback/compose_feedback',
+    'mail_view/ui/compose_feedback',
     'page/events'
   ],
 
@@ -65,7 +65,7 @@ define(
       this.openFeedbackBox = function() {
         var stage = this.reset(this.attr.feedbackBox);
         FeedbackBox.attachTo(stage);
-      }
+      };
 
       this.openMail = function(ev, data) {
         var stage = this.reset(this.attr.mailView);

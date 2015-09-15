@@ -54,14 +54,13 @@ describeComponent('dispatchers/right_pane_dispatcher', function () {
       });
 
       it('listens to open feedback event and open feedback box', function () {
-        var feedbackBox = require('feedback/compose_feedback');
+        var feedbackBox = require('mail_view/ui/compose_feedback');
         spyOn(feedbackBox, 'attachTo');
 
         this.component.trigger(document, Pixelated.events.ui.feedback.open);
 
         expect(feedbackBox.attachTo).toHaveBeenCalled();
       });
-
 
     });
 

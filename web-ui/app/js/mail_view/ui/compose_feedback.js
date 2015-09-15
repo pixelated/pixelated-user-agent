@@ -21,13 +21,13 @@ define(['flight/lib/component', 'views/templates', 'page/events', 'features'],
 
   return defineComponent(function () {
     this.render = function () {
-      this.$node.html(templates.feedback.compose_feedback());
+      this.$node.html(templates.compose.feedback());
     };
 
     this.openComposeBox = function() {
       var stage = this.reset('compose-box');
       this.attachTo(stage);
-    }
+    };
 
     this.after('initialize', function () {
       if (features.isEnabled('feedback')) {

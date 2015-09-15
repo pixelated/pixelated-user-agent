@@ -44,7 +44,7 @@ define(
     'page/logout',
     'page/logout_shortcut',
     'feedback/feedback_trigger',
-    'feedback/compose_feedback',
+    'mail_view/ui/compose_feedback',
     'page/version',
   ],
 

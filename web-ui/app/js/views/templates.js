@@ -25,7 +25,8 @@ define(['hbs/templates'], function (templates) {
       replySection: window.Pixelated['app/templates/compose/reply_section.hbs'],
       recipientInput: window.Pixelated['app/templates/compose/recipient_input.hbs'],
       fixedRecipient: window.Pixelated['app/templates/compose/fixed_recipient.hbs'],
-      recipients: window.Pixelated['app/templates/compose/recipients.hbs']
+      recipients: window.Pixelated['app/templates/compose/recipients.hbs'],
+      feedback: window.Pixelated['app/templates/compose/feedback_box.hbs']
     },
     tags: {
       tagList: window.Pixelated['app/templates/tags/tag_list.hbs'],
@@ -61,8 +62,7 @@ define(['hbs/templates'], function (templates) {
       version: window.Pixelated['app/templates/page/version.hbs']
     },
     feedback: {
-      feedback: window.Pixelated['app/templates/feedback/feedback_trigger.hbs'],
-      compose_feedback: window.Pixelated['app/templates/feedback/compose_feedback.hbs']
+      feedback: window.Pixelated['app/templates/feedback/feedback_trigger.hbs']
     }
   };
 
