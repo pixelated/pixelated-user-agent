@@ -54,7 +54,7 @@ describeComponent('dispatchers/right_pane_dispatcher', function () {
       });
 
       it('listens to open feedback event and open feedback box', function () {
-        var feedbackBox = require('mail_view/ui/compose_feedback');
+        var feedbackBox = require('mail_view/ui/feedback_box');
         spyOn(feedbackBox, 'attachTo');
 
         this.component.trigger(document, Pixelated.events.ui.feedback.open);

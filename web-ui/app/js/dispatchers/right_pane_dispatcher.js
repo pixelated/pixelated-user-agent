@@ -23,7 +23,7 @@ define(
     'mail_view/ui/reply_section',
     'mail_view/ui/draft_box',
     'mail_view/ui/no_message_selected_pane',
-    'mail_view/ui/compose_feedback',
+    'mail_view/ui/feedback_box',
     'page/events'
   ],
 

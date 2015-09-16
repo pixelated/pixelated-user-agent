@@ -44,7 +44,7 @@ define(
     'page/logout',
     'page/logout_shortcut',
     'feedback/feedback_trigger',
-    'mail_view/ui/compose_feedback',
+    'mail_view/ui/feedback_box',
     'page/version',
   ],
 
@@ -77,7 +77,7 @@ define(
     logout,
     logoutShortcut,
     feedback,
-    compose_feedback,
+    feedbackBox,
     version) {
 
     'use strict';

@@ -24,15 +24,17 @@ define(['flight/lib/component', 'views/templates', 'page/events', 'features'],
       this.$node.html(templates.compose.feedback());
     };
 
-    this.openComposeBox = function() {
-      var stage = this.reset('compose-box');
+    this.openFeedbackBox = function() {
+      var stage = this.reset('feedback-box');
       this.attachTo(stage);
+      this.enableFloatlabel('input.floatlabel');
+      this.enableFloatlabel('textarea.floatlabel');
     };
 
     this.after('initialize', function () {
       if (features.isEnabled('feedback')) {
           this.render();
-          this.on(document, events.ui.feedback.open, this.openComposeBox);
+          this.on(document, events.ui.feedback.open, this.openFeedbackBox);
       }
     });
 
