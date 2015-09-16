@@ -55,7 +55,7 @@ class LeapSession(object):
     - ``incoming_mail_fetcher`` Background job for fetching incoming mails from LEAP server (LeapIncomingMail)
     """
 
-    def __init__(self, provider, user_auth, mail_store, soledad_session, nicknym, soledad_account, incoming_mail_fetcher, smtp):
+    def __init__(self, provider, user_auth, mail_store, soledad_session, nicknym, soledad_account, smtp):
         self.smtp = smtp
         self.config = provider.config
         self.provider = provider
@@ -64,27 +64,35 @@ class LeapSession(object):
         self.soledad_session = soledad_session
         self.nicknym = nicknym
         self.account = soledad_account
-        self.incoming_mail_fetcher = incoming_mail_fetcher
 
     @defer.inlineCallbacks
     def initial_sync(self):
         yield self.sync()
+        yield self.after_first_sync()
+
+    def after_first_sync(self):
         yield self.nicknym.generate_openpgp_key()
-        yield self.start_background_jobs()
-        defer.returnValue(self)
+        self.incoming_mail_fetcher = yield self._create_incoming_mail_fetcher(
+            self.nicknym,
+            self.soledad_session,
+            self.account,
+            self.account_email())
+        reactor.callFromThread(self.incoming_mail_fetcher.startService)
 
     def account_email(self):
         name = self.user_auth.username
         return self.provider.address_for(name)
 
     def close(self):
-        self.stop_background_jobs()
+        self.stop_background_jobs
 
     @defer.inlineCallbacks
-    def start_background_jobs(self):
-        self.incoming_mail_fetcher = yield self.incoming_mail_fetcher
-
-        reactor.callFromThread(self.incoming_mail_fetcher.startService)
+    def _create_incoming_mail_fetcher(self, nicknym, soledad_session, account, user_mail):
+        inbox = yield account.callWhenReady(lambda _: account.getMailbox('INBOX'))
+        defer.returnValue(IncomingMail(nicknym.keymanager,
+                          soledad_session.soledad,
+                          inbox.collection,
+                          user_mail))
 
     def stop_background_jobs(self):
         reactor.callFromThread(self.incoming_mail_fetcher.stopService)
@@ -124,11 +132,10 @@ class LeapSessionFactory(object):
 
         nicknym = self._create_nicknym(account_email, auth.token, auth.uuid, soledad)
         account = self._create_account(account_email, soledad)
-        deferred_incoming_mail_fetcher = self._create_incoming_mail_fetcher(nicknym, soledad, account, account_email)
 
         smtp = LeapSmtp(self._provider, auth, nicknym.keymanager)
 
-        return LeapSession(self._provider, auth, mail_store, soledad, nicknym, account, deferred_incoming_mail_fetcher, smtp)
+        return LeapSession(self._provider, auth, mail_store, soledad, nicknym, account, smtp)
 
     def _lookup_session(self, key):
         global SESSIONS
@@ -161,11 +168,3 @@ class LeapSessionFactory(object):
         return account
         # memstore = MemoryStore(permanent_store=SoledadStore(soledad_session.soledad))
         # return SoledadBackedAccount(uuid, soledad_session.soledad, memstore)
-
-    @defer.inlineCallbacks
-    def _create_incoming_mail_fetcher(self, nicknym, soledad_session, account, user_mail):
-        inbox = yield account.callWhenReady(lambda _: account.getMailbox('INBOX'))
-        defer.returnValue(IncomingMail(nicknym.keymanager,
-                          soledad_session.soledad,
-                          inbox.collection,
-                          user_mail))
