@@ -50,7 +50,7 @@ class SessionTest(AbstractLeapTest):
         self.soledad_session.sync.assert_called_once_with()
 
     def _create_session(self):
-        return LeapSession(self.provider, self.auth, self.mail_store, self.soledad_session, self.nicknym, self.soledad_account, self.smtp_mock)
+        return LeapSession(self.provider, self.auth, self.mail_store, self.soledad_session, self.nicknym, self.smtp_mock)
 
 
 def _execute_func(func):
