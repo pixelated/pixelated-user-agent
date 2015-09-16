@@ -20,6 +20,10 @@ define(['flight/lib/component', 'views/templates', 'page/events', 'features'],
   'use strict';
 
   return defineComponent(function () {
+     this.defaultAttrs({
+       'closeButton': '.close-mail-button'
+     });
+
     this.render = function () {
       this.$node.html(templates.compose.feedback());
     };
@@ -31,10 +35,15 @@ define(['flight/lib/component', 'views/templates', 'page/events', 'features'],
       this.enableFloatlabel('textarea.floatlabel');
     };
 
+    this.showNoMessageSelected = function() {
+      this.trigger(document, events.dispatchers.rightPane.openNoMessageSelected);
+    };
+
     this.after('initialize', function () {
       if (features.isEnabled('feedback')) {
           this.render();
           this.on(document, events.dispatchers.rightPane.openFeedbackBox, this.openFeedbackBox);
+          this.on(this.select('closeButton'), 'click', this.showNoMessageSelected);
       }
     });
 
