@@ -27,7 +27,7 @@ describeComponent('feedback/feedback_trigger', function () {
     it('Should trigger ui:feedback:open event on click', function () {
 
       this.setupComponent('<nav id="feedback"></nav>', {});
-      var spy = spyOnEvent(document, Pixelated.events.ui.feedback.open);
+      var spy = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openFeedbackBox);
 
       this.$node.find('a').click();
       expect(spy).toHaveBeenTriggeredOn(document);

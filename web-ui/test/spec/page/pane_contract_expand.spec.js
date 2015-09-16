@@ -45,7 +45,7 @@ describeComponent('page/pane_contract_expand', function () {
     });
 
     it('contracts middle pane and expands right pane on open draft', function () {
-      $(document).trigger(Pixelated.events.ui.feedback.open);
+      $(document).trigger(Pixelated.events.dispatchers.rightPane.openFeedbackBox);
 
       expect($('#middle-pane-container').attr('class')).toEqual(this.component.attr.MIDDLE_PANE_CONTRACT_CLASSES);
       expect($('#right-pane').attr('class')).toEqual(this.component.attr.RIGHT_PANE_EXPAND_CLASSES);

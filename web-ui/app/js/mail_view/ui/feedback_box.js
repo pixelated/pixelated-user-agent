@@ -34,7 +34,7 @@ define(['flight/lib/component', 'views/templates', 'page/events', 'features'],
     this.after('initialize', function () {
       if (features.isEnabled('feedback')) {
           this.render();
-          this.on(document, events.ui.feedback.open, this.openFeedbackBox);
+          this.on(document, events.dispatchers.rightPane.openFeedbackBox, this.openFeedbackBox);
       }
     });
 

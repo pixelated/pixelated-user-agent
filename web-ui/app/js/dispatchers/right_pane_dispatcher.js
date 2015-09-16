@@ -104,7 +104,7 @@ define(
         this.on(document, events.dispatchers.rightPane.openComposeBox, this.openComposeBox);
         this.on(document, events.dispatchers.rightPane.openDraft, this.openDraft);
         this.on(document, events.ui.mail.open, this.openMail);
-        this.on(document, events.ui.feedback.open, this.openFeedbackBox);
+        this.on(document, events.dispatchers.rightPane.openFeedbackBox, this.openFeedbackBox);
         this.on(document, events.dispatchers.rightPane.openNoMessageSelected, this.openNoMessageSelectedPane);
         this.on(document, events.dispatchers.rightPane.selectTag, this.selectTag);
         this.on(document, events.ui.tag.selected, this.saveTag);

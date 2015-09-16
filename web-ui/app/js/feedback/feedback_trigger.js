@@ -25,7 +25,7 @@ define(['flight/lib/component', 'views/templates', 'page/events', 'features'],
     };
 
     this.onClick = function() {
-      this.trigger(document, events.ui.feedback.open);
+      this.trigger(document, events.dispatchers.rightPane.openFeedbackBox);
     };
 
     this.after('initialize', function () {
