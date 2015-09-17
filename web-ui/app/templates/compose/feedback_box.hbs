@@ -2,15 +2,14 @@
   <i class="fa fa-times"></i>
 </button>
 <div class="floatlabel">
-  <label class="floatlabel" for="subject">Subject</label>
-  <input class="floatlabel" name="subject" type="text" id="subject" value="{{subject}}" placeholder="{{t 'Subject'}}" tabindex="1"/>
+  <span id="feedback-subject">Feedback</span>
 </div>
 <div class="floatlabel">
   <label class="floatlabel" for="text-box">Body</label>
-  <textarea class="floatlabel" name="body" id="text-box" placeholder="{{t 'Body'}}" tabindex="2">{{body}}</textarea>
+  <textarea class="floatlabel" name="body" id="text-box" placeholder="{{t 'feedback-placeholder'}}" tabindex="2">{{body}}</textarea>
 </div>
 
 
 <div class="buttons-group columns">
-  <button id="send-button" tabindex="6"><i class="fa fa-send"></i></button>
+  <button id="send-button" tabindex="6">{{t 'Submit Feedback'}} </button>
 </div>

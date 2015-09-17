@@ -99,6 +99,9 @@ define(function () {
       highlightResults: 'search:highlightResults',
       resetHighlight: 'search:resetHighlight'
     },
+    feedback: {
+      submitted: 'feedback:submitted'
+    },
     mail: {
       here: 'mail:here',
       want: 'mail:want',

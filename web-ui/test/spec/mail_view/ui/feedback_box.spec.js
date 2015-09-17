@@ -16,4 +16,18 @@ describeComponent('mail_view/ui/feedback_box', function () {
 
   });
 
+  describe('when submit feedback', function () {
+    it('should display submitted message', function() {
+      var spy = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
+      this.component.select('submitButton').click();
+      expect(spy).toHaveBeenTriggeredOnAndWith(document, { message: 'Thanks for your feedback!' });
+    });
+
+    it('should close feedback box after submit', function() {
+      var spy = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
+      this.component.select('submitButton').click();
+      expect(spy).toHaveBeenTriggeredOn(document);
+    });
+  });
+
 });
