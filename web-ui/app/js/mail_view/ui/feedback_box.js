@@ -43,8 +43,8 @@ define(['flight/lib/component', 'views/templates', 'page/events', 'features'],
 
     this.submitFeedback = function () {
       var feedback = this.select('textBox').val();
-      this.trigger(document, events.feedback.submit, { feedback: feedback});
-    }
+      this.trigger(document, events.feedback.submit, { feedback: feedback });
+    };
 
     this.after('initialize', function () {
       if (features.isEnabled('feedback')) {
