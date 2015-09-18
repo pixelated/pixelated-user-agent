@@ -23,6 +23,7 @@ define(['flight/lib/component', 'views/templates', 'page/events', 'features'],
      this.defaultAttrs({
        'closeButton': '.close-mail-button',
        'submitButton': '#send-button',
+       'textBox': '#text-box',
      });
 
     this.render = function () {
@@ -40,17 +41,18 @@ define(['flight/lib/component', 'views/templates', 'page/events', 'features'],
       this.trigger(document, events.dispatchers.rightPane.openNoMessageSelected);
     };
 
-    this.showFeedbackSubmittedMessage = function() {
-      this.trigger(document, events.ui.userAlerts.displayMessage, { message: 'Thanks for your feedback!' });
-    };
+    this.submitFeedback = function () {
+      var feedback = this.select('textBox').val();
+      this.trigger(document, events.feedback.submit, { feedback: feedback});
+    }
 
     this.after('initialize', function () {
       if (features.isEnabled('feedback')) {
           this.render();
           this.on(document, events.dispatchers.rightPane.openFeedbackBox, this.openFeedbackBox);
+          this.on(document, events.feedback.submitted, this.showNoMessageSelected);
           this.on(this.select('closeButton'), 'click', this.showNoMessageSelected);
-          this.on(this.select('submitButton'), 'click', this.showNoMessageSelected);
-          this.on(this.select('submitButton'), 'click', this.showFeedbackSubmittedMessage);
+          this.on(this.select('submitButton'), 'click', this.submitFeedback);
       }
     });
 

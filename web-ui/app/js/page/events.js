@@ -100,6 +100,7 @@ define(function () {
       resetHighlight: 'search:resetHighlight'
     },
     feedback: {
+      submit: 'feedback:submit',
       submitted: 'feedback:submitted'
     },
     mail: {

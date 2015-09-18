@@ -17,15 +17,19 @@ describeComponent('mail_view/ui/feedback_box', function () {
   });
 
   describe('when submit feedback', function () {
-    it('should display submitted message', function() {
-      var spy = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
+
+    it('should fire submit feedback event', function () {
+      var spy = spyOnEvent(document, Pixelated.events.feedback.submit);
+
+      this.component.select("textBox").val("Pixelated is Awesome!");
       this.component.select('submitButton').click();
-      expect(spy).toHaveBeenTriggeredOnAndWith(document, { message: 'Thanks for your feedback!' });
-    });
+      expect(spy).toHaveBeenTriggeredOnAndWith(document, {feedback: "Pixelated is Awesome!"});
+    })
 
     it('should close feedback box after submit', function() {
       var spy = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
-      this.component.select('submitButton').click();
+
+      this.component.trigger(document, Pixelated.events.feedback.submitted);
       expect(spy).toHaveBeenTriggeredOn(document);
     });
   });
