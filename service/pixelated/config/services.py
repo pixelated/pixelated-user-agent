@@ -7,6 +7,7 @@ from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.listeners.mailbox_indexer_listener import listen_all_mailboxes
 from twisted.internet import defer
 from pixelated.adapter.search.index_storage_key import SearchIndexStorageKey
+from pixelated.adapter.services.feedback_service import FeedbackService
 
 
 class Services(object):
@@ -33,6 +34,7 @@ class Services(object):
 
         self.keymanager = leap_session.nicknym
         self.draft_service = self.setup_draft_service(leap_session.mail_store)
+        self.feedback_service = self.setup_feedback_service(leap_session)
 
         yield self.index_all_mails()
 
@@ -68,3 +70,6 @@ class Services(object):
 
     def setup_search_index_storage_key(self, soledad):
         return SearchIndexStorageKey(soledad)
+
+    def setup_feedback_service(self, leap_session):
+        return FeedbackService(leap_session)

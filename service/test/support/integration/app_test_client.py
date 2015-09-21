@@ -31,6 +31,7 @@ from twisted.internet import reactor, defer
 from twisted.internet.defer import succeed
 from twisted.web.resource import getChildForRequest
 # from twisted.web.server import Site as PixelatedSite
+from pixelated.adapter.services.feedback_service import FeedbackService
 from pixelated.config.site import PixelatedSite
 
 from pixelated.adapter.mailstore import LeapMailStore
@@ -74,13 +75,16 @@ class AppTestClient(object):
         self.account = IMAPAccount(self.ACCOUNT, self.soledad, account_ready_cb)
         yield account_ready_cb
         self.draft_service = DraftService(self.mail_store)
+        self.leap_session = mock()
+        self.feedback_service = FeedbackService(self.leap_session)
 
         self.mail_service = self._create_mail_service(self.mail_sender, self.mail_store, self.search_engine)
         mails = yield self.mail_service.all_mails()
         self.search_engine.index_mails(mails)
 
         self.resource = RootResource()
-        self.resource.initialize(self.keymanager, self.search_engine, self.mail_service, self.draft_service)
+        self.resource.initialize(
+            self.keymanager, self.search_engine, self.mail_service, self.draft_service, self.feedback_service)
 
     def _render(self, request, as_json=True):
         def get_str(_str):
