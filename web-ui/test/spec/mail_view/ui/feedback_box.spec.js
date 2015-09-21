@@ -32,6 +32,14 @@ describeComponent('mail_view/ui/feedback_box', function () {
       this.component.trigger(document, Pixelated.events.feedback.submitted);
       expect(spy).toHaveBeenTriggeredOn(document);
     });
+
+    it('should shows success message after submit', function () {
+      var spy = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
+
+      this.component.trigger(document, Pixelated.events.feedback.submitted);
+      expect(spy).toHaveBeenTriggeredOnAndWith(document, {message: 'Thanks for your feedback!'});
+    });
+
   });
 
 });

@@ -45,6 +45,7 @@ define(
     'page/logout_shortcut',
     'feedback/feedback_trigger',
     'mail_view/ui/feedback_box',
+    'mail_view/data/feedback_sender',
     'page/version',
   ],
 
@@ -78,6 +79,7 @@ define(
     logoutShortcut,
     feedback,
     feedbackBox,
+    feedbackSender,
     version) {
 
     'use strict';
@@ -114,6 +116,7 @@ define(
       version.attachTo('.version');
 
       feedback.attachTo('#feedback');
+      feedbackSender.attachTo(document);
     }
 
     return initialize;

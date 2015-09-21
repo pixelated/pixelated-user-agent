@@ -46,11 +46,16 @@ define(['flight/lib/component', 'views/templates', 'page/events', 'features'],
       this.trigger(document, events.feedback.submit, { feedback: feedback });
     };
 
+    this.showSuccessMessage = function () {
+        this.trigger(document, events.ui.userAlerts.displayMessage, { message: 'Thanks for your feedback!' });
+    };
+
     this.after('initialize', function () {
       if (features.isEnabled('feedback')) {
           this.render();
           this.on(document, events.dispatchers.rightPane.openFeedbackBox, this.openFeedbackBox);
           this.on(document, events.feedback.submitted, this.showNoMessageSelected);
+          this.on(document, events.feedback.submitted, this.showSuccessMessage);
           this.on(this.select('closeButton'), 'click', this.showNoMessageSelected);
           this.on(this.select('submitButton'), 'click', this.submitFeedback);
       }
