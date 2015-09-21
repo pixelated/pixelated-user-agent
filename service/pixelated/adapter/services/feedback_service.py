@@ -1,7 +1,10 @@
+import os
 import requests
 
 
 class FeedbackService(object):
+    FEEDBACK_URL = os.environ.get('FEEDBACK_URL')
+
     def __init__(self, leap_session):
         self.leap_session = leap_session
 
@@ -14,4 +17,4 @@ class FeedbackService(object):
             "ticket[regarding_user]": account_mail
         }
 
-        return requests.post("https://pixelated.wazokazi.is/tickets", files=data, verify=False)
+        return requests.post(self.FEEDBACK_URL, files=data, verify=False)

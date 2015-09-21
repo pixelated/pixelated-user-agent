@@ -29,7 +29,7 @@ class FeaturesResource(Resource):
         if os.environ.get('DISPATCHER_LOGOUT_URL'):
             dispatcher_features['logout'] = os.environ.get('DISPATCHER_LOGOUT_URL')
 
-        if os.environ.get('FEEDBACK_ENABLED') is None:
+        if os.environ.get('FEEDBACK_URL') is None:
             self.DISABLED_FEATURES.append('feedback')
 
         return respond_json(
