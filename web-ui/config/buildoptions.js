@@ -25,4 +25,3 @@
   include: ['js/main'],
   name: 'bower_components/almond/almond'
 })
-
