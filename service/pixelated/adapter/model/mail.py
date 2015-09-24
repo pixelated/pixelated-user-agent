@@ -241,7 +241,7 @@ class InputMail(Mail):
         input_mail = InputMail()
         input_mail.headers = {key.capitalize(): value for key, value in mail_dict.get('header', {}).items()}
 
-        input_mail.headers['Date'] = date.iso_now()
+        input_mail.headers['Date'] = date.mail_date_now()
 
         input_mail.body = mail_dict.get('body', '')
 
@@ -254,7 +254,7 @@ class InputMail(Mail):
     def from_python_mail(mail):
         input_mail = InputMail()
         input_mail.headers = {key.capitalize(): value for key, value in mail.items()}
-        input_mail.headers['Date'] = date.iso_now()
+        input_mail.headers['Date'] = date.mail_date_now()
         input_mail.headers['Subject'] = mail['Subject']
         input_mail.headers['To'] = InputMail.FROM_EMAIL_ADDRESS
         input_mail._mime = MIMEMultipart()

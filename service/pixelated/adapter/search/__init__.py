@@ -18,6 +18,7 @@ from pixelated.support.encrypted_file_storage import EncryptedFileStorage
 
 import os
 import re
+import dateutil.parser
 from pixelated.adapter.model.status import Status
 from pixelated.adapter.search.contacts import contacts_suggestions
 from whoosh.index import FileIndex
@@ -27,7 +28,6 @@ from whoosh.qparser import MultifieldParser
 from whoosh.writing import AsyncWriter
 from whoosh import sorting
 from pixelated.support.functional import unique
-from pixelated.support.date import milliseconds
 import traceback
 
 
@@ -126,7 +126,7 @@ class SearchEngine(object):
         index_data = {
             'sender': self._empty_string_to_none(header.get('from', '')),
             'subject': self._empty_string_to_none(header.get('subject', '')),
-            'date': milliseconds(header.get('date', '')),
+            'date': dateutil.parser.parse(header.get('date', '')).strftime('%s'),
             'to': self._format_recipient(header, 'to'),
             'cc': self._format_recipient(header, 'cc'),
             'bcc': self._format_recipient(header, 'bcc'),

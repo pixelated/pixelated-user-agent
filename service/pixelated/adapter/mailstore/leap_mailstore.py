@@ -169,7 +169,7 @@ class LeapMail(Mail):
     def from_dict(mail_dict):
         # TODO: implement this method and also write tests for it
         headers = {key.capitalize(): value for key, value in mail_dict.get('header', {}).items()}
-        headers['Date'] = date.iso_now()
+        headers['Date'] = date.mail_date_now()
         body = mail_dict.get('body', '')
         tags = set(mail_dict.get('tags', []))
         status = set(mail_dict.get('status', []))

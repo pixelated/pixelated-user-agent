@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 
+from pixelated.support import date
 from pixelated.adapter.model.mail import InputMail
 from pixelated.adapter.model.status import Status
 
@@ -26,7 +27,8 @@ class MailBuilder:
                 'to': ['recipient@to.com'],
                 'cc': ['recipient@cc.com'],
                 'bcc': ['recipient@bcc.com'],
-                'subject': 'Hi! This the subject'
+                'subject': 'Hi! This the subject',
+                'date': date.mail_date_now()
             },
             'body': "Hello,\nThis is the body of this message\n\nRegards,\n\n--\nPixelated.\n",
             'status': []

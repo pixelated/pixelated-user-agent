@@ -16,6 +16,7 @@
 import datetime
 
 import dateutil.parser
+from email.utils import formatdate
 from dateutil.tz import tzlocal
 
 
@@ -23,9 +24,6 @@ def iso_now():
     return datetime.datetime.now(tzlocal()).isoformat()
 
 
-def milliseconds(date):
-    date = dateutil.parser.parse(date)
-    date = date.replace(tzinfo=None)
-    epoch = datetime.datetime.utcfromtimestamp(0)
-    delta = date - epoch
-    return int(delta.total_seconds() * 1000)
+def mail_date_now():
+    date = dateutil.parser.parse(iso_now())
+    return formatdate(float(date.strftime('%s')))
