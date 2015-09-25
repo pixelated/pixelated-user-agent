@@ -166,11 +166,17 @@ class MailsResource(Resource):
         if draft_id:
             deferred_check = self._mail_service.mail_exists(draft_id)
 
+            def handleDuplicatedDraftException(error):
+                respond_json_deferred("", request, status_code=422)
+
             def return422otherwise(mail_exists):
                 if not mail_exists:
                     respond_json_deferred("", request, status_code=422)
                 else:
-                    defer_response(self._draft_service.update_draft(draft_id, _mail))
+                    new_draft = self._draft_service.update_draft(draft_id, _mail)
+                    new_draft.addErrback(handleDuplicatedDraftException)
+                    defer_response(new_draft)
+
             deferred_check.addCallback(return422otherwise)
         else:
             defer_response(self._draft_service.create_draft(_mail))

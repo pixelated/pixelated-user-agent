@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from twisted.internet import defer
+from pixelated.adapter.errors import DuplicatedDraftException
 
 
 class DraftService(object):
@@ -32,8 +33,16 @@ class DraftService(object):
     @defer.inlineCallbacks
     def update_draft(self, ident, input_mail):
         new_draft = yield self.create_draft(input_mail)
-        yield self._mail_store.delete_mail(ident)
-        defer.returnValue(new_draft)
+        try:
+            yield self._mail_store.delete_mail(ident)
+            defer.returnValue(new_draft)
+        except Exception as error:
+            errorMessage = error.args[0].getErrorMessage()
+
+            if errorMessage == 'Need to create doc before deleting':
+                yield self._mail_store.delete_mail(new_draft.ident)
+            raise DuplicatedDraftException(errorMessage)
+
         # pixelated_mail = yield self.create_draft(input_mail)
         # yield (yield self._mailboxes.drafts).remove(ident)
         # defer.returnValue(pixelated_mail)
