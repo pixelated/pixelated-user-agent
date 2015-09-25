@@ -18,6 +18,7 @@ import logging
 from mailbox import Maildir
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
+from pixelated.adapter.mailstore.maintenance import SoledadMaintenance
 from pixelated.config.leap import initialize_leap
 from pixelated.config import logger, arguments
 
@@ -36,7 +37,8 @@ def initialize():
             args.leap_provider_cert_fingerprint,
             args.credentials_file,
             organization_mode=False,
-            leap_home=args.leap_home)
+            leap_home=args.leap_home,
+            initial_sync=False)
 
         execute_command(args, leap_session)
 
@@ -90,6 +92,9 @@ def add_command_callback(args, prepareDeferred, finalizeDeferred):
         prepareDeferred.chainDeferred(finalizeDeferred)
     elif args.command == 'sync':
         # nothing to do here, sync is already part of the chain
+        prepareDeferred.chainDeferred(finalizeDeferred)
+    elif args.command == 'repair':
+        prepareDeferred.addCallback(repair)
         prepareDeferred.chainDeferred(finalizeDeferred)
     else:
         print 'Unsupported command: %s' % args.command
@@ -172,6 +177,15 @@ def dump_soledad(args):
     for doc in docs:
         print doc
         print '\n'
+
+    defer.returnValue(args)
+
+
+@defer.inlineCallbacks
+def repair(args):
+    leap_session, soledad = args
+
+    yield SoledadMaintenance(soledad).repair()
 
     defer.returnValue(args)
 

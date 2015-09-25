@@ -87,6 +87,18 @@ class TestSoledadMaintenance(unittest.TestCase):
 
         verify(soledad, never).delete_doc(other_doc)
 
+    @defer.inlineCallbacks
+    def test_repair_recreates_public_key_active_doc_if_necessary(self):
+        soledad = mock()
+
+        private_key = self._private_key(SOME_EMAIL_ADDRESS, SOME_KEY_ID)
+        private_key_doc = SoledadDocument(doc_id='some_doc', json=private_key.get_json())
+        when(soledad).get_all_docs().thenReturn(defer.succeed((1, [private_key_doc])))
+
+        yield SoledadMaintenance(soledad).repair()
+
+        verify(soledad).create_doc_from_json('{"key_id": "4914254E384E264C", "tags": ["keymanager-active"], "type": "OpenPGPKey-active", "private": false, "address": "foo@example.tld"}')
+
     def _public_key(self, address, keyid):
         return self._gpgkey(address, keyid, private=False)
 

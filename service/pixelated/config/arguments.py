@@ -43,6 +43,7 @@ def parse_maintenance_args():
 
     subparsers.add_parser('dump-soledad', help='dump the soledad database')
     subparsers.add_parser('sync', help='sync the soledad database')
+    subparsers.add_parser('repair', help='repair database if possible')
 
     return parser.parse_args()
 

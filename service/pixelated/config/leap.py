@@ -13,7 +13,8 @@ def initialize_leap(leap_provider_cert,
                     leap_provider_cert_fingerprint,
                     credentials_file,
                     organization_mode,
-                    leap_home):
+                    leap_home,
+                    initial_sync=True):
     init_monkeypatches()
     events_server.ensure_server()
     provider, username, password = credentials.read(organization_mode, credentials_file)
@@ -24,7 +25,8 @@ def initialize_leap(leap_provider_cert,
     LeapCertificate(provider).setup_ca_bundle()
     leap_session = LeapSessionFactory(provider).create(username, password)
 
-    leap_session = yield leap_session.initial_sync()
+    if initial_sync:
+        leap_session = yield leap_session.initial_sync()
 
     defer.returnValue(leap_session)
 
