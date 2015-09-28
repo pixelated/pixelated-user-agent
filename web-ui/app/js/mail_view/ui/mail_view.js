@@ -62,8 +62,8 @@ define(
           statuses: viewHelpers.formatStatusClasses(data.mail.status),
           ident: data.mail.ident,
           tags: data.mail.tags,
-          encryptionStatus: encrypted,
-          signatureStatus: signed,
+          // encryptionStatus: encrypted, // XXX uncomment this line when encryption status is working
+          // signatureStatus: signed, // XXX uncomment this line when signature status is working
           attachments: attachments
         }));
 
