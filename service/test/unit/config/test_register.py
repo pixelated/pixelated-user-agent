@@ -13,6 +13,10 @@ class TestRegister(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_username('invalid@username')
 
+    def test_username_at_least_8_characters(self):
+        with self.assertRaises(ValueError):
+            validate_username('short')
+
     def test_username_pass_when_valid(self):
         try:
             validate_username('a.valid_username-123')

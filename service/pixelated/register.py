@@ -62,7 +62,7 @@ def register(
 
 def validate_username(username):
     accepted_characters = '^[a-z0-9\-\_\.]*$'
-    if not re.match(accepted_characters, username):
+    if not re.match(accepted_characters, username) or len(username) > 8:
         raise ValueError
 
 
