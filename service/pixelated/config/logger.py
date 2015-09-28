@@ -21,7 +21,7 @@ from twisted.python import log
 
 def init(debug=False):
     debug_enabled = debug or os.environ.get('DEBUG', False)
-    logging_level = logging.DEBUG if debug_enabled else logging.INFO
+    logging_level = logging.DEBUG if debug_enabled else logging.WARN
     log_format = "%(asctime)s [%(name)s] %(levelname)s %(message)s"
     date_format = '%Y-%m-%d %H:%M:%S'
 
