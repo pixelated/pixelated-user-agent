@@ -28,6 +28,7 @@ mkdir -p dist
 ./go handlebars
 ./go imagemin
 ./go minify_html
+./go add_git_version
 ./go buildmain
 
 
