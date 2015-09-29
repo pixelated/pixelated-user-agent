@@ -16,6 +16,7 @@
 import re
 import getpass
 import logging
+import sys
 
 from pixelated.config import arguments
 from pixelated.config import logger as logger_config
@@ -39,13 +40,15 @@ def register(
         provider_cert,
         provider_cert_fingerprint):
 
-    try:
-        validate_username(username)
-    except ValueError:
-        print('Only lowercase letters, digits, . - and _ allowed.')
-
     if not password:
         password = getpass.getpass('Please enter password for %s: ' % username)
+
+    try:
+        validate_username(username)
+        validate_password(password)
+    except ValueError, e:
+        print(e.message)
+        sys.exit(1)
 
     events_server.ensure_server()
     LeapCertificate.set_cert_and_fingerprint(provider_cert, provider_cert_fingerprint)
@@ -62,8 +65,13 @@ def register(
 
 def validate_username(username):
     accepted_characters = '^[a-z0-9\-\_\.]*$'
-    if not re.match(accepted_characters, username) or len(username) > 8:
-        raise ValueError
+    if (not re.match(accepted_characters, username)):
+        raise ValueError('Only lowercase letters, digits, . - and _ allowed.')
+
+
+def validate_password(password):
+    if len(password) < 8:
+        raise ValueError('The password must have at least 8 characters')
 
 
 def initialize():

@@ -1,6 +1,6 @@
 import unittest
 
-from pixelated.register import validate_username
+from pixelated.register import validate_username, validate_password
 
 
 class TestRegister(unittest.TestCase):
@@ -13,9 +13,9 @@ class TestRegister(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_username('invalid@username')
 
-    def test_username_at_least_8_characters(self):
+    def test_password_raises_error_if_shorter_than_8_characters(self):
         with self.assertRaises(ValueError):
-            validate_username('short')
+            validate_password('short')
 
     def test_username_pass_when_valid(self):
         try:
