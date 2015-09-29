@@ -23,7 +23,7 @@
     "watch": "0.14.0"
   },
   "scripts": {
-    "test": "npm run build && node_modules/karma/bin/karma start --single-run --browsers PhantomJS $GRUNT_OPTS",
+    "test": "npm run jshint --silent && npm run build && node_modules/karma/bin/karma start --single-run --browsers PhantomJS $GRUNT_OPTS",
     "debug": "npm run build && node_modules/karma/bin/karma start --browsers Chrome $GRUNT_OPTS",
     "watch": "npm run compass-watch & npm run handlebars-watch",
     "watch-test": "node_modules/karma/bin/karma start",
