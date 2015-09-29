@@ -16,7 +16,7 @@ Here's the brief:
 
 ## Contributions steps
 
-This is the lifecycle of a contribution. See our [README](blob/master/README.md) for details on how to set up your development environment.
+This is the lifecycle of a contribution. See our [README](README.md) for details on how to set up your development environment.
 
 We follow a simplified fork + pull request workflow:
 
