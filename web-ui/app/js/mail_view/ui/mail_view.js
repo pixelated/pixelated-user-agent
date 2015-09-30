@@ -52,6 +52,10 @@ define(
         signed = this.checkSigned(data.mail);
         encrypted = this.checkEncrypted(data.mail);
 
+        if(data.mail.mailbox === 'sent') {
+          encrypted = undefined;
+        }
+
         var attachments = _.map(data.mail.attachments, function(a){
             return { 'encoding': a.encoding, 'name': a.name, 'ident': a.ident };
         });
