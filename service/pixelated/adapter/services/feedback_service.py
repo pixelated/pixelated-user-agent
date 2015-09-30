@@ -17,4 +17,4 @@ class FeedbackService(object):
             "ticket[regarding_user]": account_mail
         }
 
-        return requests.post(self.FEEDBACK_URL, files=data, verify=False)
+        return requests.post(self.FEEDBACK_URL, data=data, verify=False)
