@@ -16,6 +16,9 @@
 
 from email.parser import Parser
 import re
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def _parse_charset_header(content_type_and_charset_header, default_charset='us-ascii'):
@@ -56,6 +59,10 @@ class BodyParser(object):
         text += u'\n'
         encoded_text = text.encode(charset)
         if isinstance(self._content, unicode):
-            return encoded_text + self._content.encode(charset, 'ignore')
+            try:
+                return encoded_text + self._content.encode(charset)
+            except UnicodeError, e:
+                logger.warn('Failed to encode content for charset %s. Ignoring invalid chars: %s' % (charset, e))
+                return encoded_text + self._content.encode(charset, 'ignore')
         else:
             return encoded_text + self._content
