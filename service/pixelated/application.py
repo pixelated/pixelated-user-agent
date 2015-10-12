@@ -104,7 +104,7 @@ def initialize():
         register(events.SOLEDAD_INVALID_AUTH_TOKEN, lambda _: reactor.stop())
         return leap_session
 
-    deferred.add_callback(_register_shutdown_on_token_expire)
+    deferred.addCallback(_register_shutdown_on_token_expire)
     deferred.addErrback(_quit_on_error)
 
     reactor.run()
