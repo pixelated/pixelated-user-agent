@@ -25,6 +25,9 @@ from pixelated.config import logger, arguments
 from leap.mail.constants import MessageFlags
 
 
+REPAIR_COMMAND = 'repair'
+
+
 def initialize():
     args = arguments.parse_maintenance_args()
 
@@ -38,12 +41,20 @@ def initialize():
             args.credentials_file,
             organization_mode=False,
             leap_home=args.leap_home,
-            initial_sync=False)
+            initial_sync=_do_initial_sync(args))
 
         execute_command(args, leap_session)
 
     reactor.callWhenRunning(_run)
     reactor.run()
+
+
+def _do_initial_sync(args):
+    return not _is_repair_command(args)
+
+
+def _is_repair_command(args):
+    return args.command == REPAIR_COMMAND
 
 
 def execute_command(args, leap_session):
@@ -93,7 +104,7 @@ def add_command_callback(args, prepareDeferred, finalizeDeferred):
     elif args.command == 'sync':
         # nothing to do here, sync is already part of the chain
         prepareDeferred.chainDeferred(finalizeDeferred)
-    elif args.command == 'repair':
+    elif args.command == REPAIR_COMMAND:
         prepareDeferred.addCallback(repair)
         prepareDeferred.chainDeferred(finalizeDeferred)
     else:
