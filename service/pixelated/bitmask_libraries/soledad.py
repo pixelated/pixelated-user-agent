@@ -16,11 +16,6 @@
 import errno
 
 import os
-from twisted.internet import reactor
-from leap.common.events import (
-    register,
-    catalog as events
-)
 from leap.soledad.client import Soledad
 from leap.soledad.common.crypto import WrongMacError, UnknownMacMethodError
 from pixelated.bitmask_libraries.certs import LeapCertificate
@@ -47,7 +42,6 @@ class SoledadSessionFactory(object):
 
 class SoledadSession(object):
     def __init__(self, provider, encryption_passphrase, user_token, user_uuid):
-        register(events.SOLEDAD_INVALID_AUTH_TOKEN, lambda _: reactor.stop())
         self.provider = provider
         self.config = provider.config
         self.user_uuid = user_uuid

@@ -28,6 +28,11 @@ from pixelated.config.site import PixelatedSite
 from pixelated.resources.loading_page import LoadingResource
 from pixelated.resources.root_resource import RootResource
 
+from leap.common.events import (
+    register,
+    catalog as events
+)
+
 
 @defer.inlineCallbacks
 def start_user_agent(loading_app, host, port, sslkey, sslcert, leap_home, leap_session):
@@ -95,6 +100,11 @@ def initialize():
         failure.printTraceback()
         reactor.stop()
 
+    def _register_shutdown_on_token_expire(leap_session):
+        register(events.SOLEDAD_INVALID_AUTH_TOKEN, lambda _: reactor.stop())
+        return leap_session
+
+    deferred.add_callback(_register_shutdown_on_token_expire)
     deferred.addErrback(_quit_on_error)
 
     reactor.run()
