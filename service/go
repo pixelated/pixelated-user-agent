@@ -44,6 +44,10 @@ function runIntegrationTests {
 
 function runUnitTests {
         echo "Executing Unit Tests."
+        if [ -f ~/.config/leap/events/zmq_certificates/public_keys/server.key ] ; then
+                echo "Removing zmq server.key before running tests."
+                rm ~/.config/leap/events/zmq_certificates/public_keys/server.key
+        fi
         trial --reporter=text $* test.unit
         echo "Done."
 }
