@@ -206,11 +206,14 @@ class InputMail(Mail):
         mime_multipart = MIMEMultipart()
 
         for header in ['To', 'Cc', 'Bcc']:
-            if self.headers[header]:
+            if self.headers.get(header):
                 mime_multipart[header] = ", ".join(self.headers[header])
 
-        if self.headers['Subject']:
+        if self.headers.get('Subject'):
             mime_multipart['Subject'] = self.headers['Subject']
+
+        if self.headers.get('From'):
+            mime_multipart['From'] = self.headers['From']
 
         mime_multipart['Date'] = self.headers['Date']
         if type(self.body) is list:
@@ -253,15 +256,15 @@ class InputMail(Mail):
     @staticmethod
     def from_python_mail(mail):
         input_mail = InputMail()
-        input_mail.headers = {key.capitalize(): value for key, value in mail.items()}
-        input_mail.headers['Date'] = date.mail_date_now()
-        input_mail.headers['Subject'] = mail['Subject']
-        input_mail.headers['To'] = InputMail.FROM_EMAIL_ADDRESS
-        input_mail._mime = MIMEMultipart()
+        input_mail.headers = {unicode(key.capitalize()): unicode(value) for key, value in mail.items()}
+        input_mail.headers[u'Date'] = unicode(date.mail_date_now())
+        input_mail.headers[u'To'] = [InputMail.FROM_EMAIL_ADDRESS]
+
         for payload in mail.get_payload():
-            input_mail._mime.attach(payload)
+            input_mail._mime_multipart.attach(payload)
             if payload.get_content_type() == 'text/plain':
-                input_mail.body = payload.as_string()
+                input_mail.body = unicode(payload.as_string())
+        input_mail._mime = input_mail.to_mime_multipart()
         return input_mail
 
 

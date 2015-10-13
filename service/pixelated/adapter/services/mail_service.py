@@ -17,6 +17,8 @@ from twisted.internet import defer
 from pixelated.adapter.model.mail import InputMail
 from pixelated.adapter.model.status import Status
 from pixelated.adapter.services.tag_service import extract_reserved_tags
+from email import message_from_file
+import os
 
 
 class MailService(object):
@@ -127,3 +129,14 @@ class MailService(object):
     @defer.inlineCallbacks
     def delete_permanent(self, mail_id):
         yield self.mail_store.delete_mail(mail_id)
+
+    @defer.inlineCallbacks
+    def add_welcome_mail_to_inbox(self):
+        current_path = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(current_path, '..', '..', 'assets', 'welcome.mail')) as mail_template_file:
+            mail_template = message_from_file(mail_template_file)
+
+        input_mail = InputMail.from_python_mail(mail_template)
+
+        mail = yield self.mail_store.add_mail('INBOX', input_mail.raw)
+        defer.returnValue(mail)

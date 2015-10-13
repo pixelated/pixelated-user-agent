@@ -5,9 +5,7 @@ To: Replace <will.be@the.user>
 Content-Type: multipart/alternative; boundary=000boundary000
 
 --000boundary000
-Content-Type: text/plain; charset=UTF-8
-
-Welcome to Pixelated Mail, a modern email with encryption. 
+Welcome to Pixelated Mail, a modern email with encryption.
 
 Pixelated Mail is an open source project that aims to provide secure email on the browser with all the functionality we've come to expect of a modern email client.
 
