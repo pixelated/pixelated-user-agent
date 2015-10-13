@@ -258,7 +258,7 @@ class InputMail(Mail):
         input_mail = InputMail()
         input_mail.headers = {unicode(key.capitalize()): unicode(value) for key, value in mail.items()}
         input_mail.headers[u'Date'] = unicode(date.mail_date_now())
-        input_mail.headers[u'To'] = [InputMail.FROM_EMAIL_ADDRESS]
+        input_mail.headers[u'To'] = [u'']
 
         for payload in mail.get_payload():
             input_mail._mime_multipart.attach(payload)
