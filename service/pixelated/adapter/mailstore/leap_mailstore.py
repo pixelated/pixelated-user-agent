@@ -147,14 +147,25 @@ class LeapMail(Mail):
             sender_mail = InputMail.FROM_EMAIL_ADDRESS
 
         recipients = self._decoded_header_utf_8(self._reply_recipient('To'))
-        recipients.append(sender_mail)
+        if not self._parsed_mail_matches(sender_mail, InputMail.FROM_EMAIL_ADDRESS) or len(recipients) == 0:
+            recipients.append(sender_mail)
         recipients = self.remove_duplicates(recipients)
         ccs = self._decoded_header_utf_8(self._reply_recipient('Cc'))
 
-        result['single'] = sender_mail
+        result['single'] = self._single_reply_recipient(recipients, sender_mail)
         result['all']['to-field'] = recipients
         result['all']['cc-field'] = ccs
         return result
+
+    def _single_reply_recipient(self, recipients, sender_mail):
+        """
+        Currently the domain model expects only one single recipient for reply action. But it should support an array,
+        or even better: there should not be any conceptual difference between reply and reply all for this logic
+        """
+        if self._parsed_mail_matches(sender_mail, InputMail.FROM_EMAIL_ADDRESS):
+            return recipients[0]
+        else:
+            return sender_mail
 
     def remove_duplicates(self, recipients):
         return list(set(recipients))

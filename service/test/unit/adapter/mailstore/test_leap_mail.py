@@ -116,7 +116,7 @@ class TestLeapMail(TestCase):
         self.assertEqual([expected_address], mail.as_dict()['replying']['all']['cc-field'])
         self.assertEqual(expected_address, mail.as_dict()['replying']['single'])
 
-    def test_reply_result_does_not_contain_own_address_in_to_with_spaces(self):
+    def test_reply_all_result_does_not_contain_own_address_in_to_with_spaces(self):
         my_address = 'myaddress@example.test'
 
         with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
@@ -126,7 +126,7 @@ class TestLeapMail(TestCase):
 
             self.assertEqual(['receiver@example.test', 'test@example.test'], mail.as_dict()['replying']['all']['to-field'])
 
-    def test_reply_result_does_not_contain_own_address_in_to_with_name(self):
+    def test_reply_all_result_does_not_contain_own_address_in_to_with_name(self):
         my_address = 'myaddress@example.test'
 
         with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
@@ -136,7 +136,7 @@ class TestLeapMail(TestCase):
 
             self.assertEqual(['receiver@example.test', 'test@example.test'], mail.as_dict()['replying']['all']['to-field'])
 
-    def test_reply_result_does_not_contain_own_address_in_to_with_encoded(self):
+    def test_reply_all_result_does_not_contain_own_address_in_to_with_encoded(self):
         my_address = 'myaddress@example.test'
 
         with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
@@ -146,7 +146,7 @@ class TestLeapMail(TestCase):
 
             self.assertEqual(['receiver@example.test', 'test@example.test'], mail.as_dict()['replying']['all']['to-field'])
 
-    def test_reply_result_does_not_contain_own_address_in_cc(self):
+    def test_reply_all_result_does_not_contain_own_address_in_cc(self):
         my_address = 'myaddress@example.test'
 
         with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
@@ -156,6 +156,36 @@ class TestLeapMail(TestCase):
                              'Cc': my_address})
 
             self.assertEqual([], mail.as_dict()['replying']['all']['cc-field'])
+
+    def test_reply_all_result_does_not_contain_own_address_if_sender(self):
+        my_address = 'myaddress@example.test'
+
+        with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
+            mail = LeapMail('', 'INBOX',
+                            {'From': 'myaddress@example.test',
+                             'To': 'receiver@example.test'})
+
+            self.assertEqual(['receiver@example.test'], mail.as_dict()['replying']['all']['to-field'])
+
+    def test_reply_all_result_does_contain_own_address_if_only_recipient(self):
+        my_address = 'myaddress@example.test'
+
+        with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
+            mail = LeapMail('', 'INBOX',
+                            {'From': 'myaddress@example.test',
+                             'To': 'myaddress@example.test'})
+
+            self.assertEqual(['myaddress@example.test'], mail.as_dict()['replying']['all']['to-field'])
+
+    def test_reply_result_swaps_sender_and_recipient_if_i_am_the_sender(self):
+        my_address = 'myaddress@example.test'
+
+        with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
+            mail = LeapMail('', 'INBOX',
+                            {'From': 'myaddress@example.test',
+                             'To': 'recipient@example.test'})
+
+            self.assertEqual('recipient@example.test', mail.as_dict()['replying']['single'])
 
     def test_as_dict_with_mixed_encodings(self):
         subject = 'Another test with =?iso-8859-1?B?3G1s5Px0?= =?iso-8859-1?Q?s?='
