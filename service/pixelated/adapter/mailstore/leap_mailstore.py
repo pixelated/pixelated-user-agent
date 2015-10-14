@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import base64
 from email.header import decode_header
+from email.utils import parseaddr
 import quopri
 from uuid import uuid4
 
@@ -163,7 +164,12 @@ class LeapMail(Mail):
         if not recipients:
             recipients = []
 
-        return [recipient for recipient in recipients if recipient != InputMail.FROM_EMAIL_ADDRESS]
+        return [recipient for recipient in recipients if not self._parsed_mail_matches(recipient, InputMail.FROM_EMAIL_ADDRESS)]
+
+    def _parsed_mail_matches(self, to_parse, expected):
+        if InputMail.FROM_EMAIL_ADDRESS is None:
+            return False
+        return parseaddr(self._decoded_header_utf_8(to_parse))[1] == expected
 
     @staticmethod
     def from_dict(mail_dict):
