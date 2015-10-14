@@ -19,10 +19,13 @@ from twisted.internet import defer
 from twisted.internet import ssl
 from OpenSSL import SSL
 from OpenSSL import crypto
+from email import message_from_file
+import os
 
+from pixelated.adapter.model.mail import InputMail
 from pixelated.config import arguments
 from pixelated.config.services import Services
-from pixelated.config.leap import initialize_leap
+from pixelated.config.leap import initialize_leap, CREATE_WELCOME_MAIL
 from pixelated.config import logger
 from pixelated.config.site import PixelatedSite
 from pixelated.resources.loading_page import LoadingResource
@@ -74,10 +77,23 @@ def _ssl_options(sslkey, sslcert):
     return options
 
 
+def welcome_mail(leap_session):
+    print 'CREATE_WELCOME_MAIL e %s' % str(CREATE_WELCOME_MAIL())
+
+    if CREATE_WELCOME_MAIL():
+        current_path = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(current_path, 'assets', 'welcome.mail')) as mail_template_file:
+            mail_template = message_from_file(mail_template_file)
+
+        input_mail = InputMail.from_python_mail(mail_template)
+
+        leap_session.mail_store.add_mail('INBOX', input_mail.raw)
+    return leap_session
+
+
 def initialize():
     args = arguments.parse_user_agent_args()
     logger.init(debug=args.debug)
-
     loading_app = reactor.listenTCP(args.port, PixelatedSite(LoadingResource()), interface=args.host)
 
     deferred = initialize_leap(args.leap_provider_cert,
@@ -86,6 +102,7 @@ def initialize():
                                args.organization_mode,
                                args.leap_home)
 
+    deferred.addCallback(welcome_mail)
     deferred.addCallback(
         lambda leap_session: start_user_agent(
             loading_app,

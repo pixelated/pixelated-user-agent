@@ -1,11 +1,18 @@
 from __future__ import absolute_import
 from pixelated.config import credentials
-from leap.common.events import server as events_server
+from leap.common.events import server as events_server, register, catalog as events
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.session import LeapSessionFactory
 from twisted.internet import defer
+
+
+_CREATE_WELCOME_MAIL = False
+
+
+def CREATE_WELCOME_MAIL():
+    return _CREATE_WELCOME_MAIL
 
 
 @defer.inlineCallbacks
@@ -17,6 +24,7 @@ def initialize_leap(leap_provider_cert,
                     initial_sync=True):
     init_monkeypatches()
     events_server.ensure_server()
+    check_new_account()
     provider, username, password = credentials.read(organization_mode, credentials_file)
     LeapCertificate.set_cert_and_fingerprint(leap_provider_cert, leap_provider_cert_fingerprint)
 
@@ -33,3 +41,12 @@ def initialize_leap(leap_provider_cert,
 
 def init_monkeypatches():
     import pixelated.extensions.requests_urllib3
+
+
+def mark_to_create_welcome_mail(_, x):
+    global _CREATE_WELCOME_MAIL
+    _CREATE_WELCOME_MAIL = True
+
+
+def check_new_account():
+    register(events.KEYMANAGER_FINISHED_KEY_GENERATION, mark_to_create_welcome_mail)
