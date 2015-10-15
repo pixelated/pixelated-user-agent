@@ -78,8 +78,6 @@ def _ssl_options(sslkey, sslcert):
 
 
 def welcome_mail(leap_session):
-    print 'CREATE_WELCOME_MAIL e %s' % str(CREATE_WELCOME_MAIL())
-
     if CREATE_WELCOME_MAIL():
         current_path = os.path.dirname(os.path.abspath(__file__))
         with open(os.path.join(current_path, 'assets', 'welcome.mail')) as mail_template_file:
