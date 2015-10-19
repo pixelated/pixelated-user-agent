@@ -33,4 +33,3 @@ def init(debug=False):
     observer = log.PythonLoggingObserver()
     logging.getLogger('gnupg').setLevel('WARN')
     observer.start()
-
