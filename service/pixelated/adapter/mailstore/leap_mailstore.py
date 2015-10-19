@@ -212,18 +212,13 @@ class LeapMailStore(MailStore):
 
     @defer.inlineCallbacks
     def get_mail(self, mail_id, include_body=False):
-        try:
-            message = yield self._fetch_msg_from_soledad(mail_id)
-            if not _is_empty_message(message):
-                leap_mail = yield self._leap_message_to_leap_mail(mail_id, message, include_body)
-            else:
-                leap_mail = None
+        message = yield self._fetch_msg_from_soledad(mail_id)
+        if not _is_empty_message(message):
+            leap_mail = yield self._leap_message_to_leap_mail(mail_id, message, include_body)
+        else:
+            leap_mail = None
 
-            defer.returnValue(leap_mail)
-        except AttributeError, e:
-            import traceback
-            traceback.print_exc()
-            defer.returnValue(None)
+        defer.returnValue(leap_mail)
 
     def get_mails(self, mail_ids):
         deferreds = []
