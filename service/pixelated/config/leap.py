@@ -6,7 +6,7 @@ from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.session import LeapSessionFactory
 from twisted.internet import defer
-
+import logging
 
 _CREATE_WELCOME_MAIL = False
 
