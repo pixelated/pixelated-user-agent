@@ -8,6 +8,7 @@ from pixelated.bitmask_libraries.session import LeapSessionFactory
 from twisted.internet import defer
 import logging
 
+
 _CREATE_WELCOME_MAIL = False
 
 
