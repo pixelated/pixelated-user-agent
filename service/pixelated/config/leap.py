@@ -1,5 +1,4 @@
 from __future__ import absolute_import
-import logging
 from pixelated.config import credentials
 from leap.common.events import server as events_server, register, catalog as events
 from pixelated.bitmask_libraries.config import LeapConfig
