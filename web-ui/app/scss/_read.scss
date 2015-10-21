@@ -13,7 +13,6 @@
       padding: 0px 0;
       margin: 1px 0 0 0;
       .recipients {
-        border-bottom: 1px solid #DDD;
         padding-bottom: 5px;
         line-height: 1.5em;
         i {
@@ -38,6 +37,10 @@
         padding-top: 5px;
         width:95%;
         flex-shrink:1;
+      }
+      .headline-area {
+        clear: both;
+        border-top: 1px solid #DDD;
       }
     }
     h3 {
