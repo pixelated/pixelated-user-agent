@@ -33,7 +33,8 @@ define([
           186: 'semicolon',
           188: 'comma',
           13: 'enter',
-          27: 'esc'
+          27: 'esc',
+          32: 'space'
         },
         EVENT_FOR = {
           8: events.ui.recipients.deleteLast,
@@ -108,12 +109,20 @@ define([
       this.recipientSelected = function (event, data) {
         var value = (data && data.value) || this.$node.val();
         var that = this;
-        _.each(value.split(/[,;]/), function(address) {
+        var addresses = this.extractAdresses(value);
+        _.each(addresses, function(address) {
             if (!_.isEmpty(address.trim())) {
                 that.trigger(that.$node, events.ui.recipients.entered, { name: that.attr.name, address: address.trim() });
             }
         });
         reset(this.$node);
+      };
+
+      this.extractAdresses = function(rawAddresses){
+        var simpleAddressMatch = /[^<\w,;]?([^\s<;,]+@[^\s>;,]+)/;
+        var canonicalAddressMatch = /([^,;\s][^,;]+<[^\s;,]+@[^\s;,]+>)/;
+        var addressMatch = new RegExp([simpleAddressMatch.source, '|', canonicalAddressMatch.source].join(''), 'g');
+        return rawAddresses.match(addressMatch);
       };
 
       this.init = function () {

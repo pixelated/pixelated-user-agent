@@ -89,7 +89,7 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
     });
 
     describe('when space is pressed', function () {
-      it('address input should not finish', function () {
+      it('should tokenize email address', function () {
         var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
 
         var spaceKeyPressEvent = $.Event('keydown', { which: 32});
@@ -98,8 +98,8 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
         this.$node.val('a@b.c');
         this.$node.trigger(spaceKeyPressEvent);
 
-        expect(spaceKeyPressEvent.preventDefault).not.toHaveBeenCalled();
-        expect(addressEnteredEvent).not.toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: 'a@b.c' });
+        expect(spaceKeyPressEvent.preventDefault).toHaveBeenCalled();
+        expect(addressEnteredEvent).toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: 'a@b.c' });
       });
     });
   });
@@ -140,5 +140,23 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
       expect(addressEnteredEvent.calls[1].data).toEqual({name: 'to', address: 'Friend <friend@domain.com>'});
       expect(addressEnteredEvent.calls[2].data).toEqual({name: 'to', address: 'd@e.f'});
     });
+
+    it('tokenizes and sanitize adresses separated by space, comma and semicolon', function() {
+      var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
+      var blurEvent = $.Event('blur');
+      spyOn(blurEvent, 'preventDefault');
+
+      this.$node.val('a@b.c Friend <friend@domain.com>, d@e.f; g@h.i');
+      this.$node.trigger(blurEvent);
+
+      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(addressEnteredEvent.callCount).toEqual(4);
+
+      expect(addressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'a@b.c'});
+      expect(addressEnteredEvent.calls[1].data).toEqual({name: 'to', address: 'Friend <friend@domain.com>'});
+      expect(addressEnteredEvent.calls[2].data).toEqual({name: 'to', address: 'd@e.f'});
+      expect(addressEnteredEvent.calls[3].data).toEqual({name: 'to', address: 'g@h.i'});
+    });
+
   });
 });
