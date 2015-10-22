@@ -16,20 +16,39 @@ class ApplicationTest(unittest.TestCase):
 
     @patch('leap.common.events.client')
     @patch('pixelated.application.reactor')
+    def test_that_start_site_binds_to_tcp_port_if_no_ssl_options(self, reactor_mock, _):
+        app_mock = MagicMock()
+        config = ApplicationTest.MockConfig(12345, '127.0.0.1')
+
+        pixelated.application.start_site(config, app_mock)
+
+        reactor_mock.listenTCP.assert_called_once_with(12345, ANY, interface='127.0.0.1')
+
+    @patch('leap.common.events.client')
+    @patch('pixelated.application.reactor')
+    def test_that_start_site_binds_to_ssl_if_ssl_options(self, reactor_mock, _):
+        app_mock = MagicMock()
+        pixelated.application._ssl_options = lambda x, y: 'options'
+
+        config = ApplicationTest.MockConfig(12345, '127.0.0.1', sslkey="sslkey", sslcert="sslcert")
+
+        pixelated.application.start_site(config, app_mock)
+
+        reactor_mock.listenSSL.assert_called_once_with(12345, ANY, 'options', interface='127.0.0.1')
+
+    @patch('leap.common.events.client')
+    @patch('pixelated.application.reactor')
     @patch('pixelated.application.Services')
-    def test_that_create_app_binds_to_tcp_port_if_no_ssl_options(self, services_mock, reactor_mock, _):
+    def test_that_start_user_agent_binds_to_tcp_port_if_no_ssl_options(self, services_mock, reactor_mock, _):
         # FIXME patch something closer, instead of leap.common
         app_mock = MagicMock()
         leap_session = MagicMock()
         config = ApplicationTest.MockConfig(12345, '127.0.0.1', leap_session)
 
-        d = pixelated.application.start_user_agent(app_mock, config.host, config.port, config.sslkey, config.sslcert, config.home, leap_session)
+        d = pixelated.application.start_user_agent(app_mock, config.home, leap_session)
 
         def _assert(_):
             services_mock.assert_called_once_with(config.home, leap_session)
-
-            reactor_mock.listenTCP.assert_called_once_with(12345, ANY, interface='127.0.0.1')
-            app_mock.stopListening.assert_called()
 
         d.addCallback(_assert)
         return d
@@ -37,7 +56,7 @@ class ApplicationTest(unittest.TestCase):
     @patch('leap.common.events.client')
     @patch('pixelated.application.reactor')
     @patch('pixelated.application.Services')
-    def test_that_create_app_binds_to_ssl_if_ssl_options(self, services_mock, reactor_mock, _):
+    def test_that_start_user_agent_binds_to_ssl_if_ssl_options(self, services_mock, reactor_mock, _):
         # FIXME patch something closer, instead of leap.common
         app_mock = MagicMock()
         leap_session = MagicMock()
@@ -45,13 +64,10 @@ class ApplicationTest(unittest.TestCase):
 
         config = ApplicationTest.MockConfig(12345, '127.0.0.1', sslkey="sslkey", sslcert="sslcert")
 
-        d = pixelated.application.start_user_agent(app_mock, config.host, config.port, config.sslkey, config.sslcert, config.home, leap_session)
+        d = pixelated.application.start_user_agent(app_mock, config.home, leap_session)
 
         def _assert(_):
             services_mock.assert_called_once_with(config.home, leap_session)
-
-            reactor_mock.listenSSL.assert_called_once_with(12345, ANY, 'options', interface='127.0.0.1')
-            app_mock.stopListening.assert_called()
 
         d.addCallback(_assert)
         return d

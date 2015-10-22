@@ -12,11 +12,21 @@ from twisted.web.resource import Resource
 from twisted.web.static import File
 
 
+MODE_STARTUP = 1
+MODE_RUNNING = 2
+
+
 class RootResource(Resource):
 
     def __init__(self):
         Resource.__init__(self)
+        self._startup_assets_folder = self._get_startup_folder()
         self._static_folder = self._get_static_folder()
+        self._startup_mode()
+
+    def _startup_mode(self):
+        self.putChild('startup-assets', File(self._startup_assets_folder))
+        self._mode = MODE_STARTUP
 
     def getChild(self, path, request):
         if path == '':
@@ -34,6 +44,12 @@ class RootResource(Resource):
         self.putChild('mail', MailResource(mail_service))
         self.putChild('feedback', FeedbackResource(feedback_service))
 
+        self._mode = MODE_RUNNING
+
+    def _get_startup_folder(self):
+        path = os.path.dirname(os.path.abspath(__file__))
+        return os.path.join(path, '..', 'assets')
+
     def _get_static_folder(self):
         static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))
         # this is a workaround for packaging
@@ -44,5 +60,11 @@ class RootResource(Resource):
             static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
         return static_folder
 
+    def _is_starting(self):
+        return self._mode == MODE_STARTUP
+
     def render_GET(self, request):
-        return open(os.path.join(self._static_folder, 'index.html')).read()
+        if self._is_starting():
+            return open(os.path.join(self._startup_assets_folder, 'Interstitial.html')).read()
+        else:
+            return open(os.path.join(self._static_folder, 'index.html')).read()

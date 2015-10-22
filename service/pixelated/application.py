@@ -25,7 +25,6 @@ from pixelated.config.services import Services
 from pixelated.config.leap import initialize_leap
 from pixelated.config import logger
 from pixelated.config.site import PixelatedSite
-from pixelated.resources.loading_page import LoadingResource
 from pixelated.resources.root_resource import RootResource
 
 from leap.common.events import (
@@ -35,25 +34,17 @@ from leap.common.events import (
 
 
 @defer.inlineCallbacks
-def start_user_agent(loading_app, host, port, sslkey, sslcert, leap_home, leap_session):
-    yield loading_app.stopListening()
+def start_user_agent(root_resource, leap_home, leap_session):
 
     services = Services(leap_home, leap_session)
     yield services.setup(leap_home, leap_session)
 
-    resource = RootResource()
-
-    resource.initialize(
+    root_resource.initialize(
         services.keymanager,
         services.search_engine,
         services.mail_service,
         services.draft_service,
         services.feedback_service)
-
-    if sslkey and sslcert:
-        reactor.listenSSL(port, PixelatedSite(resource), _ssl_options(sslkey, sslcert), interface=host)
-    else:
-        reactor.listenTCP(port, PixelatedSite(resource), interface=host)
 
     # soledad needs lots of threads
     reactor.threadpool.adjustPoolsize(5, 15)
@@ -77,7 +68,9 @@ def _ssl_options(sslkey, sslcert):
 def initialize():
     args = arguments.parse_user_agent_args()
     logger.init(debug=args.debug)
-    loading_app = reactor.listenTCP(args.port, PixelatedSite(LoadingResource()), interface=args.host)
+    resource = RootResource()
+
+    start_site(args, resource)
 
     deferred = initialize_leap(args.leap_provider_cert,
                                args.leap_provider_cert_fingerprint,
@@ -87,11 +80,7 @@ def initialize():
 
     deferred.addCallback(
         lambda leap_session: start_user_agent(
-            loading_app,
-            args.host,
-            args.port,
-            args.sslkey,
-            args.sslcert,
+            resource,
             args.leap_home,
             leap_session))
 
@@ -107,3 +96,11 @@ def initialize():
     deferred.addErrback(_quit_on_error)
 
     reactor.run()
+
+
+def start_site(config, resource):
+    if config.sslkey and config.sslcert:
+        reactor.listenSSL(config.port, PixelatedSite(resource), _ssl_options(config.sslkey, config.sslcert),
+                          interface=config.host)
+    else:
+        reactor.listenTCP(config.port, PixelatedSite(resource), interface=config.host)
