@@ -1,3 +1,11 @@
+{{> recipients }}
+
+<div class="clearfix">
+    <a id="to-trigger" class="hide">{{t 'To'}}</a>
+    <a id="ccs-trigger" class="hide">{{t 'CC'}}</a>
+    <a id="bccs-trigger" class="hide">{{t 'BCC'}}</a>
+</div>
+
 <button class="close-mail-button">
   <i class="fa fa-times"></i>
 </button>
@@ -10,17 +18,10 @@
   <textarea class="floatlabel" name="body" id="text-box" placeholder="{{t 'Body'}}" tabindex="2">{{body}}</textarea>
 </div>
 
-{{> recipients }}
-
-<div class="clearfix">
-    <a id="to-trigger" class="hide">{{t 'To'}}</a>
-    <a id="ccs-trigger" class="hide">{{t 'CC'}}</a>
-    <a id="bccs-trigger" class="hide">{{t 'BCC'}}</a>
-</div>
-
 <div class="buttons-group columns">
   <button id="send-button" tabindex="6"><i class="fa fa-send"></i></button>
   <button id="trash-button" tabindex="7">{{t 'trash-button'}}<i class="fa fa-trash-o"></i></button>
   <button id="draft-button">{{t 'draft-button'}}<i class="fa fa-pencil"></i></button>
   <div id="draft-save-status"></div>
 </div>
+
