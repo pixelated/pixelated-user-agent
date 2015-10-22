@@ -125,11 +125,15 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
   });
 
   describe('on blur', function() {
-    it('tokenizes and sanitize recipient email if there is an input val', function() {
-      var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
-      var blurEvent = $.Event('blur');
-      spyOn(blurEvent, 'preventDefault');
+    var addressEnteredEvent, blurEvent;
 
+    beforeEach(function() {
+      addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
+      blurEvent = $.Event('blur');
+      spyOn(blurEvent, 'preventDefault');
+    });
+
+    it('tokenizes and sanitize recipient email if there is an input val', function() {
       this.$node.val('a@b.c, Friend <friend@domain.com>; d@e.f  , , , , , , , ,');
       this.$node.trigger(blurEvent);
 
@@ -142,10 +146,6 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
     });
 
     it('tokenizes and sanitize adresses separated by space, comma and semicolon', function() {
-      var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
-      var blurEvent = $.Event('blur');
-      spyOn(blurEvent, 'preventDefault');
-
       this.$node.val('a@b.c Friend <friend@domain.com>, d@e.f; g@h.i');
       this.$node.trigger(blurEvent);
 
@@ -157,6 +157,5 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
       expect(addressEnteredEvent.calls[2].data).toEqual({name: 'to', address: 'd@e.f'});
       expect(addressEnteredEvent.calls[3].data).toEqual({name: 'to', address: 'g@h.i'});
     });
-
   });
 });
