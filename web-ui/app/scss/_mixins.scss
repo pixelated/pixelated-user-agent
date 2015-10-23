@@ -245,11 +245,12 @@
 
       .recipient-del {
         position: relative;
-        color: #aaa;
-
+        color: #AAA;
+        &:hover, &:focus {
+          color: #AAA;
+        }
         &:before {
           margin-left: 0.4em;
-          # padding-left: 0.4em;
           font-weight: bold;
           content: "x"
         }
