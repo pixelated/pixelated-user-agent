@@ -245,6 +245,7 @@
 
       .recipient-del {
         position: relative;
+        color: #aaa;
 
         &:before {
           margin-left: 0.4em;
@@ -254,7 +255,7 @@
         }
         &.deleteTooltip:hover:after {
           position: absolute;
-          content: "click to remove";
+          content: "Click to remove";
           font-size: 0.5rem;
           @include tooltip(25px, 0px);
         }
