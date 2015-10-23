@@ -87,9 +87,9 @@ define(
 
       this.editRecipient = function(evt) {
         var mailAddr = this.$node.children('input[type=hidden]').val();
-        // TODO: refator the code bellow
-        $("#recipients-to-area").find("input.tt-input").val(mailAddr);
-        $("#recipients-to-area").find("input.tt-input").focus();
+        // TODO: refactor the code bellow
+        $('#recipients-to-area').find('input.tt-input').val(mailAddr);
+        $('#recipients-to-area').find('input.tt-input').focus();
         // this.triger(document, events.ui.recipients:inputFieldHasCharacters);
         this.destroy();
       };
