@@ -178,7 +178,7 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
     });
 
     it('displays it as an invalid address token when cannot parse', function() {
-      this.$node.val('invalid_format email@example.com');
+      this.$node.val('invalid_format, email@example.com');
       this.$node.trigger(blurEvent);
 
       expect(blurEvent.preventDefault).toHaveBeenCalled();

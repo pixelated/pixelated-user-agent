@@ -136,7 +136,7 @@ define([
       };
 
       this.extractInvalidAddresses = function(rawAddresses) {
-        return rawAddresses.replace(emailAddressMatch, '').split(' ');
+        return rawAddresses.replace(emailAddressMatch, '').split(/[ ,;]/);
       };
 
       this.init = function () {
