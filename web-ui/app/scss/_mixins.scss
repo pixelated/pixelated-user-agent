@@ -245,14 +245,14 @@
 
       .recipient-del {
         position: relative;
-        color: #AAA;
+        color: $recipients_font_color;
         &:hover, &:focus {
-          color: #AAA;
+          color: $recipients_font_color;
         }
         &:before {
           margin-left: 0.4em;
           font-weight: bold;
-          content: "x"
+          content: "x";
         }
         &.deleteTooltip:hover:after {
           position: absolute;
