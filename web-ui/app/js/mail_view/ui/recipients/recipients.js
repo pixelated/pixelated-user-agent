@@ -46,9 +46,16 @@ define(
         this.addressesUpdated();
       }
 
+      function editCurrentRecipient() {
+        this.attr.iterator.editCurrent();
+        this.addressesUpdated();
+      }
+
       var SPECIAL_KEYS_ACTIONS = {
         8: deleteCurrentRecipient,
         46: deleteCurrentRecipient,
+        32: editCurrentRecipient,
+        13: editCurrentRecipient,
         37: moveLeft,
         39: moveRight
       };

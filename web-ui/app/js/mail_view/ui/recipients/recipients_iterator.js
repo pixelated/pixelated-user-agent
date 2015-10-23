@@ -54,6 +54,10 @@ define(['helpers/iterator'], function (Iterator) {
         this.input.focus();
       }
     };
+
+    this.editCurrent = function() {
+      this.iterator.removeCurrent().editRecipient();
+    };
   }
 
 });
