@@ -42,6 +42,10 @@ define([
         },
         self;
 
+      var simpleAddressMatch = /[^<\w,;]?([^\s<;,]+@[^\s>;,]+)/;
+      var canonicalAddressMatch = /([^,;\s][^,;@]+<[^\s;,]+@[^\s;,]+>)/;
+      var emailAddressMatch = new RegExp([simpleAddressMatch.source, '|', canonicalAddressMatch.source].join(''), 'g');
+
       var extractContactNames = function (response) {
           return _.map(response, function(a) { return { value: a }; });
       };
@@ -109,20 +113,30 @@ define([
       this.recipientSelected = function (event, data) {
         var value = (data && data.value) || this.$node.val();
         var that = this;
-        var addresses = this.extractAdresses(value);
-        _.each(addresses, function(address) {
+
+        function triggerEventForEach(addresses, event) {
+          _.each(addresses, function(address) {
             if (!_.isEmpty(address.trim())) {
-                that.trigger(that.$node, events.ui.recipients.entered, { name: that.attr.name, address: address.trim() });
+              that.trigger(that.$node, event, { name: that.attr.name, address: address.trim() });
             }
-        });
+          });
+        }
+
+        var validAddresses = this.extractValidAddresses(value);
+        var invalidAddresses = this.extractInvalidAddresses(value);
+
+        triggerEventForEach(validAddresses, events.ui.recipients.entered);
+        triggerEventForEach(invalidAddresses, events.ui.recipients.enteredInvalid);
+
         reset(this.$node);
       };
 
-      this.extractAdresses = function(rawAddresses){
-        var simpleAddressMatch = /[^<\w,;]?([^\s<;,]+@[^\s>;,]+)/;
-        var canonicalAddressMatch = /([^,;\s][^,;]+<[^\s;,]+@[^\s;,]+>)/;
-        var addressMatch = new RegExp([simpleAddressMatch.source, '|', canonicalAddressMatch.source].join(''), 'g');
-        return rawAddresses.match(addressMatch);
+      this.extractValidAddresses = function(rawAddresses) {
+        return rawAddresses.match(emailAddressMatch);
+      };
+
+      this.extractInvalidAddresses = function(rawAddresses) {
+        return rawAddresses.replace(emailAddressMatch, '').split(' ');
       };
 
       this.init = function () {

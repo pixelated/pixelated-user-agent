@@ -81,6 +81,7 @@ define(function () {
       },
       recipients: {
         entered: 'ui:recipients:entered',
+        enteredInvalid: 'ui:recipients:enteredInvalid',
         updated: 'ui:recipients:updated',
         deleteRecipient: 'ui:recipients:deleteRecipient',
         deleteLast: 'ui:recipients:deleteLast',

@@ -158,4 +158,33 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
       expect(addressEnteredEvent.calls[3].data).toEqual({name: 'to', address: 'g@h.i'});
     });
   });
+
+  describe('when entering an invalid address', function() {
+    var invalidAddressEnteredEvent, addressEnteredEvent, blurEvent;
+
+    beforeEach(function () {
+      invalidAddressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.enteredInvalid);
+      addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
+      blurEvent = $.Event('blur');
+      spyOn(blurEvent, 'preventDefault');
+    });
+
+    it('displays it as an invalid address token', function() {
+      this.$node.val('invalid');
+      this.$node.trigger(blurEvent);
+
+      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(invalidAddressEnteredEvent).toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: 'invalid' });
+    });
+
+    it('displays it as an invalid address token when cannot parse', function() {
+      this.$node.val('invalid_format email@example.com');
+      this.$node.trigger(blurEvent);
+
+      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(invalidAddressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'invalid_format'});
+      expect(addressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'email@example.com'});
+    });
+
+  });
 });

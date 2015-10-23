@@ -70,6 +70,11 @@ define(
         this.addressesUpdated();
       };
 
+      this.invalidRecipientEntered = function(event, recipient) {
+        recipient.invalidAddress = true;
+        this.addRecipient(recipient);
+      };
+
       this.deleteRecipient = function (event, recipient) {
         var iter = new Iterator(this.attr.recipients, /*startingIndex=*/-1);
 
@@ -150,6 +155,7 @@ define(
         this.on(events.ui.recipients.deleteLast, this.deleteLastRecipient);
         this.on(events.ui.recipients.selectLast, this.selectLastRecipient);
         this.on(events.ui.recipients.entered, this.recipientEntered);
+        this.on(events.ui.recipients.enteredInvalid, this.invalidRecipientEntered);
 
         this.on(document, events.ui.recipients.doCompleteInput, this.doCompleteRecipients);
 

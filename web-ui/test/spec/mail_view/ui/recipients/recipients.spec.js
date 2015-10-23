@@ -26,15 +26,34 @@ describeComponent('mail_view/ui/recipients/recipients',function () {
     beforeEach(function () {
       this.setupComponent();
       recipientsUpdatedEvent  = spyOnEvent(document, Pixelated.events.ui.recipients.updated);
-      this.component.trigger(Pixelated.events.ui.recipients.entered, {name: 'to', addresses: ['foobar@gmail.com'] });
     });
 
     it('triggers recipients updated', function() {
+      this.component.trigger(Pixelated.events.ui.recipients.entered, {name: 'to', addresses: ['foobar@gmail.com'] });
       expect(recipientsUpdatedEvent).toHaveBeenTriggeredOn(document);
     });
 
     it('adds recipients', function() {
+      this.component.trigger(Pixelated.events.ui.recipients.entered, {name: 'to', addresses: ['foobar@gmail.com'] });
       expect(this.component.attr.recipients.length).toBe(1);
     });
   });
+
+  describe('adding invalid recipients from the ui', function() {
+    beforeEach(function () {
+      this.setupComponent();
+      recipientsUpdatedEvent  = spyOnEvent(document, Pixelated.events.ui.recipients.updated);
+      this.component.trigger(Pixelated.events.ui.recipients.enteredInvalid, {name: 'to', addresses: ['invalid.com'] });
+    });
+
+    it('does not trigger recipients updated', function() {
+      expect(recipientsUpdatedEvent).not.toHaveBeenTriggeredOn(document);
+    });
+
+    it('adds recipients with invalid indication', function() {
+      expect(this.component.attr.recipients.length).toBe(1);
+      expect(this.component.attr.recipients[0].attr.invalidAddress).toBe(true);
+    });
+  });
+
 });

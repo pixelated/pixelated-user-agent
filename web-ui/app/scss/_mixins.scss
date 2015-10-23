@@ -185,6 +185,10 @@
       flex: 1 1 50px;
     }
 
+    .invalid-format {
+      border-bottom: 1px dotted $error;
+    }
+
     input[type=text] {
       vertical-align: top;
       height: 35px;
@@ -210,7 +214,7 @@
         }
         &.encrypted {
           border-bottom-color: $will_be_encrypted;
-          
+
           &:before {
             color: $will_be_encrypted;
             content: "\f023 ";
@@ -218,12 +222,13 @@
         }
         &.not-encrypted {
           border-bottom-color: $wont_be_encrypted;
-          
+
           &:before {
             color: $wont_be_encrypted;
             content: "\f13e ";
           }
         }
+
         &.deleting span {
           text-decoration: line-through;
         }

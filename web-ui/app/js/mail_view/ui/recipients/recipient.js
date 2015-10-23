@@ -72,6 +72,10 @@ define(
         return this.$node.find('.recipient-value').hasClass('selected');
       };
 
+      this.sinalizeInvalid = function () {
+        this.$node.find('.recipient-value>span').addClass('invalid-format');
+      };
+
       this.discoverEncryption = function () {
         this.$node.addClass('discorver-encryption');
         var p = $.getJSON('/keys?search=' + this.attr.address).promise();
@@ -96,8 +100,12 @@ define(
 
       this.after('initialize', function () {
         this.recipientDelActions();
-        this.discoverEncryption();
         this.on('dblclick', this.editRecipient);
+        if (this.attr.invalidAddress){
+            this.sinalizeInvalid();
+        } else {
+            this.discoverEncryption();
+        }
       });
     }
   }
