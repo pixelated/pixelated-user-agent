@@ -77,30 +77,30 @@ define(
       };
 
       this.discoverEncryption = function () {
-        this.$node.addClass('discorver-encryption');
+        this.$node.addClass('discover-encryption');
         var p = $.getJSON('/keys?search=' + this.attr.address).promise();
         p.done(function () {
           this.$node.find('.recipient-value').addClass('encrypted');
-          this.$node.removeClass('discorver-encryption');
+          this.$node.removeClass('discover-encryption');
         }.bind(this));
           p.fail(function () {
             this.$node.find('.recipient-value').addClass('not-encrypted');
-            this.$node.removeClass('discorver-encryption');
+            this.$node.removeClass('discover-encryption');
         }.bind(this));
       };
 
       this.editRecipient = function(evt) {
-        var mailAddr = this.$node.children('input[type=hidden]').val();
+        var mailAddr = this.$node.find('input[type=hidden]').val();
         // TODO: refactor the code bellow
         $('#recipients-to-area').find('input.tt-input').val(mailAddr);
         $('#recipients-to-area').find('input.tt-input').focus();
-        // this.triger(document, events.ui.recipients:inputFieldHasCharacters);
         this.destroy();
+        // TODO: fix the bug when edit recipient and click out of the input
       };
 
       this.after('initialize', function () {
         this.recipientDelActions();
-        this.on('dblclick', this.editRecipient);
+        this.on('click', this.editRecipient);
         if (this.attr.invalidAddress){
             this.sinalizeInvalid();
         } else {
