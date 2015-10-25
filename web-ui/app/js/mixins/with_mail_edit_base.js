@@ -38,6 +38,7 @@ define(
         cancelButton: '#cancel-button',
         trashButton: '#trash-button',
         toArea: '#recipients-to-area',
+        toBox: '#recipients-to-box',
         ccArea: '#recipients-cc-area',
         bccArea: '#recipients-bcc-area',
         ccsTrigger: '#ccs-trigger',

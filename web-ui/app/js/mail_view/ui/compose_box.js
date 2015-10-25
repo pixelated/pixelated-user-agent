@@ -70,7 +70,7 @@ define(
       this.after('initialize', function () {
         this.renderComposeBox();
 
-        this.select('subjectBox').focus();
+        this.select('toBox').focus();
         this.on(this.select('cancelButton'), 'click', this.showNoMessageSelected);
         this.on(document, events.mail.deleted, this.mailDeleted);
 
