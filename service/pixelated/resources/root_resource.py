@@ -1,5 +1,6 @@
 import os
 import requests
+from string import Template
 from pixelated.resources.attachments_resource import AttachmentsResource
 from pixelated.resources.contacts_resource import ContactsResource
 from pixelated.resources.features_resource import FeaturesResource
@@ -22,6 +23,7 @@ class RootResource(Resource):
         Resource.__init__(self)
         self._startup_assets_folder = self._get_startup_folder()
         self._static_folder = self._get_static_folder()
+        self._html_template = open(os.path.join(self._static_folder, 'index.html')).read()
         self._startup_mode()
 
     def _startup_mode(self):
@@ -33,7 +35,9 @@ class RootResource(Resource):
             return self
         return Resource.getChild(self, path, request)
 
-    def initialize(self, keymanager, search_engine, mail_service, draft_service, feedback_service):
+    def initialize(self, leap_session, keymanager, search_engine, mail_service, draft_service, feedback_service):
+        self._leap_session = leap_session
+
         self.putChild('assets', File(self._static_folder))
         self.putChild('keys', KeysResource(keymanager))
         self.putChild('attachment', AttachmentsResource(mail_service))
@@ -67,4 +71,6 @@ class RootResource(Resource):
         if self._is_starting():
             return open(os.path.join(self._startup_assets_folder, 'Interstitial.html')).read()
         else:
-            return open(os.path.join(self._static_folder, 'index.html')).read()
+            email = self._leap_session.account_email()
+            response = Template(self._html_template).safe_substitute(account_email=email)
+            return str(response)

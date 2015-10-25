@@ -47,6 +47,7 @@ def start_user_agent(root_resource, leap_home, leap_session):
         yield add_welcome_mail(leap_session.mail_store)
 
     root_resource.initialize(
+        leap_session,
         services.keymanager,
         services.search_engine,
         services.mail_service,
