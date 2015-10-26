@@ -34,7 +34,7 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
         expect(addressEnteredEvent).not.toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: '' });
       });
 
-      it('wont add address if shift key is pressed together: ' + keycode[1], function () {
+      it('won`t add address if shift key is pressed together: ' + keycode[1], function () {
         var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
 
         var enterAddressKeyPressEvent = $.Event('keydown', { which: keycode[0], shiftKey: true });
@@ -185,6 +185,23 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
       expect(invalidAddressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'invalid_format'});
       expect(addressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'email@example.com'});
     });
+
+    it('displays it as an invalid address token when domain isn`t complete', function() {
+      this.$node.val('email@example');
+      this.$node.trigger(blurEvent);
+
+      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(invalidAddressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'email@example'});
+    });
+
+    it('displays it as an invalid address token when cannonical email domain isn`t complete', function() {
+      this.$node.val('Invalid <email@example>');
+      this.$node.trigger(blurEvent);
+
+      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(invalidAddressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'Invalid <email@example>'});
+    });
+
 
   });
 });
