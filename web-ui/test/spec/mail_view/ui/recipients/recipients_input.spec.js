@@ -87,21 +87,6 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
         expect(addressEnteredEvent).not.toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: ''});
       });
     });
-
-    describe('when space is pressed', function () {
-      it('should tokenize email address', function () {
-        var addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
-
-        var spaceKeyPressEvent = $.Event('keydown', { which: 32});
-        spyOn(spaceKeyPressEvent, 'preventDefault');
-
-        this.$node.val('a@b.c');
-        this.$node.trigger(spaceKeyPressEvent);
-
-        expect(spaceKeyPressEvent.preventDefault).toHaveBeenCalled();
-        expect(addressEnteredEvent).toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: 'a@b.c' });
-      });
-    });
   });
 
   describe('on keyup', function () {

@@ -33,8 +33,7 @@ define([
           186: 'semicolon',
           188: 'comma',
           13: 'enter',
-          27: 'esc',
-          32: 'space'
+          27: 'esc'
         },
         EVENT_FOR = {
           8: events.ui.recipients.deleteLast,
