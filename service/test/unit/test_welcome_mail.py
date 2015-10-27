@@ -19,7 +19,7 @@ import unittest
 from mockito import verify, mock
 from mockito.matchers import Matcher
 from email import message_from_file
-from pixelated.config.leap import add_welcome_mail
+from pixelated.application import add_welcome_mail
 from pixelated.adapter.model.mail import InputMail
 
 

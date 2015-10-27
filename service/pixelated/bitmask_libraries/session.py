@@ -28,6 +28,12 @@ from .smtp import LeapSmtp
 from leap.mail.imap.account import IMAPAccount
 from twisted.internet import defer
 
+from leap.common.events import (
+    register,
+    catalog as events
+)
+
+
 SESSIONS = {}
 
 
@@ -63,6 +69,8 @@ class LeapSession(object):
         self.mail_store = mail_store
         self.soledad_session = soledad_session
         self.nicknym = nicknym
+        self.fresh_account = False
+        register(events.KEYMANAGER_FINISHED_KEY_GENERATION, self._set_fresh_account)
 
     @defer.inlineCallbacks
     def initial_sync(self):
@@ -84,6 +92,9 @@ class LeapSession(object):
     def _create_account(self, user_mail, soledad_session):
         account = IMAPAccount(user_mail, soledad_session.soledad)
         return account
+
+    def _set_fresh_account(self, *args):
+        self.fresh_account = True
 
     def account_email(self):
         name = self.user_auth.username

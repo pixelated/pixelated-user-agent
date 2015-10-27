@@ -14,12 +14,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
+from email import message_from_file
 from twisted.internet import reactor
 from twisted.internet import defer
 from twisted.internet import ssl
 from OpenSSL import SSL
 from OpenSSL import crypto
 
+from pixelated.adapter.model.mail import InputMail
 from pixelated.config import arguments
 from pixelated.config.services import Services
 from pixelated.config.leap import initialize_leap
@@ -38,6 +42,9 @@ def start_user_agent(root_resource, leap_home, leap_session):
 
     services = Services(leap_home, leap_session)
     yield services.setup(leap_home, leap_session)
+
+    if leap_session.fresh_account:
+        yield add_welcome_mail(leap_session.mail_store)
 
     root_resource.initialize(
         services.keymanager,
@@ -104,3 +111,13 @@ def start_site(config, resource):
                           interface=config.host)
     else:
         reactor.listenTCP(config.port, PixelatedSite(resource), interface=config.host)
+
+
+def add_welcome_mail(mail_store):
+    current_path = os.path.dirname(os.path.abspath(__file__))
+    welcome_mail = os.path.join(current_path, 'assets', 'welcome.mail')
+    with open(welcome_mail) as mail_template_file:
+        mail_template = message_from_file(mail_template_file)
+
+    input_mail = InputMail.from_python_mail(mail_template)
+    mail_store.add_mail('INBOX', input_mail.raw)
