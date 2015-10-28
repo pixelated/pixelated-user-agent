@@ -58,7 +58,7 @@ define(
         this.attr.iterator = null;
         var mailAddr = recipient.getMailAddress();
 
-        var position = recipient.$node.closest('.recipients-area').find('.fixed-recipient').index(recipient.$node);
+        var position = this.getRecipientPosition(recipient);
         this.attr.recipients.splice(position, 1);
         recipient.destroy();
 
@@ -66,6 +66,10 @@ define(
         this.unselectAllRecipients();
         this.attr.input.$node.val(mailAddr).focus();
       };
+
+      this.getRecipientPosition = function(recipient) {
+        return recipient.$node.closest('.recipients-area').find('.fixed-recipient').index(recipient.$node);
+      }
 
       this.unselectAllRecipients = function() {
         this.$node.find('.recipient-value.selected').removeClass('selected');
@@ -96,14 +100,13 @@ define(
       };
 
       this.deleteRecipient = function (event, recipient) {
-        var iter = new Iterator(this.attr.recipients, /*startingIndex=*/-1);
+        this.attr.iterator = null;
+        var position = this.getRecipientPosition(recipient);
 
-        while(iter.hasNext() && iter.next()) {
-          if (iter.current().isSelected() && iter.current().address === recipient.address) {
-            iter.removeCurrent().destroy();
-            break;
-          }
-        }
+        this.attr.recipients.splice(position, 1);
+        recipient.destroy();
+
+        this.addressesUpdated();
       };
 
       this.deleteLastRecipient = function () {
