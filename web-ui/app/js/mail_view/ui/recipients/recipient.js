@@ -40,7 +40,7 @@ define(
       this.recipientDelActions = function () {
         this.on(this.$node.find('.recipient-del'), 'click', function (event) {
           this.doSelect();
-          this.trigger(events.ui.recipients.deleteRecipient, {recipientsName : this.attr.address});
+          this.trigger(events.ui.recipients.deleteRecipient, this);
           event.preventDefault();
         });
 
