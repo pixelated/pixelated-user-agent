@@ -80,8 +80,8 @@ class TestCommands(unittest.TestCase):
     def test_load_mails_adds_mails(self):
         # given
         mail_root = pkg_resources.resource_filename('test.unit.fixtures', 'mailset')
-        firstMailDeferred = defer.succeed(None)
-        secondMailDeferred = defer.succeed(None)
+        firstMailDeferred = defer.succeed(MagicMock())
+        secondMailDeferred = defer.succeed(MagicMock())
         self.mail_store.add_mail.side_effect = [firstMailDeferred, secondMailDeferred]
         self.mail_store.add_mailbox.return_value = defer.succeed(None)
 
@@ -94,6 +94,26 @@ class TestCommands(unittest.TestCase):
             self.mail_store.add_mail.assert_any_call('INBOX', self._mail_content(join(mail_root, 'new', 'mbox00000000')))
             self.mail_store.add_mail.assert_any_call('INBOX', self._mail_content(join(mail_root, 'new', 'mbox00000001')))
             # TODO Should we check for flags?
+
+        def error_callack(err):
+            print err
+            self.assertTrue(False)
+
+        d.addCallback(assert_mails_added)
+        d.addErrback(error_callack)
+
+        return d
+
+    def test_load_mails_supports_mbox(self):
+        # given
+        mbox_file = pkg_resources.resource_filename('test.unit.fixtures', 'mbox')
+
+        d = load_mails(self.args, [mbox_file])
+
+        # then
+        def assert_mails_added(_):
+            self.assertTrue(self.mail_store.add_mail.called)
+            self.mail_store.add_mail.assert_any_call('INBOX', self._mail_content(mbox_file))
 
         def error_callack(err):
             print err

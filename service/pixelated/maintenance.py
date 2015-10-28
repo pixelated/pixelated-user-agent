@@ -15,7 +15,9 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from mailbox import Maildir
+from os.path import isfile
+from mailbox import Maildir, mbox, MaildirMessage
+import random
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
 from pixelated.adapter.mailstore.maintenance import SoledadMaintenance
@@ -23,7 +25,7 @@ from pixelated.config.leap import initialize_leap
 from pixelated.config import logger, arguments
 
 from leap.mail.constants import MessageFlags
-
+from pixelated.support.mail_generator import MailGenerator
 
 REPAIR_COMMAND = 'repair'
 
@@ -98,6 +100,9 @@ def add_command_callback(args, prepareDeferred, finalizeDeferred):
     elif args.command == 'load-mails':
         prepareDeferred.addCallback(load_mails, args.file)
         prepareDeferred.addCallback(flush_to_soledad, finalizeDeferred)
+    elif args.command == 'markov-generate':
+        prepareDeferred.addCallback(markov_generate, args.file, int(args.limit), args.seed)
+        prepareDeferred.addCallback(flush_to_soledad, finalizeDeferred)
     elif args.command == 'dump-soledad':
         prepareDeferred.addCallback(dump_soledad)
         prepareDeferred.chainDeferred(finalizeDeferred)
@@ -130,22 +135,46 @@ def is_keep_file(mail):
     return mail['subject'] is None
 
 
+def _is_new_mail(mail):
+    return _is_maildir_msg(mail) and mail.get_subdir() == 'new'
+
+
+def _is_maildir_msg(mail):
+    return isinstance(mail, MaildirMessage)
+
+
 @defer.inlineCallbacks
-def add_mail_folder(store, maildir, folder_name, deferreds):
+def _add_mail(store, folder_name, mail, flags, tags):
+    created_mail = yield store.add_mail(folder_name, mail.as_string())
+    leap_mail = yield store.get_mail(created_mail.mail_id)
+    leap_mail.tags |= set(tags)
+    for flag in flags:
+        leap_mail.flags.add(flag)
+
+    yield store.update_mail(leap_mail)
+
+
+@defer.inlineCallbacks
+def add_mail_folder(store, mailbox, folder_name, deferreds):
     yield store.add_mailbox(folder_name)
 
-    for mail in maildir:
+    for mail in mailbox:
         if is_keep_file(mail):
             continue
 
-        flags = (MessageFlags.RECENT_FLAG,) if mail.get_subdir() == 'new' else ()
-        if 'S' in mail.get_flags():
-            flags = (MessageFlags.SEEN_FLAG,) + flags
-        if 'R' in mail.get_flags():
-            flags = (MessageFlags.ANSWERED_FLAG,) + flags
+        if _is_maildir_msg(mail):
+            flags = {MessageFlags.RECENT_FLAG} if _is_new_mail(mail) else set()
 
-        deferreds.append(store.add_mail(folder_name, mail.as_string()))
-        # FIXME support flags
+            if 'S' in mail.get_flags():
+                flags = flags.add(MessageFlags.SEEN_FLAG)
+            if 'R' in mail.get_flags():
+                flags = flags.add(MessageFlags.ANSWERED_FLAG)
+        else:
+            flags = {MessageFlags.RECENT_FLAG}
+
+        tags = mail['X-Tags'].split() if mail['X-Tags'] else []
+
+        deferreds.append(_add_mail(store, folder_name, mail, flags, tags))
 
 
 @defer.inlineCallbacks
@@ -153,18 +182,53 @@ def load_mails(args, mail_paths):
     leap_session, soledad = args
     store = leap_session.mail_store
 
+    yield _load_mails_as_is(mail_paths, store)
+
+    defer.returnValue(args)
+
+
+@defer.inlineCallbacks
+def _load_mails_as_is(mail_paths, store):
     deferreds = []
 
     for path in mail_paths:
-        maildir = Maildir(path, factory=None)
-        yield add_mail_folder(store, maildir, 'INBOX', deferreds)
-        for mail_folder_name in maildir.list_folders():
-            mail_folder = maildir.get_folder(mail_folder_name)
-            yield add_mail_folder(store, mail_folder, mail_folder_name, deferreds)
+        if isfile(path):
+            mbox_mails = mbox(path, factory=None)
+            yield add_mail_folder(store, mbox_mails, 'INBOX', deferreds)
+        else:
+            maildir = Maildir(path, factory=None)
+            yield add_mail_folder(store, maildir, 'INBOX', deferreds)
+            for mail_folder_name in maildir.list_folders():
+                mail_folder = maildir.get_folder(mail_folder_name)
+                yield add_mail_folder(store, mail_folder, mail_folder_name, deferreds)
 
     yield defer.gatherResults(deferreds, consumeErrors=True)
 
+
+@defer.inlineCallbacks
+def markov_generate(args, mail_paths, limit, seed):
+    leap_session, soledad = args
+    store = leap_session.mail_store
+
+    username = leap_session.user_auth.username
+    server_name = leap_session.provider.server_name
+
+    markov_mails = _generate_mails(limit, mail_paths, seed, server_name, username)
+    deferreds = []
+    yield add_mail_folder(store, markov_mails, 'INBOX', deferreds)
+    yield defer.gatherResults(deferreds, consumeErrors=True)
+
     defer.returnValue(args)
+
+
+def _generate_mails(limit, mail_paths, seed, server_name, username):
+    mails = []
+    for path in mail_paths:
+        mbox_mails = mbox(path, factory=None)
+        mails.extend(mbox_mails)
+    gen = MailGenerator(username, server_name, mails, random=random.Random(seed))
+    markov_mails = [gen.generate_mail() for _ in range(limit)]
+    return markov_mails
 
 
 def flush_to_soledad(args, finalize):

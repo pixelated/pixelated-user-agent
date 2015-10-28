@@ -41,6 +41,11 @@ def parse_maintenance_args():
     mails_parser = subparsers.add_parser('load-mails', help='load mails into account')
     mails_parser.add_argument('file', nargs='+', help='file(s) with mail data')
 
+    markov_mails_parser = subparsers.add_parser('markov-generate', help='generate mails using markov chains')
+    markov_mails_parser.add_argument('--seed', default=None, help='Specify a seed to always generate the same output')
+    markov_mails_parser.add_argument('-l', '--limit', metavar='count', default='5', help='limit number of generated mails', dest='limit')
+    markov_mails_parser.add_argument('file', nargs='+', help='file(s) with mail data')
+
     subparsers.add_parser('dump-soledad', help='dump the soledad database')
     subparsers.add_parser('sync', help='sync the soledad database')
     subparsers.add_parser('repair', help='repair database if possible')
