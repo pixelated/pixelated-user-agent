@@ -89,18 +89,18 @@ define(
         }.bind(this));
       };
 
-      this.editRecipient = function(evt) {
-        var mailAddr = this.$node.find('input[type=hidden]').val();
-        // TODO: refactor the code bellow
-        $('#recipients-to-area').find('input.tt-input').val(mailAddr);
-        $('#recipients-to-area').find('input.tt-input').focus();
-        this.destroy();
-        // TODO: fix the bug when edit recipient and click out of the input
+      this.getMailAddress = function() {
+        return this.$node.find('input[type=hidden]').val();
       };
+
+      this.triggerEditRecipient = function(event, element) {
+        this.trigger(this.$node.closest('.recipients-area'), events.ui.recipients.clickToEdit, this);
+      }
 
       this.after('initialize', function () {
         this.recipientDelActions();
-        this.on('click', this.editRecipient);
+        this.on('click', this.triggerEditRecipient);
+        
         if (this.attr.invalidAddress){
             this.sinalizeInvalid();
         } else {

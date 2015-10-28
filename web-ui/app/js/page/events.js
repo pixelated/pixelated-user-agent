@@ -83,6 +83,7 @@ define(function () {
         entered: 'ui:recipients:entered',
         enteredInvalid: 'ui:recipients:enteredInvalid',
         updated: 'ui:recipients:updated',
+        editRecipient: 'ui:recipients:editRecipient',
         deleteRecipient: 'ui:recipients:deleteRecipient',
         deleteLast: 'ui:recipients:deleteLast',
         selectLast: 'ui:recipients:selectLast',
@@ -91,7 +92,8 @@ define(function () {
         inputFieldHasCharacters: 'ui:recipients:inputFieldHasCharacters',
         inputFieldIsEmpty: 'ui:recipients:inputFieldIsEmpty',
         doCompleteInput: 'ui:recipients:doCompleteInput',
-        doCompleteRecipients: 'ui:recipients:doCompleteRecipients'
+        doCompleteRecipients: 'ui:recipients:doCompleteRecipients',
+        clickToEdit: 'ui:recipients:clickToEdit'
       }
     },
     search: {

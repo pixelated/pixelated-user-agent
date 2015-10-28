@@ -46,9 +46,29 @@ define(
         this.addressesUpdated();
       }
 
-      function editCurrentRecipient() {
-        this.attr.iterator.editCurrent();
+      function editCurrentRecipient(event, recipient) {
+        var mailAddr = this.attr.iterator.current().getMailAddress();
+        this.attr.iterator.deleteCurrent();
+        this.attr.input.$node.val(mailAddr).focus();
+        this.unselectAllRecipients();
         this.addressesUpdated();
+      }
+
+      this.clickToEditRecipient = function(event, recipient) {
+        this.attr.iterator = null;
+        var mailAddr = recipient.getMailAddress();
+
+        var position = recipient.$node.closest('.recipients-area').find('.fixed-recipient').index(recipient.$node);
+        this.attr.recipients.splice(position, 1);
+        recipient.destroy();
+
+        this.addressesUpdated();
+        this.unselectAllRecipients();
+        this.attr.input.$node.val(mailAddr).focus();
+      };
+
+      this.unselectAllRecipients = function() {
+        this.$node.find('.recipient-value.selected').removeClass('selected');
       }
 
       var SPECIAL_KEYS_ACTIONS = {
@@ -156,6 +176,7 @@ define(
         this.on(events.ui.recipients.selectLast, this.selectLastRecipient);
         this.on(events.ui.recipients.entered, this.recipientEntered);
         this.on(events.ui.recipients.enteredInvalid, this.invalidRecipientEntered);
+        this.on(events.ui.recipients.clickToEdit, this.clickToEditRecipient);
 
         this.on(document, events.ui.recipients.doCompleteInput, this.doCompleteRecipients);
 
