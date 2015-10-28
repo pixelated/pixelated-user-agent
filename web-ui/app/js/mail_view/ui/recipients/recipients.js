@@ -69,11 +69,11 @@ define(
 
       this.getRecipientPosition = function(recipient) {
         return recipient.$node.closest('.recipients-area').find('.fixed-recipient').index(recipient.$node);
-      }
+      };
 
       this.unselectAllRecipients = function() {
         this.$node.find('.recipient-value.selected').removeClass('selected');
-      }
+      };
 
       var SPECIAL_KEYS_ACTIONS = {
         8: deleteCurrentRecipient,

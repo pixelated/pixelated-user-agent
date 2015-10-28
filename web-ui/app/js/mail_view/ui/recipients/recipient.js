@@ -95,7 +95,7 @@ define(
 
       this.triggerEditRecipient = function(event, element) {
         this.trigger(this.$node.closest('.recipients-area'), events.ui.recipients.clickToEdit, this);
-      }
+      };
 
       this.after('initialize', function () {
         this.recipientDelActions();
