@@ -77,6 +77,10 @@ def search_for_tags(content):
     return map(lambda tag: tag[0], potential_tags)
 
 
+def filter_too_short_texts(texts):
+    return [text for text in texts if text is not None and len(text.split()) >= 3]
+
+
 def load_all_mails(mail_list):
     subjects = set()
     mail_bodies = []
@@ -91,7 +95,7 @@ def load_all_mails(mail_list):
             else:
                 raise Exception(mail.get_content_type())
 
-    return subjects, mail_bodies
+    return filter_too_short_texts(subjects), filter_too_short_texts(mail_bodies)
 
 
 class MailGenerator(object):
