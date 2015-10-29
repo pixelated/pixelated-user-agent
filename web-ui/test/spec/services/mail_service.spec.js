@@ -130,6 +130,24 @@ describeComponent('services/mail_service', function () {
     expect(spyAjax.calls.mostRecent().args[1].type).toEqual('DELETE');
   });
 
+  describe('when request fails', function () {
+    it ('will redirect the browser to the location specified', function () {
+      var browser = require('helpers/browser');
+      var redirectUrl = '/some/redirect/url';
+      var me = {};
+      var deferred = $.Deferred();
+      spyOn($, 'ajax').and.returnValue(deferred);
+      var spyRedirect = spyOn(browser, 'redirect').and.returnValue($.Deferred());
+
+      this.component.trigger(Pixelated.events.mail.want, { caller: me, mail: email1.ident });
+
+      deferred.reject({status: 302, getResponseHeader: function (_) {return redirectUrl;}}, '', '');
+
+      expect(spyRedirect).toHaveBeenCalled();
+      expect(spyRedirect.calls.mostRecent().args[0]).toEqual(redirectUrl);
+    });
+  });
+
   describe('when successfuly deletes an email', function () {
     var displayMessageEvent, uncheckAllEvent, mailsDeletedEvent;
 

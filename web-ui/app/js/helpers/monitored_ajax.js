@@ -15,7 +15,7 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(['page/events', 'views/i18n'], function (events, i18n) {
+define(['page/events', 'views/i18n', 'helpers/browser'], function (events, i18n, browser) {
 
   'use strict';
 
@@ -45,11 +45,17 @@ define(['page/events', 'views/i18n'], function (events, i18n) {
 
     return $.ajax(url, config).fail(function (xmlhttprequest, textstatus, message) {
       if (!config.skipErrorMessage) {
-        var msg =  (xmlhttprequest.responseJSON && xmlhttprequest.responseJSON.message) ||
+        var msg = (xmlhttprequest.responseJSON && xmlhttprequest.responseJSON.message) ||
             messages[textstatus] ||
             'unexpected problem while talking to server';
-        on.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n(msg) });
+        on.trigger(document, events.ui.userAlerts.displayMessage, {message: i18n(msg)});
       }
+
+      if (xmlhttprequest.status === 302) {
+        var redirectUrl = xmlhttprequest.getResponseHeader('Location');
+        browser.redirect(redirectUrl);
+      }
+
     }.bind(this));
   }
 
