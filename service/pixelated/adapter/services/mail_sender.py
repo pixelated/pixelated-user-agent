@@ -27,7 +27,7 @@ class SMTPDownException(Exception):
         Exception.__init__(self, "Couldn't send mail now, try again later.")
 
 
-class MailSender(object):
+class LocalSmtpMailSender(object):
 
     def __init__(self, account_email_address, smtp):
         self.smtp = smtp

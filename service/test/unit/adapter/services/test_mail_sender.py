@@ -16,14 +16,14 @@
 from twisted.trial import unittest
 
 from mockito import mock, when, verify, any, unstub
-from pixelated.adapter.services.mail_sender import MailSender, SMTPDownException
+from pixelated.adapter.services.mail_sender import LocalSmtpMailSender, SMTPDownException
 from pixelated.adapter.model.mail import InputMail
 from test.support.test_helper import mail_dict
 from twisted.internet import reactor
 from twisted.internet.defer import Deferred
 
 
-class MailSenderTest(unittest.TestCase):
+class LocalSmtpMailSenderTest(unittest.TestCase):
     def setUp(self):
         self.smtp = mock()
         self.smtp.local_smtp_port_number = 4650
@@ -32,7 +32,7 @@ class MailSenderTest(unittest.TestCase):
     def test_sendmail(self):
         when(reactor).connectTCP('localhost', 4650, any()).thenReturn(None)
         input_mail = InputMail.from_dict(mail_dict())
-        mail_sender = MailSender('someone@somedomain.tld', self.smtp)
+        mail_sender = LocalSmtpMailSender('someone@somedomain.tld', self.smtp)
 
         return self._succeed(mail_sender.sendmail(input_mail))
 
@@ -44,7 +44,7 @@ class MailSenderTest(unittest.TestCase):
 
         input_mail = InputMail.from_dict(mail_dict())
 
-        mail_sender = MailSender('someone@somedomain.tld', self.smtp)
+        mail_sender = LocalSmtpMailSender('someone@somedomain.tld', self.smtp)
 
         sent_deferred = mail_sender.sendmail(input_mail)
 
@@ -55,7 +55,7 @@ class MailSenderTest(unittest.TestCase):
     def test_senmail_returns_deffered(self):
         when(reactor).connectTCP('localhost', 4650, any()).thenReturn(None)
         input_mail = InputMail.from_dict(mail_dict())
-        mail_sender = MailSender('someone@somedomain.tld', self.smtp)
+        mail_sender = LocalSmtpMailSender('someone@somedomain.tld', self.smtp)
 
         deferred = mail_sender.sendmail(input_mail)
 
@@ -66,7 +66,7 @@ class MailSenderTest(unittest.TestCase):
 
     def test_doesnt_send_mail_if_smtp_is_not_running(self):
         self.smtp.ensure_running = lambda: False
-        mail_sender = MailSender('someone@somedomain.tld', self.smtp)
+        mail_sender = LocalSmtpMailSender('someone@somedomain.tld', self.smtp)
 
         deferred = mail_sender.sendmail({})
 

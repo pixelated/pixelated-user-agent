@@ -1,7 +1,7 @@
 from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
 from pixelated.adapter.services.mail_service import MailService
 from pixelated.adapter.model.mail import InputMail
-from pixelated.adapter.services.mail_sender import MailSender
+from pixelated.adapter.services.mail_sender import LocalSmtpMailSender
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.listeners.mailbox_indexer_listener import listen_all_mailboxes
@@ -57,7 +57,7 @@ class Services(object):
     def setup_mail_service(self, leap_session, search_engine):
         # if False:   FIXME
         #    yield pixelated_mailboxes.add_welcome_mail_for_fresh_user()
-        pixelated_mail_sender = MailSender(
+        pixelated_mail_sender = LocalSmtpMailSender(
             leap_session.account_email(),
             leap_session.smtp)
         return MailService(
