@@ -54,6 +54,8 @@ define(['page/events', 'views/i18n', 'helpers/browser'], function (events, i18n,
       if (xmlhttprequest.status === 302) {
         var redirectUrl = xmlhttprequest.getResponseHeader('Location');
         browser.redirect(redirectUrl);
+      }else if (xmlhttprequest.status === 401) {
+        browser.redirect('/');
       }
 
     }.bind(this));
