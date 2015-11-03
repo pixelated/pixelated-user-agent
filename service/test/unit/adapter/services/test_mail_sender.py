@@ -13,14 +13,39 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from leap.mail.outgoing.service import OutgoingMail
 from twisted.trial import unittest
 
 from mockito import mock, when, verify, any, unstub
-from pixelated.adapter.services.mail_sender import LocalSmtpMailSender, SMTPDownException
+from pixelated.adapter.services.mail_sender import LocalSmtpMailSender, SMTPDownException, MailSender
 from pixelated.adapter.model.mail import InputMail
+from pixelated.support.functional import flatten
 from test.support.test_helper import mail_dict
-from twisted.internet import reactor
+from twisted.internet import reactor, defer
 from twisted.internet.defer import Deferred
+
+
+class MailSenderTest(unittest.TestCase):
+
+    def setUp(self):
+        self._cert_path = u'/some/cert/path'
+        self._keymanager_mock = mock()
+        self._remote_smtp_host = 'some.host.test'
+        self._remote_smtp_port = 1234
+
+    def tearDown(self):
+        unstub()
+
+    def test_iterates_over_recipients(self):
+        sender = MailSender('someone@somedomain.tld', self._keymanager_mock, self._cert_path, self._remote_smtp_host, self._remote_smtp_port)
+        input_mail = InputMail.from_dict(mail_dict())
+
+        when(OutgoingMail).send_message(any(), any()).thenAnswer(lambda: defer.succeed(None))
+
+        sender.sendmail(input_mail)
+
+        for recipient in flatten([input_mail.to, input_mail.cc, input_mail.bcc]):
+            verify(OutgoingMail).send_message(any(), recipient)
 
 
 class LocalSmtpMailSenderTest(unittest.TestCase):

@@ -15,16 +15,40 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from StringIO import StringIO
 from email.utils import parseaddr
+from leap.mail.outgoing.service import OutgoingMail
 
 from twisted.internet.defer import Deferred, fail
 from twisted.mail.smtp import SMTPSenderFactory
-from twisted.internet import reactor
+from twisted.internet import reactor, defer
 from pixelated.support.functional import flatten
 
 
 class SMTPDownException(Exception):
     def __init__(self):
         Exception.__init__(self, "Couldn't send mail now, try again later.")
+
+
+class MailSender(object):
+
+    def __init__(self, account_email_address, keymanager, cert_path, remote_smtp_host, remote_smtp_port):
+        self._from = account_email_address
+        self._keymanager = keymanager
+        self._cert_path = cert_path
+        self._remote_smtp_host = remote_smtp_host
+        self._remote_smtp_port = remote_smtp_port
+
+    def sendmail(self, mail):
+        recipients = flatten([mail.to, mail.cc, mail.bcc])
+        outgoing_mail = self._create_outgoing_mail()
+        deferreds = []
+
+        for recipient in recipients:
+            deferreds.append(outgoing_mail.send_message(mail.to_smtp_format(), recipient))
+
+        return defer.gatherResults(deferreds)
+
+    def _create_outgoing_mail(self):
+        return OutgoingMail(self._from, self._keymanager, self._cert_path, self._cert_path, self._remote_smtp_host, self._remote_smtp_port)
 
 
 class LocalSmtpMailSender(object):

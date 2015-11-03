@@ -151,6 +151,8 @@ class LeapSessionFactory(object):
 
         smtp = LeapSmtp(self._provider, auth, nicknym.keymanager)
 
+        # TODO: Create the new mail sender based on what we have in available LeapSmtp, e.g. the certs
+
         return LeapSession(self._provider, auth, mail_store, soledad, nicknym, smtp)
 
     def _lookup_session(self, key):
