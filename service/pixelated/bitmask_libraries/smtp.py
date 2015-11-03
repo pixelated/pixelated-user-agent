@@ -33,57 +33,12 @@ class LeapSmtp(object):
         self.session_id = auth.session_id
         self.user_token = auth.token
         self._keymanager = keymanager
-        self._remote_hostname, self._remote_port = self._discover_remote_smtp_server()
+        self._remote_hostname, self._remote_port = provider.smtp_info()
         self._local_smtp_service_socket = None
         self._local_smtp_service = None
 
-    def smtp_info(self):
-        return ('localhost', self.local_smtp_port_number)
-
-    def _discover_remote_smtp_server(self):
-        json_data = self._provider.fetch_smtp_json()
-        hosts = json_data['hosts']
-        hostname = hosts.keys()[0]
-        host = hosts[hostname]
-
-        hostname = host['hostname']
-        port = host['port']
-
-        return hostname, port
-
-    def _download_client_certificates(self):
-        cert_path = self._client_cert_path()
-
-        if not os.path.exists(os.path.dirname(cert_path)):
-            os.makedirs(os.path.dirname(cert_path))
-
-        cert_url = '%s/%s/cert' % (self._provider.api_uri, self._provider.api_version)
-        cookies = {"_session_id": self.session_id}
-        headers = {}
-        headers["Authorization"] = 'Token token="{0}"'.format(self.user_token)
-        response = requests.get(
-            cert_url,
-            verify=LeapCertificate(self._provider).provider_api_cert,
-            cookies=cookies,
-            timeout=self._provider.config.timeout_in_s,
-            headers=headers)
-        response.raise_for_status()
-
-        client_cert = response.content
-
-        with open(cert_path, 'w') as f:
-            f.write(client_cert)
-
-    def _client_cert_path(self):
-        return os.path.join(
-            self._provider.config.leap_home,
-            "providers",
-            self._provider.domain,
-            "keys", "client", "smtp.pem")
-
     def start(self):
-        self._download_client_certificates()
-        cert_path = self._client_cert_path()
+        cert_path = self._provider._client_cert_path()
         email = '%s@%s' % (self.username, self._provider.domain)
 
         self._local_smtp_service, self._local_smtp_service_socket = setup_smtp_gateway(

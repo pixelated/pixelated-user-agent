@@ -48,7 +48,12 @@ class MailSender(object):
         return defer.gatherResults(deferreds)
 
     def _create_outgoing_mail(self):
-        return OutgoingMail(self._from, self._keymanager, self._cert_path, self._cert_path, self._remote_smtp_host, self._remote_smtp_port)
+        return OutgoingMail(str(self._from), 
+                            self._keymanager, 
+                            unicode(self._cert_path), 
+                            unicode(self._cert_path), 
+                            str(self._remote_smtp_host), 
+                            int(self._remote_smtp_port))
 
 
 class LocalSmtpMailSender(object):

@@ -16,17 +16,18 @@
 import errno
 import traceback
 import sys
-
 import os
-from leap.mail.incoming.service import IncomingMail
-from twisted.internet import reactor
-from .nicknym import NickNym
-from leap.auth import SRPAuth
+import requests
+
+from twisted.internet import reactor, defer
+from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.adapter.mailstore import LeapMailStore
-from .soledad import SoledadSessionFactory
-from .smtp import LeapSmtp
+from leap.mail.incoming.service import IncomingMail
+from leap.auth import SRPAuth
 from leap.mail.imap.account import IMAPAccount
-from twisted.internet import defer
+from .nicknym import NickNym
+from .smtp import LeapSmtp
+from .soledad import SoledadSessionFactory
 
 from leap.common.events import (
     register,
@@ -149,11 +150,35 @@ class LeapSessionFactory(object):
 
         nicknym = self._create_nicknym(account_email, auth.token, auth.uuid, soledad)
 
+        self._download_smtp_cert(auth)
         smtp = LeapSmtp(self._provider, auth, nicknym.keymanager)
 
         # TODO: Create the new mail sender based on what we have in available LeapSmtp, e.g. the certs
 
         return LeapSession(self._provider, auth, mail_store, soledad, nicknym, smtp)
+
+    def _download_smtp_cert(self, auth):
+        cert_path = self._provider._client_cert_path()
+
+        if not os.path.exists(os.path.dirname(cert_path)):
+            os.makedirs(os.path.dirname(cert_path))
+
+        cert_url = '%s/%s/cert' % (self._provider.api_uri, self._provider.api_version)
+        cookies = {"_session_id": auth.session_id}
+        headers = {}
+        headers["Authorization"] = 'Token token="{0}"'.format(auth.token)
+        response = requests.get(
+            cert_url,
+            verify=LeapCertificate(self._provider).provider_api_cert,
+            cookies=cookies,
+            timeout=self._provider.config.timeout_in_s,
+            headers=headers)
+        response.raise_for_status()
+
+        client_cert = response.content
+
+        with open(cert_path, 'w') as f:
+            f.write(client_cert)
 
     def _lookup_session(self, key):
         global SESSIONS
