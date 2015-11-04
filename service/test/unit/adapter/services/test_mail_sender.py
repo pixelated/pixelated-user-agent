@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from leap.mail.outgoing.service import OutgoingMail
+from twisted.mail.smtp import User
 from twisted.trial import unittest
 
 from mockito import mock, when, verify, any, unstub
@@ -24,6 +25,18 @@ from pixelated.support.functional import flatten
 from test.support.test_helper import mail_dict
 from twisted.internet import reactor, defer
 from twisted.internet.defer import Deferred
+from mockito.matchers import Matcher
+
+
+class TwistedSmtpUserCapture(Matcher):
+
+    def __init__(self, username):
+        self._username = username
+
+    def matches(self, arg):
+        return isinstance(arg, User) \
+            and isinstance(arg.dest.addrstr, str) \
+            and self._username == arg.dest.addrstr
 
 
 class MailSenderTest(unittest.TestCase):
@@ -48,7 +61,7 @@ class MailSenderTest(unittest.TestCase):
         yield sender.sendmail(input_mail)
 
         for recipient in flatten([input_mail.to, input_mail.cc, input_mail.bcc]):
-            verify(OutgoingMail).send_message(any(), recipient)
+            verify(OutgoingMail).send_message(any(), TwistedSmtpUserCapture(recipient))
 
 
 class LocalSmtpMailSenderTest(unittest.TestCase):
