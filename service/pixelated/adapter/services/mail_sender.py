@@ -32,14 +32,33 @@ class SMTPDownException(Exception):
 NOT_NEEDED = None
 
 
+class MailSenderException(Exception):
+
+    def __init__(self, message, email_error_map):
+        super(MailSenderException, self).__init__(message, email_error_map)
+        self.email_error_map = email_error_map
+
+
 class MailSender(object):
 
     def __init__(self, smtp_config, keymanager):
         self._smtp_config = smtp_config
         self._keymanager = keymanager
 
+    @defer.inlineCallbacks
     def sendmail(self, mail):
         recipients = flatten([mail.to, mail.cc, mail.bcc])
+
+        results = yield self._send_mail_to_all_recipients(mail, recipients)
+        all_succeeded = reduce(lambda a, b: a and b, [r[0] for r in results])
+
+        if not all_succeeded:
+            error_map = self._build_error_map(recipients, results)
+            raise MailSenderException('Failed to send mail to all recipients', error_map)
+
+        defer.returnValue(all_succeeded)
+
+    def _send_mail_to_all_recipients(self, mail, recipients):
         outgoing_mail = self._create_outgoing_mail()
         deferreds = []
 
@@ -47,7 +66,13 @@ class MailSender(object):
             smtp_recipient = self._create_twisted_smtp_recipient(recipient)
             deferreds.append(outgoing_mail.send_message(mail.to_smtp_format(), smtp_recipient))
 
-        return defer.gatherResults(deferreds)
+        return defer.DeferredList(deferreds, fireOnOneErrback=False, consumeErrors=True)
+
+    def _build_error_map(self, recipients, results):
+        error_map = {}
+        for email, error in [(recipients[idx], r[1]) for idx, r in enumerate(results)]:
+            error_map[email] = error
+        return error_map
 
     def _create_outgoing_mail(self):
         return OutgoingMail(str(self._smtp_config.account_email),

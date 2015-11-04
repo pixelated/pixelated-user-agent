@@ -18,7 +18,8 @@ from twisted.mail.smtp import User
 from twisted.trial import unittest
 
 from mockito import mock, when, verify, any, unstub
-from pixelated.adapter.services.mail_sender import LocalSmtpMailSender, SMTPDownException, MailSender
+from pixelated.adapter.services.mail_sender import LocalSmtpMailSender, SMTPDownException, MailSender, \
+    MailSenderException
 from pixelated.adapter.model.mail import InputMail
 from pixelated.bitmask_libraries.smtp import LeapSMTPConfig
 from pixelated.support.functional import flatten
@@ -62,6 +63,20 @@ class MailSenderTest(unittest.TestCase):
 
         for recipient in flatten([input_mail.to, input_mail.cc, input_mail.bcc]):
             verify(OutgoingMail).send_message(any(), TwistedSmtpUserCapture(recipient))
+
+    @defer.inlineCallbacks
+    def test_problem_with_email_raises_exception(self):
+        sender = MailSender(self._smtp_config, self._keymanager_mock)
+        input_mail = InputMail.from_dict(mail_dict())
+
+        when(OutgoingMail).send_message(any(), any()).thenAnswer(lambda: defer.fail(Exception('pretend something went wrong')))
+
+        try:
+            yield sender.sendmail(input_mail)
+            self.fail('Exception expected!')
+        except MailSenderException, e:
+            for recipient in flatten([input_mail.to, input_mail.cc, input_mail.bcc]):
+                self.assertTrue(recipient in e.email_error_map)
 
 
 class LocalSmtpMailSenderTest(unittest.TestCase):
