@@ -23,10 +23,10 @@ from twisted.internet import reactor, defer
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.adapter.mailstore import LeapMailStore
 from leap.mail.incoming.service import IncomingMail
-from leap.auth import SRPAuth
 from leap.mail.imap.account import IMAPAccount
+from leap.auth import SRPAuth
 from .nicknym import NickNym
-from .smtp import LeapSmtp, LeapSMTPConfig
+from .smtp import LeapSMTPConfig
 from .soledad import SoledadSessionFactory
 
 from leap.common.events import (
@@ -62,8 +62,8 @@ class LeapSession(object):
     - ``incoming_mail_fetcher`` Background job for fetching incoming mails from LEAP server (LeapIncomingMail)
     """
 
-    def __init__(self, provider, user_auth, mail_store, soledad_session, nicknym, smtp):
-        self.smtp = smtp
+    def __init__(self, provider, user_auth, mail_store, soledad_session, nicknym, smtp_config):
+        self.smtp_config = smtp_config
         self.config = provider.config
         self.provider = provider
         self.user_auth = user_auth
@@ -184,9 +184,8 @@ class LeapSessionFactory(object):
 
         smtp_host, smtp_port = self._provider.smtp_info()
         smtp_config = LeapSMTPConfig(account_email, self._smtp_client_cert_path(), smtp_host, smtp_port)
-        smtp = LeapSmtp(smtp_config, nicknym.keymanager)
 
-        return LeapSession(self._provider, auth, mail_store, soledad, nicknym, smtp)
+        return LeapSession(self._provider, auth, mail_store, soledad, nicknym, smtp_config)
 
     def _download_smtp_cert(self, auth):
         cert_path = self._smtp_client_cert_path()

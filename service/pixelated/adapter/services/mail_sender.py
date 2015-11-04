@@ -84,26 +84,3 @@ class MailSender(object):
 
     def _create_twisted_smtp_recipient(self, recipient):
         return User(str(recipient), NOT_NEEDED, NOT_NEEDED, NOT_NEEDED)
-
-
-class LocalSmtpMailSender(object):
-
-    def __init__(self, account_email_address, smtp):
-        self.smtp = smtp
-        self.account_email_address = account_email_address
-
-    def sendmail(self, mail):
-        if self.smtp.ensure_running():
-            recipients = flatten([mail.to, mail.cc, mail.bcc])
-            result_deferred = Deferred()
-            sender_factory = SMTPSenderFactory(
-                fromEmail=self.account_email_address,
-                toEmail=set([parseaddr(recipient)[1] for recipient in recipients]),
-                file=StringIO(mail.to_smtp_format()),
-                deferred=result_deferred)
-
-            reactor.connectTCP('localhost', self.smtp.local_smtp_port_number,
-                               sender_factory)
-
-            return result_deferred
-        return fail(SMTPDownException())
