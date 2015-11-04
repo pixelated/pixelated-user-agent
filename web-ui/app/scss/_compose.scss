@@ -38,11 +38,14 @@
     padding: 0.5rem;
     cursor: text;
     display: inline-block;
-    padding: 10px;
+  }
+
+  label {
+    padding: 13px 10px;
   }
 
   span {
-    padding: 10px 3px;  
+    padding: 3px;  
   }
   label.floatlabel {
     padding: 0.4rem !important;
