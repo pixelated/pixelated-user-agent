@@ -26,7 +26,7 @@ from leap.mail.incoming.service import IncomingMail
 from leap.auth import SRPAuth
 from leap.mail.imap.account import IMAPAccount
 from .nicknym import NickNym
-from .smtp import LeapSmtp
+from .smtp import LeapSmtp, LeapSMTPConfig
 from .soledad import SoledadSessionFactory
 
 from leap.common.events import (
@@ -123,6 +123,36 @@ class LeapSession(object):
             raise
 
 
+class SmtpCertDownloader(object):
+
+    def __init__(self, provider, auth):
+        self._provider = provider
+        self._auth = auth
+
+    def download(self):
+        cert_url = '%s/%s/cert' % (self._provider.api_uri, self._provider.api_version)
+        cookies = {"_session_id": self._auth.session_id}
+        headers = {}
+        headers["Authorization"] = 'Token token="{0}"'.format(self._auth.token)
+        response = requests.get(
+            cert_url,
+            verify=LeapCertificate(self._provider).provider_api_cert,
+            cookies=cookies,
+            timeout=self._provider.config.timeout_in_s,
+            headers=headers)
+        response.raise_for_status()
+
+        client_cert = response.content
+
+        return client_cert
+
+    def download_to(self, target_file):
+        client_cert = self.download()
+
+        with open(target_file, 'w') as f:
+            f.write(client_cert)
+
+
 class LeapSessionFactory(object):
     def __init__(self, provider):
         self._provider = provider
@@ -151,34 +181,27 @@ class LeapSessionFactory(object):
         nicknym = self._create_nicknym(account_email, auth.token, auth.uuid, soledad)
 
         self._download_smtp_cert(auth)
-        smtp = LeapSmtp(self._provider, auth, nicknym.keymanager)
 
-        # TODO: Create the new mail sender based on what we have in available LeapSmtp, e.g. the certs
+        smtp_host, smtp_port = self._provider.smtp_info()
+        smtp_config = LeapSMTPConfig(account_email, self._smtp_client_cert_path(), smtp_host, smtp_port)
+        smtp = LeapSmtp(smtp_config, nicknym.keymanager)
 
         return LeapSession(self._provider, auth, mail_store, soledad, nicknym, smtp)
 
     def _download_smtp_cert(self, auth):
-        cert_path = self._provider._client_cert_path()
+        cert_path = self._smtp_client_cert_path()
 
         if not os.path.exists(os.path.dirname(cert_path)):
             os.makedirs(os.path.dirname(cert_path))
 
-        cert_url = '%s/%s/cert' % (self._provider.api_uri, self._provider.api_version)
-        cookies = {"_session_id": auth.session_id}
-        headers = {}
-        headers["Authorization"] = 'Token token="{0}"'.format(auth.token)
-        response = requests.get(
-            cert_url,
-            verify=LeapCertificate(self._provider).provider_api_cert,
-            cookies=cookies,
-            timeout=self._provider.config.timeout_in_s,
-            headers=headers)
-        response.raise_for_status()
+        SmtpCertDownloader(self._provider, auth).download_to(cert_path)
 
-        client_cert = response.content
-
-        with open(cert_path, 'w') as f:
-            f.write(client_cert)
+    def _smtp_client_cert_path(self):
+        return os.path.join(
+            self._config.leap_home,
+            "providers",
+            self._provider.domain,
+            "keys", "client", "smtp.pem")
 
     def _lookup_session(self, key):
         global SESSIONS

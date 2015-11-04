@@ -30,12 +30,9 @@ class SMTPDownException(Exception):
 
 class MailSender(object):
 
-    def __init__(self, account_email_address, keymanager, cert_path, remote_smtp_host, remote_smtp_port):
-        self._from = account_email_address
+    def __init__(self, smtp_config, keymanager):
+        self._smtp_config = smtp_config
         self._keymanager = keymanager
-        self._cert_path = cert_path
-        self._remote_smtp_host = remote_smtp_host
-        self._remote_smtp_port = remote_smtp_port
 
     def sendmail(self, mail):
         recipients = flatten([mail.to, mail.cc, mail.bcc])
@@ -48,7 +45,12 @@ class MailSender(object):
         return defer.gatherResults(deferreds)
 
     def _create_outgoing_mail(self):
-        return OutgoingMail(str(self._from), self._keymanager, unicode(self._cert_path), unicode(self._cert_path), str(self._remote_smtp_host), int(self._remote_smtp_port))
+        return OutgoingMail(str(self._smtp_config.account_email),
+                            self._keymanager,
+                            self._smtp_config.cert_path,
+                            self._smtp_config.cert_path,
+                            str(self._smtp_config.remote_smtp_host),
+                            int(self._smtp_config.remote_smtp_port))
 
 
 class LocalSmtpMailSender(object):

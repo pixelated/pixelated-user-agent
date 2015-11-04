@@ -19,6 +19,7 @@ from twisted.trial import unittest
 from mockito import mock, when, verify, any, unstub
 from pixelated.adapter.services.mail_sender import LocalSmtpMailSender, SMTPDownException, MailSender
 from pixelated.adapter.model.mail import InputMail
+from pixelated.bitmask_libraries.smtp import LeapSMTPConfig
 from pixelated.support.functional import flatten
 from test.support.test_helper import mail_dict
 from twisted.internet import reactor, defer
@@ -32,17 +33,19 @@ class MailSenderTest(unittest.TestCase):
         self._keymanager_mock = mock()
         self._remote_smtp_host = 'some.host.test'
         self._remote_smtp_port = 1234
+        self._smtp_config = LeapSMTPConfig('someone@somedomain.tld', self._cert_path, self._remote_smtp_host, self._remote_smtp_port)
 
     def tearDown(self):
         unstub()
 
+    @defer.inlineCallbacks
     def test_iterates_over_recipients(self):
-        sender = MailSender('someone@somedomain.tld', self._keymanager_mock, self._cert_path, self._remote_smtp_host, self._remote_smtp_port)
+        sender = MailSender(self._smtp_config, self._keymanager_mock)
         input_mail = InputMail.from_dict(mail_dict())
 
         when(OutgoingMail).send_message(any(), any()).thenAnswer(lambda: defer.succeed(None))
 
-        sender.sendmail(input_mail)
+        yield sender.sendmail(input_mail)
 
         for recipient in flatten([input_mail.to, input_mail.cc, input_mail.bcc]):
             verify(OutgoingMail).send_message(any(), recipient)

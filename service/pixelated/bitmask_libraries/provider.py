@@ -138,10 +138,3 @@ class LeapProvider(object):
 
     def address_for(self, username):
         return '%s@%s' % (username, self.domain)
-
-    def _client_cert_path(self):
-        return os.path.join(
-            self.config.leap_home,
-            "providers",
-            self.domain,
-            "keys", "client", "smtp.pem")
