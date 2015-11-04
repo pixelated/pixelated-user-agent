@@ -21,11 +21,15 @@ from twisted.internet.defer import Deferred, fail
 from twisted.mail.smtp import SMTPSenderFactory
 from twisted.internet import reactor, defer
 from pixelated.support.functional import flatten
+from twisted.mail.smtp import User
 
 
 class SMTPDownException(Exception):
     def __init__(self):
         Exception.__init__(self, "Couldn't send mail now, try again later.")
+
+
+NOT_NEEDED = None
 
 
 class MailSender(object):
@@ -40,7 +44,8 @@ class MailSender(object):
         deferreds = []
 
         for recipient in recipients:
-            deferreds.append(outgoing_mail.send_message(mail.to_smtp_format(), recipient))
+            smtp_recipient = self._create_twisted_smtp_recipient(recipient)
+            deferreds.append(outgoing_mail.send_message(mail.to_smtp_format(), smtp_recipient))
 
         return defer.gatherResults(deferreds)
 
@@ -51,6 +56,9 @@ class MailSender(object):
                             self._smtp_config.cert_path,
                             str(self._smtp_config.remote_smtp_host),
                             int(self._smtp_config.remote_smtp_port))
+
+    def _create_twisted_smtp_recipient(self, recipient):
+        return User(str(recipient), NOT_NEEDED, NOT_NEEDED, NOT_NEEDED)
 
 
 class LocalSmtpMailSender(object):
