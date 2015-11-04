@@ -13,17 +13,45 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from leap.mail.outgoing.service import OutgoingMail
 from twisted.trial import unittest
 
 from mockito import mock, when, verify, any, unstub
-from pixelated.adapter.services.mail_sender import MailSender, SMTPDownException
+from pixelated.adapter.services.mail_sender import LocalSmtpMailSender, SMTPDownException, MailSender
 from pixelated.adapter.model.mail import InputMail
+from pixelated.bitmask_libraries.smtp import LeapSMTPConfig
+from pixelated.support.functional import flatten
 from test.support.test_helper import mail_dict
-from twisted.internet import reactor
+from twisted.internet import reactor, defer
 from twisted.internet.defer import Deferred
 
 
 class MailSenderTest(unittest.TestCase):
+
+    def setUp(self):
+        self._cert_path = u'/some/cert/path'
+        self._keymanager_mock = mock()
+        self._remote_smtp_host = 'some.host.test'
+        self._remote_smtp_port = 1234
+        self._smtp_config = LeapSMTPConfig('someone@somedomain.tld', self._cert_path, self._remote_smtp_host, self._remote_smtp_port)
+
+    def tearDown(self):
+        unstub()
+
+    @defer.inlineCallbacks
+    def test_iterates_over_recipients(self):
+        sender = MailSender(self._smtp_config, self._keymanager_mock)
+        input_mail = InputMail.from_dict(mail_dict())
+
+        when(OutgoingMail).send_message(any(), any()).thenAnswer(lambda: defer.succeed(None))
+
+        yield sender.sendmail(input_mail)
+
+        for recipient in flatten([input_mail.to, input_mail.cc, input_mail.bcc]):
+            verify(OutgoingMail).send_message(any(), recipient)
+
+
+class LocalSmtpMailSenderTest(unittest.TestCase):
     def setUp(self):
         self.smtp = mock()
         self.smtp.local_smtp_port_number = 4650
@@ -32,7 +60,7 @@ class MailSenderTest(unittest.TestCase):
     def test_sendmail(self):
         when(reactor).connectTCP('localhost', 4650, any()).thenReturn(None)
         input_mail = InputMail.from_dict(mail_dict())
-        mail_sender = MailSender('someone@somedomain.tld', self.smtp)
+        mail_sender = LocalSmtpMailSender('someone@somedomain.tld', self.smtp)
 
         return self._succeed(mail_sender.sendmail(input_mail))
 
@@ -44,7 +72,7 @@ class MailSenderTest(unittest.TestCase):
 
         input_mail = InputMail.from_dict(mail_dict())
 
-        mail_sender = MailSender('someone@somedomain.tld', self.smtp)
+        mail_sender = LocalSmtpMailSender('someone@somedomain.tld', self.smtp)
 
         sent_deferred = mail_sender.sendmail(input_mail)
 
@@ -55,7 +83,7 @@ class MailSenderTest(unittest.TestCase):
     def test_senmail_returns_deffered(self):
         when(reactor).connectTCP('localhost', 4650, any()).thenReturn(None)
         input_mail = InputMail.from_dict(mail_dict())
-        mail_sender = MailSender('someone@somedomain.tld', self.smtp)
+        mail_sender = LocalSmtpMailSender('someone@somedomain.tld', self.smtp)
 
         deferred = mail_sender.sendmail(input_mail)
 
@@ -66,7 +94,7 @@ class MailSenderTest(unittest.TestCase):
 
     def test_doesnt_send_mail_if_smtp_is_not_running(self):
         self.smtp.ensure_running = lambda: False
-        mail_sender = MailSender('someone@somedomain.tld', self.smtp)
+        mail_sender = LocalSmtpMailSender('someone@somedomain.tld', self.smtp)
 
         deferred = mail_sender.sendmail({})
 

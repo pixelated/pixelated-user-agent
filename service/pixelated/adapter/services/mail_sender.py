@@ -15,10 +15,11 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from StringIO import StringIO
 from email.utils import parseaddr
+from leap.mail.outgoing.service import OutgoingMail
 
 from twisted.internet.defer import Deferred, fail
 from twisted.mail.smtp import SMTPSenderFactory
-from twisted.internet import reactor
+from twisted.internet import reactor, defer
 from pixelated.support.functional import flatten
 
 
@@ -28,6 +29,31 @@ class SMTPDownException(Exception):
 
 
 class MailSender(object):
+
+    def __init__(self, smtp_config, keymanager):
+        self._smtp_config = smtp_config
+        self._keymanager = keymanager
+
+    def sendmail(self, mail):
+        recipients = flatten([mail.to, mail.cc, mail.bcc])
+        outgoing_mail = self._create_outgoing_mail()
+        deferreds = []
+
+        for recipient in recipients:
+            deferreds.append(outgoing_mail.send_message(mail.to_smtp_format(), recipient))
+
+        return defer.gatherResults(deferreds)
+
+    def _create_outgoing_mail(self):
+        return OutgoingMail(str(self._smtp_config.account_email),
+                            self._keymanager,
+                            self._smtp_config.cert_path,
+                            self._smtp_config.cert_path,
+                            str(self._smtp_config.remote_smtp_host),
+                            int(self._smtp_config.remote_smtp_port))
+
+
+class LocalSmtpMailSender(object):
 
     def __init__(self, account_email_address, smtp):
         self.smtp = smtp

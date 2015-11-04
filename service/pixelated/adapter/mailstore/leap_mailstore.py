@@ -223,7 +223,7 @@ class LeapMailStore(MailStore):
     def get_mails(self, mail_ids):
         deferreds = []
         for mail_id in mail_ids:
-            deferreds.append(self.get_mail(mail_id))
+            deferreds.append(self.get_mail(mail_id, include_body=True))
 
         return defer.gatherResults(deferreds, consumeErrors=True)
 

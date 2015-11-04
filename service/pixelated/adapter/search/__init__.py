@@ -23,7 +23,7 @@ import time
 from pixelated.adapter.model.status import Status
 from pixelated.adapter.search.contacts import contacts_suggestions
 from whoosh.index import FileIndex
-from whoosh.fields import Schema, ID, KEYWORD, TEXT, NUMERIC
+from whoosh.fields import Schema, ID, KEYWORD, TEXT, NUMERIC, NGRAMWORDS
 from whoosh.qparser import QueryParser
 from whoosh.qparser import MultifieldParser
 from whoosh.writing import AsyncWriter
@@ -103,9 +103,9 @@ class SearchEngine(object):
             to=KEYWORD(stored=False, commas=True),
             cc=KEYWORD(stored=False, commas=True),
             bcc=KEYWORD(stored=False, commas=True),
-            subject=TEXT(stored=False),
+            subject=NGRAMWORDS(stored=False),
             date=NUMERIC(stored=False, sortable=True, bits=64, signed=False),
-            body=TEXT(stored=False),
+            body=NGRAMWORDS(stored=False),
             tag=KEYWORD(stored=True, commas=True),
             flags=KEYWORD(stored=True, commas=True),
             raw=TEXT(stored=False))
@@ -116,7 +116,7 @@ class SearchEngine(object):
 
     def index_mail(self, mail):
         with AsyncWriter(self._index) as writer:
-                self._index_mail(writer, mail)
+            self._index_mail(writer, mail)
 
     def _index_mail(self, writer, mail):
         mdict = mail.as_dict()
@@ -197,7 +197,7 @@ class SearchEngine(object):
             .replace('-in:', 'AND NOT tag:')
             .replace('in:all', '*')
         )
-        return MultifieldParser(['raw', 'body'], self._index.schema).parse(query)
+        return MultifieldParser(['body', 'subject', 'raw'], self._index.schema).parse(query)
 
     def remove_from_index(self, mail_id):
         with AsyncWriter(self._index) as writer:

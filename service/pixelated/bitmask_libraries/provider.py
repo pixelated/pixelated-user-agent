@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
+import os
 
 from leap.common.certs import get_digest
 import requests
@@ -94,6 +95,13 @@ class LeapProvider(object):
 
         if fingerprint.strip() != digest:
             raise Exception('Certificate fingerprints don\'t match! Expected [%s] but got [%s]' % (fingerprint.strip(), digest))
+
+    def smtp_info(self):
+        json_data = self.fetch_smtp_json()
+        hosts = json_data['hosts']
+        hostname = hosts.keys()[0]
+        host = hosts[hostname]
+        return host['hostname'], host['port']
 
     def _validated_get(self, url):
         session = requests.session()
