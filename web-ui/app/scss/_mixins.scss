@@ -271,4 +271,10 @@
   }
 }
 
+ input.recipients-input:focus {
+    background: #fafafa !important;
+    border-color: #999999;
+    outline: none; 
+  }
+
 @include tt-hint;
