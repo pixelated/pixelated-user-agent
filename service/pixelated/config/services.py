@@ -55,11 +55,11 @@ class Services(object):
         self.search_engine = search_engine
 
     def setup_mail_service(self, leap_session, search_engine):
-        pixelated_mail_sender = LocalSmtpMailSender(
-            leap_session.account_email(),
-            leap_session.smtp)
+        # pixelated_mail_sender = LocalSmtpMailSender(
+        #     leap_session.account_email(),
+        #     leap_session.smtp)
 
-        MailSender(leap_session.smtp._smtp_config, leap_session.nicknym.keymanager)
+        pixelated_mail_sender = MailSender(leap_session.smtp._smtp_config, leap_session.nicknym.keymanager)
 
         return MailService(
             pixelated_mail_sender,
