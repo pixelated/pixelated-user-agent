@@ -53,6 +53,7 @@ define(['hbs/templates'], function (templates) {
       paginationTrigger: window.Pixelated['app/templates/mail_actions/pagination_trigger.hbs']
     },
     noMessageSelected: window.Pixelated['app/templates/compose/no_message_selected.hbs'],
+    noMailsAvailable: window.Pixelated['app/templates/compose/no_mails_available.hbs'],
     search: {
       trigger: window.Pixelated['app/templates/search/search_trigger.hbs']
     },

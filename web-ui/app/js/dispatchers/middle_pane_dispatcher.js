@@ -14,13 +14,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-define(['flight/lib/component', 'page/events', 'helpers/triggering'], function(defineComponent, events, triggering) {
+define(['flight/lib/component', 'page/events', 'helpers/triggering', 'mail_view/ui/no_mails_available_pane'], function(defineComponent, events, triggering, NoMailsAvailablePane) {
   'use strict';
 
   return defineComponent(function() {
     this.defaultAttrs({
-      middlePane: '#middle-pane'
+      middlePane: '#middle-pane',
+      noMailsAvailablePane: 'no-mails-available-pane'
     });
+
+    this.createChildDiv = function (component_id) {
+      var child_div = $('<div>', {id: component_id});
+      this.select('middlePane').append(child_div);
+      return child_div;
+    };
+
+    this.resetChildDiv = function() {
+      this.select('middlePane').empty();
+    };
 
     this.refreshMailList =  function (ev, data) {
       this.trigger(document, events.ui.mails.fetchByTag, data);
@@ -40,10 +51,21 @@ define(['flight/lib/component', 'page/events', 'helpers/triggering'], function(d
         this.select('middlePane').css({height: (vh - top) + 'px'});
     };
 
+    this.onMailsChange = function (ev, data) {
+      if (data.mails.length > 0) {
+        NoMailsAvailablePane.teardownAll();
+        this.resetChildDiv();
+      } else {
+        var child_div = this.createChildDiv(this.attr.noMailsAvailablePane);
+        NoMailsAvailablePane.attachTo(child_div);
+      }
+    };
+
     this.after('initialize', function () {
       this.on(document, events.dispatchers.middlePane.refreshMailList, this.refreshMailList);
       this.on(document, events.dispatchers.middlePane.cleanSelected, this.cleanSelected);
       this.on(document, events.dispatchers.middlePane.resetScroll, this.resetScroll);
+      this.on(document, events.mails.available, this.onMailsChange);
 
       this.updateMiddlePaneHeight();
       $(window).on('resize', this.updateMiddlePaneHeight.bind(this));
