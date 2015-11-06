@@ -27,7 +27,7 @@ from leap.mail.imap.account import IMAPAccount
 from leap.auth import SRPAuth
 from .nicknym import NickNym
 from .smtp import LeapSMTPConfig
-from .soledad import SoledadSessionFactory
+from .soledad import SoledadFactory
 
 from leap.common.events import (
     register,
@@ -39,36 +39,14 @@ SESSIONS = {}
 
 
 class LeapSession(object):
-    """
-    A LEAP session.
 
-
-    Properties:
-
-    - ``smtp`` the smtp gateway instance (LeapSmtp).
-
-    - ``config`` the configuration for this session (LeapClientConfig).
-
-    - ``provider`` the responsible for interacting with provider.json (LeapProvider).
-
-    - ``user_auth`` the secure remote password session data after authenticating with LEAP. See http://en.wikipedia.org/wiki/Secure_Remote_Password_protocol (SRPSession)
-
-    - ``mail_store`` the MailStore to access the users mails
-
-    - ``soledad_session`` the soledad session. See https://leap.se/soledad (LeapSecureRemotePassword)
-
-    - ``nicknym`` the nicknym instance. See https://leap.se/nicknym (NickNym)
-
-    - ``incoming_mail_fetcher`` Background job for fetching incoming mails from LEAP server (LeapIncomingMail)
-    """
-
-    def __init__(self, provider, user_auth, mail_store, soledad_session, nicknym, smtp_config):
+    def __init__(self, provider, user_auth, mail_store, soledad, nicknym, smtp_config):
         self.smtp_config = smtp_config
         self.config = provider.config
         self.provider = provider
         self.user_auth = user_auth
         self.mail_store = mail_store
-        self.soledad_session = soledad_session
+        self.soledad = soledad
         self.nicknym = nicknym
         self.fresh_account = False
         register(events.KEYMANAGER_FINISHED_KEY_GENERATION, self._set_fresh_account)
@@ -82,16 +60,16 @@ class LeapSession(object):
     @defer.inlineCallbacks
     def after_first_sync(self):
         yield self.nicknym.generate_openpgp_key()
-        self.account = self._create_account(self.account_email, self.soledad_session)
+        self.account = self._create_account(self.account_email, self.soledad)
         self.incoming_mail_fetcher = yield self._create_incoming_mail_fetcher(
             self.nicknym,
-            self.soledad_session,
+            self.soledad,
             self.account,
             self.account_email())
         reactor.callFromThread(self.incoming_mail_fetcher.startService)
 
-    def _create_account(self, user_mail, soledad_session):
-        account = IMAPAccount(user_mail, soledad_session.soledad)
+    def _create_account(self, user_mail, soledad):
+        account = IMAPAccount(user_mail, soledad)
         return account
 
     def _set_fresh_account(self, *args):
@@ -105,10 +83,10 @@ class LeapSession(object):
         self.stop_background_jobs
 
     @defer.inlineCallbacks
-    def _create_incoming_mail_fetcher(self, nicknym, soledad_session, account, user_mail):
+    def _create_incoming_mail_fetcher(self, nicknym, soledad, account, user_mail):
         inbox = yield account.callWhenReady(lambda _: account.getMailbox('INBOX'))
         defer.returnValue(IncomingMail(nicknym.keymanager,
-                          soledad_session.soledad,
+                          soledad,
                           inbox.collection,
                           user_mail))
 
@@ -117,7 +95,7 @@ class LeapSession(object):
 
     def sync(self):
         try:
-            return self.soledad_session.sync()
+            return self.soledad.sync()
         except:
             traceback.print_exc(file=sys.stderr)
             raise
@@ -175,13 +153,20 @@ class LeapSessionFactory(object):
         auth = srp_auth.authenticate(username, password)
         account_email = self._provider.address_for(username)
 
-        soledad = SoledadSessionFactory.create(self._provider, auth.token, auth.uuid, password)
-        mail_store = LeapMailStore(soledad.soledad)
+        self._create_database_dir()
 
+        soledad = SoledadFactory.create(auth.token,
+                                        auth.uuid,
+                                        password,
+                                        self._secrets_path(auth.uuid),
+                                        self._local_db_path(auth.uuid),
+                                        self._provider.discover_soledad_server(auth.uuid),
+                                        LeapCertificate(self._provider).provider_api_cert)
+
+        mail_store = LeapMailStore(soledad)
         nicknym = self._create_nicknym(account_email, auth.token, auth.uuid, soledad)
 
         self._download_smtp_cert(auth)
-
         smtp_host, smtp_port = self._provider.smtp_info()
         smtp_config = LeapSMTPConfig(account_email, self._smtp_client_cert_path(), smtp_host, smtp_port)
 
@@ -225,8 +210,23 @@ class LeapSessionFactory(object):
             else:
                 raise
 
-    def _create_nicknym(self, email_address, token, uuid, soledad_session):
-        return NickNym(self._provider, self._config, soledad_session, email_address, token, uuid)
+    def _create_nicknym(self, email_address, token, uuid, soledad):
+        return NickNym(self._provider, self._config, soledad, email_address, token, uuid)
 
-        # memstore = MemoryStore(permanent_store=SoledadStore(soledad_session.soledad))
-        # return SoledadBackedAccount(uuid, soledad_session.soledad, memstore)
+    def _leap_path(self):
+        return "%s/soledad" % self._config.leap_home
+
+    def _secrets_path(self, user_uuid):
+        return "%s/%s.secret" % (self._leap_path(), user_uuid)
+
+    def _local_db_path(self, user_uuid):
+        return "%s/%s.db" % (self._leap_path(), user_uuid)
+
+    def _create_database_dir(self):
+        try:
+            os.makedirs(self._leap_path())
+        except OSError as exc:
+            if exc.errno == errno.EEXIST and os.path.isdir(self._leap_path()):
+                pass
+            else:
+                raise

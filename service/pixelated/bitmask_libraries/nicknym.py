@@ -19,11 +19,11 @@ from twisted.internet import defer
 
 
 class NickNym(object):
-    def __init__(self, provider, config, soledad_session, email_address, token, uuid):
+    def __init__(self, provider, config, soledad, email_address, token, uuid):
         nicknym_url = _discover_nicknym_server(provider)
         self._email = email_address
         self.keymanager = KeyManager(self._email, nicknym_url,
-                                     soledad_session.soledad,
+                                     soledad,
                                      token=token, ca_cert_path=LeapCertificate(provider).provider_api_cert, api_uri=provider.api_uri,
                                      api_version=provider.api_version,
                                      uid=uuid, gpgbinary=config.gpg_binary)

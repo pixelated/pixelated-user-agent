@@ -29,7 +29,7 @@ class NickNymTest(AbstractLeapTest):
         # when
         NickNym(self.provider,
                 self.config,
-                self.soledad_session,
+                self.soledad,
                 'test_user@some-server.test',
                 self.auth.token,
                 self.auth.uuid)
@@ -53,7 +53,7 @@ class NickNymTest(AbstractLeapTest):
         keyman.get_key.side_effect = KeyNotFound
         nicknym = NickNym(self.provider,
                           self.config,
-                          self.soledad_session,
+                          self.soledad,
                           'test_user@some-server.test',
                           self.auth.token,
                           self.auth.uuid)

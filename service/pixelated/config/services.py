@@ -19,7 +19,7 @@ class Services(object):
     def setup(self, leap_home, leap_session):
         InputMail.FROM_EMAIL_ADDRESS = leap_session.account_email()
 
-        search_index_storage_key = self.setup_search_index_storage_key(leap_session.soledad_session.soledad)
+        search_index_storage_key = self.setup_search_index_storage_key(leap_session.soledad)
         yield self.setup_search_engine(
             leap_home,
             search_index_storage_key)

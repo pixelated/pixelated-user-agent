@@ -20,6 +20,7 @@ from leap.common.certs import get_digest
 import requests
 from .certs import LeapCertificate
 from pixelated.support.tls_adapter import EnforceTLSv1Adapter
+from pixelated.bitmask_libraries.soledad import SoledadDiscoverException
 
 
 class LeapProvider(object):
@@ -138,3 +139,16 @@ class LeapProvider(object):
 
     def address_for(self, username):
         return '%s@%s' % (username, self.domain)
+
+    def discover_soledad_server(self, user_uuid):
+        try:
+            json_data = self.fetch_soledad_json()
+
+            hosts = json_data['hosts']
+            host = hosts.keys()[0]
+            server_url = 'https://%s:%d/user-%s' % \
+                         (hosts[host]['hostname'], hosts[host]['port'],
+                          user_uuid)
+            return server_url
+        except Exception, e:
+            raise SoledadDiscoverException(e)

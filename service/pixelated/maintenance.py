@@ -65,7 +65,7 @@ def execute_command(args, leap_session):
         return leap_session
 
     def get_soledad_handle(leap_session):
-        soledad = leap_session.soledad_session.soledad
+        soledad = leap_session.soledad
 
         return leap_session, soledad
 
