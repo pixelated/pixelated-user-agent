@@ -103,7 +103,7 @@ cd ../service
 rm -rf "$VIRTUALENV_PATH"
 virtualenv "$VIRTUALENV_PATH"
 source "$VIRTUALENV_PATH/bin/activate"
-pip install --upgrade setuptools
+pip install --upgrade setuptools pip
 ./go setup --always-unzip
 pip uninstall -y enum34 && pip install enum34
 pip uninstall -y pysqlcipher && pip install pysqlcipher # this is needed so pysqlcipher gets recompiled with the right version of glibc
