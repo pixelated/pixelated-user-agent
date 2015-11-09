@@ -29,8 +29,8 @@ define(['flight/lib/component', 'page/events', 'helpers/triggering', 'mail_view/
       return child_div;
     };
 
-    this.resetChildDiv = function() {
-      this.select('middlePane').empty();
+    this.resetChildDiv = function(component_id) {
+      $('#' + component_id).remove();
     };
 
     this.refreshMailList =  function (ev, data) {
@@ -52,12 +52,12 @@ define(['flight/lib/component', 'page/events', 'helpers/triggering', 'mail_view/
     };
 
     this.onMailsChange = function (ev, data) {
+      this.resetChildDiv(this.attr.noMailsAvailablePane);
       if (data.mails.length > 0) {
         NoMailsAvailablePane.teardownAll();
-        this.resetChildDiv();
       } else {
         var child_div = this.createChildDiv(this.attr.noMailsAvailablePane);
-        NoMailsAvailablePane.attachTo(child_div);
+        NoMailsAvailablePane.attachTo(child_div, {tag: data.tag});
       }
     };
 

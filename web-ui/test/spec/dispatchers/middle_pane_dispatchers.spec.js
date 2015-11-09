@@ -31,14 +31,14 @@ describeComponent('dispatchers/middle_pane_dispatcher', function () {
       spyOn(noMailsAvailablePane, 'teardownAll');
     });
 
-    it('should listen to no mails available event and show noMailsAvailablePane', function () {
+    it('should listen to mails available event and show noMailsAvailablePane', function () {
         var mail_list = { mails: []};
         this.component.trigger(document, Pixelated.events.mails.available, mail_list);
 
         expect(noMailsAvailablePane.attachTo).toHaveBeenCalled();
     });
 
-    it('should tbd', function () {
+    it('should listen to mails available event and do not show noMailsAvailablePane', function () {
         var pretend_to_be_a_mail = {};
         var mail_list = { mails: [pretend_to_be_a_mail]};
         this.component.trigger(document, Pixelated.events.mails.available, mail_list);

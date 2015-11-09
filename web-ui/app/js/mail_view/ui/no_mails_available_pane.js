@@ -29,15 +29,17 @@ define(
     return defineComponent(noMailsAvailablePane);
 
     function noMailsAvailablePane() {
+      this.defaultAttrs({
+        tag: null 
+      });
 
       this.render = function() {
-        this.$node.html(templates.noMailsAvailable());
+        this.attr.tag = this.attr.tag.toUpperCase();
+        this.$node.html(templates.noMailsAvailable(this.attr));
       };
 
       this.after('initialize', function () {
         this.render();
-
-        // this.on(document, events.dispatchers.middlePane.clear, this.teardown);
       });
     }
   }
