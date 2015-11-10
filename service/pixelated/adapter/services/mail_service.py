@@ -23,10 +23,11 @@ import os
 
 class MailService(object):
 
-    def __init__(self, mail_sender, mail_store, search_engine):
+    def __init__(self, mail_sender, mail_store, search_engine, account_email):
         self.mail_store = mail_store
         self.search_engine = search_engine
         self.mail_sender = mail_sender
+        self.account_email = account_email
 
     @defer.inlineCallbacks
     def all_mails(self):

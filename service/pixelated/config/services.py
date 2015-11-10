@@ -60,7 +60,8 @@ class Services(object):
         return MailService(
             pixelated_mail_sender,
             leap_session.mail_store,
-            search_engine)
+            search_engine,
+            leap_session.account_email())
 
     def setup_draft_service(self, mail_store):
         return DraftService(mail_store)

@@ -8,10 +8,12 @@ from pixelated.resources.root_resource import RootResource
 class TestRootResource(unittest.TestCase):
 
     def setUp(self):
-        leap_session = mock()
-        when(leap_session).account_email().thenReturn('hackerman@pixelated.org')
+        test_email = 'hackerman@pixelated-project.org'
+        mail_service = mock()
+        mail_service.account_email = test_email
+
         root_resource = RootResource()
-        root_resource.initialize(leap_session, mock(), mock(), mock(), mock(), mock())
+        root_resource.initialize(mock(), mock(), mail_service, mock(), mock())
         root_resource._html_template = """
             <html>
                 <head>

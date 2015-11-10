@@ -35,8 +35,8 @@ class RootResource(Resource):
             return self
         return Resource.getChild(self, path, request)
 
-    def initialize(self, leap_session, keymanager, search_engine, mail_service, draft_service, feedback_service):
-        self._leap_session = leap_session
+    def initialize(self, keymanager, search_engine, mail_service, draft_service, feedback_service):
+        self.account_email = mail_service.account_email
 
         self.putChild('assets', File(self._static_folder))
         self.putChild('keys', KeysResource(keymanager))
@@ -71,6 +71,5 @@ class RootResource(Resource):
         if self._is_starting():
             return open(os.path.join(self._startup_assets_folder, 'Interstitial.html')).read()
         else:
-            email = self._leap_session.account_email()
-            response = Template(self._html_template).safe_substitute(account_email=email)
+            response = Template(self._html_template).safe_substitute(account_email=self.account_email)
             return str(response)
