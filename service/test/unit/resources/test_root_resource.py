@@ -1,4 +1,5 @@
 import unittest
+import re
 from mockito import mock, when
 from test.unit.resources import DummySite
 from twisted.web.test.requesthelper import DummyRequest
@@ -6,20 +7,13 @@ from pixelated.resources.root_resource import RootResource
 
 
 class TestRootResource(unittest.TestCase):
+    MAIL_ADDRESS = 'test_user@pixelated-project.org'
 
     def setUp(self):
-        test_email = 'hackerman@pixelated-project.org'
-        mail_service = mock()
-        mail_service.account_email = test_email
-
         root_resource = RootResource()
-        root_resource.initialize(mock(), mock(), mail_service, mock(), mock())
-        root_resource._html_template = """
-            <html>
-                <head>
-                    <title>$account_email</title>
-                </head>
-            </html>"""
+        root_resource._mode = root_resource
+        root_resource.account_email = self.MAIL_ADDRESS
+        root_resource._html_template = "<html><head><title>$account_email</title></head></html>"
         self.web = DummySite(root_resource)
 
     def test_render_GET_should_template_account_email(self):
@@ -28,15 +22,9 @@ class TestRootResource(unittest.TestCase):
         d = self.web.get(request)
 
         def assert_response(_):
-            expected = """
-            <html>
-                <head>
-                    <title>hackerman@pixelated.org</title>
-                </head>
-            </html>"""
-
-            actual = request.written[0]
-            self.assertEquals(expected, actual)
+            expected = "<title>{0}</title>".format(self.MAIL_ADDRESS)
+            matches = re.findall(expected, request.written[0])
+            self.assertEquals(len(matches), 1)
 
         d.addCallback(assert_response)
         return d

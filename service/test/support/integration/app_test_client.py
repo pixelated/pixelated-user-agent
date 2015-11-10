@@ -166,7 +166,7 @@ class AppTestClient(object):
         return mail_sender
 
     def _create_mail_service(self, mail_sender, mail_store, search_engine):
-        mail_service = MailService(mail_sender, mail_store, search_engine)
+        mail_service = MailService(mail_sender, mail_store, search_engine, self.MAIL_ADDRESS)
         return mail_service
 
     def _generate_soledad_test_folder_name(self, soledad_test_folder='/tmp/soledad-test/test'):
