@@ -355,7 +355,11 @@ class LeapMailStore(MailStore):
     @defer.inlineCallbacks
     def _raw_message_body(self, message):
         content_doc = (yield message.get_wrapper().get_body(self.soledad))
-        parser = BodyParser(content_doc.raw, content_type=content_doc.content_type, content_transfer_encoding=content_doc.content_transfer_encoding)
+        parser = BodyParser('', content_type='text/plain', content_transfer_encoding='UTF-8')
+        # It fix the problem when leap doesn'r found body_phash and returns empty string
+        if not isinstance(content_doc, str):
+            parser = BodyParser(content_doc.raw, content_type=content_doc.content_type, content_transfer_encoding=content_doc.content_transfer_encoding)
+
         defer.returnValue(parser.parsed_content())
 
     @defer.inlineCallbacks
