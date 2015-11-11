@@ -27,8 +27,6 @@ class DraftService(object):
     def create_draft(self, input_mail):
         mail = yield self._mail_store.add_mail('DRAFTS', input_mail.raw)
         defer.returnValue(mail)
-        # pixelated_mail = yield (yield self._mailboxes.drafts).add(input_mail)
-        # defer.returnValue(pixelated_mail)
 
     @defer.inlineCallbacks
     def update_draft(self, ident, input_mail):
@@ -42,7 +40,3 @@ class DraftService(object):
             if errorMessage == 'Need to create doc before deleting':
                 yield self._mail_store.delete_mail(new_draft.ident)
             raise DuplicatedDraftException(errorMessage)
-
-        # pixelated_mail = yield self.create_draft(input_mail)
-        # yield (yield self._mailboxes.drafts).remove(ident)
-        # defer.returnValue(pixelated_mail)
