@@ -1,3 +1,7 @@
 <div class="scene">
-  <div class="text">{{t 'NO EMAILS IN'}} '{{ tag }}'.</div>
+  {{#if forSearch }}
+    <div class="text">{{t 'NO RESULTS FOR'}}: '{{ forSearch }}'.</div>
+  {{else}}
+    <div class="text">{{t 'NO EMAILS IN'}} '{{ tag }}'.</div>
+  {{/if}}
 </div>

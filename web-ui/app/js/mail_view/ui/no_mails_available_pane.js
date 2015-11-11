@@ -36,6 +36,7 @@ define(
 
       this.render = function() {
         this.attr.tag = this.attr.tag.toUpperCase();
+        this.attr.forSearch = this.attr.forSearch.toUpperCase();
         this.$node.html(templates.noMailsAvailable(this.attr));
       };
 
