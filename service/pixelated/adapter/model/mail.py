@@ -13,38 +13,20 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import json
 import os
 import re
 import logging
-import dateutil.parser as dateparser
-from uuid import uuid4
 from email import message_from_file
 from email.mime.text import MIMEText
-from email.header import decode_header, Header
+from email.header import Header
 from email.MIMEMultipart import MIMEMultipart
 from pycryptopp.hash import sha256
-from leap.mail.adaptors import soledad_indexes as fields
 import leap.mail.walk as walk
 from pixelated.adapter.model.status import Status
 from pixelated.support import date
-from pixelated.support.functional import compact
-
-from twisted.internet import defer
 
 
 logger = logging.getLogger(__name__)
-
-TYPE_KEY = 'type'
-CONTENT_HASH_KEY = 'chash'
-HEADERS_KEY = 'headers'
-DATE_KEY = 'date'
-SUBJECT_KEY = 'subject'
-PARTS_MAP_KEY = 'part_map'
-BODY_KEY = 'body'
-MSGID_KEY = 'msgid'
-MULTIPART_KEY = 'multi'
-SIZE_KEY = 'size'
 
 
 class Mail(object):
@@ -152,55 +134,8 @@ class InputMail(Mail):
     def ident(self):
         return self._get_chash()
 
-    def get_for_save(self, next_uid, mailbox):
-        docs = [self._fdoc(next_uid, mailbox), self._hdoc()]
-        docs.extend([m for m in self._cdocs()])
-        return docs
-
-    def _fdoc(self, next_uid, mailbox):
-        if self._fd:
-            return self._fd
-
-        fd = {}
-        fd[fields.MBOX] = mailbox
-        fd[fields.MBOX_UUID] = next_uid
-        fd[fields.CONTENT_HASH] = self._get_chash()
-        fd[SIZE_KEY] = len(self.raw)
-        fd[MULTIPART_KEY] = True
-        fd[fields.RECENT] = True
-        fd[fields.TYPE] = fields.FLAGS
-        fd[fields.FLAGS] = Status.to_flags(self._status)
-        self._fd = fd
-        return fd
-
     def _get_body_phash(self):
         return walk.get_body_phash(self._mime_multipart)
-
-    def _hdoc(self):
-        if self._hd:
-            return self._hd
-
-        # InputMail does not have a from header but we need it when persisted into soledad.
-        headers = self.headers.copy()
-        headers['From'] = InputMail.FROM_EMAIL_ADDRESS
-
-        hd = {}
-        hd[HEADERS_KEY] = headers
-        hd[DATE_KEY] = headers['Date']
-        hd[CONTENT_HASH_KEY] = self._get_chash()
-        hd[MSGID_KEY] = ''
-        hd[MULTIPART_KEY] = True
-        hd[SUBJECT_KEY] = headers.get('Subject')
-        hd[TYPE_KEY] = fields.HEADERS
-        hd[BODY_KEY] = self._get_body_phash()
-        hd[PARTS_MAP_KEY] = \
-            walk.walk_msg_tree(walk.get_parts(self._mime_multipart), body_phash=self._get_body_phash())['part_map']
-
-        self._hd = hd
-        return hd
-
-    def _cdocs(self):
-        return walk.get_raw_docs(self._mime_multipart, self._mime_multipart.walk())
 
     def to_mime_multipart(self):
         mime_multipart = MIMEMultipart()
