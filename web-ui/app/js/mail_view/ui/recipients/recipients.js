@@ -32,7 +32,8 @@ define(
 
     function recipients() {
       this.defaultAttrs({
-        navigationHandler: '.recipients-navigation-handler'
+        navigationHandler: '.recipients-navigation-handler',
+        recipientsList: '.recipients-list'
       });
 
       function getAddresses(recipients) {
@@ -85,7 +86,7 @@ define(
       };
 
       this.addRecipient = function(recipient) {
-        var newRecipient = Recipient.prototype.renderAndPrepend(this.$node, recipient);
+        var newRecipient = Recipient.prototype.renderAndPrepend(this.$node.find(this.attr.recipientsList), recipient);
         this.attr.recipients.push(newRecipient);
       };
 

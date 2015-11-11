@@ -1,19 +1,31 @@
 <div id="recipients-fields" style="display:none">
     <div id='recipients-to-area' class="recipients-area input-container columns large-12 no-padding">
         <input class="recipients-navigation-handler"/>
-        <label for="recipients-to-box" class="recipients-label column large-1">{{t 'TO'}}: </label>
-        <input id='recipients-to-box' class="recipients-input" type="text" tabindex="1"/>
+        <div class='compose-column-label'>
+          <label for="recipients-to-box" class="recipients-label column large-1">{{t 'TO'}}: </label>
+        </div>
+        <div class='recipients-list compose-column-recipients'>
+          <input id='recipients-to-box' class="recipients-input" type="text" tabindex="1"/>
+        </div>
     </div>
 
     <div id="recipients-cc-area" class="recipients-area input-container columns large-12 no-padding">
         <input class="recipients-navigation-handler"/>
-        <label for="recipients-cc-box" class="recipients-label column large-1">{{t 'CC'}}: </label>
-        <input id='recipients-cc-box' class="recipients-input" type="text" tabindex="2"/>
+        <div class='compose-column-label'>
+          <label for="recipients-cc-box" class="recipients-label column large-1">{{t 'CC'}}: </label>
+        </div>
+        <div class='recipients-list compose-column-recipients'>
+          <input id='recipients-cc-box' class="recipients-input" type="text" tabindex="2"/>
+        </div>
     </div>
 
     <div id="recipients-bcc-area" class="recipients-area input-container columns large-12 no-padding">
         <input class="recipients-navigation-handler"/>
-        <label for ="recipients-bcc-box" class="recipients-label column large-1">{{t 'BCC'}}: </label>
-        <input id='recipients-bcc-box' class="recipients-input" type="text" tabindex="3"/>
+        <div class='compose-column-label'>
+          <label for ="recipients-bcc-box" class="recipients-label column large-1">{{t 'BCC'}}: </label>
+        </div>
+        <div class='recipients-list compose-column-recipients'>
+          <input id='recipients-bcc-box' class="recipients-input" type="text" tabindex="3"/>
+        </div>
     </div>
 </div>
