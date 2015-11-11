@@ -5,3 +5,4 @@ build/
 test/perf/**/results
 .coverage
 htmlcov/
+_trial_temp.lock
