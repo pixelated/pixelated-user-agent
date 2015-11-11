@@ -30,7 +30,8 @@ define(
 
     function noMailsAvailablePane() {
       this.defaultAttrs({
-        tag: null 
+        tag: null,
+        forSearch: ''
       });
 
       this.render = function() {

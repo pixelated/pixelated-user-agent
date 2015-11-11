@@ -24,10 +24,10 @@ describeComponent('dispatchers/middle_pane_dispatcher', function () {
   });
 
   describe('no emails available', function () {
-    var noMailsAvailablePane;
+    var noMailsAvailablePane, attachToSpy;
     beforeEach(function () {
       noMailsAvailablePane = require('mail_view/ui/no_mails_available_pane');
-      spyOn(noMailsAvailablePane, 'attachTo');
+      attachToSpy = spyOn(noMailsAvailablePane, 'attachTo');
       spyOn(noMailsAvailablePane, 'teardownAll');
     });
 
@@ -47,5 +47,11 @@ describeComponent('dispatchers/middle_pane_dispatcher', function () {
         expect(noMailsAvailablePane.teardownAll).toHaveBeenCalled();
     });
 
+    it('should give search information to component', function () {
+        var mail_list = { mails: [], tag: 'all', forSearch: 'search'};
+        this.component.trigger(document, Pixelated.events.mails.available, mail_list);
+ 
+        expect(attachToSpy.calls.mostRecent().args[1]).toEqual({tag: 'all', forSearch: 'search'});
+    });
   });
 });

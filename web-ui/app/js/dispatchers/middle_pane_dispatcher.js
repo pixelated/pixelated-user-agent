@@ -57,7 +57,7 @@ define(['flight/lib/component', 'page/events', 'helpers/triggering', 'mail_view/
         NoMailsAvailablePane.teardownAll();
       } else {
         var child_div = this.createChildDiv(this.attr.noMailsAvailablePane);
-        NoMailsAvailablePane.attachTo(child_div, {tag: data.tag});
+        NoMailsAvailablePane.attachTo(child_div, {tag: data.tag, forSearch: data.forSearch});
       }
     };
 

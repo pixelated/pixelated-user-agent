@@ -222,7 +222,7 @@ define(
         monitoredAjax(this, url, { dataType: 'json' })
           .done(function (data) {
             this.attr.numPages = Math.ceil(data.stats.total / this.attr.pageSize);
-            this.trigger(document, events.mails.available, _.merge(_.merge({tag: this.attr.currentTag }), this.parseMails(data)));
+            this.trigger(document, events.mails.available, _.merge(_.merge({tag: this.attr.currentTag, forSearch: this.attr.lastQuery }), this.parseMails(data)));
           }.bind(this))
           .fail(function () {
             this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n('Could not fetch messages') });
