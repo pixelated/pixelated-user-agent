@@ -81,7 +81,6 @@ def impl(context):
 
 @when('I forward this mail')
 def impl(context):
-    context.execute_steps(u'When I save the draft')  # FIXME: this won't be necessary after #89 is done
     wait_until_button_is_visible(context, 'Send')
     click_button(context, 'Send')
 

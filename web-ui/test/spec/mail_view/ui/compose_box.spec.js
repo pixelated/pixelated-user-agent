@@ -120,22 +120,6 @@ describeComponent('mail_view/ui/compose_box', function () {
 
   });
 
-  describe('draft compose box', function() {
-    it('should save a draft when click on draft button', function () {
-      $(document).trigger(Pixelated.events.ui.recipients.updated, {recipientsName: 'to', newRecipients: ['fox@somewhere.com']});
-
-      this.component.select('subjectBox').val('A new fancy subject!');
-      var eventSpy = spyOnEvent(document, Pixelated.events.mail.saveDraft);
-
-      this.component.select('draftButton').click();
-
-      expect(eventSpy).toHaveBeenTriggeredOn(document);
-      expect(eventSpy.mostRecentCall.data.header).toEqual(jasmine.objectContaining({
-        to: ['fox@somewhere.com']
-      }));
-    });
-  });
-
   describe('subject label', function() {
     var input;
     var label;

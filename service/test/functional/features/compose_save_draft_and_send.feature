@@ -24,7 +24,6 @@ Feature: compose mail, save draft and send mail
       | subject          | body                                        |
       | Pixelated rocks! | You should definitely use it. Cheers, User. |
       And for the 'To' field I enter 'pixelated@friends.org'
-      And I save the draft
     When I select the tag 'drafts'
     When I open the first mail in the mail list
      And I send it

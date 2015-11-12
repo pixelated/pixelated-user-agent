@@ -23,10 +23,9 @@ define(
     'page/events',
     'views/i18n',
     'mail_view/ui/send_button',
-    'mail_view/ui/draft_button',
     'flight/lib/utils'
   ],
-  function(viewHelper, Recipients, DraftSaveStatus, events, i18n, SendButton, DraftButton, utils) {
+  function(viewHelper, Recipients, DraftSaveStatus, events, i18n, SendButton, utils) {
     'use strict';
 
     function withMailEditBase() {
@@ -34,7 +33,6 @@ define(
       this.defaultAttrs({
         bodyBox: '#text-box',
         sendButton: '#send-button',
-        draftButton: '#draft-button',
         cancelButton: '#cancel-button',
         trashButton: '#trash-button',
         toArea: '#recipients-to-area',
@@ -93,10 +91,8 @@ define(
         this.attr.recipientValues = context.recipients;
         this.attachRecipients(context);
 
-        this.on(this.select('draftButton'), 'click', this.buildAndSaveDraft);
         this.on(this.select('trashButton'), 'click', this.trashMail);
         SendButton.attachTo(this.select('sendButton'));
-        DraftButton.attachTo(this.select('draftButton'));
 
         this.warnSendButtonOfRecipients();
       };

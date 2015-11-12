@@ -41,16 +41,6 @@ describeComponent('mail_view/ui/draft_box', function () {
 
   });
 
-  it('sending a draft sends the correct mailIdent', function () {
-    this.setupComponent({mailIdent: mail.ident});
-    this.component.trigger(this.component, Pixelated.events.mail.here, { mail: mail});
-
-    var sendDraftEvent = spyOnEvent(document, Pixelated.events.mail.saveDraft);
-    this.component.select('draftButton').click();
-
-    expect(sendDraftEvent).toHaveBeenTriggeredOnAndWith(document, jasmine.objectContaining({ident: mail.ident}));
-  });
-
   it('shows no message selected pane when draft is sent', function() {
     var openNoMessageSelectedEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
 
