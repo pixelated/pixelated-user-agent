@@ -132,5 +132,10 @@ class MailService(object):
         yield self.mail_store.move_mail_to_mailbox(mail_id, 'INBOX')
 
     @defer.inlineCallbacks
+    def archive_mail(self, mail_id):
+        yield self.mail_store.add_mailbox('ARCHIVE')
+        yield self.mail_store.move_mail_to_mailbox(mail_id, 'ARCHIVE')
+
+    @defer.inlineCallbacks
     def delete_permanent(self, mail_id):
         yield self.mail_store.delete_mail(mail_id)

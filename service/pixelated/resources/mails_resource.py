@@ -94,6 +94,23 @@ class MailsRecoverResource(Resource):
         return NOT_DONE_YET
 
 
+class MailsArchiveResource(Resource):
+
+    def __init__(self, mail_service):
+        Resource.__init__(self)
+        self._mail_service = mail_service
+
+    def render_POST(self, request):
+        idents = json.loads(request.content.read())['idents']
+        deferreds = []
+        for ident in idents:
+            deferreds.append(self._mail_service.archive_mail(ident))
+        d = defer.gatherResults(deferreds, consumeErrors=True)
+        d.addCallback(lambda _: respond_json_deferred({'successMessage': 'Your message was archived'}, request))
+        d.addErrback(lambda _: respond_json_deferred(None, request, status_code=500))
+        return NOT_DONE_YET
+
+
 class MailsResource(Resource):
 
     def _register_smtp_error_handler(self):
@@ -108,6 +125,7 @@ class MailsResource(Resource):
         Resource.__init__(self)
         self.putChild('delete', MailsDeleteResource(mail_service))
         self.putChild('recover', MailsRecoverResource(mail_service))
+        self.putChild('archive', MailsArchiveResource(mail_service))
         self.putChild('read', MailsReadResource(mail_service))
         self.putChild('unread', MailsUnreadResource(mail_service))
 

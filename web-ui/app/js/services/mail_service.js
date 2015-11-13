@@ -128,7 +128,16 @@ define(
           var mails = dataToRecover.mails || [dataToRecover.mail];
 
           this.refreshMails();
-          this.trigger(document, events.ui.userAlerts.displayMessage, { message: dataToRecover.successMessage});
+          this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n(dataToRecover.successMessage)});
+          this.trigger(document, events.ui.mails.uncheckAll);
+        }, this);
+      };
+
+      this.triggerArchived = function (dataToArchive) {
+        return _.bind(function (response) {
+          this.refreshMails();
+          this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n(response.successMessage)});
+          //this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n("Your message was archived")});
           this.trigger(document, events.ui.mails.uncheckAll);
         }, this);
       };
@@ -169,6 +178,20 @@ define(
         }).done(this.triggerRecovered(dataToRecover))
           .fail(this.errorMessage(i18n('Could not move emails to inbox')));
       };
+
+      this.archiveManyMails = function(event, dataToArchive) {
+        var mailIdents = _.map(dataToArchive.checkedMails, function (mail) {
+          return mail.ident;
+        });
+
+        monitoredAjax(this, '/mails/archive', {
+          type: 'POST',
+          dataType: 'json',
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify({idents: mailIdents})
+        }).done(this.triggerArchived(dataToArchive))
+          .fail(this.errorMessage(i18n('Could not archive emails')));
+      }
 
       function compileQuery(data) {
         var query = 'tag:"' + that.attr.currentTag + '"';
@@ -299,6 +322,7 @@ define(
         this.on(document, events.mail.delete, this.deleteMail);
         this.on(document, events.mail.deleteMany, this.deleteManyMails);
         this.on(document, events.mail.recoverMany, this.recoverManyMails);
+        this.on(document, events.mail.archiveMany, this.archiveManyMails);
         this.on(document, events.search.perform, this.newSearch);
         this.on(document, events.ui.tag.selected, this.fetchByTag);
         this.on(document, events.ui.tag.select, this.fetchByTag);

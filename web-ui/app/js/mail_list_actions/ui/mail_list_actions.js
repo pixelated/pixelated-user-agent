@@ -29,6 +29,7 @@ define(
     'mail_list_actions/ui/pagination_trigger',
     'mail_list_actions/ui/delete_many_trigger',
     'mail_list_actions/ui/recover_many_trigger',
+    'mail_list_actions/ui/archive_many_trigger',
     'mail_list_actions/ui/mark_many_as_read_trigger',
     'mail_list_actions/ui/mark_as_unread_trigger'
   ],
@@ -45,6 +46,7 @@ define(
     paginationTrigger,
     deleteManyTrigger,
     recoverManyTrigger,
+    archiveManyTrigger,
     markManyAsReadTrigger,
     markAsUnreadTrigger
   ) {
@@ -60,6 +62,7 @@ define(
         paginationTrigger.attachTo('#pagination-trigger');
         deleteManyTrigger.attachTo('#delete-selected');
         recoverManyTrigger.attachTo('#recover-selected');
+        archiveManyTrigger.attachTo('#archive-selected');
         markManyAsReadTrigger.attachTo('#mark-selected-as-read');
         markAsUnreadTrigger.attachTo('#mark-selected-as-unread');
         refresher.attachTo(document);
