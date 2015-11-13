@@ -42,11 +42,6 @@ def choose_impl(context, recipients_field, to_type):
     find_element_by_css_selector(context, '.tt-dropdown-menu div div').click()
 
 
-@when('I save the draft')
-def save_impl(context):
-    context.browser.find_element_by_id('draft-button').click()
-
-
 @when('I send it')
 def send_impl(context):
     send_button = wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, '#send-button:enabled'))
