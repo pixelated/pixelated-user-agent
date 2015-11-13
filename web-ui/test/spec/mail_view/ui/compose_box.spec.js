@@ -3,6 +3,12 @@ describeComponent('mail_view/ui/compose_box', function () {
   beforeEach(function () {
     Pixelated.mockBloodhound();
     this.setupComponent('<div style="display:none"></div>');
+
+    spyOn(this.component, 'trim_recipient').and.callFake(function(recipients) {
+      return recipients.map(function(recipient) {
+        return recipient.trim();
+      });
+    });
   });
 
 

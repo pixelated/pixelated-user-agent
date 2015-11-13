@@ -133,11 +133,11 @@ define(
       this.sendMail = function () {
         this.cancelPostponedSaveDraft();
         var mail = this.buildMail('sent');
-        mail.header.to = this.trim_recipient(mail.header.to);
-        mail.header.cc = this.trim_recipient(mail.header.cc);
-        mail.header.bcc = this.trim_recipient(mail.header.bcc);
         
         if (allRecipientsAreEmails(mail)) {
+          mail.header.to = this.trim_recipient(mail.header.to);
+          mail.header.cc = this.trim_recipient(mail.header.cc);
+          mail.header.bcc = this.trim_recipient(mail.header.bcc);
           this.trigger(events.mail.send, mail);
         } else {
           this.trigger(

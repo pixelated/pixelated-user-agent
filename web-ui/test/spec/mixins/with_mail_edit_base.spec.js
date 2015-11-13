@@ -7,6 +7,12 @@ describeMixin('mixins/with_mail_edit_base', function () {
     this.component.buildMail = function (tag) {
       return { header: { to: ['a@smth.com'], from: 'b@smth.com', subject: 'Sbject' } };
     };
+
+    spyOn(this.component, 'trim_recipient').and.callFake(function(recipients) {
+      return recipients.map(function(recipient) {
+        return recipient.trim();
+      });
+    });
   });
 
   describe('initialization', function() {
