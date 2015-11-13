@@ -124,10 +124,19 @@ define(
         });
       };
 
+      this.trim_recipient = function(recipients) {
+        recipients.map(function(recipient) {
+          return recipient.trim();
+        });
+      }
+
       this.sendMail = function () {
         this.cancelPostponedSaveDraft();
         var mail = this.buildMail('sent');
-
+        mail.header.to = this.trim_recipient(mail.header.to);
+        mail.header.cc = this.trim_recipient(mail.header.cc);
+        mail.header.bcc = this.trim_recipient(mail.header.bcc);
+        
         if (allRecipientsAreEmails(mail)) {
           this.trigger(events.mail.send, mail);
         } else {
