@@ -128,7 +128,7 @@ define(
         recipients.map(function(recipient) {
           return recipient.trim();
         });
-      }
+      };
 
       this.sendMail = function () {
         this.cancelPostponedSaveDraft();
