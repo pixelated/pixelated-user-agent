@@ -125,7 +125,7 @@ define(
       };
 
       this.trim_recipient = function(recipients) {
-        recipients.map(function(recipient) {
+        return recipients.map(function(recipient) {
           return recipient.trim();
         });
       };
