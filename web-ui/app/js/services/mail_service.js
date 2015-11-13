@@ -137,9 +137,21 @@ define(
         return _.bind(function (response) {
           this.refreshMails();
           this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n(response.successMessage)});
-          //this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n("Your message was archived")});
           this.trigger(document, events.ui.mails.uncheckAll);
         }, this);
+      };
+
+      this.archiveManyMails = function(event, dataToArchive) {
+        var mailIdents = _.map(dataToArchive.checkedMails, function (mail) {
+          return mail.ident;
+        });
+        monitoredAjax(this, '/mails/archive', {
+          type: 'POST',
+          dataType: 'json',
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify({idents: mailIdents})
+        }).done(this.triggerArchived(dataToArchive))
+          .fail(this.errorMessage(i18n('Could not archive emails')));
       };
 
       this.deleteMail = function (ev, data) {
@@ -178,20 +190,6 @@ define(
         }).done(this.triggerRecovered(dataToRecover))
           .fail(this.errorMessage(i18n('Could not move emails to inbox')));
       };
-
-      this.archiveManyMails = function(event, dataToArchive) {
-        var mailIdents = _.map(dataToArchive.checkedMails, function (mail) {
-          return mail.ident;
-        });
-
-        monitoredAjax(this, '/mails/archive', {
-          type: 'POST',
-          dataType: 'json',
-          contentType: 'application/json; charset=utf-8',
-          data: JSON.stringify({idents: mailIdents})
-        }).done(this.triggerArchived(dataToArchive))
-          .fail(this.errorMessage(i18n('Could not archive emails')));
-      }
 
       function compileQuery(data) {
         var query = 'tag:"' + that.attr.currentTag + '"';

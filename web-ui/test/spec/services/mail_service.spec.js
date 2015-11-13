@@ -93,7 +93,6 @@ describeComponent('services/mail_service', function () {
     var spyAjax = spyOn($, 'ajax').and.returnValue(deferred);
 
     var spyEvent = spyOnEvent(document, Pixelated.events.mail.tags.updated);
-    var component = jasmine.createSpyObj('component',['successUpdateTags']);
 
     this.component.trigger(Pixelated.events.mail.tags.update, { ident: email1.ident, tags: email1.tags });
 
@@ -111,7 +110,6 @@ describeComponent('services/mail_service', function () {
     var spyAjax = spyOn($, 'ajax').and.returnValue(deferred);
 
     var spyEvent = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
-    var component = jasmine.createSpyObj('component',['failureUpdateTags']);
 
     this.component.trigger(Pixelated.events.mail.tags.update, { ident: email1.ident, tags: email1.tags });
 
@@ -169,7 +167,7 @@ describeComponent('services/mail_service', function () {
 
     this.component.trigger(Pixelated.events.mail.delete, {mail: {ident: '43'}});
 
-    deferred.reject({responseJSON: {}});
+    deferred.reject({mailsJSON: {}});
 
     expect(spyEvent).toHaveBeenTriggeredOnAndWith(document, {message: i18n('Could not delete email')} );
   });
@@ -181,6 +179,45 @@ describeComponent('services/mail_service', function () {
     expect(spyAjax.calls.mostRecent().args[0]).toEqual('/mails/recover');
     expect(spyAjax.calls.mostRecent().args[1].type).toEqual('POST');
     expect(spyAjax.calls.all()[0].args[1].data).toEqual(JSON.stringify({ idents: ['43', '44'] } ));
+  });
+
+  // TODO: WIP
+  describe('when try archive emails', function() {
+    var deferred, spyAjax, mails;
+
+    beforeEach(function() {
+      deferred = $.Deferred();
+      spyAjax = spyOn($, 'ajax').and.returnValue(deferred);
+      mails = {checkedMails: [{ident: '43'}, {ident: '44'}]};
+    });
+
+    it('should call triggerArchived', function() {
+      spyOn(this.component, 'triggerArchived');
+
+      this.component.trigger(Pixelated.events.mail.archiveMany, mails);
+
+      deferred.resolve();
+      expect(this.component.triggerArchived).toHaveBeenCalledWith(mails);
+    });
+
+    it('should show an error message when request returns no success', function() {
+      spyOn(this.component, 'errorMessage');
+
+      this.component.trigger(Pixelated.events.mail.archiveMany, mails);
+      
+      deferred.reject({});
+      expect(this.component.errorMessage).toHaveBeenCalledWith(i18n('Could not archive emails'));
+    });
+    
+    it('make an ajax request to /mails/archive', function() {
+      this.component.trigger(Pixelated.events.mail.archiveMany,
+                            {checkedMails: [{ident: '43'}, {ident: '44'}]});
+
+      expect(spyAjax).toHaveBeenCalled();
+      expect(spyAjax.calls.mostRecent().args[0]).toEqual('/mails/archive');
+      expect(spyAjax.calls.mostRecent().args[1].type).toEqual('POST');
+      expect(spyAjax.calls.all()[0].args[1].data).toEqual(JSON.stringify({ idents: ['43', '44'] } ));
+    });
   });
 
   describe('when successfuly recovers emails', function () {
