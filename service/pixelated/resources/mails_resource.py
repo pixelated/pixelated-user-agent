@@ -95,6 +95,7 @@ class MailsRecoverResource(Resource):
 
 
 class MailsArchiveResource(Resource):
+    isLeaf = True
 
     def __init__(self, mail_service):
         Resource.__init__(self)
