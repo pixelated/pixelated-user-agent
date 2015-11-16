@@ -116,7 +116,7 @@ class LeapMail(Mail):
             return self.remove_duplicates([self._decoded_header_utf_8(v) for v in header_value])
         elif header_value is not None:
             def encode_chunk(content, encoding):
-                return unicode(content, encoding=encoding or 'ascii', errors='ignore')
+                return unicode(content.strip(), encoding=encoding or 'ascii', errors='ignore')
 
             try:
                 encoded_chunks = [encode_chunk(content, encoding) for content, encoding in decode_header(header_value)]
