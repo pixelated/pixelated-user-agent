@@ -34,7 +34,7 @@ define(
         forSearch: ''
       });
 
-      var mailsQueryMatch = /-?in:"[\w]+"|tag:"[\w]+"/g;
+      var mailsQueryMatch = /-?in:"?[\w]+"?|tag:"[\w]+"/g;
 
       this.render = function() {
         this.attr.tag = this.attr.tag.toUpperCase();

@@ -11,5 +11,10 @@ describeComponent('mail_view/ui/no_mails_available_pane', function () {
             this.setupComponent({tag: 'all', forSearch: 'search'});
             expect(this.$node.html()).toMatch('<div class="text">NO RESULTS FOR: \'SEARCH\'.</div>');
         });
+
+        it('show only tag information when listing all mails', function () {
+            this.setupComponent({tag: 'all', forSearch: 'in:all'});
+            expect(this.$node.html()).toMatch('<div class="text">NO EMAILS IN \'ALL\'.</div>');
+        });
     });
 });
