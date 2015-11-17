@@ -88,6 +88,7 @@ class MailService(object):
     @defer.inlineCallbacks
     def send_mail(self, content_dict):
         mail = InputMail.from_dict(content_dict)
+        mail.headers['From'] = self.account_email
         draft_id = content_dict.get('ident')
 
         yield self.mail_sender.sendmail(mail)

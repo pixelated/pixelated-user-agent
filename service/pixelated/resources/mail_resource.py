@@ -37,9 +37,7 @@ class Mail(Resource):
 
     def render_GET(self, request):
         d = self._mail_service.mail(self._mail_id)
-
         d.addCallback(lambda mail: respond_json_deferred(mail.as_dict(), request))
-
         return NOT_DONE_YET
 
     def render_DELETE(self, request):

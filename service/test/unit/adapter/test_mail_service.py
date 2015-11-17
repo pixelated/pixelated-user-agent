@@ -43,12 +43,13 @@ class TestMailService(unittest.TestCase):
         unstub()
 
     def test_send_mail(self):
-        when(InputMail).from_dict(ANY()).thenReturn('inputmail')
+        input_mail = InputMail()
+        when(InputMail).from_dict(ANY()).thenReturn(input_mail)
         when(self.mail_sender).sendmail(ANY()).thenReturn(defer.Deferred())
 
         sent_deferred = self.mail_service.send_mail(mail_dict())
 
-        verify(self.mail_sender).sendmail("inputmail")
+        verify(self.mail_sender).sendmail(input_mail)
 
         sent_deferred.callback('Assume sending mail succeeded')
 
@@ -73,11 +74,11 @@ class TestMailService(unittest.TestCase):
 
     @defer.inlineCallbacks
     def test_send_mail_marks_as_read(self):
-        mail = LeapMail('id', 'INBOX')
+        mail = InputMail()
         when(mail).raw = 'raw mail'
         when(InputMail).from_dict(ANY()).thenReturn(mail)
         when(self.mail_store).delete_mail('12').thenReturn(defer.succeed(None))
-        when(self.mail_sender).sendmail(ANY()).thenReturn(defer.succeed(None))
+        when(self.mail_sender).sendmail(mail).thenReturn(defer.succeed(None))
 
         sent_mail = LeapMail('id', 'INBOX')
         add_mail_deferral = defer.succeed(sent_mail)
@@ -90,7 +91,8 @@ class TestMailService(unittest.TestCase):
 
     @defer.inlineCallbacks
     def test_send_mail_does_not_delete_draft_on_error(self):
-        when(InputMail).from_dict(ANY()).thenReturn('inputmail')
+        input_mail = InputMail()
+        when(InputMail).from_dict(ANY()).thenReturn(input_mail)
 
         deferred_failure = defer.fail(Exception("Assume sending mail failed"))
         when(self.mail_sender).sendmail(ANY()).thenReturn(deferred_failure)
@@ -99,7 +101,7 @@ class TestMailService(unittest.TestCase):
             yield self.mail_service.send_mail({'ident': '12'})
             self.fail("send_mail is expected to raise if underlying call fails")
         except:
-            verify(self.mail_sender).sendmail("inputmail")
+            verify(self.mail_sender).sendmail(input_mail)
             verifyNoMoreInteractions(self.drafts)
 
     @defer.inlineCallbacks
