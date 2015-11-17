@@ -21,25 +21,25 @@ require(['page/router/url_params'], function (urlParams) {
       });
 
       it('returns the tag in the hash if there is one', function () {
-        document.location.hash = '/Drafts';
+        document.location.hash = '#/Drafts';
 
         expect(urlParams.getTag()).toEqual('Drafts');
       });
 
       it('returns tag with slash', function () {
-        document.location.hash = '/Events/2011';
+        document.location.hash = '#/Events/2011';
 
         expect(urlParams.getTag()).toEqual('Events/2011');
       });
 
       it('returns tag even if there is an mail ident', function () {
-        document.location.hash = '/Events/2011/mail/1';
+        document.location.hash = '#/events/2011/mail/M-123_abc';
 
-        expect(urlParams.getTag()).toEqual('Events/2011');
+        expect(urlParams.getTag()).toEqual('events/2011');
       });
 
       it('returns the tag even if there is a trailing slash', function () {
-        document.location.hash = '/Events/';
+        document.location.hash = '#/Events/';
 
         expect(urlParams.getTag()).toEqual('Events');
       });
@@ -47,13 +47,13 @@ require(['page/router/url_params'], function (urlParams) {
 
     describe('hasMailIdent', function () {
       it('is true if hash has mailIdent', function () {
-        document.location.hash = '/inbox/mail/1';
+        document.location.hash = '#/inbox/mail/M-123_abc';
 
         expect(urlParams.hasMailIdent()).toBeTruthy();
       });
 
       it('is false if hash has no mail ident', function () {
-        document.location.hash = '/Drafts';
+        document.location.hash = '#/Drafts';
 
         expect(urlParams.hasMailIdent()).toBeFalsy();
       });
@@ -61,13 +61,13 @@ require(['page/router/url_params'], function (urlParams) {
 
     describe('getMailIdent', function () {
       it('returns the mail ident that is in the hash', function () {
-        document.location.hash = '/inbox/mail/123';
+        document.location.hash = '#/inbox/mail/M-123_abc';
 
-        expect(urlParams.getMailIdent()).toEqual('123');
+        expect(urlParams.getMailIdent()).toEqual('M-123_abc');
       });
 
       it('supports uppercase letters and numbers as mail id', function () {
-        document.location.hash = '/inbox/mail/123ASDADA';
+        document.location.hash = '#/inbox/mail/123ASDADA';
 
         expect(urlParams.getMailIdent()).toEqual('123ASDADA');
       });
