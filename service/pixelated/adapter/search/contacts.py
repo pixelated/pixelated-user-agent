@@ -44,9 +44,13 @@ def search_addresses(searcher, query):
     results = []
     for field in ['to', 'cc', 'bcc', 'sender']:
         query_parser = QueryParser(field, searcher.schema)
-        results.append(searcher.search(query_parser.parse("*%s*" % query),
-                                       limit=None,
-                                       mask=restrict_q,
-                                       groupedby=sorting.FieldFacet(field,
-                                                                    allow_overlap=True)).groups())
-    return flatten(results)
+        results.append(
+            searcher.search(
+                query_parser.parse("*%s*" % query),
+                limit=None,
+                mask=restrict_q,
+                groupedby=sorting.FieldFacet(
+                    field,
+                    allow_overlap=True),
+                terms=True).matched_terms())
+    return [address[1] for address in flatten(results)]

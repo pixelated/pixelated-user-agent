@@ -29,7 +29,7 @@ class ContactsResource(Resource):
         self._search_engine = search_engine
 
     def render_GET(self, request):
-        query = request.args.get('q', [''])
+        query = request.args.get('q', [''])[-1]
         d = deferToThread(lambda: self._search_engine.contacts(query))
         d.addCallback(lambda tags: respond_json_deferred(tags, request))
 
