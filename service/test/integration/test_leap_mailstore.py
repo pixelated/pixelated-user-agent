@@ -18,6 +18,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from test.support.integration import SoledadTestBase, load_mail_from_file
 from twisted.internet import defer
+from pixelated.adapter.model.mail import InputMail
 
 
 class LeapMailStoreTest(SoledadTestBase):
@@ -114,3 +115,78 @@ class LeapMailStoreTest(SoledadTestBase):
 
         self.assertEqual(1, len(mails))
         self.assertEqual(mail.mail_id, mails[0])
+
+    @defer.inlineCallbacks
+    def test_get_replying_when_sender_is_not_me(self):
+        InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
+        mail = load_mail_from_file('mbox00000000')
+        del mail['From']
+        del mail['To']
+        del mail['Cc']
+        mail['From'] = 'not-me@pixelated.org'
+        mail['To'] = 'addr1@pixelated.org, addr2@pixelated.org'
+
+        yield self.mail_store.add_mailbox('INBOX')
+        mail = yield self.mail_store.add_mail('INBOX', mail.as_string())
+
+        replying = mail.as_dict()['replying']
+
+        self.assertEqual(replying['single'], 'not-me@pixelated.org')
+        self.assertEqual(replying['all']['to-field'], [u'addr1@pixelated.org', u'addr2@pixelated.org', u'not-me@pixelated.org'])
+        self.assertListEqual(replying['all']['cc-field'], [])
+
+    @defer.inlineCallbacks
+    def test_get_replying_when_sender_is_me(self):
+        InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
+        mail = load_mail_from_file('mbox00000000')
+        del mail['From']
+        del mail['To']
+        del mail['Cc']
+        mail['From'] = 'me@pixelated.org'
+        mail['To'] = 'addr1@pixelated.org, addr2@pixelated.org'
+
+        yield self.mail_store.add_mailbox('INBOX')
+        mail = yield self.mail_store.add_mail('INBOX', mail.as_string())
+
+        replying = mail.as_dict()['replying']
+
+        self.assertEqual(replying['single'], 'me@pixelated.org')
+        self.assertEqual(replying['all']['to-field'], [u'addr1@pixelated.org', u'addr2@pixelated.org'])
+        self.assertEqual(replying['all']['cc-field'], [])
+
+    @defer.inlineCallbacks
+    def test_get_replying_when_sender_is_me_to_me(self):
+        InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
+        mail = load_mail_from_file('mbox00000000')
+        del mail['From']
+        del mail['To']
+        del mail['Cc']
+        mail['From'] = 'me@pixelated.org'
+        mail['To'] = 'me@pixelated.org'
+
+        yield self.mail_store.add_mailbox('INBOX')
+        mail = yield self.mail_store.add_mail('INBOX', mail.as_string())
+
+        replying = mail.as_dict()['replying']
+
+        self.assertEqual(replying['single'], 'me@pixelated.org')
+        self.assertEqual(replying['all']['to-field'], [u'me@pixelated.org'])
+        self.assertEqual(replying['all']['cc-field'], [])
+
+    @defer.inlineCallbacks
+    def test_get_replying_when_sender_is_me_to_recipients_including_me(self):
+        InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
+        mail = load_mail_from_file('mbox00000000')
+        del mail['From']
+        del mail['To']
+        del mail['Cc']
+        mail['From'] = 'me@pixelated.org'
+        mail['To'] = 'addr1@pixelated.org, me@pixelated.org'
+
+        yield self.mail_store.add_mailbox('INBOX')
+        mail = yield self.mail_store.add_mail('INBOX', mail.as_string())
+        replying = mail.as_dict()['replying']
+
+        self.assertEqual(replying['single'], 'me@pixelated.org')
+        self.assertEqual(replying['all']['to-field'], [u'addr1@pixelated.org', u'me@pixelated.org'])
+        self.assertEqual(replying['all']['cc-field'], [])
