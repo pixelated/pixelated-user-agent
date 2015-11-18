@@ -123,10 +123,11 @@ class MailService(object):
     @defer.inlineCallbacks
     def delete_mail(self, mail_id):
         mail = yield self.mail(mail_id)
-        if mail.mailbox_name.upper() == u'TRASH':
-            yield self.mail_store.delete_mail(mail_id)
-        else:
-            yield self.mail_store.move_mail_to_mailbox(mail_id, 'TRASH')
+        if mail is not None:
+            if mail.mailbox_name.upper() == u'TRASH':
+                yield self.mail_store.delete_mail(mail_id)
+            else:
+                yield self.mail_store.move_mail_to_mailbox(mail_id, 'TRASH')
 
     @defer.inlineCallbacks
     def recover_mail(self, mail_id):
