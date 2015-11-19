@@ -57,7 +57,7 @@ class ContactsTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_deduplication_on_same_mail_address_using_largest(self):
-        input_mail = MailBuilder().with_tags(['important']).build_input_mail()
+        input_mail = MailBuilder().with_tags(['important']).with_from('sender@from.com').build_input_mail()
 
         formatted_input_mail = MailBuilder().with_tags(['important'])
         formatted_input_mail.with_to('Recipient Principal <recipient@to.com>')
@@ -70,7 +70,6 @@ class ContactsTest(SoledadTestBase):
 
         contacts = yield self.get_contacts(query='Recipient')
 
-        self.assertEquals(3, len(contacts))
-        self.assertTrue('Recipient Principal <recipient@to.com>' in contacts)
+        self.assertEquals(4, len(contacts))
         self.assertTrue('Recipient Copied <recipient@cc.com>' in contacts)
         self.assertTrue('Recipient Carbon <recipient@bcc.com>' in contacts)
