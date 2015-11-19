@@ -337,7 +337,6 @@ class LeapMailStore(MailStore):
         # fetch mailbox name by mbox_uuid
         mbox_uuid = message.get_wrapper().fdoc.mbox_uuid
         mbox_name = yield self._mailbox_name_from_uuid(mbox_uuid)
-
         mail = LeapMail(mail_id, mbox_name, message.get_wrapper().hdoc.headers, set(message.get_tags()), set(message.get_flags()), body=body, attachments=self._extract_attachment_info_from(message))   # TODO assert flags are passed on
 
         defer.returnValue(mail)

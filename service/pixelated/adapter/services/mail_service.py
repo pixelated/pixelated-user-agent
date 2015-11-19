@@ -88,10 +88,9 @@ class MailService(object):
     @defer.inlineCallbacks
     def send_mail(self, content_dict):
         mail = InputMail.from_dict(content_dict)
-        mail.headers['From'] = self.account_email
         draft_id = content_dict.get('ident')
-
         yield self.mail_sender.sendmail(mail)
+
         sent_mail = yield self.move_to_sent(draft_id, mail)
         defer.returnValue(sent_mail)
 
@@ -102,7 +101,6 @@ class MailService(object):
                 yield self.mail_store.delete_mail(last_draft_ident)
             except Exception as error:
                 pass
-
         sent_mail = yield self.mail_store.add_mail('SENT', mail.raw)
         sent_mail.flags.add(Status.SEEN)
         yield self.mail_store.update_mail(sent_mail)

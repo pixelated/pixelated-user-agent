@@ -160,7 +160,6 @@ class InputMail(Mail):
 
     def to_smtp_format(self):
         mime_multipart = self.to_mime_multipart()
-        mime_multipart['From'] = InputMail.FROM_EMAIL_ADDRESS
         return mime_multipart.as_string()
 
     @staticmethod
@@ -180,11 +179,10 @@ class InputMail(Mail):
         input_mail.headers = {key.capitalize(): value for key, value in mail_dict.get('header', {}).items()}
 
         input_mail.headers['Date'] = date.mail_date_now()
+        input_mail.headers['From'] = InputMail.FROM_EMAIL_ADDRESS
 
         input_mail.body = mail_dict.get('body', '')
-
         input_mail.tags = set(mail_dict.get('tags', []))
-
         input_mail._status = set(mail_dict.get('status', []))
         return input_mail
 
