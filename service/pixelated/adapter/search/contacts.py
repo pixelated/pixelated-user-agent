@@ -44,10 +44,9 @@ def search_addresses(searcher, query):
     results = []
     for field in ['to', 'cc', 'bcc', 'sender']:
         query_parser = QueryParser(field, searcher.schema)
-        query_parsed = query_parser.parse("*%s* OR *%s*" % (query.title(), query))
         results.append(
             searcher.search(
-                query_parsed,
+                query_parser.parse("*%s* OR *%s*" % (query.title(), query)),
                 limit=None,
                 mask=restrict_q,
                 groupedby=sorting.FieldFacet(
