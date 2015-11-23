@@ -190,3 +190,13 @@ class LeapMailStoreTest(SoledadTestBase):
         self.assertEqual(replying['single'], 'me@pixelated.org')
         self.assertEqual(replying['all']['to-field'], [u'addr1@pixelated.org', u'me@pixelated.org'])
         self.assertEqual(replying['all']['cc-field'], [])
+
+    @defer.inlineCallbacks
+    def test_deleting_a_deleted_mail_doesnt_raise_errors(self):
+        InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
+        mail = load_mail_from_file('mbox00000000')
+        yield self.mail_store.add_mailbox('INBOX')
+        mail = yield self.mail_store.add_mail('INBOX', mail.as_string())
+
+        yield self.mail_store.delete_mail(mail.ident)
+        yield self.mail_store.delete_mail(mail.ident)
