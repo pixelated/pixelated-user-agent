@@ -94,14 +94,3 @@ class DraftsTest(SoledadTestBase):
 
         self.assertEquals(1, len(drafts))
         self.assertEquals('First draft edited', drafts[0].subject)
-
-    @defer.inlineCallbacks
-    def test_respond_unprocessable_entity_if_draft_to_remove_doesnt_exist(self):
-        draft = MailBuilder().with_subject('First draft').build_json()
-        yield self.put_mail(draft)[0]
-
-        updated_draft = MailBuilder().with_subject('First draft edited').with_ident('NOTFOUND').build_json()
-        response, request = self.put_mail(updated_draft)
-        yield response
-
-        self.assertEquals(422, request.code)
