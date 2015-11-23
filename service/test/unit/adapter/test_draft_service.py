@@ -27,5 +27,5 @@ class DraftServiceTest(unittest.TestCase):
 
         self.draft_service.update_draft(mail.ident, mail)
 
-        inorder.verify(self.mail_store).add_mail('DRAFTS', mail.raw)
         inorder.verify(self.mail_store).delete_mail(mail.ident)
+        inorder.verify(self.mail_store).add_mail('DRAFTS', mail.raw)

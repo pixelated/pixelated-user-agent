@@ -30,13 +30,6 @@ class DraftService(object):
 
     @defer.inlineCallbacks
     def update_draft(self, ident, input_mail):
+        yield self._mail_store.delete_mail(ident)
         new_draft = yield self.create_draft(input_mail)
-        try:
-            yield self._mail_store.delete_mail(ident)
-            defer.returnValue(new_draft)
-        except Exception as error:
-            errorMessage = error.args[0].getErrorMessage()
-
-            if errorMessage == 'Need to create doc before deleting':
-                yield self._mail_store.delete_mail(new_draft.ident)
-            raise DuplicatedDraftException(errorMessage)
+        defer.returnValue(new_draft)
