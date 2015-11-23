@@ -29,6 +29,7 @@ class DraftService(object):
 
     @defer.inlineCallbacks
     def update_draft(self, ident, input_mail):
-        yield self._mail_store.delete_mail(ident)
-        new_draft = yield self.create_draft(input_mail)
-        defer.returnValue(new_draft)
+        removed = yield self._mail_store.delete_mail(ident)
+        if removed:
+            new_draft = yield self.create_draft(input_mail)
+            defer.returnValue(new_draft)

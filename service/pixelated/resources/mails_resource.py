@@ -183,11 +183,17 @@ class MailsResource(Resource):
                 err(error, 'error saving draft')
                 respond_json_deferred("", request, status_code=422)
 
+        def updateCallback(pixelated_mail):
+            if not pixelated_mail:
+                respond_json_deferred("", request, status_code=422)
+            else:
+                respond_json_deferred({'ident': pixelated_mail.ident}, request)
+
         if draft_id:
             deferred = self._draft_service.update_draft(draft_id, _mail)
         else:
             deferred = self._draft_service.create_draft(_mail)
-        deferred.addCallback(lambda pixelated_mail: respond_json_deferred({'ident': pixelated_mail.ident}, request))
+        deferred.addCallback(updateCallback)
         deferred.addErrback(onError)
 
         return server.NOT_DONE_YET

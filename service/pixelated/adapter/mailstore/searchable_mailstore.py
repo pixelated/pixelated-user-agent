@@ -39,8 +39,9 @@ class SearchableMailStore(object):  # implementes MailStore
 
     @defer.inlineCallbacks
     def delete_mail(self, mail_id):
-        yield self._delegate.delete_mail(mail_id)
+        removed = yield self._delegate.delete_mail(mail_id)
         self._search_engine.remove_from_index(mail_id)
+        defer.returnValue(removed)
 
     @defer.inlineCallbacks
     def update_mail(self, mail):

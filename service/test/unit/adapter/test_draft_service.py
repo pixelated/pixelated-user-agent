@@ -23,6 +23,7 @@ class DraftServiceTest(unittest.TestCase):
 
     def test_update_draft(self):
         mail = InputMail.from_dict(test_helper.mail_dict())
+        when(self.mail_store).delete_mail(mail.ident).thenReturn(defer.succeed(True))
         when(self.mail_store).add_mail('DRAFTS', mail.raw).thenReturn(defer.succeed(LeapMail('id', 'DRAFTS')))
 
         self.draft_service.update_draft(mail.ident, mail)

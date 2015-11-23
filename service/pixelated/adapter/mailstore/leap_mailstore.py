@@ -291,6 +291,8 @@ class LeapMailStore(MailStore):
         message = yield self._fetch_msg_from_soledad(mail_id)
         if message and message.get_wrapper().mdoc.doc_id:
             yield message.get_wrapper().delete(self.soledad)
+            defer.returnValue(True)
+        defer.returnValue(False)
 
     @defer.inlineCallbacks
     def get_mailbox_mail_ids(self, mailbox_name):
