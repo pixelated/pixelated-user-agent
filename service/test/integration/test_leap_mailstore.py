@@ -188,7 +188,7 @@ class LeapMailStoreTest(SoledadTestBase):
         replying = mail.as_dict()['replying']
 
         self.assertEqual(replying['single'], 'me@pixelated.org')
-        self.assertEqual(replying['all']['to-field'], [u'addr1@pixelated.org', u'me@pixelated.org'])
+        self.assertEqual(replying['all']['to-field'], [u'addr1@pixelated.org'])
         self.assertEqual(replying['all']['cc-field'], [])
 
     @defer.inlineCallbacks

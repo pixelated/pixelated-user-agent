@@ -49,9 +49,8 @@ class LeapMail(Mail):
     @property
     def headers(self):
         cpy = dict(self._headers)
-
         for name in set(self._headers.keys()).intersection(['To', 'Cc', 'Bcc']):
-            cpy[name] = self._headers[name].split(',') if self._headers[name] else []
+            cpy[name] = [address.strip() for address in (self._headers[name].split(',') if self._headers[name] else [])]
 
         return cpy
 
@@ -146,16 +145,19 @@ class LeapMail(Mail):
         if sender_mail is None:
             sender_mail = InputMail.FROM_EMAIL_ADDRESS
 
-        recipients = self._decoded_header_utf_8(self._reply_recipient('To'))
-        if not self._parsed_mail_matches(sender_mail, InputMail.FROM_EMAIL_ADDRESS) or len(recipients) == 0:
-            recipients.append(sender_mail)
+        recipients = self._reply_recipient('To')
+        recipients = self._decoded_header_utf_8(recipients)
+        recipients.append(sender_mail)
         recipients = self.remove_duplicates(recipients)
         ccs = self._decoded_header_utf_8(self._reply_recipient('Cc'))
 
         result['single'] = sender_mail
-        result['all']['to-field'] = recipients
-        result['all']['cc-field'] = ccs
+        result['all']['to-field'] = self._remove_me(recipients) if len(recipients) > 1 else recipients
+        result['all']['cc-field'] = self._remove_me(ccs) if len(ccs) > 1 else ccs
         return result
+
+    def _remove_me(self, recipients):
+        return [recipient for recipient in recipients if not self._parsed_mail_matches(recipient, InputMail.FROM_EMAIL_ADDRESS)]
 
     def remove_duplicates(self, recipients):
         return list(set(recipients))
@@ -170,7 +172,7 @@ class LeapMail(Mail):
     def _parsed_mail_matches(self, to_parse, expected):
         if InputMail.FROM_EMAIL_ADDRESS is None:
             return False
-        return parseaddr(self._decoded_header_utf_8(to_parse))[1] == expected
+        return parseaddr(to_parse)[1] == expected
 
     @staticmethod
     def from_dict(mail_dict):

@@ -111,7 +111,6 @@ class TestLeapMail(TestCase):
                          'To': '=?iso-8859-1?q?=22=C4lbert_=DCbr=F6=22_=3C=E4=FC=F6=40example=2Email=3E?=',
                          'Cc': '=?iso-8859-1?q?=22=C4lbert_=DCbr=F6=22_=3C=E4=FC=F6=40example=2Email=3E?=',
                          'Subject': '=?iso-8859-1?q?H=E4ll=F6_W=F6rld?='})
-
         self.assertEqual([expected_address], mail.as_dict()['replying']['all']['to-field'])
         self.assertEqual([expected_address], mail.as_dict()['replying']['all']['cc-field'])
         self.assertEqual(expected_address, mail.as_dict()['replying']['single'])
@@ -123,7 +122,7 @@ class TestLeapMail(TestCase):
             mail = LeapMail('', 'INBOX',
                             {'From': 'test@example.test',
                              'To': 'receiver@example.test, %s ' % my_address})
-            expected_recipients = [my_address, 'receiver@example.test', 'test@example.test']
+            expected_recipients = ['receiver@example.test', 'test@example.test']
             actual_recipients = mail.as_dict()['replying']['all']['to-field']
             expected_recipients.sort()
             actual_recipients.sort()
@@ -138,7 +137,7 @@ class TestLeapMail(TestCase):
                             {'From': 'test@example.test',
                              'To': 'receiver@example.test, Folker Bernitt <%s>' % my_address})
 
-            expected_recipients = ['Folker Bernitt <%s>' % my_address, 'receiver@example.test', 'test@example.test']
+            expected_recipients = ['receiver@example.test', 'test@example.test']
             actual_recipients = mail.as_dict()['replying']['all']['to-field']
             expected_recipients.sort()
             actual_recipients.sort()
@@ -146,7 +145,7 @@ class TestLeapMail(TestCase):
             self.assertEqual(expected_recipients, actual_recipients)
 
     # TODO: fix this test
-    def _test_reply_all_result_does_not_contain_own_address_in_to_with_encoded(self):
+    def test_reply_all_does_not_contain_own_address_in_to_field_with_different_encodings(self):
         my_address = 'myaddress@example.test'
 
         with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
@@ -154,13 +153,12 @@ class TestLeapMail(TestCase):
                             {'From': 'test@example.test',
                              'To': 'receiver@example.test, =?iso-8859-1?q?=C4lbert_=3Cmyaddress=40example=2Etest=3E?='})
 
-            # expected_recipients = ['receiver@example.test', 'test@example.test']
-            # actual_recipients = mail.as_dict()['replying']['all']['to-field']
-            # expected_recipients.sort()
-            # actual_recipients.sort()
+            expected_recipients = [u'receiver@example.test', u'test@example.test']
+            actual_recipients = mail.as_dict()['replying']['all']['to-field']
+            expected_recipients.sort()
+            actual_recipients.sort()
 
-            # self.assertEqual(expected_recipients, actual_recipients)
-            self.assertEqual(['receiver@example.test', 'test@example.test'], mail.as_dict()['replying']['all']['to-field'])
+            self.assertEqual(expected_recipients, actual_recipients)
 
     def test_reply_all_result_does_not_contain_own_address_in_cc(self):
         my_address = 'myaddress@example.test'
