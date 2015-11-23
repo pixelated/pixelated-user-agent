@@ -199,4 +199,8 @@ class LeapMailStoreTest(SoledadTestBase):
         mail = yield self.mail_store.add_mail('INBOX', mail.as_string())
 
         yield self.mail_store.delete_mail(mail.ident)
-        yield self.mail_store.delete_mail(mail.ident)
+        try:
+            yield self.mail_store.delete_mail(mail.ident)
+        except Exception as e:
+            self.fail("Deleting a deleted mail should be ok, but raised an error")
+            raise e
