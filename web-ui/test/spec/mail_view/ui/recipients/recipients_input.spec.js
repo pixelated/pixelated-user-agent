@@ -144,7 +144,7 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
     });
   });
 
-  describe('when entering an invalid address', function() {
+  describe('validate email format', function() {
     var invalidAddressEnteredEvent, addressEnteredEvent, blurEvent;
 
     beforeEach(function () {
@@ -187,6 +187,20 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
       expect(invalidAddressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'Invalid <email@example>'});
     });
 
+    it('parses email with dash' , function() {
+      this.$node.val('team@pixelated-project.org');
+      this.$node.trigger(blurEvent);
 
-  });
+      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(addressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'team@pixelated-project.org'});
+    });
+   
+    it('parses cannonical email with dash' , function() {
+      this.$node.val('Pixelated <team@pixelated-project.org>');
+      this.$node.trigger(blurEvent);
+
+      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(addressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'Pixelated <team@pixelated-project.org>'});
+    });
+ });
 });

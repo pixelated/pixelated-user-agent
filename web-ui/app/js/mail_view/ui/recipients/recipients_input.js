@@ -41,8 +41,8 @@ define([
         },
         self;
 
-      var simpleAddressMatch = /[^<\w,;]?([^\s<;,]+@\w+\.[^\s>;,]+)/;
-      var canonicalAddressMatch = /([^,;\s][^,;@]+<[^\s;,]+@\w+\.[^\s;,]+>)/;
+      var simpleAddressMatch = /[^<\w,;]?([^\s<;,]+@[\w-]+\.[^\s>;,]+)/;
+      var canonicalAddressMatch = /([^,;\s][^,;@]+<[^\s;,]+@[\w-]+\.[^\s;,]+>)/;
       var emailAddressMatch = new RegExp([simpleAddressMatch.source, '|', canonicalAddressMatch.source].join(''), 'g');
 
       var extractContactNames = function (response) {
