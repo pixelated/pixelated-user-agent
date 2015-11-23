@@ -20,7 +20,7 @@ from pixelated.adapter.model.status import Status
 
 from pixelated.adapter.services.mail_service import MailService
 from test.support.test_helper import mail_dict, leap_mail
-from mockito import mock, unstub, when, verify, verifyNoMoreInteractions, any as ANY
+from mockito import mock, unstub, when, verify, verifyNoMoreInteractions, any as ANY, never
 from twisted.internet import defer
 
 
@@ -133,6 +133,17 @@ class TestMailService(unittest.TestCase):
         yield self.mail_service.delete_mail(1)
 
         verify(self.mail_store).move_mail_to_mailbox(1, 'TRASH')
+
+    @defer.inlineCallbacks
+    def test_delete_mail_does_not_fail_for_invalid_mail(self):
+        no_mail = None
+        mail_id = 1
+        when(self.mail_store).get_mail(mail_id, include_body=True).thenReturn(defer.succeed(no_mail))
+
+        yield self.mail_service.delete_mail(mail_id)
+
+        verify(self.mail_store, never).delete_mail(mail_id)
+        verify(self.mail_store, never).move_mail_to_mailbox(mail_id, ANY())
 
     @defer.inlineCallbacks
     def test_recover_mail(self):
