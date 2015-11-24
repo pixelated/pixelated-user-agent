@@ -33,7 +33,6 @@ setup(name='pixelated-user-agent',
       packages=[
           'pixelated',
           'pixelated.adapter',
-          'pixelated.adapter.errors',
           'pixelated.adapter.listeners',
           'pixelated.adapter.model',
           'pixelated.adapter.search',
