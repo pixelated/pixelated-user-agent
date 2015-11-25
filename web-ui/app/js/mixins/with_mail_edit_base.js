@@ -158,7 +158,6 @@ define(
         this.trigger(document, events.ui.mail.recipientsUpdated);
         if (data.skipSaveDraft) { return; }
 
-        this.attr.silent = true;
         var mail = this.buildMail();
         this.postponeSaveDraft(mail);
       };
@@ -176,17 +175,12 @@ define(
         this.cancelPostponedSaveDraft();
 
         this.attr.timeout = window.setTimeout(_.bind(function() {
-          this.attr.silent = true;
           this.saveDraft(mail);
         }, this), this.attr.saveDraftInterval);
       };
 
       this.draftSaved = function(event, data) {
         this.attr.ident = data.ident;
-        if(!this.attr.silent) {
-          this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n('Saved as draft.') });
-        }
-        delete this.attr.silent;
       };
 
       this.validateAnyRecipient = function () {
