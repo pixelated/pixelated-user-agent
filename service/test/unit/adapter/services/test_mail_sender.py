@@ -39,6 +39,19 @@ class TwistedSmtpUserCapture(Matcher):
             and self._username == arg.dest.addrstr
 
 
+class MailToSmtpFormatCapture(Matcher):
+
+    def __init__(self, recipient, bccs):
+        self._recipient = recipient
+        self._bccs = bccs
+
+    def matches(self, mail):
+        if self._recipient in self._bccs:
+            return 'Bcc: %s\n' % self._recipient in mail
+        else:
+            return "Bcc: " not in mail
+
+
 class MailSenderTest(unittest.TestCase):
 
     def setUp(self):
@@ -47,32 +60,43 @@ class MailSenderTest(unittest.TestCase):
         self._remote_smtp_host = 'some.host.test'
         self._remote_smtp_port = 1234
         self._smtp_config = LeapSMTPConfig('someone@somedomain.tld', self._cert_path, self._remote_smtp_host, self._remote_smtp_port)
+        self.sender = MailSender(self._smtp_config, self._keymanager_mock)
 
     def tearDown(self):
         unstub()
 
     @defer.inlineCallbacks
     def test_iterates_over_recipients(self):
-        sender = MailSender(self._smtp_config, self._keymanager_mock)
         input_mail = InputMail.from_dict(mail_dict())
 
-        when(OutgoingMail).send_message(any(), any()).thenAnswer(lambda: defer.succeed(None))
+        when(OutgoingMail).send_message(any(), any()).thenReturn(defer.succeed(None))
 
-        yield sender.sendmail(input_mail)
+        yield self.sender.sendmail(input_mail)
 
         for recipient in flatten([input_mail.to, input_mail.cc, input_mail.bcc]):
             verify(OutgoingMail).send_message(any(), TwistedSmtpUserCapture(recipient))
 
     @defer.inlineCallbacks
     def test_problem_with_email_raises_exception(self):
-        sender = MailSender(self._smtp_config, self._keymanager_mock)
         input_mail = InputMail.from_dict(mail_dict())
 
-        when(OutgoingMail).send_message(any(), any()).thenAnswer(lambda: defer.fail(Exception('pretend something went wrong')))
+        when(OutgoingMail).send_message(any(), any()).thenReturn(defer.fail(Exception('pretend something went wrong')))
 
         try:
-            yield sender.sendmail(input_mail)
+            yield self.sender.sendmail(input_mail)
             self.fail('Exception expected!')
         except MailSenderException, e:
             for recipient in flatten([input_mail.to, input_mail.cc, input_mail.bcc]):
                 self.assertTrue(recipient in e.email_error_map)
+
+    @defer.inlineCallbacks
+    def test_iterates_over_recipients_and_send_whitout_bcc_field(self):
+        input_mail = InputMail.from_dict(mail_dict())
+        bccs = input_mail.bcc
+
+        when(OutgoingMail).send_message(any(), any()).thenReturn(defer.succeed(None))
+
+        yield self.sender.sendmail(input_mail)
+
+        for recipient in flatten([input_mail.to, input_mail.cc, input_mail.bcc]):
+            verify(OutgoingMail).send_message(MailToSmtpFormatCapture(recipient, bccs), TwistedSmtpUserCapture(recipient))

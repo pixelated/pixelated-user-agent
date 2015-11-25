@@ -60,9 +60,15 @@ class MailSender(object):
 
     def _send_mail_to_all_recipients(self, mail, recipients):
         outgoing_mail = self._create_outgoing_mail()
+        bccs = mail.bcc
         deferreds = []
 
         for recipient in recipients:
+            if recipient in bccs:
+                mail.headers['Bcc'] = [recipient]
+            else:
+                mail.headers['Bcc'] = []
+
             smtp_recipient = self._create_twisted_smtp_recipient(recipient)
             deferreds.append(outgoing_mail.send_message(mail.to_smtp_format(), smtp_recipient))
 
