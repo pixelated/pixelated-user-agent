@@ -1,5 +1,6 @@
 /* Pixelated Color Palette - don't change these! */
 $dark_slate_gray: #3E3A37;
+$light_gray: #C2C2C2;
 $light_blue: #3DABC4;
 $dark_blue: #178CA6;
 $light_orange: #FF9C00;
@@ -29,6 +30,9 @@ $total_count_bg: #C0B9B9;
 /* Feedback to Users */
 $warning: #F7E8AF;
 $search-highlight: #FFEF29;
+
+/* Light gray indicator icons */
+$indicator_icon_color: $light_gray;
 
 $error: #D93C38;
 $attention: #F6A41C;

@@ -132,6 +132,10 @@
             }
           }
         }
+
+        i.fa-pencil, i.fa-trash-o {
+            color: $indicator_icon_color;
+        }
       }
 
       .received-date, .sent-date {
@@ -143,6 +147,10 @@
       .attachment-indicator {
         margin: 2px 0 0 25px;
         font-size: initial;
+
+        i.fa-paperclip {
+            color: $indicator_icon_color;
+        }
       }
       .from {
         white-space: nowrap;
