@@ -64,15 +64,17 @@ class MailSender(object):
         deferreds = []
 
         for recipient in recipients:
-            if recipient in bccs:
-                mail.headers['Bcc'] = [recipient]
-            else:
-                mail.headers['Bcc'] = []
-
+            self._define_bcc_field(mail, recipient, bccs)
             smtp_recipient = self._create_twisted_smtp_recipient(recipient)
             deferreds.append(outgoing_mail.send_message(mail.to_smtp_format(), smtp_recipient))
 
         return defer.DeferredList(deferreds, fireOnOneErrback=False, consumeErrors=True)
+
+    def _define_bcc_field(self, mail, recipient, bccs):
+        if recipient in bccs:
+            mail.headers['Bcc'] = [recipient]
+        else:
+            mail.headers['Bcc'] = []
 
     def _build_error_map(self, recipients, results):
         error_map = {}
