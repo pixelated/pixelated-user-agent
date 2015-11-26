@@ -100,3 +100,17 @@ class MailSenderTest(unittest.TestCase):
 
         for recipient in flatten([input_mail.to, input_mail.cc, input_mail.bcc]):
             verify(OutgoingMail).send_message(MailToSmtpFormatCapture(recipient, bccs), TwistedSmtpUserCapture(recipient))
+
+    def test_remove_canonical_recipient_when_it_is_not_canonical(self):
+        recipient = u'user@pixelated.org'
+
+        non_canonical = self.sender._remove_canonical_recipient(recipient)
+
+        self.assertEqual(recipient, non_canonical)
+
+    def test_remove_canonical_recipient_when_it_is_canonical(self):
+        recipient = u'User <user@pixelated.org>'
+
+        non_canonical = self.sender._remove_canonical_recipient(recipient)
+
+        self.assertEqual(u'user@pixelated.org', non_canonical)

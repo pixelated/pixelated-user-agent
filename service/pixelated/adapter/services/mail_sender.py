@@ -91,4 +91,9 @@ class MailSender(object):
                             int(self._smtp_config.remote_smtp_port))
 
     def _create_twisted_smtp_recipient(self, recipient):
+        # TODO: Better is fix Twisted instead
+        recipient = self._remove_canonical_recipient(recipient)
         return User(str(recipient), NOT_NEEDED, NOT_NEEDED, NOT_NEEDED)
+
+    def _remove_canonical_recipient(self, recipient):
+        return recipient.split('<')[1][0:-1] if '<' in recipient else recipient
