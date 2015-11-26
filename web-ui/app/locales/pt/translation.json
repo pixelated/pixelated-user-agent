@@ -11,6 +11,8 @@
     "Could not delete email": "Não foi possível deletar o email",
     "Could not fetch messages": "Não foi possível buscar as mensagens",
     "sending-mail": "Enviando...",
+    "send-button": "Enviar",
+    "trash-button": "Descartar",
 
     "tags": {
         "inbox": "Caixa de Entrada",
