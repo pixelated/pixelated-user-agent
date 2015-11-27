@@ -30,7 +30,7 @@
   background-color: rgba(#3E3A37, 0.9);
 
   h1, i {
-    font-size: 2em;
+    font-size: 1.6em;
     color: white;
   }
 
@@ -41,13 +41,13 @@
   }
 
   p {
-    font-size: 1.7em;
+    font-size: 1.2em;
     color: #FF9C00;
   }
 }
 
 #user-settings-box.extra-bottom-space {
-  bottom: 65px;
+  bottom: 28px;
 }
 
 .arrow-box:before {
@@ -464,31 +464,37 @@ section {
         }
       }
 
-      ul#logout li {
-        color: $action_buttons;
-        &:hover {
-          background-color: $action_buttons;
-        }
-      }
-
-      ul#user-settings-icon li {
-        color: white;
-        &:hover {
-          background-color: white;
-        }
-      }
-
-      ul#feedback {
-        margin-bottom: 0;
-
-        li {
-          color: $light_orange;
+      ul {
+        &#logout li {
+          color: $action_buttons;
           &:hover {
-            background-color: $light_orange;
+            background-color: $action_buttons;
+          }
+        }
+
+        &#user-settings-icon {
+            margin-bottom: 0;
+
+            li {
+                color: white;
+                &:hover {
+                    background-color: white;
+                }
+            }
+        }
+
+
+        &#feedback {
+          margin-bottom: 0;
+
+          li {
+            color: $light_orange;
+            &:hover {
+              background-color: $light_orange;
+            }
           }
         }
       }
-
       h3 {
         color: white;
         text-transform: uppercase;
