@@ -91,7 +91,7 @@ define(
         this.attr.recipientValues = context.recipients;
         this.attachRecipients(context);
 
-        this.on(this.select('trashButton'), 'click', this.trashMail);
+        this.on(this.select('trashButton'), 'click', this.discardMail);
         SendButton.attachTo(this.select('sendButton'));
 
         this.warnSendButtonOfRecipients();
@@ -103,12 +103,6 @@ define(
         DraftSaveStatus.attachTo(this.select('draftSaveStatus'));
       };
 
-      this.deleteMail = function(data) {
-        this.attr.ident = data.ident;
-        var mail = this.buildMail();
-        this.trigger(document, events.ui.mail.delete, { mail: mail });
-      };
-
       this.monitorInput = function() {
         this.trigger(events.ui.mail.changedSinceLastSave);
         this.cancelPostponedSaveDraft();
@@ -116,13 +110,11 @@ define(
         this.postponeSaveDraft(mail);
       };
 
-      this.trashMail = function() {
+      this.discardMail = function() {
         this.cancelPostponedSaveDraft();
         if (this.attr.ident) {
-          this.trigger(document, events.mail.save, {
-            mail: this.buildMail(),
-            callback: this.deleteMail.bind(this)
-          });
+            var mail = this.buildMail();
+            this.trigger(document, events.ui.mail.delete, { mail: mail });
         } else {
             this.trigger(document, events.ui.mail.discard);
         }

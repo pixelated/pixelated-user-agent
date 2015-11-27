@@ -69,25 +69,26 @@ describeMixin('mixins/with_mail_edit_base', function () {
   });
 
   describe('when user asks to discard the mail', function() {
-    var mailSaveSpy, mailDiscardSpy;
+    var mailDeleteSpy, mailDiscardSpy;
 
     beforeEach(function () {
-        mailSaveSpy = spyOnEvent(document, Pixelated.events.mail.save);
+        mailDeleteSpy = spyOnEvent(document, Pixelated.events.ui.mail.delete);
         mailDiscardSpy = spyOnEvent(document, Pixelated.events.ui.mail.discard);
     });
  
     it('discards the mail if it was never saved', function() {
         delete this.component.attr.ident;
-        this.component.trashMail();
-        expect(mailSaveSpy).not.toHaveBeenTriggeredOn(document);
+        this.component.discardMail();
+        expect(mailDeleteSpy).not.toHaveBeenTriggeredOn(document);
         expect(mailDiscardSpy).toHaveBeenTriggeredOn(document);
     });
 
     it('deletes the draft if it was saved before', function() {
       var spy = spyOnEvent(document, Pixelated.events.mail.save);
       this.component.attr.ident = 'ident';
-      this.component.trashMail();
-      expect(mailSaveSpy).toHaveBeenTriggeredOn(document);
+      this.component.discardMail();
+      expect(mailDeleteSpy).toHaveBeenTriggeredOn(document);
+      expect(mailDiscardSpy).not.toHaveBeenTriggeredOn(document);
     });
   });
 
