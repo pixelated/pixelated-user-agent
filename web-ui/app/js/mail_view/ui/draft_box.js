@@ -72,7 +72,6 @@ define(
         this.select('bodyBox').focus();
         this.select('tipMsg').hide();
         this.enableAutoSave();
-        this.on(this.select('cancelButton'), 'click', this.showNoMessageSelected);
         this.on(this.select('closeMailButton'), 'click', this.showNoMessageSelected);
       };
 

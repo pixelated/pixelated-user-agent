@@ -212,7 +212,6 @@ define(
         this.trigger(events.mail.want, {mail: this.attr.ident, caller: this});
       };
 
-
       this.after('initialize', function () {
         this.on(this, events.mail.here, this.displayMail);
         this.on(this, events.mail.notFound, this.openNoMessageSelectedPane);

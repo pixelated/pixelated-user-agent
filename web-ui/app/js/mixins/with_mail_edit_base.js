@@ -118,10 +118,14 @@ define(
 
       this.trashMail = function() {
         this.cancelPostponedSaveDraft();
-        this.trigger(document, events.mail.save, {
-          mail: this.buildMail(),
-          callback: this.deleteMail.bind(this)
-        });
+        if (this.attr.ident) {
+          this.trigger(document, events.mail.save, {
+            mail: this.buildMail(),
+            callback: this.deleteMail.bind(this)
+          });
+        } else {
+            this.trigger(document, events.ui.mail.discard);
+        }
       };
 
       this.trim_recipient = function(recipients) {
@@ -133,7 +137,7 @@ define(
       this.sendMail = function () {
         this.cancelPostponedSaveDraft();
         var mail = this.buildMail('sent');
-        
+
         if (allRecipientsAreEmails(mail)) {
           mail.header.to = this.trim_recipient(mail.header.to);
           mail.header.cc = this.trim_recipient(mail.header.cc);
@@ -219,6 +223,10 @@ define(
         });
       };
 
+      this.before('initialize', function () {
+            this.discardDraft = function () {};
+      });
+
       this.after('initialize', function () {
         this.on(document, events.dispatchers.rightPane.clear, this.teardown);
         this.on(document, events.ui.recipients.updated, this.recipientsUpdated);
@@ -227,6 +235,7 @@ define(
 
         this.on(document, events.ui.mail.send, this.sendMail);
 
+        this.on(document, events.ui.mail.discard, this.discardDraft);
         this.on(document, events.ui.tag.selected, this.saveTag);
         this.on(document, events.ui.tag.select, this.saveTag);
       });

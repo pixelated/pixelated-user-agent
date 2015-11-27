@@ -67,13 +67,15 @@ define(
         }
       };
 
+      this.discardDraft = function () {
+        this.trigger(events.dispatchers.rightPane.openNoMessageSelected);
+      };
+
       this.after('initialize', function () {
         this.renderComposeBox();
 
         this.select('toBox').focus();
-        this.on(this.select('cancelButton'), 'click', this.showNoMessageSelected);
         this.on(document, events.mail.deleted, this.mailDeleted);
-
         this.on(document, events.mail.sent, this.showNoMessageSelected);
       });
     }

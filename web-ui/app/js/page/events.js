@@ -60,6 +60,7 @@ define(function () {
         wantChecked: 'ui:mail:wantChecked',
         hereChecked: 'ui:mail:hereChecked',
         checked: 'ui:mail:checked',
+        discard: 'ui:mail:discard',
         unchecked: 'ui:mail:unchecked',
         changedSinceLastSave: 'ui:mail:changedSinceLastSave',
         send: 'ui:mail:send',

@@ -82,14 +82,6 @@ describeComponent('mail_view/ui/reply_box', function () {
       expect(this.component.select('bodyBox').val()).toBe('quoted email');
     });
 
-    it('triggers mail when cancelling a reply', function () {
-      var mailSaveEvent = spyOnEvent(document, Pixelated.events.mail.save);
-
-      this.component.select('trashButton').click();
-
-      expect(mailSaveEvent).toHaveBeenTriggeredOn(document);
-    });
-
     it('reopens the mail after the reply is sent', function () {
       var mailOpenEvent = spyOnEvent(document, Pixelated.events.ui.mail.open);
 

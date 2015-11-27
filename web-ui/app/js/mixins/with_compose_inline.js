@@ -65,6 +65,10 @@ define(
         this.attr.mail.ident = data.ident;
       };
 
+      this.discardDraft = function() {
+        this.trashReply();
+      };
+
       this.after('initialize', function () {
         this.on(document, events.mail.sent, this.openMail);
         this.on(document, events.mail.deleted, this.trashReply);

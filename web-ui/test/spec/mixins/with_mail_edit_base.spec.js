@@ -2,11 +2,13 @@ describeMixin('mixins/with_mail_edit_base', function () {
   'use strict';
 
   beforeEach(function () {
+    this.Component.discardDraft = function () {};
     this.setupComponent();
     // Stubing mixing wrongly!!! 'deprecated' while waiting for draft component extraction
     this.component.buildMail = function (tag) {
       return { header: { to: ['a@smth.com'], from: 'b@smth.com', subject: 'Sbject' } };
     };
+
 
     spyOn(this.component, 'trim_recipient').and.callFake(function(recipients) {
       return recipients.map(function(recipient) {
@@ -66,11 +68,26 @@ describeMixin('mixins/with_mail_edit_base', function () {
     });
   });
 
-  describe('when user asks to trash the mail', function() {
-    it('triggers mail delete for this mail', function() {
+  describe('when user asks to discard the mail', function() {
+    var mailSaveSpy, mailDiscardSpy;
+
+    beforeEach(function () {
+        mailSaveSpy = spyOnEvent(document, Pixelated.events.mail.save);
+        mailDiscardSpy = spyOnEvent(document, Pixelated.events.ui.mail.discard);
+    });
+ 
+    it('discards the mail if it was never saved', function() {
+        delete this.component.attr.ident;
+        this.component.trashMail();
+        expect(mailSaveSpy).not.toHaveBeenTriggeredOn(document);
+        expect(mailDiscardSpy).toHaveBeenTriggeredOn(document);
+    });
+
+    it('deletes the draft if it was saved before', function() {
       var spy = spyOnEvent(document, Pixelated.events.mail.save);
+      this.component.attr.ident = 'ident';
       this.component.trashMail();
-      expect(spy).toHaveBeenTriggeredOn(document);
+      expect(mailSaveSpy).toHaveBeenTriggeredOn(document);
     });
   });
 
