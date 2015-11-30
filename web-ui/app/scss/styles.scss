@@ -24,17 +24,32 @@
 #user-settings-box {
   position: absolute;
   left: 20px;
-  bottom: 10px;
+  bottom: 0px;
   z-index: 1;
-  padding: 20px;
+  padding: 13px 18px;
   background-color: rgba(#3E3A37, 0.9);
+  min-width: 230px;
+ 
+  &.extra-bottom-space{
+    bottom: 33px
+  }
 
+  #user-settings-close {
+    float: right;
+  }
+  
   h1, i {
     font-size: 1.6em;
     color: white;
+    line-height: 1.2em;
+  }
+  
+  i.fa-user {
+    margin-right: 10px;
+    float: left;
   }
 
-  i {
+  i.fa-close{
     margin-left: 10px;
     float: right;
     cursor: pointer;
@@ -46,9 +61,7 @@
   }
 }
 
-#user-settings-box.extra-bottom-space {
-  bottom: 28px;
-}
+
 
 .arrow-box:before {
   right: 100%;
@@ -440,6 +453,8 @@ section {
       }
 
       ul#logout, ul#feedback, ul#user-settings-icon {
+        margin-bottom: 0;
+
         li {
           background-color: $navigation_background;
           padding: 5px 10px;
@@ -473,8 +488,6 @@ section {
         }
 
         &#user-settings-icon {
-            margin-bottom: 0;
-
             li {
                 color: white;
                 &:hover {
@@ -854,7 +867,7 @@ button {
 div.side-nav-bottom {
   width: 100%;
   position: fixed;
-  bottom: 0;
+  bottom: 20px;
   background-color: $navigation_background;
 
   .version {
