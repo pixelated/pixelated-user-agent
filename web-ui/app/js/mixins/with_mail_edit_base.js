@@ -216,7 +216,9 @@ define(
       };
 
       this.before('initialize', function () {
+          if (!this.discardDraft){
             this.discardDraft = function () {};
+          }
       });
 
       this.after('initialize', function () {
