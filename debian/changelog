@@ -1,3 +1,9 @@
+pixelated-user-agent (0.4) jessie; urgency=medium
+
+  * Start building jessie packages
+
+ -- Christoph <chris@inferno.nadir.org>  Tue, 01 Dec 2015 10:57:36 +0100
+
 pixelated-user-agent (0.3) wheezy; urgency=medium
 
   Release 0.3. This is our last wheezy release.
