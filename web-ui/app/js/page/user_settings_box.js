@@ -14,7 +14,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-define(['flight/lib/component', 'features', 'views/templates', 'page/events'], function (defineComponent, features, templates, events) {
+define(
+  [
+    'flight/lib/component',
+    'features',
+    'views/templates',
+    'page/events',
+    'helpers/monitored_ajax'
+  ], function (defineComponent, features, templates, events, monitoredAjax) {
+
   'use strict';
 
   return defineComponent(function () {
@@ -23,10 +31,24 @@ define(['flight/lib/component', 'features', 'views/templates', 'page/events'], f
     });
 
     this.render = function () {
-      this.$node.html(templates.page.userSettingsBox());
       if (features.isLogoutEnabled()) {
         this.$node.addClass('extra-bottom-space');
       }
+
+      var success = function (userSettings) {
+        this.$node.html(templates.page.userSettingsBox(userSettings));
+        this.on(this.attr.close, 'click', this.toggleHidden);
+      };
+
+      var failure = function (resp) {
+        var msg = i18n('Could not get mail address');
+        this.trigger(document, events.ui.userAlerts.displayMessage, { message: msg });
+      };
+
+      monitoredAjax(this, '/user-settings', {
+        type: 'GET',
+        contentType: 'application/json; charset=utf-8'
+      }).done(success.bind(this)).fail(failure.bind(this));
     };
 
     this.toggleHidden = function() {
@@ -40,7 +62,6 @@ define(['flight/lib/component', 'features', 'views/templates', 'page/events'], f
     this.after('initialize', function () {
       this.render();
       this.on(document, events.ui.userSettingsBox.toggle, this.toggleHidden);
-      this.on(this.attr.close, 'click', this.toggleHidden);
     });
   });
 });

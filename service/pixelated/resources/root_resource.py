@@ -5,6 +5,7 @@ from pixelated.resources.attachments_resource import AttachmentsResource
 from pixelated.resources.contacts_resource import ContactsResource
 from pixelated.resources.features_resource import FeaturesResource
 from pixelated.resources.feedback_resource import FeedbackResource
+from pixelated.resources.user_settings_resource import UserSettingsResource
 from pixelated.resources.mail_resource import MailResource
 from pixelated.resources.mails_resource import MailsResource
 from pixelated.resources.tags_resource import TagsResource
@@ -47,6 +48,7 @@ class RootResource(Resource):
         self.putChild('mails', MailsResource(mail_service, draft_service))
         self.putChild('mail', MailResource(mail_service))
         self.putChild('feedback', FeedbackResource(feedback_service))
+        self.putChild('user-settings', UserSettingsResource(self.account_email))
 
         self._mode = MODE_RUNNING
 
