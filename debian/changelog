@@ -1,3 +1,9 @@
+pixelated-user-agent (0.3) wheezy; urgency=medium
+
+  Release 0.3. This is our last wheezy release.
+
+ -- Christoph Kluenter <ckluente@thouthworks.com>  Tue, 01 Dec 2015 08:57:26 +0100
+
 pixelated-user-agent (0.2) wheezy; urgency=medium
 
   [ Christoph Kluenter ]
