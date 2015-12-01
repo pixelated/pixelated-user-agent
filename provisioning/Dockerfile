@@ -16,7 +16,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 
-FROM debian:wheezy
+FROM debian:jessie
 
 MAINTAINER fbernitt@thoughtworks.com
 
@@ -24,7 +24,7 @@ MAINTAINER fbernitt@thoughtworks.com
 RUN echo "APT::Get::Assume-Yes true;" >>/etc/apt/apt.conf
 
 # Install Pixelated User Packages
-RUN echo "deb http://packages.pixelated-project.org/debian wheezy-snapshots main" >> /etc/apt/sources.list
+RUN echo "deb http://packages.pixelated-project.org/debian jessie-snapshots main" >> /etc/apt/sources.list
 RUN apt-key adv --keyserver pool.sks-keyservers.net --recv-key 287A1542472DC0E3
 
 # Update packages lists
