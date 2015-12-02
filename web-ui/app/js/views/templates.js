@@ -62,6 +62,7 @@ define(['hbs/templates'], function (templates) {
       userSettingsBox: window.Pixelated['app/templates/page/user_settings_box.hbs'],
       logout: window.Pixelated['app/templates/page/logout.hbs'],
       logoutShortcut: window.Pixelated['app/templates/page/logout_shortcut.hbs'],
+      unreadCountTitle: window.Pixelated['app/templates/page/unread_count_title.hbs'],
       version: window.Pixelated['app/templates/page/version.hbs']
     },
     feedback: {

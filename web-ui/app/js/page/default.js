@@ -50,6 +50,7 @@ define(
     'mail_view/ui/feedback_box',
     'mail_view/data/feedback_sender',
     'page/version',
+    'page/unread_count_title',
   ],
 
   function (
@@ -86,7 +87,8 @@ define(
     feedback,
     feedbackBox,
     feedbackSender,
-    version) {
+    version,
+    unreadCountTitle) {
 
     'use strict';
     function initialize(path) {
@@ -125,6 +127,8 @@ define(
 
       feedback.attachTo('#feedback');
       feedbackSender.attachTo(document);
+
+      unreadCountTitle.attachTo('#unread-count-title');
     }
 
     return initialize;
