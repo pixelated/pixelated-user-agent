@@ -39,7 +39,8 @@ requirejs.config({
     'features': 'js/features/features',
     'i18next': 'bower_components/i18next/i18next.amd',
     'quoted-printable': 'bower_components/quoted-printable',
-    'utf8': 'bower_components/utf8'
+    'utf8': 'bower_components/utf8',
+    'user_settings': 'js/user_settings'
   }
 });
 

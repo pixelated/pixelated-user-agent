@@ -20,48 +20,48 @@ define(
     'features',
     'views/templates',
     'page/events',
+    'views/i18n',
     'helpers/monitored_ajax'
-  ], function (defineComponent, features, templates, events, monitoredAjax) {
+  ], function (defineComponent, features, templates, events, i18n, monitoredAjax) {
 
   'use strict';
 
   return defineComponent(function () {
+    this.create = function(parentElement) {
+      parentElement;
+
+      var component = new this.consructor();
+      component.initialize(html, recipient);
+      component.attr.recipient = recipient;
+      return component;
+    };
+
     this.defaultAttrs({
       close: '#user-settings-close'
     });
-
-    this.render = function () {
+      
+    this.render = function (event, userSettings) {
       if (features.isLogoutEnabled()) {
         this.$node.addClass('extra-bottom-space');
       }
 
-      var success = function (userSettings) {
-        this.$node.html(templates.page.userSettingsBox(userSettings));
-        this.on(this.attr.close, 'click', this.toggleHidden);
-      };
+      this.$node.addClass('arrow-box');
+      this.$node.html(templates.page.userSettingsBox(userSettings));
 
-      var failure = function (resp) {
-        var msg = i18n('Could not get mail address');
-        this.trigger(document, events.ui.userAlerts.displayMessage, { message: msg });
-      };
-
-      monitoredAjax(this, '/user-settings', {
-        type: 'GET',
-        contentType: 'application/json; charset=utf-8'
-      }).done(success.bind(this)).fail(failure.bind(this));
+      this.on(this.attr.close, 'click', function() {
+        this.trigger(document, events.userSettings.destroyPopup);
+      });
     };
 
-    this.toggleHidden = function() {
-      if (this.$node.hasClass('hidden')) {
-        this.$node.removeClass('hidden');
-      } else {
-        this.$node.addClass('hidden');
-      }
+    this.destroy = function () {
+      this.$node.remove();
+      this.teardown();
     };
 
     this.after('initialize', function () {
-      this.render();
-      this.on(document, events.ui.userSettingsBox.toggle, this.toggleHidden);
+      this.on(document, events.userSettings.here, this.render);
+      this.on(document, events.userSettings.destroyPopup, this.destroy);
+      this.trigger(document, events.userSettings.getInfo);
     });
   });
 });

@@ -14,17 +14,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-define(['flight/lib/component', 'views/templates', 'page/events'], function (defineComponent, templates, events) {
+define(
+  [
+    'flight/lib/component',
+    'views/templates',
+    'page/events',
+    'user_settings/ui/user_settings_box'
+  ], function (defineComponent, templates, events, userSettingsBox) {
   'use strict';
 
   return defineComponent(function () {
+    this.defaultAttrs({
+      userSettingsBox: $('#user-settings-box')
+    });
 
     this.render = function () {
       this.$node.html(templates.page.userSettingsIcon());
     };
 
     this.toggleUserSettingsBox = function() {
-      this.trigger(document, events.ui.userSettingsBox.toggle);
+      if(this.attr.userSettingsBox.children().length == 0) {
+        var div = $('<div>');
+        $(this.attr.userSettingsBox).append(div);
+        userSettingsBox.attachTo(div);
+        this.attr.userSettingsInfo = userSettingsBox;
+      } else {
+        this.trigger(document, events.userSettings.destroyPopup);
+      }
     };
 
     this.after('initialize', function () {

@@ -112,6 +112,11 @@ define(function () {
       submit: 'feedback:submit',
       submitted: 'feedback:submitted'
     },
+    userSettings: {
+      here: 'userSettings:here',
+      getInfo: 'userSettings:getInfo',
+      destroyPopup: 'userSettings:destroyPopup'
+    },
     mail: {
       here: 'mail:here',
       want: 'mail:want',
