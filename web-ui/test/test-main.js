@@ -31,7 +31,8 @@ requirejs.config({
     'quoted-printable': 'app/bower_components/quoted-printable',
     'utf8': 'app/bower_components/utf8',
     'test': 'test',
-    'features': 'test/features'
+    'features': 'test/features',
+    'user_settings': 'app/js/user_settings'
   },
 
 

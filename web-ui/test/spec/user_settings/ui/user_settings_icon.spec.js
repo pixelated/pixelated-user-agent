@@ -1,4 +1,4 @@
-describeComponent('page/user_settings_icon', function () {
+describeComponent('user_settings/ui/user_settings_icon', function () {
   'use strict';
 
   beforeEach(function () {
