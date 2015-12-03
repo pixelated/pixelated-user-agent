@@ -33,7 +33,7 @@ define(
     };
 
     this.toggleUserSettingsBox = function() {
-      if(this.attr.userSettingsBox.children().length == 0) {
+      if(this.attr.userSettingsBox.children().length === 0) {
         var div = $('<div>');
         $(this.attr.userSettingsBox).append(div);
         userSettingsBox.attachTo(div);
@@ -43,9 +43,14 @@ define(
       }
     };
 
+    this.triggerToggleUserSettingsBox = function() {
+      this.trigger(document, events.ui.userSettingsBox.toggle);
+    };
+
     this.after('initialize', function () {
       this.render();
-      this.on('click', this.toggleUserSettingsBox);
+      this.on('click', this.triggerToggleUserSettingsBox);
+      this.on(document, events.ui.userSettingsBox.toggle, this.toggleUserSettingsBox);
     });
   });
 });

@@ -20,22 +20,12 @@ define(
     'features',
     'views/templates',
     'page/events',
-    'views/i18n',
     'helpers/monitored_ajax'
-  ], function (defineComponent, features, templates, events, i18n, monitoredAjax) {
+  ], function (defineComponent, features, templates, events, monitoredAjax) {
 
   'use strict';
 
   return defineComponent(function () {
-    this.create = function(parentElement) {
-      parentElement;
-
-      var component = new this.consructor();
-      component.initialize(html, recipient);
-      component.attr.recipient = recipient;
-      return component;
-    };
-
     this.defaultAttrs({
       close: '#user-settings-close'
     });

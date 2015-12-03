@@ -21,7 +21,7 @@
   background-color: $search-highlight;
 }
 
-#user-settings-box {
+#user-settings-box>div {
   position: absolute;
   left: 20px;
   bottom: 0px;
@@ -60,8 +60,6 @@
     color: #FF9C00;
   }
 }
-
-
 
 .arrow-box:before {
   right: 100%;
