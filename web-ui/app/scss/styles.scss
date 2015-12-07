@@ -21,43 +21,48 @@
   background-color: $search-highlight;
 }
 
-#user-settings-box>div {
-  position: absolute;
-  left: 20px;
-  bottom: 0px;
-  z-index: 1;
-  padding: 10px 16px 10px 18px;
-  background-color: rgba(#3E3A37, 0.9);
-  min-width: 230px;
+#user-settings-box {
+  position: fixed;
+  z-index: 10;
+
+  &>div {
+    position: fixed;
+    left: 70px;
+    bottom: 0px;
+    z-index: 1;
+    padding: 10px 16px 10px 18px;
+    background-color: rgba(#3E3A37, 0.9);
+    min-width: 230px;
  
-  &.extra-bottom-space{
-    bottom: 33px
-  }
+    &.extra-bottom-space{
+      bottom: 33px
+    }
 
-  #user-settings-close {
-    float: right;
-  }
-  
-  h1, i {
-    font-size: 1.2em;
-    color: white;
-    line-height: 1.2em;
-  }
-  
-  i.fa-user {
-    margin-right: 10px;
-    float: left;
-  }
+    #user-settings-close {
+      float: right;
+    }
 
-  i.fa-close{
-    margin-left: 10px;
-    float: right;
-    cursor: pointer;
-  }
+    h1, i {
+      font-size: 1.2em;
+      color: white;
+      line-height: 1.2em;
+    }
 
-  p {
-    font-size: 1.2em;
-    color: #FF9C00;
+    i.fa-user {
+      margin-right: 10px;
+      float: left;
+    }
+
+    i.fa-close{
+      margin-left: 10px;
+      float: right;
+      cursor: pointer;
+    }
+
+    p {
+      font-size: 1.2em;
+      color: #FF9C00;
+    }
   }
 }
 
@@ -795,6 +800,10 @@ button {
     -ms-transform: translate3d(10rem, 0, 0);
     -o-transform: translate3d(10rem, 0, 0);
     transform: translate3d(10rem, 0, 0);
+
+    #user-settings-box>div {
+        left: 20px;
+    }
   }
 }
 
