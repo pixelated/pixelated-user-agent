@@ -7,10 +7,9 @@ from twisted.web.resource import Resource
 from twisted.web import server
 from twisted.internet import defer
 from twisted.python.log import err
-from leap.common.events import (
-    register,
-    catalog as events
-)
+from leap.common import events
+
+from pixelated.utils import to_unicode
 
 
 class MailsUnreadResource(Resource):
@@ -120,7 +119,7 @@ class MailsResource(Resource):
             delivery_error_mail = InputMail.delivery_error_template(delivery_address=event.content)
             self._mail_service.mailboxes.inbox.add(delivery_error_mail)
 
-        register(events.SMTP_SEND_MESSAGE_ERROR, callback=on_error)
+        events.register(events.catalog.SMTP_SEND_MESSAGE_ERROR, callback=on_error)
 
     def __init__(self, mail_service, draft_service):
         Resource.__init__(self)
@@ -136,7 +135,8 @@ class MailsResource(Resource):
 
     def render_GET(self, request):
         query, window_size, page = request.args.get('q')[0], request.args.get('w')[0], request.args.get('p')[0]
-        d = self._mail_service.mails(query, window_size, page)
+        unicode_query = to_unicode(query)
+        d = self._mail_service.mails(unicode_query, window_size, page)
 
         d.addCallback(lambda (mails, total): {
             "stats": {

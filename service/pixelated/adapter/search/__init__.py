@@ -31,6 +31,8 @@ from whoosh import sorting
 from pixelated.support.functional import unique
 import traceback
 
+from pixelated.utils import to_unicode
+
 
 class SearchEngine(object):
     DEFAULT_INDEX_HOME = os.path.join(os.environ['HOME'], '.leap')
@@ -132,7 +134,7 @@ class SearchEngine(object):
             'cc': self._format_recipient(header, 'cc'),
             'bcc': self._format_recipient(header, 'bcc'),
             'tag': u','.join(unique(tags)),
-            'body': unicode(mdict['textPlainBody'] if 'textPlainBody' in mdict else mdict['body']),
+            'body': to_unicode(mdict.get('textPlainBody', mdict.get('body', ''))),
             'ident': unicode(mdict['ident']),
             'flags': unicode(','.join(unique(mail.flags))),
             'raw': unicode(mail.raw)

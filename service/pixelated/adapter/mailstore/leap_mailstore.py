@@ -27,6 +27,8 @@ from pixelated.adapter.mailstore.mailstore import MailStore, underscore_uuid
 from leap.mail.mail import Message
 from pixelated.adapter.model.mail import Mail, InputMail
 
+from pixelated.utils import to_unicode
+
 
 class AttachmentInfo(object):
     def __init__(self, ident, name, encoding):
@@ -41,7 +43,7 @@ class LeapMail(Mail):
         self._mail_id = mail_id
         self._mailbox_name = mailbox_name
         self._headers = headers if headers is not None else {}
-        self._body = body
+        self._body = to_unicode(body)
         self.tags = set(tags)   # TODO test that asserts copy
         self._flags = set(flags)  # TODO test that asserts copy
         self._attachments = attachments
