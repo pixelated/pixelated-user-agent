@@ -36,6 +36,7 @@ define(
 
       this.render = function() {
         this.$node.html(templates.search.trigger());
+        this.$node.removeClass('hidden');
       };
 
       this.search = function(ev, data) {
