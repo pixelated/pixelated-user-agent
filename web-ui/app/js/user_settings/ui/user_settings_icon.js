@@ -43,8 +43,9 @@ define(
       }
     };
 
-    this.triggerToggleUserSettingsBox = function() {
+    this.triggerToggleUserSettingsBox = function(e) {
       this.trigger(document, events.ui.userSettingsBox.toggle);
+      e.stopPropagation();
     };
 
     this.after('initialize', function () {

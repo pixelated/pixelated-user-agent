@@ -27,7 +27,8 @@ define(
 
   return defineComponent(function () {
     this.defaultAttrs({
-      close: '#user-settings-close'
+      close: '#user-settings-close',
+      userSettingsBoxContainer: '#user-settings-box'
     });
       
     this.render = function (event, userSettings) {
@@ -41,6 +42,25 @@ define(
       this.on(this.attr.close, 'click', function() {
         this.trigger(document, events.userSettings.destroyPopup);
       });
+
+      this.on(document, 'click', function(e) {
+        var userSettingsBoxContainer = $(this.attr.userSettingsBoxContainer).get(0);
+        var target = e.target || e.srcElement;
+
+        if (target !== userSettingsBoxContainer && !isChildOf(target, userSettingsBoxContainer)) {
+          this.destroy();
+        }
+      });
+
+      function isChildOf(child, parent) {
+          if (child.parentNode === parent) {
+              return true;
+          } else if (child.parentNode === null) {
+              return false;
+          } else {
+              return isChildOf(child.parentNode, parent);
+          }
+      }
     };
 
     this.destroy = function () {
