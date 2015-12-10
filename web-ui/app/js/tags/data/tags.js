@@ -35,10 +35,10 @@ define(['flight/lib/component', 'page/events', 'helpers/monitored_ajax', 'mixins
   };
 
   function dataTags() {
-    function sendTagsBackTo(on, params) {
+    function sendTagsBackTo(on) {
       return function(data) {
         data.push(DataTags.all);
-        on.trigger(params.caller, events.tags.received, {tags: data});
+        on.trigger(document, events.tags.received, {tags: data});
       };
     }
 
@@ -48,11 +48,12 @@ define(['flight/lib/component', 'page/events', 'helpers/monitored_ajax', 'mixins
 
     this.fetchTags = function(event, params) {
       monitoredAjax(this, this.attr.tagsResource)
-        .done(sendTagsBackTo(this, params));
+        .done(sendTagsBackTo(this));
     };
 
     this.refreshTags = function() {
-      this.fetchTags(null, {caller: document});
+      var notTriggeredByEvent = null;
+      this.fetchTags(notTriggeredByEvent);
     };
 
     this.after('initialize', function () {

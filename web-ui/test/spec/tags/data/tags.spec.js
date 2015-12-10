@@ -23,14 +23,13 @@ describeComponent('tags/data/tags', function () {
     var deferred = $.Deferred();
 
     spyOn($, 'ajax').and.returnValue(deferred);
-    var me = {};
-    var eventSpy = spyOnEvent(me, Pixelated.events.tags.received);
+    var eventSpy = spyOnEvent(document, Pixelated.events.tags.received);
 
-    this.component.trigger(Pixelated.events.tags.want, { caller: me});
+    this.component.trigger(Pixelated.events.tags.want);
 
     deferred.resolve(['foo', 'bar', 'quux/bar']);
 
-    expect(eventSpy).toHaveBeenTriggeredOn(me);
+    expect(eventSpy).toHaveBeenTriggeredOn(document);
   });
 
   it('triggers an event containing the returned tags', function() {
@@ -38,9 +37,8 @@ describeComponent('tags/data/tags', function () {
     var deferred = $.Deferred();
 
     spyOn($, 'ajax').and.returnValue(deferred);
-    var me = {};
-    var eventSpy = spyOnEvent(me, Pixelated.events.tags.received);
-    this.component.trigger(Pixelated.events.tags.want, { caller: me });
+    var eventSpy = spyOnEvent(document, Pixelated.events.tags.received);
+    this.component.trigger(Pixelated.events.tags.want);
 
     deferred.resolve(tags);
 
