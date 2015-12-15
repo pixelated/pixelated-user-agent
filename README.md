@@ -2,7 +2,7 @@ Pixelated User Agent
 ====================
 
 [![Build Status](https://snap-ci.com/pixelated/pixelated-user-agent/branch/master/build_image)](https://snap-ci.com/pixelated/pixelated-user-agent/branch/master) [
-![Coverage Status](https://coveralls.io/repos/pixelated-project/pixelated-user-agent/badge.svg?branch=master)](https://coveralls.io/r/pixelated-project/pixelated-user-agent?branch=master)
+![Coverage Status](https://coveralls.io/repos/pixelated/pixelated-user-agent/badge.svg?branch=master)](https://coveralls.io/r/pixelated/pixelated-user-agent?branch=master)
 
 The Pixelated User Agent is the mail client of the Pixelated ecosystem. It is composed of two parts, a web interface written in JavaScript ([FlightJS](https://flightjs.github.io/)) and a Python API that interacts with a LEAP Provider, the e-mail platform that Pixelated is built on.
 
@@ -40,10 +40,10 @@ After this is done, you can log into the machine and view project root folder wi
     cd /vagrant
 
 Then run the setup:
- 
+
     cd /vagrant/service
     ./go setup
- 
+
 From here on you can run the tests for the UI by going to the **web-ui** folder or for the REST API by going to the **service** folder:
 
     cd /vagrant/web-ui
@@ -51,7 +51,7 @@ From here on you can run the tests for the UI by going to the **web-ui** folder 
 
     cd /vagrant/service
     ./go test
-    
+
 To run the user agent:
 
 ```
@@ -65,7 +65,7 @@ username
 *******************
 ```
 
-As soon as the user agent starts you will be asked for username, password and the [provider you registered with](https://github.com/pixelated-project/pixelated-user-agent/blob/master/README.md#registering-with-a-provider). 
+As soon as the user agent starts you will be asked for username, password and the [provider you registered with](https://github.com/pixelated-project/pixelated-user-agent/blob/master/README.md#registering-with-a-provider).
 
 Now you can see it running on [http://localhost:3333](http://localhost:3333)
 
