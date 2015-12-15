@@ -17,8 +17,9 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from test.support.integration.soledad_test_base import SoledadTestBase
 from twisted.internet import defer
+
+from test.support.integration.soledad_test_base import SoledadTestBase
 
 
 class RetrieveAttachmentTest(SoledadTestBase):

@@ -13,19 +13,20 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-
 import io
-
 import re
+
+from twisted.internet import defer
 from twisted.protocols.basic import FileSender
 from twisted.python.log import msg
 from twisted.web import server
 from twisted.web.resource import Resource
-from twisted.internet import defer
+from twisted.web.server import NOT_DONE_YET
+
+from pixelated.resources import respond_json_deferred
 
 
 class AttachmentResource(Resource):
-
     isLeaf = True
 
     def __init__(self, mail_service, attachment_id):
@@ -38,6 +39,7 @@ class AttachmentResource(Resource):
             msg(failure, 'attachment not found')
             request.code = 404
             request.finish()
+
         encoding = request.args.get('encoding', [None])[0]
         filename = request.args.get('filename', [self.attachment_id])[0]
         request.setHeader(b'Content-Type', b'application/force-download')
@@ -67,6 +69,7 @@ class AttachmentResource(Resource):
 
 
 class AttachmentsResource(Resource):
+    BASE_URL = 'attachment'
 
     def __init__(self, mail_service):
         Resource.__init__(self)
@@ -74,3 +77,20 @@ class AttachmentsResource(Resource):
 
     def getChild(self, attachment_id, request):
         return AttachmentResource(self.mail_service, attachment_id)
+
+    def render_POST(self, request):
+        _file = request.args['attachment'][0]
+
+        deferred = self.mail_service.attachment_id(_file)
+
+        def send_location(attachment_id):
+            request.headers['Location'] = '/%s/%s'% (self.BASE_URL, attachment_id)
+            respond_json_deferred({"attachment_id": attachment_id}, request, status_code=201)
+
+        def error_handler(error):
+            respond_json_deferred({"message": "Something went wrong. Attachement not saved."}, request, status_code=500)
+
+        deferred.addCallback(send_location)
+        deferred.addErrback(error_handler)
+
+        return NOT_DONE_YET

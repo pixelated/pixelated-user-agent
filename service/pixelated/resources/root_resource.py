@@ -41,7 +41,7 @@ class RootResource(Resource):
 
         self.putChild('assets', File(self._static_folder))
         self.putChild('keys', KeysResource(keymanager))
-        self.putChild('attachment', AttachmentsResource(mail_service))
+        self.putChild(AttachmentsResource.BASE_URL, AttachmentsResource(mail_service))
         self.putChild('contacts', ContactsResource(search_engine))
         self.putChild('features', FeaturesResource())
         self.putChild('tags', TagsResource(search_engine))

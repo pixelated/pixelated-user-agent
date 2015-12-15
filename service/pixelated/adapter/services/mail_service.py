@@ -35,6 +35,11 @@ class MailService(object):
         defer.returnValue(mails)
 
     @defer.inlineCallbacks
+    def attachment_id(self, _file):
+        _attachment_id = yield 'mocked_for_now'
+        defer.returnValue(_attachment_id)
+
+    @defer.inlineCallbacks
     def mails(self, query, window_size, page):
         mail_ids, total = self.search_engine.search(query, window_size, page)
 
