@@ -4,13 +4,25 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "LEAP/wheezy"
+  config.vm.box = "debian/jessie64"
 
   config.vm.define "source", primary: true do |source|
     source.vm.provision "puppet" do |puppet|
       puppet.manifests_path = "provisioning/manifests"
       puppet.module_path    = "provisioning/modules"
       puppet.manifest_file  = "source.pp"
+    end
+  end
+
+  config.vm.provision "shell", :inline => <<-SHELL
+    apt-get update
+    apt-get install -y puppet
+  SHELL
+
+  for plugin in ['vagrant-vbguest']
+    unless Vagrant.has_plugin?(plugin)
+      puts "Missing plugin #{plugin}, installing..."
+      `vagrant plugin install #{plugin}`
     end
   end
 
