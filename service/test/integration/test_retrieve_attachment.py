@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import base64
+import json
 from email import encoders
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
@@ -66,3 +67,4 @@ class RetrieveAttachmentTest(SoledadTestBase):
 
         self.assertEqual(201, req.code)
         self.assertEqual('/attachment/B5B4ED80AC3B894523D72E375DACAA2FC6606C18EDF680FE95903086C8B5E14A', req.headers['Location'])
+        self.assertEqual({'attachment_id': 'B5B4ED80AC3B894523D72E375DACAA2FC6606C18EDF680FE95903086C8B5E14A'}, json.loads(req.written[0]))

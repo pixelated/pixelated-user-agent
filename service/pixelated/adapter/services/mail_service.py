@@ -25,6 +25,7 @@ from pixelated.adapter.model.status import Status
 from pixelated.adapter.services.tag_service import extract_reserved_tags
 from leap.mail.adaptors.soledad import SoledadMailAdaptor
 
+
 class MailService(object):
 
     def __init__(self, mail_sender, mail_store, search_engine, account_email):

@@ -87,12 +87,13 @@ class AttachmentsResource(Resource):
                '</body></html>'
 
     def render_POST(self, request):
-        fields = cgi.FieldStorage(fp=request.content, headers=request.headers, environ={'REQUEST_METHOD':'POST'})
+        fields = cgi.FieldStorage(fp=request.content, headers=(request.getAllHeaders()),
+                                  environ={'REQUEST_METHOD': 'POST'})
         _file = fields['attachment']
         deferred = defer.maybeDeferred(self.mail_service.attachment_id, _file.value, _file.type)
 
         def send_location(attachment_id):
-            request.headers['Location'] = '/%s/%s'% (self.BASE_URL, attachment_id)
+            request.headers['Location'] = '/%s/%s' % (self.BASE_URL, attachment_id)
             respond_json_deferred({"attachment_id": attachment_id}, request, status_code=201)
 
         def error_handler(error):
