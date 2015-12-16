@@ -96,8 +96,8 @@ class PixRequestMock(DummyRequest):
 
 def request_mock(path='', method='GET', body='', headers={}):
     dummy = PixRequestMock(path.split('/'))
-    for name, value in headers.iteritems():
-        dummy.setHeader(name, value)
+    for name, val in headers.iteritems():
+        dummy.headers[name.lower()] = val
     dummy.method = method
     dummy.content = io.BytesIO(body)
     return dummy

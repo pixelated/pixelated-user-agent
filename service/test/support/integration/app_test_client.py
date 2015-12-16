@@ -123,8 +123,9 @@ class AppTestClient(object):
         request.args = get_args
         return self._render(request, as_json)
 
-    def post(self, path, body=''):
-        request = request_mock(path=path, method="POST", body=body, headers={'Content-Type': ['application/json']})
+    def post(self, path, body='', headers=None):
+        headers = headers or {'Content-Type': 'application/json'}
+        request = request_mock(path=path, method="POST", body=body, headers=headers)
         return self._render(request)
 
     def put(self, path, body):
@@ -195,6 +196,12 @@ class AppTestClient(object):
     @defer.inlineCallbacks
     def get_attachment(self, ident, encoding):
         deferred_result, req = self.get("/attachment/%s" % ident, {'encoding': [encoding]}, as_json=False)
+        res = yield deferred_result
+        defer.returnValue((res, req))
+
+    @defer.inlineCallbacks
+    def post_attachment(self, data, headers):
+        deferred_result, req = self.post('/attachment', body=data, headers=headers)
         res = yield deferred_result
         defer.returnValue((res, req))
 

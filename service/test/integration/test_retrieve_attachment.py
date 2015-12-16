@@ -13,10 +13,13 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+import base64
+from email import encoders
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+from poster.encode import multipart_encode, MultipartParam
 from twisted.internet import defer
 
 from test.support.integration.soledad_test_base import SoledadTestBase
@@ -49,3 +52,17 @@ class RetrieveAttachmentTest(SoledadTestBase):
 
         self.assertEqual(404, req.code)
         self.assertIsNone(attachment)
+
+    @defer.inlineCallbacks
+    def test_post_new_attachment(self):
+        content_type = 'text/plain'
+        filename = 'filename.txt'
+        data = 'pretend to be binary attachment data'
+        file = MultipartParam('attachment', value=data, filename=filename, filetype=content_type)
+        datagen, headers = multipart_encode([file])
+        post_data = "".join(datagen)
+
+        _, req = yield self.post_attachment(post_data, headers)
+
+        self.assertEqual(201, req.code)
+        self.assertEqual('/attachment/B5B4ED80AC3B894523D72E375DACAA2FC6606C18EDF680FE95903086C8B5E14A', req.headers['Location'])

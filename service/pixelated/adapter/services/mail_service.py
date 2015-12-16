@@ -13,13 +13,17 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from email import encoders
+from email.mime.nonmultipart import MIMENonMultipart
+from email.mime.multipart import MIMEMultipart
+from leap.mail.mail import Message
+
 from twisted.internet import defer
+
 from pixelated.adapter.model.mail import InputMail
 from pixelated.adapter.model.status import Status
 from pixelated.adapter.services.tag_service import extract_reserved_tags
-from email import message_from_file
-import os
-
+from leap.mail.adaptors.soledad import SoledadMailAdaptor
 
 class MailService(object):
 
@@ -34,10 +38,28 @@ class MailService(object):
         mails = yield self.mail_store.all_mails()
         defer.returnValue(mails)
 
-    @defer.inlineCallbacks
-    def attachment_id(self, _file):
-        _attachment_id = yield 'mocked_for_now'
-        defer.returnValue(_attachment_id)
+    def _attachment_to_cdoc(self, content, content_type, encoder=encoders.encode_base64):
+        major, sub = content_type.split('/')
+        attachment = MIMENonMultipart(major, sub)
+        attachment.set_payload(content)
+        encoder(attachment)
+        attachment.add_header('Content-Disposition', 'attachment', filename='does_not_matter.txt')
+
+        pseudo_mail = MIMEMultipart()
+        pseudo_mail.attach(attachment)
+
+        tmp_mail = SoledadMailAdaptor().get_msg_from_string(MessageClass=Message, raw_msg=pseudo_mail.as_string())
+
+        cdoc = tmp_mail.get_wrapper().cdocs[1]
+        return cdoc
+
+    def _calc_attachment_id_(self, content, content_type, encoder=encoders.encode_base64):
+        cdoc = self._attachment_to_cdoc(content, content_type, encoder)
+
+        return cdoc.phash
+
+    def attachment_id(self, content, content_type):
+        return self._calc_attachment_id_(content, content_type)
 
     @defer.inlineCallbacks
     def mails(self, query, window_size, page):
