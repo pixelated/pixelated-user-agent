@@ -90,7 +90,7 @@ class AttachmentsResource(Resource):
         fields = cgi.FieldStorage(fp=request.content, headers=(request.getAllHeaders()),
                                   environ={'REQUEST_METHOD': 'POST'})
         _file = fields['attachment']
-        deferred = defer.maybeDeferred(self.mail_service.attachment_id, _file.value, _file.type)
+        deferred = self.mail_service.save_attachment(_file.value, _file.type)
 
         def send_location(attachment_id):
             request.headers['Location'] = '/%s/%s' % (self.BASE_URL, attachment_id)

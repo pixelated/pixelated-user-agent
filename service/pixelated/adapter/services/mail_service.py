@@ -28,39 +28,20 @@ from leap.mail.adaptors.soledad import SoledadMailAdaptor
 
 class MailService(object):
 
-    def __init__(self, mail_sender, mail_store, search_engine, account_email):
+    def __init__(self, mail_sender, mail_store, search_engine, account_email, attachment_store):
         self.mail_store = mail_store
         self.search_engine = search_engine
         self.mail_sender = mail_sender
         self.account_email = account_email
+        self.attchment_store = attachment_store
 
     @defer.inlineCallbacks
     def all_mails(self):
         mails = yield self.mail_store.all_mails()
         defer.returnValue(mails)
 
-    def _attachment_to_cdoc(self, content, content_type, encoder=encoders.encode_base64):
-        major, sub = content_type.split('/')
-        attachment = MIMENonMultipart(major, sub)
-        attachment.set_payload(content)
-        encoder(attachment)
-        attachment.add_header('Content-Disposition', 'attachment', filename='does_not_matter.txt')
-
-        pseudo_mail = MIMEMultipart()
-        pseudo_mail.attach(attachment)
-
-        tmp_mail = SoledadMailAdaptor().get_msg_from_string(MessageClass=Message, raw_msg=pseudo_mail.as_string())
-
-        cdoc = tmp_mail.get_wrapper().cdocs[1]
-        return cdoc
-
-    def _calc_attachment_id_(self, content, content_type, encoder=encoders.encode_base64):
-        cdoc = self._attachment_to_cdoc(content, content_type, encoder)
-
-        return cdoc.phash
-
-    def attachment_id(self, content, content_type):
-        return self._calc_attachment_id_(content, content_type)
+    def save_attachment(self, content, content_type):
+        return self.attchment_store.add_attachment(content, content_type)
 
     @defer.inlineCallbacks
     def mails(self, query, window_size, page):
@@ -103,7 +84,7 @@ class MailService(object):
         return self.mail_store.get_mail(mail_id, include_body=True)
 
     def attachment(self, attachment_id):
-        return self.mail_store.get_mail_attachment(attachment_id)
+        return self.attchment_store.get_mail_attachment(attachment_id)
 
     @defer.inlineCallbacks
     def mail_exists(self, mail_id):

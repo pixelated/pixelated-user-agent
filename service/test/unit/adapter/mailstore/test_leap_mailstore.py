@@ -135,45 +135,6 @@ class TestLeapMailStore(TestCase):
         self.assertEqual(expeted_body, mail.body)
 
     @defer.inlineCallbacks
-    def test_get_mail_attachment(self):
-        attachment_id = 'AAAA9AAD9E153D24265395203C53884506ABA276394B9FEC02B214BF9E77E48E'
-        doc = SoledadDocument(json=json.dumps({'content_type': 'foo/bar', 'raw': 'asdf'}))
-        when(self.soledad).get_from_index('by-type-and-payloadhash', 'cnt', attachment_id).thenReturn(defer.succeed([doc]))
-        store = LeapMailStore(self.soledad)
-
-        attachment = yield store.get_mail_attachment(attachment_id)
-
-        self.assertEqual({'content-type': 'foo/bar', 'content': bytearray('asdf')}, attachment)
-
-    @defer.inlineCallbacks
-    def test_get_mail_attachment_different_content_encodings(self):
-        attachment_id = '1B0A9AAD9E153D24265395203C53884506ABA276394B9FEC02B214BF9E77E48E'
-        encoding_examples = [('', 'asdf', 'asdf'),
-                             ('base64', 'asdf', 'YXNkZg=='),
-                             ('quoted-printable', 'äsdf', '=C3=A4sdf')]
-
-        for transfer_encoding, data, encoded_data in encoding_examples:
-            doc = SoledadDocument(json=json.dumps({'content_type': 'foo/bar', 'raw': encoded_data,
-                                                   'content_transfer_encoding': transfer_encoding}))
-            when(self.soledad).get_from_index('by-type-and-payloadhash', 'cnt', attachment_id).thenReturn(defer.succeed([doc]))
-            store = LeapMailStore(self.soledad)
-
-            attachment = yield store.get_mail_attachment(attachment_id)
-
-            self.assertEqual(bytearray(data), attachment['content'])
-
-    @defer.inlineCallbacks
-    def test_get_mail_attachment_throws_exception_if_attachment_does_not_exist(self):
-        attachment_id = '1B0A9AAD9E153D24265395203C53884506ABA276394B9FEC02B214BF9E77E48E'
-        when(self.soledad).get_from_index('by-type-and-payloadhash', 'cnt', attachment_id).thenReturn(defer.succeed([]))
-        store = LeapMailStore(self.soledad)
-        try:
-            yield store.get_mail_attachment(attachment_id)
-            self.fail('ValueError exception expected')
-        except ValueError:
-            pass
-
-    @defer.inlineCallbacks
     def test_update_mail(self):
         mdoc_id, fdoc_id = self._add_mail_fixture_to_soledad_from_file('mbox00000000')
         soledad_fdoc = self.doc_by_id[fdoc_id]

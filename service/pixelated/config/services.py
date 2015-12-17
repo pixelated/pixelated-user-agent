@@ -1,3 +1,4 @@
+from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
 from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
 from pixelated.adapter.services.mail_service import MailService
 from pixelated.adapter.model.mail import InputMail
@@ -61,7 +62,8 @@ class Services(object):
             pixelated_mail_sender,
             leap_session.mail_store,
             search_engine,
-            leap_session.account_email())
+            leap_session.account_email(),
+            LeapAttachmentStore(leap_session.soledad))
 
     def setup_draft_service(self, mail_store):
         return DraftService(mail_store)

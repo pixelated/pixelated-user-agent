@@ -28,6 +28,7 @@ class TestMailService(unittest.TestCase):
     def setUp(self):
         self.drafts = mock()
         self.mail_store = mock()
+        self.attachment_store = mock()
         self.mailboxes = mock()
 
         self.mailboxes.drafts = defer.succeed(self.drafts)
@@ -37,7 +38,7 @@ class TestMailService(unittest.TestCase):
 
         self.mail_sender = mock()
         self.search_engine = mock()
-        self.mail_service = MailService(self.mail_sender, self.mail_store, self.search_engine, 'acount@email')
+        self.mail_service = MailService(self.mail_sender, self.mail_store, self.search_engine, 'acount@email', self.attachment_store)
 
     def tearDown(self):
         unstub()
@@ -158,7 +159,7 @@ class TestMailService(unittest.TestCase):
     @defer.inlineCallbacks
     def test_get_attachment(self):
         attachment_dict = {'content': bytearray('data'), 'content-type': 'text/plain'}
-        when(self.mail_store).get_mail_attachment('some attachment id').thenReturn(defer.succeed(attachment_dict))
+        when(self.attachment_store).get_mail_attachment('some attachment id').thenReturn(defer.succeed(attachment_dict))
 
         attachment = yield self.mail_service.attachment('some attachment id')
 
