@@ -14,6 +14,9 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from email.mime.nonmultipart import MIMENonMultipart
+from email.mime.multipart import MIMEMultipart
+
 from twisted.trial import unittest
 
 import pixelated.support.date
@@ -37,6 +40,23 @@ def simple_mail_dict():
 
 def multipart_mail_dict():
     return {
+        'body': [{'content-type': 'plain', 'raw': 'Hello world!'},
+                 {'content-type': 'html', 'raw': '<p>Hello html world!</p>'}],
+        'header': {
+            'cc': ['cc@pixelated.org', 'anothercc@pixelated.org'],
+            'to': ['to@pixelated.org', 'anotherto@pixelated.org'],
+            'bcc': ['bcc@pixelated.org', 'anotherbcc@pixelated.org'],
+            'subject': 'Oi',
+        },
+        'ident': '',
+        'tags': ['sent']
+    }
+
+
+def with_attachment_mail_dict():
+    return {
+        'attachments': [{'content-type': 'text/plain', 'filename': 'ayoyo.txt', 'raw': 'Hamburg Ayoyoyooooo!!!', 'id': 'some_attachment_id'},
+                        {'content-type': 'text/html', 'filename': 'hello.html', 'raw': '<p>Hello html Hamburg!</p>', 'id': 'other_attachment_id'}],
         'body': [{'content-type': 'plain', 'raw': 'Hello world!'},
                  {'content-type': 'html', 'raw': '<p>Hello html world!</p>'}],
         'header': {
@@ -120,3 +140,17 @@ class InputMailTest(unittest.TestCase):
 
         self.assertRegexpMatches(mime_multipart.as_string(), part_one)
         self.assertRegexpMatches(mime_multipart.as_string(), part_two)
+
+    def test_raw_with_attachment_data(self):
+        input_mail = InputMail.from_dict(with_attachment_mail_dict())
+
+        attachment = MIMENonMultipart('text', 'plain', Content_Disposition='attachment; filename=ayoyo.txt')
+        attachment.set_payload('Hello World')
+        mail = MIMEMultipart()
+        mail.attach(attachment)
+
+        part_one = 'Content-Type: text/plain; Content-Disposition="attachment; filename=ayoyo.txt"\nMIME-Version: 1.0\n\nHamburg Ayoyoyooooo!!!'
+        part_two = 'Content-Type: text/html; Content-Disposition="attachment; filename=hello.html"\nMIME-Version: 1.0\n\n<p>Hello html Hamburg!</p>'
+
+        self.assertRegexpMatches(input_mail.raw, part_one)
+        self.assertRegexpMatches(input_mail.raw, part_two)

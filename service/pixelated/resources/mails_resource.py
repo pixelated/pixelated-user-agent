@@ -154,14 +154,6 @@ class MailsResource(Resource):
         return NOT_DONE_YET
 
     def render_POST(self, request):
-        content_dict = json.loads(request.content.read())
-
-        deferred = self._mail_service.send_mail(content_dict)
-
-        def onSuccess(sent_mail):
-            data = sent_mail.as_dict()
-            respond_json_deferred(data, request)
-
         def onError(error):
             if isinstance(error.value, SMTPDownException):
                 respond_json_deferred({'message': str(error.value)}, request, status_code=503)
@@ -169,31 +161,45 @@ class MailsResource(Resource):
                 err(error, 'something failed')
                 respond_json_deferred({'message': 'an error occurred while sending'}, request, status_code=422)
 
-        deferred.addCallback(onSuccess)
+        deferred = self._handle_post(request)
         deferred.addErrback(onError)
 
         return server.NOT_DONE_YET
 
     def render_PUT(self, request):
-        content_dict = json.loads(request.content.read())
-        _mail = InputMail.from_dict(content_dict)
-        draft_id = content_dict.get('ident')
-
         def onError(error):
                 err(error, 'error saving draft')
                 respond_json_deferred("", request, status_code=422)
 
-        def updateCallback(pixelated_mail):
-            if not pixelated_mail:
-                respond_json_deferred("", request, status_code=422)
-            else:
-                respond_json_deferred({'ident': pixelated_mail.ident}, request)
-
-        if draft_id:
-            deferred = self._draft_service.update_draft(draft_id, _mail)
-        else:
-            deferred = self._draft_service.create_draft(_mail)
-        deferred.addCallback(updateCallback)
+        deferred = self._handle_put(request)
         deferred.addErrback(onError)
 
         return server.NOT_DONE_YET
+
+    @defer.inlineCallbacks
+    def _fetch_attachment_contents(self, attachments):
+        for attachment in attachments:
+            retrieved_attachment = yield self._mail_service.attachment(attachment['id'])
+            attachment['raw'] = retrieved_attachment['content']
+
+    @defer.inlineCallbacks
+    def _handle_post(self, request):
+        content_dict = json.loads(request.content.read())
+        self._fetch_attachment_contents(content_dict.get('attachments', []))
+
+        sent_mail = yield self._mail_service.send_mail(content_dict)
+        respond_json_deferred(sent_mail.as_dict(), request)
+
+    @defer.inlineCallbacks
+    def _handle_put(self, request):
+        content_dict = json.loads(request.content.read())
+        self._fetch_attachment_contents(content_dict.get('attachments', []))
+
+        _mail = InputMail.from_dict(content_dict)
+        draft_id = content_dict.get('ident')
+        pixelated_mail = yield self._draft_service.process_draft(draft_id, _mail)
+
+        if not pixelated_mail:
+            respond_json_deferred("", request, status_code=422)
+        else:
+            respond_json_deferred({'ident': pixelated_mail.ident}, request)

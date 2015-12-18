@@ -24,7 +24,7 @@ from twisted.internet import defer
 from mock import patch
 
 
-class TestArchiveResource(unittest.TestCase):
+class TestMailsResource(unittest.TestCase):
     def setUp(self):
         self.mail_service = mock()
 
@@ -46,6 +46,51 @@ class TestArchiveResource(unittest.TestCase):
 
         def assert_response(_):
             verify(self.mail_service).mails(unicodified_search_term, 25, 1)
+
+        d.addCallback(assert_response)
+        return d
+
+    @patch('leap.common.events.register')
+    def test_render_PUT_should_store_draft_with_attachments(self, mock_register):
+        request = DummyRequest(['/mails'])
+        request.method = 'PUT'
+        content = mock()
+        when(content).read().thenReturn('{"attachments": [{"id": "some fake attachment id"}]}')
+        when(self.mail_service).attachment('some fake attachment id').thenReturn(defer.Deferred())
+        request.content = content
+
+        mails_resource = MailsResource(self.mail_service, mock())
+        mails_resource.isLeaf = True
+        web = DummySite(mails_resource)
+        d = web.get(request)
+
+        def assert_response(_):
+            verify(self.mail_service).attachment('some fake attachment id')
+
+        d.addCallback(assert_response)
+        return d
+
+    @patch('leap.common.events.register')
+    def test_render_POST_should_send_email_with_attachments(self, mock_register):
+        request = DummyRequest(['/mails'])
+        request.method = 'POST'
+        content = mock()
+        when(content).read().thenReturn('{"attachments": [{"id": "some fake attachment id"}]}')
+        when(self.mail_service).attachment('some fake attachment id').thenReturn(defer.succeed({"content": "some content"}))
+        as_dictable = mock()
+        when(as_dictable).as_dict().thenReturn({})
+        when(self.mail_service).send_mail({"attachments": [{"id": "some fake attachment id", "raw": "some content"}]})\
+            .thenReturn(defer.succeed(as_dictable))
+        request.content = content
+
+        mails_resource = MailsResource(self.mail_service, mock())
+        mails_resource.isLeaf = True
+        web = DummySite(mails_resource)
+        d = web.get(request)
+
+        def assert_response(_):
+            verify(self.mail_service).attachment('some fake attachment id')
+            verify(self.mail_service).send_mail({"attachments": [{"id": "some fake attachment id", "raw": "some content"}]})
 
         d.addCallback(assert_response)
         return d

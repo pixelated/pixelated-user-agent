@@ -24,9 +24,24 @@ class DraftServiceTest(SoledadTestBase):
     @defer.inlineCallbacks
     def test_store_and_load_draft(self):
         input_mail = MailBuilder().with_body('some test text').build_input_mail()
-
-        stored_draft = yield self.draft_service.create_draft(input_mail)
+        draft_id = None
+        stored_draft = yield self.draft_service.process_draft(draft_id, input_mail)
 
         draft = yield self.mail_store.get_mail(stored_draft.ident, include_body=True)
 
         self.assertEqual('some test text', draft.body)
+
+    @defer.inlineCallbacks
+    def test_update_draft(self):
+        input_mail = MailBuilder().with_body('some test text').build_input_mail()
+        saved_mail = yield self.mail_store.add_mail('DRAFTS', input_mail.raw)
+        draft_id = saved_mail.ident
+        new_email = MailBuilder().with_body('other test text').with_ident(draft_id).build_input_mail()
+
+        stored_draft = yield self.draft_service.process_draft(draft_id, new_email)
+
+        old_draft = yield self.mail_store.get_mail(draft_id, include_body=True)
+        draft = yield self.mail_store.get_mail(stored_draft.ident, include_body=True)
+
+        self.assertIsNone(old_draft)
+        self.assertEqual('other test text', draft.body)

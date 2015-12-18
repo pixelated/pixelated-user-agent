@@ -33,3 +33,8 @@ class DraftService(object):
         if removed:
             new_draft = yield self.create_draft(input_mail)
             defer.returnValue(new_draft)
+
+    def process_draft(self, ident, input_mail):
+        if ident:
+            return self.update_draft(ident, input_mail)
+        return self.create_draft(input_mail)
