@@ -16,6 +16,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 from uuid import uuid4
+import u1db
 
 from leap.mail.adaptors.soledad_indexes import MAIL_INDEXES
 from leap.soledad.common.document import SoledadDocument
@@ -66,6 +67,26 @@ class TestLeapAttachmentStore(TestCase):
         self.assertEqual('9863729729D2E2EE8E52F0A7115CE33AD18DDA4B58E49AE08DD092D1C8E699B0', attachment_id)
 
         verify(self.soledad).create_doc(cdoc_serialized, doc_id=attachment_id)
+
+    @defer.inlineCallbacks
+    def test_store_attachment_twice_does_not_cause_exception(self):
+        attachment_id = '9863729729D2E2EE8E52F0A7115CE33AD18DDA4B58E49AE08DD092D1C8E699B0'
+        content = 'this is some attachment content'
+        content_type = 'text/plain'
+        cdoc_serialized = {'content_transfer_encoding': 'base64', 'lkf': [], 'content_disposition': 'attachment',
+                           'ctype': '', 'raw': 'dGhpcyBpcyBzb21lIGF0dGFjaG1lbnQgY29udGVudA==',
+                           'phash': '9863729729D2E2EE8E52F0A7115CE33AD18DDA4B58E49AE08DD092D1C8E699B0',
+                           'content_type': 'text/plain', 'type': 'cnt'}
+        doc = SoledadDocument(json=json.dumps({'content_type': content_type, 'raw': content}))
+        when(self.soledad).get_from_index('by-type-and-payloadhash', 'cnt', attachment_id).thenReturn(defer.succeed([doc]))
+
+        store = LeapAttachmentStore(self.soledad)
+
+        when(self.soledad).create_doc(cdoc_serialized, doc_id=attachment_id).thenRaise(u1db.errors.RevisionConflict())
+
+        actual_attachment_id = yield store.add_attachment(content, content_type)
+
+        self.assertEqual(attachment_id, actual_attachment_id)
 
     @defer.inlineCallbacks
     def test_get_mail_attachment_different_content_encodings(self):
