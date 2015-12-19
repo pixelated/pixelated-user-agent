@@ -77,7 +77,7 @@ class Mail(object):
             return str(Header(header_value, 'utf-8'))
         return str(header_value)
 
-    def _attach_body_mimetext_to(self, mime_multipart, body_to_use=None):
+    def _add_message_content(self, mime_multipart, body_to_use=None):
         body_to_use = body_to_use or self.body
         if isinstance(body_to_use, list):
             for part in body_to_use:
@@ -85,29 +85,35 @@ class Mail(object):
         else:
             mime_multipart.attach(MIMEText(body_to_use, 'plain', self._charset()))
 
+    def _add_body(self, mime):
+        body_to_use = getattr(self, 'body', None) or getattr(self, 'text_plain_body', None)
+        self._add_message_content(mime, body_to_use)
+        self._add_attachments(mime)
+
+    def _generate_mime_multipart(self):
+        mime = MIMEMultipart()
+        self._add_headers(mime)
+        self._add_body(mime)
+        return mime
+
     @property
     def _mime_multipart(self):
-        if self._mime:
-            return self._mime
-        mime = MIMEMultipart()
+        self._mime = self._mime or self._generate_mime_multipart()
+        return self._mime
+
+    def _add_headers(self, mime):
         for key, value in self.headers.items():
             if isinstance(value, list):
                 mime[str(key)] = self._encode_header_value_list(value)
             else:
                 mime[str(key)] = self._encode_header_value(value)
 
-        body_to_use = getattr(self, 'body', None) or getattr(self, 'text_plain_body', None)
-        self._attach_body_mimetext_to(mime, body_to_use)
-
-        if self._attachments:
-            for attachment in self._attachments:
-                major, sub = attachment['content-type'].split('/')
-                a = MIMENonMultipart(major, sub, Content_Disposition='attachment; filename=%s' % attachment['filename'])
-                a.set_payload(attachment['raw'])
-                mime.attach(a)
-
-        self._mime = mime
-        return mime
+    def _add_attachments(self, mime):
+        for attachment in getattr(self, '_attachments', []):
+            major, sub = attachment['content-type'].split('/')
+            attachment_mime = MIMENonMultipart(major, sub, Content_Disposition='attachment; filename=%s' % attachment['filename'])
+            attachment_mime.set_payload(attachment['raw'])
+            mime.attach(attachment_mime)
 
     def _charset(self):
         content_type = self.headers.get('content_type', {})
@@ -151,22 +157,20 @@ class InputMail(Mail):
     def _get_body_phash(self):
         return walk.get_body_phash(self._mime_multipart)
 
-    def to_mime_multipart(self):
-        mime_multipart = MIMEMultipart()
-
+    def _add_predefined_headers(self, mime_multipart):
         for header in ['To', 'Cc', 'Bcc']:
             if self.headers.get(header):
                 mime_multipart[header] = ", ".join(self.headers[header])
-
-        if self.headers.get('Subject'):
-            mime_multipart['Subject'] = self.headers['Subject']
-
-        if self.headers.get('From'):
-            mime_multipart['From'] = self.headers['From']
-
+        for header in ['Subject', 'From']:
+            if self.headers.get(header):
+                mime_multipart[header] = self.headers[header]
         mime_multipart['Date'] = self.headers['Date']
-        self._attach_body_mimetext_to(mime_multipart)
-        return mime_multipart
+
+    def to_mime_multipart(self):
+        mime = MIMEMultipart()
+        self._add_predefined_headers(mime)
+        self._add_body(mime)
+        return mime
 
     def to_smtp_format(self):
         mime_multipart = self.to_mime_multipart()
@@ -184,7 +188,6 @@ class InputMail(Mail):
         })
 
     @staticmethod
-    # def from_dict(mail_dict, attachments):
     def from_dict(mail_dict):
         input_mail = InputMail()
         input_mail.headers = {key.capitalize(): value for key, value in mail_dict.get('header', {}).items()}
