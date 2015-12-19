@@ -28,10 +28,8 @@ from whoosh.qparser import QueryParser
 from whoosh.qparser import MultifieldParser
 from whoosh.writing import AsyncWriter
 from whoosh import sorting
-from pixelated.support.functional import unique
+from pixelated.support.functional import unique, to_unicode
 import traceback
-
-from pixelated.utils import to_unicode
 
 
 class SearchEngine(object):

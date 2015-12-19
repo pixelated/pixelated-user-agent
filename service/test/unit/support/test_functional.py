@@ -18,7 +18,7 @@
 
 import unittest
 
-from pixelated.utils import to_unicode
+from pixelated.support.functional import to_unicode
 
 
 class UtilsTest(unittest.TestCase):

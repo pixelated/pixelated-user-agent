@@ -28,3 +28,10 @@ def unique(_list):
 
 def compact(_list):
     return [a for a in _list if a]
+
+
+def to_unicode(text):
+    if text and not isinstance(text, unicode):
+        encoding = 'utf-8'
+        return unicode(text, encoding=encoding)
+    return text

@@ -9,7 +9,7 @@ from twisted.internet import defer
 from twisted.python.log import err
 from leap.common import events
 
-from pixelated.utils import to_unicode
+from pixelated.support.functional import to_unicode
 
 
 class MailsUnreadResource(Resource):

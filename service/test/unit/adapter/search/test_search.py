@@ -22,7 +22,7 @@ from pixelated.adapter.search import SearchEngine
 from tempdir import TempDir
 from test.support import test_helper
 
-from pixelated.utils import to_unicode
+from pixelated.support.functional import to_unicode
 
 INDEX_KEY = '\xde3?\x87\xff\xd9\xd3\x14\xf0\xa7>\x1f%C{\x16.\\\xae\x8c\x13\xa7\xfb\x04\xd4]+\x8d_\xed\xd1\x8d\x0bI' \
     '\x8a\x0e\xa4tm\xab\xbf\xb4\xa5\x99\x00d\xd5w\x9f\x18\xbc\x1d\xd4_W\xd2\xb6\xe8H\x83\x1b\xd8\x9d\xad'
