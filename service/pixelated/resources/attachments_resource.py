@@ -94,7 +94,11 @@ class AttachmentsResource(Resource):
 
         def send_location(attachment_id):
             request.headers['Location'] = '/%s/%s' % (self.BASE_URL, attachment_id)
-            respond_json_deferred({"attachment_id": attachment_id}, request, status_code=201)
+            response_json = {"attachment_id": attachment_id,
+                             "content-type": _file.type,
+                             "filename": _file.filename,
+                             "filesize": len(_file.value)}
+            respond_json_deferred(response_json, request, status_code=201)
 
         def error_handler(error):
             print error

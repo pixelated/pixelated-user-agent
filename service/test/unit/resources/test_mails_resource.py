@@ -15,13 +15,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import unittest
-import json
-from mockito import mock, when, verify
-from test.unit.resources import DummySite
-from twisted.web.test.requesthelper import DummyRequest
-from pixelated.resources.mails_resource import MailsResource
-from twisted.internet import defer
+
 from mock import patch
+from mockito import mock, when, verify
+from twisted.internet import defer
+from twisted.web.test.requesthelper import DummyRequest
+
+from pixelated.resources.mails_resource import MailsResource
+from test.unit.resources import DummySite
 
 
 class TestMailsResource(unittest.TestCase):
