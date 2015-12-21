@@ -41,3 +41,7 @@ $success: #50BA5B;
 $will_be_encrypted: $success;
 $wont_be_encrypted: $attention;
 $recipients_font_color: #AAA;
+
+/* Attachments */
+$attachment_text: #333;
+$attachment_icon: lighten($attachment_text, 30);

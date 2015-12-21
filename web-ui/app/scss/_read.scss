@@ -75,13 +75,33 @@
     border-top: 1px solid #DDD;
     padding: 10px 0 0;
 
-    a {
-      color: $action_buttons;
-      text-decoration: none;
-      line-height: inherit;
-      &:hover, &:focus {
-      color: lighten($action_buttons, 10);
-      outline: none;
+    li {
+        display: block;
+        border: 1px solid #D9D9D9;
+        border-radius: 2px;
+        background-color: #F5F5F5;
+    
+      a {
+        color: $attachment_text;
+        display: block;
+        text-decoration: none;
+        line-height: inherit;
+        padding: 4px 5px;
+      
+        &:hover, &:focus {
+          i.download-icon {
+            color: lighten($attachment_icon, 15);
+          }
+          color: $attachment_icon;
+          outline: none;
+        }
+
+        i.download-icon {
+          position: absolute;
+          color: $attachment_icon;
+          right: 0;
+          padding: 4px 10px;
+        }
       }
     }
   }
