@@ -20,6 +20,7 @@ from twisted.web.resource import Resource
 
 
 class FeaturesResource(Resource):
+    DISABLED_FEATURES = ['draftReply']
     isLeaf = True
 
     def render_GET(self, request):
@@ -33,7 +34,7 @@ class FeaturesResource(Resource):
             {'disabled_features': disabled_features, 'dispatcher_features': dispatcher_features}, request)
 
     def _disabled_features(self):
-        disabled_features = ['draftReply']
+        disabled_features = [default_disabled_feature for default_disabled_feature in self.DISABLED_FEATURES]
         if os.environ.get('FEEDBACK_URL') is None:
             disabled_features.append('feedback')
         if 'ATTACHMENT' not in os.environ:
