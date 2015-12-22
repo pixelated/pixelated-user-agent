@@ -34,8 +34,8 @@ define(['helpers/monitored_ajax'], function(monitoredAjax) {
     var features;
     monitoredAjax(this, '/features', {
       async: false,
-      success: function (results){
-	features = results;
+      success: function (results) {
+        features = results;
       },
       error: function () {
         console.error('Could not load feature toggles');

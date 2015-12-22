@@ -13,7 +13,9 @@
     "typeahead.js": "~0.10.5",
     "jasmine-flight": "~3.0.0",
     "utf8": "~2.0.0",
-    "modernizr": "~2.8.3"
+    "modernizr": "~2.8.3",
+    "jquery-file-upload": "~9.11.2",
+    "jquery-ui": "~1.11.4"
   },
   "devDependencies": {
     "handlebars": "2.0.0",

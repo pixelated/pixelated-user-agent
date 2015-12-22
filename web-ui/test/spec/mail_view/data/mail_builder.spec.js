@@ -106,5 +106,13 @@ define(['mail_view/data/mail_builder'], function (mailBuilder) {
 
       expect(mail.tags).toContain('tag1');
     });
+
+    it('sets attachments', function() {
+      var mail = mailBuilder.newMail()
+        .attachment(['faked attachment list'])
+        .build();
+
+      expect(mail.attachments).toEqual(['faked attachment list']);
+    });
   });
 });

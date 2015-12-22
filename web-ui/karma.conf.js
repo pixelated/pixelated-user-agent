@@ -19,6 +19,8 @@ module.exports = function (config) {
       // loaded without require
       'app/bower_components/lodash/dist/lodash.js',
       'app/bower_components/jquery/dist/jquery.js',
+      'app/bower_components/jquery-ui/jquery-ui.min.js',
+      'app/bower_components/jquery-file-upload/js/jquery.fileupload.js',
       'app/bower_components/jasmine-jquery/lib/jasmine-jquery.js',
       'app/bower_components/jasmine-flight/lib/jasmine-flight.js',
       'app/bower_components/jasmine-jquery/lib/jasmine-jquery.js',
