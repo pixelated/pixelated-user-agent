@@ -149,8 +149,8 @@ class InputMailTest(unittest.TestCase):
         mail = MIMEMultipart()
         mail.attach(attachment)
 
-        part_one = 'Content-Type: text/plain; Content-Disposition="attachment; filename=ayoyo.txt"\nMIME-Version: 1.0\n\nHamburg Ayoyoyooooo!!!'
-        part_two = 'Content-Type: text/html; Content-Disposition="attachment; filename=hello.html"\nMIME-Version: 1.0\n\n<p>Hello html Hamburg!</p>'
+        part_one = 'Content-Type: text/plain\nMIME-Version: 1.0\nContent-Disposition: attachment; filename="ayoyo.txt"\nContent-Transfer-Encoding: base64\n\n'
+        part_two = 'Content-Type: text/html\nMIME-Version: 1.0\nContent-Disposition: attachment; filename="hello.html"\nContent-Transfer-Encoding: base64\n\n'
 
         self.assertRegexpMatches(input_mail.raw, part_one)
         self.assertRegexpMatches(input_mail.raw, part_two)

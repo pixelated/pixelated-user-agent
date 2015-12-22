@@ -19,6 +19,8 @@ import logging
 from email import message_from_file
 from email.mime.text import MIMEText
 from email.header import Header
+
+import binascii
 from email.MIMEMultipart import MIMEMultipart
 from email.mime.nonmultipart import MIMENonMultipart
 from pycryptopp.hash import sha256
@@ -111,8 +113,11 @@ class Mail(object):
     def _add_attachments(self, mime):
         for attachment in getattr(self, '_attachments', []):
             major, sub = attachment['content-type'].split('/')
-            attachment_mime = MIMENonMultipart(major, sub, Content_Disposition='attachment; filename=%s' % attachment['filename'])
-            attachment_mime.set_payload(attachment['raw'])
+            attachment_mime = MIMENonMultipart(major, sub)
+            base64_attachment_file = binascii.b2a_base64(attachment['raw'])
+            attachment_mime.set_payload(base64_attachment_file)
+            attachment_mime['Content-Disposition'] = 'attachment; filename="%s"' % attachment['filename']
+            attachment_mime['Content-Transfer-Encoding'] = 'base64'
             mime.attach(attachment_mime)
 
     def _charset(self):

@@ -177,25 +177,28 @@ class MailsResource(Resource):
         return server.NOT_DONE_YET
 
     @defer.inlineCallbacks
-    def _fetch_attachment_contents(self, attachments):
+    def _fetch_attachment_contents(self, content_dict):
+        attachments = content_dict.get('attachments', []) if content_dict else []
         for attachment in attachments:
-            retrieved_attachment = yield self._mail_service.attachment(attachment['id'])
+            retrieved_attachment = yield self._mail_service.attachment(attachment['attachment_id'])
             attachment['raw'] = retrieved_attachment['content']
+        content_dict['attachments'] = attachments
+        defer.returnValue(content_dict)
 
     @defer.inlineCallbacks
     def _handle_post(self, request):
         content_dict = json.loads(request.content.read())
-        self._fetch_attachment_contents(content_dict.get('attachments', []))
+        with_attachment_content = yield self._fetch_attachment_contents(content_dict)
 
-        sent_mail = yield self._mail_service.send_mail(content_dict)
+        sent_mail = yield self._mail_service.send_mail(with_attachment_content)
         respond_json_deferred(sent_mail.as_dict(), request)
 
     @defer.inlineCallbacks
     def _handle_put(self, request):
         content_dict = json.loads(request.content.read())
-        self._fetch_attachment_contents(content_dict.get('attachments', []))
+        with_attachment_content = yield self._fetch_attachment_contents(content_dict)
 
-        _mail = InputMail.from_dict(content_dict)
+        _mail = InputMail.from_dict(with_attachment_content)
         draft_id = content_dict.get('ident')
         pixelated_mail = yield self._draft_service.process_draft(draft_id, _mail)
 
