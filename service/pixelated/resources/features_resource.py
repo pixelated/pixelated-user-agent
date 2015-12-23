@@ -37,6 +37,4 @@ class FeaturesResource(Resource):
         disabled_features = [default_disabled_feature for default_disabled_feature in self.DISABLED_FEATURES]
         if os.environ.get('FEEDBACK_URL') is None:
             disabled_features.append('feedback')
-        if 'ATTACHMENT' not in os.environ:
-            disabled_features.append('attachment')
         return disabled_features
