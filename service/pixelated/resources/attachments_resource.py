@@ -102,7 +102,7 @@ class AttachmentsResource(Resource):
 
         def error_handler(error):
             print error
-            respond_json_deferred({"message": "Something went wrong. Attachement not saved."}, request, status_code=500)
+            respond_json_deferred({"message": "Something went wrong. Attachment not saved."}, request, status_code=500)
 
         deferred.addCallback(send_location)
         deferred.addErrback(error_handler)
