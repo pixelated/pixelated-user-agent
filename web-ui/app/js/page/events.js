@@ -143,7 +143,8 @@ define(function () {
         update: 'mail:tags:update',
         updated: 'mail:tags:updated'
       },
-      uploadedAttachment: 'mail:uploaded:attachment'
+      uploadedAttachment: 'mail:uploaded:attachment',
+      uploadingAttachment: 'mail:uploading:attachment'
     },
     mails: {
       available: 'mails:available',

@@ -42,13 +42,18 @@ define(
                     dataType: 'json',
                     done: function (e, response) {
                         var data = response.result;
-                        $('#files').html('<span>' + data.filename + ' (' + humanReadable(data.filesize) + ')' + '</span>');
+                        var link = '<a href="/attachment/'+ data.attachment_id + '?filename='+ data.filename +'&encoding=base64">' + data.filename + ' (' + humanReadable(data.filesize) + ')' + '</a>';
+                        $('#attachment-list-item').html(link);
                         on.trigger(document, events.mail.uploadedAttachment, data);
                     },
                     progressall: function (e, data) {
                         var progress = parseInt(data.loaded / data.total * 100, 10);
                         $('#progress .progress-bar').css('width', progress + '%');
                     }
+                }).bind('fileuploadstart', function(e) {
+                    on.trigger(document, events.mail.uploadingAttachment);
+                }).bind('fileuploadadd', function(e) {
+                    $('.attachmentsAreaWrap').show();
                 });
             }
 
@@ -60,6 +65,7 @@ define(
             this.after('initialize', function () {
                 if (features.isEnabled('attachment')) {
                     this.render();
+                    $('.attachmentsAreaWrap').hide();
                 }
                 this.on(this.$node, 'click', this.upload);
             });

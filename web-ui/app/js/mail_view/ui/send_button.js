@@ -47,7 +47,7 @@ define([
 
       this.updateButton = function () {
         if (this.attr.sendingInProgress === false) {
-          if (this.atLeastOneInputFieldHasCharacters() || this.atLeastOneInputFieldHasRecipients()) {
+          if (this.attr.uploading === false && (this.atLeastOneInputFieldHasCharacters() || this.atLeastOneInputFieldHasRecipients())) {
             this.enableButton();
           } else {
             this.disableButton();
@@ -62,6 +62,16 @@ define([
 
       this.inputFieldHasCharacters = function (ev, data) {
         this.attr.inputFieldHasCharacters[data.name] = true;
+        this.updateButton();
+      };
+
+      this.uploadInProgress = function (ev, data) {
+        this.attr.uploading = true;
+        this.updateButton();
+      };
+
+      this.uploadFinished = function (ev, data) {
+        this.attr.uploading = false;
         this.updateButton();
       };
 
@@ -89,6 +99,7 @@ define([
 
       this.resetButton = function () {
         this.attr.sendingInProgress = false;
+        this.attr.uploading = false;
         this.$node.html(viewHelper.i18n('send-button'));
         this.enableButton();
       };
@@ -103,6 +114,9 @@ define([
         this.on(document, events.ui.recipients.updated, this.updateRecipientsForField);
 
         this.on(this.$node, 'click', this.updateRecipientsAndSendMail);
+
+        this.on(document, events.mail.uploadingAttachment, this.uploadInProgress);
+        this.on(document, events.mail.uploadedAttachment, this.uploadFinished);
 
         this.on(document, events.dispatchers.rightPane.clear, this.teardown);
         this.on(document, events.ui.sendbutton.enable, this.resetButton);
