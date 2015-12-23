@@ -61,7 +61,7 @@ class AttachmentsResourceTest(unittest.TestCase):
         def assert_response(_):
             self.assertEqual(500, request.code)
             self.assertFalse('Location' in request.headers)
-            self.assertEqual({"message": "Something went wrong. Attachement not saved."}, json.loads(request.written[0]))
+            self.assertIn("message", json.loads(request.written[0]))
             verify(self.mail_service).save_attachment('some mocked value', 'some mocked type')
 
         d.addCallback(assert_response)
