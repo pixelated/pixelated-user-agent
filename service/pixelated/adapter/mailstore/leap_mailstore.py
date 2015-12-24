@@ -190,7 +190,7 @@ class LeapMail(Mail):
 
 
 def _extract_filename(content_disposition):
-    match = re.compile('.*name=\"(.*)\".*').search(content_disposition)
+    match = re.compile('.*name=\"?(.*[^\"\'])').search(content_disposition)
     filename = ''
     if match:
         filename = match.group(1)

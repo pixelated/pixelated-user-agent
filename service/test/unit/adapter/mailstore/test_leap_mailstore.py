@@ -258,6 +258,25 @@ class TestLeapMailStore(TestCase):
         expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'filename.txt', 'encoding': 'base64'}]
         self.assertEqual(expected, message.as_dict()['attachments'])
 
+    def test_extract_attachment_filename_with_or_without_quotes(self):
+        input_mail = MIMEMultipart()
+        input_mail.attach(MIMEText(u'a utf8 message', _charset='utf-8'))
+
+        attachment_without_quotes = MIMEApplication('pretend to be an attachment from apple mail')
+        attachment_without_quotes.add_header('Content-Disposition', 'u\'attachment;\n\tfilename=batatinha.rtf')
+        input_mail.attach(attachment_without_quotes)
+
+        attachment_with_quotes = MIMEApplication('pretend to be an attachment from thunderbird')
+        attachment_with_quotes.add_header('Content-Disposition', 'u\'attachment; filename="receipt.pdf"')
+        input_mail.attach(attachment_with_quotes)
+
+        message = self._add_create_mail_mocks_to_soledad(input_mail)
+        store = LeapMailStore(self.soledad)
+        attachment_info = store._extract_attachment_info_from(message)
+
+        self.assertEqual('batatinha.rtf', attachment_info[0].name)
+        self.assertEqual('receipt.pdf', attachment_info[1].name)
+
     @defer.inlineCallbacks
     def test_add_mail_with_special_chars(self):
         input_mail = MIMEText(u'a utf8 message', _charset='utf-8')
