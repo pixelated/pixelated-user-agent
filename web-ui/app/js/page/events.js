@@ -144,7 +144,8 @@ define(function () {
         updated: 'mail:tags:updated'
       },
       uploadedAttachment: 'mail:uploaded:attachment',
-      uploadingAttachment: 'mail:uploading:attachment'
+      uploadingAttachment: 'mail:uploading:attachment',
+      startUploadAttachment: 'mail:start:upload:attachment'
     },
     mails: {
       available: 'mails:available',

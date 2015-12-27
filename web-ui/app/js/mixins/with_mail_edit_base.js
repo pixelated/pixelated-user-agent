@@ -23,10 +23,11 @@ define(
     'page/events',
     'views/i18n',
     'mail_view/ui/send_button',
-    'mail_view/ui/attachment',
+    'mail_view/ui/attachment_icon',
+    'mail_view/data/attachment_list',
     'flight/lib/utils'
   ],
-  function(viewHelper, Recipients, DraftSaveStatus, events, i18n, SendButton, Attachment, utils) {
+  function(viewHelper, Recipients, DraftSaveStatus, events, i18n, SendButton, AttachmentIcon, AttachmentList, utils) {
     'use strict';
 
     function withMailEditBase() {
@@ -35,6 +36,7 @@ define(
         bodyBox: '#text-box',
         sendButton: '#send-button',
         attachmentButton: '#attachment-button',
+        attachmentList: '#attachment-list',
         cancelButton: '#cancel-button',
         trashButton: '#trash-button',
         toArea: '#recipients-to-area',
@@ -95,7 +97,8 @@ define(
 
         this.on(this.select('trashButton'), 'click', this.discardMail);
         SendButton.attachTo(this.select('sendButton'));
-        Attachment.attachTo(this.select('attachmentButton'));
+        AttachmentIcon.attachTo(this.select('attachmentButton'));
+        AttachmentList.attachTo(this.select('attachmentList'));
 
         this.warnSendButtonOfRecipients();
       };
