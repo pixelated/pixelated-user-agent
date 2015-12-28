@@ -5,10 +5,11 @@
           <label for="recipients-to-box" class="recipients-label column large-1">{{t 'TO'}}: </label>
         </div>
         <div class='recipients-list compose-column-recipients'>
-          <input id='recipients-to-box' class="recipients-input" type="text" tabindex="1"/>
-        </div>
+          <input id='recipients-to-box' class="recipients-input" type="text" tabindex="1"/></div>
     </div>
-
+    <label id="cc-bcc-collapse" class="collapse fa-angle-down" for="hide-and-show"></label>
+    <input id="hide-and-show" type="checkbox">
+    <div id="cc-and-bcc">
     <div id="recipients-cc-area" class="recipients-area input-container columns large-12 no-padding">
         <input class="recipients-navigation-handler"/>
         <div class='compose-column-label'>
@@ -28,4 +29,5 @@
           <input id='recipients-bcc-box' class="recipients-input" type="text" tabindex="3"/>
         </div>
     </div>
+  </div>
 </div>

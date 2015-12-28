@@ -73,12 +73,24 @@ define(
         this.trigger(events.dispatchers.rightPane.openNoMessageSelected);
       };
 
+      this.toggleRecipientsArrows = function () {
+        if ($('#cc-bcc-collapse').hasClass('fa-angle-down')) {
+          $('#cc-bcc-collapse').removeClass('fa-angle-down');
+          $('#cc-bcc-collapse').addClass('fa-angle-up');
+        } else {
+          $('#cc-bcc-collapse').removeClass('fa-angle-up');
+          $('#cc-bcc-collapse').addClass('fa-angle-down');
+        }
+      };
+
+
       this.after('initialize', function () {
         this.renderComposeBox();
 
         this.select('toBox').focus();
         this.on(document, events.mail.deleted, this.mailDeleted);
         this.on(document, events.mail.sent, this.showNoMessageSelected);
+        this.on($('#cc-bcc-collapse'), 'click', this.toggleRecipientsArrows);
       });
     }
   }
