@@ -1,5 +1,12 @@
---allow-external u1db  --allow-unverified u1db
---allow-external dirspec  --allow-unverified dirspec
+--index-url https://pypi.python.org/simple/
+
+-e 'bzr+http://bazaar.launchpad.net/~ubuntuone-control-tower/dirspec/trunk#egg=dirspec'
+-e 'bzr+http://bazaar.launchpad.net/~ubuntuone-control-tower/u1db/trunk#egg=u1db'
+
+pyasn1==0.1.8
+requests==2.0.0
+srp==1.0.4
+whoosh==2.5.7
 -e 'git+https://github.com/pixelated-project/leap_pycommon.git@develop#egg=leap.common'
 -e 'git+https://github.com/pixelated-project/leap_auth.git#egg=leap.auth'
 -e 'git+https://github.com/pixelated-project/soledad.git@develop#egg=leap.soledad.common&subdirectory=common/'
@@ -7,4 +14,4 @@
 -e 'git+https://github.com/pixelated-project/soledad.git@develop#egg=leap.soledad.server&subdirectory=server/'
 -e 'git+https://github.com/pixelated-project/keymanager.git@develop#egg=leap.keymanager'
 -e 'git+https://github.com/pixelated-project/leap_mail.git@develop#egg=leap.mail'
-
+-e .

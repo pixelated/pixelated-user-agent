@@ -3,6 +3,7 @@ class pixelated::source {
 
   package { [
     'git',
+    'bzr',
     'nodejs-legacy',
     'python-dev',
     'python-virtualenv',
