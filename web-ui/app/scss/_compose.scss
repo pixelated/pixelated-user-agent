@@ -30,7 +30,6 @@
   margin: 5px 0 50px 30px;
   padding: 0;
   .input-container {
-    border-bottom: 1px solid #DDD;
     padding: 1px;
   }
   label, span {
@@ -71,6 +70,7 @@
   input#subject, #feedback-subject {
     font-size: 1.6875rem;
     line-height: 1.4;
+    border-top: 1px solid #DDD;
   }
   #feedback-subject {
     color: #333;
