@@ -284,21 +284,25 @@
     border-color: #999999;
     outline: none; 
   }
-  
-  }
+}
 
   .collapse {
     display:block;
     position: absolute;
-    right: 0;
+    right: 10px;
+    padding-right: 15px;
+    padding-left: 15px; 
+    font-family: 'FontAwesome';
+    font-weight: bolder;
+    font-size: larger;
     cursor: pointer;
   }
   
-  .collapse + input, .collapse + input + *{
+  .collapse + input, .collapse + input + * {
     display:none;
   }
 
-  .collapse+ input:checked + *{
+  .collapse + input:checked + * {
     display:block;
   }
 }
