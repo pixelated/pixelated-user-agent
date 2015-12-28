@@ -34,7 +34,7 @@ mkdir -p dist
 
 # copy files
 cd app
-cp --parents 404.html fonts/* locales/**/* bower_components/font-awesome/css/font-awesome.min.css bower_components/font-awesome/fonts/* ../dist
+cp --parents 404.html fonts/* locales/**/* bower_components/font-awesome/css/font-awesome.min.css bower_components/jquery-file-upload/css/jquery.fileupload.css bower_components/font-awesome/fonts/* ../dist
 cd -
 
 # concat js files and minify
@@ -42,6 +42,8 @@ cat \
 app/bower_components/modernizr/modernizr.js \
 app/bower_components/lodash/dist/lodash.js \
 app/bower_components/jquery/dist/jquery.js \
+app/bower_components/jquery-ui/jquery-ui.min.js \
+app/bower_components/jquery-file-upload/js/jquery.fileupload.js \
 app/js/lib/highlightRegex.js \
 app/bower_components/handlebars/handlebars.min.js \
 app/bower_components/typeahead.js/dist/typeahead.bundle.min.js \
