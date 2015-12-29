@@ -1,8 +1,5 @@
 --index-url https://pypi.python.org/simple/
 
--e 'bzr+https://code.launchpad.net/~ubuntuone-control-tower/dirspec/trunk#egg=dirspec'
--e 'bzr+https://code.launchpad.net/~ubuntuone-control-tower/u1db/trunk#egg=u1db'
-
 pyasn1==0.1.8
 requests==2.0.0
 srp==1.0.4
