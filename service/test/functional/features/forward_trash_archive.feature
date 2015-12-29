@@ -23,6 +23,7 @@ Feature: forward and deletion
     Given I have a mail in my inbox
     When I open the first mail in the 'inbox'
       And I choose to forward this mail
+      And I toggle the cc and bcc fields
     When for the 'CC' field I enter 'pixelated@friends.org'
       And for the 'Bcc' field I enter 'pixelated@family.org'
       And I forward this mail

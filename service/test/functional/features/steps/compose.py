@@ -48,6 +48,12 @@ def send_impl(context):
     send_button.click()
 
 
+@when(u'I toggle the cc and bcc fields')
+def collapse_cc_bcc_fields(context):
+    cc_and_bcc_chevron = wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, '#cc-bcc-collapse'))
+    cc_and_bcc_chevron.click()
+
+
 def _enter_recipient(context, recipients_field, to_type):
     recipients_field = recipients_field.lower()
     browser = context.browser
