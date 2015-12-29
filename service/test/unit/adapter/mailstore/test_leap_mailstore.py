@@ -242,6 +242,21 @@ class TestLeapMailStore(TestCase):
         self.assertEqual(expected, message.as_dict()['attachments'])
 
     @defer.inlineCallbacks
+    def test_add_mail_with_inline_attachment(self):
+        input_mail = MIMEMultipart()
+        input_mail.attach(MIMEText(u'a utf8 message', _charset='utf-8'))
+        attachment = MIMEApplication('pretend to be an inline attachment')
+        attachment.add_header('Content-Disposition', 'u\'inline;\n\tfilename=super_nice_photo.jpg')
+        input_mail.attach(attachment)
+        mocked_message = self._add_create_mail_mocks_to_soledad(input_mail)
+        store = LeapMailStore(self.soledad)
+
+        message = yield store.add_mail('INBOX', input_mail.as_string())
+
+        expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'super_nice_photo.jpg', 'encoding': 'base64'}]
+        self.assertEqual(expected, message.as_dict()['attachments'])
+
+    @defer.inlineCallbacks
     def test_add_mail_with_nested_attachments(self):
         input_mail = MIMEMultipart()
         input_mail.attach(MIMEText(u'a utf8 message', _charset='utf-8'))

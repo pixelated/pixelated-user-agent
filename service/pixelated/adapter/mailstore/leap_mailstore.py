@@ -373,7 +373,7 @@ class LeapMailStore(MailStore):
                 phash = part_map['phash']
                 if 'Content-Disposition' in headers:
                     disposition = headers['Content-Disposition']
-                    if 'attachment' in disposition:
+                    if 'attachment' in disposition or 'inline' in disposition:
                         filename = _extract_filename(disposition)
                         encoding = headers.get('Content-Transfer-Encoding', None)
                         result.append(AttachmentInfo(phash, filename, encoding))
