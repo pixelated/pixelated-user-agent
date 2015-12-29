@@ -1,21 +1,49 @@
 
 describeComponent('page/unread_count_title', function () {
   'use strict';
-  describe('title bar', function () {
+  describe('unread count on title bar', function () {
+
     beforeEach(function () {
-      this.setupComponent('<span></span>');
+      document.title = 'example@pixelated-project.org';
+      this.setupComponent();
     });
 
-    it('should render template', function () {
-      expect(this.$node).toExist();
-      expect(this.$node.html()).toEqual('<span>(1)</span>');
+    it('listens to mails available event', function () {
+      this.component.trigger(Pixelated.events.mails.available, {mails: []});
+      expect(this.component.getTitleText()).toEqual('example@pixelated-project.org');
     });
-    
-    it('should update count on mail read event', function () {
-      this.component.trigger(Pixelated.events.mails.read);
-        $(document).trigger(Pixelated.events.mail.read, { tags: ['someothertag'], mailbox: 'inbox' });
-      expect(this.$node.html()).toEqual('<span>(1)</span>');
+
+    it('only considers unread mails', function () {
+      var readMail = {'status': ['read']};
+      this.component.trigger(Pixelated.events.mails.available, {mails: [readMail]});
+      expect(this.component.getTitleText()).toEqual('example@pixelated-project.org');
     });
+
+    it('update for one unread email', function () {
+      var mails = [{'status': ['read']}, {'status': []}];
+      this.component.trigger(Pixelated.events.mails.available, {mails: mails});
+      expect(this.component.getTitleText()).toEqual('(1) - example@pixelated-project.org');
+    });
+
+    it('update for more than one unread email', function () {
+      var mails = [{'status': ['read']}, {'status': []}, {'status': []}];
+      this.component.trigger(Pixelated.events.mails.available, {mails: mails});
+      expect(this.component.getTitleText()).toEqual('(2) - example@pixelated-project.org');
+    });
+
+    it('update for more than one unread email', function () {
+      var mails = [{'status': ['read']}, {'status': []}, {'status': []}];
+      this.component.trigger(Pixelated.events.mails.available, {mails: mails});
+      expect(this.component.getTitleText()).toEqual('(2) - example@pixelated-project.org');
+    });
+
+    it('decreases unread count', function () {
+      document.title = '(2) - example@pixelated-project.org';
+      var mails = [{'status': ['read']}, {'status': ['read']}];
+      this.component.trigger(Pixelated.events.mails.available, {mails: mails});
+      expect(this.component.getTitleText()).toEqual('example@pixelated-project.org');
+    });
+
 
   });
 });

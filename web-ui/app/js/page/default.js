@@ -128,7 +128,7 @@ define(
       feedback.attachTo('#feedback');
       feedbackSender.attachTo(document);
 
-      unreadCountTitle.attachTo('#unread-count-title');
+      unreadCountTitle.attachTo(document);
     }
 
     return initialize;

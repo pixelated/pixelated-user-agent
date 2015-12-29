@@ -19,21 +19,32 @@
 define(
   [
     'flight/lib/component',
-    'views/templates',
     'page/events',
   ],
 
-  function (defineComponent, templates, events) {
+  function (defineComponent, events) {
     'use strict';
-    
+
     return defineComponent(function () {
-      this.render = function () {
-        var unreadCountTitleHTML = templates.page.unreadCountTitle();
-        this.$node.html(unreadCountTitleHTML);
+      this.getTitleText = function () {
+        return document.title;
+      };
+
+      this.updateCount = function (ev, data) {
+        var unread = data.mails.filter(function (mail) {
+            return mail.status.indexOf('read') === -1;
+        }).length;
+
+        if (unread > 0) {
+            document.title = '(' + unread + ') - ' + this.rawTitle;
+        } else {
+            document.title = this.rawTitle;
+        }
       };
 
       this.after('initialize', function () {
-        this.render();
+        this.rawTitle = document.title;
+        this.on(document, events.mails.available, this.updateCount);
       });
 
     });
