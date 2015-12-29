@@ -35,11 +35,13 @@ define(
             return mail.status.indexOf('read') === -1;
         }).length;
 
-        if (unread > 0) {
-            document.title = '(' + unread + ') - ' + this.rawTitle;
-        } else {
-            document.title = this.rawTitle;
-        }
+        var tag = this.toTitleCase(data.tag);
+        var counter = unread > 0 ? ' (' + unread + ') - ' : ' - ';
+        document.title = tag + counter  + this.rawTitle;
+      };
+
+      this.toTitleCase = function (str) {
+        return str.replace(/\b\w/g, function (txt) { return txt.toUpperCase(); });
       };
 
       this.after('initialize', function () {
