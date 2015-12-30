@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-'use strict';
 
 define([
     'flight/lib/component',
@@ -22,6 +21,7 @@ define([
     'features'
   ],
   function (defineComponent, events, features) {
+    'use strict';
 
     function recipientsInput() {
       var EXIT_KEY_CODE_MAP = {

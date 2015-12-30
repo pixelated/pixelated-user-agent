@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-'use strict';
 define(['flight/lib/component', 'page/events'], function (defineComponent, events) {
-
+  'use strict';
   return defineComponent(function() {
 
     this.closeSlider = function (ev){

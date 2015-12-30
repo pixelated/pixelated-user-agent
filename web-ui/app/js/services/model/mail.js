@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-'use strict';
-
 define(['helpers/contenttype'], function (contentType) {
+  'use strict';
   function isSentMail() {
     return _.has(this, 'mailbox') && this.mailbox.toUpperCase() === 'SENT';
   }

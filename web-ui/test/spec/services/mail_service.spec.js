@@ -1,7 +1,5 @@
-'use strict';
-
 describeComponent('services/mail_service', function () {
-
+  'use strict';
   var email1, i18n;
   var features;
 

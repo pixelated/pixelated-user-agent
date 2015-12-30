@@ -15,7 +15,6 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-'use strict';
 define(
   [
     'flight/lib/component',
@@ -29,6 +28,7 @@ define(
   ],
 
   function (defineComponent, templates, mailActions, viewHelpers, withHideAndShow, withMailTagging, events, i18n) {
+  'use strict';
 
     return defineComponent(mailView, mailActions, withHideAndShow, withMailTagging);
 

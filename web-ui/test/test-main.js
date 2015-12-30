@@ -1,6 +1,6 @@
-'use strict';
 
 var tests = Object.keys(window.__karma__.files).filter(function (file) {
+  'use strict';
   return (/\.spec\.js$/.test(file));
 });
 
@@ -39,6 +39,7 @@ requirejs.config({
   deps: tests,
 
   callback: function () {
+    'use strict';
     require(['page/events','test/test_data', 'views/i18n', 'monkey_patching/array', 'views/recipientListFormatter', 'test/custom_matchers'], function (events, testData, i18n, mp, recipientListFormatter, customMatchers) {
       window.Pixelated = window.Pixelated || {};
       window.Pixelated.events = events;

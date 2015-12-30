@@ -1,6 +1,5 @@
-'use strict';
-
 define(function() {
+'use strict';
   var rawMail = {
     header: {
       to:'jed_waelchi@cummerata.info',

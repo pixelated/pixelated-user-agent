@@ -15,9 +15,9 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-'use strict';
 define(['features'],
   function(features) {
+  'use strict';
 
     function withFeatureToggle(componentName, behaviorForFeatureOff) {
       return function() {

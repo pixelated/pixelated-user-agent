@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-'use strict';
 
 define(
   [
@@ -24,6 +23,7 @@ define(
   ],
 
   function (defineComponent, templates, events) {
+  'use strict';
 
     return defineComponent(recipient);
 

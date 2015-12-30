@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-'use strict';
-
 $(document).ready(function(){
+  'use strict';
   $('a[href*=#]').click(function() {
     if (location.pathname.replace(/^\//,'') === this.pathname.replace(/^\//,'') &&
         location.hostname === this.hostname) {

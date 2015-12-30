@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-'use strict';
 
 define(
   [
@@ -23,6 +22,7 @@ define(
     'mail_list/ui/mail_items/sent_item'
   ],
   function (GenericMailItem, DraftItem, SentItem) {
+    'use strict';
 
     var MAIL_ITEM_TYPE = {
       'drafts': DraftItem,

@@ -15,10 +15,10 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-'use strict';
 define(
   ['page/events', 'features'],
   function (events, features) {
+  'use strict';
     function withMailTagging () {
       this.updateTags = function(mail, tags) {
         this.trigger(document, events.mail.tags.update, {ident: mail.ident, tags: tags});

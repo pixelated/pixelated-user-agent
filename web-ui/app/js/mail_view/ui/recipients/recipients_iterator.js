@@ -15,8 +15,8 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-'use strict';
 define(['helpers/iterator'], function (Iterator) {
+  'use strict';
 
   return RecipientsIterator;
 

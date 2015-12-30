@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-'use strict';
 
 requirejs.config({
   baseUrl: '../assets/',
@@ -48,6 +47,7 @@ require([
   'flight/lib/compose',
   'flight/lib/debug'
 ], function(compose, debug){
+  'use strict';
   debug.enable(true);
   debug.events.logAll();
 });
@@ -65,6 +65,7 @@ require(
   ],
 
   function(compose, registry, advice, withLogging, debug, events, initializeDefault, _monkeyPatched) {
+    'use strict';
     window.Pixelated = window.Pixelated || {};
     window.Pixelated.events = events;
 

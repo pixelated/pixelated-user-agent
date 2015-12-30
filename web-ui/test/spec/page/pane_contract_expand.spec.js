@@ -1,7 +1,6 @@
-'use strict';
 
 describeComponent('page/pane_contract_expand', function () {
-
+  'use strict';
   var fixture;
 
   beforeEach(function () {
