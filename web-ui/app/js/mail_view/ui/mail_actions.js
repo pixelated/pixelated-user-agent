@@ -37,11 +37,13 @@ define(
         moreActions: '#more-actions'
       });
 
+      this.deleteMail = function () {
+        this.trigger(document, events.ui.mail.delete, {mail: this.attr.mail});
+        this.select('moreActions').hide();
+      };
 
       this.displayMailActions = function () {
-
         this.$node.html(templates.mails.mailActions());
-
         this.select('moreActions').hide();
 
         this.on(this.select('replyButtonTop'), 'click', function () {
@@ -50,11 +52,6 @@ define(
 
         this.on(this.select('replyAllButtonTop'), 'click', function () {
           this.trigger(document, events.ui.replyBox.showReplyAll);
-          this.select('moreActions').hide();
-        }.bind(this));
-
-        this.on(this.select('deleteButtonTop'), 'click', function () {
-          this.trigger(document, events.ui.mail.delete, {mail: this.attr.mail});
           this.select('moreActions').hide();
         }.bind(this));
 
@@ -72,12 +69,14 @@ define(
             this.select('moreActions').hide();
           }
         }.bind(this));
-
       };
 
       this.after('initialize', function () {
         this.on(document, events.dispatchers.rightPane.clear, this.teardown);
+        this.on(document, events.shortcuts.deleteMail, this.deleteMail);
+
         this.displayMailActions();
+        this.on(this.select('deleteButtonTop'), 'click', this.deleteMail);
       });
     }
   }

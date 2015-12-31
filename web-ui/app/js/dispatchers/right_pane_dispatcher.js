@@ -100,12 +100,22 @@ define(
         this.attr.currentTag = data.tag;
       };
 
+      this.shortcutOpenComposeBox = function() {
+        this.trigger(document, events.dispatchers.rightPane.openComposeBox);
+      };
+
+      this.shortcutCloseMail = function() {
+        this.trigger(document, events.dispatchers.rightPane.openNoMessageSelected);
+      };
+
       this.after('initialize', function () {
         this.on(document, events.dispatchers.rightPane.openComposeBox, this.openComposeBox);
+        this.on(document, events.shortcuts.openComposeBox, this.shortcutOpenComposeBox);
         this.on(document, events.dispatchers.rightPane.openDraft, this.openDraft);
         this.on(document, events.ui.mail.open, this.openMail);
         this.on(document, events.dispatchers.rightPane.openFeedbackBox, this.openFeedbackBox);
         this.on(document, events.dispatchers.rightPane.openNoMessageSelected, this.openNoMessageSelectedPane);
+        this.on(document, events.shortcuts.closeMail, this.shortcutCloseMail);
         this.on(document, events.dispatchers.rightPane.selectTag, this.selectTag);
         this.on(document, events.ui.tag.selected, this.saveTag);
         this.on(document, events.ui.tag.select, this.saveTag);

@@ -112,6 +112,10 @@ define(
         this.on(document, events.mail.draftReply.notFound, this.showButtons);
         this.on(document, events.mail.draftReply.here, this.showDraftReply);
 
+        this.on(document, events.shortcuts.replyMail, this.showReply);
+        this.on(document, events.shortcuts.replyAllMail, this.showReplyAll);
+        this.on(document, events.shortcuts.forwardMail, this.showForward);
+
         this.checkForDraftReply();
       });
     }

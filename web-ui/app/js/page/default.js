@@ -51,6 +51,7 @@ define(
     'mail_view/data/feedback_sender',
     'page/version',
     'page/unread_count_title',
+    'page/shortcuts'
   ],
 
   function (
@@ -88,7 +89,8 @@ define(
     feedbackBox,
     feedbackSender,
     version,
-    unreadCountTitle) {
+    unreadCountTitle,
+    shortcuts) {
 
     'use strict';
     function initialize(path) {
@@ -129,6 +131,7 @@ define(
       feedbackSender.attachTo(document);
 
       unreadCountTitle.attachTo(document);
+      shortcuts.attachTo(document);
     }
 
     return initialize;
