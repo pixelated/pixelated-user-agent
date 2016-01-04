@@ -1,9 +1,9 @@
 # add the pixelated sources needed to install everything
 class pixelated::apt {
 
-  # wheezy backports
-  file { '/etc/apt/sources.list.d/wheezy-backports.list':
-    source => 'puppet:///modules/pixelated/apt/wheezy-backports.list',
+  # jessie backports
+  file { '/etc/apt/sources.list.d/jessie-backports.list':
+    source => 'puppet:///modules/pixelated/apt/jessie-backports.list',
     owner  => 'root',
     notify => Exec['apt_get_update'],
   }

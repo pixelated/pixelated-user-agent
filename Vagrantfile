@@ -3,12 +3,6 @@
 
 VAGRANTFILE_API_VERSION = "2"
 
-unless Vagrant.has_plugin?('vagrant-vbguest')
-  system "vagrant plugin install vagrant-vbguest"
-  puts "Restarting vagrant process..."
-  exec "vagrant #{ARGV.join' '}"
-end
-
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "LEAP/jessie"
 
