@@ -33,4 +33,3 @@ Description: API to serve the pixelated front-end requests
  POST   /mail/:id/unstar
  POST   /mail/:id/replied
  POST   /mail/:id/unreplied
-
