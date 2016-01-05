@@ -20,13 +20,14 @@ define(
     'views/templates',
     'mixins/with_mail_edit_base',
     'page/events',
-    'mail_view/data/mail_builder'
+    'mail_view/data/mail_builder',
+    'mail_view/data/attachment_list'
   ],
 
-  function (defineComponent, templates, withMailEditBase, events, mailBuilder) {
+  function (defineComponent, templates, withMailEditBase, events, mailBuilder, attachmentList) {
     'use strict';
 
-    return defineComponent(composeBox, withMailEditBase);
+    return defineComponent(composeBox, withMailEditBase, attachmentList);
 
     function composeBox() {
 
