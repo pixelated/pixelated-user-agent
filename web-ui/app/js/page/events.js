@@ -206,15 +206,6 @@ define(function () {
       tags: {
         refreshTagList: 'dispatchers:tag:refresh'
       }
-    },
-    shortcuts: {
-      openComposeBox: 'shortcuts:openComposeBox',
-      closeMail: 'shortcuts:closeMail',
-      focusSearchField: 'shortcuts:focusSearchField',
-      replyMail: 'shortcuts:replyMail',
-      replyAllMail: 'shortcuts:replyAllMail',
-      forwardMail: 'shortcuts:forwardMail',
-      deleteMail: 'shortcuts:deleteMail'
     }
   };
 

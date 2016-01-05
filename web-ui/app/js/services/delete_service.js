@@ -53,7 +53,6 @@ define(['flight/lib/component', 'page/events', 'views/i18n'], function (defineCo
     this.after('initialize', function () {
       this.on(document, events.ui.mail.delete, this.deleteEmail);
       this.on(document, events.ui.mail.deleteMany, this.deleteManyEmails);
-      this.on(document, events.shortcuts.deleteMail, this.deleteEmail);
     });
 
   });
