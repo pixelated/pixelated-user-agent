@@ -15,6 +15,17 @@ describeComponent('dispatchers/right_pane_dispatcher', function () {
       expect(composeBox.attachTo).toHaveBeenCalled();
     });
 
+    it('should trigger reset attachment list on open compose box event', function () {
+      var composeBox = require('mail_view/ui/compose_box');
+      Pixelated.mockBloodhound();
+      this.setupComponent();
+      var triggerRestAttachment = spyOnEvent(document, Pixelated.events.mail.resetAttachments);
+      this.component.trigger(document, Pixelated.events.dispatchers.rightPane.openComposeBox);
+
+      expect(triggerRestAttachment).toHaveBeenTriggeredOn(document);
+    });
+
+
     describe('no message selected', function () {
       var noMessageSelectedPane;
       beforeEach(function () {

@@ -16,6 +16,20 @@ describeMixin('mail_view/data/attachment_list', function () {
             expect(this.component.attr.attachments).toEqual([stubAttachment, anotherStubAttachment]);
         });
 
+        it('should reset attachment list on compose', function () {
+            this.component.attr.attachments = ['some array'];
+            $(document).trigger(Pixelated.events.mail.resetAttachments);
+
+            expect(this.component.attr.attachments).toEqual([]);
+        });
+
+        it('should reset attachment list and tear down when email sent', function () {
+            this.component.attr.attachments = ['some array'];
+            $(document).trigger(Pixelated.events.mail.sent);
+
+            expect(this.component.attr.attachments).toEqual([]);
+        });
+
     });
 
 });

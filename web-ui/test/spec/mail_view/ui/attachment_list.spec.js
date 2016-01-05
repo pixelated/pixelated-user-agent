@@ -4,7 +4,7 @@ describeComponent('mail_view/ui/attachment_list', function () {
     describe('initialization', function () {
         beforeEach(function () {
             this.setupComponent('<div id="attachment-list">' +
-                '<ul><li id="attachment-list-item"> </li></ul>' +
+                '<ul id="attachment-list-item"></ul>' +
                 '</div>');
         });
 
@@ -22,8 +22,18 @@ describeComponent('mail_view/ui/attachment_list', function () {
 
             $(document).trigger(Pixelated.events.mail.uploadedAttachment, stubAttachment);
 
-            var expected_li = '<a href="/attachment/faked?filename=haha.txt&amp;encoding=base64">haha.txt (4.39 Kb)</a>';
+            var expected_li = '<li><a href="/attachment/faked?filename=haha.txt&amp;encoding=base64">haha.txt (4.39 Kb)</a></li>';
             expect(this.component.select('attachmentListItem').html()).toEqual(expected_li);
+        });
+
+        it('should tear down when email sent', function () {
+            var mockTearDown = spyOn(this.Component.prototype, 'resetAll');
+            this.setupComponent('<div id="attachment-list">' +
+                '<ul id="attachment-list-item"></ul>' +
+                '</div>');
+            $(document).trigger(Pixelated.events.mail.sent);
+
+            expect(mockTearDown).toHaveBeenCalled();
         });
 
         xit('should start uploading attachments', function () {

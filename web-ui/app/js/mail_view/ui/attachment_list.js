@@ -32,14 +32,15 @@ define(
                 attachmentBaseUrl: '/attachment'
             });
 
-            this.addAttachment = function (event, data) {
+            this.showAttachment = function (event, data) {
                 this.trigger(document, events.mail.appendAttachment, data);
                 this.renderAttachmentListView(data);
             };
 
             this.renderAttachmentListView = function (data) {
+                var currentHtml = this.select('attachmentListItem').html();
                 var item = this.buildAttachmentListItem(data);
-                this.select('attachmentListItem').html(item);
+                this.select('attachmentListItem').html(currentHtml + '<li>' + item + '</li>');
             };
 
             function humanReadable(bytes) {
@@ -73,13 +74,18 @@ define(
             }
 
             this.startUpload = function () {
-                addJqueryFileUploadConfig(this);
                 this.select('inputFileUpload').click();
             };
 
+            this.resetAll = function () {
+              this.teardown();
+            };
+
             this.after('initialize', function () {
-                this.on(document, events.mail.uploadedAttachment, this.addAttachment);
+                addJqueryFileUploadConfig(this);
+                this.on(document, events.mail.uploadedAttachment, this.showAttachment);
                 this.on(document, events.mail.startUploadAttachment, this.startUpload);
+                this.on(document, events.mail.sent, this.resetAll);
             });
         }
 

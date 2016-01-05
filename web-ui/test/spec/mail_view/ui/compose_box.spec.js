@@ -13,7 +13,6 @@ describeComponent('mail_view/ui/compose_box', function () {
 
 
   describe('compose new mail', function() {
-
     it('only sends if all the recipients are valid emails', function() {
       $(document).trigger(Pixelated.events.ui.recipients.updated, {recipientsName: 'to', newRecipients: ['valid@email.example']});
 

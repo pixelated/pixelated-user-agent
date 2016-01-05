@@ -32,8 +32,19 @@ define(
                 this.attr.attachments.push(data);
             };
 
+            this.resetAttachmentList = function () {
+                this.attr.attachments = [];
+            };
+
+            this.resetAll = function () {
+              this.resetAttachmentList();
+              this.teardown();
+            };
+
             this.after('initialize', function () {
                 this.on(document, events.mail.appendAttachment, this.addAttachment);
+                this.on(document, events.mail.resetAttachments, this.resetAttachmentList);
+                this.on(document, events.mail.sent, this.resetAll);
             });
         }
 
