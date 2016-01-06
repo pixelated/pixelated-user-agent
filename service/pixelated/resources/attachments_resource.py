@@ -79,13 +79,6 @@ class AttachmentsResource(Resource):
     def getChild(self, attachment_id, request):
         return AttachmentResource(self.mail_service, attachment_id)
 
-    def render_GET(self, request):
-        return '<html><body><p></p>' \
-               '<form method="POST" enctype="multipart/form-data">' \
-               '<input name="attachment" type="file" /> <p></p>' \
-               '<input type="submit" /></form><p></p>' \
-               '</body></html>'
-
     def render_POST(self, request):
         fields = cgi.FieldStorage(fp=request.content, headers=(request.getAllHeaders()),
                                   environ={'REQUEST_METHOD': 'POST'})
