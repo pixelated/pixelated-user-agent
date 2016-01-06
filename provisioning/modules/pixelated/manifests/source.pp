@@ -4,6 +4,7 @@ class pixelated::source {
   package { [
     'git',
     'nodejs',
+    'nodejs-legacy',
     'python-dev',
     'python-virtualenv',
     'libffi-dev',
