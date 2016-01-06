@@ -149,100 +149,108 @@ define(
                     this.trigger(events.mail.send_failed);
                 }
             };
+            
+      this.buildAndSaveDraft = function () {
+        var mail = this.buildMail();
+        this.saveDraft(mail);
+      };
 
-            this.buildAndSaveDraft = function () {
-                var mail = this.buildMail();
-                this.saveDraft(mail);
-            };
+      this.recipientsUpdated = function (ev, data) {
+        this.attr.recipientValues[data.recipientsName] = data.newRecipients;
+        this.trigger(document, events.ui.mail.recipientsUpdated);
+        if (data.skipSaveDraft) { return; }
 
-            this.recipientsUpdated = function (ev, data) {
-                this.attr.recipientValues[data.recipientsName] = data.newRecipients;
-                this.trigger(document, events.ui.mail.recipientsUpdated);
-                if (data.skipSaveDraft) {
-                    return;
-                }
+        var mail = this.buildMail();
+        this.postponeSaveDraft(mail);
+      };
 
-                var mail = this.buildMail();
-                this.postponeSaveDraft(mail);
-            };
+      this.saveDraft = function (mail) {
+        this.cancelPostponedSaveDraft();
+        this.trigger(document, events.mail.saveDraft, mail);
+      };
 
-            this.saveDraft = function (mail) {
-                this.cancelPostponedSaveDraft();
-                this.trigger(document, events.mail.saveDraft, mail);
-            };
+      this.cancelPostponedSaveDraft = function() {
+        clearTimeout(this.attr.timeout);
+      };
 
-            this.cancelPostponedSaveDraft = function () {
-                clearTimeout(this.attr.timeout);
-            };
+      this.postponeSaveDraft = function (mail) {
+        this.cancelPostponedSaveDraft();
 
-            this.postponeSaveDraft = function (mail) {
-                this.cancelPostponedSaveDraft();
+        this.attr.timeout = window.setTimeout(_.bind(function() {
+          this.saveDraft(mail);
+        }, this), this.attr.saveDraftInterval);
+      };
 
-                this.attr.timeout = window.setTimeout(_.bind(function () {
-                    this.saveDraft(mail);
-                }, this), this.attr.saveDraftInterval);
-            };
+      this.draftSaved = function(event, data) {
+        this.attr.ident = data.ident;
+      };
 
-            this.draftSaved = function (event, data) {
-                this.attr.ident = data.ident;
-            };
+      this.validateAnyRecipient = function () {
+        return !_.isEmpty(_.flatten(_.values(this.attr.recipientValues)));
+      };
 
-            this.validateAnyRecipient = function () {
-                return !_.isEmpty(_.flatten(_.values(this.attr.recipientValues)));
-            };
+      function allRecipientsAreEmails(mail) {
+        var allRecipients = mail.header.to.concat(mail.header.cc).concat(mail.header.bcc);
+        return _.isEmpty(allRecipients) ? false : _.all(allRecipients, emailFormatChecker);
+      }
 
-            function allRecipientsAreEmails(mail) {
-                var allRecipients = mail.header.to.concat(mail.header.cc).concat(mail.header.bcc);
-                return _.isEmpty(allRecipients) ? false : _.all(allRecipients, emailFormatChecker);
-            }
+      function emailFormatChecker(email) {
+        var emailFormat = /[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailFormat.test(email);
+      }
 
-            function emailFormatChecker(email) {
-                var emailFormat = /[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return emailFormat.test(email);
-            }
+      this.saveTag = function(ev, data) {
+        this.attr.currentTag = data.tag;
+      };
 
-            this.saveTag = function (ev, data) {
-                this.attr.currentTag = data.tag;
-            };
+      this.mailSent = function() {
+        this.trigger(document, events.ui.userAlerts.displayMessage, { message: 'Your message was sent!' });
+      };
 
-            this.mailSent = function () {
-                this.trigger(document, events.ui.userAlerts.displayMessage, {message: 'Your message was sent!'});
-            };
+      this.enableFloatlabel = function(element) {
+        var showClass = 'showfloatlabel';
+        $(element).bind('keyup', function() {
+          var label = $(this).prev('label');
+          if (this.value !== '') {
+            label.addClass(showClass);
+            $(this).addClass(showClass);
+          } else {
+            label.removeClass(showClass);
+            $(this).removeClass(showClass);
+          }
+        });
+      };
 
-            this.enableFloatlabel = function (element) {
-                var showClass = 'showfloatlabel';
-                $(element).bind('keyup', function () {
-                    var label = $(this).prev('label');
-                    if (this.value !== '') {
-                        label.addClass(showClass);
-                        $(this).addClass(showClass);
-                    } else {
-                        label.removeClass(showClass);
-                        $(this).removeClass(showClass);
-                    }
-                });
-            };
+      this.toggleRecipientsArrows = function () {
+        $('#cc-bcc-collapse').toggleClass('fa-angle-down');
+        $('#cc-bcc-collapse').toggleClass('fa-angle-up');
+      };
 
-            this.before('initialize', function () {
-                if (!this.discardDraft) {
-                    this.discardDraft = function () {
-                    };
-                }
-            });
+      this.before('initialize', function () {
+          if (!this.discardDraft){
+            this.discardDraft = function () {};
+          }
+      });
 
-            this.after('initialize', function () {
-                this.on(document, events.dispatchers.rightPane.clear, this.teardown);
-                this.on(document, events.ui.recipients.updated, this.recipientsUpdated);
-                this.on(document, events.mail.draftSaved, this.draftSaved);
-                this.on(document, events.mail.sent, this.mailSent);
+      this.bindCollapse = function () {
+        this.on($('#cc-bcc-collapse'), 'click', this.toggleRecipientsArrows);        
+      };
 
-                this.on(document, events.ui.mail.send, this.sendMail);
+      this.after('initialize', function () {
+        this.on(document, events.dispatchers.rightPane.clear, this.teardown);
+        this.on(document, events.ui.recipients.updated, this.recipientsUpdated);
+        this.on(document, events.mail.draftSaved, this.draftSaved);
+        this.on(document, events.mail.sent, this.mailSent);
 
-                this.on(document, events.ui.mail.discard, this.discardDraft);
-                this.on(document, events.ui.tag.selected, this.saveTag);
-                this.on(document, events.ui.tag.select, this.saveTag);
-            });
-        }
+        this.on(document, events.ui.mail.send, this.sendMail);
 
-        return withMailEditBase;
-    });
+        this.on(document, events.ui.mail.discard, this.discardDraft);
+        this.on(document, events.ui.tag.selected, this.saveTag);
+        this.on(document, events.ui.tag.select, this.saveTag);
+        this.bindCollapse();
+      });
+    }
+
+    return withMailEditBase;
+  });
+
