@@ -292,6 +292,27 @@ class TestLeapMailStore(TestCase):
         self.assertEqual('batatinha.rtf', attachment_info[0].name)
         self.assertEqual('receipt.pdf', attachment_info[1].name)
 
+    def test_extract_attachment_filename_from_other_headers(self):
+        input_mail = MIMEMultipart()
+        input_mail.attach(MIMEText(u'a utf8 message', _charset='utf-8'))
+
+        attachment_without_description = MIMEApplication('pretend to be an attachment from apple mail', _subtype='pgp-keys')
+        attachment_without_description.add_header('Content-Disposition', 'attachment')
+        attachment_without_description.add_header('Content-Description', 'Some GPG Key')
+
+        input_mail.attach(attachment_without_description)
+
+        attachment_with_name_in_content_type = MIMEApplication('pretend to be an attachment from thunderbird', _subtype='pgp-signature; name="signature.asc"')
+        attachment_with_name_in_content_type.add_header('Content-Disposition', 'inline')
+        input_mail.attach(attachment_with_name_in_content_type)
+
+        message = self._add_create_mail_mocks_to_soledad(input_mail)
+        store = LeapMailStore(self.soledad)
+        attachment_info = store._extract_attachment_info_from(message)
+
+        self.assertEqual('Some GPG Key', attachment_info[0].name)
+        self.assertEqual('signature.asc', attachment_info[1].name)
+
     @defer.inlineCallbacks
     def test_add_mail_with_special_chars(self):
         input_mail = MIMEText(u'a utf8 message', _charset='utf-8')

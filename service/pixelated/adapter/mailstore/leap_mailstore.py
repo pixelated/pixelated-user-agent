@@ -13,19 +13,18 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import base64
+import re
 from email.header import decode_header
 from email.utils import parseaddr
 from uuid import uuid4
 
-import re
-from leap.mail.adaptors.soledad import SoledadMailAdaptor, ContentDocWrapper
+from leap.mail.adaptors.soledad import SoledadMailAdaptor
+from leap.mail.mail import Message
 from twisted.internet import defer
+
 from pixelated.adapter.mailstore.body_parser import BodyParser
 from pixelated.adapter.mailstore.mailstore import MailStore, underscore_uuid
-from leap.mail.mail import Message
 from pixelated.adapter.model.mail import Mail, InputMail
-
 from pixelated.support.functional import to_unicode
 
 
@@ -34,6 +33,12 @@ class AttachmentInfo(object):
         self.ident = ident
         self.name = name
         self.encoding = encoding
+
+    def __repr__(self):
+        return 'AttachmentInfo[%s, %s, %s]' % (self.ident, self.name, self.encoding)
+
+    def __str__(self):
+        return 'AttachmentInfo[%s, %s, %s]' % (self.ident, self.name, self.encoding)
 
 
 class LeapMail(Mail):
@@ -189,8 +194,23 @@ class LeapMail(Mail):
         return LeapMail(None, None, headers, tags, set(), body, attachments)
 
 
-def _extract_filename(content_disposition):
-    match = re.compile('.*name=\"?(.*[^\"\'])').search(content_disposition)
+def _extract_filename(headers, default_filename='UNNAMED'):
+    content_disposition = headers.get('Content-Disposition', '')
+    filename = _extract_filename_from_name_header_part(content_disposition)
+    if not filename:
+        filename = headers.get('Content-Description', '')
+    if not filename:
+        content_type = headers.get('Content-Type', '')
+        filename = _extract_filename_from_name_header_part(content_type)
+
+    if not filename:
+        filename = default_filename
+
+    return filename
+
+
+def _extract_filename_from_name_header_part(header_value):
+    match = re.compile('.*name=\"?(.*[^\"\'])').search(header_value)
     filename = ''
     if match:
         filename = match.group(1)
@@ -322,7 +342,8 @@ class LeapMailStore(MailStore):
         # fetch mailbox name by mbox_uuid
         mbox_uuid = message.get_wrapper().fdoc.mbox_uuid
         mbox_name = yield self._mailbox_name_from_uuid(mbox_uuid)
-        mail = LeapMail(mail_id, mbox_name, message.get_wrapper().hdoc.headers, set(message.get_tags()), set(message.get_flags()), body=body, attachments=self._extract_attachment_info_from(message))   # TODO assert flags are passed on
+        attachments = self._extract_attachment_info_from(message)
+        mail = LeapMail(mail_id, mbox_name, message.get_wrapper().hdoc.headers, set(message.get_tags()), set(message.get_flags()), body=body, attachments=attachments)   # TODO assert flags are passed on
 
         defer.returnValue(mail)
 
@@ -364,6 +385,18 @@ class LeapMailStore(MailStore):
         part_maps = wrapper.hdoc.part_map
         return self._extract_part_map(part_maps)
 
+    def _is_attachment(self, part_map, headers):
+        disposition = headers.get('Content-Disposition', None)
+        content_type = part_map['ctype']
+
+        if 'multipart' in content_type:
+            return False
+
+        if 'text/plain' == content_type and ((disposition == 'inline') or (disposition is None)):
+            return False
+
+        return True
+
     def _extract_part_map(self, part_maps):
         result = []
 
@@ -371,12 +404,10 @@ class LeapMailStore(MailStore):
             if 'headers' in part_map and 'phash' in part_map:
                 headers = {header[0]: header[1] for header in part_map['headers']}
                 phash = part_map['phash']
-                if 'Content-Disposition' in headers:
-                    disposition = headers['Content-Disposition']
-                    if 'attachment' in disposition or 'inline' in disposition:
-                        filename = _extract_filename(disposition)
-                        encoding = headers.get('Content-Transfer-Encoding', None)
-                        result.append(AttachmentInfo(phash, filename, encoding))
+                if self._is_attachment(part_map, headers):
+                    filename = _extract_filename(headers)
+                    encoding = headers.get('Content-Transfer-Encoding', None)
+                    result.append(AttachmentInfo(phash, filename, encoding))
             if 'part_map' in part_map:
                 result += self._extract_part_map(part_map['part_map'])
 
