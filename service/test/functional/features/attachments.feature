@@ -25,3 +25,15 @@ Feature: Attachments
     Then I see the mail has an attachment
     #When I open click on the first attachment
     #Then the browser downloaded a file
+
+  Scenario: User uploads a mail attachment
+    When I compose a message with
+      | subject          | body                                        |
+      | Pixelated rocks! | You should definitely use it. Cheers, User. |
+      And for the 'To' field I enter 'pixelated@friends.org'
+    And I find an attachment icon
+    When I upload a file
+    And I send it
+    When I select the tag 'sent'
+    And I open the first mail in the mail list
+    Then I see the mail has an attachment
