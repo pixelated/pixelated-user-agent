@@ -180,7 +180,7 @@ class MailsResource(Resource):
     def _fetch_attachment_contents(self, content_dict):
         attachments = content_dict.get('attachments', []) if content_dict else []
         for attachment in attachments:
-            retrieved_attachment = yield self._mail_service.attachment(attachment['attachment_id'])
+            retrieved_attachment = yield self._mail_service.attachment(attachment['ident'])
             attachment['raw'] = retrieved_attachment['content']
         content_dict['attachments'] = attachments
         defer.returnValue(content_dict)

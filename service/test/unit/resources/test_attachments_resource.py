@@ -36,7 +36,7 @@ class AttachmentsResourceTest(unittest.TestCase):
         def assert_response(_):
             self.assertEqual(201, request.code)
             self.assertEqual('/attachment/%s' % attachment_id, request.headers['Location'])
-            response_json = {'attachment_id': attachment_id, 'content-type': 'some mocked type',
+            response_json = {'ident': attachment_id, 'content-type': 'some mocked type',
                              'filename': 'filename.txt', 'filesize': 17}
             self.assertEqual(response_json, json.loads(request.written[0]))
             verify(self.mail_service).save_attachment('some mocked value', 'some mocked type')

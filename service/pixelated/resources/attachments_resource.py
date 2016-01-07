@@ -87,7 +87,7 @@ class AttachmentsResource(Resource):
 
         def send_location(attachment_id):
             request.headers['Location'] = '/%s/%s' % (self.BASE_URL, attachment_id)
-            response_json = {"attachment_id": attachment_id,
+            response_json = {"ident": attachment_id,
                              "content-type": _file.type,
                              "filename": _file.filename,
                              "filesize": len(_file.value)}

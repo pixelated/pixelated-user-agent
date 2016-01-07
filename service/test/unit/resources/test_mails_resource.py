@@ -56,7 +56,7 @@ class TestMailsResource(unittest.TestCase):
         request = DummyRequest(['/mails'])
         request.method = 'PUT'
         content = mock()
-        when(content).read().thenReturn('{"attachments": [{"attachment_id": "some fake attachment id"}]}')
+        when(content).read().thenReturn('{"attachments": [{"ident": "some fake attachment id"}]}')
         when(self.mail_service).attachment('some fake attachment id').thenReturn(defer.Deferred())
         request.content = content
 
@@ -76,11 +76,11 @@ class TestMailsResource(unittest.TestCase):
         request = DummyRequest(['/mails'])
         request.method = 'POST'
         content = mock()
-        when(content).read().thenReturn('{"attachments": [{"attachment_id": "some fake attachment id"}]}')
+        when(content).read().thenReturn('{"attachments": [{"ident": "some fake attachment id"}]}')
         when(self.mail_service).attachment('some fake attachment id').thenReturn(defer.succeed({"content": "some content"}))
         as_dictable = mock()
         when(as_dictable).as_dict().thenReturn({})
-        when(self.mail_service).send_mail({"attachments": [{"attachment_id": "some fake attachment id", "raw": "some content"}]})\
+        when(self.mail_service).send_mail({"attachments": [{"ident": "some fake attachment id", "raw": "some content"}]})\
             .thenReturn(defer.succeed(as_dictable))
         request.content = content
 
@@ -91,7 +91,7 @@ class TestMailsResource(unittest.TestCase):
 
         def assert_response(_):
             verify(self.mail_service).attachment('some fake attachment id')
-            verify(self.mail_service).send_mail({"attachments": [{"attachment_id": "some fake attachment id", "raw": "some content"}]})
+            verify(self.mail_service).send_mail({"attachments": [{"ident": "some fake attachment id", "raw": "some content"}]})
 
         d.addCallback(assert_response)
         return d

@@ -67,7 +67,7 @@ class RetrieveAttachmentTest(SoledadTestBase):
 
         self.assertEqual(201, req.code)
         self.assertEqual('/attachment/B5B4ED80AC3B894523D72E375DACAA2FC6606C18EDF680FE95903086C8B5E14A', req.headers['Location'])
-        response_json = {'attachment_id': 'B5B4ED80AC3B894523D72E375DACAA2FC6606C18EDF680FE95903086C8B5E14A',
+        response_json = {'ident': 'B5B4ED80AC3B894523D72E375DACAA2FC6606C18EDF680FE95903086C8B5E14A',
                          'content-type': content_type,
                          'filename': filename,
                          'filesize': len(data)}
