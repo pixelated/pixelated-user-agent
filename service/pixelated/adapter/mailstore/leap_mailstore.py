@@ -29,16 +29,21 @@ from pixelated.support.functional import to_unicode
 
 
 class AttachmentInfo(object):
-    def __init__(self, ident, name, encoding):
-        self.ident = ident
-        self.name = name
-        self.encoding = encoding
+    def __init__(self, part_map, headers):
+        self.ident = part_map['phash']
+        self.name = _extract_filename(headers)
+        self.encoding = headers.get('Content-Transfer-Encoding', None)
+        self.ctype = part_map.get('ctype') or headers.get('Content-Type')
+        self.size = headers.get('size', 0)
 
     def __repr__(self):
         return 'AttachmentInfo[%s, %s, %s]' % (self.ident, self.name, self.encoding)
 
     def __str__(self):
         return 'AttachmentInfo[%s, %s, %s]' % (self.ident, self.name, self.encoding)
+
+    def as_dict(self):
+        return {'ident': self.ident, 'name': self.name, 'encoding': self.encoding, 'size': self.size, 'content-type': self.ctype}
 
 
 class LeapMail(Mail):
@@ -140,7 +145,7 @@ class LeapMail(Mail):
             'textPlainBody': self._body,
             'replying': self._replying_dict(),
             'mailbox': self._mailbox_name.lower(),
-            'attachments': [{'ident': attachment.ident, 'name': attachment.name, 'encoding': attachment.encoding} for attachment in self._attachments]
+            'attachments': [attachment.as_dict() for attachment in self._attachments]
         }
 
     def _replying_dict(self):
@@ -403,11 +408,8 @@ class LeapMailStore(MailStore):
         for nr, part_map in part_maps.items():
             if 'headers' in part_map and 'phash' in part_map:
                 headers = {header[0]: header[1] for header in part_map['headers']}
-                phash = part_map['phash']
                 if self._is_attachment(part_map, headers):
-                    filename = _extract_filename(headers)
-                    encoding = headers.get('Content-Transfer-Encoding', None)
-                    result.append(AttachmentInfo(phash, filename, encoding))
+                    result.append(AttachmentInfo(part_map, headers))
             if 'part_map' in part_map:
                 result += self._extract_part_map(part_map['part_map'])
 

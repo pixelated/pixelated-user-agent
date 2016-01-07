@@ -238,7 +238,7 @@ class TestLeapMailStore(TestCase):
 
         message = yield store.add_mail('INBOX', input_mail.as_string())
 
-        expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'filename.txt', 'encoding': 'base64'}]
+        expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'filename.txt', 'encoding': 'base64', 'size': 0, 'content-type': 'application/octet-stream'}]
         self.assertEqual(expected, message.as_dict()['attachments'])
 
     @defer.inlineCallbacks
@@ -253,7 +253,7 @@ class TestLeapMailStore(TestCase):
 
         message = yield store.add_mail('INBOX', input_mail.as_string())
 
-        expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'super_nice_photo.jpg', 'encoding': 'base64'}]
+        expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'super_nice_photo.jpg', 'encoding': 'base64', 'size': 0, 'content-type': 'application/octet-stream'}]
         self.assertEqual(expected, message.as_dict()['attachments'])
 
     @defer.inlineCallbacks
@@ -270,7 +270,7 @@ class TestLeapMailStore(TestCase):
 
         message = yield store.add_mail('INBOX', input_mail.as_string())
 
-        expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'filename.txt', 'encoding': 'base64'}]
+        expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'filename.txt', 'encoding': 'base64', 'size': 0, 'content-type': 'application/octet-stream'}]
         self.assertEqual(expected, message.as_dict()['attachments'])
 
     def test_extract_attachment_filename_with_or_without_quotes(self):

@@ -89,8 +89,9 @@ class AttachmentsResource(Resource):
             request.headers['Location'] = '/%s/%s' % (self.BASE_URL, attachment_id)
             response_json = {"ident": attachment_id,
                              "content-type": _file.type,
-                             "filename": _file.filename,
-                             "filesize": len(_file.value)}
+                             "encoding": "base64",  # hard coded for now -- not really used
+                             "name": _file.filename,
+                             "size": len(_file.value)}
             respond_json_deferred(response_json, request, status_code=201)
 
         def error_handler(error):

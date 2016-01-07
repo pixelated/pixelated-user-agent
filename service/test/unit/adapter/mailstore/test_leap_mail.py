@@ -85,9 +85,11 @@ class TestLeapMail(TestCase):
         self.assertEqual(body, mail.as_dict()['body'])
 
     def test_as_dict_with_attachments(self):
-        mail = LeapMail('doc id', 'INBOX', attachments=[AttachmentInfo('id', 'name', 'encoding')])
+        mail = LeapMail('doc id', 'INBOX', attachments=[AttachmentInfo({'phash': 'id', 'ctype': 'text/plain'},
+                                                                       {'Content-Description': 'name',
+                                                                        'Content-Transfer-Encoding': 'encoding', 'size': 2})])
 
-        self.assertEqual([{'ident': 'id', 'name': 'name', 'encoding': 'encoding'}],
+        self.assertEqual([{'ident': 'id', 'name': 'name', 'encoding': 'encoding', 'content-type': 'text/plain', 'size': 2}],
                          mail.as_dict()['attachments'])
 
     def test_as_dict_headers_with_special_chars(self):
