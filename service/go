@@ -18,7 +18,11 @@ function resolveNumOfCores {
 function setuppy {
         echo "Installing Pixelated User Agent."
         pip install --upgrade pip setuptools
-        pip install -r requirements.txt
+        if [ `uname -s` = "Darwin" ]; then
+                CFLAGS="-DCRYPTOPP_DISABLE_ASM=1" pip install -r requirements.txt
+        else
+                pip install -r requirements.txt
+        fi
         pip install -r test_requirements.txt
         echo "Done."
 }
