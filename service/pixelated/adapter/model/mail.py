@@ -116,7 +116,7 @@ class Mail(object):
             attachment_mime = MIMENonMultipart(major, sub)
             base64_attachment_file = binascii.b2a_base64(attachment['raw'])
             attachment_mime.set_payload(base64_attachment_file)
-            attachment_mime['Content-Disposition'] = 'attachment; filename="%s"' % attachment['filename']
+            attachment_mime['Content-Disposition'] = 'attachment; filename="%s"' % attachment['name']
             attachment_mime['Content-Transfer-Encoding'] = 'base64'
             mime.attach(attachment_mime)
 

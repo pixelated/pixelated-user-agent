@@ -55,8 +55,8 @@ def multipart_mail_dict():
 
 def with_attachment_mail_dict():
     return {
-        'attachments': [{'content-type': 'text/plain', 'filename': 'ayoyo.txt', 'raw': 'Hamburg Ayoyoyooooo!!!', 'id': 'some_attachment_id'},
-                        {'content-type': 'text/html', 'filename': 'hello.html', 'raw': '<p>Hello html Hamburg!</p>', 'id': 'other_attachment_id'}],
+        'attachments': [{'content-type': 'text/plain', 'name': 'ayoyo.txt', 'raw': 'Hamburg Ayoyoyooooo!!!', 'ident': 'some_attachment_id'},
+                        {'content-type': 'text/html', 'name': 'hello.html', 'raw': '<p>Hello html Hamburg!</p>', 'ident': 'other_attachment_id'}],
         'body': [{'content-type': 'plain', 'raw': 'Hello world!'},
                  {'content-type': 'html', 'raw': '<p>Hello html world!</p>'}],
         'header': {

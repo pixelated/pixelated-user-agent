@@ -34,7 +34,7 @@ class AttachmentInfo(object):
         self.name = _extract_filename(headers)
         self.encoding = headers.get('Content-Transfer-Encoding', None)
         self.ctype = part_map.get('ctype') or headers.get('Content-Type')
-        self.size = headers.get('size', 0)
+        self.size = part_map.get('size', 0)
 
     def __repr__(self):
         return 'AttachmentInfo[%s, %s, %s]' % (self.ident, self.name, self.encoding)
