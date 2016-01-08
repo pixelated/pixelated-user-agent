@@ -35,19 +35,17 @@ class MailboxListenerTest(unittest.TestCase):
         mailbox.listeners = set()
         when(mailbox).addListener = lambda x: mailbox.listeners.add(x)
 
-        self.assertNotIn(MailboxIndexerListener('INBOX', self.mail_store), mailbox.listeners)
+        self.assertNotIn(MailboxIndexerListener('INBOX', self.mail_store, mock()), mailbox.listeners)
 
-        MailboxIndexerListener.listen(self.account, 'INBOX', self.mail_store)
+        MailboxIndexerListener.listen(self.account, 'INBOX', self.mail_store, mock())
 
-        self.assertIn(MailboxIndexerListener('INBOX', self.mail_store), mailbox.listeners)
+        self.assertIn(MailboxIndexerListener('INBOX', self.mail_store, mock()), mailbox.listeners)
 
     def test_reindex_missing_idents(self):
         search_engine = mock()
         when(search_engine).search('tag:inbox', all_mails=True).thenReturn(['ident1', 'ident2'])
 
-        MailboxIndexerListener.SEARCH_ENGINE = search_engine
-
-        listener = MailboxIndexerListener('INBOX', self.mail_store)
+        listener = MailboxIndexerListener('INBOX', self.mail_store, search_engine)
         when(self.mail_store).get_mailbox_mail_ids('INBOX').thenReturn({'ident1', 'ident2', 'missing_ident'})
         self.mail_store.used_arguments = []
         self.mail_store.get_mails = lambda x: self.mail_store.used_arguments.append(x)
@@ -59,7 +57,7 @@ class MailboxListenerTest(unittest.TestCase):
     @defer.inlineCallbacks
     def test_catches_exceptions_to_not_break_other_listeners(self):
         when(logger).error(ANY()).thenReturn(None)
-        listener = MailboxIndexerListener('INBOX', self.mail_store)
+        listener = MailboxIndexerListener('INBOX', self.mail_store, mock())
 
         yield listener.newMessages(1, 1)
 

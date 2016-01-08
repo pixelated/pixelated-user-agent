@@ -25,12 +25,11 @@ class IncomingMailTest(SoledadTestBase):
     @defer.inlineCallbacks
     def test_message_collection(self):
         # given
-        MailboxIndexerListener.SEARCH_ENGINE = self.search_engine
         mbx = yield self.account.getMailbox('INBOX')
         input_mail = MailBuilder().build_input_mail()
 
         # when
-        yield MailboxIndexerListener.listen(self.account, 'INBOX', self.mail_store)
+        yield MailboxIndexerListener.listen(self.account, 'INBOX', self.mail_store, self.search_engine)
         yield mbx.addMessage(input_mail.raw, [], notify_just_mdoc=False)
 
         # then

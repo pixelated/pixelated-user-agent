@@ -23,32 +23,31 @@ logger = logging.getLogger(__name__)
 class MailboxIndexerListener(object):
     """ Listens for new mails, keeping the index updated """
 
-    SEARCH_ENGINE = None
-
     @classmethod
     @defer.inlineCallbacks
-    def listen(cls, account, mailbox_name, mail_store):
-        listener = MailboxIndexerListener(mailbox_name, mail_store)
+    def listen(cls, account, mailbox_name, mail_store, search_engine):
+        listener = MailboxIndexerListener(mailbox_name, mail_store, search_engine)
         if listener not in (yield account.getMailbox(mailbox_name)).listeners:
             mbx = yield account.getMailbox(mailbox_name)
             mbx.addListener(listener)
 
         defer.returnValue(listener)
 
-    def __init__(self, mailbox_name, mail_store):
+    def __init__(self, mailbox_name, mail_store, search_engine):
         self.mailbox_name = mailbox_name
         self.mail_store = mail_store
+        self.search_engine = search_engine
 
     @defer.inlineCallbacks
     def newMessages(self, exists, recent):
         try:
-            indexed_idents = set(self.SEARCH_ENGINE.search('tag:' + self.mailbox_name.lower(), all_mails=True))
+            indexed_idents = set(self.search_engine.search('tag:' + self.mailbox_name.lower(), all_mails=True))
             soledad_idents = yield self.mail_store.get_mailbox_mail_ids(self.mailbox_name)
             soledad_idents = set(soledad_idents)
 
             missing_idents = soledad_idents.difference(indexed_idents)
 
-            self.SEARCH_ENGINE.index_mails((yield self.mail_store.get_mails(missing_idents)))
+            self.search_engine.index_mails((yield self.mail_store.get_mails(missing_idents)))
         except Exception, e:  # this is a event handler, don't let exceptions escape
             logger.error(e)
 
@@ -64,7 +63,6 @@ class MailboxIndexerListener(object):
 
 @defer.inlineCallbacks
 def listen_all_mailboxes(account, search_engine, mail_store):
-    MailboxIndexerListener.SEARCH_ENGINE = search_engine
     mailboxes = yield account.account.list_all_mailbox_names()
     for mailbox_name in mailboxes:
-        yield MailboxIndexerListener.listen(account, mailbox_name, mail_store)
+        yield MailboxIndexerListener.listen(account, mailbox_name, mail_store, search_engine)
