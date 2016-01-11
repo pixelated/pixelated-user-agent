@@ -48,19 +48,15 @@ define(
                 this.select('attachmentListItem').html(currentHtml + '<li>' + item + '</li>');
             };
 
-            function humanReadable(bytes) {
-                var e = Math.floor(Math.log(bytes) / Math.log(1024));
-                return (bytes / Math.pow(1024, e)).toFixed(2) + ' ' + ' KMGTP'.charAt(e) + 'b';
-            }
-
             this.buildAttachmentListItem = function (attachment) {
                 return '<a href="' + this.attr.attachmentBaseUrl + '/' + attachment.ident + '?filename=' +
                     attachment.name + '&encoding=' + attachment.encoding + '">' + attachment.name + ' (' + viewHelper.formatSize(attachment.size) + ')' +
                     '</a>';
             };
 
-            function addJqueryFileUploadConfig(self) {
-                self.select('inputFileUpload').fileupload({
+            this.addJqueryFileUploadConfig = function() {
+                var self = this;
+                this.select('inputFileUpload').fileupload({
                     url: self.attr.attachmentBaseUrl,
                     dataType: 'json',
                     done: function (e, response) {
@@ -76,17 +72,17 @@ define(
                 }).bind('fileuploadadd', function (e) {
                     $('.attachmentsAreaWrap').show();
                 });
-            }
+            };
 
             this.startUpload = function () {
-                addJqueryFileUploadConfig(this);
+                this.addJqueryFileUploadConfig();
                 this.select('inputFileUpload').click();
             };
 
             this.after('initialize', function () {
+                this.addJqueryFileUploadConfig();
                 this.on(document, events.mail.uploadedAttachment, this.showAttachment);
                 this.on(document, events.mail.startUploadAttachment, this.startUpload);
-                //this.on(document, events.mail.sent, this.resetAll);
                 this.on(document, events.mail.appendAttachment, this.addAttachment);
             });
         }
