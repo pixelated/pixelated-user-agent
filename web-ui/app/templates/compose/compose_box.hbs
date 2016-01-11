@@ -24,20 +24,26 @@
         <!-- The file input field used as target for the file upload widget -->
         <input id="fileupload" type="file" name="attachment">
     </span>
-    <br>
-    <br>
     <!-- The global progress bar -->
     <div id="progress" class="progress">
         <div class="progress-bar progress-bar-success"></div>
     </div>
+
     <!-- The container for the uploaded files -->
-    <div class="attachmentsAreaWrap">
-      <div class="attachmentsArea column large-12">
-        <p><strong><i class="fa fa-paperclip"></i> Attachment(s):</strong></p>
-        <ul id="attachment-list-item"></ul>
-      </div>
+    <div class="attachmentsAreaWrap {{#unless attachments}}hide{{/unless}}">
+        <div class="attachmentsArea column large-12">
+            <p><strong><i class="fa fa-paperclip"></i> Attachment(s):</strong></p>
+            <ul id="attachment-list-item">
+                {{#each attachments }}
+                    <li>
+                        <a href="/attachment/{{ this.ident }}?encoding={{ this.encoding }}&filename={{ this.name }}">{{ this.name }} ({{ this.size}})
+                            <i class="fa fa-arrow-down download-icon"></i></a>
+                    </li>
+                {{/each }}
+            </ul>
+        </div>
     </div>
- 
+
     <br>
 </div>
 

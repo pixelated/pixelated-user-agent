@@ -132,6 +132,7 @@ define(function() {
     tags:['textplain'],
     mailbox: ['inbox'],
     status:[],
+    attachments: [],
     textPlainBody: 'Hello Everyone',
     isSentMail: function() { return false; },
     isDraftMail: function() { return false; },

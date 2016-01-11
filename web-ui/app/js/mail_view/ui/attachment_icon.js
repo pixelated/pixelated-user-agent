@@ -37,7 +37,6 @@ define(
             this.after('initialize', function () {
                 if (features.isEnabled('attachment')) {
                     this.render();
-                    $('.attachmentsAreaWrap').hide();
                 }
                 this.on(this.$node, 'click', this.triggerUploadAttachment);
             });

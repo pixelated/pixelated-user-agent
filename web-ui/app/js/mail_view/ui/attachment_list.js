@@ -17,11 +17,10 @@
 
 define(
     [
-        'flight/lib/component',
         'page/events'
     ],
 
-    function (defineComponent, events) {
+    function (events) {
         'use strict';
 
         function attachmentList() {
@@ -29,12 +28,17 @@ define(
                 inputFileUpload: '#fileupload',
                 attachmentListItem: '#attachment-list-item',
                 progressBar: '#progress .progress-bar',
-                attachmentBaseUrl: '/attachment'
+                attachmentBaseUrl: '/attachment',
+                attachments: []
             });
 
-            this.showAttachment = function (event, data) {
+            this.showAttachment = function (ev, data) {
                 this.trigger(document, events.mail.appendAttachment, data);
                 this.renderAttachmentListView(data);
+            };
+
+            this.addAttachment = function (event, data) {
+                this.attr.attachments.push(data);
             };
 
             this.renderAttachmentListView = function (data) {
@@ -48,9 +52,9 @@ define(
                 return (bytes / Math.pow(1024, e)).toFixed(2) + ' ' + ' KMGTP'.charAt(e) + 'b';
             }
 
-            this.buildAttachmentListItem = function (data) {
-                return '<a href="' + this.attr.attachmentBaseUrl + '/' + data.attachment_id + '?filename=' +
-                    data.filename + '&encoding=base64">' + data.filename + ' (' + humanReadable(data.filesize) + ')' +
+            this.buildAttachmentListItem = function (attachment) {
+                return '<a href="' + this.attr.attachmentBaseUrl + '/' + attachment.ident + '?filename=' +
+                    attachment.name + '&encoding=' + attachment.encoding + '">' + attachment.name + ' (' + humanReadable(attachment.size) + ')' +
                     '</a>';
             };
 
@@ -74,20 +78,17 @@ define(
             }
 
             this.startUpload = function () {
+                addJqueryFileUploadConfig(this);
                 this.select('inputFileUpload').click();
             };
 
-            this.resetAll = function () {
-              this.teardown();
-            };
-
             this.after('initialize', function () {
-                addJqueryFileUploadConfig(this);
                 this.on(document, events.mail.uploadedAttachment, this.showAttachment);
                 this.on(document, events.mail.startUploadAttachment, this.startUpload);
-                this.on(document, events.mail.sent, this.resetAll);
+                //this.on(document, events.mail.sent, this.resetAll);
+                this.on(document, events.mail.appendAttachment, this.addAttachment);
             });
         }
 
-        return defineComponent(attachmentList);
+        return attachmentList;
     });

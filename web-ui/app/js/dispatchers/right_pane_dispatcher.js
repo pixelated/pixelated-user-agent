@@ -60,7 +60,6 @@ define(
       this.openComposeBox = function() {
         var stage = this.reset(this.attr.composeBox);
         ComposeBox.attachTo(stage, {currentTag: this.attr.currentTag});
-        this.trigger(document, events.mail.resetAttachments);
       };
 
       this.openFeedbackBox = function() {

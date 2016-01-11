@@ -48,6 +48,7 @@ define(
           .cc(this.attr.recipientValues.cc)
           .bcc(this.attr.recipientValues.bcc)
           .body(this.select('bodyBox').val())
+          .attachment(this.attr.attachments)
           .tag(tag);
       };
 
@@ -55,7 +56,6 @@ define(
         var mail = data.mail;
         var body = mail.textPlainBody;
         this.attr.ident = mail.ident;
-
         this.render(templates.compose.box, {
           recipients: {
             to: mail.header.to,
@@ -63,7 +63,8 @@ define(
             bcc: mail.header.bcc
           },
           subject: mail.header.subject,
-          body: body
+          body: body,
+          attachments: mail.attachments
         });
 
         this.enableFloatlabel('input.floatlabel');

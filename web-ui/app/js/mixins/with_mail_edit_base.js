@@ -17,6 +17,7 @@
 
 define(
     [
+        'flight/lib/compose',
         'helpers/view_helper',
         'mail_view/ui/recipients/recipients',
         'mail_view/ui/draft_save_status',
@@ -27,7 +28,7 @@ define(
         'mail_view/ui/attachment_list',
         'flight/lib/utils'
     ],
-    function (viewHelper, Recipients, DraftSaveStatus, events, i18n, SendButton, AttachmentIcon, AttachmentListUI, utils) {
+    function (compose, viewHelper, Recipients, DraftSaveStatus, events, i18n, SendButton, AttachmentIcon, attachmentList, utils) {
         'use strict';
 
         function withMailEditBase() {
@@ -93,12 +94,12 @@ define(
                     context.recipients = {to: [], cc: [], bcc: []};
                 }
                 this.attr.recipientValues = context.recipients;
+                this.attr.attachments = context.attachments || [];
                 this.attachRecipients(context);
 
                 this.on(this.select('trashButton'), 'click', this.discardMail);
                 SendButton.attachTo(this.select('sendButton'));
                 AttachmentIcon.attachTo(this.select('attachmentButton'));
-                AttachmentListUI.attachTo(this.select('attachmentList'));
 
                 this.warnSendButtonOfRecipients();
             };
@@ -149,108 +150,113 @@ define(
                     this.trigger(events.mail.send_failed);
                 }
             };
-            
-      this.buildAndSaveDraft = function () {
-        var mail = this.buildMail();
-        this.saveDraft(mail);
-      };
 
-      this.recipientsUpdated = function (ev, data) {
-        this.attr.recipientValues[data.recipientsName] = data.newRecipients;
-        this.trigger(document, events.ui.mail.recipientsUpdated);
-        if (data.skipSaveDraft) { return; }
+            this.buildAndSaveDraft = function () {
+                var mail = this.buildMail();
+                this.saveDraft(mail);
+            };
 
-        var mail = this.buildMail();
-        this.postponeSaveDraft(mail);
-      };
+            this.recipientsUpdated = function (ev, data) {
+                this.attr.recipientValues[data.recipientsName] = data.newRecipients;
+                this.trigger(document, events.ui.mail.recipientsUpdated);
+                if (data.skipSaveDraft) {
+                    return;
+                }
 
-      this.saveDraft = function (mail) {
-        this.cancelPostponedSaveDraft();
-        this.trigger(document, events.mail.saveDraft, mail);
-      };
+                var mail = this.buildMail();
+                this.postponeSaveDraft(mail);
+            };
 
-      this.cancelPostponedSaveDraft = function() {
-        clearTimeout(this.attr.timeout);
-      };
+            this.saveDraft = function (mail) {
+                this.cancelPostponedSaveDraft();
+                this.trigger(document, events.mail.saveDraft, mail);
+            };
 
-      this.postponeSaveDraft = function (mail) {
-        this.cancelPostponedSaveDraft();
+            this.cancelPostponedSaveDraft = function () {
+                clearTimeout(this.attr.timeout);
+            };
 
-        this.attr.timeout = window.setTimeout(_.bind(function() {
-          this.saveDraft(mail);
-        }, this), this.attr.saveDraftInterval);
-      };
+            this.postponeSaveDraft = function (mail) {
+                this.cancelPostponedSaveDraft();
 
-      this.draftSaved = function(event, data) {
-        this.attr.ident = data.ident;
-      };
+                this.attr.timeout = window.setTimeout(_.bind(function () {
+                    this.saveDraft(mail);
+                }, this), this.attr.saveDraftInterval);
+            };
 
-      this.validateAnyRecipient = function () {
-        return !_.isEmpty(_.flatten(_.values(this.attr.recipientValues)));
-      };
+            this.draftSaved = function (event, data) {
+                this.attr.ident = data.ident;
+            };
 
-      function allRecipientsAreEmails(mail) {
-        var allRecipients = mail.header.to.concat(mail.header.cc).concat(mail.header.bcc);
-        return _.isEmpty(allRecipients) ? false : _.all(allRecipients, emailFormatChecker);
-      }
+            this.validateAnyRecipient = function () {
+                return !_.isEmpty(_.flatten(_.values(this.attr.recipientValues)));
+            };
 
-      function emailFormatChecker(email) {
-        var emailFormat = /[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailFormat.test(email);
-      }
+            function allRecipientsAreEmails(mail) {
+                var allRecipients = mail.header.to.concat(mail.header.cc).concat(mail.header.bcc);
+                return _.isEmpty(allRecipients) ? false : _.all(allRecipients, emailFormatChecker);
+            }
 
-      this.saveTag = function(ev, data) {
-        this.attr.currentTag = data.tag;
-      };
+            function emailFormatChecker(email) {
+                var emailFormat = /[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailFormat.test(email);
+            }
 
-      this.mailSent = function() {
-        this.trigger(document, events.ui.userAlerts.displayMessage, { message: 'Your message was sent!' });
-      };
+            this.saveTag = function (ev, data) {
+                this.attr.currentTag = data.tag;
+            };
 
-      this.enableFloatlabel = function(element) {
-        var showClass = 'showfloatlabel';
-        $(element).bind('keyup', function() {
-          var label = $(this).prev('label');
-          if (this.value !== '') {
-            label.addClass(showClass);
-            $(this).addClass(showClass);
-          } else {
-            label.removeClass(showClass);
-            $(this).removeClass(showClass);
-          }
-        });
-      };
+            this.mailSent = function () {
+                this.trigger(document, events.ui.userAlerts.displayMessage, {message: 'Your message was sent!'});
+            };
 
-      this.toggleRecipientsArrows = function () {
-        $('#cc-bcc-collapse').toggleClass('fa-angle-down');
-        $('#cc-bcc-collapse').toggleClass('fa-angle-up');
-      };
+            this.enableFloatlabel = function (element) {
+                var showClass = 'showfloatlabel';
+                $(element).bind('keyup', function () {
+                    var label = $(this).prev('label');
+                    if (this.value !== '') {
+                        label.addClass(showClass);
+                        $(this).addClass(showClass);
+                    } else {
+                        label.removeClass(showClass);
+                        $(this).removeClass(showClass);
+                    }
+                });
+            };
 
-      this.before('initialize', function () {
-          if (!this.discardDraft){
-            this.discardDraft = function () {};
-          }
-      });
+            this.toggleRecipientsArrows = function () {
+                $('#cc-bcc-collapse').toggleClass('fa-angle-down');
+                $('#cc-bcc-collapse').toggleClass('fa-angle-up');
+            };
 
-      this.bindCollapse = function () {
-        this.on($('#cc-bcc-collapse'), 'click', this.toggleRecipientsArrows);        
-      };
+            this.before('initialize', function () {
+                if (!this.discardDraft) {
+                    this.discardDraft = function () {
+                    };
+                }
+            });
 
-      this.after('initialize', function () {
-        this.on(document, events.dispatchers.rightPane.clear, this.teardown);
-        this.on(document, events.ui.recipients.updated, this.recipientsUpdated);
-        this.on(document, events.mail.draftSaved, this.draftSaved);
-        this.on(document, events.mail.sent, this.mailSent);
+            this.bindCollapse = function () {
+                this.on($('#cc-bcc-collapse'), 'click', this.toggleRecipientsArrows);
+            };
 
-        this.on(document, events.ui.mail.send, this.sendMail);
+            this.after('initialize', function () {
+                this.on(document, events.dispatchers.rightPane.clear, this.teardown);
+                this.on(document, events.ui.recipients.updated, this.recipientsUpdated);
+                this.on(document, events.mail.draftSaved, this.draftSaved);
+                this.on(document, events.mail.sent, this.mailSent);
 
-        this.on(document, events.ui.mail.discard, this.discardDraft);
-        this.on(document, events.ui.tag.selected, this.saveTag);
-        this.on(document, events.ui.tag.select, this.saveTag);
-        this.bindCollapse();
-      });
-    }
+                this.on(document, events.ui.mail.send, this.sendMail);
 
-    return withMailEditBase;
-  });
+                this.on(document, events.ui.mail.discard, this.discardDraft);
+                this.on(document, events.ui.tag.selected, this.saveTag);
+                this.on(document, events.ui.tag.select, this.saveTag);
+                this.bindCollapse();
+            });
+
+            compose.mixin(this, [attachmentList]);
+        }
+
+        return withMailEditBase;
+    });
 
