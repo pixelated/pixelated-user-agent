@@ -3,7 +3,13 @@
 </span>
 <span>
   <a href="/#/{{ currentTag }}/mail/{{ ident }}">
-    <span class="sent-date">{{ formatDate header.date }}</span>
+    <span class="sent-date">{{ formatDate header.date }}
+            {{#if attachments}}
+            <div class="attachment-indicator">
+                <i class="fa fa-paperclip"></i>
+            </div>
+        {{/if}}
+    </span>
 
     <div class="from">
       {{t 'to:'}}

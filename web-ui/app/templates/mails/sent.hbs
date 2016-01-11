@@ -3,29 +3,35 @@
 </span>
 <span>
   <a href="/#/{{ currentTag }}/mail/{{ ident }}">
-    <span class="sent-date">{{ formatDate header.date }}</span>
+    <span class="sent-date">{{ formatDate header.date }}
+        {{#if attachments}}
+            <div class="attachment-indicator">
+                <i class="fa fa-paperclip"></i>
+            </div>
+        {{/if}}
+    </span>
 
-    <div class="from">
-      {{t 'to:'}}
-      {{#if header.to }}
-        {{ header.to }}
-      {{else}}
-        {{t 'no_recipient'}}
-      {{/if}}
-    </div>
-    <div class="subject-and-tags">
-      {{#if header.subject }}
-        {{header.subject}}
-      {{else}}
-        {{t 'no_subject'}}
-      {{/if}}
-    </div>
-    <div class="subject-and-tags">
-      <ul class="tags">
-        {{#each tagsForListView }}
-            <li class="tag" data-tag="{{this}}">{{ this }}</li>
-        {{/each }}
-      </ul>
-    </div>
+      <div class="from">
+          {{t 'to:'}}
+          {{#if header.to }}
+              {{ header.to }}
+          {{else}}
+              {{t 'no_recipient'}}
+          {{/if}}
+      </div>
+      <div class="subject-and-tags">
+          {{#if header.subject }}
+              {{header.subject}}
+          {{else}}
+              {{t 'no_subject'}}
+          {{/if}}
+      </div>
+      <div class="subject-and-tags">
+          <ul class="tags">
+              {{#each tagsForListView }}
+                  <li class="tag" data-tag="{{this}}">{{ this }}</li>
+              {{/each }}
+          </ul>
+      </div>
   </a>
 </span>
