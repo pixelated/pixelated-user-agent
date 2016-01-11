@@ -17,10 +17,11 @@
 
 define(
     [
-        'page/events'
+        'page/events',
+        'helpers/view_helper'
     ],
 
-    function (events) {
+    function (events, viewHelper) {
         'use strict';
 
         function attachmentList() {
@@ -54,7 +55,7 @@ define(
 
             this.buildAttachmentListItem = function (attachment) {
                 return '<a href="' + this.attr.attachmentBaseUrl + '/' + attachment.ident + '?filename=' +
-                    attachment.name + '&encoding=' + attachment.encoding + '">' + attachment.name + ' (' + humanReadable(attachment.size) + ')' +
+                    attachment.name + '&encoding=' + attachment.encoding + '">' + attachment.name + ' (' + viewHelper.formatSize(attachment.size) + ')' +
                     '</a>';
             };
 

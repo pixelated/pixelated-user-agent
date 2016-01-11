@@ -121,11 +121,19 @@ define(
     }
   }
 
+  function formatSize(bytes) {
+    var e = Math.floor(Math.log(bytes) / Math.log(1024));
+    return (bytes / Math.pow(1024, e)).toFixed(2) + ' ' + ' KMGTP'.charAt(e) + 'b';
+  }
+
+
   Handlebars.registerHelper('formatDate', formatDate);
+  Handlebars.registerHelper('formatSize', formatSize);
   Handlebars.registerHelper('formatStatusClasses', formatStatusClasses);
 
   return {
     formatStatusClasses: formatStatusClasses,
+    formatSize: formatSize,
     formatMailBody: formatMailBody,
     moveCaretToEndOfText: moveCaretToEndOfText,
     quoteMail: quoteMail,

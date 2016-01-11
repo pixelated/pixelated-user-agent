@@ -56,7 +56,7 @@ describeMixin('mixins/with_mail_edit_base', function () {
       setTimeout(function () {
         expect(saveDraftSpy).not.toHaveBeenTriggeredOn(document);
         done();
-      }, 10);
+      }, 12);
     });
   });
 

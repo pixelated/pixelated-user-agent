@@ -56,10 +56,6 @@ define(
           encrypted = undefined;
         }
 
-        var attachments = _.map(data.mail.attachments, function(a){
-            return { 'encoding': a.encoding, 'name': a.name, 'ident': a.ident };
-        });
-
         this.$node.html(templates.mails.fullView({
           header: data.mail.header,
           body: [],
@@ -68,7 +64,7 @@ define(
           tags: data.mail.tags,
           encryptionStatus: encrypted,
           signatureStatus: signed,
-          attachments: attachments
+          attachments: data.mail.attachments
         }));
 
         this.$node.find('.bodyArea').html(viewHelpers.formatMailBody(data.mail));

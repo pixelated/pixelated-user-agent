@@ -36,7 +36,7 @@
             <ul id="attachment-list-item">
                 {{#each attachments }}
                     <li>
-                        <a href="/attachment/{{ this.ident }}?encoding={{ this.encoding }}&filename={{ this.name }}">{{ this.name }} ({{ this.size}})
+                        <a href="/attachment/{{ this.ident }}?encoding={{ this.encoding }}&filename={{ this.name }}">{{ this.name }} ({{ formatSize this.size}})
                             <i class="fa fa-arrow-down download-icon"></i></a>
                     </li>
                 {{/each }}

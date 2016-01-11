@@ -51,6 +51,31 @@ define(['helpers/view_helper'], function (viewHelper) {
       });
     });
 
+    describe('formatSize', function() {
+      var template;
+      beforeEach(function () {
+        template = Handlebars.compile('{{formatSize size}}');
+      });
+
+      it('formats size to bytes', function() {
+        var bytes = 42;
+        var result = template({ size: bytes });
+        expect(result).toEqual('42.00  b');
+      });
+
+      it('formats size to kilobytes', function() {
+        var bytes = 4200;
+        var result = template({ size: bytes });
+        expect(result).toEqual('4.10 Kb');
+      });
+
+      it('formats size to megabytes', function() {
+        var bytes = 4200000;
+        var result = template({ size: bytes });
+        expect(result).toEqual('4.01 Mb');
+      });
+    });
+
     describe('format status classes', function () {
       it('formats all the status of the email to css classes', function () {
         var statuses = ['read', 'banana'];
