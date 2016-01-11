@@ -48,6 +48,18 @@ describeMixin('mixins/with_mail_edit_base', function () {
       }, 10);
     });
 
+    it('saves the draft when an attachment is added within timeout', function(done) {
+      var saveDraftSpy = spyOnEvent(document, Pixelated.events.mail.saveDraft);
+      this.component.enableAutoSave();
+      this.component.trigger(document, Pixelated.events.mail.appendAttachment);
+      expect(saveDraftSpy).not.toHaveBeenTriggeredOn(document);
+
+      setTimeout(function () {
+        expect(saveDraftSpy).toHaveBeenTriggeredOn(document);
+        done();
+      }, 10);
+    });
+
     it('does not save if mail is sent before the save draft interval number of seconds', function(done) {
       var saveDraftSpy = spyOnEvent(document, Pixelated.events.mail.saveDraft);
       this.component.monitorInput();

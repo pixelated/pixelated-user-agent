@@ -87,7 +87,7 @@ define(
         this.on(this, events.mail.here, this.renderDraftBox);
         this.on(document, events.mail.sent, this.showNoMessageSelected);
         this.on(document, events.mail.deleted, this.mailDeleted);
-        this.trigger(document, events.mail.want, { mail: this.attr.mailIdent , caller: this });
+        this.trigger(document, events.mail.want, { mail: this.attr.mailIdent, caller: this });
       });
     }
   }
