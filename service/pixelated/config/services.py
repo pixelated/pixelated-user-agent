@@ -23,6 +23,7 @@ class Services(object):
         search_index_storage_key = self.setup_search_index_storage_key(leap_session.soledad)
         yield self.setup_search_engine(
             leap_home,
+            leap_session.user_auth.uuid,
             search_index_storage_key)
 
         self.wrap_mail_store_with_indexing_mail_store(leap_session)
@@ -48,11 +49,11 @@ class Services(object):
         self.search_engine.index_mails(all_mails)
 
     @defer.inlineCallbacks
-    def setup_search_engine(self, leap_home, search_index_storage_key):
+    def setup_search_engine(self, leap_home, namespace, search_index_storage_key):
         key_unicode = yield search_index_storage_key.get_or_create_key()
         key = str(key_unicode)
         print 'The key len is: %s' % len(key)
-        search_engine = SearchEngine(key, agent_home=leap_home)
+        search_engine = SearchEngine(key, namespace, agent_home=leap_home)
         self.search_engine = search_engine
 
     def setup_mail_service(self, leap_session, search_engine):
