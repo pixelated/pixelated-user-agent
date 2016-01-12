@@ -37,7 +37,7 @@ import pkg_resources
 from leap.mail.mail import Message
 from pixelated.adapter.mailstore import underscore_uuid
 
-from pixelated.adapter.mailstore.leap_mailstore import LeapMailStore, LeapMail, AttachmentInfo
+from pixelated.adapter.mailstore.leap_mailstore import LeapMailStore, LeapMail
 
 
 class TestLeapMailStore(TestCase):

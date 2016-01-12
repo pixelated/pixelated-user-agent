@@ -29,12 +29,12 @@ from pixelated.support.functional import to_unicode
 
 
 class AttachmentInfo(object):
-    def __init__(self, part_map, headers):
-        self.ident = part_map['phash']
-        self.name = _extract_filename(headers)
-        self.encoding = headers.get('Content-Transfer-Encoding', None)
-        self.ctype = part_map.get('ctype') or headers.get('Content-Type')
-        self.size = part_map.get('size', 0)
+    def __init__(self, ident, name, encoding=None, ctype='application/octet-stream', size=0):
+        self.ident = ident
+        self.name = name
+        self.encoding = encoding
+        self.ctype = ctype
+        self.size = size
 
     def __repr__(self):
         return 'AttachmentInfo[%s, %s, %s]' % (self.ident, self.name, self.encoding)
@@ -402,6 +402,15 @@ class LeapMailStore(MailStore):
 
         return True
 
+    def _create_attachment_info_from(self, part_map, headers):
+        ident = part_map['phash']
+        name = _extract_filename(headers)
+        encoding = headers.get('Content-Transfer-Encoding', None)
+        ctype = part_map.get('ctype') or headers.get('Content-Type')
+        size = part_map.get('size', 0)
+
+        return AttachmentInfo(ident, name, encoding, ctype, size)
+
     def _extract_part_map(self, part_maps):
         result = []
 
@@ -409,7 +418,7 @@ class LeapMailStore(MailStore):
             if 'headers' in part_map and 'phash' in part_map:
                 headers = {header[0]: header[1] for header in part_map['headers']}
                 if self._is_attachment(part_map, headers):
-                    result.append(AttachmentInfo(part_map, headers))
+                    result.append(self._create_attachment_info_from(part_map, headers))
             if 'part_map' in part_map:
                 result += self._extract_part_map(part_map['part_map'])
 
