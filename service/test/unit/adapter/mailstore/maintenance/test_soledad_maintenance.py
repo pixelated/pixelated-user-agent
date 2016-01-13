@@ -20,6 +20,10 @@ from twisted.trial import unittest
 from mockito import mock, when, verify, never
 from pixelated.adapter.mailstore.maintenance import SoledadMaintenance
 from leap.keymanager.openpgp import OpenPGPKey
+import logging
+
+logging.getLogger('pixelated.adapter.mailstore.maintenance').addHandler(logging.NullHandler())
+
 
 SOME_EMAIL_ADDRESS = 'foo@example.tld'
 SOME_KEY_ID = '4914254E384E264C'

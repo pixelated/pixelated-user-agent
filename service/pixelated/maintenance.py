@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import logging
 from os.path import isfile
 from mailbox import Maildir, mbox, MaildirMessage
 import random
@@ -23,11 +22,14 @@ from twisted.internet.threads import deferToThread
 from pixelated.adapter.mailstore.maintenance import SoledadMaintenance
 from pixelated.config.leap import initialize_leap
 from pixelated.config import logger, arguments
+import logging
 
 from leap.mail.constants import MessageFlags
 from pixelated.support.mail_generator import MailGenerator
 
 REPAIR_COMMAND = 'repair'
+
+log = logging.getLogger(__name__)
 
 
 def initialize():
@@ -72,7 +74,6 @@ def execute_command(args, leap_session):
     @defer.inlineCallbacks
     def soledad_sync(args):
         leap_session, soledad = args
-        log = logging.getLogger('some logger')
 
         log.warn('Before sync')
 

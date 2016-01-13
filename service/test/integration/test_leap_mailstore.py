@@ -60,14 +60,6 @@ class LeapMailStoreTest(SoledadTestBase):
         mail = yield self.mail_store.add_mail('INBOX', input_mail.as_string())
         fetched_mail = yield self.mail_store.get_mail(mail.ident, include_body=True)
 
-        # _, docs = yield self.soledad.get_all_docs()
-        # for doc in docs:
-        #     print '\n%s\n' % doc
-
-        # self.assertEqual(1, len(mail.as_dict()['attachments']))
-        # print fetched_mail.as_dict()
-        # self.assertEqual(1, len(fetched_mail.as_dict()['attachments']))
-
     @defer.inlineCallbacks
     def test_all_mails(self):
         mail = load_mail_from_file('mbox00000000')
