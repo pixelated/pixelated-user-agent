@@ -5,7 +5,7 @@
   "repository": "https://github.com/pixelated-project/pixelated-user-agent",
   "private": true,
   "devDependencies": {
-    "bower": "1.7.1",
+    "bower": "1.7.2",
     "handlebars": "2.0.0",
     "html-minifier": "1.0.1",
     "imagemin": "4.0.0",
@@ -19,8 +19,8 @@
     "karma-requirejs": "0.2.2",
     "karma-coverage": "0.2.7",
     "minify": "1.4.10",
-    "requirejs": "2.1.16",
-    "watch": "0.14.0"
+    "requirejs": "2.1.22",
+    "watch": "0.17.1"
   },
   "scripts": {
     "test": "npm run jshint --silent && npm run build && node_modules/karma/bin/karma start --single-run --browsers PhantomJS $GRUNT_OPTS",
