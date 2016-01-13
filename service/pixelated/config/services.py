@@ -1,3 +1,5 @@
+import logging
+
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
 from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
 from pixelated.adapter.services.mail_service import MailService
@@ -9,6 +11,8 @@ from pixelated.adapter.listeners.mailbox_indexer_listener import listen_all_mail
 from twisted.internet import defer
 from pixelated.adapter.search.index_storage_key import SearchIndexStorageKey
 from pixelated.adapter.services.feedback_service import FeedbackService
+
+logger = logging.getLogger(__name__)
 
 
 class Services(object):
@@ -52,7 +56,7 @@ class Services(object):
     def setup_search_engine(self, leap_home, namespace, search_index_storage_key):
         key_unicode = yield search_index_storage_key.get_or_create_key()
         key = str(key_unicode)
-        print 'The key len is: %s' % len(key)
+        logger.debug('The key len is: %s' % len(key))
         search_engine = SearchEngine(key, namespace, agent_home=leap_home)
         self.search_engine = search_engine
 
