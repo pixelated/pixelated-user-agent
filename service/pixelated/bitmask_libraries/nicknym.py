@@ -16,6 +16,9 @@
 from leap.keymanager import KeyManager, openpgp, KeyNotFound
 from .certs import LeapCertificate
 from twisted.internet import defer
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class NickNym(object):
@@ -32,9 +35,8 @@ class NickNym(object):
     def generate_openpgp_key(self):
         key_present = yield self._key_exists(self._email)
         if not key_present:
-            print "Generating keys - this could take a while..."
+            logger.info("Generating keys - this could take a while...")
             yield self._gen_key()
-        # Sending it anyway for now. TODO: This can be better with real checking (downloading pubkey from nicknym)
         yield self._send_key_to_leap()
 
     @defer.inlineCallbacks
