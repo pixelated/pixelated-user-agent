@@ -16,6 +16,7 @@
 import cgi
 import io
 import re
+import logging
 
 from twisted.internet import defer
 from twisted.protocols.basic import FileSender
@@ -25,6 +26,8 @@ from twisted.web.resource import Resource
 from twisted.web.server import NOT_DONE_YET
 
 from pixelated.resources import respond_json_deferred
+
+logger = logging.getLogger(__name__)
 
 
 class AttachmentResource(Resource):
@@ -95,7 +98,7 @@ class AttachmentsResource(Resource):
             respond_json_deferred(response_json, request, status_code=201)
 
         def error_handler(error):
-            print error
+            logger.error(error)
             respond_json_deferred({"message": "Something went wrong. Attachment not saved."}, request, status_code=500)
 
         deferred.addCallback(send_location)

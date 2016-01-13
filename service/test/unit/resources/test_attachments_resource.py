@@ -1,5 +1,6 @@
 import json
 import unittest
+import logging
 
 from mock import patch, MagicMock
 from mockito import mock, when, verify
@@ -8,6 +9,8 @@ from twisted.web.test.requesthelper import DummyRequest
 
 from pixelated.resources.attachments_resource import AttachmentsResource
 from test.unit.resources import DummySite
+
+logging.getLogger('pixelated.resources.attachments_resource').addHandler(logging.NullHandler())
 
 
 class AttachmentsResourceTest(unittest.TestCase):
