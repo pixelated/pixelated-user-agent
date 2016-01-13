@@ -36,9 +36,14 @@ from leap.common.events import (
     catalog as events
 )
 
+import logging
+
+log = logging.getLogger(__name__)
+
 
 @defer.inlineCallbacks
 def start_user_agent(root_resource, leap_home, leap_session):
+    log.info('Bootstrap done, loading services for user %s' % leap_session.user_auth.username)
 
     services = Services(leap_home, leap_session)
     yield services.setup(leap_home, leap_session)
@@ -55,6 +60,7 @@ def start_user_agent(root_resource, leap_home, leap_session):
 
     # soledad needs lots of threads
     reactor.threadpool.adjustPoolsize(5, 15)
+    log.info('Done, the user agent is ready to be used')
 
 
 def _ssl_options(sslkey, sslcert):
@@ -73,6 +79,7 @@ def _ssl_options(sslkey, sslcert):
 
 
 def initialize():
+    log.info('Starting the Pixelated user agent')
     args = arguments.parse_user_agent_args()
     logger.init(debug=args.debug)
     resource = RootResource()
@@ -106,6 +113,7 @@ def initialize():
 
 
 def start_site(config, resource):
+    log.info('Starting the API with the loading screen on port %s' % config.port)
     if config.sslkey and config.sslcert:
         reactor.listenSSL(config.port, PixelatedSite(resource), _ssl_options(config.sslkey, config.sslcert),
                           interface=config.host)

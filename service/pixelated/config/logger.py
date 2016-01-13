@@ -31,5 +31,5 @@ def init(debug=False):
                         filemode='a')
 
     observer = log.PythonLoggingObserver()
-    logging.getLogger('gnupg').setLevel(logging.WARN)
+    logging.getLogger('pixelated').setLevel(logging.INFO)
     observer.start()
