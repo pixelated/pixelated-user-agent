@@ -45,7 +45,7 @@ class TestMailService(unittest.TestCase):
 
     def test_send_mail(self):
         input_mail = InputMail()
-        when(InputMail).from_dict(ANY()).thenReturn(input_mail)
+        when(InputMail).from_dict(ANY(), ANY()).thenReturn(input_mail)
         when(self.mail_sender).sendmail(ANY()).thenReturn(defer.Deferred())
 
         sent_deferred = self.mail_service.send_mail(mail_dict())
@@ -60,7 +60,7 @@ class TestMailService(unittest.TestCase):
     def test_send_mail_removes_draft(self):
         mail = LeapMail('id', 'INBOX')
         when(mail).raw = 'raw mail'
-        when(InputMail).from_dict(ANY()).thenReturn(mail)
+        when(InputMail).from_dict(ANY(), ANY()).thenReturn(mail)
         when(self.mail_store).delete_mail('12').thenReturn(defer.succeed(None))
         when(self.mail_store).add_mail('SENT', ANY()).thenReturn(mail)
 
@@ -77,7 +77,7 @@ class TestMailService(unittest.TestCase):
     def test_send_mail_marks_as_read(self):
         mail = InputMail()
         when(mail).raw = 'raw mail'
-        when(InputMail).from_dict(ANY()).thenReturn(mail)
+        when(InputMail).from_dict(ANY(), ANY()).thenReturn(mail)
         when(self.mail_store).delete_mail('12').thenReturn(defer.succeed(None))
         when(self.mail_sender).sendmail(mail).thenReturn(defer.succeed(None))
 
@@ -93,7 +93,7 @@ class TestMailService(unittest.TestCase):
     @defer.inlineCallbacks
     def test_send_mail_does_not_delete_draft_on_error(self):
         input_mail = InputMail()
-        when(InputMail).from_dict(ANY()).thenReturn(input_mail)
+        when(InputMail).from_dict(ANY(), ANY()).thenReturn(input_mail)
 
         deferred_failure = defer.fail(Exception("Assume sending mail failed"))
         when(self.mail_sender).sendmail(ANY()).thenReturn(deferred_failure)

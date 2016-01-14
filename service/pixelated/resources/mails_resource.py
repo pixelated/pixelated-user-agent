@@ -198,7 +198,7 @@ class MailsResource(Resource):
         content_dict = json.loads(request.content.read())
         with_attachment_content = yield self._fetch_attachment_contents(content_dict)
 
-        _mail = InputMail.from_dict(with_attachment_content)
+        _mail = InputMail.from_dict(with_attachment_content, from_address=self._mail_service.account_email)
         draft_id = content_dict.get('ident')
         pixelated_mail = yield self._draft_service.process_draft(draft_id, _mail)
 

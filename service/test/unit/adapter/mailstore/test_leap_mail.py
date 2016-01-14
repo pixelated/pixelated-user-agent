@@ -68,11 +68,6 @@ class TestLeapMail(TestCase):
                 'imprints': [{'state': 'no_signature_information'}],
                 'locks': []
             },
-            'replying': {'all': {'cc-field': [],
-                                 'to-field': ['receiver@example.test',
-                                              'test@example.test',
-                                              'receiver2@other.test']},
-                         'single': 'test@example.test'},
             'attachments': []
         }
 
@@ -104,103 +99,6 @@ class TestLeapMail(TestCase):
         self.assertEqual([expected_address], mail.as_dict()['header']['to'])
         self.assertEqual([expected_address], mail.as_dict()['header']['cc'])
         self.assertEqual(expected_subject, mail.as_dict()['header']['subject'])
-
-    def test_as_dict_replying_with_special_chars(self):
-        expected_address = u'"\xc4lbert \xdcbr\xf6" <\xe4\xfc\xf6@example.mail>'
-        mail = LeapMail('', 'INBOX',
-                        {'From': '=?iso-8859-1?q?=22=C4lbert_=DCbr=F6=22_=3C=E4=FC=F6=40example=2Email=3E?=',
-                         'To': '=?iso-8859-1?q?=22=C4lbert_=DCbr=F6=22_=3C=E4=FC=F6=40example=2Email=3E?=',
-                         'Cc': '=?iso-8859-1?q?=22=C4lbert_=DCbr=F6=22_=3C=E4=FC=F6=40example=2Email=3E?=',
-                         'Subject': '=?iso-8859-1?q?H=E4ll=F6_W=F6rld?='})
-        self.assertEqual([expected_address], mail.as_dict()['replying']['all']['to-field'])
-        self.assertEqual([expected_address], mail.as_dict()['replying']['all']['cc-field'])
-        self.assertEqual(expected_address, mail.as_dict()['replying']['single'])
-
-    def test_reply_all_result_does_not_contain_own_address_in_to_with_spaces(self):
-        my_address = 'myaddress@example.test'
-
-        with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
-            mail = LeapMail('', 'INBOX',
-                            {'From': 'test@example.test',
-                             'To': 'receiver@example.test, %s ' % my_address})
-            expected_recipients = ['receiver@example.test', 'test@example.test']
-            actual_recipients = mail.as_dict()['replying']['all']['to-field']
-            expected_recipients.sort()
-            actual_recipients.sort()
-
-            self.assertEqual(expected_recipients, actual_recipients)
-
-    def test_reply_all_result_does_not_contain_own_address_in_to_with_name(self):
-        my_address = 'myaddress@example.test'
-
-        with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
-            mail = LeapMail('', 'INBOX',
-                            {'From': 'test@example.test',
-                             'To': 'receiver@example.test, Folker Bernitt <%s>' % my_address})
-
-            expected_recipients = ['receiver@example.test', 'test@example.test']
-            actual_recipients = mail.as_dict()['replying']['all']['to-field']
-            expected_recipients.sort()
-            actual_recipients.sort()
-
-            self.assertEqual(expected_recipients, actual_recipients)
-
-    # TODO: fix this test
-    def test_reply_all_does_not_contain_own_address_in_to_field_with_different_encodings(self):
-        my_address = 'myaddress@example.test'
-
-        with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
-            mail = LeapMail('', 'INBOX',
-                            {'From': 'test@example.test',
-                             'To': 'receiver@example.test, =?iso-8859-1?q?=C4lbert_=3Cmyaddress=40example=2Etest=3E?='})
-
-            expected_recipients = [u'receiver@example.test', u'test@example.test']
-            actual_recipients = mail.as_dict()['replying']['all']['to-field']
-            expected_recipients.sort()
-            actual_recipients.sort()
-
-            self.assertEqual(expected_recipients, actual_recipients)
-
-    def test_reply_all_result_does_not_contain_own_address_in_cc(self):
-        my_address = 'myaddress@example.test'
-
-        with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
-            mail = LeapMail('', 'INBOX',
-                            {'From': 'test@example.test',
-                             'To': 'receiver@example.test',
-                             'Cc': my_address})
-
-            self.assertEqual([my_address], mail.as_dict()['replying']['all']['cc-field'])
-
-    def test_reply_all_result_does_not_contain_own_address_if_sender(self):
-        my_address = 'myaddress@example.test'
-
-        with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
-            mail = LeapMail('', 'INBOX',
-                            {'From': 'myaddress@example.test',
-                             'To': 'receiver@example.test'})
-
-            self.assertEqual(['receiver@example.test'], mail.as_dict()['replying']['all']['to-field'])
-
-    def test_reply_all_result_does_contain_own_address_if_only_recipient(self):
-        my_address = 'myaddress@example.test'
-
-        with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
-            mail = LeapMail('', 'INBOX',
-                            {'From': 'myaddress@example.test',
-                             'To': 'myaddress@example.test'})
-
-            self.assertEqual(['myaddress@example.test'], mail.as_dict()['replying']['all']['to-field'])
-
-    def test_reply_result_swaps_sender_and_recipient_if_i_am_the_sender(self):
-        my_address = 'myaddress@example.test'
-
-        with patch('pixelated.adapter.mailstore.leap_mailstore.InputMail.FROM_EMAIL_ADDRESS', my_address):
-            mail = LeapMail('', 'INBOX',
-                            {'From': 'myaddress@example.test',
-                             'To': 'recipient@example.test'})
-
-            self.assertEqual('myaddress@example.test', mail.as_dict()['replying']['single'])
 
     def test_as_dict_with_mixed_encodings(self):
         subject = 'Another test with =?iso-8859-1?B?3G1s5Px0?= =?iso-8859-1?Q?s?='

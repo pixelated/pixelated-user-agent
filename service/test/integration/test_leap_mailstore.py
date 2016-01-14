@@ -32,7 +32,7 @@ class LeapMailStoreTest(SoledadTestBase):
         self.maxDiff = None
         mail = load_mail_from_file('mbox00000000')
         mail_id = yield self._create_mail_in_soledad(mail)
-        expected_mail_dict = {'body': u'Dignissimos ducimus veritatis. Est tenetur consequatur quia occaecati. Vel sit sit voluptas.\n\nEarum distinctio eos. Accusantium qui sint ut quia assumenda. Facere dignissimos inventore autem sit amet. Pariatur voluptatem sint est.\n\nUt recusandae praesentium aspernatur. Exercitationem amet placeat deserunt quae consequatur eum. Unde doloremque suscipit quia.\n\n', 'header': {u'date': u'Tue, 21 Apr 2015 08:43:27 +0000 (UTC)', u'to': [u'carmel@murazikortiz.name'], u'x-tw-pixelated-tags': u'nite, macro, trash', u'from': u'darby.senger@zemlak.biz', u'subject': u'Itaque consequatur repellendus provident sunt quia.'}, 'ident': mail_id, 'status': [], 'tags': set([]), 'replying': {'all': {'cc-field': [], 'to-field': [u'carmel@murazikortiz.name', u'darby.senger@zemlak.biz']}, 'single': u'darby.senger@zemlak.biz'}, 'textPlainBody': u'Dignissimos ducimus veritatis. Est tenetur consequatur quia occaecati. Vel sit sit voluptas.\n\nEarum distinctio eos. Accusantium qui sint ut quia assumenda. Facere dignissimos inventore autem sit amet. Pariatur voluptatem sint est.\n\nUt recusandae praesentium aspernatur. Exercitationem amet placeat deserunt quae consequatur eum. Unde doloremque suscipit quia.\n\n', 'mailbox': u'inbox', 'attachments': [], 'security_casing': {'imprints': [{'state': 'no_signature_information'}], 'locks': []}}
+        expected_mail_dict = {'body': u'Dignissimos ducimus veritatis. Est tenetur consequatur quia occaecati. Vel sit sit voluptas.\n\nEarum distinctio eos. Accusantium qui sint ut quia assumenda. Facere dignissimos inventore autem sit amet. Pariatur voluptatem sint est.\n\nUt recusandae praesentium aspernatur. Exercitationem amet placeat deserunt quae consequatur eum. Unde doloremque suscipit quia.\n\n', 'header': {u'date': u'Tue, 21 Apr 2015 08:43:27 +0000 (UTC)', u'to': [u'carmel@murazikortiz.name'], u'x-tw-pixelated-tags': u'nite, macro, trash', u'from': u'darby.senger@zemlak.biz', u'subject': u'Itaque consequatur repellendus provident sunt quia.'}, 'ident': mail_id, 'status': [], 'tags': set([]), 'textPlainBody': u'Dignissimos ducimus veritatis. Est tenetur consequatur quia occaecati. Vel sit sit voluptas.\n\nEarum distinctio eos. Accusantium qui sint ut quia assumenda. Facere dignissimos inventore autem sit amet. Pariatur voluptatem sint est.\n\nUt recusandae praesentium aspernatur. Exercitationem amet placeat deserunt quae consequatur eum. Unde doloremque suscipit quia.\n\n', 'mailbox': u'inbox', 'attachments': [], 'security_casing': {'imprints': [{'state': 'no_signature_information'}], 'locks': []}}
 
         result = yield self.mail_store.get_mail(mail_id, include_body=True)
         self.assertIsNotNone(result)
@@ -109,83 +109,7 @@ class LeapMailStoreTest(SoledadTestBase):
         self.assertEqual(mail.mail_id, mails[0])
 
     @defer.inlineCallbacks
-    def test_get_replying_when_sender_is_not_me(self):
-        InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
-        mail = load_mail_from_file('mbox00000000')
-        del mail['From']
-        del mail['To']
-        del mail['Cc']
-        mail['From'] = 'not-me@pixelated.org'
-        mail['To'] = 'addr1@pixelated.org, addr2@pixelated.org'
-
-        yield self.mail_store.add_mailbox('INBOX')
-        mail = yield self.mail_store.add_mail('INBOX', mail.as_string())
-
-        replying = mail.as_dict()['replying']
-
-        self.assertEqual(replying['single'], 'not-me@pixelated.org')
-        self.assertEqual(replying['all']['to-field'], [u'addr1@pixelated.org', u'addr2@pixelated.org', u'not-me@pixelated.org'])
-        self.assertListEqual(replying['all']['cc-field'], [])
-
-    @defer.inlineCallbacks
-    def test_get_replying_when_sender_is_me(self):
-        InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
-        mail = load_mail_from_file('mbox00000000')
-        del mail['From']
-        del mail['To']
-        del mail['Cc']
-        mail['From'] = 'me@pixelated.org'
-        mail['To'] = 'addr1@pixelated.org, addr2@pixelated.org'
-
-        yield self.mail_store.add_mailbox('INBOX')
-        mail = yield self.mail_store.add_mail('INBOX', mail.as_string())
-
-        replying = mail.as_dict()['replying']
-
-        self.assertEqual(replying['single'], 'me@pixelated.org')
-        self.assertEqual(replying['all']['to-field'], [u'addr1@pixelated.org', u'addr2@pixelated.org'])
-        self.assertEqual(replying['all']['cc-field'], [])
-
-    @defer.inlineCallbacks
-    def test_get_replying_when_sender_is_me_to_me(self):
-        InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
-        mail = load_mail_from_file('mbox00000000')
-        del mail['From']
-        del mail['To']
-        del mail['Cc']
-        mail['From'] = 'me@pixelated.org'
-        mail['To'] = 'me@pixelated.org'
-
-        yield self.mail_store.add_mailbox('INBOX')
-        mail = yield self.mail_store.add_mail('INBOX', mail.as_string())
-
-        replying = mail.as_dict()['replying']
-
-        self.assertEqual(replying['single'], 'me@pixelated.org')
-        self.assertEqual(replying['all']['to-field'], [u'me@pixelated.org'])
-        self.assertEqual(replying['all']['cc-field'], [])
-
-    @defer.inlineCallbacks
-    def test_get_replying_when_sender_is_me_to_recipients_including_me(self):
-        InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
-        mail = load_mail_from_file('mbox00000000')
-        del mail['From']
-        del mail['To']
-        del mail['Cc']
-        mail['From'] = 'me@pixelated.org'
-        mail['To'] = 'addr1@pixelated.org, me@pixelated.org'
-
-        yield self.mail_store.add_mailbox('INBOX')
-        mail = yield self.mail_store.add_mail('INBOX', mail.as_string())
-        replying = mail.as_dict()['replying']
-
-        self.assertEqual(replying['single'], 'me@pixelated.org')
-        self.assertEqual(replying['all']['to-field'], [u'addr1@pixelated.org'])
-        self.assertEqual(replying['all']['cc-field'], [])
-
-    @defer.inlineCallbacks
     def test_deleting_a_deleted_mail_doesnt_raise_errors(self):
-        InputMail.FROM_EMAIL_ADDRESS = 'me@pixelated.org'
         mail = load_mail_from_file('mbox00000000')
         yield self.mail_store.add_mailbox('INBOX')
         mail = yield self.mail_store.add_mail('INBOX', mail.as_string())

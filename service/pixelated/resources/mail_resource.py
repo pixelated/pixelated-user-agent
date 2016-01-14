@@ -1,5 +1,6 @@
 import json
 from pixelated.resources import respond_json, respond_json_deferred
+from pixelated.support import replier
 from twisted.web.resource import Resource
 from twisted.web.server import NOT_DONE_YET
 from twisted.python.log import err
@@ -36,8 +37,18 @@ class Mail(Resource):
         self._mail_service = mail_service
 
     def render_GET(self, request):
+        def populate_reply(mail):
+            mail_dict = mail.as_dict()
+            current_user = self._mail_service.account_email
+            sender = mail.headers.get('Reply-to', mail.headers.get('From'))
+            to = mail.headers.get('To', [])
+            ccs = mail.headers.get('Cc', [])
+            mail_dict['replying'] = replier.generate_recipients(sender, to, ccs, current_user)
+            return mail_dict
+
         d = self._mail_service.mail(self._mail_id)
-        d.addCallback(lambda mail: respond_json_deferred(mail.as_dict(), request))
+        d.addCallback(lambda mail: populate_reply(mail))
+        d.addCallback(lambda mail_dict: respond_json_deferred(mail_dict, request))
         return NOT_DONE_YET
 
     def render_DELETE(self, request):

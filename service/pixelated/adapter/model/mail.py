@@ -141,8 +141,6 @@ class Mail(object):
 
 
 class InputMail(Mail):
-    FROM_EMAIL_ADDRESS = None
-
     def __init__(self):
         self._raw_message = None
         self._fd = None
@@ -193,12 +191,12 @@ class InputMail(Mail):
         })
 
     @staticmethod
-    def from_dict(mail_dict):
+    def from_dict(mail_dict, from_address):
         input_mail = InputMail()
         input_mail.headers = {key.capitalize(): value for key, value in mail_dict.get('header', {}).items()}
 
         input_mail.headers['Date'] = date.mail_date_now()
-        input_mail.headers['From'] = InputMail.FROM_EMAIL_ADDRESS
+        input_mail.headers['From'] = from_address
 
         input_mail.body = mail_dict.get('body', '')
         input_mail.tags = set(mail_dict.get('tags', []))

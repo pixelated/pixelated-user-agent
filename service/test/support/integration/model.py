@@ -33,7 +33,6 @@ class MailBuilder:
             'body': "Hello,\nThis is the body of this message\n\nRegards,\n\n--\nPixelated.\n",
             'status': []
         }
-        InputMail.FROM_EMAIL_ADDRESS = 'Formatted Sender <sender@from.com>'
 
     def with_body(self, body):
         self.mail['body'] = body
@@ -80,7 +79,7 @@ class MailBuilder:
         return json.dumps(self.mail)
 
     def build_input_mail(self):
-        return InputMail.from_dict(self.mail)
+        return InputMail.from_dict(self.mail, from_address='Formatted Sender <sender@from.com>')
 
     def build_leap_mail(self):
         return LeapMail.from_dict(self.mail)

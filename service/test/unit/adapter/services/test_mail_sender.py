@@ -67,7 +67,7 @@ class MailSenderTest(unittest.TestCase):
 
     @defer.inlineCallbacks
     def test_iterates_over_recipients(self):
-        input_mail = InputMail.from_dict(mail_dict())
+        input_mail = InputMail.from_dict(mail_dict(), from_address='pixelated@org')
 
         when(OutgoingMail).send_message(any(), any()).thenReturn(defer.succeed(None))
 
@@ -78,7 +78,7 @@ class MailSenderTest(unittest.TestCase):
 
     @defer.inlineCallbacks
     def test_problem_with_email_raises_exception(self):
-        input_mail = InputMail.from_dict(mail_dict())
+        input_mail = InputMail.from_dict(mail_dict(), from_address='pixelated@org')
 
         when(OutgoingMail).send_message(any(), any()).thenReturn(defer.fail(Exception('pretend something went wrong')))
 
@@ -91,7 +91,7 @@ class MailSenderTest(unittest.TestCase):
 
     @defer.inlineCallbacks
     def test_iterates_over_recipients_and_send_whitout_bcc_field(self):
-        input_mail = InputMail.from_dict(mail_dict())
+        input_mail = InputMail.from_dict(mail_dict(), from_address='pixelated@org')
         bccs = input_mail.bcc
 
         when(OutgoingMail).send_message(any(), any()).thenReturn(defer.succeed(None))

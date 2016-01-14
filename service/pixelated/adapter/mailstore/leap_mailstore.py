@@ -121,6 +121,9 @@ class LeapMail(Mail):
 
         return result
 
+    def remove_duplicates(self, values):
+        return list(set(values))
+
     def _decoded_header_utf_8(self, header_value):
         if isinstance(header_value, list):
             return self.remove_duplicates([self._decoded_header_utf_8(v) for v in header_value])
@@ -143,47 +146,12 @@ class LeapMail(Mail):
             'body': self._body,
             'security_casing': self.security_casing,
             'textPlainBody': self._body,
-            'replying': self._replying_dict(),
             'mailbox': self._mailbox_name.lower(),
             'attachments': [attachment.as_dict() for attachment in self._attachments]
         }
 
-    def _replying_dict(self):
-        result = {'single': None, 'all': {'to-field': [], 'cc-field': []}}
-
-        sender_mail = self._decoded_header_utf_8(self.headers.get('Reply-To', self.headers.get('From')))
-        # Issue #215: Fix for existing mails without any from address.
-        if sender_mail is None:
-            sender_mail = InputMail.FROM_EMAIL_ADDRESS
-
-        recipients = self._reply_recipient('To')
-        recipients = self._decoded_header_utf_8(recipients)
-        recipients.append(sender_mail)
-        recipients = self.remove_duplicates(recipients)
-        ccs = self._decoded_header_utf_8(self._reply_recipient('Cc'))
-
-        result['single'] = sender_mail
-        result['all']['to-field'] = self._remove_me(recipients) if len(recipients) > 1 else recipients
-        result['all']['cc-field'] = self._remove_me(ccs) if len(ccs) > 1 else ccs
-        return result
-
-    def _remove_me(self, recipients):
-        return [recipient for recipient in recipients if not self._parsed_mail_matches(recipient, InputMail.FROM_EMAIL_ADDRESS)]
-
-    def remove_duplicates(self, recipients):
-        return list(set(recipients))
-
     def _reply_recipient(self, kind):
-        recipients = self.headers.get(kind, [])
-        if not recipients:
-            recipients = []
-
-        return recipients
-
-    def _parsed_mail_matches(self, to_parse, expected):
-        if InputMail.FROM_EMAIL_ADDRESS is None:
-            return False
-        return parseaddr(to_parse)[1] == expected
+        return self.headers.get(kind, [])
 
     @staticmethod
     def from_dict(mail_dict):
