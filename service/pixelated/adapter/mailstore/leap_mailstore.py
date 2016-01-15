@@ -121,12 +121,12 @@ class LeapMail(Mail):
 
         return result
 
-    def remove_duplicates(self, values):
+    def _remove_duplicates(self, values):
         return list(set(values))
 
     def _decoded_header_utf_8(self, header_value):
         if isinstance(header_value, list):
-            return self.remove_duplicates([self._decoded_header_utf_8(v) for v in header_value])
+            return self._remove_duplicates([self._decoded_header_utf_8(v) for v in header_value])
         elif header_value is not None:
             def encode_chunk(content, encoding):
                 return unicode(content.strip(), encoding=encoding or 'ascii', errors='ignore')
@@ -149,9 +149,6 @@ class LeapMail(Mail):
             'mailbox': self._mailbox_name.lower(),
             'attachments': [attachment.as_dict() for attachment in self._attachments]
         }
-
-    def _reply_recipient(self, kind):
-        return self.headers.get(kind, [])
 
     @staticmethod
     def from_dict(mail_dict):
