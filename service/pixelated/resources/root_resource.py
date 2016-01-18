@@ -46,7 +46,7 @@ class RootResource(Resource):
         self.putChild('features', FeaturesResource())
         self.putChild('tags', TagsResource(services_factory))
         self.putChild('mails', MailsResource(services_factory))
-        self.putChild('mail', MailResource(mail_service))
+        self.putChild('mail', MailResource(services_factory))
         self.putChild('feedback', FeedbackResource(feedback_service))
         self.putChild('user-settings', UserSettingsResource(self.account_email))
 

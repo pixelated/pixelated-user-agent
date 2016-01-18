@@ -1,5 +1,5 @@
 import json
-from pixelated.resources import respond_json, respond_json_deferred
+from pixelated.resources import respond_json, respond_json_deferred, BaseResource
 from pixelated.support import replier
 from twisted.web.resource import Resource
 from twisted.web.server import NOT_DONE_YET
@@ -62,11 +62,11 @@ class Mail(Resource):
         return NOT_DONE_YET
 
 
-class MailResource(Resource):
+class MailResource(BaseResource):
 
-    def __init__(self, mail_service):
-        Resource.__init__(self)
-        self._mail_service = mail_service
+    def __init__(self, services_factory):
+        BaseResource.__init__(self, services_factory)
 
     def getChild(self, mail_id, request):
-        return Mail(mail_id, self._mail_service)
+        _mail_service = self.mail_service(request)
+        return Mail(mail_id, _mail_service)
