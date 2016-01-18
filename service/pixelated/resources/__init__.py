@@ -47,10 +47,19 @@ class BaseResource(Resource):
         Resource.__init__(self)
         self._services_factory = services_factory
 
-    def keymanager(self, request):
-        user_id = self._get_user_id_from_request()
-        return self._services_factory.services(user_id).keymanager
-
-    def _get_user_id_from_request(self):
+    def _get_user_id_from_request(self, request):
         # currently we are faking this
         return self._services_factory._services_by_user.keys()[0]
+
+    def _services(self, request):
+        user_id = self._get_user_id_from_request(request)
+        return self._services_factory.services(user_id)
+
+    def _service(self, request, attribute):
+        return getattr(self._services(request), attribute)
+
+    def keymanager(self, request):
+        return self._service(request, 'keymanager')
+
+    def mail_service(self, request):
+        return self._service(request, 'mail_service')

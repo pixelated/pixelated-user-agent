@@ -3,7 +3,7 @@ import unittest
 import logging
 
 from mock import patch, MagicMock
-from mockito import mock, when, verify
+from mockito import mock, when, verify, any as ANY
 from twisted.internet import defer
 from twisted.web.test.requesthelper import DummyRequest
 
@@ -17,7 +17,13 @@ class AttachmentsResourceTest(unittest.TestCase):
 
     def setUp(self):
         self.mail_service = mock()
-        self.mails_resource = AttachmentsResource(self.mail_service)
+        self.servicesFactory = mock()
+        self.services = mock()
+        self.services.mail_service = self.mail_service
+        self.servicesFactory._services_by_user = {'someuserid': self.mail_service}
+        when(self.servicesFactory).services(ANY()).thenReturn(self.services)
+
+        self.mails_resource = AttachmentsResource(self.servicesFactory)
         self.mails_resource.isLeaf = True
         self.web = DummySite(self.mails_resource)
 

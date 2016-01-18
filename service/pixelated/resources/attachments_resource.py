@@ -25,7 +25,7 @@ from twisted.web import server
 from twisted.web.resource import Resource
 from twisted.web.server import NOT_DONE_YET
 
-from pixelated.resources import respond_json_deferred
+from pixelated.resources import respond_json_deferred, BaseResource
 
 logger = logging.getLogger(__name__)
 
@@ -72,21 +72,22 @@ class AttachmentResource(Resource):
         return match.group(1)
 
 
-class AttachmentsResource(Resource):
+class AttachmentsResource(BaseResource):
     BASE_URL = 'attachment'
 
-    def __init__(self, mail_service):
-        Resource.__init__(self)
-        self.mail_service = mail_service
+    def __init__(self, services_factory):
+        BaseResource.__init__(self, services_factory)
 
     def getChild(self, attachment_id, request):
-        return AttachmentResource(self.mail_service, attachment_id)
+        _mail_service = self.mail_service(request)
+        return AttachmentResource(_mail_service, attachment_id)
 
     def render_POST(self, request):
+        _mail_service = self.mail_service(request)
         fields = cgi.FieldStorage(fp=request.content, headers=(request.getAllHeaders()),
                                   environ={'REQUEST_METHOD': 'POST'})
         _file = fields['attachment']
-        deferred = self.mail_service.save_attachment(_file.value, _file.type)
+        deferred = _mail_service.save_attachment(_file.value, _file.type)
 
         def send_location(attachment_id):
             request.headers['Location'] = '/%s/%s' % (self.BASE_URL, attachment_id)

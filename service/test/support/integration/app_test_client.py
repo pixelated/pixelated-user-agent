@@ -90,6 +90,7 @@ class AppTestClient(object):
         self.service_factory = ServicesFactory()
         services = mock()
         services.keymanager = self.keymanager
+        services.mail_service = self.mail_service
         self.service_factory.add_session('someuserid', services)
 
         self.resource.initialize(
