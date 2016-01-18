@@ -46,7 +46,7 @@ def start_user_agent(root_resource, leap_home, leap_session):
     log.info('Bootstrap done, loading services for user %s' % leap_session.user_auth.username)
 
     services = Services(leap_home, leap_session)
-    yield services.setup(leap_home, leap_session)
+    yield services.setup()
 
     if leap_session.fresh_account:
         yield add_welcome_mail(leap_session.mail_store)

@@ -18,61 +18,60 @@ logger = logging.getLogger(__name__)
 class Services(object):
 
     def __init__(self, leap_home, leap_session):
-        pass
+        self._leap_home = leap_home
+        self._leap_session = leap_session
 
     @defer.inlineCallbacks
-    def setup(self, leap_home, leap_session):
-        search_index_storage_key = self.setup_search_index_storage_key(leap_session.soledad)
-        yield self.setup_search_engine(
-            leap_home,
-            leap_session.user_auth.uuid,
+    def setup(self):
+        search_index_storage_key = self._setup_search_index_storage_key(self._leap_session.soledad)
+        yield self._setup_search_engine(
+            self._leap_session.user_auth.uuid,
             search_index_storage_key)
 
-        self.wrap_mail_store_with_indexing_mail_store(leap_session)
+        self._wrap_mail_store_with_indexing_mail_store(self._leap_session)
 
-        yield listen_all_mailboxes(leap_session.account, self.search_engine, leap_session.mail_store)
+        yield listen_all_mailboxes(self._leap_session.account, self.search_engine, self._leap_session.mail_store)
 
-        self.mail_service = self.setup_mail_service(
-            leap_session,
+        self.mail_service = self._setup_mail_service(
             self.search_engine)
 
-        self.keymanager = leap_session.nicknym
-        self.draft_service = self.setup_draft_service(leap_session.mail_store)
-        self.feedback_service = self.setup_feedback_service(leap_session)
+        self.keymanager = self._leap_session.nicknym
+        self.draft_service = self._setup_draft_service(self._leap_session.mail_store)
+        self.feedback_service = self._setup_feedback_service()
 
-        yield self.index_all_mails()
+        yield self._index_all_mails()
 
-    def wrap_mail_store_with_indexing_mail_store(self, leap_session):
+    def _wrap_mail_store_with_indexing_mail_store(self, leap_session):
         leap_session.mail_store = SearchableMailStore(leap_session.mail_store, self.search_engine)
 
     @defer.inlineCallbacks
-    def index_all_mails(self):
+    def _index_all_mails(self):
         all_mails = yield self.mail_service.all_mails()
         self.search_engine.index_mails(all_mails)
 
     @defer.inlineCallbacks
-    def setup_search_engine(self, leap_home, namespace, search_index_storage_key):
+    def _setup_search_engine(self, namespace, search_index_storage_key):
         key_unicode = yield search_index_storage_key.get_or_create_key()
         key = str(key_unicode)
         logger.debug('The key len is: %s' % len(key))
-        search_engine = SearchEngine(key, namespace, agent_home=leap_home)
+        search_engine = SearchEngine(key, namespace, agent_home=self._leap_home)
         self.search_engine = search_engine
 
-    def setup_mail_service(self, leap_session, search_engine):
-        pixelated_mail_sender = MailSender(leap_session.smtp_config, leap_session.nicknym.keymanager)
+    def _setup_mail_service(self, search_engine):
+        pixelated_mail_sender = MailSender(self._leap_session.smtp_config, self._leap_session.nicknym.keymanager)
 
         return MailService(
             pixelated_mail_sender,
-            leap_session.mail_store,
+            self._leap_session.mail_store,
             search_engine,
-            leap_session.account_email(),
-            LeapAttachmentStore(leap_session.soledad))
+            self._leap_session.account_email(),
+            LeapAttachmentStore(self._leap_session.soledad))
 
-    def setup_draft_service(self, mail_store):
+    def _setup_draft_service(self, mail_store):
         return DraftService(mail_store)
 
-    def setup_search_index_storage_key(self, soledad):
+    def _setup_search_index_storage_key(self, soledad):
         return SearchIndexStorageKey(soledad)
 
-    def setup_feedback_service(self, leap_session):
-        return FeedbackService(leap_session)
+    def _setup_feedback_service(self):
+        return FeedbackService(self._leap_session)
