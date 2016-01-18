@@ -31,5 +31,7 @@ def init(debug=False):
                         filemode='a')
 
     observer = log.PythonLoggingObserver()
+    # don't remove this line, it fix the PGP private key logged
+    logging.getLogger('gnupg').setLevel(logging.WARN)
     logging.getLogger('pixelated').setLevel(logging.INFO)
     observer.start()
