@@ -72,16 +72,10 @@ def start_user_agent(root_resource, leap_home, leap_session):
     if leap_session.fresh_account:
         yield add_welcome_mail(leap_session.mail_store)
 
-    servicesFactory = ServicesFactory()
-    servicesFactory.add_session(leap_session.user_auth.uuid, services)
+    services_factory = ServicesFactory()
+    services_factory.add_session(leap_session.user_auth.uuid, services)
 
-    root_resource.initialize(
-        servicesFactory,
-        services.keymanager,
-        services.search_engine,
-        services.mail_service,
-        services.draft_service,
-        services.feedback_service)
+    root_resource.initialize(services_factory, services.mail_service)
 
     # soledad needs lots of threads
     reactor.threadpool.adjustPoolsize(5, 15)

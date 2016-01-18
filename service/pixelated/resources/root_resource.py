@@ -36,7 +36,7 @@ class RootResource(Resource):
             return self
         return Resource.getChild(self, path, request)
 
-    def initialize(self, services_factory, keymanager, search_engine, mail_service, draft_service, feedback_service):
+    def initialize(self, services_factory, mail_service):
         self.account_email = mail_service.account_email
         self.putChild('assets', File(self._static_folder))
         self.putChild('keys', KeysResource(services_factory))

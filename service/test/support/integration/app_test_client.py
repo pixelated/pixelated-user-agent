@@ -96,8 +96,7 @@ class AppTestClient(object):
         services.feedback_service = self.feedback_service
         self.service_factory.add_session('someuserid', services)
 
-        self.resource.initialize(
-            self.service_factory, self.keymanager, self.search_engine, self.mail_service, self.draft_service, self.feedback_service)
+        self.resource.initialize(self.service_factory, self.mail_service)
 
     def _render(self, request, as_json=True):
         def get_str(_str):
