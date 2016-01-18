@@ -63,3 +63,6 @@ class BaseResource(Resource):
 
     def mail_service(self, request):
         return self._service(request, 'mail_service')
+
+    def search_engine(self, request):
+        return self._service(request, 'search_engine')

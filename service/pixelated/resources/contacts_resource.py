@@ -14,23 +14,23 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from pixelated.resources import respond_json_deferred
+from pixelated.resources import respond_json_deferred, BaseResource
 from twisted.internet.threads import deferToThread
 from twisted.web import server
 from twisted.web.resource import Resource
 
 
-class ContactsResource(Resource):
+class ContactsResource(BaseResource):
 
     isLeaf = True
 
-    def __init__(self, search_engine):
-        Resource.__init__(self)
-        self._search_engine = search_engine
+    def __init__(self, services_factory):
+        BaseResource.__init__(self, services_factory)
 
     def render_GET(self, request):
+        _search_engine = self.search_engine(request)
         query = request.args.get('q', [''])[-1]
-        d = deferToThread(lambda: self._search_engine.contacts(query))
+        d = deferToThread(lambda: _search_engine.contacts(query))
         d.addCallback(lambda tags: respond_json_deferred(tags, request))
 
         def handle_error(error):
