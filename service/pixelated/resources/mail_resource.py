@@ -1,9 +1,11 @@
 import json
-from pixelated.resources import respond_json, respond_json_deferred, BaseResource
-from pixelated.support import replier
+
+from twisted.python.log import err
 from twisted.web.resource import Resource
 from twisted.web.server import NOT_DONE_YET
-from twisted.python.log import err
+
+from pixelated.resources import respond_json_deferred, BaseResource
+from pixelated.support import replier
 
 
 class MailTags(Resource):

@@ -1,5 +1,5 @@
 import json
-from mockito import verify, mock, when
+from mockito import verify, mock, when, any as ANY
 from twisted.trial import unittest
 from twisted.web.test.requesthelper import DummyRequest
 from pixelated.resources.feedback_resource import FeedbackResource
@@ -9,7 +9,13 @@ from test.unit.resources import DummySite
 class TestFeedbackResource(unittest.TestCase):
     def setUp(self):
         self.feedback_service = mock()
-        self.web = DummySite(FeedbackResource(self.feedback_service))
+        self.servicesFactory = mock()
+        self.services = mock()
+        self.services.feedback_service = self.feedback_service
+        self.servicesFactory._services_by_user = {'someuserid': self.feedback_service}
+        when(self.servicesFactory).services(ANY()).thenReturn(self.services)
+
+        self.web = DummySite(FeedbackResource(self.servicesFactory))
 
     def test_sends_feedback_to_leap_web(self):
         request = DummyRequest(['/feedback'])

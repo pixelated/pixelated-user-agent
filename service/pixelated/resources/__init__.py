@@ -69,3 +69,6 @@ class BaseResource(Resource):
 
     def draft_service(self, request):
         return self._service(request, 'draft_service')
+
+    def feedback_service(self, request):
+        return self._service(request, 'feedback_service')
