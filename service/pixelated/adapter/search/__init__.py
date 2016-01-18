@@ -36,9 +36,9 @@ class SearchEngine(object):
     DEFAULT_INDEX_HOME = os.path.join(os.environ['HOME'], '.leap')
     DEFAULT_TAGS = ['inbox', 'sent', 'drafts', 'trash']
 
-    def __init__(self, key, namespace, agent_home=DEFAULT_INDEX_HOME):
+    def __init__(self, key, user_home=DEFAULT_INDEX_HOME):
         self.key = key
-        self.index_folder = os.path.join(agent_home, 'search_index', namespace)
+        self.index_folder = os.path.join(user_home, 'search_index')
         if not os.path.exists(self.index_folder):
             os.makedirs(self.index_folder)
         self._index = self._create_index()

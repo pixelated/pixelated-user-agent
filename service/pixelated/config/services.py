@@ -1,3 +1,4 @@
+import os
 import logging
 
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
@@ -54,7 +55,9 @@ class Services(object):
         key_unicode = yield search_index_storage_key.get_or_create_key()
         key = str(key_unicode)
         logger.debug('The key len is: %s' % len(key))
-        search_engine = SearchEngine(key, namespace, agent_home=self._leap_home)
+        user_id = self._leap_session.user_auth.uuid
+        user_folder = os.path.join(self._leap_home, user_id)
+        search_engine = SearchEngine(key, user_home=user_folder)
         self.search_engine = search_engine
 
     def _setup_mail_service(self, search_engine):

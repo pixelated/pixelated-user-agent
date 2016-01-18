@@ -43,14 +43,14 @@ class LockStub(object):
 class SearchEngineTest(unittest.TestCase):
     def setUp(self):
         self.tempdir = TempDir()
-        self.agent_home = self.tempdir.name
+        self.user_home = self.tempdir.name
 
     def tearDown(self):
         self.tempdir.dissolve()
 
     def test_headers_encoding(self):
         # given
-        se = SearchEngine(INDEX_KEY, 'test_namespace', self.agent_home)
+        se = SearchEngine(INDEX_KEY, self.user_home)
 
         headers = {
             'From': 'foo@bar.tld',
@@ -68,7 +68,7 @@ class SearchEngineTest(unittest.TestCase):
 
     def test_contents_encoding_accents(self):
         # given
-        se = SearchEngine(INDEX_KEY, 'test_namespace', self.agent_home)
+        se = SearchEngine(INDEX_KEY, self.user_home)
 
         headers = {
             'From': 'foo@bar.tld',
@@ -93,7 +93,7 @@ class SearchEngineTest(unittest.TestCase):
 
     def test_contents_encoding_special_characters(self):
         # given
-        se = SearchEngine(INDEX_KEY, 'test_namespace', self.agent_home)
+        se = SearchEngine(INDEX_KEY, self.user_home)
 
         headers = {
             'From': 'foo@bar.tld',

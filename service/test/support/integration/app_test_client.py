@@ -67,7 +67,7 @@ class AppTestClient(object):
 
         self.keymanager = mock()
 
-        self.search_engine = SearchEngine(self.INDEX_KEY, 'test_namespace', agent_home=soledad_test_folder)
+        self.search_engine = SearchEngine(self.INDEX_KEY, user_home=soledad_test_folder)
         self.mail_sender = self._create_mail_sender()
 
         self.mail_store = SearchableMailStore(LeapMailStore(self.soledad), self.search_engine)
