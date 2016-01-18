@@ -33,6 +33,7 @@ from twisted.web.resource import getChildForRequest
 # from twisted.web.server import Site as PixelatedSite
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
 from pixelated.adapter.services.feedback_service import FeedbackService
+from pixelated.application import ServicesFactory
 from pixelated.config.site import PixelatedSite
 
 from pixelated.adapter.mailstore import LeapMailStore
@@ -85,8 +86,14 @@ class AppTestClient(object):
         self.search_engine.index_mails(mails)
 
         self.resource = RootResource()
+
+        self.service_factory = ServicesFactory()
+        services = mock()
+        services.keymanager = self.keymanager
+        self.service_factory.add_session('someuserid', services)
+
         self.resource.initialize(
-            self.keymanager, self.search_engine, self.mail_service, self.draft_service, self.feedback_service)
+            self.service_factory, self.keymanager, self.search_engine, self.mail_service, self.draft_service, self.feedback_service)
 
     def _render(self, request, as_json=True):
         def get_str(_str):

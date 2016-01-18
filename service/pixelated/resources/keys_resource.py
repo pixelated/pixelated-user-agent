@@ -1,18 +1,18 @@
 from email.utils import parseaddr
-from pixelated.resources import respond_json_deferred
+from pixelated.resources import respond_json_deferred, BaseResource
 from twisted.web import server
-from twisted.web.resource import Resource
 
 
-class KeysResource(Resource):
+class KeysResource(BaseResource):
 
     isLeaf = True
 
-    def __init__(self, keymanager):
-        Resource.__init__(self)
-        self._keymanager = keymanager
+    def __init__(self, services_factory):
+        BaseResource.__init__(self, services_factory)
 
     def render_GET(self, request):
+        _keymanager = self.keymanager(request)
+
         def finish_request(key):
             if key.private:
                 respond_json_deferred(None, request, status_code=401)
@@ -23,7 +23,7 @@ class KeysResource(Resource):
             respond_json_deferred(None, request, status_code=404)
 
         _, key_to_find = parseaddr(request.args.get('search')[0])
-        d = self._keymanager.fetch_key(key_to_find)
+        d = _keymanager.fetch_key(key_to_find)
         d.addCallback(finish_request)
         d.addErrback(key_not_found)
 

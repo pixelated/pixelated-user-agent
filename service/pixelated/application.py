@@ -41,6 +41,27 @@ import logging
 log = logging.getLogger(__name__)
 
 
+class ServicesFactory(object):
+
+    def __init__(self):
+        self._services_by_user = {}
+
+    def is_logged_in(self, user_id):
+        return user_id in self._services_by_user
+
+    def services(self, user_id):
+        return self._services_by_user[user_id]
+
+    def log_out_user(self, user_id):
+        if self.is_logged_in(user_id):
+            services = self._services_by_user[user_id]
+            services.close()
+            del self._services_by_user[user_id]
+
+    def add_session(self, user_id, services):
+        self._services_by_user[user_id] = services
+
+
 @defer.inlineCallbacks
 def start_user_agent(root_resource, leap_home, leap_session):
     log.info('Bootstrap done, loading services for user %s' % leap_session.user_auth.username)
@@ -51,7 +72,11 @@ def start_user_agent(root_resource, leap_home, leap_session):
     if leap_session.fresh_account:
         yield add_welcome_mail(leap_session.mail_store)
 
+    servicesFactory = ServicesFactory()
+    servicesFactory.add_session(leap_session.user_auth.uuid, services)
+
     root_resource.initialize(
+        servicesFactory,
         services.keymanager,
         services.search_engine,
         services.mail_service,

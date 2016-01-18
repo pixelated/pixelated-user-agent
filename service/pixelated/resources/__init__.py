@@ -16,6 +16,8 @@
 
 import json
 
+from twisted.web.resource import Resource
+
 
 class SetEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -37,3 +39,18 @@ def respond_json_deferred(entity, request, status_code=200):
     request.code = status_code
     request.write(json_response)
     request.finish()
+
+
+class BaseResource(Resource):
+
+    def __init__(self, services_factory):
+        Resource.__init__(self)
+        self._services_factory = services_factory
+
+    def keymanager(self, request):
+        user_id = self._get_user_id_from_request()
+        return self._services_factory.services(user_id).keymanager
+
+    def _get_user_id_from_request(self):
+        # currently we are faking this
+        return self._services_factory._services_by_user.keys()[0]
