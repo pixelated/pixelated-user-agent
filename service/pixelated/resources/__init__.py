@@ -66,3 +66,6 @@ class BaseResource(Resource):
 
     def search_engine(self, request):
         return self._service(request, 'search_engine')
+
+    def draft_service(self, request):
+        return self._service(request, 'draft_service')

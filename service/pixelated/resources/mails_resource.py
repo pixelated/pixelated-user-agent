@@ -2,7 +2,7 @@ import json
 from pixelated.adapter.services.mail_sender import SMTPDownException
 from pixelated.adapter.model.mail import InputMail
 from twisted.web.server import NOT_DONE_YET
-from pixelated.resources import respond_json_deferred
+from pixelated.resources import respond_json_deferred, BaseResource
 from twisted.web.resource import Resource
 from twisted.web import server
 from twisted.internet import defer
@@ -111,7 +111,7 @@ class MailsArchiveResource(Resource):
         return NOT_DONE_YET
 
 
-class MailsResource(Resource):
+class MailsResource(BaseResource):
 
     def _register_smtp_error_handler(self):
 
@@ -121,22 +121,29 @@ class MailsResource(Resource):
 
         events.register(events.catalog.SMTP_SEND_MESSAGE_ERROR, callback=on_error)
 
-    def __init__(self, mail_service, draft_service):
-        Resource.__init__(self)
-        self.putChild('delete', MailsDeleteResource(mail_service))
-        self.putChild('recover', MailsRecoverResource(mail_service))
-        self.putChild('archive', MailsArchiveResource(mail_service))
-        self.putChild('read', MailsReadResource(mail_service))
-        self.putChild('unread', MailsUnreadResource(mail_service))
-
-        self._draft_service = draft_service
-        self._mail_service = mail_service
+    def __init__(self, services_factory):
+        BaseResource.__init__(self, services_factory)
         self._register_smtp_error_handler()
 
+    def getChild(self, action, request):
+        _mail_service = self.mail_service(request)
+
+        if action == 'delete':
+            return MailsDeleteResource(_mail_service)
+        if action == 'recover':
+            return MailsRecoverResource(_mail_service)
+        if action == 'archive':
+            return MailsArchiveResource(_mail_service)
+        if action == 'read':
+            return MailsReadResource(_mail_service)
+        if action == 'unread':
+            return MailsUnreadResource(_mail_service)
+
     def render_GET(self, request):
+        _mail_service = self.mail_service(request)
         query, window_size, page = request.args.get('q')[0], request.args.get('w')[0], request.args.get('p')[0]
         unicode_query = to_unicode(query)
-        d = self._mail_service.mails(unicode_query, window_size, page)
+        d = _mail_service.mails(unicode_query, window_size, page)
 
         d.addCallback(lambda (mails, total): {
             "stats": {
@@ -177,30 +184,33 @@ class MailsResource(Resource):
         return server.NOT_DONE_YET
 
     @defer.inlineCallbacks
-    def _fetch_attachment_contents(self, content_dict):
+    def _fetch_attachment_contents(self, content_dict, _mail_service):
         attachments = content_dict.get('attachments', []) if content_dict else []
         for attachment in attachments:
-            retrieved_attachment = yield self._mail_service.attachment(attachment['ident'])
+            retrieved_attachment = yield _mail_service.attachment(attachment['ident'])
             attachment['raw'] = retrieved_attachment['content']
         content_dict['attachments'] = attachments
         defer.returnValue(content_dict)
 
     @defer.inlineCallbacks
     def _handle_post(self, request):
+        _mail_service = self.mail_service(request)
         content_dict = json.loads(request.content.read())
-        with_attachment_content = yield self._fetch_attachment_contents(content_dict)
+        with_attachment_content = yield self._fetch_attachment_contents(content_dict, _mail_service)
 
-        sent_mail = yield self._mail_service.send_mail(with_attachment_content)
+        sent_mail = yield _mail_service.send_mail(with_attachment_content)
         respond_json_deferred(sent_mail.as_dict(), request)
 
     @defer.inlineCallbacks
     def _handle_put(self, request):
+        _draft_service = self.draft_service(request)
+        _mail_service = self.mail_service(request)
         content_dict = json.loads(request.content.read())
-        with_attachment_content = yield self._fetch_attachment_contents(content_dict)
+        with_attachment_content = yield self._fetch_attachment_contents(content_dict, _mail_service)
 
-        _mail = InputMail.from_dict(with_attachment_content, from_address=self._mail_service.account_email)
+        _mail = InputMail.from_dict(with_attachment_content, from_address=_mail_service.account_email)
         draft_id = content_dict.get('ident')
-        pixelated_mail = yield self._draft_service.process_draft(draft_id, _mail)
+        pixelated_mail = yield _draft_service.process_draft(draft_id, _mail)
 
         if not pixelated_mail:
             respond_json_deferred("", request, status_code=422)

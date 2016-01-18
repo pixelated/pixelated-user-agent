@@ -17,7 +17,7 @@
 import unittest
 
 from mock import patch
-from mockito import mock, when, verify
+from mockito import mock, when, verify, any as ANY
 from twisted.internet import defer
 from twisted.web.test.requesthelper import DummyRequest
 
@@ -28,6 +28,12 @@ from test.unit.resources import DummySite
 class TestMailsResource(unittest.TestCase):
     def setUp(self):
         self.mail_service = mock()
+        self.servicesFactory = mock()
+        self.services = mock()
+        self.services.mail_service = self.mail_service
+        self.services.draft_service = mock()
+        self.servicesFactory._services_by_user = {'someuserid': self.mail_service}
+        when(self.servicesFactory).services(ANY()).thenReturn(self.services)
 
     @patch('leap.common.events.register')
     def test_render_GET_should_unicode_mails_search_query(self, mock_register):
@@ -40,7 +46,7 @@ class TestMailsResource(unittest.TestCase):
         unicodified_search_term = u'coração'
         when(self.mail_service).mails(unicodified_search_term, 25, 1).thenReturn(defer.Deferred())
 
-        mails_resource = MailsResource(self.mail_service, mock())
+        mails_resource = MailsResource(self.servicesFactory)
         mails_resource.isLeaf = True
         web = DummySite(mails_resource)
         d = web.get(request)
@@ -60,7 +66,7 @@ class TestMailsResource(unittest.TestCase):
         when(self.mail_service).attachment('some fake attachment id').thenReturn(defer.Deferred())
         request.content = content
 
-        mails_resource = MailsResource(self.mail_service, mock())
+        mails_resource = MailsResource(self.servicesFactory)
         mails_resource.isLeaf = True
         web = DummySite(mails_resource)
         d = web.get(request)
@@ -84,7 +90,7 @@ class TestMailsResource(unittest.TestCase):
             .thenReturn(defer.succeed(as_dictable))
         request.content = content
 
-        mails_resource = MailsResource(self.mail_service, mock())
+        mails_resource = MailsResource(self.servicesFactory)
         mails_resource.isLeaf = True
         web = DummySite(mails_resource)
         d = web.get(request)

@@ -91,6 +91,7 @@ class AppTestClient(object):
         services = mock()
         services.keymanager = self.keymanager
         services.mail_service = self.mail_service
+        services.draft_service = self.draft_service
         services.search_engine = self.search_engine
         self.service_factory.add_session('someuserid', services)
 
