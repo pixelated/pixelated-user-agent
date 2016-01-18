@@ -115,8 +115,9 @@ class SearchEngine(object):
         return FileIndex.create(storage, self._mail_schema(), indexname='mails')
 
     def index_mail(self, mail):
-        with AsyncWriter(self._index) as writer:
-            self._index_mail(writer, mail)
+        if mail is not None:
+            with AsyncWriter(self._index) as writer:
+                self._index_mail(writer, mail)
 
     def _index_mail(self, writer, mail):
         mdict = mail.as_dict()

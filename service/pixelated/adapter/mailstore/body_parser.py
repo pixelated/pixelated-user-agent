@@ -40,8 +40,7 @@ class BodyParser(object):
         text = self._serialize_for_parser(charset)
 
         decoded_body = self._parse_and_decode(text)
-
-        return unicode(decoded_body, encoding=charset)
+        return unicode(decoded_body, charset, errors='replace')
 
     def _parse_and_decode(self, text):
         parsed_body = Parser().parsestr(text)
