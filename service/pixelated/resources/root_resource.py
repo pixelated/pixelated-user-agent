@@ -44,7 +44,7 @@ class RootResource(Resource):
         self.putChild(AttachmentsResource.BASE_URL, AttachmentsResource(services_factory))
         self.putChild('contacts', ContactsResource(services_factory))
         self.putChild('features', FeaturesResource())
-        self.putChild('tags', TagsResource(search_engine))
+        self.putChild('tags', TagsResource(services_factory))
         self.putChild('mails', MailsResource(mail_service, draft_service))
         self.putChild('mail', MailResource(mail_service))
         self.putChild('feedback', FeedbackResource(feedback_service))
