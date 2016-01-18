@@ -153,7 +153,7 @@ class LeapSessionFactory(object):
         auth = srp_auth.authenticate(username, password)
         account_email = self._provider.address_for(username)
 
-        self._create_database_dir()
+        self._create_database_dir(auth.uuid)
 
         soledad = SoledadFactory.create(auth.token,
                                         auth.uuid,
@@ -213,20 +213,20 @@ class LeapSessionFactory(object):
     def _create_nicknym(self, email_address, token, uuid, soledad):
         return NickNym(self._provider, self._config, soledad, email_address, token, uuid)
 
-    def _leap_path(self):
-        return "%s/soledad" % self._config.leap_home
+    def _soledad_path(self, user_uuid):
+        return os.path.join(self._config.leap_home, user_uuid, 'soledad')
 
     def _secrets_path(self, user_uuid):
-        return "%s/%s.secret" % (self._leap_path(), user_uuid)
+        return os.path.join(self._soledad_path(user_uuid), 'secrets')
 
     def _local_db_path(self, user_uuid):
-        return "%s/%s.db" % (self._leap_path(), user_uuid)
+        return os.path.join(self._soledad_path(user_uuid), 'soledad.db')
 
-    def _create_database_dir(self):
+    def _create_database_dir(self, user_uuid):
         try:
-            os.makedirs(self._leap_path())
+            os.makedirs(self._soledad_path(user_uuid))
         except OSError as exc:
-            if exc.errno == errno.EEXIST and os.path.isdir(self._leap_path()):
+            if exc.errno == errno.EEXIST and os.path.isdir(self._soledad_path(user_uuid)):
                 pass
             else:
                 raise
