@@ -38,7 +38,6 @@ class RootResource(Resource):
 
     def initialize(self, services_factory, keymanager, search_engine, mail_service, draft_service, feedback_service):
         self.account_email = mail_service.account_email
-
         self.putChild('assets', File(self._static_folder))
         self.putChild('keys', KeysResource(services_factory))
         self.putChild(AttachmentsResource.BASE_URL, AttachmentsResource(services_factory))
@@ -48,7 +47,7 @@ class RootResource(Resource):
         self.putChild('mails', MailsResource(services_factory))
         self.putChild('mail', MailResource(services_factory))
         self.putChild('feedback', FeedbackResource(services_factory))
-        self.putChild('user-settings', UserSettingsResource(self.account_email))
+        self.putChild('user-settings', UserSettingsResource(services_factory))
 
         self._mode = MODE_RUNNING
 
