@@ -46,10 +46,10 @@ class ApplicationTest(unittest.TestCase):
         leap_session = MagicMock()
         config = ApplicationTest.MockConfig(12345, '127.0.0.1', leap_session)
 
-        d = pixelated.application.start_user_agent(app_mock, services_factory_mock, config.home, leap_session)
+        d = pixelated.application.start_user_agent_in_single_user_mode(app_mock, services_factory_mock, config.home, leap_session)
 
         def _assert(_):
-            services_mock.assert_called_once_with(config.home, leap_session)
+            services_mock.assert_called_once_with(leap_session)
 
         d.addCallback(_assert)
         return d
@@ -66,10 +66,10 @@ class ApplicationTest(unittest.TestCase):
 
         config = ApplicationTest.MockConfig(12345, '127.0.0.1', sslkey="sslkey", sslcert="sslcert")
 
-        d = pixelated.application.start_user_agent(app_mock, services_factory_mock, config.home, leap_session)
+        d = pixelated.application.start_user_agent_in_single_user_mode(app_mock, services_factory_mock, config.home, leap_session)
 
         def _assert(_):
-            services_mock.assert_called_once_with(config.home, leap_session)
+            services_mock.assert_called_once_with(leap_session)
 
         d.addCallback(_assert)
         return d

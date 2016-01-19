@@ -19,8 +19,8 @@ import unittest
 from mockito import verify, mock
 from mockito.matchers import Matcher
 from email import message_from_file
-from pixelated.application import add_welcome_mail
 from pixelated.adapter.model.mail import InputMail
+from pixelated.adapter.welcome_mail import add_welcome_mail
 
 
 class TestWelcomeMail(unittest.TestCase):

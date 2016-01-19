@@ -1,5 +1,20 @@
+#
+# Copyright (c) 2016 ThoughtWorks, Inc.
+#
+# Pixelated is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Pixelated is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+
 import os
-import requests
 from string import Template
 
 from pixelated.resources import BaseResource
@@ -7,6 +22,7 @@ from pixelated.resources.attachments_resource import AttachmentsResource
 from pixelated.resources.contacts_resource import ContactsResource
 from pixelated.resources.features_resource import FeaturesResource
 from pixelated.resources.feedback_resource import FeedbackResource
+from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.user_settings_resource import UserSettingsResource
 from pixelated.resources.mail_resource import MailResource
 from pixelated.resources.mails_resource import MailsResource
@@ -39,7 +55,7 @@ class RootResource(BaseResource):
             return self
         return Resource.getChild(self, path, request)
 
-    def initialize(self):
+    def initialize(self, portal=None):
         self.putChild('assets', File(self._static_folder))
         self.putChild('keys', KeysResource(self._services_factory))
         self.putChild(AttachmentsResource.BASE_URL, AttachmentsResource(self._services_factory))
@@ -50,6 +66,7 @@ class RootResource(BaseResource):
         self.putChild('mail', MailResource(self._services_factory))
         self.putChild('feedback', FeedbackResource(self._services_factory))
         self.putChild('user-settings', UserSettingsResource(self._services_factory))
+        self.putChild('login', LoginResource(self._services_factory, portal))
 
         self._mode = MODE_RUNNING
 

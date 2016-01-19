@@ -33,7 +33,7 @@ from twisted.web.resource import getChildForRequest
 # from twisted.web.server import Site as PixelatedSite
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
 from pixelated.adapter.services.feedback_service import FeedbackService
-from pixelated.application import ServicesFactory
+from pixelated.application import ServicesFactory, UserAgentMode, SingleUserServicesFactory
 from pixelated.config.site import PixelatedSite
 
 from pixelated.adapter.mailstore import LeapMailStore
@@ -85,7 +85,7 @@ class AppTestClient(object):
         mails = yield self.mail_service.all_mails()
         self.search_engine.index_mails(mails)
 
-        self.service_factory = ServicesFactory()
+        self.service_factory = SingleUserServicesFactory(UserAgentMode(is_single_user=True))
         services = mock()
         services.keymanager = self.keymanager
         services.mail_service = self.mail_service

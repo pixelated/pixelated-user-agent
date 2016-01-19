@@ -20,7 +20,7 @@ import random
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
 from pixelated.adapter.mailstore.maintenance import SoledadMaintenance
-from pixelated.config.leap import initialize_leap
+from pixelated.config.leap import initialize_leap_single_user
 from pixelated.config import logger, arguments
 import logging
 
@@ -39,7 +39,7 @@ def initialize():
 
     @defer.inlineCallbacks
     def _run():
-        leap_session = yield initialize_leap(
+        leap_session = yield initialize_leap_single_user(
             args.leap_provider_cert,
             args.leap_provider_cert_fingerprint,
             args.credentials_file,

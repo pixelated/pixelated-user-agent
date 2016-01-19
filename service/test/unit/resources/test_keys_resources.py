@@ -3,7 +3,7 @@ import ast
 from mockito import mock, when, any as ANY
 from leap.keymanager import OpenPGPKey, KeyNotFound
 
-from pixelated.application import ServicesFactory
+from pixelated.application import ServicesFactory, UserAgentMode
 from pixelated.resources.keys_resource import KeysResource
 import twisted.trial.unittest as unittest
 from twisted.web.test.requesthelper import DummyRequest
@@ -15,12 +15,13 @@ class TestKeysResource(unittest.TestCase):
 
     def setUp(self):
         self.keymanager = mock()
-        self.servicesFactory = mock()
+        self.services_factory = mock()
+        self.services_factory.mode = UserAgentMode(is_single_user=True)
         self.services = mock()
         self.services.keymanager = self.keymanager
-        self.servicesFactory._services_by_user = {'someuserid': self.keymanager}
-        when(self.servicesFactory).services(ANY()).thenReturn(self.services)
-        self.web = DummySite(KeysResource(self.servicesFactory))
+        self.services_factory._services_by_user = {'someuserid': self.keymanager}
+        when(self.services_factory).services(ANY()).thenReturn(self.services)
+        self.web = DummySite(KeysResource(self.services_factory))
 
     def test_returns_404_if_key_not_found(self):
         request = DummyRequest(['/keys'])

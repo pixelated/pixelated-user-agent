@@ -16,7 +16,11 @@
 
 import json
 
+from twisted.web._responses import UNAUTHORIZED
 from twisted.web.resource import Resource
+
+# from pixelated.resources.login_resource import LoginResource
+from pixelated.resources.session import IPixelatedSession
 
 
 class SetEncoder(json.JSONEncoder):
@@ -48,8 +52,19 @@ class BaseResource(Resource):
         self._services_factory = services_factory
 
     def _get_user_id_from_request(self, request):
-        # currently we are faking this
-        return self._services_factory._services_by_user.keys()[0]
+        if self._services_factory.mode.is_single_user:
+            return None  # it doesn't matter
+        session = self.get_session(request)
+        if session.is_logged_in():
+            return session.user_uuid
+        raise ValueError('Not logged in')
+
+    def is_logged_in(self, request):
+        session = self.get_session(request)
+        return session.is_logged_in()
+
+    def get_session(self, request):
+        return IPixelatedSession(request.getSession())
 
     def _services(self, request):
         user_id = self._get_user_id_from_request(request)
@@ -72,3 +87,13 @@ class BaseResource(Resource):
 
     def feedback_service(self, request):
         return self._service(request, 'feedback_service')
+
+
+class UnAuthorizedResource(Resource):
+
+    def __init__(self):
+        Resource.__init__(self)
+
+    def render_GET(self, request):
+        request.setResponseCode(UNAUTHORIZED)
+        return "Unauthorized!"

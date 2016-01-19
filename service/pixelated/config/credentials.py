@@ -50,5 +50,4 @@ def read_from_file(credentials_file):
 
 def read_from_dispatcher():
     config = json.loads(sys.stdin.read())
-
     return config['leap_provider_hostname'], config['user'], config['password']

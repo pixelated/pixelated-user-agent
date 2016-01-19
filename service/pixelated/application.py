@@ -14,37 +14,36 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import os
+import logging
 
-from email import message_from_file
-from twisted.internet import reactor
-from twisted.internet import defer
-from twisted.internet import ssl
 from OpenSSL import SSL
 from OpenSSL import crypto
+from leap.common.events import (server as events_server,
+                                register, catalog as events)
+from twisted.cred import portal
+from twisted.cred.checkers import AllowAnonymousAccess
+from twisted.internet import defer
+from twisted.internet import reactor
+from twisted.internet import ssl
 
-from pixelated.adapter.model.mail import InputMail
+from pixelated.adapter.welcome_mail import add_welcome_mail
 from pixelated.config import arguments
-from pixelated.config.services import Services
-from pixelated.config.leap import initialize_leap
 from pixelated.config import logger
+from pixelated.config.leap import initialize_leap_single_user, init_monkeypatches, initialize_leap_provider
+from pixelated.config.services import Services
 from pixelated.config.site import PixelatedSite
+from pixelated.resources.auth import LeapPasswordChecker, PixelatedRealm, PixelatedAuthSessionWrapper, SessionChecker
+from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
-
-from leap.common.events import (
-    register,
-    catalog as events
-)
-
-import logging
 
 log = logging.getLogger(__name__)
 
 
 class ServicesFactory(object):
 
-    def __init__(self):
+    def __init__(self, mode):
         self._services_by_user = {}
+        self.mode = mode
 
     def is_logged_in(self, user_id):
         return user_id in self._services_by_user
@@ -62,11 +61,28 @@ class ServicesFactory(object):
         self._services_by_user[user_id] = services
 
 
+class SingleUserServicesFactory(object):
+    def __init__(self, mode):
+        self._services = None
+        self.mode = mode
+
+    def add_session(self, user_id, services):
+        self._services = services
+
+    def services(self, user_id):
+        return self._services
+
+
+class UserAgentMode(object):
+    def __init__(self, is_single_user):
+        self.is_single_user = is_single_user
+
+
 @defer.inlineCallbacks
-def start_user_agent(root_resource, services_factory, leap_home, leap_session):
+def start_user_agent_in_single_user_mode(root_resource, services_factory, leap_home, leap_session):
     log.info('Bootstrap done, loading services for user %s' % leap_session.user_auth.username)
 
-    services = Services(leap_home, leap_session)
+    services = Services(leap_session)
     yield services.setup()
 
     if leap_session.fresh_account:
@@ -77,7 +93,7 @@ def start_user_agent(root_resource, services_factory, leap_home, leap_session):
     root_resource.initialize()
 
     # soledad needs lots of threads
-    reactor.threadpool.adjustPoolsize(5, 15)
+    reactor.getThreadPool().adjustPoolsize(5, 15)
     log.info('Done, the user agent is ready to be used')
 
 
@@ -96,27 +112,21 @@ def _ssl_options(sslkey, sslcert):
     return options
 
 
+def _create_service_factory(args):
+    if args.single_user:
+        return SingleUserServicesFactory(UserAgentMode(is_single_user=True))
+    else:
+        return ServicesFactory(UserAgentMode(is_single_user=False))
+
+
 def initialize():
     log.info('Starting the Pixelated user agent')
     args = arguments.parse_user_agent_args()
     logger.init(debug=args.debug)
-    services_factory = ServicesFactory()
+    services_factory = _create_service_factory(args)
     resource = RootResource(services_factory)
 
-    start_site(args, resource)
-
-    deferred = initialize_leap(args.leap_provider_cert,
-                               args.leap_provider_cert_fingerprint,
-                               args.credentials_file,
-                               args.organization_mode,
-                               args.leap_home)
-
-    deferred.addCallback(
-        lambda leap_session: start_user_agent(
-            resource,
-            services_factory,
-            args.leap_home,
-            leap_session))
+    deferred = _start_mode(args, resource, services_factory)
 
     def _quit_on_error(failure):
         failure.printTraceback()
@@ -129,23 +139,66 @@ def initialize():
     deferred.addCallback(_register_shutdown_on_token_expire)
     deferred.addErrback(_quit_on_error)
 
+    log.info('Running the reactor')
+
     reactor.run()
 
 
+def _start_mode(args, resource, services_factory):
+    if services_factory.mode.is_single_user:
+        deferred = _start_in_single_user_mode(args, resource, services_factory)
+    else:
+        deferred = _start_in_multi_user_mode(args, resource, services_factory)
+    return deferred
+
+
+def _start_in_multi_user_mode(args, root_resource, services_factory):
+    if args.provider is None:
+        raise ValueError('provider name is required')
+
+    init_monkeypatches()
+    events_server.ensure_server()
+
+    config, provider = initialize_leap_provider(args.provider, args.leap_provider_cert, args.leap_provider_cert_fingerprint, args.leap_home)
+
+    checker = LeapPasswordChecker(args, provider)
+    session_checker = SessionChecker()
+    anonymous_resource = LoginResource(services_factory)
+
+    realm = PixelatedRealm(root_resource, anonymous_resource)
+    _portal = portal.Portal(realm, [checker, session_checker, AllowAnonymousAccess()])
+
+    protected_resource = PixelatedAuthSessionWrapper(_portal, root_resource, anonymous_resource, [])
+    anonymous_resource.set_portal(_portal)
+
+    start_site(args, protected_resource)
+
+    root_resource.initialize(_portal)
+    reactor.getThreadPool().adjustPoolsize(5, 15)
+
+    return defer.succeed(None)
+
+
+def _start_in_single_user_mode(args, resource, services_factory):
+    start_site(args, resource)
+    deferred = initialize_leap_single_user(args.leap_provider_cert,
+                                           args.leap_provider_cert_fingerprint,
+                                           args.credentials_file,
+                                           args.organization_mode,
+                                           args.leap_home)
+    deferred.addCallback(
+        lambda leap_session: start_user_agent_in_single_user_mode(
+            resource,
+            services_factory,
+            args.leap_home,
+            leap_session))
+    return deferred
+
+
 def start_site(config, resource):
-    log.info('Starting the API with the loading screen on port %s' % config.port)
+    log.info('Starting the API on port %s' % config.port)
     if config.sslkey and config.sslcert:
         reactor.listenSSL(config.port, PixelatedSite(resource), _ssl_options(config.sslkey, config.sslcert),
                           interface=config.host)
     else:
         reactor.listenTCP(config.port, PixelatedSite(resource), interface=config.host)
-
-
-def add_welcome_mail(mail_store):
-    current_path = os.path.dirname(os.path.abspath(__file__))
-    welcome_mail = os.path.join(current_path, 'assets', 'welcome.mail')
-    with open(welcome_mail) as mail_template_file:
-        mail_template = message_from_file(mail_template_file)
-
-    input_mail = InputMail.from_python_mail(mail_template)
-    mail_store.add_mail('INBOX', input_mail.raw)

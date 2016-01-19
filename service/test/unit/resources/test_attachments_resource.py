@@ -7,6 +7,7 @@ from mockito import mock, when, verify, any as ANY
 from twisted.internet import defer
 from twisted.web.test.requesthelper import DummyRequest
 
+from pixelated.application import UserAgentMode
 from pixelated.resources.attachments_resource import AttachmentsResource
 from test.unit.resources import DummySite
 
@@ -17,13 +18,14 @@ class AttachmentsResourceTest(unittest.TestCase):
 
     def setUp(self):
         self.mail_service = mock()
-        self.servicesFactory = mock()
+        self.services_factory = mock()
+        self.services_factory.mode = UserAgentMode(is_single_user=True)
         self.services = mock()
         self.services.mail_service = self.mail_service
-        self.servicesFactory._services_by_user = {'someuserid': self.mail_service}
-        when(self.servicesFactory).services(ANY()).thenReturn(self.services)
+        self.services_factory._services_by_user = {'someuserid': self.mail_service}
+        when(self.services_factory).services(ANY()).thenReturn(self.services)
 
-        self.mails_resource = AttachmentsResource(self.servicesFactory)
+        self.mails_resource = AttachmentsResource(self.services_factory)
         self.mails_resource.isLeaf = True
         self.web = DummySite(self.mails_resource)
 

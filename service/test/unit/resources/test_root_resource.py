@@ -1,6 +1,8 @@
 import unittest
 import re
 from mockito import mock, when, any as ANY
+
+from pixelated.application import UserAgentMode
 from test.unit.resources import DummySite
 from twisted.web.test.requesthelper import DummyRequest
 from pixelated.resources.root_resource import RootResource
@@ -12,6 +14,7 @@ class TestRootResource(unittest.TestCase):
     def setUp(self):
         self.mail_service = mock()
         self.services_factory = mock()
+        self.services_factory.mode = UserAgentMode(is_single_user=True)
         self.services = mock()
         self.services.mail_service = self.mail_service
         self.services_factory._services_by_user = {'someuserid': self.mail_service}

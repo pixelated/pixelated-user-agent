@@ -28,8 +28,11 @@ def parse_user_agent_args():
     parser.add_argument('--port', type=int, default=3333, help='the port to run the user agent on')
     parser.add_argument('-sk', '--sslkey', metavar='<server.key>', default=None, help='use specified file as web server\'s SSL key (when using the user-agent together with the pixelated-dispatcher)')
     parser.add_argument('-sc', '--sslcert', metavar='<server.crt>', default=None, help='use specified file as web server\'s SSL certificate (when using the user-agent together with the pixelated-dispatcher)')
+    parser.add_argument('--multi-user', help='Run user agent in multi user mode', action='store_false', default=True, dest='single_user')
+    parser.add_argument('-p', '--provider', help='specify a provider for mutli-user mode', metavar='<provider host>', default=None, dest='provider')
 
     args = parser.parse_args()
+
     return args
 
 

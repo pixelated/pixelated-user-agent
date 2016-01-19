@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 class Services(object):
 
-    def __init__(self, leap_home, leap_session):
-        self._leap_home = leap_home
+    def __init__(self, leap_session):
+        self._leap_home = leap_session.config.leap_home
         self._leap_session = leap_session
 
     @defer.inlineCallbacks
