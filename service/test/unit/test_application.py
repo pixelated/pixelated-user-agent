@@ -42,10 +42,11 @@ class ApplicationTest(unittest.TestCase):
     def test_that_start_user_agent_binds_to_tcp_port_if_no_ssl_options(self, services_mock, reactor_mock, _):
         # FIXME patch something closer, instead of leap.common
         app_mock = MagicMock()
+        services_factory_mock = MagicMock()
         leap_session = MagicMock()
         config = ApplicationTest.MockConfig(12345, '127.0.0.1', leap_session)
 
-        d = pixelated.application.start_user_agent(app_mock, config.home, leap_session)
+        d = pixelated.application.start_user_agent(app_mock, services_factory_mock, config.home, leap_session)
 
         def _assert(_):
             services_mock.assert_called_once_with(config.home, leap_session)
@@ -59,12 +60,13 @@ class ApplicationTest(unittest.TestCase):
     def test_that_start_user_agent_binds_to_ssl_if_ssl_options(self, services_mock, reactor_mock, _):
         # FIXME patch something closer, instead of leap.common
         app_mock = MagicMock()
+        services_factory_mock = MagicMock()
         leap_session = MagicMock()
         pixelated.application._ssl_options = lambda x, y: 'options'
 
         config = ApplicationTest.MockConfig(12345, '127.0.0.1', sslkey="sslkey", sslcert="sslcert")
 
-        d = pixelated.application.start_user_agent(app_mock, config.home, leap_session)
+        d = pixelated.application.start_user_agent(app_mock, services_factory_mock, config.home, leap_session)
 
         def _assert(_):
             services_mock.assert_called_once_with(config.home, leap_session)

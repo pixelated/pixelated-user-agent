@@ -63,7 +63,7 @@ class ServicesFactory(object):
 
 
 @defer.inlineCallbacks
-def start_user_agent(root_resource, leap_home, leap_session):
+def start_user_agent(root_resource, services_factory, leap_home, leap_session):
     log.info('Bootstrap done, loading services for user %s' % leap_session.user_auth.username)
 
     services = Services(leap_home, leap_session)
@@ -72,10 +72,9 @@ def start_user_agent(root_resource, leap_home, leap_session):
     if leap_session.fresh_account:
         yield add_welcome_mail(leap_session.mail_store)
 
-    services_factory = ServicesFactory()
     services_factory.add_session(leap_session.user_auth.uuid, services)
 
-    root_resource.initialize(services_factory, services.mail_service)
+    root_resource.initialize()
 
     # soledad needs lots of threads
     reactor.threadpool.adjustPoolsize(5, 15)
@@ -101,7 +100,8 @@ def initialize():
     log.info('Starting the Pixelated user agent')
     args = arguments.parse_user_agent_args()
     logger.init(debug=args.debug)
-    resource = RootResource()
+    services_factory = ServicesFactory()
+    resource = RootResource(services_factory)
 
     start_site(args, resource)
 
@@ -114,6 +114,7 @@ def initialize():
     deferred.addCallback(
         lambda leap_session: start_user_agent(
             resource,
+            services_factory,
             args.leap_home,
             leap_session))
 

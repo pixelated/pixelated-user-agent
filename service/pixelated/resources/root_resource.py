@@ -1,6 +1,8 @@
 import os
 import requests
 from string import Template
+
+from pixelated.resources import BaseResource
 from pixelated.resources.attachments_resource import AttachmentsResource
 from pixelated.resources.contacts_resource import ContactsResource
 from pixelated.resources.features_resource import FeaturesResource
@@ -18,13 +20,14 @@ MODE_STARTUP = 1
 MODE_RUNNING = 2
 
 
-class RootResource(Resource):
+class RootResource(BaseResource):
 
-    def __init__(self):
-        Resource.__init__(self)
+    def __init__(self, services_factory):
+        BaseResource.__init__(self, services_factory)
         self._startup_assets_folder = self._get_startup_folder()
         self._static_folder = self._get_static_folder()
         self._html_template = open(os.path.join(self._static_folder, 'index.html')).read()
+        self._services_factory = services_factory
         self._startup_mode()
 
     def _startup_mode(self):
@@ -36,18 +39,17 @@ class RootResource(Resource):
             return self
         return Resource.getChild(self, path, request)
 
-    def initialize(self, services_factory, mail_service):
-        self.account_email = mail_service.account_email
+    def initialize(self):
         self.putChild('assets', File(self._static_folder))
-        self.putChild('keys', KeysResource(services_factory))
-        self.putChild(AttachmentsResource.BASE_URL, AttachmentsResource(services_factory))
-        self.putChild('contacts', ContactsResource(services_factory))
+        self.putChild('keys', KeysResource(self._services_factory))
+        self.putChild(AttachmentsResource.BASE_URL, AttachmentsResource(self._services_factory))
+        self.putChild('contacts', ContactsResource(self._services_factory))
         self.putChild('features', FeaturesResource())
-        self.putChild('tags', TagsResource(services_factory))
-        self.putChild('mails', MailsResource(services_factory))
-        self.putChild('mail', MailResource(services_factory))
-        self.putChild('feedback', FeedbackResource(services_factory))
-        self.putChild('user-settings', UserSettingsResource(services_factory))
+        self.putChild('tags', TagsResource(self._services_factory))
+        self.putChild('mails', MailsResource(self._services_factory))
+        self.putChild('mail', MailResource(self._services_factory))
+        self.putChild('feedback', FeedbackResource(self._services_factory))
+        self.putChild('user-settings', UserSettingsResource(self._services_factory))
 
         self._mode = MODE_RUNNING
 
@@ -72,5 +74,6 @@ class RootResource(Resource):
         if self._is_starting():
             return open(os.path.join(self._startup_assets_folder, 'Interstitial.html')).read()
         else:
-            response = Template(self._html_template).safe_substitute(account_email=self.account_email)
+            account_email = self.mail_service(request).account_email
+            response = Template(self._html_template).safe_substitute(account_email=account_email)
             return str(response)

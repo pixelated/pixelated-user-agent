@@ -85,8 +85,6 @@ class AppTestClient(object):
         mails = yield self.mail_service.all_mails()
         self.search_engine.index_mails(mails)
 
-        self.resource = RootResource()
-
         self.service_factory = ServicesFactory()
         services = mock()
         services.keymanager = self.keymanager
@@ -96,7 +94,8 @@ class AppTestClient(object):
         services.feedback_service = self.feedback_service
         self.service_factory.add_session('someuserid', services)
 
-        self.resource.initialize(self.service_factory, self.mail_service)
+        self.resource = RootResource(self.service_factory)
+        self.resource.initialize()
 
     def _render(self, request, as_json=True):
         def get_str(_str):
