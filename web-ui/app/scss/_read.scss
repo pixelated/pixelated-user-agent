@@ -68,6 +68,10 @@
   padding: 15px 30px 0 30px;
 }
 
+#attachment-list {
+  margin-top: 6px;
+}
+
 .attachmentsAreaWrap {
   padding: 0 30px;
 
@@ -80,6 +84,7 @@
         border: 1px solid #D9D9D9;
         border-radius: 2px;
         background-color: #F5F5F5;
+        margin-bottom: 7px;
     
       a {
         color: $attachment_text;
@@ -92,6 +97,7 @@
           i.download-icon {
             color: lighten($attachment_icon, 15);
           }
+
           color: $attachment_icon;
           outline: none;
         }

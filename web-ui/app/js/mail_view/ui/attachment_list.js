@@ -50,8 +50,8 @@ define(
 
             this.buildAttachmentListItem = function (attachment) {
                 return '<a href="' + this.attr.attachmentBaseUrl + '/' + attachment.ident + '?filename=' +
-                    attachment.name + '&encoding=' + attachment.encoding + '">' + attachment.name + ' (' + viewHelper.formatSize(attachment.size) + ')' +
-                    '</a>';
+                    attachment.name + '&encoding=' + attachment.encoding + '">' + attachment.name + ' <span class="attachment-size"> (' + viewHelper.formatSize(attachment.size) + ')' +
+                    '</span></a>';
             };
 
             this.addJqueryFileUploadConfig = function() {

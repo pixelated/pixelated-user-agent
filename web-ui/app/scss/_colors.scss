@@ -43,5 +43,6 @@ $wont_be_encrypted: $attention;
 $recipients_font_color: #AAA;
 
 /* Attachments */
-$attachment_text: #333;
+$attachment_text: #555;
 $attachment_icon: lighten($attachment_text, 30);
+$attachment_size: lighten($attachment_text, 30);

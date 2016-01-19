@@ -45,7 +45,13 @@
 
   span {
     padding: 3px;  
+
+    &.attachment-size {
+        color: $attachment_size;
+        cursor: pointer;
+    }
   }
+
   label.floatlabel {
     padding: 0.4rem !important;
     position: absolute;
@@ -115,6 +121,16 @@
 
   button.close-mail-button {
     margin: 1px;
+  }
+
+
+  .attachmentsAreaWrap {
+      padding: 0;
+
+      .attachmentsArea {
+          padding: 0;
+          border-top: 0;
+      }
   }
 
   @include recipients;

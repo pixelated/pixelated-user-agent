@@ -32,11 +32,10 @@
     <!-- The container for the uploaded files -->
     <div class="attachmentsAreaWrap {{#unless attachments}}hide{{/unless}}">
         <div class="attachmentsArea column large-12">
-            <p><strong><i class="fa fa-paperclip"></i> Attachment(s):</strong></p>
             <ul id="attachment-list-item">
                 {{#each attachments }}
                     <li>
-                        <a href="/attachment/{{ this.ident }}?encoding={{ this.encoding }}&filename={{ this.name }}">{{ this.name }} ({{ formatSize this.size}})
+                        <a href="/attachment/{{ this.ident }}?encoding={{ this.encoding }}&filename={{ this.name }}">{{ this.name }} <span class="attachment-size">({{ formatSize this.size}})</span>
                             <i class="fa fa-arrow-down download-icon"></i></a>
                     </li>
                 {{/each }}

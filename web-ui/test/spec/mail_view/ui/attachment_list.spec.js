@@ -32,7 +32,7 @@ describeMixin('mail_view/ui/attachment_list', function () {
 
             $(document).trigger(Pixelated.events.mail.uploadedAttachment, stubAttachment);
 
-            var expected_li = '<li><a href="/attachment/faked?filename=haha.txt&amp;encoding=base64">haha.txt (4.39 Kb)</a></li>';
+            var expected_li = '<li><a href="/attachment/faked?filename=haha.txt&amp;encoding=base64">haha.txt <span class="attachment-size"> (4.39 Kb)</span></a></li>';
             expect(this.component.select('attachmentListItem').html()).toEqual(expected_li);
         });
 
