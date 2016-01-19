@@ -8,7 +8,7 @@ describeComponent('mail_view/ui/attachment_icon', function () {
     });
 
     it('should render attachment button if feature enabled', function () {
-        expect(this.$node.html()).toMatch('<i class="fa fa-paperclip fa-2x"></i>');
+        expect(this.$node.html()).toMatch('<i class="fa fa-paperclip"></i>');
     });
 
     it('should trigger starts of attachment upload process', function () {

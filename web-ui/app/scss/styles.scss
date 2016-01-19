@@ -885,6 +885,16 @@ div.side-nav-bottom {
 
 .buttons-group span#attachment-button{
   cursor: pointer;
+  outline: 0;
+  margin-left: 18px;
+  padding-top: 0px;
+  -ms-transform: rotate(224deg); /* IE 9 */
+  -webkit-transform: rotate(224deg); /* Chrome, Safari, Opera */
+  transform: rotate(224deg);
+
+  i.fa-paperclip {
+      font-size: 1.7em;
+  }
 }
 
 @import "mascot.scss";

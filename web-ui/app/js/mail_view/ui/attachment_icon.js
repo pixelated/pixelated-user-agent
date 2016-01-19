@@ -27,7 +27,7 @@ define(
 
         return defineComponent(function () {
             this.render = function () {
-                this.$node.html('<i class="fa fa-paperclip fa-2x"></i>');
+                this.$node.html('<i class="fa fa-paperclip"></i>');
             };
 
             this.triggerUploadAttachment = function () {
