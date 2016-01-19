@@ -10,17 +10,20 @@ class TestRootResource(unittest.TestCase):
     MAIL_ADDRESS = 'test_user@pixelated-project.org'
 
     def setUp(self):
-        self.services_factory_mock = mock()
-        self.mail_service_mock = mock()
-        root_resource = RootResource(self.services_factory_mock)
-        root_resource._mode = root_resource
-        root_resource.account_email = self.MAIL_ADDRESS
+        self.mail_service = mock()
+        self.services_factory = mock()
+        self.services = mock()
+        self.services.mail_service = self.mail_service
+        self.services_factory._services_by_user = {'someuserid': self.mail_service}
+        when(self.services_factory).services(ANY()).thenReturn(self.services)
+        self.mail_service.account_email = self.MAIL_ADDRESS
+
+        root_resource = RootResource(self.services_factory)
         root_resource._html_template = "<html><head><title>$account_email</title></head></html>"
+        root_resource._mode = root_resource
         self.web = DummySite(root_resource)
 
     def test_render_GET_should_template_account_email(self):
-        when(self.services_factory_mock).mail_service(ANY()).thenReturn(self.mail_service_mock)
-        self.mail_service_mock.account_email = self.MAIL_ADDRESS
         request = DummyRequest([''])
 
         d = self.web.get(request)
