@@ -70,6 +70,7 @@ define(
                 }).bind('fileuploadstart', function (e) {
                     self.trigger(document, events.mail.uploadingAttachment);
                 }).bind('fileuploadadd', function (e) {
+                    $('#attachment-list').show();
                     $('.attachmentsAreaWrap').show();
                 });
             };
