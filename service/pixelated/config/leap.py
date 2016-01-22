@@ -20,6 +20,7 @@ def initialize_leap_provider(provider_hostname, provider_cert, provider_fingerpr
 
     config = LeapConfig(leap_home=leap_home, start_background_jobs=True)
     provider = LeapProvider(provider_hostname, config)
+    provider.download_certificate()
     LeapCertificate(provider).setup_ca_bundle()
 
     return config, provider
