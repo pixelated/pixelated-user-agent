@@ -23,6 +23,7 @@ from pixelated.resources.contacts_resource import ContactsResource
 from pixelated.resources.features_resource import FeaturesResource
 from pixelated.resources.feedback_resource import FeedbackResource
 from pixelated.resources.login_resource import LoginResource
+from pixelated.resources.logout_resource import LogoutResource
 from pixelated.resources.user_settings_resource import UserSettingsResource
 from pixelated.resources.mail_resource import MailResource
 from pixelated.resources.mails_resource import MailsResource
@@ -60,13 +61,14 @@ class RootResource(BaseResource):
         self.putChild('keys', KeysResource(self._services_factory))
         self.putChild(AttachmentsResource.BASE_URL, AttachmentsResource(self._services_factory))
         self.putChild('contacts', ContactsResource(self._services_factory))
-        self.putChild('features', FeaturesResource())
+        self.putChild('features', FeaturesResource(portal))
         self.putChild('tags', TagsResource(self._services_factory))
         self.putChild('mails', MailsResource(self._services_factory))
         self.putChild('mail', MailResource(self._services_factory))
         self.putChild('feedback', FeedbackResource(self._services_factory))
         self.putChild('user-settings', UserSettingsResource(self._services_factory))
-        self.putChild('login', LoginResource(self._services_factory, portal))
+        self.putChild(LoginResource.BASE_URL, LoginResource(self._services_factory, portal))
+        self.putChild(LogoutResource.BASE_URL, LogoutResource(self._services_factory))
 
         self._mode = MODE_RUNNING
 

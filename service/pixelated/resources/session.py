@@ -32,5 +32,8 @@ class PixelatedSession(object):
     def is_logged_in(self):
         return self.user_uuid is not None
 
+    def expire(self):
+        self.user_uuid = None
+
 
 registerAdapter(PixelatedSession, Session, IPixelatedSession)

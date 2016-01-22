@@ -18,20 +18,30 @@ from pixelated.resources import respond_json
 import os
 from twisted.web.resource import Resource
 
+from pixelated.resources.logout_resource import LogoutResource
+
 
 class FeaturesResource(Resource):
     DISABLED_FEATURES = ['draftReply']
     isLeaf = True
 
+    def __init__(self, multi_user=False):
+        Resource.__init__(self)
+        self._multi_user = multi_user
+
     def render_GET(self, request):
-        dispatcher_features = {}
-
-        if os.environ.get('DISPATCHER_LOGOUT_URL'):
-            dispatcher_features['logout'] = os.environ.get('DISPATCHER_LOGOUT_URL')
-
+        dispatcher_features = self._dispatcher_features()
         disabled_features = self._disabled_features()
         return respond_json(
             {'disabled_features': disabled_features, 'dispatcher_features': dispatcher_features}, request)
+
+    def _dispatcher_features(self):
+        dispatcher_features = {}
+        if os.environ.get('DISPATCHER_LOGOUT_URL'):
+            dispatcher_features['logout'] = os.environ.get('DISPATCHER_LOGOUT_URL')
+        if self._multi_user:
+            dispatcher_features['logout'] = '/%s' % LogoutResource.BASE_URL
+        return dispatcher_features
 
     def _disabled_features(self):
         disabled_features = [default_disabled_feature for default_disabled_feature in self.DISABLED_FEATURES]

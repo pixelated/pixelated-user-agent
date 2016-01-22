@@ -30,6 +30,7 @@ log = logging.getLogger(__name__)
 
 
 class LoginResource(BaseResource):
+    BASE_URL = 'login'
 
     def __init__(self, services_factory, portal=None):
         BaseResource.__init__(self, services_factory)
