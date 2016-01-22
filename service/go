@@ -15,6 +15,13 @@ function resolveNumOfCores {
         fi
 }
 
+function removeZmqCertificates {
+        if [ -d ~/.config/leap/events/zmq_certificates ] ; then
+                echo "Removing zmq folder before running tests."
+                rm -Rf ~/.config/leap/events/zmq_certificates
+        fi
+}
+
 function setuppy {
         echo "Installing Pixelated User Agent."
         pip install --upgrade pip setuptools
@@ -46,10 +53,7 @@ function runIntegrationTests {
 
 function runUnitTests {
         echo "Executing Unit Tests."
-        if [ -f ~/.config/leap/events/zmq_certificates/public_keys/server.key ] ; then
-                echo "Removing zmq server.key before running tests."
-                rm ~/.config/leap/events/zmq_certificates/public_keys/server.key
-        fi
+        removeZmqCertificates
         trial --reporter=text $* test.unit
         echo "Done."
 }
@@ -101,6 +105,7 @@ function runCoverageUnitAndIntegration {
 
 function runFunctionalTests {
         echo "Executing Functional Tests on headless PhantomJS."
+        removeZmqCertificates
         echo "You should execute it on Debian box for more similar results with CI environment."
         behave --tags ~@wip test/functional/features
         echo "Done."
