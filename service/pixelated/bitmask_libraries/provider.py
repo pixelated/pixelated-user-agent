@@ -69,9 +69,20 @@ class LeapProvider(object):
         Downloads the server certificate, validates it against the provided fingerprint and stores it to file
         """
         path = filename or self.local_ca_crt
+
+        directory = self._extract_directory(path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
         cert = self.fetch_valid_certificate()
         with open(path, 'w') as out:
             out.write(cert)
+
+    def _extract_directory(self, path):
+        splited = path.split('/')
+        splited.pop(-1)
+        directory = '/'.join(splited)
+        return directory
 
     def fetch_valid_certificate(self):
         cert = self._fetch_certificate()
