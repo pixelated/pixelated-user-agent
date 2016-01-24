@@ -16,7 +16,7 @@
 
 import json
 
-from twisted.web._responses import UNAUTHORIZED
+from twisted.web.http import UNAUTHORIZED
 from twisted.web.resource import Resource
 
 # from pixelated.resources.login_resource import LoginResource

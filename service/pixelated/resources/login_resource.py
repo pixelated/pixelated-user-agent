@@ -19,7 +19,9 @@ import os
 
 from twisted.cred import credentials
 from twisted.internet import defer
-from twisted.web.resource import IResource
+from twisted.web import util
+from twisted.web.http import UNAUTHORIZED, OK
+from twisted.web.resource import IResource, NoResource
 from twisted.web.server import NOT_DONE_YET
 from twisted.web.static import File
 from twisted.web.template import Element, XMLFile, renderElement, renderer, tags
@@ -80,9 +82,12 @@ class LoginResource(BaseResource):
             return self
         if path == 'login':
             return self
-        return UnAuthorizedResource()
+        if not self.is_logged_in(request):
+            return UnAuthorizedResource()
+        return NoResource()
 
     def render_GET(self, request):
+        request.setResponseCode(OK)
         return self._render_template(request)
 
     def _render_template(self, request, error_msg=None):
@@ -92,11 +97,13 @@ class LoginResource(BaseResource):
     def render_POST(self, request):
 
         def render_response(response):
-            request.redirect("/")
+            util.redirectTo("/", request)
             request.finish()
 
         def render_error(error):
-            request.status = 500
+            log.info('Login Error for %s' % request.args['username'][0])
+            log.info('%s' % error)
+            request.setResponseCode(UNAUTHORIZED)
             return self._render_template(request, 'Invalid credentials')
 
         d = self._handle_login(request)
@@ -107,17 +114,13 @@ class LoginResource(BaseResource):
     @defer.inlineCallbacks
     def _handle_login(self, request):
         if self.is_logged_in(request):
+            request.setResponseCode(OK)
             defer.succeed(None)
             return
         username = request.args['username'][0]
         password = request.args['password'][0]
         creds = credentials.UsernamePassword(username, password)
-
         iface, leap_user, logout = yield self._portal.login(creds, None, IResource)
-
-        # we should really check whether the response is anonymous
 
         yield leap_user.start_services(self._services_factory)
         leap_user.init_http_session(request)
-
-        log.info('about to redirect to home page')
