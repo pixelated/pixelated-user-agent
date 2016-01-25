@@ -48,6 +48,7 @@ define(
           .cc(this.attr.recipientValues.cc)
           .bcc(this.attr.recipientValues.bcc)
           .body(this.select('bodyBox').val())
+          .attachment(this.attr.attachments)
           .tag(tag);
       };
 

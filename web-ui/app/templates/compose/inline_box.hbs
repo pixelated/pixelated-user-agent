@@ -10,8 +10,11 @@
 
 {{> recipients }}
 
+{{> attachments_list }}
+
 <div class="buttons-group columns">
   <button id="send-button" tabindex=6><i class="fa fa-send"></i></button>
+  <span id="attachment-button" tabindex="6"></span>
   <button id="trash-button" tabindex=7>{{t 'trash-button'}}<i class="fa fa-trash-o"></i></button>
   <div id="draft-save-status"></div>
 </div>
