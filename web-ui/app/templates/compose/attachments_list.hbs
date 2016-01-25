@@ -1,0 +1,27 @@
+<div id="attachment-list" class="buttons-group columns">
+    <span class="btn btn-success fileinput-button">
+        <!-- The file input field used as target for the file upload widget -->
+        <input id="fileupload" type="file" name="attachment">
+    </span>
+    <!-- The global progress bar -->
+    <div id="progress" class="progress">
+        <div class="progress-bar progress-bar-success"></div>
+    </div>
+
+    <!-- The container for the uploaded files -->
+    <div class="attachmentsAreaWrap {{#unless attachments}}hide{{/unless}}">
+        <div class="attachmentsArea column large-12">
+            <ul id="attachment-list-item">
+                {{#each attachments }}
+                    <li>
+                        <a href="/attachment/{{ this.ident }}?encoding={{ this.encoding }}&filename={{ this.name }}">{{ this.name }} <span class="attachment-size">({{ formatSize this.size}})</span>
+                            <i class="fa fa-arrow-down download-icon"></i></a>
+                    </li>
+                {{/each }}
+            </ul>
+        </div>
+    </div>
+
+    <br>
+</div>
+
