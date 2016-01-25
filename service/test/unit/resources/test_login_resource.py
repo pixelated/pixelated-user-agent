@@ -1,7 +1,6 @@
 from leap.exceptions import SRPAuthenticationError
 from mock import patch
 from mockito import mock, when, any as ANY, verify, verifyZeroInteractions
-from twisted.cred import credentials
 from twisted.trial import unittest
 from twisted.web.resource import IResource
 from twisted.web.test.requesthelper import DummyRequest

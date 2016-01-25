@@ -161,7 +161,7 @@ def _start_in_multi_user_mode(args, root_resource, services_factory):
 
     config, provider = initialize_leap_provider(args.provider, args.leap_provider_cert, args.leap_provider_cert_fingerprint, args.leap_home)
 
-    checker = LeapPasswordChecker(args, provider)
+    checker = LeapPasswordChecker(provider)
     session_checker = SessionChecker()
     anonymous_resource = LoginResource(services_factory)
 

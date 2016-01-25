@@ -32,7 +32,7 @@ from twisted.web.resource import IResource, ErrorPage
 
 from pixelated.adapter.welcome_mail import add_welcome_mail
 from pixelated.config.leap import authenticate_user
-from pixelated.config.services import Services
+from pixelated.config import services
 from pixelated.resources import IPixelatedSession
 
 
@@ -46,8 +46,7 @@ class LeapPasswordChecker(object):
         credentials.IUsernameHashedPassword
     )
 
-    def __init__(self, setup_args, leap_provider):
-        self._setup_args = setup_args
+    def __init__(self, leap_provider):
         self._leap_provider = leap_provider
 
     def requestAvatarId(self, credentials):
@@ -99,13 +98,13 @@ class LeapUser(object):
 
     @defer.inlineCallbacks
     def start_services(self, services_factory):
-        services = Services(self._leap_session)
-        yield services.setup()
+        _services = services.Services(self._leap_session)
+        yield _services.setup()
 
         if self._leap_session.fresh_account:
             yield add_welcome_mail(self._leap_session.mail_store)
 
-        services_factory.add_session(self._leap_session.user_auth.uuid, services)
+        services_factory.add_session(self._leap_session.user_auth.uuid, _services)
 
     def init_http_session(self, request):
         session = IPixelatedSession(request.getSession())

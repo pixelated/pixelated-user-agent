@@ -93,11 +93,20 @@ class PixRequestMock(DummyRequest):
         if len(self.written):
             return self.written[0]
 
+    def redirect(self, url):
+        self.setResponseCode(302)
+        self.setHeader(b"location", url)
+
 
 def request_mock(path='', method='GET', body='', headers={}):
     dummy = PixRequestMock(path.split('/'))
     for name, val in headers.iteritems():
         dummy.headers[name.lower()] = val
     dummy.method = method
-    dummy.content = io.BytesIO(body)
+    if isinstance(body, str):
+        dummy.content = io.BytesIO(body)
+    else:
+        for key, val in body.items():
+            dummy.addArg(key, val)
+
     return dummy
