@@ -17,6 +17,8 @@
 from os.path import isfile
 from mailbox import Maildir, mbox, MaildirMessage
 import random
+
+from leap.mail.adaptors.soledad import MetaMsgDocWrapper
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
 from pixelated.adapter.mailstore.maintenance import SoledadMaintenance
@@ -28,6 +30,8 @@ from leap.mail.constants import MessageFlags
 from pixelated.support.mail_generator import MailGenerator
 
 REPAIR_COMMAND = 'repair'
+INTEGRITY_CHECK_COMMAND = 'integrity-check'
+
 
 log = logging.getLogger(__name__)
 
@@ -54,11 +58,15 @@ def initialize():
 
 
 def _do_initial_sync(args):
-    return not _is_repair_command(args)
+    return (not _is_repair_command(args)) and (not _is_integrity_check_command(args))
 
 
 def _is_repair_command(args):
     return args.command == REPAIR_COMMAND
+
+
+def _is_integrity_check_command(args):
+    return args.command == INTEGRITY_CHECK_COMMAND
 
 
 def execute_command(args, leap_session):
@@ -109,6 +117,9 @@ def add_command_callback(args, prepareDeferred, finalizeDeferred):
         prepareDeferred.chainDeferred(finalizeDeferred)
     elif args.command == 'sync':
         # nothing to do here, sync is already part of the chain
+        prepareDeferred.chainDeferred(finalizeDeferred)
+    elif args.command == INTEGRITY_CHECK_COMMAND:
+        prepareDeferred.addCallback(integrity_check)
         prepareDeferred.chainDeferred(finalizeDeferred)
     elif args.command == REPAIR_COMMAND:
         prepareDeferred.addCallback(repair)
@@ -253,6 +264,38 @@ def dump_soledad(args):
     for doc in docs:
         print doc
         print '\n'
+
+    defer.returnValue(args)
+
+
+@defer.inlineCallbacks
+def integrity_check(args):
+    leap_session, soledad = args
+
+    generation, docs = yield soledad.get_all_docs()
+
+    known_docs = {}
+
+    print 'Analysing %d docs\n' % len(docs)
+
+    # learn about all docs
+    for doc in docs:
+        known_docs[doc.doc_id] = doc
+
+    for doc in docs:
+        if doc.doc_id.startswith('M-'):
+            meta = MetaMsgDocWrapper(doc_id=doc.doc_id, **doc.content)
+
+            # validate header doc
+            if meta.hdoc not in known_docs:
+                print 'Error: Could not find header doc %s for meta %s' % (meta.hdoc, doc.doc_id)
+
+            if meta.fdoc not in known_docs:
+                print 'Error: Could not find flags doc %s for meta %s' % (meta.fdoc, doc.doc_id)
+
+            for cdoc in meta.cdocs:
+                if cdoc not in known_docs:
+                    print 'Error: Could not find content doc %s for meta %s' % (cdoc, meta.doc_id)
 
     defer.returnValue(args)
 

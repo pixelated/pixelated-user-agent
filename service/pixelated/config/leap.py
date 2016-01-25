@@ -65,7 +65,7 @@ def initialize_leap_single_user(leap_provider_cert,
 
     config, provider = initialize_leap_provider(provider, leap_provider_cert, leap_provider_cert_fingerprint, leap_home)
 
-    leap_session = yield authenticate_user(provider, username, password)
+    leap_session = yield authenticate_user(provider, username, password, initial_sync=initial_sync)
 
     defer.returnValue(leap_session)
 
