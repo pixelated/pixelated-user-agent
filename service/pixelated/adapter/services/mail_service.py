@@ -37,7 +37,7 @@ class MailService(object):
 
     @defer.inlineCallbacks
     def all_mails(self):
-        mails = yield self.mail_store.all_mails()
+        mails = yield self.mail_store.all_mails(gracefully_ignore_errors=True)
         defer.returnValue(mails)
 
     def save_attachment(self, content, content_type):

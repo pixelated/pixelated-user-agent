@@ -120,7 +120,7 @@ class TestLeapMailStore(TestCase):
         try:
             yield store.get_mails(['invalid'])
             self.fail('Exception expected')
-        except FirstError:
+        except Exception, e:
             pass
 
     @defer.inlineCallbacks
@@ -383,6 +383,17 @@ class TestLeapMailStore(TestCase):
 
         self._assert_message_docs_created(expected_message, mail, only_mdoc_and_fdoc=True)
         self._assert_mail_got_deleted(fdoc_id, mail_id)
+
+    @defer.inlineCallbacks
+    def test_all_mail_graceful_error_handling(self):
+        mail_id, fdoc_id = self._add_mail_fixture_to_soledad_from_file('mbox00000000')
+        when(self.soledad).get_from_index('by-type', 'meta').thenReturn(defer.succeed([self.doc_by_id[mail_id]]))
+        when(self.soledad).get_doc(self.doc_by_id[mail_id].content['cdocs'][0]).thenAnswer(lambda: defer.fail(Exception('fail loading attachment')))
+        store = LeapMailStore(self.soledad)
+
+        mails = yield store.all_mails(gracefully_ignore_errors=True)
+
+        self.assertEqual(0, len(mails))
 
     def _assert_mail_got_deleted(self, fdoc_id, mail_id):
         verify(self.soledad).delete_doc(self.doc_by_id[mail_id])

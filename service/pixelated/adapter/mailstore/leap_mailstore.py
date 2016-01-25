@@ -21,6 +21,7 @@ from uuid import uuid4
 from leap.mail.adaptors.soledad import SoledadMailAdaptor
 from leap.mail.mail import Message
 from twisted.internet import defer
+from twisted.internet.defer import FirstError, DeferredList
 
 from pixelated.adapter.mailstore.body_parser import BodyParser
 from pixelated.adapter.mailstore.mailstore import MailStore, underscore_uuid
@@ -203,12 +204,18 @@ class LeapMailStore(MailStore):
 
         defer.returnValue(leap_mail)
 
-    def get_mails(self, mail_ids):
+    @defer.inlineCallbacks
+    def get_mails(self, mail_ids, gracefully_ignore_errors=False):
         deferreds = []
         for mail_id in mail_ids:
             deferreds.append(self.get_mail(mail_id, include_body=True))
 
-        return defer.gatherResults(deferreds, consumeErrors=True)
+        if gracefully_ignore_errors:
+            results = yield DeferredList(deferreds, consumeErrors=True)
+            defer.returnValue([mail for ok, mail in results if ok and mail is not None])
+        else:
+            result = yield defer.gatherResults(deferreds, consumeErrors=True)
+            defer.returnValue(result)
 
     @defer.inlineCallbacks
     def update_mail(self, mail):
@@ -218,12 +225,12 @@ class LeapMailStore(MailStore):
         yield self._update_mail(message)  # TODO assert this is yielded (otherwise asynchronous)
 
     @defer.inlineCallbacks
-    def all_mails(self):
+    def all_mails(self, gracefully_ignore_errors=False):
         mdocs = yield self.soledad.get_from_index('by-type', 'meta')
 
         mail_ids = map(lambda doc: doc.doc_id, mdocs)
 
-        mails = yield self.get_mails(mail_ids)
+        mails = yield self.get_mails(mail_ids, gracefully_ignore_errors=gracefully_ignore_errors)
         defer.returnValue(mails)
 
     @defer.inlineCallbacks
