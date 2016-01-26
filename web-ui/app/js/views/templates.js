@@ -27,7 +27,8 @@ define(['hbs/templates'], function (templates) {
       fixedRecipient: window.Pixelated['app/templates/compose/fixed_recipient.hbs'],
       recipients: window.Pixelated['app/templates/compose/recipients.hbs'],
       feedback: window.Pixelated['app/templates/compose/feedback_box.hbs'],
-      attachmentsList: window.Pixelated['app/templates/compose/attachments_list.hbs']
+      attachmentsList: window.Pixelated['app/templates/compose/attachments_list.hbs'],
+      uploadAttachmentFailed: window.Pixelated['app/templates/compose/upload_attachment_failed.hbs']
     },
     tags: {
       tagList: window.Pixelated['app/templates/tags/tag_list.hbs'],
@@ -73,6 +74,7 @@ define(['hbs/templates'], function (templates) {
   Handlebars.registerPartial('tag_inner', Templates.tags.tagInner);
   Handlebars.registerPartial('recipients', Templates.compose.recipients);
   Handlebars.registerPartial('attachments_list', Templates.compose.attachmentsList);
+  Handlebars.registerPartial('uploadAttachmentFailed', Templates.compose.uploadAttachmentFailed);
 
   return Templates;
 });

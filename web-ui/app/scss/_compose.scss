@@ -133,6 +133,27 @@
       .attachmentsArea {
           padding: 0;
           border-top: 0;
+
+          #upload-error {
+              color: $error;
+              margin-bottom: 20px;
+
+              .close-icon {
+                  font-size: 1.0rem;
+                  cursor: pointer;
+              }
+
+              span, a {
+                  color: $error;
+                  font-size: 0.9rem;
+              }
+
+              a {
+                  text-decoration: underline;
+                  padding: 5px;
+              }
+          }
+
       }
   }
 

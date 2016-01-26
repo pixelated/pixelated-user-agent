@@ -17,11 +17,12 @@
 
 define(
     [
+        'views/templates',
         'page/events',
         'helpers/view_helper'
     ],
 
-    function (events, viewHelper) {
+    function (templates, events, viewHelper) {
         'use strict';
 
         function attachmentList() {
@@ -30,7 +31,11 @@ define(
                 attachmentListItem: '#attachment-list-item',
                 progressBar: '#progress .progress-bar',
                 attachmentBaseUrl: '/attachment',
-                attachments: []
+                attachments: [],
+                closeIcon: '.close-icon',
+                uploadError: '#upload-error',
+                dismissButton: '#dismiss-button',
+                uploadFileButton: '#upload-file-button'
             });
 
             this.showAttachment = function (ev, data) {
@@ -57,6 +62,42 @@ define(
             this.addJqueryFileUploadConfig = function() {
                 var self = this;
                 this.select('inputFileUpload').fileupload({
+                    add: function(e, data) {
+                        var uploadError = self.select('uploadError');
+                        if (uploadError) {
+                            uploadError.remove();
+                        }
+
+                        var uploadErrors = [];
+
+                        this.showUploadFailed = function () {
+                            var html = $(templates.compose.uploadAttachmentFailed());
+                            html.insertAfter(self.$node.find(self.attr.attachmentListItem));
+
+                            self.on(self.select('closeIcon'), 'click', this.dismissUploadFailed);
+                            self.on(self.select('dismissButton'), 'click', this.dismissUploadFailed);
+                            self.on(self.select('uploadFileButton'), 'click', this.uploadAnotherFile);
+                        };
+
+                        this.dismissUploadFailed = function (event) {
+                            event.preventDefault();
+                            self.select('uploadError').remove();
+                        };
+
+                        this.uploadAnotherFile = function (event) {
+                            event.preventDefault();
+                            self.startUpload();
+                        };
+
+                        if(data.originalFiles[0].size > 1000000) {
+                            uploadErrors.push('Filesize is too big');
+                        }
+                        if(uploadErrors.length > 0) {
+                            this.showUploadFailed();
+                        } else {
+                            data.submit();
+                        }
+                    },
                     url: self.attr.attachmentBaseUrl,
                     dataType: 'json',
                     done: function (e, response) {
