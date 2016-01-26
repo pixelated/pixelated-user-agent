@@ -27,7 +27,7 @@ from leap.auth import SRPAuth
 
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
 from pixelated.adapter.services.feedback_service import FeedbackService
-from pixelated.application import UserAgentMode, ServicesFactory
+from pixelated.application import UserAgentMode, ServicesFactory, set_up_protected_resources
 
 from pixelated.adapter.mailstore import LeapMailStore
 from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
@@ -58,20 +58,8 @@ class MultiUserClient(AppTestClient):
         self.service_factory = ServicesFactory(UserAgentMode(is_single_user=False))
 
         root_resource = RootResource(self.service_factory)
-        anonymous_resource = LoginResource(self.service_factory)
-
         leap_provider = mock()
-        checker = LeapPasswordChecker(leap_provider)
-        session_checker = SessionChecker()
-
-        realm = PixelatedRealm(root_resource, anonymous_resource)
-        _portal = portal.Portal(realm, [checker, session_checker, AllowAnonymousAccess()])
-
-        protected_resource = PixelatedAuthSessionWrapper(_portal, root_resource, anonymous_resource, [])
-        anonymous_resource.set_portal(_portal)
-        root_resource.initialize(_portal)
-
-        self.resource = protected_resource
+        self.resource = set_up_protected_resources(root_resource, leap_provider, self.service_factory)
 
     @defer.inlineCallbacks
     def login(self, username='username', password='password'):

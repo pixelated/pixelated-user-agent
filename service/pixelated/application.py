@@ -160,7 +160,13 @@ def _start_in_multi_user_mode(args, root_resource, services_factory):
     events_server.ensure_server()
 
     config, provider = initialize_leap_provider(args.provider, args.leap_provider_cert, args.leap_provider_cert_fingerprint, args.leap_home)
+    protected_resource = set_up_protected_resources(root_resource, provider, services_factory)
+    start_site(args, protected_resource)
+    reactor.getThreadPool().adjustPoolsize(5, 15)
+    return defer.succeed(None)
 
+
+def set_up_protected_resources(root_resource, provider, services_factory):
     checker = LeapPasswordChecker(provider)
     session_checker = SessionChecker()
     anonymous_resource = LoginResource(services_factory)
@@ -170,13 +176,8 @@ def _start_in_multi_user_mode(args, root_resource, services_factory):
 
     protected_resource = PixelatedAuthSessionWrapper(_portal, root_resource, anonymous_resource, [])
     anonymous_resource.set_portal(_portal)
-
-    start_site(args, protected_resource)
-
     root_resource.initialize(_portal)
-    reactor.getThreadPool().adjustPoolsize(5, 15)
-
-    return defer.succeed(None)
+    return protected_resource
 
 
 def _start_in_single_user_mode(args, resource, services_factory):
