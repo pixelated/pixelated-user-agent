@@ -53,9 +53,9 @@ class TestLoginResource(unittest.TestCase):
             self.assertEqual(200, request.responseCode)
             form_action = 'action="/login"'
             form_method = 'method="post"'
-            input_username = '<input autofocus="" placeholder="  username" class="text-field" type="text" tabindex="1" id="email" name="username" />'
-            input_password = '<input placeholder="  password" class="text-field" type="password" tabindex="2" id="password" name="password" autocomplete="off" />'
-            input_submit = '<input type="submit" tabindex="3" class="button" name="login" value="Login" />'
+            input_username = 'name="username"'
+            input_password = 'name="password"'
+            input_submit = 'name="login"'
             written_response = ''.join(request.written)
             self.assertIn(form_action, written_response)
             self.assertIn(form_method, written_response)
