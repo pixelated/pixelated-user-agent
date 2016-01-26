@@ -41,7 +41,7 @@ from pixelated.resources.auth import LeapPasswordChecker, SessionChecker, Pixela
 from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
 from test.support.integration import AppTestClient
-from test.support.integration.app_test_client import initialize_soledad
+from test.support.integration.app_test_client import initialize_soledad, AppTestAccount
 
 from test.support.test_helper import request_mock
 
@@ -50,10 +50,12 @@ class MultiUserClient(AppTestClient):
 
     @defer.inlineCallbacks
     def start_client(self):
-        self.soledad_test_folder = self._generate_soledad_test_folder_name()
-        SearchEngine.DEFAULT_INDEX_HOME = self.soledad_test_folder
-        self.cleanup = lambda: shutil.rmtree(self.soledad_test_folder)
-        self.soledad = yield initialize_soledad(tempdir=self.soledad_test_folder)
+        self._test_account = AppTestAccount('test')
+
+        yield self._test_account.start()
+
+        self.cleanup = lambda: self._test_account.cleanup()
+        self.soledad = self._test_account.soledad
 
         self.service_factory = ServicesFactory(UserAgentMode(is_single_user=False))
 
@@ -61,7 +63,6 @@ class MultiUserClient(AppTestClient):
         leap_provider = mock()
         self.resource = set_up_protected_resources(root_resource, leap_provider, self.service_factory)
 
-    @defer.inlineCallbacks
     def login(self, username='username', password='password'):
         leap_session = mock(LeapSession)
         user_auth = mock()
@@ -74,12 +75,11 @@ class MultiUserClient(AppTestClient):
 
         self._set_leap_srp_auth(username, password)
         when(LeapSessionFactory).create(username, password).thenReturn(leap_session)
-        _services = yield self.generate_services()
-        when(config_services).Services(leap_session).thenReturn(_services)
+        when(config_services).Services(leap_session).thenReturn(self._test_account.services)
         # when(Services).setup().thenReturn(defer.succeed('mocked so irrelevant'))
 
         request = request_mock(path='/login', method="POST", body={'username': username, 'password': password})
-        defer.returnValue(self._render(request, as_json=False))
+        return self._render(request, as_json=False)
 
     def _set_leap_srp_auth(self, username, password):
         auth_dict = {'username': 'password'}
@@ -95,28 +95,3 @@ class MultiUserClient(AppTestClient):
             session = from_request.getSession()
             request.session = session
         return self._render(request, as_json)
-
-    @defer.inlineCallbacks
-    def generate_services(self):
-        search_engine = SearchEngine(self.INDEX_KEY, user_home=self.soledad_test_folder)
-        self.mail_sender = self._create_mail_sender()
-
-        self.mail_store = SearchableMailStore(LeapMailStore(self.soledad), search_engine)
-        self.attachment_store = LeapAttachmentStore(self.soledad)
-
-        account_ready_cb = defer.Deferred()
-        self.account = IMAPAccount(self.ACCOUNT, self.soledad, account_ready_cb)
-        yield account_ready_cb
-        self.leap_session = mock()
-
-        mail_service = self._create_mail_service(self.mail_sender, self.mail_store, search_engine, self.attachment_store)
-        mails = yield mail_service.all_mails()
-        search_engine.index_mails(mails)
-
-        services = mock()
-        services.keymanager = mock()
-        services.mail_service = mail_service
-        services.draft_service = DraftService(self.mail_store)
-        services.search_engine = search_engine
-        services.feedback_service = FeedbackService(self.leap_session)
-        defer.returnValue(services)

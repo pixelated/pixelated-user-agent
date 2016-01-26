@@ -46,6 +46,73 @@ from pixelated.resources.root_resource import RootResource
 from test.support.integration.model import MailBuilder
 from test.support.test_helper import request_mock
 from test.support.integration.model import ResponseMail
+from tempdir import TempDir
+
+
+class AppTestAccount(object):
+    INDEX_KEY = '\xde3?\x87\xff\xd9\xd3\x14\xf0\xa7>\x1f%C{\x16.\\\xae\x8c\x13\xa7\xfb\x04\xd4]+\x8d_\xed\xd1\x8d\x0bI' \
+                '\x8a\x0e\xa4tm\xab\xbf\xb4\xa5\x99\x00d\xd5w\x9f\x18\xbc\x1d\xd4_W\xd2\xb6\xe8H\x83\x1b\xd8\x9d\xad'
+
+    def __init__(self, user_id):
+        self._user_id = user_id
+        self._uuid = str(uuid.uuid4())
+        self._mail_address = '%s@pixelated.org' % user_id
+        self._tmp_dir = TempDir()
+        self._soledad = None
+        self._services = None
+
+    @defer.inlineCallbacks
+    def start(self):
+        soledad_test_folder = os.path.join(self._tmp_dir.name, self._uuid)
+        self.soledad = yield initialize_soledad(tempdir=soledad_test_folder, uuid=self._uuid)
+        self.search_engine = SearchEngine(self.INDEX_KEY, user_home=soledad_test_folder)
+        self.keymanager = mock()
+        self.mail_sender = self._create_mail_sender()
+        self.mail_store = SearchableMailStore(LeapMailStore(self.soledad), self.search_engine)
+        self.attachment_store = LeapAttachmentStore(self.soledad)
+
+        yield self._initialize_imap_account()
+
+        self.draft_service = DraftService(self.mail_store)
+        self.leap_session = mock()
+        self.feedback_service = FeedbackService(self.leap_session)
+
+        self.mail_service = self._create_mail_service(self.mail_sender, self.mail_store, self.search_engine, self.attachment_store)
+
+        mails = yield self.mail_service.all_mails()
+        if len(mails) > 0:
+            raise Exception('What? Where did these come from?')
+        self.search_engine.index_mails(mails)
+
+    @property
+    def services(self):
+        if self._services is None:
+            services = mock()
+            services.keymanager = self.keymanager
+            services.mail_service = self.mail_service
+            services.draft_service = self.draft_service
+            services.search_engine = self.search_engine
+            services.feedback_service = self.feedback_service
+
+            self._services = services
+
+        return self._services
+
+    def cleanup(self):
+        self._tmp_dir.dissolve()
+
+    def _initialize_imap_account(self):
+        account_ready_cb = defer.Deferred()
+        self.account = IMAPAccount(self._user_id, self.soledad, account_ready_cb)
+        return account_ready_cb
+
+    def _create_mail_service(self, mail_sender, mail_store, search_engine, attachment_store):
+        return MailService(mail_sender, mail_store, search_engine, self._mail_address, attachment_store)
+
+    def _create_mail_sender(self):
+        mail_sender = Mock()
+        mail_sender.sendmail.side_effect = lambda mail: succeed(mail)
+        return mail_sender
 
 
 class AppTestClient(object):
@@ -54,44 +121,29 @@ class AppTestClient(object):
     ACCOUNT = 'test'
     MAIL_ADDRESS = 'test@pixelated.org'
 
-    # def __init__(self):
-    #     self.start_client()
-
     @defer.inlineCallbacks
     def start_client(self):
-        soledad_test_folder = self._generate_soledad_test_folder_name()
-        SearchEngine.DEFAULT_INDEX_HOME = soledad_test_folder
+        self._test_account = AppTestAccount(self.ACCOUNT)
 
-        self.cleanup = lambda: shutil.rmtree(soledad_test_folder)
+        yield self._test_account.start()
 
-        self.soledad = yield initialize_soledad(tempdir=soledad_test_folder)
+        self.cleanup = lambda: self._test_account.cleanup()
 
-        self.keymanager = mock()
-
-        self.search_engine = SearchEngine(self.INDEX_KEY, user_home=soledad_test_folder)
-        self.mail_sender = self._create_mail_sender()
-
-        self.mail_store = SearchableMailStore(LeapMailStore(self.soledad), self.search_engine)
-        self.attachment_store = LeapAttachmentStore(self.soledad)
-
-        account_ready_cb = defer.Deferred()
-        self.account = IMAPAccount(self.ACCOUNT, self.soledad, account_ready_cb)
-        yield account_ready_cb
-        self.draft_service = DraftService(self.mail_store)
-        self.leap_session = mock()
-        self.feedback_service = FeedbackService(self.leap_session)
-
-        self.mail_service = self._create_mail_service(self.mail_sender, self.mail_store, self.search_engine, self.attachment_store)
-        mails = yield self.mail_service.all_mails()
-        self.search_engine.index_mails(mails)
+        # copy fields for single user tests
+        self.soledad = self._test_account.soledad
+        self.search_engine = self._test_account.search_engine
+        self.keymanager = self._test_account.keymanager
+        self.mail_sender = self._test_account.mail_sender
+        self.mail_store = self._test_account.mail_store
+        self.attachment_store = self._test_account.attachment_store
+        self.draft_service = self._test_account.draft_service
+        self.leap_session = self._test_account.leap_session
+        self.feedback_service = self._test_account.feedback_service
+        self.mail_service = self._test_account.mail_service
+        self.account = self._test_account.account
 
         self.service_factory = SingleUserServicesFactory(UserAgentMode(is_single_user=True))
-        services = mock()
-        services.keymanager = self.keymanager
-        services.mail_service = self.mail_service
-        services.draft_service = self.draft_service
-        services.search_engine = self.search_engine
-        services.feedback_service = self.feedback_service
+        services = self._test_account.services
         self.service_factory.add_session('someuserid', services)
 
         self.resource = RootResource(self.service_factory)
@@ -177,10 +229,6 @@ class AppTestClient(object):
         mail_sender.sendmail.side_effect = lambda mail: succeed(mail)
         return mail_sender
 
-    def _create_mail_service(self, mail_sender, mail_store, search_engine, attachment_store):
-        mail_service = MailService(mail_sender, mail_store, search_engine, self.MAIL_ADDRESS, attachment_store)
-        return mail_service
-
     def _generate_soledad_test_folder_name(self, soledad_test_folder='/tmp/soledad-test/test'):
         return os.path.join(soledad_test_folder, str(uuid.uuid4()))
 
@@ -254,11 +302,10 @@ class AppTestClient(object):
 
 
 @defer.inlineCallbacks
-def initialize_soledad(tempdir):
+def initialize_soledad(tempdir, uuid):
     if os.path.isdir(tempdir):
         shutil.rmtree(tempdir)
 
-    uuid = "foobar-uuid"
     passphrase = u"verysecretpassphrase"
     secret_path = os.path.join(tempdir, "secret.gpg")
     local_db_path = os.path.join(tempdir, "soledad.u1db")

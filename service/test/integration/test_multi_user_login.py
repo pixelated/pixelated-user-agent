@@ -45,7 +45,7 @@ class MultiUserLoginTest(MultiUserClient, SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_wrong_credentials_cannot_access_resources(self):
-        response, login_request = yield self.login('username', 'wrong_password')
+        response, login_request = self.login('username', 'wrong_password')
         response_str = yield response
         self.assertEqual(401, login_request.responseCode)
         self.assertIn('Invalid credentials', login_request.written)
