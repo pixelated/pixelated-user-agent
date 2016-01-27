@@ -12,4 +12,13 @@ class AddCSPHeaderRequest(Request):
 
 
 class PixelatedSite(Site):
+
     requestFactory = AddCSPHeaderRequest
+
+    @classmethod
+    def enable_csp_requests(cls):
+        cls.requestFactory = Site.requestFactory
+
+    @classmethod
+    def disable_csp_requests(cls):
+        cls.requestFactory = AddCSPHeaderRequest

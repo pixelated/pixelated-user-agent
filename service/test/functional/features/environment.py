@@ -21,6 +21,7 @@ from leap.common.events.server import ensure_server
 from twisted.internet import defer
 
 from pixelated.application import UserAgentMode
+from pixelated.config.site import PixelatedSite
 from test.support.dispatcher.proxy import Proxy
 from test.support.integration import AppTestClient
 from selenium import webdriver
@@ -40,6 +41,7 @@ def start_app_test_client(client, mode):
 def before_all(context):
     ensure_server()
     logging.disable('INFO')
+    PixelatedSite.disable_csp_requests()
     client = AppTestClient()
     start_app_test_client(client, UserAgentMode(is_single_user=True))
     client.listenTCP()
