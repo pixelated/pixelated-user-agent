@@ -91,10 +91,11 @@ define(
                             self.startUpload();
                         };
 
-                        if(data.originalFiles[0].size > 1000000) {
+                        var ONE_MEGABYTE = 1000000;
+                        if (data.originalFiles[0].size > ONE_MEGABYTE) {
                             uploadErrors.push('Filesize is too big');
                         }
-                        if(uploadErrors.length > 0) {
+                        if (uploadErrors.length > 0) {
                             this.showUploadFailed();
                         } else {
                             data.submit();
