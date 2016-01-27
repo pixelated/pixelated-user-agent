@@ -53,12 +53,12 @@ class LeapPasswordChecker(object):
         def _validate_credentials():
             try:
                 srp_auth = SRPAuth(self._leap_provider.api_uri, self._leap_provider.local_ca_crt)
-                srp_auth.authenticate(credentials.username, credentials.password)
+                return srp_auth.authenticate(credentials.username, credentials.password)
             except SRPAuthenticationError:
                 raise UnauthorizedLogin()
 
-        def _authententicate_user(_):
-            return authenticate_user(self._leap_provider, credentials.username, credentials.password)
+        def _authententicate_user(srp_auth):
+            return authenticate_user(self._leap_provider, credentials.username, credentials.password, auth=srp_auth)
 
         d = threads.deferToThread(_validate_credentials)
         d.addCallback(_authententicate_user)
@@ -131,7 +131,6 @@ class PixelatedAuthSessionWrapper(object):
 
     def getChildWithDefault(self, path, request):
         request.postpath.insert(0, request.prepath.pop())
-
         return self._authorizedResource(request)
 
     def _authorizedResource(self, request):

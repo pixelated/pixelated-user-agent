@@ -136,21 +136,24 @@ class LeapSessionFactory(object):
         self._provider = provider
         self._config = provider.config
 
-    def create(self, username, password):
+    def create(self, username, password, auth=None):
         key = self._session_key(username)
         session = self._lookup_session(key)
         if not session:
-            session = self._create_new_session(username, password)
+            session = self._create_new_session(username, password, auth)
             self._remember_session(key, session)
 
         return session
 
-    def _create_new_session(self, username, password):
+    def _auth_leap(self, username, password):
+        srp_auth = SRPAuth(self._provider.api_uri, self._provider.local_ca_crt)
+        return srp_auth.authenticate(username, password)
+
+    def _create_new_session(self, username, password, auth=None):
         self._create_dir(self._provider.config.leap_home)
         self._provider.download_certificate()
 
-        srp_auth = SRPAuth(self._provider.api_uri, self._provider.local_ca_crt)
-        auth = srp_auth.authenticate(username, password)
+        auth = auth or self._auth_leap(username, password)
         account_email = self._provider.address_for(username)
 
         self._create_database_dir(auth.uuid)

@@ -14,19 +14,36 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from leap.auth import SRPAuth
+import json
+import shutil
+
 from leap.exceptions import SRPAuthenticationError
-from mockito import mock, when
+from leap.mail.imap.account import IMAPAccount
+from mockito import mock, when, any as ANY
+from twisted.cred import portal
+from twisted.cred.checkers import AllowAnonymousAccess
 from twisted.internet import defer
 
+from leap.auth import SRPAuth
+
+from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
+from pixelated.adapter.services.feedback_service import FeedbackService
 from pixelated.application import UserAgentMode, ServicesFactory, set_up_protected_resources
+
+from pixelated.adapter.mailstore import LeapMailStore
+from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
+
+from pixelated.adapter.search import SearchEngine
+from pixelated.adapter.services.draft_service import DraftService
 from pixelated.bitmask_libraries.session import LeapSession, LeapSessionFactory
 import pixelated.config.services
 # from pixelated.config.services import Services
+from pixelated.resources.auth import LeapPasswordChecker, SessionChecker, PixelatedRealm, PixelatedAuthSessionWrapper
+from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
 from test.support.integration import AppTestClient
-from test.support.integration.app_test_client import AppTestAccount
-
+from test.support.integration.app_test_client import initialize_soledad, AppTestAccount
+import test.support.mockito
 from test.support.test_helper import request_mock
 
 
@@ -58,18 +75,19 @@ class MultiUserClient(AppTestClient):
         leap_session.config = config
         leap_session.fresh_account = False
 
-        self._set_leap_srp_auth(username, password)
+        mock_srp_auth = 'mocked so irrelevant but just need a return value'
+        self._set_leap_srp_auth(username, password, mock_srp_auth)
+        when(LeapSessionFactory).create(username, password, mock_srp_auth).thenReturn(leap_session)
         when(leap_session).initial_sync().thenAnswer(lambda: defer.succeed(None))
-        when(LeapSessionFactory).create(username, password).thenReturn(leap_session)
         when(pixelated.config.services).Services(ANY()).thenReturn(self._test_account.services)
 
         request = request_mock(path='/login', method="POST", body={'username': username, 'password': password})
         return self._render(request, as_json=False)
 
-    def _set_leap_srp_auth(self, username, password):
+    def _set_leap_srp_auth(self, username, password, mock_srp_auth):
         auth_dict = {'username': 'password'}
         if auth_dict[username] == password:
-            when(SRPAuth).authenticate(username, password).thenReturn(True)
+            when(SRPAuth).authenticate(username, password).thenReturn(mock_srp_auth)
         else:
             when(SRPAuth).authenticate(username, password).thenRaise(SRPAuthenticationError())
 

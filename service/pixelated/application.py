@@ -49,7 +49,6 @@ class ServicesFactory(object):
         return user_id in self._services_by_user
 
     def services(self, user_id):
-        print self._services_by_user.keys()
         return self._services_by_user[user_id]
 
     def log_out_user(self, user_id):

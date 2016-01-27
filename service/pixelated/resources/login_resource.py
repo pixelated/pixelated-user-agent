@@ -96,10 +96,14 @@ class LoginResource(BaseResource):
         return renderElement(request, site)
 
     def render_POST(self, request):
+        if self.is_logged_in(request):
+            return util.redirectTo("/", request)
 
-        def render_response(response):
-            util.redirectTo("/", request)
+        def render_response(leap_user):
+            request.setResponseCode(OK)
+            request.write(open(os.path.join(self._startup_folder, 'Interstitial.html')).read())
             request.finish()
+            self._setup_user_services(leap_user, request)
 
         def render_error(error):
             log.info('Login Error for %s' % request.args['username'][0])
@@ -114,15 +118,17 @@ class LoginResource(BaseResource):
 
     @defer.inlineCallbacks
     def _handle_login(self, request):
-        if self.is_logged_in(request):
-            request.setResponseCode(OK)
-            defer.succeed(None)
-            return
+        creds = self._get_creds_from(request)
+        iface, leap_user, logout = yield self._portal.login(creds, None, IResource)
+        defer.returnValue(leap_user)
+
+    def _get_creds_from(self, request):
         username = request.args['username'][0]
         password = request.args['password'][0]
-        creds = credentials.UsernamePassword(username, password)
-        iface, leap_user, logout = yield self._portal.login(creds, None, IResource)
+        return credentials.UsernamePassword(username, password)
 
+    @defer.inlineCallbacks
+    def _setup_user_services(self, leap_user, request):
         yield self._initialize_after_login(self._services_factory, leap_user)
         self._init_http_session(request, leap_user)
 

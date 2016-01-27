@@ -40,9 +40,8 @@ def initialize_leap_multi_user(provider_hostname,
 
 
 @defer.inlineCallbacks
-def authenticate_user(provider, username, password, initial_sync=True):
-    leap_session = LeapSessionFactory(provider).create(username, password)
-
+def authenticate_user(provider, username, password, initial_sync=True, auth=None):
+    leap_session = LeapSessionFactory(provider).create(username, password, auth)
     if initial_sync:
         yield leap_session.initial_sync()
 

@@ -1,3 +1,5 @@
+import os
+
 from leap.exceptions import SRPAuthenticationError
 from mock import patch
 from mockito import mock, when, any as ANY, verify, verifyZeroInteractions
@@ -93,7 +95,7 @@ class TestLoginPOST(unittest.TestCase):
 
     @patch('twisted.web.util.redirectTo')
     @patch('pixelated.config.services.Services.setup')
-    def test_login_setups_user_services_and_add_corresponding_session_to_services_factory(self, mock_service_setup, mock_redirect):
+    def test_login_responds_interstitial_and_add_corresponding_session_to_services_factory(self, mock_service_setup, mock_redirect):
         irrelevant = None
         when(self.portal).login(ANY(), None, IResource).thenReturn((irrelevant, self.leap_user, irrelevant))
         d = self.web.get(self.request)
@@ -101,7 +103,8 @@ class TestLoginPOST(unittest.TestCase):
         def assert_login_setup_service_for_user(_):
             verify(self.portal).login(ANY(), None, IResource)
             verify(self.services_factory).create_services_from(self.leap_session)
-            mock_redirect.assert_called_once_with('/', self.request)
+            interstitial_js_in_template = '<script src="startup-assets/Interstitial.js"></script>'
+            self.assertIn(interstitial_js_in_template, self.request.written[0])
             self.assertTrue(self.resource.is_logged_in(self.request))
 
         d.addCallback(assert_login_setup_service_for_user)
@@ -143,12 +146,12 @@ class TestLoginPOST(unittest.TestCase):
     @patch('pixelated.resources.session.PixelatedSession.is_logged_in')
     def test_should_not_process_login_if_already_logged_in(self, mock_logged_in, mock_redirect):
         mock_logged_in.return_value = True
+        mock_redirect.return_value = "mocked redirection"
         when(self.portal).login(ANY(), None, IResource).thenRaise(Exception())
         d = self.web.get(self.request)
 
         def assert_login_setup_service_for_user(_):
             verifyZeroInteractions(self.portal)
-            self.assertEqual(200, self.request.responseCode)
             mock_redirect.assert_called_once_with('/', self.request)
 
         d.addCallback(assert_login_setup_service_for_user)
