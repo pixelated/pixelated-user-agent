@@ -50,13 +50,15 @@ define(
             this.renderAttachmentListView = function (data) {
                 var currentHtml = this.select('attachmentListItem').html();
                 var item = this.buildAttachmentListItem(data);
-                this.select('attachmentListItem').html(currentHtml + '<li>' + item + '</li>');
+                this.select('attachmentListItem').html(currentHtml + item);
             };
 
             this.buildAttachmentListItem = function (attachment) {
-                return '<a href="' + this.attr.attachmentBaseUrl + '/' + attachment.ident + '?filename=' +
-                    attachment.name + '&encoding=' + attachment.encoding + '">' + attachment.name + ' <span class="attachment-size"> (' + viewHelper.formatSize(attachment.size) + ')' +
-                    '</span></a>';
+                var attachmentData = {ident: attachment.ident,
+                                      encoding: attachment.encoding,
+                                      name: attachment.name,
+                                      size: attachment.size};
+                return templates.compose.attachmentItem(attachmentData);
             };
 
             this.addJqueryFileUploadConfig = function() {

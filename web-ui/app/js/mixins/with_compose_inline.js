@@ -29,6 +29,7 @@ define(
       this.defaultAttrs({
         subjectDisplay: '#reply-subject',
         subjectInput: '#subject-container input',
+        forwardBox: '#forward-box',
         recipientsDisplay: '#all-recipients'
       });
 

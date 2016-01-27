@@ -13,10 +13,7 @@
         <div class="attachmentsArea column large-12">
             <ul id="attachment-list-item">
                 {{#each attachments }}
-                    <li>
-                        <a href="/attachment/{{ this.ident }}?encoding={{ this.encoding }}&filename={{ this.name }}">{{ this.name }} <span class="attachment-size">({{ formatSize this.size}})</span>
-                            <i class="fa fa-arrow-down download-icon"></i></a>
-                    </li>
+                    {{> attachment_item this }} 
                 {{/each }}
             </ul>
         </div>

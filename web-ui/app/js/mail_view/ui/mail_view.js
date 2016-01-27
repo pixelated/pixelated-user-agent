@@ -46,11 +46,15 @@ define(
       this.displayMail = function (event, data) {
         this.attr.mail = data.mail;
 
-        var signed, encrypted;
+        var signed, encrypted, attachments;
 
         data.mail.security_casing = data.mail.security_casing || {};
         signed = this.checkSigned(data.mail);
         encrypted = this.checkEncrypted(data.mail);
+        attachments = data.mail.attachments.map(function (attachment) { 
+            attachment.received = true;
+            return attachment;
+        });
 
         if(data.mail.mailbox === 'sent') {
           encrypted = undefined;
@@ -64,7 +68,7 @@ define(
           tags: data.mail.tags,
           encryptionStatus: encrypted,
           signatureStatus: signed,
-          attachments: data.mail.attachments
+          attachments: attachments
         }));
 
         this.$node.find('.bodyArea').html(viewHelpers.formatMailBody(data.mail));

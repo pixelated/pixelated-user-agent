@@ -1,0 +1,8 @@
+<li>
+    <a href="/attachment/{{ this.ident }}?encoding={{ this.encoding }}&filename={{ this.name }}">
+        {{ this.name }} <span class="attachment-size">({{ formatSize this.size}})</span>
+        {{#if received}}
+            <i class="fa fa-arrow-down download-icon"></i>
+        {{/if}}
+    </a>
+</li>

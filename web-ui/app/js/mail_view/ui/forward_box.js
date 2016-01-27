@@ -44,7 +44,8 @@ define(
         this.renderInlineCompose('forward-box', {
           subject: this.attr.subject,
           recipients: { to: [], cc: []},
-          body: viewHelper.quoteMail(mail)
+          body: viewHelper.quoteMail(mail),
+          attachments: mail.attachments
         });
 
         this.on(this.select('subjectDisplay'), 'click', this.showSubjectInput);
