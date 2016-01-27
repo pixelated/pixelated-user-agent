@@ -17,6 +17,7 @@ from uuid import uuid4
 from test.support.integration import MailBuilder
 from behave import given
 from common import wait_for_condition
+from crochet import wait_for
 
 
 @given('I have a mail in my inbox')
@@ -24,8 +25,30 @@ def add_mail_impl(context):
     subject = 'Hi! This the subject %s' % uuid4()
 
     input_mail = MailBuilder().with_subject(subject).build_input_mail()
-    context.client.add_mail_to_inbox(input_mail)
 
+    context.client.add_mail_to_inbox(input_mail)
     wait_for_condition(context, lambda _: context.client.search_engine.search(subject)[1] > 0, poll_frequency=0.1)
 
     context.last_subject = subject
+
+
+@given('I have a mail for {username} in my inbox')
+def add_mail_to_user_inbox(context, username):
+    subject = 'Hi! This the subject %s' % uuid4()
+
+    input_mail = MailBuilder().with_subject(subject).build_input_mail()
+
+    context.multi_user_client.add_mail_to_user_inbox(input_mail, username)
+    wait_for_condition(context, lambda _: context.multi_user_client.account_for(username).search_engine.search(subject)[1] > 0, poll_frequency=0.1)
+
+    context.last_subject = subject
+
+
+@wait_for(timeout=10.0)
+def add_multi_user_account(context, username):
+    return context.multi_user_client.create_user('username')
+
+
+@given(u'Account for user {username} exists')
+def add_account(context, username):
+    add_multi_user_account(context, username)

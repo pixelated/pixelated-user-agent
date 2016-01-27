@@ -27,7 +27,8 @@ from twisted.web.static import File
 from twisted.web.template import Element, XMLFile, renderElement, renderer, tags
 from twisted.python.filepath import FilePath
 
-from pixelated.resources import BaseResource, UnAuthorizedResource
+from pixelated.adapter.welcome_mail import add_welcome_mail
+from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
 
 log = logging.getLogger(__name__)
 
@@ -122,5 +123,17 @@ class LoginResource(BaseResource):
         creds = credentials.UsernamePassword(username, password)
         iface, leap_user, logout = yield self._portal.login(creds, None, IResource)
 
-        yield leap_user.start_services(self._services_factory)
-        leap_user.init_http_session(request)
+        yield self._initialize_after_login(self._services_factory, leap_user)
+        self._init_http_session(request, leap_user)
+
+    @defer.inlineCallbacks
+    def _initialize_after_login(self, services_factory, leap_user):
+        session = leap_user.leap_session
+        yield services_factory.create_services_from(session)
+
+        if session.fresh_account:
+            yield add_welcome_mail(session.mail_store)
+
+    def _init_http_session(self, request, leap_user):
+        session = IPixelatedSession(request.getSession())
+        session.user_uuid = leap_user.leap_session.user_auth.uuid

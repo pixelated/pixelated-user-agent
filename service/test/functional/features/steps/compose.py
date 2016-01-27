@@ -21,7 +21,6 @@ from common import *
 
 @when('I compose a message with')
 def impl(context):
-    take_screenshot(context, '/tmp/screenshot.jpeg')
     toggle = context.browser.find_element_by_id('compose-mails-trigger')
     toggle.click()
 

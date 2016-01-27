@@ -16,6 +16,7 @@
 import json
 import multiprocessing
 from leap.mail.adaptors.soledad import SoledadMailAdaptor
+from leap.srp_session import SRPSession
 from mockito import mock
 import os
 import shutil
@@ -31,9 +32,13 @@ from twisted.internet import reactor, defer
 from twisted.internet.defer import succeed
 from twisted.web.resource import getChildForRequest
 # from twisted.web.server import Site as PixelatedSite
+from zope.interface import implementer
+from twisted.cred import checkers, credentials
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
 from pixelated.adapter.services.feedback_service import FeedbackService
-from pixelated.application import ServicesFactory, UserAgentMode, SingleUserServicesFactory
+from pixelated.application import ServicesFactory, UserAgentMode, SingleUserServicesFactory, set_up_protected_resources
+from pixelated.bitmask_libraries.config import LeapConfig
+from pixelated.bitmask_libraries.session import LeapSession
 from pixelated.config.site import PixelatedSite
 
 from pixelated.adapter.mailstore import LeapMailStore
@@ -53,17 +58,17 @@ class AppTestAccount(object):
     INDEX_KEY = '\xde3?\x87\xff\xd9\xd3\x14\xf0\xa7>\x1f%C{\x16.\\\xae\x8c\x13\xa7\xfb\x04\xd4]+\x8d_\xed\xd1\x8d\x0bI' \
                 '\x8a\x0e\xa4tm\xab\xbf\xb4\xa5\x99\x00d\xd5w\x9f\x18\xbc\x1d\xd4_W\xd2\xb6\xe8H\x83\x1b\xd8\x9d\xad'
 
-    def __init__(self, user_id):
+    def __init__(self, user_id, leap_home):
         self._user_id = user_id
+        self._leap_home = leap_home
         self._uuid = str(uuid.uuid4())
         self._mail_address = '%s@pixelated.org' % user_id
-        self._tmp_dir = TempDir()
         self._soledad = None
         self._services = None
 
     @defer.inlineCallbacks
     def start(self):
-        soledad_test_folder = os.path.join(self._tmp_dir.name, self._uuid)
+        soledad_test_folder = os.path.join(self._leap_home, self._uuid)
         self.soledad = yield initialize_soledad(tempdir=soledad_test_folder, uuid=self._uuid)
         self.search_engine = SearchEngine(self.INDEX_KEY, user_home=soledad_test_folder)
         self.keymanager = mock()
@@ -99,7 +104,8 @@ class AppTestAccount(object):
         return self._services
 
     def cleanup(self):
-        self._tmp_dir.dissolve()
+        soledad_test_folder = os.path.join(self._leap_home, self._uuid)
+        shutil.rmtree(soledad_test_folder)
 
     def _initialize_imap_account(self):
         account_ready_cb = defer.Deferred()
@@ -115,19 +121,56 @@ class AppTestAccount(object):
         return mail_sender
 
 
+@implementer(checkers.ICredentialsChecker)
+class StubSRPChecker(object):
+    credentialInterfaces = (
+        credentials.IUsernamePassword,
+    )
+
+    def __init__(self, leap_provider, credentials={}):
+        self._leap_provider = leap_provider
+        self._credentials = credentials.copy()
+
+    def add_user(self, username, password):
+        self._credentials[username] = password
+
+    def requestAvatarId(self, credentials):
+        leap_auth = SRPSession(credentials.username, uuid.uuid4(), uuid.uuid4(), uuid.uuid4())
+        return defer.succeed(LeapSession(self._leap_provider, leap_auth, None, None, None, None))
+
+
+class StubServicesFactory(ServicesFactory):
+
+    def __init__(self, accounts, mode):
+        super(StubServicesFactory, self).__init__(mode=mode)
+        self._accounts = accounts
+
+    @defer.inlineCallbacks
+    def create_services_from(self, leap_session):
+        account = self._accounts[leap_session.user_auth.username]
+        self._services_by_user[leap_session.user_auth.uuid] = account.services
+        yield defer.succeed(None)
+
+
 class AppTestClient(object):
     INDEX_KEY = '\xde3?\x87\xff\xd9\xd3\x14\xf0\xa7>\x1f%C{\x16.\\\xae\x8c\x13\xa7\xfb\x04\xd4]+\x8d_\xed\xd1\x8d\x0bI' \
                 '\x8a\x0e\xa4tm\xab\xbf\xb4\xa5\x99\x00d\xd5w\x9f\x18\xbc\x1d\xd4_W\xd2\xb6\xe8H\x83\x1b\xd8\x9d\xad'
     ACCOUNT = 'test'
     MAIL_ADDRESS = 'test@pixelated.org'
 
+    def _initialize(self):
+        self._tmp_dir = TempDir()
+        self.accounts = {}
+
     @defer.inlineCallbacks
-    def start_client(self):
-        self._test_account = AppTestAccount(self.ACCOUNT)
+    def start_client(self, mode=UserAgentMode(is_single_user=True)):
+        self._initialize()
+        self._mode = mode
+        self._test_account = AppTestAccount(self.ACCOUNT, self._tmp_dir.name)
 
         yield self._test_account.start()
 
-        self.cleanup = lambda: self._test_account.cleanup()
+        self.cleanup = lambda: self._tmp_dir.dissolve()
 
         # copy fields for single user tests
         self.soledad = self._test_account.soledad
@@ -142,12 +185,29 @@ class AppTestClient(object):
         self.mail_service = self._test_account.mail_service
         self.account = self._test_account.account
 
-        self.service_factory = SingleUserServicesFactory(UserAgentMode(is_single_user=True))
-        services = self._test_account.services
-        self.service_factory.add_session('someuserid', services)
+        if mode.is_single_user:
+            self.service_factory = SingleUserServicesFactory(mode)
+            services = self._test_account.services
+            self.service_factory.add_session('someuserid', services)
 
-        self.resource = RootResource(self.service_factory)
-        self.resource.initialize()
+            self.resource = RootResource(self.service_factory)
+            self.resource.initialize()
+        else:
+            self.service_factory = StubServicesFactory(self.accounts, mode)
+            provider = mock()
+            provider.config = LeapConfig(self._tmp_dir.name)
+
+            self.resource = set_up_protected_resources(RootResource(self.service_factory), provider, self.service_factory, checker=StubSRPChecker(provider))
+
+    @defer.inlineCallbacks
+    def create_user(self, account_name):
+        if self._mode.is_single_user:
+            raise Exception('Not supported in single user mode')
+
+        account = AppTestAccount(account_name, self._tmp_dir.name)
+        yield account.start()
+
+        self.accounts[account_name] = account
 
     def _render(self, request, as_json=True):
         def get_str(_str):
@@ -203,6 +263,12 @@ class AppTestClient(object):
     def add_mail_to_inbox(self, input_mail):
         mail = yield self.mail_store.add_mail('INBOX', input_mail.raw)
         defer.returnValue(mail)
+
+    def account_for(self, username):
+        return self.accounts[username]
+
+    def add_mail_to_user_inbox(self, input_mail, username):
+        return self.account_for(username).mail_store.add_mail('INBOX', input_mail.raw)
 
     @defer.inlineCallbacks
     def add_multiple_to_mailbox(self, num, mailbox='', flags=[], tags=[], to='recipient@to.com', cc='recipient@cc.com', bcc='recipient@bcc.com'):

@@ -19,6 +19,8 @@ import uuid
 from crochet import setup, wait_for
 from leap.common.events.server import ensure_server
 from twisted.internet import defer
+
+from pixelated.application import UserAgentMode
 from test.support.dispatcher.proxy import Proxy
 from test.support.integration import AppTestClient
 from selenium import webdriver
@@ -31,20 +33,25 @@ setup()
 
 
 @wait_for(timeout=5.0)
-def start_app_test_client(client):
-    ensure_server()
-    return client.start_client()
+def start_app_test_client(client, mode):
+    return client.start_client(mode=mode)
 
 
 def before_all(context):
+    ensure_server()
     logging.disable('INFO')
     client = AppTestClient()
-    start_app_test_client(client)
+    start_app_test_client(client, UserAgentMode(is_single_user=True))
     client.listenTCP()
     proxy = Proxy(proxy_port='8889', app_port='4567')
     FeaturesResource.DISABLED_FEATURES.append('autoRefresh')
     context.client = client
     context.call_to_terminate_proxy = proxy.run_on_a_thread()
+
+    multi_user_client = AppTestClient()
+    start_app_test_client(multi_user_client, UserAgentMode(is_single_user=False))
+    multi_user_client.listenTCP(port=MULTI_USER_PORT)
+    context.multi_user_client = multi_user_client
 
 
 def after_all(context):
@@ -57,7 +64,7 @@ def before_feature(context, feature):
     context.browser.set_window_size(1280, 1024)
     context.browser.implicitly_wait(DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S)
     context.browser.set_page_load_timeout(60)  # wait for data
-    context.browser.get('http://localhost:8889/')
+    context.browser.get(HOMEPAGE_URL)
 
 
 def after_step(context, step):

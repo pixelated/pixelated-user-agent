@@ -76,6 +76,7 @@ def impl(context):
 
 
 @given('I have mails')
+@then(u'I have mails')
 def impl(context):
     emails = wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-list li span a'))
     assert len(emails) > 0

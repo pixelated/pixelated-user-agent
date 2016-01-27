@@ -30,7 +30,7 @@ from pixelated.adapter.welcome_mail import add_welcome_mail
 from pixelated.config import arguments
 from pixelated.config import logger
 from pixelated.config.leap import initialize_leap_single_user, init_monkeypatches, initialize_leap_provider
-from pixelated.config.services import Services
+from pixelated.config import services
 from pixelated.config.site import PixelatedSite
 from pixelated.resources.auth import LeapPasswordChecker, PixelatedRealm, PixelatedAuthSessionWrapper, SessionChecker
 from pixelated.resources.login_resource import LoginResource
@@ -49,6 +49,7 @@ class ServicesFactory(object):
         return user_id in self._services_by_user
 
     def services(self, user_id):
+        print self._services_by_user.keys()
         return self._services_by_user[user_id]
 
     def log_out_user(self, user_id):
@@ -59,6 +60,13 @@ class ServicesFactory(object):
 
     def add_session(self, user_id, services):
         self._services_by_user[user_id] = services
+
+    @defer.inlineCallbacks
+    def create_services_from(self, leap_session):
+        _services = services.Services(leap_session)
+        yield _services.setup()
+
+        self._services_by_user[leap_session.user_auth.uuid] = _services
 
 
 class SingleUserServicesFactory(object):
@@ -82,13 +90,13 @@ class UserAgentMode(object):
 def start_user_agent_in_single_user_mode(root_resource, services_factory, leap_home, leap_session):
     log.info('Bootstrap done, loading services for user %s' % leap_session.user_auth.username)
 
-    services = Services(leap_session)
-    yield services.setup()
+    _services = services.Services(leap_session)
+    yield _services.setup()
 
     if leap_session.fresh_account:
         yield add_welcome_mail(leap_session.mail_store)
 
-    services_factory.add_session(leap_session.user_auth.uuid, services)
+    services_factory.add_session(leap_session.user_auth.uuid, _services)
 
     root_resource.initialize()
 
@@ -166,8 +174,9 @@ def _start_in_multi_user_mode(args, root_resource, services_factory):
     return defer.succeed(None)
 
 
-def set_up_protected_resources(root_resource, provider, services_factory):
-    checker = LeapPasswordChecker(provider)
+def set_up_protected_resources(root_resource, provider, services_factory, checker=None):
+    if not checker:
+        checker = LeapPasswordChecker(provider)
     session_checker = SessionChecker()
     anonymous_resource = LoginResource(services_factory)
 

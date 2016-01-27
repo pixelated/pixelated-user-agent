@@ -94,21 +94,7 @@ class SessionChecker(object):
 class LeapUser(object):
 
     def __init__(self, leap_session):
-        self._leap_session = leap_session
-
-    @defer.inlineCallbacks
-    def start_services(self, services_factory):
-        _services = services.Services(self._leap_session)
-        yield _services.setup()
-
-        if self._leap_session.fresh_account:
-            yield add_welcome_mail(self._leap_session.mail_store)
-
-        services_factory.add_session(self._leap_session.user_auth.uuid, _services)
-
-    def init_http_session(self, request):
-        session = IPixelatedSession(request.getSession())
-        session.user_uuid = self._leap_session.user_auth.uuid
+        self.leap_session = leap_session
 
 
 class PixelatedRealm(object):

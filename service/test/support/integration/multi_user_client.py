@@ -35,22 +35,23 @@ from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.services.draft_service import DraftService
 from pixelated.bitmask_libraries.session import LeapSession, LeapSessionFactory
-from pixelated.config import services as config_services
+import pixelated.config.services
 # from pixelated.config.services import Services
 from pixelated.resources.auth import LeapPasswordChecker, SessionChecker, PixelatedRealm, PixelatedAuthSessionWrapper
 from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
 from test.support.integration import AppTestClient
 from test.support.integration.app_test_client import initialize_soledad, AppTestAccount
-
+import test.support.mockito
 from test.support.test_helper import request_mock
 
 
 class MultiUserClient(AppTestClient):
 
     @defer.inlineCallbacks
-    def start_client(self):
-        self._test_account = AppTestAccount('test')
+    def start_client(self, mode=UserAgentMode(is_single_user=True)):
+        self._initialize()
+        self._test_account = AppTestAccount('test', self._tmp_dir.name)
 
         yield self._test_account.start()
 
@@ -74,9 +75,9 @@ class MultiUserClient(AppTestClient):
         leap_session.fresh_account = False
 
         self._set_leap_srp_auth(username, password)
+        when(leap_session).initial_sync().thenAnswer(lambda: defer.succeed(None))
         when(LeapSessionFactory).create(username, password).thenReturn(leap_session)
-        when(config_services).Services(leap_session).thenReturn(self._test_account.services)
-        # when(Services).setup().thenReturn(defer.succeed('mocked so irrelevant'))
+        when(pixelated.config.services).Services(ANY()).thenReturn(self._test_account.services)
 
         request = request_mock(path='/login', method="POST", body={'username': username, 'password': password})
         return self._render(request, as_json=False)

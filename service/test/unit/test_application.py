@@ -38,7 +38,7 @@ class ApplicationTest(unittest.TestCase):
 
     @patch('leap.common.events.client')
     @patch('pixelated.application.reactor')
-    @patch('pixelated.application.Services')
+    @patch('pixelated.application.services.Services')
     def test_that_start_user_agent_binds_to_tcp_port_if_no_ssl_options(self, services_mock, reactor_mock, _):
         # FIXME patch something closer, instead of leap.common
         app_mock = MagicMock()
@@ -56,7 +56,7 @@ class ApplicationTest(unittest.TestCase):
 
     @patch('leap.common.events.client')
     @patch('pixelated.application.reactor')
-    @patch('pixelated.application.Services')
+    @patch('pixelated.application.services.Services')
     def test_that_start_user_agent_binds_to_ssl_if_ssl_options(self, services_mock, reactor_mock, _):
         # FIXME patch something closer, instead of leap.common
         app_mock = MagicMock()

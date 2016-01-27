@@ -88,6 +88,7 @@ class TestLoginPOST(unittest.TestCase):
         config.leap_home = 'some_folder'
         leap_session.config = config
         leap_session.fresh_account = False
+        self.leap_session = leap_session
         self.leap_user = LeapUser(leap_session)
 
     @patch('twisted.web.util.redirectTo')
@@ -99,8 +100,7 @@ class TestLoginPOST(unittest.TestCase):
 
         def assert_login_setup_service_for_user(_):
             verify(self.portal).login(ANY(), None, IResource)
-            self.assertTrue(mock_service_setup.called)
-            verify(self.services_factory).add_session('some_user_uuid', ANY())
+            verify(self.services_factory).create_services_from(self.leap_session)
             mock_redirect.assert_called_once_with('/', self.request)
             self.assertTrue(self.resource.is_logged_in(self.request))
 
