@@ -17,8 +17,8 @@ class PixelatedSite(Site):
 
     @classmethod
     def enable_csp_requests(cls):
-        cls.requestFactory = Site.requestFactory
+        cls.requestFactory = AddCSPHeaderRequest
 
     @classmethod
     def disable_csp_requests(cls):
-        cls.requestFactory = AddCSPHeaderRequest
+        cls.requestFactory = Site.requestFactory
