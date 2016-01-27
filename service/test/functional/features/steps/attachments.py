@@ -60,7 +60,36 @@ def find_icon(context):
     assert find_element_by_css_selector(context, '#attachment-button .fa.fa-paperclip')
 
 
-@when(u'I upload a file')
+@when(u'I try to upload a file bigger than 1MB')
+def upload_big_file(context):
+    base_dir = "test/functional/features/files/"
+    fname = "image_over_1MB.png"
+    fill_by_css_selector(context, '#fileupload', base_dir + fname)
+    wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, '#upload-error-message'))
+
+
+@then(u'I see an upload error message')
+def show_upload_error_message(context):
+    upload_error_message = find_elements_by_css_selector(context, '#upload-error-message')
+    error_messages = [e.text for e in upload_error_message]
+    assert "Upload failed. This file exceeds the 1MB limit." in error_messages
+
+
+@when(u'I dismiss the error message')
+def dismiss_error_message(context):
+    dismiss_button = find_elements_by_css_selector(context, '#dismiss-button')
+    assert len(dismiss_button) > 0
+    for button in dismiss_button:
+        button.click()
+
+
+@then(u'It should not show the error message anymore')
+def should_not_show_upload_error_message(context):
+    upload_error_message_is_present = page_has_css(context, '#upload-error-message')
+    assert not upload_error_message_is_present
+
+
+@when(u'I upload a valid file')
 def upload_attachment(context):
     base_dir = "test/functional/features/files/"
     fname = "upload_test_file.txt"
