@@ -40,6 +40,7 @@ define(
       this.setupForwardBox = function() {
         var mail = this.attr.mail;
         this.attr.subject = fwd(mail.header.subject);
+        this.attr.attachments = mail.attachments;
 
         this.renderInlineCompose('forward-box', {
           subject: this.attr.subject,

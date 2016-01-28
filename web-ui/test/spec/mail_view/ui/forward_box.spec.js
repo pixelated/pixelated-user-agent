@@ -78,6 +78,20 @@ describeComponent('mail_view/ui/forward_box', function () {
     }));
   });
 
+  it('should copy original message attachments', function() {
+    testMail = Pixelated.testData().parsedMail.withAttachments;
+    var mailSendEvent = spyOnEvent(document, Pixelated.events.mail.send);
+
+    this.setupComponent({ mail: testMail });
+
+    this.component.attr.recipientValues.to.push('forward_to@email.com');
+    $(document).trigger(Pixelated.events.ui.mail.send);
+
+    var sentMail = mailSendEvent.mostRecentCall.data;
+
+    expect(sentMail.attachments).toEqual(testMail.attachments);
+  });
+
   it('triggers openMail when email is sent', function() {
     var eventSpy = spyOnEvent(document, Pixelated.events.ui.mail.open);
     this.setupComponent({ mail: testMail });
