@@ -8,6 +8,10 @@ class AddCSPHeaderRequest(Request):
         self.setHeader("Content-Security-Policy", self.HEADER_VALUES)
         self.setHeader("X-Content-Security-Policy", self.HEADER_VALUES)
         self.setHeader("X-Webkit-CSP", self.HEADER_VALUES)
+
+        if self.isSecure():
+            self.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
+
         Request.process(self)
 
 
