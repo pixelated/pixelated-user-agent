@@ -32,3 +32,13 @@ def enter_credentials(context, username, password):
 def click_login(context):
     login_button = wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, 'input[name="login"]'))
     login_button.click()
+
+
+@then(u'I should see the fancy interstitial')
+def step_impl(context):
+    assert find_element_by_css_selector(context, 'section#hive-section')
+    _wait_for_interstitial_to_reload()
+
+
+def _wait_for_interstitial_to_reload():
+    time.sleep(6)

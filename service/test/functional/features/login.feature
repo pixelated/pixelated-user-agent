@@ -25,4 +25,5 @@ Feature: login and logout
     When I open the login page
     And I enter username and password as credentials
     And I click on the login button
+    Then I should see the fancy interstitial
     Then I have mails

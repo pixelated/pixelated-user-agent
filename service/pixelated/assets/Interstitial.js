@@ -45,7 +45,7 @@ $(function () {
       url: '/'
     }).success(function (data) {
       if (/Pixelated Mail/g.test(data)) {
-        window.location.reload(true);
+        window.location="/";
       }
     });
   }, 5000);

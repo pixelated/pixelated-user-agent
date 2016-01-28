@@ -14,32 +14,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import json
-import shutil
 
 from leap.exceptions import SRPAuthenticationError
-from leap.mail.imap.account import IMAPAccount
 from mockito import mock, when, any as ANY
-from twisted.cred import portal
-from twisted.cred.checkers import AllowAnonymousAccess
 from twisted.internet import defer
 
 from leap.auth import SRPAuth
 
-from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
-from pixelated.adapter.services.feedback_service import FeedbackService
 from pixelated.application import UserAgentMode, ServicesFactory, set_up_protected_resources
 
-from pixelated.adapter.mailstore import LeapMailStore
-from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
-
-from pixelated.adapter.search import SearchEngine
-from pixelated.adapter.services.draft_service import DraftService
 from pixelated.bitmask_libraries.session import LeapSession, LeapSessionFactory
 import pixelated.config.services
-# from pixelated.config.services import Services
-from pixelated.resources.auth import LeapPasswordChecker, SessionChecker, PixelatedRealm, PixelatedAuthSessionWrapper
-from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
 from test.support.integration import AppTestClient
 from test.support.integration.app_test_client import initialize_soledad, AppTestAccount
