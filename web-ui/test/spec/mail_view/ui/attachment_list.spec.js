@@ -39,27 +39,36 @@ describeMixin('mail_view/ui/attachment_list', function () {
             expect(this.component.select('attachmentListItem').html()).toContain('(4.39 Kb');
         });
 
-       it('should not upload files larger than 1MB', function () {
+        describe('Upload files -- max file size -- ', function (){
             var submitFile = 'file not submitted', submitted = 'file submitted';
             var mockSubmit = function (){ submitFile = submitted; };
             var largeAttachment = {originalFiles: [{size: 4500000}], submit: mockSubmit};
-            spyOn(largeAttachment, 'submit');
             var dummyEvent = 'whatever, not used';
 
-            this.component.checkAttachmentSize(dummyEvent, largeAttachment);
+            it('should show error messages on the dom, when uploading files larger than 1MB', function () {
+                this.component.checkAttachmentSize(dummyEvent, largeAttachment);
 
-            expect(largeAttachment.submit).not.toHaveBeenCalled();
-        });
+                expect(this.component.select('uploadError').html()).toContain('Upload failed. This file exceeds the 1MB limit.');
+            });
 
-       it('should upload files smaller than 1MB', function () {
-            var submitFile = 'file not submitted', submitted = 'file submitted';
-            var mockSubmit = function (){ submitFile = submitted; };
-            var largeAttachment = {originalFiles: [{size: 450}], submit: mockSubmit};
-            var dummyEvent = 'whatever, not used';
+            xit('should dismiss upload failed message when clicking close icon', function () {
 
-            this.component.checkAttachmentSize(dummyEvent, largeAttachment);
+            });
 
-            expect(submitFile).toEqual(submitted);
+            it('should not upload files larger than 1MB', function () {
+                spyOn(largeAttachment, 'submit');
+
+                this.component.checkAttachmentSize(dummyEvent, largeAttachment);
+
+                expect(largeAttachment.submit).not.toHaveBeenCalled();
+            });
+
+            it('should upload files smaller than 1MB', function () {
+                var smallAttachment = {originalFiles: [{size: 450}], submit: mockSubmit};
+                this.component.checkAttachmentSize(dummyEvent, smallAttachment);
+
+                expect(submitFile).toEqual(submitted);
+            });
         });
 
         xit('should start uploading attachments', function () {
