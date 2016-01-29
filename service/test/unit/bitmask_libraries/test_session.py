@@ -13,12 +13,13 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+
 from mock import patch
 from mock import MagicMock
 
 from pixelated.bitmask_libraries.session import LeapSession
 from test_abstract_leap import AbstractLeapTest
-from twisted.internet import defer
+from leap.common.events.catalog import KEYMANAGER_FINISHED_KEY_GENERATION
 
 
 class SessionTest(AbstractLeapTest):
@@ -48,6 +49,49 @@ class SessionTest(AbstractLeapTest):
                 session = self._create_session()
                 yield session.sync()
                 self.soledad_session.sync.assert_called_once()
+
+    def test_session_registers_to_generated_keys(self):
+        email = 'someone@somedomain.tld'
+        self.provider.address_for.return_value = email
+        with patch('pixelated.bitmask_libraries.session.register') as register_mock:
+            session = self._create_session()
+
+            register_mock.assert_called_once_with(KEYMANAGER_FINISHED_KEY_GENERATION, session._set_fresh_account, uid=email)
+
+    @patch('pixelated.bitmask_libraries.session.register')
+    def test_close_unregisters_from_generate_keys_events(self, _):
+        email = 'someone@somedomain.tld'
+        self.provider.address_for.return_value = email
+        session = self._create_session()
+
+        with patch('pixelated.bitmask_libraries.session.unregister') as unregister_mock:
+            session.close()
+
+            unregister_mock.assert_called_once_with(KEYMANAGER_FINISHED_KEY_GENERATION, uid=email)
+
+    @patch('pixelated.bitmask_libraries.session.register')
+    def test_session_fresh_is_initially_false(self, _):
+        session = self._create_session()
+
+        self.assertFalse(session.fresh_account)
+
+    @patch('pixelated.bitmask_libraries.session.register')
+    def test_session_sets_status_to_fresh_on_key_generation_event(self, _):
+        session = self._create_session()
+        self.provider.address_for.return_value = 'someone@somedomain.tld'
+
+        session._set_fresh_account('someone@somedomain.tld')
+
+        self.assertTrue(session.fresh_account)
+
+    @patch('pixelated.bitmask_libraries.session.register')
+    def test_session_does_not_set_status_fresh_for_unkown_emails(self, _):
+        session = self._create_session()
+        self.provider.address_for.return_value = 'someone@somedomain.tld'
+
+        session._set_fresh_account('another_email@somedomain.tld')
+
+        self.assertFalse(session.fresh_account)
 
     def _create_session(self):
         return LeapSession(self.provider, self.auth, self.mail_store, self.soledad_session, self.nicknym, self.smtp_mock)

@@ -18,6 +18,7 @@ import traceback
 import sys
 import os
 import requests
+import logging
 
 from twisted.internet import reactor, defer
 from pixelated.bitmask_libraries.certs import LeapCertificate
@@ -30,9 +31,12 @@ from .smtp import LeapSMTPConfig
 from .soledad import SoledadFactory
 
 from leap.common.events import (
-    register,
+    register, unregister,
     catalog as events
 )
+
+
+log = logging.getLogger(__name__)
 
 
 SESSIONS = {}
@@ -49,7 +53,9 @@ class LeapSession(object):
         self.soledad = soledad
         self.nicknym = nicknym
         self.fresh_account = False
-        register(events.KEYMANAGER_FINISHED_KEY_GENERATION, self._set_fresh_account)
+        self.incoming_mail_fetcher = None
+        self.account = None
+        register(events.KEYMANAGER_FINISHED_KEY_GENERATION, self._set_fresh_account, uid=self.account_email())
 
     @defer.inlineCallbacks
     def initial_sync(self):
@@ -72,15 +78,18 @@ class LeapSession(object):
         account = IMAPAccount(user_mail, soledad)
         return account
 
-    def _set_fresh_account(self, *args):
-        self.fresh_account = True
+    def _set_fresh_account(self, email_address):
+        log.debug('Key for email %s has been generated' % email_address)
+        if email_address == self.account_email():
+            self.fresh_account = True
 
     def account_email(self):
         name = self.user_auth.username
         return self.provider.address_for(name)
 
     def close(self):
-        self.stop_background_jobs
+        self.stop_background_jobs()
+        unregister(events.KEYMANAGER_FINISHED_KEY_GENERATION, uid=self.account_email())
 
     @defer.inlineCallbacks
     def _create_incoming_mail_fetcher(self, nicknym, soledad, account, user_mail):
@@ -91,7 +100,9 @@ class LeapSession(object):
                           user_mail))
 
     def stop_background_jobs(self):
-        reactor.callFromThread(self.incoming_mail_fetcher.stopService)
+        if self.incoming_mail_fetcher:
+            reactor.callFromThread(self.incoming_mail_fetcher.stopService)
+            self.incoming_mail_fetcher = None
 
     def sync(self):
         try:
