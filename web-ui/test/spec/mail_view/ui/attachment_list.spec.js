@@ -51,8 +51,30 @@ describeMixin('mail_view/ui/attachment_list', function () {
                 expect(this.component.select('uploadError').html()).toContain('Upload failed. This file exceeds the 1MB limit.');
             });
 
-            xit('should dismiss upload failed message when clicking close icon', function () {
+            it('should dismiss upload failed message when clicking close icon', function () {
+                this.component.checkAttachmentSize(dummyEvent, largeAttachment);
 
+                this.component.select('closeIcon').click();
+
+                expect(this.component.select('uploadError').html()).toBe(undefined);
+            });
+
+            it('should dismiss upload failed message when clicking dismiss button', function () {
+                this.component.checkAttachmentSize(dummyEvent, largeAttachment);
+
+                this.component.select('dismissButton').click();
+
+                expect(this.component.select('uploadError').html()).toBe(undefined);
+            });
+
+            it('should start file upload when clicking Choose another file button', function () {
+                this.component.checkAttachmentSize(dummyEvent, largeAttachment);
+
+                var triggerUploadAttachment = spyOnEvent(document, Pixelated.events.mail.startUploadAttachment);
+
+                this.component.select('uploadFileButton').click();
+
+                expect(triggerUploadAttachment).toHaveBeenTriggeredOn(document);
             });
 
             it('should not upload files larger than 1MB', function () {

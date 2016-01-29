@@ -86,7 +86,7 @@ define(
 
                 var uploadAnotherFile = function (event) {
                     event.preventDefault();
-                    self.startUpload();
+                    self.trigger(document, events.mail.startUploadAttachment);
                 };
 
                 var ONE_MEGABYTE = 1000000;
