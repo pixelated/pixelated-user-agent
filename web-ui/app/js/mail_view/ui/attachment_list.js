@@ -61,46 +61,49 @@ define(
                 return templates.compose.attachmentItem(attachmentData);
             };
 
+            this.checkAttachmentSize = function(e, data) {
+                var self = this;
+                var uploadError = self.select('uploadError');
+                if (uploadError) {
+                    uploadError.remove();
+                }
+
+                var uploadErrors = [];
+
+                var showUploadFailed = function () {
+                    var html = $(templates.compose.uploadAttachmentFailed());
+                    html.insertAfter(self.select('attachmentListItem'));
+
+                    self.on(self.select('closeIcon'), 'click', dismissUploadFailed);
+                    self.on(self.select('dismissButton'), 'click', dismissUploadFailed);
+                    self.on(self.select('uploadFileButton'), 'click', uploadAnotherFile);
+                };
+
+                var dismissUploadFailed = function (event) {
+                    event.preventDefault();
+                    self.select('uploadError').remove();
+                };
+
+                var uploadAnotherFile = function (event) {
+                    event.preventDefault();
+                    self.startUpload();
+                };
+
+                var ONE_MEGABYTE = 1000000;
+                if (data.originalFiles[0].size > ONE_MEGABYTE) {
+                    uploadErrors.push('Filesize is too big');
+                }
+                if (uploadErrors.length > 0) {
+                    showUploadFailed();
+                } else {
+                    data.submit();
+                }
+            };
+
             this.addJqueryFileUploadConfig = function() {
                 var self = this;
                 this.select('inputFileUpload').fileupload({
-                    add: function(e, data) {
-                        var uploadError = self.select('uploadError');
-                        if (uploadError) {
-                            uploadError.remove();
-                        }
-
-                        var uploadErrors = [];
-
-                        this.showUploadFailed = function () {
-                            var html = $(templates.compose.uploadAttachmentFailed());
-                            html.insertAfter(self.$node.find(self.attr.attachmentListItem));
-
-                            self.on(self.select('closeIcon'), 'click', this.dismissUploadFailed);
-                            self.on(self.select('dismissButton'), 'click', this.dismissUploadFailed);
-                            self.on(self.select('uploadFileButton'), 'click', this.uploadAnotherFile);
-                        };
-
-                        this.dismissUploadFailed = function (event) {
-                            event.preventDefault();
-                            self.select('uploadError').remove();
-                        };
-
-                        this.uploadAnotherFile = function (event) {
-                            event.preventDefault();
-                            self.startUpload();
-                        };
-
-                        var ONE_MEGABYTE = 1000000;
-                        if (data.originalFiles[0].size > ONE_MEGABYTE) {
-                            uploadErrors.push('Filesize is too big');
-                        }
-                        if (uploadErrors.length > 0) {
-                            this.showUploadFailed();
-                        } else {
-                            data.submit();
-                        }
-                    },
+                    add: function(e, data) { self.checkAttachmentSize(e, data); },
                     url: self.attr.attachmentBaseUrl,
                     dataType: 'json',
                     done: function (e, response) {

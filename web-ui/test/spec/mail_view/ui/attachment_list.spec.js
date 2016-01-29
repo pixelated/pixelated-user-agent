@@ -39,6 +39,29 @@ describeMixin('mail_view/ui/attachment_list', function () {
             expect(this.component.select('attachmentListItem').html()).toContain('(4.39 Kb');
         });
 
+       it('should not upload files larger than 1MB', function () {
+            var submitFile = 'file not submitted', submitted = 'file submitted';
+            var mockSubmit = function (){ submitFile = submitted; };
+            var largeAttachment = {originalFiles: [{size: 4500000}], submit: mockSubmit};
+            spyOn(largeAttachment, 'submit');
+            var dummyEvent = 'whatever, not used';
+
+            this.component.checkAttachmentSize(dummyEvent, largeAttachment);
+
+            expect(largeAttachment.submit).not.toHaveBeenCalled();
+        });
+
+       it('should upload files smaller than 1MB', function () {
+            var submitFile = 'file not submitted', submitted = 'file submitted';
+            var mockSubmit = function (){ submitFile = submitted; };
+            var largeAttachment = {originalFiles: [{size: 450}], submit: mockSubmit};
+            var dummyEvent = 'whatever, not used';
+
+            this.component.checkAttachmentSize(dummyEvent, largeAttachment);
+
+            expect(submitFile).toEqual(submitted);
+        });
+
         xit('should start uploading attachments', function () {
             var stubAttachment = {ident: 'faked', name: 'haha.txt', size: 4500};
             var mockAjax = spyOn($, 'ajax').and.callFake(function (params) {params.success(stubAttachment);});
