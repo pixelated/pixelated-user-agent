@@ -40,9 +40,10 @@ describeMixin('mail_view/ui/attachment_list', function () {
         });
 
         describe('Upload files -- max file size -- ', function (){
+            var ONE_MEGABYTE = 1024*1024;
             var submitFile = 'file not submitted', submitted = 'file submitted';
             var mockSubmit = function (){ submitFile = submitted; };
-            var largeAttachment = {originalFiles: [{size: 4500000}], submit: mockSubmit};
+            var largeAttachment = {originalFiles: [{size: ONE_MEGABYTE+1}], submit: mockSubmit};
             var dummyEvent = 'whatever, not used';
 
             it('should show error messages on the dom, when uploading files larger than 1MB', function () {
@@ -85,27 +86,12 @@ describeMixin('mail_view/ui/attachment_list', function () {
                 expect(largeAttachment.submit).not.toHaveBeenCalled();
             });
 
-            it('should upload files smaller than 1MB', function () {
-                var smallAttachment = {originalFiles: [{size: 450}], submit: mockSubmit};
+            it('should upload files less or equal 1MB', function () {
+                var smallAttachment = {originalFiles: [{size: ONE_MEGABYTE}], submit: mockSubmit};
                 this.component.checkAttachmentSize(dummyEvent, smallAttachment);
 
                 expect(submitFile).toEqual(submitted);
             });
         });
-
-        xit('should start uploading attachments', function () {
-            var stubAttachment = {ident: 'faked', name: 'haha.txt', size: 4500};
-            var mockAjax = spyOn($, 'ajax').and.callFake(function (params) {params.success(stubAttachment);});
-            var uploadedAttachment = spyOnEvent(document, Pixelated.events.mail.uploadedAttachment);
-            var uploading = spyOnEvent(document, Pixelated.events.mail.uploadingAttachment);
-
-            $(document).trigger(Pixelated.events.mail.startUploadAttachment);
-
-            expect(mockAjax).toHaveBeenCalled();
-            expect(uploadedAttachment).toHaveBeenTriggeredOnAndWith(document, stubAttachment);
-            expect(uploading).toHaveBeenTriggeredOn(document);
-        });
-
     });
-
 });

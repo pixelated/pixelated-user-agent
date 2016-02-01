@@ -38,6 +38,9 @@ define(
                 uploadFileButton: '#upload-file-button'
             });
 
+            var ONE_MEGABYTE = 1024*1024;
+            var ATTACHMENT_SIZE_LIMIT = ONE_MEGABYTE;
+
             this.showAttachment = function (ev, data) {
                 this.trigger(document, events.mail.appendAttachment, data);
                 this.renderAttachmentListView(data);
@@ -89,8 +92,7 @@ define(
                     self.trigger(document, events.mail.startUploadAttachment);
                 };
 
-                var ONE_MEGABYTE = 1000000;
-                if (data.originalFiles[0].size > ONE_MEGABYTE) {
+                if (data.originalFiles[0].size > ATTACHMENT_SIZE_LIMIT) {
                     uploadErrors.push('Filesize is too big');
                 }
                 if (uploadErrors.length > 0) {
