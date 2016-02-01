@@ -147,7 +147,8 @@ define(function () {
       uploadingAttachment: 'mail:uploading:attachment',
       startUploadAttachment: 'mail:start:upload:attachment',
       appendAttachment: 'mail:append:attachment',
-      resetAttachments: 'mail:reset:attachments'
+      resetAttachments: 'mail:reset:attachments',
+      removeAttachment: 'mail:remove:attachment'
     },
     mails: {
       available: 'mails:available',
