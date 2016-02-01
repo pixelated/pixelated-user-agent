@@ -22,7 +22,7 @@ class MailStore(object):
     def get_mail_attachment(self, attachment_id):
         pass
 
-    def get_mails(self, mail_ids):
+    def get_mails(self, mail_ids, gracefully_ignore_errors=False, include_body=False):
         pass
 
     def all_mails(self):

@@ -205,10 +205,10 @@ class LeapMailStore(MailStore):
         defer.returnValue(leap_mail)
 
     @defer.inlineCallbacks
-    def get_mails(self, mail_ids, gracefully_ignore_errors=False):
+    def get_mails(self, mail_ids, gracefully_ignore_errors=False, include_body=False):
         deferreds = []
         for mail_id in mail_ids:
-            deferreds.append(self.get_mail(mail_id, include_body=True))
+            deferreds.append(self.get_mail(mail_id, include_body=include_body))
 
         if gracefully_ignore_errors:
             results = yield DeferredList(deferreds, consumeErrors=True)
@@ -230,7 +230,7 @@ class LeapMailStore(MailStore):
 
         mail_ids = map(lambda doc: doc.doc_id, mdocs)
 
-        mails = yield self.get_mails(mail_ids, gracefully_ignore_errors=gracefully_ignore_errors)
+        mails = yield self.get_mails(mail_ids, gracefully_ignore_errors=gracefully_ignore_errors, include_body=True)
         defer.returnValue(mails)
 
     @defer.inlineCallbacks

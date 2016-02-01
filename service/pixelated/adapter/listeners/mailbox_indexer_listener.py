@@ -47,7 +47,7 @@ class MailboxIndexerListener(object):
 
             missing_idents = soledad_idents.difference(indexed_idents)
 
-            self.search_engine.index_mails((yield self.mail_store.get_mails(missing_idents)))
+            self.search_engine.index_mails((yield self.mail_store.get_mails(missing_idents, include_body=True)))
         except Exception, e:  # this is a event handler, don't let exceptions escape
             logger.error(e)
 
