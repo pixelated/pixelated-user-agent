@@ -80,7 +80,7 @@ class SessionTest(AbstractLeapTest):
         session = self._create_session()
         self.provider.address_for.return_value = 'someone@somedomain.tld'
 
-        session._set_fresh_account('someone@somedomain.tld')
+        session._set_fresh_account(None, 'someone@somedomain.tld')
 
         self.assertTrue(session.fresh_account)
 
@@ -89,7 +89,7 @@ class SessionTest(AbstractLeapTest):
         session = self._create_session()
         self.provider.address_for.return_value = 'someone@somedomain.tld'
 
-        session._set_fresh_account('another_email@somedomain.tld')
+        session._set_fresh_account(None, 'another_email@somedomain.tld')
 
         self.assertFalse(session.fresh_account)
 
