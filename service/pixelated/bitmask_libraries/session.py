@@ -78,7 +78,7 @@ class LeapSession(object):
         account = IMAPAccount(user_mail, soledad)
         return account
 
-    def _set_fresh_account(self, email_address):
+    def _set_fresh_account(self, event, email_address):
         log.debug('Key for email %s has been generated' % email_address)
         if email_address == self.account_email():
             self.fresh_account = True
