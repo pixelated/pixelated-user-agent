@@ -1,4 +1,6 @@
+import time
 import json
+import logging
 from pixelated.adapter.services.mail_sender import SMTPDownException
 from pixelated.adapter.model.mail import InputMail
 from twisted.web.server import NOT_DONE_YET
@@ -9,7 +11,11 @@ from twisted.internet import defer
 from twisted.python.log import err
 from leap.common import events
 
+from pixelated.support import log_time
 from pixelated.support.functional import to_unicode
+
+
+log = logging.getLogger(__name__)
 
 
 class MailsUnreadResource(Resource):
@@ -139,19 +145,31 @@ class MailsResource(BaseResource):
         if action == 'unread':
             return MailsUnreadResource(_mail_service)
 
+    @log_time
+    def _build_mails_response(self, (mails, total)):
+        return {
+            "stats": {
+                "total": total,
+            },
+            "mails": [mail.as_dict() for mail in mails]
+        }
+
     def render_GET(self, request):
+        start = time.clock()
+
+        def log_after_completion(result, start):
+            end = time.clock()
+            log.info('Needed %f ms to render response' % (end - start))
+            return result
+
         _mail_service = self.mail_service(request)
         query, window_size, page = request.args.get('q')[0], request.args.get('w')[0], request.args.get('p')[0]
         unicode_query = to_unicode(query)
         d = _mail_service.mails(unicode_query, window_size, page)
 
-        d.addCallback(lambda (mails, total): {
-            "stats": {
-                "total": total,
-            },
-            "mails": [mail.as_dict() for mail in mails]
-        })
+        d.addCallback(self._build_mails_response)
         d.addCallback(lambda res: respond_json_deferred(res, request))
+        d.addCallback(log_after_completion, start=start)
 
         def error_handler(error):
             print error

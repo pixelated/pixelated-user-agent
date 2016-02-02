@@ -14,10 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import re
-import logging
-import time
 from email.header import decode_header
-from functools import wraps
 from uuid import uuid4
 
 from leap.mail.adaptors.soledad import SoledadMailAdaptor
@@ -28,10 +25,8 @@ from twisted.internet.defer import FirstError, DeferredList
 from pixelated.adapter.mailstore.body_parser import BodyParser
 from pixelated.adapter.mailstore.mailstore import MailStore, underscore_uuid
 from pixelated.adapter.model.mail import Mail, InputMail
+from pixelated.support import log_time_deferred
 from pixelated.support.functional import to_unicode
-
-
-log = logging.getLogger(__name__)
 
 
 class AttachmentInfo(object):
@@ -191,25 +186,6 @@ def _extract_filename_from_name_header_part(header_value):
     if match:
         filename = match.group(1)
     return filename
-
-
-def log_time_deferred(f):
-
-    def log_time(result, start):
-        log.info('after callback: Needed %f ms to execute %s' % ((time.clock() - start), f))
-        return result
-
-    @wraps(f)
-    def wrapper(*args, **kwds):
-        start = time.clock()
-        result = f(*args, **kwds)
-        if isinstance(result, defer.Deferred):
-            result.addCallback(log_time, start=start)
-        else:
-            log.warn('No Deferred returned, perhaps need to re-order annotations?')
-        return result
-
-    return wrapper
 
 
 class LeapMailStore(MailStore):
