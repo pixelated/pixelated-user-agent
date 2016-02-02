@@ -29,7 +29,8 @@ define(
             this.defaultAttrs({
                 inputFileUpload: '#fileupload',
                 attachmentListItem: '#attachment-list-item',
-                progressBar: '#progress .progress-bar',
+                attachmentUploadItem: '#attachment-upload-item',
+                attachmentUploadItemProgress: '#attachment-upload-item-progress',
                 attachmentBaseUrl: '/attachment',
                 attachments: [],
                 closeIcon: '.close-icon',
@@ -74,57 +75,73 @@ define(
                 return element;
             };
 
-            this.checkAttachmentSize = function(e, data) {
-                var self = this;
-                var uploadError = self.select('uploadError');
+            this.performPreUploadCheck = function(e, data) {
+                if (data.originalFiles[0].size > ATTACHMENT_SIZE_LIMIT) {
+                    return false;
+                }
+
+                return true;
+            };
+
+            this.removeUploadError = function() {
+                var uploadError = this.select('uploadError');
                 if (uploadError) {
                     uploadError.remove();
                 }
+            };
 
-                var uploadErrors = [];
+            this.showUploadError = function () {
+                var self = this;
 
-                var showUploadFailed = function () {
-                    var html = $(templates.compose.uploadAttachmentFailed());
-                    html.insertAfter(self.select('attachmentListItem'));
+                var html = $(templates.compose.uploadAttachmentFailed());
+                html.insertAfter(self.select('attachmentListItem'));
 
-                    self.on(self.select('closeIcon'), 'click', dismissUploadFailed);
-                    self.on(self.select('dismissButton'), 'click', dismissUploadFailed);
-                    self.on(self.select('uploadFileButton'), 'click', uploadAnotherFile);
-                };
+                self.on(self.select('closeIcon'), 'click', dismissUploadFailed);
+                self.on(self.select('dismissButton'), 'click', dismissUploadFailed);
+                self.on(self.select('uploadFileButton'), 'click', uploadAnotherFile);
 
-                var dismissUploadFailed = function (event) {
+                function dismissUploadFailed(event) {
                     event.preventDefault();
                     self.select('uploadError').remove();
-                };
+                }
 
-                var uploadAnotherFile = function (event) {
+                function uploadAnotherFile(event) {
                     event.preventDefault();
                     self.trigger(document, events.mail.startUploadAttachment);
-                };
+                }
+            };
 
-                if (data.originalFiles[0].size > ATTACHMENT_SIZE_LIMIT) {
-                    uploadErrors.push('Filesize is too big');
-                }
-                if (uploadErrors.length > 0) {
-                    showUploadFailed();
-                } else {
-                    data.submit();
-                }
+            this.showUploadProgressBar = function() {
+                this.select('attachmentUploadItem').show();
+            };
+
+            this.hideUploadProgressBar = function() {
+                this.select('attachmentUploadItem').hide();
             };
 
             this.addJqueryFileUploadConfig = function() {
                 var self = this;
+
+                self.removeUploadError();
+
                 this.select('inputFileUpload').fileupload({
-                    add: function(e, data) { self.checkAttachmentSize(e, data); },
+                    add: function(e, data) {
+                        if (self.performPreUploadCheck(e, data)) {
+                            self.showUploadProgressBar();
+                            data.submit();
+                        } else {
+                            self.showUploadError();
+                        }
+                    },
                     url: self.attr.attachmentBaseUrl,
                     dataType: 'json',
                     done: function (e, response) {
-                        var data = response.result;
-                        self.trigger(document, events.mail.uploadedAttachment, data);
+                        self.hideUploadProgressBar();
+                        self.trigger(document, events.mail.uploadedAttachment, response.result);
                     },
                     progressall: function (e, data) {
                         var progressRate = parseInt(data.loaded / data.total * 100, 10);
-                        self.select('progressBar').css('width', progressRate + '%');
+                        self.select('attachmentUploadItemProgress').css('width', progressRate + '%');
                     }
                 }).bind('fileuploadstart', function (e) {
                     self.trigger(document, events.mail.uploadingAttachment);

@@ -34,12 +34,27 @@ define(
                 this.trigger(document, events.mail.startUploadAttachment);
             };
 
+            this.uploadInProgress = function (ev, data) {
+                this.attr.busy = true;
+                this.$node.addClass('busy');
+            };
+
+            this.uploadFinished = function (ev, data) {
+                this.attr.busy = false;
+                this.$node.removeClass('busy');
+            };
+
             this.after('initialize', function () {
                 if (features.isEnabled('attachment')) {
                     this.render();
+                    this.on(document, events.mail.uploadingAttachment, this.uploadInProgress);
+                    this.on(document, events.mail.uploadedAttachment, this.uploadFinished);
                 }
-                this.on(this.$node, 'click', this.triggerUploadAttachment);
+                this.on(this.$node, 'click', function() {
+                    if (!this.attr.busy) {
+                        this.triggerUploadAttachment();
+                    }
+                });
             });
-
         });
     });

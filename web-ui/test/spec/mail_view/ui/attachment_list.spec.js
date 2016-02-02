@@ -5,6 +5,7 @@ describeMixin('mail_view/ui/attachment_list', function () {
         beforeEach(function () {
             this.setupComponent('<div id="attachment-list">' +
                 '<ul id="attachment-list-item"></ul>' +
+                '<ul id="attachment-upload-item"><li><a>Uploading...</a><div id="attachment-upload-item-progress" class="progress"><div class="progress-bar progress-bar-success"></div></div></li></ul>' +
                 '</div>');
         });
 
@@ -39,58 +40,71 @@ describeMixin('mail_view/ui/attachment_list', function () {
             expect(this.component.select('attachmentListItem').html()).toContain('(4.39 Kb');
         });
 
-        describe('Upload files -- max file size -- ', function (){
-            var ONE_MEGABYTE = 1024*1024;
-            var submitFile = 'file not submitted', submitted = 'file submitted';
-            var mockSubmit = function (){ submitFile = submitted; };
-            var largeAttachment = {originalFiles: [{size: ONE_MEGABYTE+1}], submit: mockSubmit};
-            var dummyEvent = 'whatever, not used';
+        describe('Upload', function() {
 
-            it('should show error messages on the dom, when uploading files larger than 1MB', function () {
-                this.component.checkAttachmentSize(dummyEvent, largeAttachment);
+            describe('Progress Bar', function () {
+                it('should show progress bar', function() {
+                    this.component.showUploadProgressBar();
 
-                expect(this.component.select('uploadError').html()).toContain('Upload failed. This file exceeds the 1MB limit.');
+                    expect(this.component.select('attachmentUploadItem').html()).toContain('Uploading...');
+                    expect(this.component.select('attachmentUploadItem').css('display')).toEqual('block');
+                });
+
+                it('should hide progress bar', function() {
+                    this.component.hideUploadProgressBar();
+
+                    expect(this.component.select('attachmentUploadItem').css('display')).toEqual('none');
+                });
             });
 
-            it('should dismiss upload failed message when clicking close icon', function () {
-                this.component.checkAttachmentSize(dummyEvent, largeAttachment);
+            describe('Error', function() {
+                it('should show error message', function () {
+                    this.component.showUploadError();
 
-                this.component.select('closeIcon').click();
+                    expect(this.component.select('uploadError').html()).toContain('Upload failed. This file exceeds the 1MB limit.');
+                });
 
-                expect(this.component.select('uploadError').html()).toBe(undefined);
+                it('should dismiss upload failed message when clicking close icon', function () {
+                    this.component.showUploadError();
+
+                    this.component.select('closeIcon').click();
+
+                    expect(this.component.select('uploadError').html()).toBe(undefined);
+                });
+
+                it('should dismiss upload failed message when clicking dismiss button', function () {
+                    this.component.showUploadError();
+
+                    this.component.select('dismissButton').click();
+
+                    expect(this.component.select('uploadError').html()).toBe(undefined);
+                });
+
+                it('should start file upload when clicking Choose another file button', function () {
+                    this.component.showUploadError();
+                    var triggerUploadAttachment = spyOnEvent(document, Pixelated.events.mail.startUploadAttachment);
+
+                    this.component.select('uploadFileButton').click();
+
+                    expect(triggerUploadAttachment).toHaveBeenTriggeredOn(document);
+                });
             });
 
-            it('should dismiss upload failed message when clicking dismiss button', function () {
-                this.component.checkAttachmentSize(dummyEvent, largeAttachment);
+            describe('File size check', function (){
+                var ONE_MEGABYTE = 1024*1024;
+                var largeAttachment = {originalFiles: [{size: ONE_MEGABYTE+1}]};
 
-                this.component.select('dismissButton').click();
+                it('should reject files larger than 1MB', function () {
+                    var uploadAccepted = this.component.performPreUploadCheck(null, largeAttachment);
+                    expect(uploadAccepted).toBe(false);
+                });
 
-                expect(this.component.select('uploadError').html()).toBe(undefined);
-            });
+                it('should accept files less or equal 1MB', function () {
+                    var smallAttachment = {originalFiles: [{size: ONE_MEGABYTE}]};
+                    var uploadAccepted = this.component.performPreUploadCheck(null, smallAttachment);
 
-            it('should start file upload when clicking Choose another file button', function () {
-                this.component.checkAttachmentSize(dummyEvent, largeAttachment);
-
-                var triggerUploadAttachment = spyOnEvent(document, Pixelated.events.mail.startUploadAttachment);
-
-                this.component.select('uploadFileButton').click();
-
-                expect(triggerUploadAttachment).toHaveBeenTriggeredOn(document);
-            });
-
-            it('should not upload files larger than 1MB', function () {
-                spyOn(largeAttachment, 'submit');
-
-                this.component.checkAttachmentSize(dummyEvent, largeAttachment);
-
-                expect(largeAttachment.submit).not.toHaveBeenCalled();
-            });
-
-            it('should upload files less or equal 1MB', function () {
-                var smallAttachment = {originalFiles: [{size: ONE_MEGABYTE}], submit: mockSubmit};
-                this.component.checkAttachmentSize(dummyEvent, smallAttachment);
-
-                expect(submitFile).toEqual(submitted);
+                    expect(uploadAccepted).toBe(true);
+                });
             });
         });
     });

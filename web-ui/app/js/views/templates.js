@@ -75,6 +75,7 @@ define(['hbs/templates'], function (templates) {
   Handlebars.registerPartial('tag_inner', Templates.tags.tagInner);
   Handlebars.registerPartial('recipients', Templates.compose.recipients);
   Handlebars.registerPartial('attachments_list', Templates.compose.attachmentsList);
+  Handlebars.registerPartial('attachments_upload', Templates.compose.attachmentsList);
   Handlebars.registerPartial('attachment_item', Templates.compose.attachmentItem);
   Handlebars.registerPartial('uploadAttachmentFailed', Templates.compose.uploadAttachmentFailed);
 

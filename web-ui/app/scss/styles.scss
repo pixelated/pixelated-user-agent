@@ -33,7 +33,7 @@
     padding: 10px 16px 10px 18px;
     background-color: rgba(#3E3A37, 0.9);
     min-width: 230px;
- 
+
     &.extra-bottom-space{
       bottom: 33px
     }
@@ -895,6 +895,12 @@ div.side-nav-bottom {
   i.fa-paperclip {
       font-size: 1.7em;
   }
+
+  &.busy {
+    color: lighten($recipients_font_color, 10%);
+    cursor: progress;
+  }
 }
+
 
 @import "mascot.scss";
