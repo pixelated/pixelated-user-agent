@@ -199,7 +199,7 @@ class MailsResource(BaseResource):
         with_attachment_content = yield self._fetch_attachment_contents(content_dict, _mail_service)
 
         sent_mail = yield _mail_service.send_mail(with_attachment_content)
-        respond_json_deferred(sent_mail.as_dict(), request)
+        respond_json_deferred(sent_mail.as_dict(), request, status_code=201)
 
     @defer.inlineCallbacks
     def _handle_put(self, request):
