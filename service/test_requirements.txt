@@ -10,4 +10,4 @@ tempdir==0.6
 coverage
 crochet==1.4.0
 poster==0.8.1
-locust
+locustio==0.7.3
