@@ -29,7 +29,6 @@ class UserBehavior(TaskSet):
     def _get_or_create_user(self, number):
         srp_auth = SRPAuth(LEAP_SERVER_HOST, os.path.expanduser(LEAP_VERIFY_CERTIFICATE))
         username, password = ('loadtest%d' % number), ('password_%d' % number)
-#       username, password = 'loadtest123', 'asdfasdf'
         try:
             srp_auth.authenticate(username, password)
         except SRPAuthenticationError:
