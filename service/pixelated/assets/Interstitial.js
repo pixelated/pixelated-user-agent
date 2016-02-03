@@ -48,7 +48,7 @@ $(function () {
         window.location="/";
       }
     });
-  }, 5000);
+  }, 2000);
 
   $('#hive-section').height($(window).height());
 

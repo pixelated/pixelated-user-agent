@@ -56,7 +56,7 @@ class RootResource(BaseResource):
             return self
         return Resource.getChild(self, path, request)
 
-    def initialize(self, portal=None):
+    def initialize(self, portal=None, provider=None):
         self.putChild('assets', File(self._static_folder))
         self.putChild('keys', KeysResource(self._services_factory))
         self.putChild(AttachmentsResource.BASE_URL, AttachmentsResource(self._services_factory))
@@ -67,7 +67,7 @@ class RootResource(BaseResource):
         self.putChild('mail', MailResource(self._services_factory))
         self.putChild('feedback', FeedbackResource(self._services_factory))
         self.putChild('user-settings', UserSettingsResource(self._services_factory))
-        self.putChild(LoginResource.BASE_URL, LoginResource(self._services_factory, portal))
+        self.putChild(LoginResource.BASE_URL, LoginResource(self._services_factory, portal, provider))
         self.putChild(LogoutResource.BASE_URL, LogoutResource(self._services_factory))
 
         self._mode = MODE_RUNNING

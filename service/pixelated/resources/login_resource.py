@@ -24,10 +24,11 @@ from twisted.web.http import UNAUTHORIZED, OK
 from twisted.web.resource import IResource, NoResource
 from twisted.web.server import NOT_DONE_YET
 from twisted.web.static import File
-from twisted.web.template import Element, XMLFile, renderElement, renderer, tags
+from twisted.web.template import Element, XMLFile, renderElement, renderer
 from twisted.python.filepath import FilePath
 
 from pixelated.adapter.welcome_mail import add_welcome_mail
+from pixelated.config.leap import authenticate_user
 from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
 
 log = logging.getLogger(__name__)
@@ -67,12 +68,13 @@ class LoginWebSite(Element):
 class LoginResource(BaseResource):
     BASE_URL = 'login'
 
-    def __init__(self, services_factory, portal=None):
+    def __init__(self, services_factory, portal=None, provider=None):
         BaseResource.__init__(self, services_factory)
         self._static_folder = _get_static_folder()
         self._startup_folder = _get_startup_folder()
         self._html_template = open(os.path.join(self._startup_folder, 'login.html')).read()
         self._portal = portal
+        self._leap_provider = provider
         self.putChild('startup-assets', File(self._startup_folder))
 
     def set_portal(self, portal):
@@ -118,9 +120,9 @@ class LoginResource(BaseResource):
 
     @defer.inlineCallbacks
     def _handle_login(self, request):
-        creds = self._get_creds_from(request)
-        iface, leap_user, logout = yield self._portal.login(creds, None, IResource)
-        defer.returnValue(leap_user)
+        self.creds = self._get_creds_from(request)
+        iface, srp_auth, logout = yield self._portal.login(self.creds, None, IResource)
+        defer.returnValue(srp_auth)
 
     def _get_creds_from(self, request):
         username = request.args['username'][0]
@@ -128,18 +130,23 @@ class LoginResource(BaseResource):
         return credentials.UsernamePassword(username, password)
 
     @defer.inlineCallbacks
-    def _setup_user_services(self, leap_user, request):
-        yield self._initialize_after_login(self._services_factory, leap_user)
-        self._init_http_session(request, leap_user)
+    def _setup_user_services(self, srp_auth, request):
+        leap_session = yield self._init_leap_session(srp_auth)
+        yield self._initialize_services(leap_session)
+        self._init_http_session(request, leap_session)
 
     @defer.inlineCallbacks
-    def _initialize_after_login(self, services_factory, leap_user):
-        session = leap_user.leap_session
-        yield services_factory.create_services_from(session)
+    def _init_leap_session(self, srp_auth):
+        leap_session = yield authenticate_user(self._leap_provider, self.creds.username, self.creds.password, auth=srp_auth)
+        defer.returnValue(leap_session)
 
-        if session.fresh_account:
-            yield add_welcome_mail(session.mail_store)
+    @defer.inlineCallbacks
+    def _initialize_services(self, leap_session):
+        yield self._services_factory.create_services_from(leap_session)
 
-    def _init_http_session(self, request, leap_user):
+        if leap_session.fresh_account:
+            yield add_welcome_mail(leap_session.mail_store)
+
+    def _init_http_session(self, request, leap_session):
         session = IPixelatedSession(request.getSession())
-        session.user_uuid = leap_user.leap_session.user_auth.uuid
+        session.user_uuid = leap_session.user_auth.uuid

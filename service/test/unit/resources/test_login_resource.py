@@ -7,8 +7,7 @@ from twisted.trial import unittest
 from twisted.web.resource import IResource
 from twisted.web.test.requesthelper import DummyRequest
 
-from pixelated.bitmask_libraries.session import LeapSession
-from pixelated.resources.auth import LeapUser
+from pixelated.bitmask_libraries.session import LeapSession, LeapSessionFactory
 from pixelated.resources.login_resource import LoginResource
 from test.unit.resources import DummySite
 
@@ -73,13 +72,16 @@ class TestLoginPOST(unittest.TestCase):
     def setUp(self):
         self.services_factory = mock()
         self.portal = mock()
-        self.resource = LoginResource(self.services_factory, self.portal)
+        self.provider = mock()
+        self.resource = LoginResource(self.services_factory, self.portal, self.provider)
         self.web = DummySite(self.resource)
 
         self.request = DummyRequest([''])
         username = 'ayoyo'
         self.request.addArg('username', username)
         password = 'ayoyo_password'
+        self.username = username
+        self.password = password
         self.request.addArg('password', password)
         self.request.method = 'POST'
         leap_session = mock(LeapSession)
@@ -91,17 +93,18 @@ class TestLoginPOST(unittest.TestCase):
         leap_session.config = config
         leap_session.fresh_account = False
         self.leap_session = leap_session
-        self.leap_user = LeapUser(leap_session)
+        self.user_auth = user_auth
 
-    @patch('twisted.web.util.redirectTo')
-    @patch('pixelated.config.services.Services.setup')
-    def test_login_responds_interstitial_and_add_corresponding_session_to_services_factory(self, mock_service_setup, mock_redirect):
+    def test_login_responds_interstitial_and_add_corresponding_session_to_services_factory(self):
         irrelevant = None
-        when(self.portal).login(ANY(), None, IResource).thenReturn((irrelevant, self.leap_user, irrelevant))
+        when(self.portal).login(ANY(), None, IResource).thenReturn((irrelevant, self.user_auth, irrelevant))
+        when(LeapSessionFactory).create(self.username, self.password, self.user_auth).thenReturn(self.leap_session)
+
         d = self.web.get(self.request)
 
         def assert_login_setup_service_for_user(_):
             verify(self.portal).login(ANY(), None, IResource)
+            verify(LeapSessionFactory).create(self.username, self.password, self.user_auth)
             verify(self.services_factory).create_services_from(self.leap_session)
             interstitial_js_in_template = '<script src="startup-assets/Interstitial.js"></script>'
             self.assertIn(interstitial_js_in_template, self.request.written[0])
@@ -110,7 +113,7 @@ class TestLoginPOST(unittest.TestCase):
         d.addCallback(assert_login_setup_service_for_user)
         return d
 
-    def test_should_return_form_back_with_error_message_when_login_fails(self, ):
+    def test_should_return_form_back_with_error_message_when_login_fails(self):
         when(self.portal).login(ANY(), None, IResource).thenRaise(Exception())
         d = self.web.get(self.request)
 

@@ -30,9 +30,6 @@ from twisted.web import util
 from twisted.cred import error
 from twisted.web.resource import IResource, ErrorPage
 
-from pixelated.adapter.welcome_mail import add_welcome_mail
-from pixelated.config.leap import authenticate_user
-from pixelated.config import services
 from pixelated.resources import IPixelatedSession
 
 
@@ -56,12 +53,7 @@ class LeapPasswordChecker(object):
                 return srp_auth.authenticate(credentials.username, credentials.password)
             except SRPAuthenticationError:
                 raise UnauthorizedLogin()
-
-        def _authententicate_user(srp_auth):
-            return authenticate_user(self._leap_provider, credentials.username, credentials.password, auth=srp_auth)
-
         d = threads.deferToThread(_validate_credentials)
-        d.addCallback(_authententicate_user)
         return d
 
 
@@ -91,12 +83,6 @@ class SessionChecker(object):
         return IPixelatedSession(request.getSession())
 
 
-class LeapUser(object):
-
-    def __init__(self, leap_session):
-        self.leap_session = leap_session
-
-
 class PixelatedRealm(object):
     implements(portal.IRealm)
 
@@ -106,12 +92,7 @@ class PixelatedRealm(object):
 
     def requestAvatar(self, avatarId, mind, *interfaces):
         if IResource in interfaces:
-            if avatarId == checkers.ANONYMOUS:
-                return IResource, checkers.ANONYMOUS, lambda: None
-            else:
-                leap_session = avatarId
-                user = LeapUser(leap_session)
-                return IResource, user, lambda: None
+            return IResource, avatarId, lambda: None
         raise NotImplementedError()
 
 
