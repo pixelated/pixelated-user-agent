@@ -49,6 +49,7 @@ define(
                     this.render();
                     this.on(document, events.mail.uploadingAttachment, this.uploadInProgress);
                     this.on(document, events.mail.uploadedAttachment, this.uploadFinished);
+                    this.on(document, events.mail.failedUploadAttachment, this.uploadFinished);
                 }
                 this.on(this.$node, 'click', function() {
                     if (!this.attr.busy) {

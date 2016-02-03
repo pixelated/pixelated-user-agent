@@ -5,7 +5,7 @@ describeMixin('mail_view/ui/attachment_list', function () {
         beforeEach(function () {
             this.setupComponent('<div id="attachment-list">' +
                 '<ul id="attachment-list-item"></ul>' +
-                '<ul id="attachment-upload-item"><li><a>Uploading...</a><div id="attachment-upload-item-progress" class="progress"><div class="progress-bar progress-bar-success"></div></div></li></ul>' +
+                '<ul id="attachment-upload-item"><li><div id="attachment-upload-item-progress" class="progress"><div class="progress-bar progress-bar-success"></div></div><a>Uploading... <i id="attachment-upload-item-abort" class="fa fa-close remove-icon"></i></a></li></ul>' +
                 '</div>');
         });
 
@@ -54,6 +54,21 @@ describeMixin('mail_view/ui/attachment_list', function () {
                     this.component.hideUploadProgressBar();
 
                     expect(this.component.select('attachmentUploadItem').css('display')).toEqual('none');
+                });
+            });
+
+            describe('Cancel', function() {
+                it('should cancel the upload', function() {
+                    var fakeJQXHR = {
+                        abort: function() {}
+                    };
+                    spyOn(fakeJQXHR, 'abort');
+                    // this.component.showUploadProgressBar();
+                    this.component.attachUploadAbort(null, fakeJQXHR);
+
+                    this.component.select('attachmentUploadItemAbort').click();
+
+                    expect(fakeJQXHR.abort).toHaveBeenCalled();
                 });
             });
 

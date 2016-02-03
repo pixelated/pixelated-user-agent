@@ -146,6 +146,7 @@ define(function () {
       uploadedAttachment: 'mail:uploaded:attachment',
       uploadingAttachment: 'mail:uploading:attachment',
       startUploadAttachment: 'mail:start:upload:attachment',
+      failedUploadAttachment: 'mail:failed:upload:attachment',
       appendAttachment: 'mail:append:attachment',
       resetAttachments: 'mail:reset:attachments',
       removeAttachment: 'mail:remove:attachment'

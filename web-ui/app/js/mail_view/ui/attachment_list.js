@@ -31,6 +31,7 @@ define(
                 attachmentListItem: '#attachment-list-item',
                 attachmentUploadItem: '#attachment-upload-item',
                 attachmentUploadItemProgress: '#attachment-upload-item-progress',
+                attachmentUploadItemAbort: '#attachment-upload-item-abort',
                 attachmentBaseUrl: '/attachment',
                 attachments: [],
                 closeIcon: '.close-icon',
@@ -119,6 +120,13 @@ define(
                 this.select('attachmentUploadItem').hide();
             };
 
+            this.attachUploadAbort = function(e, data) {
+                this.on(this.select('attachmentUploadItemAbort'), 'click', function(e) {
+                    data.abort();
+                    e.preventDefault();
+                });
+            };
+
             this.addJqueryFileUploadConfig = function() {
                 var self = this;
 
@@ -128,6 +136,7 @@ define(
                     add: function(e, data) {
                         if (self.performPreUploadCheck(e, data)) {
                             self.showUploadProgressBar();
+                            self.attachUploadAbort(e, data);
                             data.submit();
                         } else {
                             self.showUploadError();
@@ -138,6 +147,10 @@ define(
                     done: function (e, response) {
                         self.hideUploadProgressBar();
                         self.trigger(document, events.mail.uploadedAttachment, response.result);
+                    },
+                    fail: function(e, data){
+                        self.hideUploadProgressBar();
+                        self.trigger(document, events.mail.failedUploadAttachment);
                     },
                     progressall: function (e, data) {
                         var progressRate = parseInt(data.loaded / data.total * 100, 10);

@@ -17,8 +17,26 @@ describeComponent('mail_view/ui/attachment_icon', function () {
         expect(this.component.attr.busy).toBe(true);
     });
 
+    it('should be busy after upload event', function() {
+      $(document).trigger(Pixelated.events.mail.uploadingAttachment);
+
+      expect(this.component.attr.busy).toBe(true);
+    });
+
     it('should not be busy', function() {
         this.component.uploadFinished();
+
+        expect(this.component.attr.busy).toBe(false);
+    });
+
+    it('should not be busy after upload finished event', function() {
+        $(document).trigger(Pixelated.events.mail.uploadedAttachment);
+
+        expect(this.component.attr.busy).toBe(false);
+    });
+
+    it('should not be busy after upload failed event', function() {
+        $(document).trigger(Pixelated.events.mail.failedUploadAttachment);
 
         expect(this.component.attr.busy).toBe(false);
     });

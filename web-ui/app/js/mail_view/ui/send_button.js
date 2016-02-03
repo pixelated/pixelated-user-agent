@@ -116,6 +116,7 @@ define([
 
         this.on(document, events.mail.uploadingAttachment, this.uploadInProgress);
         this.on(document, events.mail.uploadedAttachment, this.uploadFinished);
+        this.on(document, events.mail.failedUploadAttachment, this.uploadFinished);
 
         this.on(document, events.dispatchers.rightPane.clear, this.teardown);
         this.on(document, events.ui.sendbutton.enable, this.resetButton);
