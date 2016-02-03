@@ -131,9 +131,11 @@ class LoginResource(BaseResource):
 
     @defer.inlineCallbacks
     def _setup_user_services(self, srp_auth, request):
-        leap_session = yield self._init_leap_session(srp_auth)
-        yield self._initialize_services(leap_session)
-        self._init_http_session(request, leap_session)
+        user_id = srp_auth.uuid
+        if not self._services_factory.is_logged_in(user_id):
+            leap_session = yield self._init_leap_session(srp_auth)
+            yield self._initialize_services(leap_session)
+        self._init_http_session(request, user_id)
 
     @defer.inlineCallbacks
     def _init_leap_session(self, srp_auth):
@@ -147,6 +149,6 @@ class LoginResource(BaseResource):
         if leap_session.fresh_account:
             yield add_welcome_mail(leap_session.mail_store)
 
-    def _init_http_session(self, request, leap_session):
+    def _init_http_session(self, request, user_id):
         session = IPixelatedSession(request.getSession())
-        session.user_uuid = leap_session.user_auth.uuid
+        session.user_uuid = user_id

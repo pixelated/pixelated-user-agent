@@ -1,8 +1,6 @@
-import os
-
 from leap.exceptions import SRPAuthenticationError
 from mock import patch
-from mockito import mock, when, any as ANY, verify, verifyZeroInteractions
+from mockito import mock, when, any as ANY, verify, verifyZeroInteractions, verifyNoMoreInteractions
 from twisted.trial import unittest
 from twisted.web.resource import IResource
 from twisted.web.test.requesthelper import DummyRequest
@@ -106,6 +104,24 @@ class TestLoginPOST(unittest.TestCase):
             verify(self.portal).login(ANY(), None, IResource)
             verify(LeapSessionFactory).create(self.username, self.password, self.user_auth)
             verify(self.services_factory).create_services_from(self.leap_session)
+            interstitial_js_in_template = '<script src="startup-assets/Interstitial.js"></script>'
+            self.assertIn(interstitial_js_in_template, self.request.written[0])
+            self.assertTrue(self.resource.is_logged_in(self.request))
+
+        d.addCallback(assert_login_setup_service_for_user)
+        return d
+
+    def test_login_does_not_reload_leap_sessions_and_services_if_already_loaded(self):
+        irrelevant = None
+        when(self.portal).login(ANY(), None, IResource).thenReturn((irrelevant, self.user_auth, irrelevant))
+        when(self.services_factory).is_logged_in('some_user_uuid').thenReturn(True)
+
+        d = self.web.get(self.request)
+
+        def assert_login_setup_service_for_user(_):
+            verify(self.portal).login(ANY(), None, IResource)
+            verify(self.services_factory).is_logged_in('some_user_uuid')
+            verifyNoMoreInteractions(self.services_factory)
             interstitial_js_in_template = '<script src="startup-assets/Interstitial.js"></script>'
             self.assertIn(interstitial_js_in_template, self.request.written[0])
             self.assertTrue(self.resource.is_logged_in(self.request))

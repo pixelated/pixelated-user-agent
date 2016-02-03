@@ -13,8 +13,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-
-
 from leap.exceptions import SRPAuthenticationError
 from mockito import mock, when, any as ANY
 from twisted.internet import defer
@@ -27,7 +25,7 @@ from pixelated.bitmask_libraries.session import LeapSession, LeapSessionFactory
 import pixelated.config.services
 from pixelated.resources.root_resource import RootResource
 from test.support.integration import AppTestClient
-from test.support.integration.app_test_client import initialize_soledad, AppTestAccount
+from test.support.integration.app_test_client import AppTestAccount
 import test.support.mockito
 from test.support.test_helper import request_mock
 
@@ -60,9 +58,8 @@ class MultiUserClient(AppTestClient):
         leap_session.config = config
         leap_session.fresh_account = False
 
-        mock_srp_auth = 'mocked so irrelevant but just need a return value'
-        self._set_leap_srp_auth(username, password, mock_srp_auth)
-        when(LeapSessionFactory).create(username, password, mock_srp_auth).thenReturn(leap_session)
+        self._set_leap_srp_auth(username, password, user_auth)
+        when(LeapSessionFactory).create(username, password, user_auth).thenReturn(leap_session)
         when(leap_session).initial_sync().thenAnswer(lambda: defer.succeed(None))
         when(pixelated.config.services).Services(ANY()).thenReturn(self._test_account.services)
 
