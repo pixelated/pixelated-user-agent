@@ -30,6 +30,7 @@ from twisted.web import util
 from twisted.cred import error
 from twisted.web.resource import IResource, ErrorPage
 
+from pixelated.config.leap import authenticate_user
 from pixelated.resources import IPixelatedSession
 
 
@@ -53,7 +54,12 @@ class LeapPasswordChecker(object):
                 return srp_auth.authenticate(credentials.username, credentials.password)
             except SRPAuthenticationError:
                 raise UnauthorizedLogin()
+
+        def _get_leap_session(srp_auth):
+            return authenticate_user(self._leap_provider, credentials.username, credentials.password, auth=srp_auth)
+
         d = threads.deferToThread(_validate_credentials)
+        d.addCallback(_get_leap_session)
         return d
 
 

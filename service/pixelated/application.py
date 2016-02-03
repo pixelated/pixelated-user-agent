@@ -177,14 +177,14 @@ def set_up_protected_resources(root_resource, provider, services_factory, checke
     if not checker:
         checker = LeapPasswordChecker(provider)
     session_checker = SessionChecker()
-    anonymous_resource = LoginResource(services_factory, provider=provider)
+    anonymous_resource = LoginResource(services_factory)
 
     realm = PixelatedRealm(root_resource, anonymous_resource)
     _portal = portal.Portal(realm, [checker, session_checker, AllowAnonymousAccess()])
 
     protected_resource = PixelatedAuthSessionWrapper(_portal, root_resource, anonymous_resource, [])
     anonymous_resource.set_portal(_portal)
-    root_resource.initialize(_portal, provider)
+    root_resource.initialize(_portal)
     return protected_resource
 
 

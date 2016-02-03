@@ -71,7 +71,7 @@ class TestLoginPOST(unittest.TestCase):
         self.services_factory = mock()
         self.portal = mock()
         self.provider = mock()
-        self.resource = LoginResource(self.services_factory, self.portal, self.provider)
+        self.resource = LoginResource(self.services_factory, self.portal)
         self.web = DummySite(self.resource)
 
         self.request = DummyRequest([''])
@@ -95,14 +95,12 @@ class TestLoginPOST(unittest.TestCase):
 
     def test_login_responds_interstitial_and_add_corresponding_session_to_services_factory(self):
         irrelevant = None
-        when(self.portal).login(ANY(), None, IResource).thenReturn((irrelevant, self.user_auth, irrelevant))
-        when(LeapSessionFactory).create(self.username, self.password, self.user_auth).thenReturn(self.leap_session)
+        when(self.portal).login(ANY(), None, IResource).thenReturn((irrelevant, self.leap_session, irrelevant))
 
         d = self.web.get(self.request)
 
         def assert_login_setup_service_for_user(_):
             verify(self.portal).login(ANY(), None, IResource)
-            verify(LeapSessionFactory).create(self.username, self.password, self.user_auth)
             verify(self.services_factory).create_services_from(self.leap_session)
             interstitial_js_in_template = '<script src="startup-assets/Interstitial.js"></script>'
             self.assertIn(interstitial_js_in_template, self.request.written[0])
@@ -111,9 +109,9 @@ class TestLoginPOST(unittest.TestCase):
         d.addCallback(assert_login_setup_service_for_user)
         return d
 
-    def test_login_does_not_reload_leap_sessions_and_services_if_already_loaded(self):
+    def test_login_does_not_reload_services_if_already_loaded(self):
         irrelevant = None
-        when(self.portal).login(ANY(), None, IResource).thenReturn((irrelevant, self.user_auth, irrelevant))
+        when(self.portal).login(ANY(), None, IResource).thenReturn((irrelevant, self.leap_session, irrelevant))
         when(self.services_factory).is_logged_in('some_user_uuid').thenReturn(True)
 
         d = self.web.get(self.request)
