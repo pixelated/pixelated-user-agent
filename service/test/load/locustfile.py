@@ -13,6 +13,7 @@ LEAP_SERVER_HOST = os.environ.get('LEAP_SERVER_HOST', 'https://api.%s:4430' % LE
 LEAP_VERIFY_CERTIFICATE = os.environ.get('LEAP_VERIFY_CERTIFICATE', '~/.leap/ca.crt')
 MAX_NUMBER_USER = os.environ.get('MAX_NUMBER_USER', 10000)
 INVITES_FILENAME = os.environ.get('INVITES_FILENAME', '/tmp/invite_codes.txt')
+INVITES_ENABLED = os.environ.get('INVITES_ENABLED', 'true') == 'true'
 
 
 def load_invite_from_number(number):
@@ -32,7 +33,8 @@ class UserBehavior(TaskSet):
         try:
             srp_auth.authenticate(username, password)
         except SRPAuthenticationError:
-            srp_auth.register(username, password, load_invite_from_number(number))
+            invite_code = load_invite_from_number(number) if INVITES_ENABLED else None
+            srp_auth.register(username, password, invite_code)
         return username, password
 
     def login(self):
