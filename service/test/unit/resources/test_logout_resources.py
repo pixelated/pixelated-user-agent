@@ -1,5 +1,5 @@
 from mock import patch
-from mockito import mock
+from mockito import mock, verify
 from twisted.trial import unittest
 from twisted.web.test.requesthelper import DummyRequest
 
@@ -24,6 +24,7 @@ class TestLogoutResource(unittest.TestCase):
         def expire_session_and_redirect(_):
             session = self.resource.get_session(request)
             self.assertFalse(session.is_logged_in())
+            verify(self.services_factory).log_out_user(session.user_uuid)
             mock_redirect.assert_called_once_with('/login', request)
 
         d.addCallback(expire_session_and_redirect)

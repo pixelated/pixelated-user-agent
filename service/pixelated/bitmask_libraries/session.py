@@ -39,7 +39,7 @@ from leap.common.events import (
 log = logging.getLogger(__name__)
 
 
-SESSIONS = {}
+SESSIONS = {}   # TODO replace with redis or memCached in prod
 
 
 class LeapSession(object):
@@ -90,6 +90,12 @@ class LeapSession(object):
     def close(self):
         self.stop_background_jobs()
         unregister(events.KEYMANAGER_FINISHED_KEY_GENERATION, uid=self.account_email())
+        self.soledad.close()
+        self.remove_from_cache()
+
+    def remove_from_cache(self):
+        key = SessionCache.session_key(self.provider, self.user_auth.username)
+        SessionCache.remove_session(key)
 
     @defer.inlineCallbacks
     def _create_incoming_mail_fetcher(self, nicknym, soledad, account, user_mail):
@@ -148,11 +154,11 @@ class LeapSessionFactory(object):
         self._config = provider.config
 
     def create(self, username, password, auth=None):
-        key = self._session_key(username)
-        session = self._lookup_session(key)
+        key = SessionCache.session_key(self._provider, username)
+        session = SessionCache.lookup_session(key)
         if not session:
             session = self._create_new_session(username, password, auth)
-            self._remember_session(key, session)
+            SessionCache.remember_session(key, session)
 
         return session
 
@@ -201,20 +207,6 @@ class LeapSessionFactory(object):
             self._provider.domain,
             "keys", "client", "smtp.pem")
 
-    def _lookup_session(self, key):
-        global SESSIONS
-        if key in SESSIONS:
-            return SESSIONS[key]
-        else:
-            return None
-
-    def _remember_session(self, key, session):
-        global SESSIONS
-        SESSIONS[key] = session
-
-    def _session_key(self, username):
-        return hash((self._provider, username))
-
     def _create_dir(self, path):
         try:
             os.makedirs(path)
@@ -244,3 +236,26 @@ class LeapSessionFactory(object):
                 pass
             else:
                 raise
+
+
+class SessionCache(object):     # should be replaced with redis or memcached in prod
+
+    @staticmethod
+    def lookup_session(key):
+        global SESSIONS
+        return SESSIONS.get(key, None)
+
+    @staticmethod
+    def remember_session(key, session):
+        global SESSIONS
+        SESSIONS[key] = session
+
+    @staticmethod
+    def remove_session(key):
+        global SESSIONS
+        if key in SESSIONS:
+            del SESSIONS[key]
+
+    @staticmethod
+    def session_key(provider, username):
+        return hash((provider, username))

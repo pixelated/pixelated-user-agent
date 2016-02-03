@@ -49,7 +49,7 @@ class MultiUserClient(AppTestClient):
         self.resource = set_up_protected_resources(root_resource, leap_provider, self.service_factory)
 
     def login(self, username='username', password='password'):
-        leap_session = mock(LeapSession)
+        leap_session = self._test_account.leap_session
         user_auth = mock()
         user_auth.uuid = 'some_user_uuid'
         leap_session.user_auth = user_auth
@@ -57,11 +57,13 @@ class MultiUserClient(AppTestClient):
         config.leap_home = 'some_folder'
         leap_session.config = config
         leap_session.fresh_account = False
+        self.leap_session = leap_session
+        self.services = self._test_account.services
 
         self._set_leap_srp_auth(username, password, user_auth)
         when(LeapSessionFactory).create(username, password, user_auth).thenReturn(leap_session)
         when(leap_session).initial_sync().thenAnswer(lambda: defer.succeed(None))
-        when(pixelated.config.services).Services(ANY()).thenReturn(self._test_account.services)
+        when(pixelated.config.services).Services(ANY()).thenReturn(self.services)
 
         request = request_mock(path='/login', method="POST", body={'username': username, 'password': password})
         return self._render(request, as_json=False)

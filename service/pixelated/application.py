@@ -53,8 +53,8 @@ class ServicesFactory(object):
 
     def log_out_user(self, user_id):
         if self.is_logged_in(user_id):
-            services = self._services_by_user[user_id]
-            services.close()
+            _services = self._services_by_user[user_id]
+            _services.close()
             del self._services_by_user[user_id]
 
     def add_session(self, user_id, services):
@@ -64,7 +64,6 @@ class ServicesFactory(object):
     def create_services_from(self, leap_session):
         _services = services.Services(leap_session)
         yield _services.setup()
-
         self._services_by_user[leap_session.user_auth.uuid] = _services
 
 
@@ -176,7 +175,7 @@ def _start_in_multi_user_mode(args, root_resource, services_factory):
 def set_up_protected_resources(root_resource, provider, services_factory, checker=None):
     if not checker:
         checker = LeapPasswordChecker(provider)
-    session_checker = SessionChecker()
+    session_checker = SessionChecker(services_factory)
     anonymous_resource = LoginResource(services_factory)
 
     realm = PixelatedRealm(root_resource, anonymous_resource)

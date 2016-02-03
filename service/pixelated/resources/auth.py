@@ -78,12 +78,14 @@ class SessionCredential(object):
 class SessionChecker(object):
     credentialInterfaces = (ISessionCredential,)
 
+    def __init__(self, services_factory):
+        self._services_factory = services_factory
+
     def requestAvatarId(self, credentials):
         session = self.get_session(credentials.request)
-        if session.is_logged_in():
-            return defer.succeed(session.user_uuid)
-        else:
-            return defer.succeed(ANONYMOUS)
+        if session.is_logged_in() and self._services_factory.is_logged_in(session.user_uuid):
+                return defer.succeed(session.user_uuid)
+        return defer.succeed(ANONYMOUS)
 
     def get_session(self, request):
         return IPixelatedSession(request.getSession())
@@ -131,7 +133,6 @@ class PixelatedAuthSessionWrapper(object):
 
     def _loginSucceeded(self, args):
         interface, avatar, logout = args
-
         if avatar == checkers.ANONYMOUS:
             return self._anonymous_resource
         else:

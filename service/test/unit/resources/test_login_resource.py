@@ -1,3 +1,5 @@
+import test.support.mockito
+
 from leap.exceptions import SRPAuthenticationError
 from mock import patch
 from mockito import mock, when, any as ANY, verify, verifyZeroInteractions, verifyNoMoreInteractions
@@ -33,6 +35,7 @@ class TestLoginResource(unittest.TestCase):
     def test_there_are_no_grand_children_resources_when_logged_in(self, mock_is_logged_in):
         request = DummyRequest(['/login/grand_children'])
         mock_is_logged_in.return_value = True
+        when(self.services_factory).is_logged_in(ANY()).thenReturn(True)
 
         d = self.web.get(request)
 
@@ -93,9 +96,13 @@ class TestLoginPOST(unittest.TestCase):
         self.leap_session = leap_session
         self.user_auth = user_auth
 
+    def mock_user_has_services_setup(self):
+        when(self.services_factory).is_logged_in('some_user_uuid').thenReturn(True)
+
     def test_login_responds_interstitial_and_add_corresponding_session_to_services_factory(self):
         irrelevant = None
         when(self.portal).login(ANY(), None, IResource).thenReturn((irrelevant, self.leap_session, irrelevant))
+        when(self.services_factory).create_services_from(self.leap_session).thenAnswer(self.mock_user_has_services_setup)
 
         d = self.web.get(self.request)
 
@@ -163,6 +170,7 @@ class TestLoginPOST(unittest.TestCase):
     @patch('pixelated.resources.session.PixelatedSession.is_logged_in')
     def test_should_not_process_login_if_already_logged_in(self, mock_logged_in, mock_redirect):
         mock_logged_in.return_value = True
+        when(self.services_factory).is_logged_in(ANY()).thenReturn(True)
         mock_redirect.return_value = "mocked redirection"
         when(self.portal).login(ANY(), None, IResource).thenRaise(Exception())
         d = self.web.get(self.request)

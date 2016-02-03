@@ -10,5 +10,7 @@ class LogoutResource(BaseResource):
 
     def render_GET(self, request):
         session = self.get_session(request)
+        self._services_factory.log_out_user(session.user_uuid)
         session.expire()
+
         return util.redirectTo("/%s" % LoginResource.BASE_URL, request)

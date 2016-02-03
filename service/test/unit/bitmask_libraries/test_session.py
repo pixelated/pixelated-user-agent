@@ -17,7 +17,7 @@
 from mock import patch
 from mock import MagicMock
 
-from pixelated.bitmask_libraries.session import LeapSession
+from pixelated.bitmask_libraries.session import LeapSession, SessionCache
 from test_abstract_leap import AbstractLeapTest
 from leap.common.events.catalog import KEYMANAGER_FINISHED_KEY_GENERATION
 
@@ -68,6 +68,28 @@ class SessionTest(AbstractLeapTest):
             session.close()
 
             unregister_mock.assert_called_once_with(KEYMANAGER_FINISHED_KEY_GENERATION, uid=email)
+
+    def test_close_stops_soledad(self):
+        email = 'someone@somedomain.tld'
+        self.provider.address_for.return_value = email
+        session = self._create_session()
+
+        session.close()
+        self.soledad_session.close.assert_called_once_with()
+
+    def test_close_removes_session_from_cache(self):
+        email = 'someone@somedomain.tld'
+        self.provider.address_for.return_value = email
+        session = self._create_session()
+
+        key = SessionCache.session_key(self.provider, self.auth.username)
+        SessionCache.remember_session(key, session)
+
+        self.assertEqual(session, SessionCache.lookup_session(key))
+
+        session.close()
+
+        self.assertIsNone(SessionCache.lookup_session(key))
 
     @patch('pixelated.bitmask_libraries.session.register')
     def test_session_fresh_is_initially_false(self, _):

@@ -25,22 +25,22 @@ class Services(object):
     @defer.inlineCallbacks
     def setup(self):
         search_index_storage_key = self._setup_search_index_storage_key(self._leap_session.soledad)
-        yield self._setup_search_engine(
-            self._leap_session.user_auth.uuid,
-            search_index_storage_key)
+        yield self._setup_search_engine(self._leap_session.user_auth.uuid, search_index_storage_key)
 
         self._wrap_mail_store_with_indexing_mail_store(self._leap_session)
 
         yield listen_all_mailboxes(self._leap_session.account, self.search_engine, self._leap_session.mail_store)
 
-        self.mail_service = self._setup_mail_service(
-            self.search_engine)
+        self.mail_service = self._setup_mail_service(self.search_engine)
 
         self.keymanager = self._leap_session.nicknym
         self.draft_service = self._setup_draft_service(self._leap_session.mail_store)
         self.feedback_service = self._setup_feedback_service()
 
         yield self._index_all_mails()
+
+    def close(self):
+        self._leap_session.close()
 
     def _wrap_mail_store_with_indexing_mail_store(self, leap_session):
         leap_session.mail_store = SearchableMailStore(leap_session.mail_store, self.search_engine)

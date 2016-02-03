@@ -39,6 +39,7 @@ from pixelated.adapter.services.feedback_service import FeedbackService
 from pixelated.application import ServicesFactory, UserAgentMode, SingleUserServicesFactory, set_up_protected_resources
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.session import LeapSession
+from pixelated.config.services import Services
 from pixelated.config.site import PixelatedSite
 
 from pixelated.adapter.mailstore import LeapMailStore
@@ -92,14 +93,16 @@ class AppTestAccount(object):
     @property
     def services(self):
         if self._services is None:
-            services = mock()
+            services = mock(Services)
             services.keymanager = self.keymanager
             services.mail_service = self.mail_service
             services.draft_service = self.draft_service
             services.search_engine = self.search_engine
             services.feedback_service = self.feedback_service
+            services._leap_session = self.leap_session
 
             self._services = services
+            self.leap_session.close = lambda: 'mocked'
 
         return self._services
 
