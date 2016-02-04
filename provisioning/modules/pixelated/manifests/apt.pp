@@ -16,12 +16,6 @@ class pixelated::apt {
     notify  => Exec['apt_get_update'],
   }
 
-  file { '/etc/apt/preferences.d/pixelated':
-    source => 'puppet:///modules/pixelated/apt/pixelated-preferences',
-    owner  => 'root',
-    notify => Exec['apt_get_update'],
-  }
-
   file { '/tmp/0x287A1542472DC0E3_packages@pixelated-project.org.asc':
     source => 'puppet:///modules/pixelated/0x287A1542472DC0E3_packages@pixelated-project.org.asc',
     notify => Exec['add_pixelated_key']
@@ -36,7 +30,7 @@ class pixelated::apt {
 
   # leap repo
   file { '/etc/apt/sources.list.d/leap.list':
-    content => 'deb http://deb.leap.se/0.6 wheezy main',
+    content => 'deb http://deb.leap.se/0.6 jessie main',
     owner   => 'root',
     require => Exec['add_leap_key'],
     notify  => Exec['apt_get_update'],
