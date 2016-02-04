@@ -127,6 +127,10 @@ define(
                 });
             };
 
+            this.detachUploadAbort = function() {
+                this.off(this.select('attachmentUploadItemAbort'), 'click');
+            };
+
             this.addJqueryFileUploadConfig = function() {
                 var self = this;
 
@@ -146,10 +150,12 @@ define(
                     dataType: 'json',
                     done: function (e, response) {
                         self.hideUploadProgressBar();
+                        self.detachUploadAbort();
                         self.trigger(document, events.mail.uploadedAttachment, response.result);
                     },
                     fail: function(e, data){
                         self.hideUploadProgressBar();
+                        self.detachUploadAbort();
                         self.trigger(document, events.mail.failedUploadAttachment);
                     },
                     progressall: function (e, data) {
