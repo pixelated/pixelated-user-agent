@@ -112,12 +112,18 @@ define(
                 }
             };
 
-            this.showUploadProgressBar = function() {
+            this.showUploadProgressBar = function(e, data) {
+                var element = $(templates.compose.attachmentUploadItem({
+                    name: data.originalFiles[0].name,
+                    size: data.originalFiles[0].size
+                }));
+                this.select('attachmentUploadItem').append(element);
                 this.select('attachmentUploadItem').show();
             };
 
             this.hideUploadProgressBar = function() {
                 this.select('attachmentUploadItem').hide();
+                this.select('attachmentUploadItem').empty();
             };
 
             this.attachUploadAbort = function(e, data) {
@@ -139,7 +145,7 @@ define(
                 this.select('inputFileUpload').fileupload({
                     add: function(e, data) {
                         if (self.performPreUploadCheck(e, data)) {
-                            self.showUploadProgressBar();
+                            self.showUploadProgressBar(e, data);
                             self.attachUploadAbort(e, data);
                             data.submit();
                         } else {
@@ -149,13 +155,13 @@ define(
                     url: self.attr.attachmentBaseUrl,
                     dataType: 'json',
                     done: function (e, response) {
-                        self.hideUploadProgressBar();
                         self.detachUploadAbort();
+                        self.hideUploadProgressBar();
                         self.trigger(document, events.mail.uploadedAttachment, response.result);
                     },
                     fail: function(e, data){
-                        self.hideUploadProgressBar();
                         self.detachUploadAbort();
+                        self.hideUploadProgressBar();
                         self.trigger(document, events.mail.failedUploadAttachment);
                     },
                     progressall: function (e, data) {

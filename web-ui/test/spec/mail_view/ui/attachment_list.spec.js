@@ -5,7 +5,7 @@ describeMixin('mail_view/ui/attachment_list', function () {
         beforeEach(function () {
             this.setupComponent('<div id="attachment-list">' +
                 '<ul id="attachment-list-item"></ul>' +
-                '<ul id="attachment-upload-item"><li><div id="attachment-upload-item-progress" class="progress"><div class="progress-bar progress-bar-success"></div></div><a>Uploading... <i id="attachment-upload-item-abort" class="fa fa-close remove-icon"></i></a></li></ul>' +
+                '<ul id="attachment-upload-item"></ul>' +
                 '</div>');
         });
 
@@ -43,14 +43,13 @@ describeMixin('mail_view/ui/attachment_list', function () {
         describe('Upload', function() {
 
             describe('Progress Bar', function () {
-                it('should show progress bar', function() {
-                    this.component.showUploadProgressBar();
+                it('should show/hide progress bar', function() {
+                    this.component.showUploadProgressBar(null, {originalFiles: [{name: 'foo.txt', size: 4500}]});
 
-                    expect(this.component.select('attachmentUploadItem').html()).toContain('Uploading...');
+                    expect(this.component.select('attachmentUploadItem').html()).toContain('foo.txt');
+                    expect(this.component.select('attachmentUploadItem').html()).toContain('(4.39 Kb');
                     expect(this.component.select('attachmentUploadItem').css('display')).toEqual('block');
-                });
 
-                it('should hide progress bar', function() {
                     this.component.hideUploadProgressBar();
 
                     expect(this.component.select('attachmentUploadItem').css('display')).toEqual('none');
@@ -63,7 +62,7 @@ describeMixin('mail_view/ui/attachment_list', function () {
                         abort: function() {}
                     };
                     spyOn(fakeJQXHR, 'abort');
-                    // this.component.showUploadProgressBar();
+                    this.component.showUploadProgressBar(null, {originalFiles: [{name: 'foo.txt', size: 4500}]});
                     this.component.attachUploadAbort(null, fakeJQXHR);
 
                     this.component.select('attachmentUploadItemAbort').click();

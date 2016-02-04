@@ -29,6 +29,7 @@ define(['hbs/templates'], function (templates) {
       feedback: window.Pixelated['app/templates/compose/feedback_box.hbs'],
       attachmentsList: window.Pixelated['app/templates/compose/attachments_list.hbs'],
       attachmentItem: window.Pixelated['app/templates/compose/attachment_item.hbs'],
+      attachmentUploadItem: window.Pixelated['app/templates/compose/attachment_upload_item.hbs'],
       uploadAttachmentFailed: window.Pixelated['app/templates/compose/upload_attachment_failed.hbs']
     },
     tags: {
@@ -77,6 +78,7 @@ define(['hbs/templates'], function (templates) {
   Handlebars.registerPartial('attachments_list', Templates.compose.attachmentsList);
   Handlebars.registerPartial('attachments_upload', Templates.compose.attachmentsList);
   Handlebars.registerPartial('attachment_item', Templates.compose.attachmentItem);
+  Handlebars.registerPartial('attachment_upload_item', Templates.compose.attachmentUploadItem);
   Handlebars.registerPartial('uploadAttachmentFailed', Templates.compose.uploadAttachmentFailed);
 
   return Templates;
