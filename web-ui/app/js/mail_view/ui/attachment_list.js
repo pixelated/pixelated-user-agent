@@ -181,18 +181,29 @@ define(
                 this.select('inputFileUpload').click();
             };
 
+            this.removeAttachmentFromList = function(attachment) {
+              for (var i = 0; i < this.attr.attachments.length; i++) {
+                if (this.attr.attachments[i].ident === attachment.ident) {
+                  this.attr.attachments.remove(i);
+                  break;
+                }
+              }
+            };
+
+            this.destroyAttachmentElement = function(attachment) {
+              this.$node.find('li[data-ident=' + attachment.ident + ']').remove();
+            };
+
             this.removeAttachments = function(event, data) {
               var success = function() {
+                this.removeAttachmentFromList(data);
+                this.destroyAttachmentElement(data);
                 console.log('Success');
-              };
-
-              var failure = function() {
-                console.log('Fail!!!!!');
               };
 
               monitoredAjax(this, '/attachment/' + data.ident, {
                 type: 'DELETE'
-              }).done(success.bind(this)).fail(failure.bind(this));
+              }).done(success.bind(this));
             };
 
             this.after('initialize', function () {
