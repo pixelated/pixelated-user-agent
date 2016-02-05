@@ -84,7 +84,7 @@ class SessionChecker(object):
     def requestAvatarId(self, credentials):
         session = self.get_session(credentials.request)
         if session.is_logged_in() and self._services_factory.is_logged_in(session.user_uuid):
-                return defer.succeed(session.user_uuid)
+            return defer.succeed(session.user_uuid)
         return defer.succeed(ANONYMOUS)
 
     def get_session(self, request):

@@ -11,6 +11,7 @@ from pixelated.application import UserAgentMode
 from pixelated.resources.attachments_resource import AttachmentsResource
 from test.unit.resources import DummySite
 
+logging.basicConfig(level=logging.CRITICAL)
 logging.getLogger('pixelated.resources.attachments_resource').addHandler(logging.NullHandler())
 
 
