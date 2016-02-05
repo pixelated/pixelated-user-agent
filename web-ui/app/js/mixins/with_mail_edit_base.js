@@ -108,6 +108,7 @@ define(
                 this.select('bodyBox').on('input', this.monitorInput.bind(this));
                 this.select('subjectBox').on('input', this.monitorInput.bind(this));
                 this.on(document, events.mail.appendAttachment, this.monitorInput.bind(this));
+                this.on(document, events.mail.removeAttachment, this.monitorInput.bind(this));
                 DraftSaveStatus.attachTo(this.select('draftSaveStatus'));
             };
 
@@ -260,4 +261,3 @@ define(
 
         return withMailEditBase;
     });
-
