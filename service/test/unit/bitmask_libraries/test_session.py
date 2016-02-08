@@ -69,15 +69,19 @@ class SessionTest(AbstractLeapTest):
 
             unregister_mock.assert_called_once_with(KEYMANAGER_FINISHED_KEY_GENERATION, uid=email)
 
-    def test_close_stops_soledad(self):
+    @patch('pixelated.bitmask_libraries.session.register')
+    def test_close_stops_soledad(self, _):
         email = 'someone@somedomain.tld'
         self.provider.address_for.return_value = email
         session = self._create_session()
 
-        session.close()
+        with patch('pixelated.bitmask_libraries.session.unregister') as unregister_mock:
+            session.close()
+
         self.soledad_session.close.assert_called_once_with()
 
-    def test_close_removes_session_from_cache(self):
+    @patch('pixelated.bitmask_libraries.session.register')
+    def test_close_removes_session_from_cache(self, _):
         email = 'someone@somedomain.tld'
         self.provider.address_for.return_value = email
         session = self._create_session()
@@ -87,7 +91,8 @@ class SessionTest(AbstractLeapTest):
 
         self.assertEqual(session, SessionCache.lookup_session(key))
 
-        session.close()
+        with patch('pixelated.bitmask_libraries.session.unregister') as unregister_mock:
+            session.close()
 
         self.assertIsNone(SessionCache.lookup_session(key))
 
