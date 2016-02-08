@@ -15,8 +15,8 @@ The Pixelated User Agent is the mail client of the Pixelated ecosystem. It is co
 ## Getting started
 
 ### Registering with a LEAP provider
-  * You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/).
-  * If you want to run your own LEAP provider, see [pixelated-platform](https://github.com/pixelated-project/pixelated-platform).
+  * You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/). Please contact us at team@pixelated-project.org for an invite code.
+  * If you want to run your own LEAP provider, see [Pixelated Platform installation](https://github.com/pixelated/puppet-pixelated).
 
 ## Installation Instructions
 The easiest setup is the [setup with vagrant](#developer-setup-with-vagrant), which we will go in details below. There is a section on [setup on the native OS](#developer-setup-on-native-os) as well.
@@ -24,15 +24,14 @@ For server setup, see [debian package](#debian-package) below.
 
 
 ### Developer Setup With Vagrant
-Please ensure that:
-  * You have an email user from your preferred leap provider ([How to](#registering-with-a-leap-provider)).
+Please ensure that you have an email user from your preferred leap provider ([How to](#registering-with-a-leap-provider)).
 
 ##### Requirements
-  * [virtualbox](https://www.virtualbox.org/wiki/Downloads) - Virtualbox is a virtual machine provider platform. It will be used by Vagrant to create a virtual machine ready to run the Pixelated User Agent.
   * [vagrant](https://www.vagrantup.com/downloads.html) - Vagrant is a tool that automates the setup of a virtual machine with the development environment in your computer. Inside the virtual machine's filesystem, this repository will be automatically mounted in the `/vagrant` folder.
+  * You will also need a vagrant [compatible provider](https://www.vagrantup.com/docs/providers/) e.g. [virtualbox](https://www.virtualbox.org/wiki/Downloads)  
   
 ##### Set up
-To setup the pixelated user agent inside a vagrant machine, please copy-paste the following command to a terminal:
+To setup the pixelated user agent inside a vagrant machine, please run the following command to a terminal:
 
 ```bash
  curl https://raw.githubusercontent.com/pixelated/pixelated-user-agent/master/vagrant_setup.sh | sh

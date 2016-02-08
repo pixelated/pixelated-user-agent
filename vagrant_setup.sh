@@ -5,7 +5,7 @@ hash vagrant 2>/dev/null || { echo >&2 "Vagrant is not installed.  Aborting."; e
 hash vboxmanage 2>/dev/null || hash virsh 2>/dev/null || { echo >&2 "Please install Virtualbox or Libvirt first and try again."; exit 1;}
 
 vagrant_ssh (){
-  vagrant ssh -c "export LANG=en_US.UTF-8; export LANGUAGE=en_US.UTF-8; export LC_ALL=en_US.UTF-8; cd $1; $2"
+  vagrant ssh -c "export LANG=en_US.UTF-8; export LANGUAGE=en_US.UTF-8; export LC_ALL=en_US.UTF-8; source /home/vagrant/user-agent-venv/bin/activate; cd $1; $2"
 }
 
 if [ -d ./pixelated-user-agent ]
