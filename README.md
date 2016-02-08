@@ -28,8 +28,8 @@ Please ensure that you have an email user from your preferred leap provider ([Ho
 
 ##### Requirements
   * [vagrant](https://www.vagrantup.com/downloads.html) - Vagrant is a tool that automates the setup of a virtual machine with the development environment in your computer. Inside the virtual machine's filesystem, this repository will be automatically mounted in the `/vagrant` folder.
-  * You will also need a vagrant [compatible provider](https://www.vagrantup.com/docs/providers/) e.g. [virtualbox](https://www.virtualbox.org/wiki/Downloads)  
-  
+  * You will also need a vagrant [compatible provider](https://www.vagrantup.com/docs/providers/) e.g. [virtualbox](https://www.virtualbox.org/wiki/Downloads)
+
 ##### Set up
 To setup the pixelated user agent inside a vagrant machine, please run the following command to a terminal:
 
@@ -48,54 +48,54 @@ To run the pixelated user agent single user mode, please run the following:
 ```
 You will then need to input your provider hostname, email username and password. Please follow the prompt.
 Once that is done, you can use by browsing to [http://localhost:3333](http://localhost:3333)
- 
+
 To run the pixelated user agent multi user mode, please run the following:
 ```bash
  (user-agent-venv)vagrant@jessie:/vagrant$ pixelated-user-agent --host 0.0.0.0 --multi-user --provider='dev.pixelated-project.org'
 ```
-You will need to change dev.pixelated-project.org to the hostname of the leap provider that you will be using.   
+You will need to change dev.pixelated-project.org to the hostname of the leap provider that you will be using.
 Once that is done, you can use by browsing to [http://localhost:3333](http://localhost:3333), where you will be prompted for your email username and password.
 
 ##### Running tests
-To run the backend test:
+To run the backend tests:
 
 ```bash
  (user-agent-venv)vagrant@jessie:/vagrant$ cd service
- (user-agent-venv)vagrant@jessie:/vagrant/service$ ./go test 
+ (user-agent-venv)vagrant@jessie:/vagrant/service$ ./go test
 ```
 
-To run the frontend test:
+To run the frontend tests:
 
 ```bash
  (user-agent-venv)vagrant@jessie:/vagrant$ cd web-ui
- (user-agent-venv)vagrant@jessie:/vagrant/web-ui$ ./go test 
+ (user-agent-venv)vagrant@jessie:/vagrant/web-ui$ ./go test
 ```
 
-To run the functional test:
+To run the functional tests:
 
 ```bash
  (user-agent-venv)vagrant@jessie:/vagrant$ cd service
- (user-agent-venv)vagrant@jessie:/vagrant/service$ ./go functional 
+ (user-agent-venv)vagrant@jessie:/vagrant/service$ ./go functional
 ```
 
 ##### Continuous Integration
 All commits to the pixelated user agent code trigger all tests to be run in [snap-ci](https://snap-ci.com/pixelated/pixelated-user-agent/branch/master).
 
 ##### Note
-* You can access the guest OS shell via the command `vagrant ssh` run within the `pixelated-user-agent/` folder in the host OS
+* You can access the guest OS shell via the command `vagrant ssh` run within the `pixelated-user-agent/` folder in the host OS.
 * `/vagrant/` in the guest OS is mapped to the `pixelated-user-agent/` folder in the host OS. File changes on either side will reflect in the other.
 * First time email sync could be slow, please be patient. This could be the case if you have a lot of emails already and it is the first time you setup the user agent on your machine.
-* CTRL + \ will stop the server
-* For all backend changes, you will need to restart the server
+* CTRL + \ will stop the server.
+* For all backend changes, you will need to stop and [restart the server](#running-the-user-agent).
 * For most frontend changes, you will just need to reload the browser. Some changes (in particular, those involving css or handlebars) you will need run:
 ```bash
  (user-agent-venv)vagrant@jessie:/vagrant$ cd web-ui
- (user-agent-venv)vagrant@jessie:/vagrant/web-ui$ ./go build 
+ (user-agent-venv)vagrant@jessie:/vagrant/web-ui$ ./go build
 ```
 
 ### Developer Setup On Native OS
 You will need to install python, pip, npm and openssl. On mac, please use homebrew. On debian/ubuntu, please use apt or aptitude.
-You will then need to run:
+You will need (within virtualenvs probably) to run:
 
 ```bash
 $ git clone https://github.com/pixelated/pixelated-user-agent.git
@@ -110,7 +110,7 @@ Running the user agent ([How to](#running-the-user-agent)), and the various test
 
 ## Debian package
 
-For people that just want to try the user agent, we have debian packages available in our [repository](http://packages.pixelated-project.org/debian/). To use it you have to add it to your sources list:
+For people that just want to try the user agent, we have debian packages available in our [repository](http://packages.pixelated-project.org/debian/). To use it, you have to add it to your sources list:
 
 ```shell
 

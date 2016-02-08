@@ -1,0 +1,284 @@
+test.unit.adapter.mailstore.maintenance.test_soledad_maintenance
+  TestSoledadMaintenance
+    test_repair_delete_public_key_active_docs ...                          [OK]
+    test_repair_delete_public_key_docs ...                                 [OK]
+    test_repair_is_deferred ...                                            [OK]
+    test_repair_keeps_active_and_key_doc_if_private_key_exists ...         [OK]
+    test_repair_only_deletes_key_docs ...                                  [OK]
+    test_repair_recreates_public_key_active_doc_if_necessary ...           [OK]
+test.unit.adapter.mailstore.test_body_parser
+  BodyParserTest
+    test_8bit_transfer_encoding_with_iso_8859_1_str_input ...              [OK]
+    test_8bit_transfer_encoding_with_iso_8859_1_unicode_input ...          [OK]
+    test_base64_text ...                                                   [OK]
+    test_base64_with_default_us_ascii_encoding ...                         [OK]
+    test_body_parser_logs_problems_and_then_ignores_invalid_chars ...      [OK]
+    test_simple_text ...                                                   [OK]
+test.unit.adapter.mailstore.test_leap_attachment_store
+  TestLeapAttachmentStore
+    test_get_mail_attachment ...                                           [OK]
+    test_get_mail_attachment_different_content_encodings ...               [OK]
+    test_get_mail_attachment_throws_exception_if_attachment_does_not_exist ... [OK]
+    test_soledad_delete_doc_is_called_when_deleting_an_attachment ...      [OK]
+    test_store_attachment ...                                              [OK]
+    test_store_attachment_twice_does_not_cause_exception ...               [OK]
+test.unit.adapter.mailstore.test_leap_mail
+  TestLeapMail
+    test_as_dict ...                                                       [OK]
+    test_as_dict_headers_with_special_chars ...                            [OK]
+    test_as_dict_with_attachments ...                                      [OK]
+    test_as_dict_with_body ...                                             [OK]
+    test_as_dict_with_mixed_encodings ...                                  [OK]
+    test_email_addresses_in_bcc_are_split_into_a_list ...                  [OK]
+    test_email_addresses_in_cc_are_split_into_a_list ...                   [OK]
+    test_email_addresses_in_to_are_split_into_a_list ...                   [OK]
+    test_email_addresses_might_be_empty_array ...                          [OK]
+    test_headers_none_recipients_are_converted_to_empty_array ...          [OK]
+    test_leap_mail ...                                                     [OK]
+    test_raw_constructed_by_headers_and_body ...                           [OK]
+    test_security_casing ...                                               [OK]
+test.unit.adapter.mailstore.test_leap_mailstore
+  TestLeapMailStore
+    test_add_mail ...                                                      [OK]
+    test_add_mail_with_attachment ...                                      [OK]
+    test_add_mail_with_inline_attachment ...                               [OK]
+    test_add_mail_with_nested_attachments ... 1 2
+1 2
+                             [OK]
+    test_add_mail_with_special_chars ...                                   [OK]
+    test_add_mailbox ...                                                   [OK]
+    test_all_mail_graceful_error_handling ...                              [OK]
+    test_all_mails ...                                                     [OK]
+    test_copy_mail_to_mailbox ...                                          [OK]
+    test_delete_mail ...                                                   [OK]
+    test_delete_mailbox ...                                                [OK]
+    test_extract_attachment_filename_from_other_headers ...                [OK]
+    test_extract_attachment_filename_with_or_without_quotes ...            [OK]
+    test_get_mail ...                                                      [OK]
+    test_get_mail_from_mailbox ...                                         [OK]
+    test_get_mail_not_exist ...                                            [OK]
+    test_get_mail_with_body ...                                            [OK]
+    test_get_mailbox_mail_ids ...                                          [OK]
+    test_get_mailbox_names ...                                             [OK]
+    test_get_mailbox_names_always_contains_inbox ...                       [OK]
+    test_get_mails ...                                                     [OK]
+    test_get_mails_fails_for_invalid_mail_id ...                           [OK]
+    test_get_two_different_mails ...                                       [OK]
+    test_handles_unmapped_mailbox_uuid ...                                 [OK]
+    test_move_to_mailbox ...                                               [OK]
+    test_update_mail ...                                                   [OK]
+test.unit.adapter.mailstore.test_searchable_mailstore
+  TestSearchableMailStore
+    test_add_mail_delegates_to_mail_store_and_updates_index ...            [OK]
+    test_copy_mail_delegates_to_mail_store_and_updates_index ...           [OK]
+    test_delete_mail_delegates_to_mail_store_and_updates_index ...         [OK]
+    test_delete_mailbox_is_not_implemented ...                             [OK]
+    test_move_mail_delegates_to_mail_store_and_updates_index ...           [OK]
+    test_other_methods_are_delegated ...                                   [OK]
+    test_update_mail_delegates_to_mail_store_and_updates_index ...         [OK]
+test.unit.adapter.search.test_index_storage_key
+  TestSearchIndexStorageKey
+    test_get_or_create_creates_key_if_not_exists ...                       [OK]
+    test_get_or_create_key_returns_key ...                                 [OK]
+test.unit.adapter.search.test_search
+  SearchEngineTest
+    test_contents_encoding_accents ...                                     [OK]
+    test_contents_encoding_special_characters ...                          [OK]
+    test_headers_encoding ...                                              [OK]
+test.unit.adapter.services.test_mail_sender
+  MailSenderTest
+    test_iterates_over_recipients ...                                      [OK]
+    test_iterates_over_recipients_and_send_whitout_bcc_field ...           [OK]
+    test_problem_with_email_raises_exception ...                           [OK]
+    test_remove_canonical_recipient_when_it_is_canonical ...               [OK]
+    test_remove_canonical_recipient_when_it_is_not_canonical ...           [OK]
+test.unit.adapter.test_contacts
+  TestContacts
+    test_contacts_filter_duplication_by_largest ...                        [OK]
+    test_extract_mail_address_from_contact ...                             [OK]
+test.unit.adapter.test_draft_service
+  DraftServiceTest
+    test_add_draft ...                                                     [OK]
+    test_update_draft ...                                                  [OK]
+test.unit.adapter.test_mail
+  InputMailTest
+    test_raw_with_attachment_data ...                                      [OK]
+    test_single_recipient ...                                              [OK]
+    test_smtp_format ...                                                   [OK]
+    test_to_mime_multipart ...                                             [OK]
+    test_to_mime_multipart_handles_alternative_bodies ...                  [OK]
+    test_to_mime_multipart_should_add_blank_fields ...                     [OK]
+    test_to_mime_multipart_with_special_chars ...                          [OK]
+test.unit.adapter.test_mail_service
+  TestMailService
+    test_delete_mail ...                                                   [OK]
+    test_delete_mail_does_not_fail_for_invalid_mail ...                    [OK]
+    test_get_attachment ...                                                [OK]
+    test_mark_as_read ...                                                  [OK]
+    test_mark_as_unread ...                                                [OK]
+    test_recover_mail ...                                                  [OK]
+    test_send_mail ...                                                     [OK]
+    test_send_mail_does_not_delete_draft_on_error ...                      [OK]
+    test_send_mail_marks_as_read ...                                       [OK]
+    test_send_mail_removes_draft ...                                       [OK]
+    test_update_tags_return_a_set_with_the_current_tags ...                [OK]
+test.unit.adapter.test_mailbox_indexer_listener
+  MailboxListenerTest
+    test_add_itself_to_mailbox_listeners ...                               [OK]
+    test_catches_exceptions_to_not_break_other_listeners ...               [OK]
+    test_reindex_missing_idents ...                                        [OK]
+test.unit.adapter.test_status
+  TestStatus
+    test_bulk_conversion ...                                               [OK]
+    test_leap_answered_flag_is_translated_to_replied_status ...            [OK]
+    test_leap_seen_flag_is_translated_to_read_status ...                   [OK]
+test.unit.adapter.test_tag
+  TestTag
+    test_as_dict_puts_all_tag_attributes_in_the_returning_dict ...         [OK]
+    test_decrement_does_nothing_if_mail_has_not_the_tag ...                [OK]
+    test_decrements_total_count_and_removes_mails_id_from_mails ...        [OK]
+    test_from_dict_sets_all_tag_attributes ...                             [OK]
+    test_increment_does_nothing_if_mail_already_has_the_tag ...            [OK]
+    test_increments_total_count_and_adds_mails_id_to_mails ...             [OK]
+test.unit.bitmask_libraries.test_certs
+  CertsTest
+    test_provider_api_cert ...                                             [OK]
+    test_set_cert_and_fingerprint_sets_cert ...                            [OK]
+    test_set_cert_and_fingerprint_sets_fingerprint ...                     [OK]
+    test_set_cert_and_fingerprint_when_none_are_passed ...                 [OK]
+test.unit.bitmask_libraries.test_nicknym
+  NickNymTest
+    test_gen_key ...                                                       [OK]
+    test_that_keymanager_is_created ...                                    [OK]
+test.unit.bitmask_libraries.test_provider
+  LeapProviderTest
+    test_fetch_smtp_json ...                                               [OK]
+    test_fetch_soledad_json ...                                            [OK]
+    test_fetch_valid_certificate ...                                       [OK]
+    test_provider_fetches_provider_json ...                                [OK]
+    test_provider_json_throws_exception_on_status_code ...                 [OK]
+    test_that_bootstrap_cert_is_used_to_fetch_certificate ...              [OK]
+    test_that_leap_fingerprint_is_validated ...                            [OK]
+    test_that_provider_cert_is_used_to_fetch_soledad_json ...              [OK]
+    test_throw_exception_for_fetch_smtp_status_code ...                    [OK]
+    test_throw_exception_for_fetch_soledad_status_code ...                 [OK]
+    test_throw_exception_for_invalid_certificate ...                       [OK]
+test.unit.bitmask_libraries.test_session
+  SessionTest
+    test_background_jobs_are_started_during_initial_sync ...               [OK]
+    test_close_removes_session_from_cache ...                              [OK]
+    test_close_stops_soledad ...                                           [OK]
+    test_close_unregisters_from_generate_keys_events ...                   [OK]
+    test_session_does_not_set_status_fresh_for_unkown_emails ...           [OK]
+    test_session_fresh_is_initially_false ...                              [OK]
+    test_session_registers_to_generated_keys ...                           [OK]
+    test_session_sets_status_to_fresh_on_key_generation_event ...          [OK]
+    test_that_close_stops_background_jobs ...                              [OK]
+    test_that_sync_deferes_to_soledad ...                                  [OK]
+test.unit.bitmask_libraries.test_smtp_cert_downloader
+  TestSmtpCertDownloader
+    test_download_certificate ...                                          [OK]
+    test_download_to ...                                                   [OK]
+    test_error_if_not_found ...                                            [OK]
+test.unit.config.test_credentials
+  TestReadCredentials
+    test_organization_mode_reads_credentials_from_stdin ...                [OK]
+test.unit.config.test_register
+  TestRegister
+    test_password_raises_error_if_shorter_than_8_characters ...            [OK]
+    test_username_pass_when_valid ...                                      [OK]
+    test_username_raises_error_when_it_contains_special_characters ...     [OK]
+    test_username_raises_error_when_it_contains_uppercase_letters ...      [OK]
+test.unit.config.test_services
+  ServicesTest
+    test_close_services_closes_the_underlying_leap_session ...             [OK]
+test.unit.config.test_site
+  TestPixelatedSite
+    test_add_csp_header_request ...                                        [OK]
+    test_add_strict_transport_security_header_if_secure ...                [OK]
+    test_does_not_add_strict_transport_security_header_if_plain_http ...   [OK]
+test.unit.maintenance.test_commands
+  TestCommands
+    test_delete_all_mails ...                                              [OK]
+    test_delete_all_mails_supports_empty_doclist ...                       [OK]
+    test_load_mails_adds_mails ...                                         [OK]
+    test_load_mails_empty_path_list ...                                    [OK]
+    test_load_mails_supports_mbox ...                                      [OK]
+    test_only_mail_documents_are_deleted ...                               [OK]
+test.unit.resources.test_archive_resource
+  TestArchiveResource
+    test_render_POST_should_archive_mails ...                              [OK]
+test.unit.resources.test_attachments_resource
+  AttachmentsResourceTest
+    test_post_attachment_fails ...                                         [OK]
+    test_post_new_attachment ...                                           [OK]
+test.unit.resources.test_feedback_resource
+  TestFeedbackResource
+    test_sends_feedback_to_leap_web ...                                    [OK]
+test.unit.resources.test_keys_resources
+  TestKeysResource
+    test_returns_404_if_key_not_found ...                                  [OK]
+    test_returns_the_key_as_json_if_found ...                              [OK]
+    test_returns_unauthorized_if_key_is_private ...                        [OK]
+test.unit.resources.test_login_resource
+  TestLoginPOST
+    test_leap_session_is_not_created_when_leap_auth_fails ...              [OK]
+    test_login_does_not_reload_services_if_already_loaded ...              [OK]
+    test_login_responds_interstitial_and_add_corresponding_session_to_services_factory ... [OK]
+    test_should_not_process_login_if_already_logged_in ...                 [OK]
+    test_should_return_form_back_with_error_message_when_login_fails ...   [OK]
+  TestLoginResource
+    test_children_resources_are_unauthorized_when_not_logged_in ...        [OK]
+    test_get ...                                                           [OK]
+    test_there_are_no_grand_children_resources_when_logged_in ...          [OK]
+test.unit.resources.test_logout_resources
+  TestLogoutResource
+    test_logout ...                                                        [OK]
+test.unit.resources.test_mails_resource
+  TestMailsResource
+    test_render_GET_should_unicode_mails_search_query ...                  [OK]
+    test_render_POST_should_send_email_with_attachments ...                [OK]
+    test_render_PUT_should_store_draft_with_attachments ...                [OK]
+test.unit.resources.test_root_resource
+  TestRootResource
+    test_render_GET_should_template_account_email ...                      [OK]
+test.unit.support.test_encrypted_file_storage
+  EncryptedFileStorageTest
+    test_encrypt_decrypt ...                                               [OK]
+    test_mac_against_appended_garbage ...                                  [OK]
+    test_mac_against_modified_file ...                                     [OK]
+test.unit.support.test_functional
+  UtilsTest
+    test_to_unicode_empty_string ...                                       [OK]
+    test_to_unicode_guesses_encoding_and_unicode_text ...                  [OK]
+    test_to_unicode_self ...                                               [OK]
+test.unit.support.test_markov
+  MarkovGeneratorTest
+    test_aborts_if_no_upper_letter_word_found ...                          [OK]
+    test_add ...                                                           [OK]
+    test_add_paragraph_on_empty_chain ...                                  [OK]
+    test_generate ...                                                      [OK]
+    test_minimum_three_words ...                                           [OK]
+    test_multiple_inputs ...                                               [OK]
+    test_multiple_word_occurences ...                                      [OK]
+    test_starts_with_capital_case_workd ...                                [OK]
+test.unit.support.test_replier
+  TestReplier
+    test_reply_all_does_not_contain_own_address_in_cc ...                  [OK]
+    test_reply_all_does_not_contain_own_address_in_to ...                  [OK]
+    test_reply_all_dont_exclude_own_address_if_only_recipient ...          [OK]
+    test_reply_single_swaps_current_user_and_recipient_if_a_am_the_sender ... [OK]
+test.unit.test_application
+  ApplicationTest
+    test_that_start_site_binds_to_ssl_if_ssl_options ...                   [OK]
+    test_that_start_site_binds_to_tcp_port_if_no_ssl_options ...           [OK]
+    test_that_start_user_agent_binds_to_ssl_if_ssl_options ...             [OK]
+    test_that_start_user_agent_binds_to_tcp_port_if_no_ssl_options ...     [OK]
+test.unit.test_welcome_mail
+  TestWelcomeMail
+    test_add_welcome_mail ...                                              [OK]
+
+-------------------------------------------------------------------------------
+Ran 196 tests in 0.499s
+
+PASSED (successes=196)

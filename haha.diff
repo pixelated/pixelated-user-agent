@@ -1,0 +1,93 @@
+diff --git a/web-ui/app/js/mail_view/data/attachment_list.js b/web-ui/app/js/mail_view/data/attachment_list.js
+index af48b05..0815cdf 100644
+--- a/web-ui/app/js/mail_view/data/attachment_list.js
++++ b/web-ui/app/js/mail_view/data/attachment_list.js
+@@ -30,6 +30,7 @@ define(
+ 
+             this.addAttachment = function (event, data) {
+                 this.attr.attachments.push(data);
++                console.log(this.attr.attachments);
+             };
+ 
+             this.after('initialize', function () {
+diff --git a/web-ui/app/js/mail_view/ui/attachment.js b/web-ui/app/js/mail_view/ui/attachment.js
+index f57fea5..529bc97 100644
+--- a/web-ui/app/js/mail_view/ui/attachment.js
++++ b/web-ui/app/js/mail_view/ui/attachment.js
+@@ -19,14 +19,15 @@ define(
+     [
+         'flight/lib/component',
+         'page/events',
+-        'features'
++        'features',
++        'helpers/monitored_ajax'
+     ],
+ 
+-    function (defineComponent, events, features) {
++    function (defineComponent, events, features, monitoredAjax) {
+         'use strict';
+ 
+         return defineComponent(function () {
+-            this.render = function () {
++            this.renderButton = function () {
+                 this.$node.html('<i class="fa fa-paperclip fa-2x"></i>');
+             };
+ 
+@@ -52,14 +53,34 @@ define(
+                 });
+             }
+ 
++            this.updateAttachmentList = function(data){
++                $('#files').html('<span>' + data.filename + ' (' + humanReadable(data.filesize) + ')' + '</span>');
++                console.log(data);
++                this.trigger(document, events.mail.uploadedAttachment, data);
++            }.bind(this);
++
+             this.upload = function () {
+-                addJqueryFileUploadConfig(this);
+-                $('#fileupload').click();
++                var $fileUploadInput = $('#fileupload');
++                $fileUploadInput.click();
++                $fileUploadInput.on('change', this.uploadAttachment);
+             };
+ 
++            this.uploadAttachment = function () {
++                var data = new FormData(),
++                    attachment = $('#fileupload')[0].files[0];
++
++                data.append('attachment', attachment);
++                monitoredAjax(this, '/attachment', {
++                          type: 'POST',
++                          contentType: false,
++                          processData: false,
++                          data: data
++                        }).done(this.updateAttachmentList);
++            }.bind(this);
++
+             this.after('initialize', function () {
+                 if (features.isEnabled('attachment')) {
+-                    this.render();
++                    this.renderButton();
+                 }
+                 this.on(this.$node, 'click', this.upload);
+             });
+diff --git a/web-ui/test/spec/mail_view/ui/attachment.spec.js b/web-ui/test/spec/mail_view/ui/attachment.spec.js
+index bbea2f5..bfd9626 100644
+--- a/web-ui/test/spec/mail_view/ui/attachment.spec.js
++++ b/web-ui/test/spec/mail_view/ui/attachment.spec.js
+@@ -11,11 +11,12 @@ describeComponent('mail_view/ui/attachment', function () {
+         expect(this.$node.html()).toMatch('<i class="fa fa-paperclip fa-2x"></i>');
+     });
+ 
+-    xit('uploads attachment on click', function () {
+-        var fileUploads = spyOn($, 'fileupload');
++    iit('uploads attachment on click', function () {
++        var ajax = spyOn(this.component, 'monitoredAjax');
+         this.$node.click();
+-        expect(fileUploads).toHaveBeenCalled();
++        expect(ajax).toHaveBeenCalled();
+     });
+ 
++
+   });
+ });
