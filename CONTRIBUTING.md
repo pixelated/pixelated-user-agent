@@ -69,10 +69,10 @@ Contributions we appreciate:
 * Security review
 * Asking questions on IRC
 
-## ThoughtWork's role
+## ThoughtWorks' role
 
 ThoughtWorks seeds the community that builds pixelated. We seed the development, investing our own resources: We provide a team of 10+ software delivery experts to lay the foundation for the project. We use our network and contacts to approach customers and users.
 
 ThoughtWorks started building Pixelated because it is right. In combining our passion for defending a free internet and our capability to deliver software, we build software to counter widespread mass surveillance of email communication.
 
-It is not ThoughWork's goal to make money from Pixelated. The reasons are multiple, but at the end of the day, we believe that our goals of mass adoption and decentralization can best be achieved if Pixelated puts end users and providers before a revenue stream.
+It is not ThoughWorks' goal to make money from Pixelated. The reasons are multiple, but at the end of the day, we believe that our goals of mass adoption and decentralization can best be achieved if Pixelated puts end users and providers before a revenue stream.
