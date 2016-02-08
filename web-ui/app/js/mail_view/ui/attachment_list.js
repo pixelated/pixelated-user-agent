@@ -55,25 +55,15 @@ define(
             this.renderAttachmentListView = function (data) {
                 var currentHtml = this.select('attachmentListItem').html();
                 var item = this.buildAttachmentListItem(data);
-                this.select('attachmentListItem').append(item);
+                this.select('attachmentListItem').html(currentHtml + item);
             };
 
             this.buildAttachmentListItem = function (attachment) {
                 var attachmentData = {ident: attachment.ident,
                                       encoding: attachment.encoding,
                                       name: attachment.name,
-                                      size: attachment.size,
-                                      removable: true};
-
-                var element = $(templates.compose.attachmentItem(attachmentData));
-                var self = this;
-                element.find('i.remove-icon').bind('click', function(event) {
-                    var element = $(this);
-                    var ident = element.closest('li').attr('data-ident');
-                    self.trigger(document, events.mail.removeAttachment, {ident: ident});
-                    event.preventDefault();
-                });
-                return element;
+                                      size: attachment.size};
+                return templates.compose.attachmentItem(attachmentData);
             };
 
             this.performPreUploadCheck = function(e, data) {

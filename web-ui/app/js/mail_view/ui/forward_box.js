@@ -46,27 +46,12 @@ define(
           subject: this.attr.subject,
           recipients: { to: [], cc: []},
           body: viewHelper.quoteMail(mail),
-          attachments: this.convertToRemovableAttachments(mail.attachments)
+          attachments: mail.attachments
         });
 
-        var self = this;
-        this.$node.find('i.remove-icon').bind('click', function(event) {
-          var element = $(this);
-          var ident = element.closest('li').attr('data-ident');
-          self.trigger(document, events.mail.removeAttachment, {ident: ident});
-          event.preventDefault();
-        });
-        
         this.on(this.select('subjectDisplay'), 'click', this.showSubjectInput);
         this.select('recipientsDisplay').hide();
         this.select('recipientsFields').show();
-      };
-
-      this.convertToRemovableAttachments = function(attachments) {
-        return attachments.map(function(attachment) {
-          attachment.removable = true;
-          return attachment;
-        });
       };
 
       this.showSubjectInput = function() {

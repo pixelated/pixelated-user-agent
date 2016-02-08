@@ -31,7 +31,7 @@
         height: 27px;
         margin-right: 3px;
       }
-
+      
       .full-view-header {
         display:inline-block;
         padding-top: 5px;
@@ -82,14 +82,14 @@
         border-radius: 2px;
         background-color: #F5F5F5;
         margin-bottom: 8px;
-
+    
       a {
         color: $attachment_text;
         display: block;
         text-decoration: none;
         line-height: inherit;
         padding: 4px 5px;
-
+      
         &:hover, &:focus {
           i.download-icon {
             color: lighten($attachment_icon, 15);
@@ -104,13 +104,6 @@
           color: $attachment_icon;
           right: 0;
           padding: 7px 10px;
-        }
-
-        i.remove-icon {
-          float: right;
-          padding-right: 5px;
-          padding-top: 7px;
-          color: #999;
         }
       }
     }
@@ -162,3 +155,5 @@
     }
   }
 }
+
+

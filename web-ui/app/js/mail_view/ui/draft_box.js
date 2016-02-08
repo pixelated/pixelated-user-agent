@@ -64,15 +64,7 @@ define(
           },
           subject: mail.header.subject,
           body: body,
-          attachments: this.convertToRemovableAttachments(mail.attachments)
-        });
-
-        var self = this;
-        this.$node.find('i.remove-icon').bind('click', function(event) {
-          var element = $(this);
-          var ident = element.closest('li').attr('data-ident');
-          self.trigger(document, events.mail.removeAttachment, {ident: ident});
-          event.preventDefault();
+          attachments: mail.attachments
         });
 
         this.enableFloatlabel('input.floatlabel');
@@ -83,13 +75,6 @@ define(
         this.enableAutoSave();
         this.bindCollapse();
         this.on(this.select('closeMailButton'), 'click', this.showNoMessageSelected);
-      };
-
-      this.convertToRemovableAttachments = function(attachments) {
-        return attachments.map(function(attachment) {
-          attachment.removable = true;
-          return attachment;
-        });
       };
 
       this.mailDeleted = function(event, data) {
