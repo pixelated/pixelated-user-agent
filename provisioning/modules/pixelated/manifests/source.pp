@@ -1,3 +1,4 @@
+# install useragent from source
 class pixelated::source {
   include phantomjs
 
@@ -6,23 +7,18 @@ class pixelated::source {
     'nodejs',
     'nodejs-legacy',
     'python-dev',
-    'python-virtualenv',
+    'virtualenv',
     'libffi-dev',
     'libssl-dev',
     'g++',
-    'ruby-dev',
     'libsqlite3-dev',
     'libfontconfig1',
-    'build-essential']:
+    'build-essential',
+    'ruby-compass']:
     ensure => latest
   }
 
   include pixelated::source::npm
-
-  package { 'compass':
-    ensure   => installed,
-    provider => 'gem'
-  }
 
   stage { 'install_pixelated': }
 
