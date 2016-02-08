@@ -71,9 +71,6 @@ class AttachmentResource(Resource):
         match = re.compile('([A-Za-z-]+\/[A-Za-z-]+)').search(content_type)
         return match.group(1)
 
-    def render_DELETE(self, request):
-        self.mail_service.delete_attachment(self.attachment_id)
-
 
 class AttachmentsResource(BaseResource):
     BASE_URL = 'attachment'

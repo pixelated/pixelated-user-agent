@@ -19,11 +19,10 @@ define(
     [
         'views/templates',
         'page/events',
-        'helpers/view_helper',
-        'helpers/monitored_ajax'
+        'helpers/view_helper'
     ],
 
-    function (templates, events, viewHelper, monitoredAjax) {
+    function (templates, events, viewHelper) {
         'use strict';
 
         function attachmentList() {
@@ -181,26 +180,11 @@ define(
                 this.select('inputFileUpload').click();
             };
 
-            this.removeAttachments = function(event, data) {
-              var success = function() {
-                console.log('Success');
-              };
-
-              var failure = function() {
-                console.log('Fail!!!!!');
-              };
-
-              monitoredAjax(this, '/attachment/' + data.ident, {
-                type: 'DELETE'
-              }).done(success.bind(this)).fail(failure.bind(this));
-            };
-
             this.after('initialize', function () {
                 this.addJqueryFileUploadConfig();
                 this.on(document, events.mail.uploadedAttachment, this.showAttachment);
                 this.on(document, events.mail.startUploadAttachment, this.startUpload);
                 this.on(document, events.mail.appendAttachment, this.addAttachment);
-                this.on(document, events.mail.removeAttachment, this.removeAttachments);
             });
         }
 

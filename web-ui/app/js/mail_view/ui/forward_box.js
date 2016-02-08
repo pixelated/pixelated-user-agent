@@ -56,7 +56,7 @@ define(
           self.trigger(document, events.mail.removeAttachment, {ident: ident});
           event.preventDefault();
         });
-
+        
         this.on(this.select('subjectDisplay'), 'click', this.showSubjectInput);
         this.select('recipientsDisplay').hide();
         this.select('recipientsFields').show();
@@ -64,8 +64,7 @@ define(
 
       this.convertToRemovableAttachments = function(attachments) {
         return attachments.map(function(attachment) {
-          attachment.removable = false; // don't show this button until the bug is fixed
-          attachment.received = true;
+          attachment.removable = true;
           return attachment;
         });
       };

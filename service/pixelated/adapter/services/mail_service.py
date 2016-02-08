@@ -35,7 +35,7 @@ class MailService(object):
         self.search_engine = search_engine
         self.mail_sender = mail_sender
         self.account_email = account_email
-        self.attachment_store = attachment_store
+        self.attchment_store = attachment_store
 
     @defer.inlineCallbacks
     def all_mails(self):
@@ -43,7 +43,7 @@ class MailService(object):
         defer.returnValue(mails)
 
     def save_attachment(self, content, content_type):
-        return self.attachment_store.add_attachment(content, content_type)
+        return self.attchment_store.add_attachment(content, content_type)
 
     @log_time_deferred
     @defer.inlineCallbacks
@@ -87,7 +87,7 @@ class MailService(object):
         return self.mail_store.get_mail(mail_id, include_body=True)
 
     def attachment(self, attachment_id):
-        return self.attachment_store.get_mail_attachment(attachment_id)
+        return self.attchment_store.get_mail_attachment(attachment_id)
 
     @defer.inlineCallbacks
     def mail_exists(self, mail_id):
@@ -151,7 +151,3 @@ class MailService(object):
     @defer.inlineCallbacks
     def delete_permanent(self, mail_id):
         yield self.mail_store.delete_mail(mail_id)
-
-    @defer.inlineCallbacks
-    def delete_attachment(self, attachment_id):
-        yield self.attachment_store.delete_attachment(attachment_id)
