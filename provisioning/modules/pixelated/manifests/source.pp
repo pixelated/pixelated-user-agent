@@ -6,6 +6,7 @@ class pixelated::source {
     'git',
     'nodejs',
     'nodejs-legacy',
+    'npm',
     'python-dev',
     'virtualenv',
     'libffi-dev',
@@ -17,8 +18,6 @@ class pixelated::source {
     'ruby-compass']:
     ensure => latest
   }
-
-  include pixelated::source::npm
 
   stage { 'install_pixelated': }
 
