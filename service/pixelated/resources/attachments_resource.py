@@ -72,18 +72,7 @@ class AttachmentResource(Resource):
         return match.group(1)
 
     def render_DELETE(self, request):
-        def success(_):
-            response_json = {"ident": self.attachment_id}
-            respond_json_deferred(response_json, request, status_code=200)
-
-        def failure(err):
-            request.code = 500
-            request.finish()
-
-        d = self.mail_service.delete_attachment(self.attachment_id)
-        d.addCallback(success)
-        d.addErrback(failure)
-        return server.NOT_DONE_YET
+        self.mail_service.delete_attachment(self.attachment_id)
 
 
 class AttachmentsResource(BaseResource):
