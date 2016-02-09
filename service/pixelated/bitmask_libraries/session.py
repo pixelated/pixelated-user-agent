@@ -89,6 +89,11 @@ class LeapSession(object):
         unregister(events.KEYMANAGER_FINISHED_KEY_GENERATION, uid=self.account_email())
         self.soledad.close()
         self.remove_from_cache()
+        self._close_account()
+
+    def _close_account(self):
+        if self.account:
+            self.account.end_session()
 
     def remove_from_cache(self):
         key = SessionCache.session_key(self.provider, self.user_auth.username)

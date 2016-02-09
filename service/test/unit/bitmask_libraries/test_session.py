@@ -97,6 +97,19 @@ class SessionTest(AbstractLeapTest):
         self.assertIsNone(SessionCache.lookup_session(key))
 
     @patch('pixelated.bitmask_libraries.session.register')
+    def test_close_ends_account_session(self, _):
+        account_mock = MagicMock()
+        email = 'someone@somedomain.tld'
+        self.provider.address_for.return_value = email
+        session = self._create_session()
+        session.account = account_mock
+
+        with patch('pixelated.bitmask_libraries.session.unregister') as unregister_mock:
+            session.close()
+
+        account_mock.end_session.assert_called_once_with()
+
+    @patch('pixelated.bitmask_libraries.session.register')
     def test_session_fresh_is_initially_false(self, _):
         session = self._create_session()
 
