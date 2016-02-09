@@ -13,7 +13,7 @@ function clone_repo {
     fi
 }
 
-sudo apt-get install -y puppet git
+sudo apt-get install -y puppet git </dev/null
 clone_repo
 sudo puppet apply --modulepath='provisioning/modules' provisioning/manifests/debian.pp
 ./install-pixelated.sh -v ~/.virtualenv/user-agent-venv
