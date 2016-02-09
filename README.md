@@ -10,7 +10,8 @@ The Pixelated User Agent is the mail client of the Pixelated ecosystem. It is co
 
 ![High level architecture User Agent](https://pixelated-project.org/assets/images/pixelated-user-agent.png)
 
-
+## Contributions
+You are most welcome to contribute to the pixelated user agent code base. Please have a look at the [contributions how to](https://github.com/pixelated/pixelated-user-agent/blob/master/CONTRIBUTING.md) and the [installations steps](#installation-instructions) below.
 
 ## Getting started
 
@@ -56,7 +57,7 @@ To run the pixelated user agent multi user mode, please run the following:
 ```bash
  (user-agent-venv)vagrant@jessie:/vagrant$ pixelated-user-agent --host 0.0.0.0 --multi-user --provider=dev.pixelated-project.org
 ```
-You will need to change dev.pixelated-project.org to the hostname of the leap provider that you will be using.
+You will need to change `dev.pixelated-project.org` to the hostname of the leap provider that you will be using.
 Once that is done, you can use by browsing to [http://localhost:3333](http://localhost:3333), where you will be prompted for your email username and password.
 
 ##### Running tests
@@ -90,7 +91,7 @@ All commits to the pixelated user agent code trigger all tests to be run in [sna
 * First time email sync could be slow, please be patient. This could be the case if you have a lot of emails already and it is the first time you setup the user agent on your machine.
 * CTRL + \ will stop the server.
 * For all backend changes, you will need to stop and [restart the server](#running-the-user-agent).
-* For most frontend changes, you will just need to reload the browser. Some changes (in particular, those involving css or handlebars) you will need run:
+* For most frontend changes, you will just need to reload the browser. Some changes (in particular, those involving css or handlebars) you will need to run:
 ```bash
  (user-agent-venv)vagrant@jessie:/vagrant$ cd web-ui
  (user-agent-venv)vagrant@jessie:/vagrant/web-ui$ ./go build
