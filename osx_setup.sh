@@ -40,9 +40,7 @@ brew install python # force brew install even if python is already install
 export  LDFLAGS=-L/usr/local/opt/openssl/lib
 export  LDFLAGS=-L/usr/local/opt/openssl/lib
 pip install virtualenv
-virtualenv ~/.virtualenvs/user-agent-venv
-source ~/.virtualenvs/user-agent-venv/bin/activate
 
 # install
 clone_repo
-cd service && ./go setup
+./install-pixelated.sh -v ~/.virtualenv/user-agent-venv

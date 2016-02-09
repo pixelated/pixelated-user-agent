@@ -19,7 +19,7 @@ The Pixelated User Agent is the mail client of the Pixelated ecosystem. It is co
   * If you want to run your own LEAP provider, see [Pixelated Platform installation](https://github.com/pixelated/puppet-pixelated).
 
 ## Installation Instructions
-The easiest setup is the [setup with vagrant](#developer-setup-with-vagrant), which we will go in details below. There is a section on [setup on the native OS](#developer-setup-on-native-os) as well.
+We provide a [setup with vagrant](#developer-setup-with-vagrant), which we will go in details below. There is a section on [native OSX](#on-osx) and [native Debian distributions](#on-debian-distributions) as well.
 For server setup, see [debian package](#debian-package) below.
 
 
@@ -54,7 +54,7 @@ Once that is done, you can use by browsing to [http://localhost:3333](http://loc
 
 To run the pixelated user agent multi user mode, please run the following:
 ```bash
- (user-agent-venv)vagrant@jessie:/vagrant$ pixelated-user-agent --host 0.0.0.0 --multi-user --provider='dev.pixelated-project.org'
+ (user-agent-venv)vagrant@jessie:/vagrant$ pixelated-user-agent --host 0.0.0.0 --multi-user --provider=dev.pixelated-project.org
 ```
 You will need to change dev.pixelated-project.org to the hostname of the leap provider that you will be using.
 Once that is done, you can use by browsing to [http://localhost:3333](http://localhost:3333), where you will be prompted for your email username and password.
@@ -97,30 +97,31 @@ All commits to the pixelated user agent code trigger all tests to be run in [sna
 ```
 
 ### Developer Setup On Native OS
-You will need to install python, pip, npm and openssl. Details for OSX and Debian distributions are explained below.
+Please ensure that you have an email user from your preferred leap provider ([How to](#registering-with-a-leap-provider)).
+Details for developer installations [on OSX](#on-osx) and [Debian distributions](#on-debian-distributions) are explained below.
 In case of any issues, please ping us on IRC ([#pixelated on irc.freenode.net](irc://irc.freenode.net/pixelated)), we will be available to help you from there.
 
 #### On OSX
 First, you will need to install the [GPG tools](https://gpgtools.org/) for Mac.
-Then, run the following sequence of command:
+Then, run the following sequence of commands:
 ```bash
 $ curl https://raw.githubusercontent.com/pixelated/pixelated-user-agent/master/osx_setup.sh | sh
-$ cd pixelated-user-agent && source ~/.virtualenvs/user-agent-venv/bin/activate
+$ cd pixelated-user-agent && source ~/.virtualenv/user-agent-venv/bin/activate
 ```
 
-Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenvs/user-agent-venv/bin/activate` first.
+Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenv/user-agent-venv/bin/activate` first.
 
 Running the user agent ([How to](#running-the-user-agent)), and the various tests ([How to](#running-tests)) are the same as in the vagrant setup above.
 
 #### On Debian distributions
-This is the setup for developers. Please run the following command:
+This is the setup for developers. Please run the following commands:
 
 ```bash
-$ curl https://raw.githubusercontent.com/pixelated/pixelated-user-agent/master/debian_setup.sh | sh
-$ cd pixelated-user-agent && source ~/.virtualenvs/user-agent-venv/bin/activate
+$ curl https://raw.githubusercontent.com/pixelated/pixelated-user-agent/master/debian_setup.sh | bash
+$ cd pixelated-user-agent && source ~/.virtualenv/user-agent-venv/bin/activate
 ```
 
-Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenvs/user-agent-venv/bin/activate` first.
+Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenv/user-agent-venv/bin/activate` first.
 
 Running the user agent ([How to](#running-the-user-agent)), and the various tests ([How to](#running-tests)) are the same as in the vagrant setup above.
 
