@@ -22,8 +22,9 @@ from pixelated.bitmask_libraries.certs import LeapCertificate
 
 
 class NickNymTest(AbstractLeapTest):
-    @patch('pixelated.bitmask_libraries.nicknym.KeyManager.__init__', return_value=None)
-    def test_that_keymanager_is_created(self, keymanager_init_mock):
+    # @patch('pixelated.bitmask_libraries.nicknym.KeyManager.__init__', return_value=None)
+    @patch('pixelated.bitmask_libraries.nicknym.KeyManager')
+    def test_that_keymanager_is_created(self, keymanager_mock):
         # given
         LeapCertificate.provider_api_cert = '/some/path/to/provider_ca_cert'
         # when
@@ -35,7 +36,7 @@ class NickNymTest(AbstractLeapTest):
                 self.auth.uuid)
 
         # then
-        keymanager_init_mock.assert_called_with(
+        keymanager_mock.assert_called_with(
             'test_user@some-server.test',
             'https://nicknym.some-server.test:6425/',
             self.soledad,
