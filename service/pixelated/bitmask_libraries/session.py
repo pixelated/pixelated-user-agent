@@ -39,9 +39,6 @@ from leap.common.events import (
 log = logging.getLogger(__name__)
 
 
-SESSIONS = {}   # TODO replace with redis or memCached in prod
-
-
 class LeapSession(object):
 
     def __init__(self, provider, user_auth, mail_store, soledad, nicknym, smtp_config):
@@ -238,23 +235,22 @@ class LeapSessionFactory(object):
                 raise
 
 
-class SessionCache(object):     # should be replaced with redis or memcached in prod
+class SessionCache(object):
+
+    sessions = {}
 
     @staticmethod
     def lookup_session(key):
-        global SESSIONS
-        return SESSIONS.get(key, None)
+        return SessionCache.sessions.get(key, None)
 
     @staticmethod
     def remember_session(key, session):
-        global SESSIONS
-        SESSIONS[key] = session
+        SessionCache.sessions[key] = session
 
     @staticmethod
     def remove_session(key):
-        global SESSIONS
-        if key in SESSIONS:
-            del SESSIONS[key]
+        if key in SessionCache.sessions:
+            del SessionCache.sessions[key]
 
     @staticmethod
     def session_key(provider, username):
