@@ -101,13 +101,14 @@ You will need to install python, pip, npm and openssl. Details for OSX and Debia
 In case of any issues, please ping us on IRC ([#pixelated on irc.freenode.net](irc://irc.freenode.net/pixelated)), we will be available to help you from there.
 
 #### On OSX
-We provide a script to ease the setup. It will essentially install compass within a rbenv, npm, python from homebrew as well as all the project requirements. Please run the following:
-
+First, you will need to install the [GPG tools](https://gpgtools.org/) for Mac.
+Then, run the following sequence of command:
 ```bash
-curl https://raw.githubusercontent.com/pixelated/pixelated-user-agent/master/osx_setup.sh | sh
+$ curl https://raw.githubusercontent.com/pixelated/pixelated-user-agent/master/osx_setup.sh | sh
+$ cd pixelated-user-agent && source ~/.virtualenvs/user-agent-venv/bin/activate
 ```
 
-Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenvs/pixelated-venv/bin/activate` first.
+Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenvs/user-agent-venv/bin/activate` first.
 
 Running the user agent ([How to](#running-the-user-agent)), and the various tests ([How to](#running-tests)) are the same as in the vagrant setup above.
 
@@ -115,10 +116,11 @@ Running the user agent ([How to](#running-the-user-agent)), and the various test
 This is the setup for developers. Please run the following command:
 
 ```bash
-curl https://raw.githubusercontent.com/pixelated/pixelated-user-agent/master/debian_setup.sh | sh
+$ curl https://raw.githubusercontent.com/pixelated/pixelated-user-agent/master/debian_setup.sh | sh
+$ cd pixelated-user-agent && source ~/.virtualenvs/user-agent-venv/bin/activate
 ```
 
-Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenvs/pixelated-venv/bin/activate` first.
+Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenvs/user-agent-venv/bin/activate` first.
 
 Running the user agent ([How to](#running-the-user-agent)), and the various tests ([How to](#running-tests)) are the same as in the vagrant setup above.
 

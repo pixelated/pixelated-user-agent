@@ -7,6 +7,8 @@ function install_compass {
     rbenv local 2.2.3
     gem install compass
     export PATH=$PATH:~/.rbenv/versions/2.2.3/bin
+    echo "export PATH=$PATH:~/.rbenv/versions/2.2.3/bin" >> ~/.bash_profile
+    echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
 }
 
 function install_rbenv {
@@ -38,10 +40,9 @@ brew install python # force brew install even if python is already install
 export  LDFLAGS=-L/usr/local/opt/openssl/lib
 export  LDFLAGS=-L/usr/local/opt/openssl/lib
 pip install virtualenv
-virtualenv ~/.virtualenvs/pixelated-venv
-source ~/.virtualenvs/pixelated-venv/bin/activate
+virtualenv ~/.virtualenvs/user-agent-venv
+source ~/.virtualenvs/user-agent-venv/bin/activate
 
 # install
 clone_repo
 cd service && ./go setup
-source ~/.virtualenvs/pixelated-venv/bin/activate
