@@ -31,10 +31,13 @@ Please ensure that you have an email user from your preferred leap provider ([Ho
   * You will also need a vagrant [compatible provider](https://www.vagrantup.com/docs/providers/) e.g. [virtualbox](https://www.virtualbox.org/wiki/Downloads)
 
 ##### Set up
-To setup the pixelated user agent inside a vagrant machine, please run the following command to a terminal:
+To setup the pixelated user agent inside a vagrant machine, please run the following sequence of commands in a terminal:
 
 ```bash
- curl https://raw.githubusercontent.com/pixelated/pixelated-user-agent/master/vagrant_setup.sh | sh
+ $ git clone https://github.com/pixelated/pixelated-user-agent.git
+ $ cd pixelated-user-agent
+ $ vagrant up
+ $ vagrant ssh
 ```
 
 This could take a while depending on your internet connection.
@@ -94,17 +97,28 @@ All commits to the pixelated user agent code trigger all tests to be run in [sna
 ```
 
 ### Developer Setup On Native OS
-You will need to install python, pip, npm and openssl. On mac, please use homebrew. On debian/ubuntu, please use apt or aptitude.
-You will need (within virtualenvs probably) to run:
+You will need to install python, pip, npm and openssl. Details for OSX and Debian distributions are explained below.
+In case of any issues, please ping us on IRC ([#pixelated on irc.freenode.net](irc://irc.freenode.net/pixelated)), we will be available to help you from there.
+
+#### On OSX
+We provide a script to ease the setup. It will essentially install compass within a rbenv, npm, python from homebrew as well as all the project requirements. Please run the following:
 
 ```bash
-$ git clone https://github.com/pixelated/pixelated-user-agent.git
-$ cd pixelated-user-agent/service
-$ ./go setup
+curl https://raw.githubusercontent.com/pixelated/pixelated-user-agent/master/osx_setup.sh | sh
 ```
 
-There have been reports of issues on setting up on native OS. Please follow instructions from the output of homebrew. You might need to `gem install compass` as well.
-Please ping us on IRC ([#pixelated on irc.freenode.net](irc://irc.freenode.net/pixelated)), we will be available to help you from there.
+Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenvs/pixelated-venv/bin/activate` first.
+
+Running the user agent ([How to](#running-the-user-agent)), and the various tests ([How to](#running-tests)) are the same as in the vagrant setup above.
+
+#### On Debian distributions
+This is the setup for developers. Please run the following command:
+
+```bash
+curl https://raw.githubusercontent.com/pixelated/pixelated-user-agent/master/debian_setup.sh | sh
+```
+
+Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenvs/pixelated-venv/bin/activate` first.
 
 Running the user agent ([How to](#running-the-user-agent)), and the various tests ([How to](#running-tests)) are the same as in the vagrant setup above.
 
