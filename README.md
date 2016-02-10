@@ -100,7 +100,7 @@ Once that is done, you can use by browsing to [http://localhost:3333](http://loc
 ## Continuous Integration
 All commits to the pixelated user agent code trigger all tests to be run in [snap-ci](https://snap-ci.com/pixelated/pixelated-user-agent/branch/master).
 
-## Note
+## Misc
 * You can access the guest OS shell via the command `vagrant ssh` run within the `pixelated-user-agent/` folder in the host OS.
 * `/vagrant/` in the guest OS is mapped to the `pixelated-user-agent/` folder in the host OS. File changes on either side will reflect in the other.
 * First time email sync could be slow, please be patient. This could be the case if you have a lot of emails already and it is the first time you setup the user agent on your machine.
@@ -112,12 +112,12 @@ All commits to the pixelated user agent code trigger all tests to be run in [sna
  (user-agent-venv)vagrant@jessie:/vagrant/web-ui$ ./go build
 ```
 
-### Developer Setup On Native OS
+## Developer Setup On Native OS
 Please ensure that you have an email user from your preferred leap provider ([How to](#registering-with-a-leap-provider)).
 Details for developer installations [on OSX](#on-osx) and [Debian distributions](#on-debian-distributions) are explained below.
 In case of any issues, please ping us on IRC ([#pixelated on irc.freenode.net](irc://irc.freenode.net/pixelated)), we will be available to help you from there.
 
-#### On OSX
+### On OSX
 First, you will need to install the [GPG tools](https://gpgtools.org/) for Mac.
 Then, run the following sequence of commands:
 ```bash
@@ -129,7 +129,7 @@ Please note that you will have to activate the virtualenv anytime you work on a 
 
 Running the user agent ([How to](#running-the-user-agent)), and the various tests ([How to](#running-tests)) are the same as in the vagrant setup above.
 
-#### On Debian distributions
+### On Debian distributions
 This is the setup for developers. Please run the following commands:
 
 ```bash
