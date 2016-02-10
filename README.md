@@ -44,7 +44,7 @@ $ ./go setup
 7) Run the user agent:
 
 ```
-$ pixelated-user-agent --host 0.0.0.0 -lc /vagrant/service/pixelated/certificates/dev.pixelated-project.org.ca.crt
+$ pixelated-user-agent --host 0.0.0.0
 
 Which provider do you want to connect to: 
 dev.pixelated-project.org
