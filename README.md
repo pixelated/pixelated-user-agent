@@ -83,7 +83,7 @@ To run the functional tests:
  (user-agent-venv)vagrant@jessie:/vagrant/service$ ./go functional
 ```
 
-You're all set! Happy hacking!
+11. You're all set! We've prepared [a couple of issues labeled "Beginner"](https://github.com/pixelated/pixelated-user-agent/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3ABeginners+) that are a good place to dive into the project. Happy Hacking!
 
 # Further Notes
 
