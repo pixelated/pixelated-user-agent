@@ -27,22 +27,28 @@ from test.support.integration.soledad_test_base import SoledadTestBase
 
 
 class RetrieveAttachmentTest(SoledadTestBase):
-
     @defer.inlineCallbacks
     def test_attachment_content_is_retrieved(self):
         attachment_id, input_mail = self._create_mail_with_attachment()
         yield self.mail_store.add_mail('INBOX', input_mail.as_string())
 
-        attachment, req = yield self.get_attachment(attachment_id, 'base64')
+        requested_filename = "file name with space"
+        expected_content_type = 'text/plain'
+        expected_content_disposition = 'attachment; filename="file name with space"'
+
+        attachment, req = yield self.get_attachment(attachment_id, 'base64', filename=requested_filename, content_type=expected_content_type)
 
         self.assertEqual(200, req.code)
         self.assertEquals('pretend to be binary attachment data', attachment)
+        self.assertEquals(expected_content_disposition, req.outgoingHeaders['content-disposition'])
+        self.assertEquals(expected_content_type, req.outgoingHeaders['content-type'])
 
     def _create_mail_with_attachment(self):
         input_mail = MIMEMultipart()
         input_mail.attach(MIMEText(u'a utf8 message', _charset='utf-8'))
         attachment = MIMEApplication('pretend to be binary attachment data')
-        attachment.add_header('Content-Disposition', 'attachment', filename='filename.txt')
+        attachment.add_header('Content-Disposition', 'attachment', filename='file name.txt')
+        attachment.add_header('Content-Type', 'text/plain')
         input_mail.attach(attachment)
         attachment_id = 'B5B4ED80AC3B894523D72E375DACAA2FC6606C18EDF680FE95903086C8B5E14A'
         return attachment_id, input_mail

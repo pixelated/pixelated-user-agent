@@ -46,8 +46,9 @@ class AttachmentResource(Resource):
 
         encoding = request.args.get('encoding', [None])[0]
         filename = request.args.get('filename', [self.attachment_id])[0]
-        request.setHeader(b'Content-Type', b'application/force-download')
-        request.setHeader(b'Content-Disposition', bytes('attachment; filename=' + filename))
+        content_type = request.args.get('content_type', ['application/octet-stream'])[0]
+        request.setHeader(b'Content-Type', content_type)
+        request.setHeader(b'Content-Disposition', bytes('attachment; filename="' + filename + '"'))
 
         d = self._send_attachment(encoding, filename, request)
         d.addErrback(error_handler)

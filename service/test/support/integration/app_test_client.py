@@ -322,8 +322,13 @@ class AppTestClient(object):
         defer.returnValue(mails)
 
     @defer.inlineCallbacks
-    def get_attachment(self, ident, encoding):
-        deferred_result, req = self.get("/attachment/%s" % ident, {'encoding': [encoding]}, as_json=False)
+    def get_attachment(self, ident, encoding, filename=None, content_type=None):
+        params = {'encoding': [encoding]}
+        if filename:
+            params['filename'] = [filename]
+        if content_type:
+            params['content_type'] = [content_type]
+        deferred_result, req = self.get("/attachment/%s" % ident, params, as_json=False)
         res = yield deferred_result
         defer.returnValue((res, req))
 
