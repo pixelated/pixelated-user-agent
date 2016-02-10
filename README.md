@@ -10,57 +10,58 @@ The Pixelated User Agent is the mail client of the Pixelated ecosystem. It is co
 
 ![High level architecture User Agent](https://pixelated-project.org/assets/images/pixelated-user-agent.png)
 
-## Contributions
-You are most welcome to contribute to the pixelated user agent code base. Please have a look at the [contributions how to](https://github.com/pixelated/pixelated-user-agent/blob/master/CONTRIBUTING.md) and the [installations steps](#installation-instructions) below.
-
 ## Getting started
 
-### Registering with a LEAP provider
-  * You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/). Please contact us at team@pixelated-project.org for an invite code.
-  * If you want to run your own LEAP provider, see [Pixelated Platform installation](https://github.com/pixelated/puppet-pixelated).
+You are most welcome to contribute to the pixelated user agent code base. Please have a look at the [contributions how to](https://github.com/pixelated/pixelated-user-agent/blob/master/CONTRIBUTING.md).
 
-## Installation Instructions
-We provide a [setup with vagrant](#developer-setup-with-vagrant), which we will go in details below. There is a section on [native OSX](#on-osx) and [native Debian distributions](#on-debian-distributions) as well.
-For server setup, see [debian package](#debian-package) below.
+1) Listen to [this podcast](https://soundcloud.com/thoughtworks/pixelated-why-secure-communication-is-essential).
 
+2) Install [Vagrant](https://www.vagrantup.com/downloads.html) and a vagrant [compatible provider](https://www.vagrantup.com/docs/providers/), e.g. [Virtual Box](https://www.virtualbox.org/wiki/Downloads). Vagrant is a tool that automates the setup of a virtual machine with the development environment in your computer. Inside the virtual machine's filesystem, this repository will be automatically mounted in the `/vagrant` folder.
 
-### Developer Setup With Vagrant
-Please ensure that you have an email user from your preferred leap provider ([How to](#registering-with-a-leap-provider)).
+3) Clone the repo and start the virtual machine (downloads 600MB):
 
-##### Requirements
-  * [vagrant](https://www.vagrantup.com/downloads.html) - Vagrant is a tool that automates the setup of a virtual machine with the development environment in your computer. Inside the virtual machine's filesystem, this repository will be automatically mounted in the `/vagrant` folder.
-  * You will also need a vagrant [compatible provider](https://www.vagrantup.com/docs/providers/) e.g. [virtualbox](https://www.virtualbox.org/wiki/Downloads)
-
-##### Set up
-To setup the pixelated user agent inside a vagrant machine, please run the following sequence of commands in a terminal:
-
-```bash
- $ git clone https://github.com/pixelated/pixelated-user-agent.git
- $ cd pixelated-user-agent
- $ vagrant up
- $ vagrant ssh
+```
+$ git clone https://github.com/pixelated-project/pixelated-user-agent.git
+$ cd pixelated-user-agent 
+$ vagrant up
 ```
 
-This could take a while depending on your internet connection.
-Once it is complete, you should be within the terminal of the vagrant box.
+4) Log into the VM: 
 
-##### Running the user agent
-To run the pixelated user agent single user mode, please run the following:
-
-```bash
- (user-agent-venv)vagrant@jessie:/vagrant$ pixelated-user-agent --host 0.0.0.0
 ```
-You will then need to input your provider hostname, email username and password. Please follow the prompt.
-Once that is done, you can use by browsing to [http://localhost:3333](http://localhost:3333)
-
-To run the pixelated user agent multi user mode, please run the following:
-```bash
- (user-agent-venv)vagrant@jessie:/vagrant$ pixelated-user-agent --host 0.0.0.0 --multi-user --provider=dev.pixelated-project.org
+$ vagrant ssh
 ```
-You will need to change `dev.pixelated-project.org` to the hostname of the leap provider that you will be using.
-Once that is done, you can use by browsing to [http://localhost:3333](http://localhost:3333), where you will be prompted for your email username and password.
 
-##### Running tests
+5) Setup the project (downloads a few hundred more megabytes): 
+
+```
+$ cd /vagrant/service
+$ ./go setup
+```
+
+6) Register with a LEAP provider. You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/). Please contact us at team@pixelated-project.org for an invite code.
+
+7) Run the user agent:
+
+```
+$ pixelated-user-agent --host 0.0.0.0 -lc /vagrant/service/pixelated/certificates/dev.pixelated-project.org.ca.crt
+
+Which provider do you want to connect to: 
+dev.pixelated-project.org
+
+What’s your username registered on the provider: 
+username (the one you created in previous step)
+
+Type your password: 
+******** (the one you created in previous step)
+```
+
+8) Connect to the provider using your credentials. If the user agent starts up successfully, you will not see any other output.
+
+9) Go to [localhost:3333](http://localhost:3333/). You should see a loading screen for a few seconds, then your inbox. If it sticks on the loading screen, check your terminal for errors, then [get help](https://pixelated-project.org/faq/#contact-the-project).
+
+10) If you like console output, you can also run the tests to see if everything went according to plan.
+
 To run the backend tests:
 
 ```bash
@@ -82,10 +83,24 @@ To run the functional tests:
  (user-agent-venv)vagrant@jessie:/vagrant/service$ ./go functional
 ```
 
-##### Continuous Integration
+You're all set! Happy hacking!
+
+# Further Notes
+
+## Multi User Mode
+
+To run the pixelated user agent multi user mode, please run the following:
+```bash
+ (user-agent-venv)vagrant@jessie:/vagrant$ pixelated-user-agent --host 0.0.0.0 --multi-user --provider=dev.pixelated-project.org
+```
+
+You will need to change `dev.pixelated-project.org` to the hostname of the leap provider that you will be using.
+Once that is done, you can use by browsing to [http://localhost:3333](http://localhost:3333), where you will be prompted for your email username and password.
+
+## Continuous Integration
 All commits to the pixelated user agent code trigger all tests to be run in [snap-ci](https://snap-ci.com/pixelated/pixelated-user-agent/branch/master).
 
-##### Note
+## Note
 * You can access the guest OS shell via the command `vagrant ssh` run within the `pixelated-user-agent/` folder in the host OS.
 * `/vagrant/` in the guest OS is mapped to the `pixelated-user-agent/` folder in the host OS. File changes on either side will reflect in the other.
 * First time email sync could be slow, please be patient. This could be the case if you have a lot of emails already and it is the first time you setup the user agent on your machine.
