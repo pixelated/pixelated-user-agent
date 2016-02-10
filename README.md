@@ -97,6 +97,18 @@ To run the functional tests:
 
 13) You're all set! We've prepared [a couple of issues labeled "Beginner"](https://github.com/pixelated/pixelated-user-agent/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3ABeginners+) that are a good place to dive into the project. Happy Hacking!
 
+## How do I see the result of my changes?
+
+For all **Python changes**, you will need to kill (Ctrl-C) the server and run `$ pixelated-user-agent --host 0.0.0.0` again.
+
+For most **JavaScript** or **HTML changes**, you will just need to reload the browser. 
+
+For most **CSS or Handlebars templates changes**, you will also need to run: `$ cd /vagrant/web-ui && ./go build`
+
+## I think I might be able to hack together a quick-and-dirty lo-fi solution for the issue I’m working with… what do I do?
+
+Do it the easy way first, and submit a pull request as a “work in progress” as soon as you have a quick-and-dirty solution (or even an unfinished solution) — that means you can get feedback from the other developers about whether you’re heading in the right direction sooner rather than later. Include “WIP” (work in progress) in the description of your pull request and ask for review, or feedback on anything specific.
+
 # Further Notes
 
 ## Multi User Mode
