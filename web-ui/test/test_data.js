@@ -224,7 +224,8 @@ define(function() {
     attachments: [{
       ident: '912ec803b2ce49e4a541068d495ab570',
       name: 'filename.txt',
-      encoding: 'base64'
+      encoding: 'base64',
+      'content-type': 'text/plain'
     }]
   };
 

@@ -271,7 +271,7 @@ describeComponent('mail_view/ui/mail_view', function () {
     this.component.displayMail({}, withAttachments);
 
     var attachmentLink = $(this.component.$node.find('.attachmentsArea li').html());
-    var expectedLink = '/attachment/912ec803b2ce49e4a541068d495ab570?encoding=base64&filename=filename.txt';
+    var expectedLink = '/attachment/912ec803b2ce49e4a541068d495ab570?content_type=text/plain&encoding=base64&filename=filename.txt';
     expect(attachmentLink.attr('href')) .toBe(expectedLink);
   });
 
