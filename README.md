@@ -26,22 +26,34 @@ $ cd pixelated-user-agent
 $ vagrant up
 ```
 
-4) Log into the VM: 
+4) Set up your python virtualenv
+
+```
+$ pip install virtualenv setuptools
+$ cd ~
+$ virtualenv pixelated
+$ virtualenv -p [PATH/TO/YOUR/PYTHON/EXECUTABLE] pixelated
+$ source ~/.virtualenv/pixelated/bin/activate
+```
+
+5) There's a bug in a LEAP library that can't handle symlinks to your local GPG installation. To fix it, add the path to your GPG binary to your $PATH so that it is found before the symlink in `/usr/local/bin` (or similar)
+
+6) Log into the VM: 
 
 ```
 $ vagrant ssh
 ```
 
-5) Setup the project (downloads a few hundred more megabytes): 
+7) Setup the project (downloads a few hundred more megabytes): 
 
 ```
 $ cd /vagrant/service
 $ ./go setup
 ```
 
-6) Register with a LEAP provider. You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/). Please contact us at team@pixelated-project.org for an invite code.
+8) Register with a LEAP provider. You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/). Please contact us at team@pixelated-project.org for an invite code.
 
-7) Run the user agent:
+9) Run the user agent:
 
 ```
 $ pixelated-user-agent --host 0.0.0.0
@@ -56,11 +68,11 @@ Type your password:
 ******** (the one you created in previous step)
 ```
 
-8) Connect to the provider using your credentials. If the user agent starts up successfully, you will not see any other output.
+10) Connect to the provider using your credentials. If the user agent starts up successfully, you will not see any other output.
 
-9) Go to [localhost:3333](http://localhost:3333/). You should see a loading screen for a few seconds, then your inbox. If it sticks on the loading screen, check your terminal for errors, then [get help](https://pixelated-project.org/faq/#contact-the-project).
+11) Go to [localhost:3333](http://localhost:3333/). You should see a loading screen for a few seconds, then your inbox. If it sticks on the loading screen, check your terminal for errors, then [get help](https://pixelated-project.org/faq/#contact-the-project).
 
-10) If you like console output, you can also run the tests to see if everything went according to plan.
+12) If you like console output, you can also run the tests to see if everything went according to plan.
 
 To run the backend tests:
 
@@ -83,7 +95,7 @@ To run the functional tests:
  (user-agent-venv)vagrant@jessie:/vagrant/service$ ./go functional
 ```
 
-11. You're all set! We've prepared [a couple of issues labeled "Beginner"](https://github.com/pixelated/pixelated-user-agent/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3ABeginners+) that are a good place to dive into the project. Happy Hacking!
+13) You're all set! We've prepared [a couple of issues labeled "Beginner"](https://github.com/pixelated/pixelated-user-agent/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3ABeginners+) that are a good place to dive into the project. Happy Hacking!
 
 # Further Notes
 
