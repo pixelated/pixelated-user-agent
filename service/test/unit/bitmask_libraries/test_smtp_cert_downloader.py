@@ -21,6 +21,7 @@ from tempfile import NamedTemporaryFile
 from httmock import all_requests, HTTMock, urlmatch
 
 CERTIFICATE_DATA = 'some cert data'
+USERNAME = 'some_user_name'
 
 
 @all_requests
@@ -29,12 +30,17 @@ def not_found_mock(url, request):
             'content': 'foobar'}
 
 
-@urlmatch(netloc='api.some-server.test:4430', path='/1/cert')
-def ca_cert_mock(url, request):
-    return {
-        "status_code": 200,
-        "content": CERTIFICATE_DATA
-    }
+@urlmatch(netloc='api.some-server.test:4430', path='/1/smtp_cert', method='POST')
+def smtp_cert_mock(url, request):
+    if request.body == 'address=%s' % USERNAME:
+        return {
+            "status_code": 200,
+            "content": CERTIFICATE_DATA
+        }
+    else:
+        return {
+            'status_code': 401
+        }
 
 
 class TestSmtpCertDownloader(unittest.TestCase):
@@ -50,6 +56,7 @@ class TestSmtpCertDownloader(unittest.TestCase):
         self._provider.api_version = '1'
         self._provider.server_name = 'some.host.tld'
 
+        self._auth.username = USERNAME
         self._auth.session_id = 'some session id'
         self._auth.token = 'some token'
 
@@ -57,7 +64,7 @@ class TestSmtpCertDownloader(unittest.TestCase):
         unstub()
 
     def test_download_certificate(self):
-        with HTTMock(ca_cert_mock, not_found_mock):
+        with HTTMock(smtp_cert_mock, not_found_mock):
             cert_data = SmtpCertDownloader(self._provider, self._auth).download()
 
         self.assertEqual(CERTIFICATE_DATA, cert_data)
@@ -71,7 +78,7 @@ class TestSmtpCertDownloader(unittest.TestCase):
         downloader = SmtpCertDownloader(self._provider, self._auth)
 
         with NamedTemporaryFile() as tmp_file:
-            with HTTMock(ca_cert_mock, not_found_mock):
+            with HTTMock(smtp_cert_mock, not_found_mock):
                 downloader.download_to(tmp_file.name)
 
             file_content = open(tmp_file.name).read()
