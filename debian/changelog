@@ -1,3 +1,9 @@
+pixelated-user-agent (0.5) jessie; urgency=medium
+
+  * user-agent is now multi-user capable. 
+
+ -- Christoph Kluenter <ckluente@thoughtworks.com>  Thu, 11 Feb 2016 13:20:43 +0100
+
 pixelated-user-agent (0.4) jessie; urgency=medium
 
   * Start building jessie packages
