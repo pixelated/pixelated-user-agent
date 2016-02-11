@@ -1,2 +1,8 @@
+# https://help.github.com/articles/dealing-with-line-endings/
+# fix windows issue where executing a mounted script
+# in vagrant fails due to a '^M' special char at the end of each line
+# see https://github.com/pixelated/pixelated-user-agent/issues/600#issuecomment-182306301
+install-pixelated.sh text eol=lf
+
 # Automatically normalize line endings for all text-based files
 * text=auto
