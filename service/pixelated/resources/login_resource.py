@@ -49,30 +49,48 @@ def _get_static_folder():
     return static_folder
 
 
+class DisclaimerElement(Element):
+    loader = XMLFile(FilePath(os.path.join(_get_startup_folder(), '_login_disclaimer_banner.html')))
+
+    def __init__(self, banner):
+        super(DisclaimerElement, self).__init__()
+        self._set_loader(banner)
+
+    def _set_loader(self, banner):
+        if banner:
+            current_path = os.path.dirname(os.path.abspath(__file__))
+            banner_file_path = os.path.join(current_path, "..", "..", "..", banner)
+            self.loader = XMLFile(FilePath(banner_file_path))
+
+
 class LoginWebSite(Element):
     loader = XMLFile(FilePath(os.path.join(_get_startup_folder(), 'login.html')))
 
-    def __init__(self, error_msg=None):
+    def __init__(self, error_msg=None, disclaimer_banner_file=None):
         super(LoginWebSite, self).__init__()
         self._error_msg = error_msg
+        self.disclaimer_banner_file = disclaimer_banner_file
 
     @renderer
     def error_msg(self, request, tag):
         if self._error_msg is not None:
             return tag(self._error_msg)
-        else:
-            return tag('')
+        return tag('')
+
+    @renderer
+    def disclaimer(self, request, tag):
+        return DisclaimerElement(self.disclaimer_banner_file).render(request)
 
 
 class LoginResource(BaseResource):
     BASE_URL = 'login'
 
-    def __init__(self, services_factory, portal=None):
+    def __init__(self, services_factory, portal=None, disclaimer_banner=None):
         BaseResource.__init__(self, services_factory)
         self._static_folder = _get_static_folder()
         self._startup_folder = _get_startup_folder()
-        self._html_template = open(os.path.join(self._startup_folder, 'login.html')).read()
         self._portal = portal
+        self._disclaimer_banner = disclaimer_banner
         self.putChild('startup-assets', File(self._startup_folder))
 
     def set_portal(self, portal):
@@ -92,7 +110,7 @@ class LoginResource(BaseResource):
         return self._render_template(request)
 
     def _render_template(self, request, error_msg=None):
-        site = LoginWebSite(error_msg=error_msg)
+        site = LoginWebSite(error_msg=error_msg, disclaimer_banner_file=self._disclaimer_banner)
         return renderElement(request, site)
 
     def render_POST(self, request):

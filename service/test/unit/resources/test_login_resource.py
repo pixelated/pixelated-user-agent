@@ -1,3 +1,5 @@
+import os
+
 import test.support.mockito
 
 from leap.exceptions import SRPAuthenticationError
@@ -58,14 +60,43 @@ class TestLoginResource(unittest.TestCase):
             input_username = 'name="username"'
             input_password = 'name="password"'
             input_submit = 'name="login"'
+            default_disclaimer = 'Some disclaimer'
             written_response = ''.join(request.written)
             self.assertIn(form_action, written_response)
             self.assertIn(form_method, written_response)
             self.assertIn(input_password, written_response)
             self.assertIn(input_submit, written_response)
             self.assertIn(input_username, written_response)
+            self.assertIn(default_disclaimer, written_response)
 
         d.addCallback(assert_form_rendered)
+        return d
+
+    def _write(self, filename, content):
+        with open(filename, 'w') as disclaimer_file:
+            disclaimer_file.write(content)
+
+    def test_override_login_disclaimer_message(self):
+        request = DummyRequest([''])
+
+        banner_file_name = 'banner.txt'
+        banner_disclaimer_content = '<p>some custom disclaimer</p>'
+        self._write(banner_file_name, banner_disclaimer_content)
+
+        self.resource._disclaimer_banner = 'service/_trial_temp/' + banner_file_name
+
+        d = self.web.get(request)
+
+        def assert_custom_disclaimer_rendered(_):
+            self.assertEqual(200, request.responseCode)
+            written_response = ''.join(request.written)
+            self.assertIn(banner_disclaimer_content, written_response)
+
+        def tear_down(_):
+            os.remove(banner_file_name)
+
+        d.addCallback(assert_custom_disclaimer_rendered)
+        d.addCallback(tear_down)
         return d
 
 

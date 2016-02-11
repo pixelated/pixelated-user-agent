@@ -36,7 +36,7 @@ install_compass
 install_npm
 
 #setup backend
-brew install python # force brew install even if python is already install
+brew install python # force brew install even if python is already installed
 export  LDFLAGS=-L/usr/local/opt/openssl/lib
 export  LDFLAGS=-L/usr/local/opt/openssl/lib
 pip install virtualenv
