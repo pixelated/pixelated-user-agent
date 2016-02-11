@@ -29,6 +29,7 @@ from leap.auth import SRPAuth
 from .nicknym import NickNym
 from .smtp import LeapSMTPConfig
 from .soledad import SoledadFactory
+import leap.common.certs as leap_certs
 
 from leap.common.events import (
     register, unregister,
@@ -127,13 +128,16 @@ class SmtpClientCertificate(object):
         self._user_path = user_path
 
     def cert_path(self):
-        if not self._is_cert_already_downloaded():
+        if not self._is_cert_already_downloaded() or self._should_redownload():
             self._download_smtp_cert()
 
         return self._smtp_client_cert_path()
 
     def _is_cert_already_downloaded(self):
         return os.path.exists(self._smtp_client_cert_path())
+
+    def _should_redownload(self):
+        return leap_certs.should_redownload(self._smtp_client_cert_path())
 
     def _download_smtp_cert(self):
         cert_path = self._smtp_client_cert_path()
