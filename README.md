@@ -26,7 +26,7 @@ $ cd pixelated-user-agent
 $ vagrant up
 ```
 
-4) Set up your python virtualenv
+4) (optional) If you want to run the tests in your IDE on your host machine outside of vagrant, set up your python virtualenv 
 
 ```
 $ pip install virtualenv setuptools
@@ -36,7 +36,7 @@ $ virtualenv -p [PATH/TO/YOUR/PYTHON/EXECUTABLE] pixelated
 $ source ~/.virtualenv/pixelated/bin/activate
 ```
 
-5) There's a bug in a LEAP library that can't handle symlinks to your local GPG installation. To fix it, add the path to your GPG binary to your $PATH so that it is found before the symlink in `/usr/local/bin` (or similar)
+5) (optional) If you want to run the tests in your IDE on your host machine outside of vagrant, there's a bug in a LEAP library that can't handle symlinks to your local GPG installation. To fix it, add the path to your GPG binary to your $PATH so that it is found before the symlink in `/usr/local/bin` (or similar)
 
 6) Log into the VM: 
 
