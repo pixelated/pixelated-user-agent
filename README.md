@@ -22,11 +22,11 @@ You are most welcome to contribute to the pixelated user agent code base. Please
 
 ```
 $ git clone https://github.com/pixelated-project/pixelated-user-agent.git
-$ cd pixelated-user-agent 
+$ cd pixelated-user-agent
 $ vagrant up
 ```
 
-4) (optional) If you want to run the tests in your IDE on your host machine outside of vagrant, set up your python virtualenv 
+4) (optional) If you want to run the tests in your IDE on your host machine outside of vagrant, set up your python virtualenv
 
 ```
 $ pip install virtualenv setuptools
@@ -38,41 +38,34 @@ $ source ~/.virtualenv/pixelated/bin/activate
 
 5) (optional) If you want to run the tests in your IDE on your host machine outside of vagrant, there's a bug in a LEAP library that can't handle symlinks to your local GPG installation. To fix it, add the path to your GPG binary to your $PATH so that it is found before the symlink in `/usr/local/bin` (or similar)
 
-6) Log into the VM: 
+6) Log into the VM:
 
 ```
 $ vagrant ssh
 ```
 
-7) Setup the project (downloads a few hundred more megabytes): 
+7) Register with a LEAP provider. You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/). Please contact us at team@pixelated-project.org for an invite code.
 
-```
-$ cd /vagrant/service
-$ ./go setup
-```
-
-8) Register with a LEAP provider. You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/). Please contact us at team@pixelated-project.org for an invite code.
-
-9) Run the user agent:
+8) Run the user agent:
 
 ```
 $ pixelated-user-agent --host 0.0.0.0
 
-Which provider do you want to connect to: 
+Which provider do you want to connect to:
 dev.pixelated-project.org
 
-What’s your username registered on the provider: 
+What’s your username registered on the provider:
 username (the one you created in previous step)
 
-Type your password: 
+Type your password:
 ******** (the one you created in previous step)
 ```
 
-10) Connect to the provider using your credentials. If the user agent starts up successfully, you will not see any other output.
+9) Connect to the provider using your credentials. If the user agent starts up successfully, you will not see any other output.
 
-11) Go to [localhost:3333](http://localhost:3333/). You should see a loading screen for a few seconds, then your inbox. If it sticks on the loading screen, check your terminal for errors, then [get help](https://pixelated-project.org/faq/#contact-the-project).
+10) Go to [localhost:3333](http://localhost:3333/). You should see a loading screen for a few seconds, then your inbox. If it sticks on the loading screen, check your terminal for errors, then [get help](https://pixelated-project.org/faq/#contact-the-project).
 
-12) If you like console output, you can also run the tests to see if everything went according to plan.
+11) If you like console output, you can also run the tests to see if everything went according to plan.
 
 To run the backend tests:
 
@@ -95,13 +88,13 @@ To run the functional tests:
  (user-agent-venv)vagrant@jessie:/vagrant/service$ ./go functional
 ```
 
-13) You're all set! We've prepared [a couple of issues labeled "Beginner"](https://github.com/pixelated/pixelated-user-agent/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3ABeginners+) that are a good place to dive into the project. Happy Hacking!
+12) You're all set! We've prepared [a couple of issues labeled "Beginner"](https://github.com/pixelated/pixelated-user-agent/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3ABeginners+) that are a good place to dive into the project. Happy Hacking!
 
 ## How do I see the result of my changes?
 
 For all **Python changes**, you will need to kill (Ctrl-C) the server and run `$ pixelated-user-agent --host 0.0.0.0` again.
 
-For most **JavaScript** or **HTML changes**, you will just need to reload the browser. 
+For most **JavaScript** or **HTML changes**, you will just need to reload the browser.
 
 For most **CSS or Handlebars templates changes**, you will also need to run: `$ cd /vagrant/web-ui && ./go build`
 
