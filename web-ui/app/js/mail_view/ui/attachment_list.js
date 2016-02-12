@@ -198,7 +198,6 @@ define(
               var success = function() {
                 this.removeAttachmentFromList(data);
                 this.destroyAttachmentElement(data);
-                console.log('Success');
               };
 
               monitoredAjax(this, '/attachment/' + data.ident, {
