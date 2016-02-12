@@ -46,8 +46,8 @@ class TestSmtpClientCertificate(unittest.TestCase):
         self.assertEqual(self.pem_path, result)
         verify(self.downloader).download_to(self.pem_path)
 
-    def test_download_certificate_if_redownload_necessary(self):
-        when(os.path).exists(self.pem_path).thenReturn(True)
+    def test_download_certificate_if_redownload_necessary_e_g_certificate_expired(self):
+        self.pretend_all_paths_exist()
         when(certs).should_redownload(self.pem_path).thenReturn(True)
 
         cert = SmtpClientCertificate(self.provider, self.auth, self.tmp_dir.name)
@@ -55,6 +55,9 @@ class TestSmtpClientCertificate(unittest.TestCase):
 
         self.assertEqual(self.pem_path, result)
         verify(self.downloader).download_to(self.pem_path)
+
+    def pretend_all_paths_exist(self):
+        when(os.path).exists(ANY()).thenReturn(True)
 
     def test_skip_download_if_already_downloaded_and_still_valid(self):
         when(os.path).exists(self.pem_path).thenReturn(True)
