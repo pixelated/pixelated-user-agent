@@ -195,14 +195,8 @@ define(
             };
 
             this.removeAttachments = function(event, data) {
-              var success = function() {
-                this.removeAttachmentFromList(data);
-                this.destroyAttachmentElement(data);
-              };
-
-              monitoredAjax(this, '/attachment/' + data.ident, {
-                type: 'DELETE'
-              }).done(success.bind(this));
+              this.removeAttachmentFromList(data);
+              this.destroyAttachmentElement(data);
             };
 
             this.after('initialize', function () {

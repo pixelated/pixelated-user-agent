@@ -151,6 +151,3 @@ class MailService(object):
     @defer.inlineCallbacks
     def delete_permanent(self, mail_id):
         yield self.mail_store.delete_mail(mail_id)
-
-    def delete_attachment(self, attachment_id):
-        return self.attachment_store.delete_attachment(attachment_id)

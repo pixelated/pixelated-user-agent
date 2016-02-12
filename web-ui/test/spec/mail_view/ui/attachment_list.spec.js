@@ -120,6 +120,52 @@ describeMixin('mail_view/ui/attachment_list', function () {
                     expect(uploadAccepted).toBe(true);
                 });
             });
+
+            describe('Remove attachment', function () {
+                it('should call the remove attachment method when triggered the removeAttachement event', function () {
+                    var stubAttachment = {ident: 'whatever'};
+                    spyOn(this.component, 'removeAttachmentFromList');
+                    spyOn(this.component, 'destroyAttachmentElement');
+
+                    $(document).trigger(Pixelated.events.mail.removeAttachment, stubAttachment);
+
+                    expect(this.component.removeAttachmentFromList).toHaveBeenCalledWith(stubAttachment);
+                    expect(this.component.destroyAttachmentElement).toHaveBeenCalledWith(stubAttachment);
+                });
+
+                it('should remove the attachment item from the DOM', function () {
+                    var stubAttachment = {ident: 'whatever'};
+                    this.setupComponent('<div id="attachment-list">' +
+                        '<ul id="attachment-list-item"><li data-ident="whatever"></li></ul>' +
+                        '<ul id="attachment-upload-item"></ul>' +
+                        '</div>');
+
+                    expect(this.component.$node.find('li[data-ident=whatever]').length).toEqual(1);
+
+                    this.component.destroyAttachmentElement(stubAttachment);
+
+                    expect(this.component.$node.find('li[data-ident=whatever]').length).toEqual(0);
+                });
+
+
+                it('should remove attachment from attachment list', function () {
+                    var stubAttachment = {ident: 'whatever'};
+                    this.component.attr.attachments = [stubAttachment, {ident: 'another attachment'}];
+                    this.component.removeAttachmentFromList(stubAttachment);
+
+                    expect(this.component.attr.attachments).toEqual([{ident: 'another attachment'}]);
+                });
+
+
+                it('when remove attachment that is not on the attachment list should not do anything', function () {
+                    var stubAttachment = {ident: 'whatever'};
+                    this.component.attr.attachments = [stubAttachment];
+
+                    this.component.removeAttachmentFromList({ident: 'different attachment'});
+
+                    expect(this.component.attr.attachments).toEqual([stubAttachment]);
+                });
+            });
         });
     });
 });

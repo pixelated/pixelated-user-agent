@@ -37,6 +37,9 @@ Feature: Attachments
     When I dismiss the error message
     Then It should not show the error message anymore
     When I upload a valid file
+    And remove the file
+    Then I should not see it attached
+    When I upload a valid file
     And I send it
     When I select the tag 'sent'
     And I open the first mail in the mail list

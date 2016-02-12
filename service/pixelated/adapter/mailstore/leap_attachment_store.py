@@ -63,9 +63,3 @@ class LeapAttachmentStore(object):
     def _calc_attachment_id_(self, content, content_type, encoder=encoders.encode_base64):
         cdoc = self._attachment_to_cdoc(content, content_type, encoder)
         return cdoc.phash
-
-    @defer.inlineCallbacks
-    def delete_attachment(self, attachment_id):
-        doc = yield self.soledad.get_from_index('by-type-and-payloadhash', 'cnt', attachment_id)
-        doc = doc[0]
-        yield self.soledad.delete_doc(doc)
