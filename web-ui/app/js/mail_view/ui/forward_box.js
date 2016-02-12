@@ -64,8 +64,7 @@ define(
 
       this.convertToRemovableAttachments = function(attachments) {
         return attachments.map(function(attachment) {
-          attachment.removable = false; // don't show this button until the bug is fixed
-          attachment.received = true;
+          attachment.removable = true;
           return attachment;
         });
       };
