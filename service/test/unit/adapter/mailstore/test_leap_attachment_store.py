@@ -116,6 +116,21 @@ class TestLeapAttachmentStore(TestCase):
         except ValueError:
             pass
 
+    @defer.inlineCallbacks
+    def test_soledad_delete_doc_is_called_when_deleting_an_attachment(self):
+        attachment_id = '1B0A9AAD9E153D24265395203C53884506ABA276394B9FEC02B214BF9E77E48E'
+        doc = SoledadDocument(json=json.dumps({'content_type': 'foo/bar', 'raw': 'quoted-printable',
+                                               'phash': attachment_id,
+                                               'content_transfer_encoding': ''}))
+
+        when(self.soledad).get_from_index('by-type-and-payloadhash', 'cnt', attachment_id).thenReturn(defer.succeed([doc]))
+        when(self.soledad).delete_doc(doc).thenReturn(defer.succeed(None))
+
+        store = LeapAttachmentStore(self.soledad)
+        yield store.delete_attachment(attachment_id)
+
+        verify(self.soledad).delete_doc(doc)
+
     def _mock_get_mailbox(self, mailbox_name, create_new_uuid=False):
         mbox_uuid = self.mbox_uuid if not create_new_uuid else str(uuid4())
         when(self.soledad).list_indexes().thenReturn(defer.succeed(MAIL_INDEXES)).thenReturn(
