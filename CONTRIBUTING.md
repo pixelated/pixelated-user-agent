@@ -24,11 +24,11 @@ We follow a simplified fork + pull request workflow:
 * Implement the change
 * Send a pull request against the master branch. Please make sure the automated tests are passing, as indicated by GitHub on the pull requests.
 * Please keep your feature branch updated. Rebase your branch against upstream changes on the master branch, resolve any conflicts and make sure the tests are staying green.
-* Your pull request will reviewed and merged
+* Your pull request will be reviewed and merged
 
 ### What to work on
 
-Our [Kanban board "Tablero"](https://pixboard.herokuapp.com) provides an overview of issues that are ready to play or awaiting QA. If you're just getting familiar with Pixelated, see the [issues labeled 'Beginner'](labels/Beginners).
+Our [Kanban board "Tablero"](https://pixboard.herokuapp.com) provides an overview of issues that are ready to play or awaiting QA. If you're just getting familiar with Pixelated, see the [issues labeled 'Beginner'](https://github.com/pixelated/pixelated-user-agent/labels/Beginners).
 
 Generally, all issues that have no user assigned are awaiting work and free to play. If you want to make sure, or you think it will take more than a couple of days to complete your work, please reach out to us using the contact info above.
 
