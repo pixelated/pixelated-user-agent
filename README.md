@@ -6,6 +6,8 @@ Pixelated User Agent
 
 The Pixelated User Agent is the mail client of the Pixelated ecosystem. It is composed of two parts, a web interface written in JavaScript ([FlightJS](https://flightjs.github.io/)) and a Python API that interacts with a LEAP Provider, the e-mail platform that Pixelated is built on.
 
+Here's a [podcast](https://soundcloud.com/thoughtworks/pixelated-why-secure-communication-is-essential) that explains the projectt.
+
 **Pixelated is still in early development state!**
 
 ![High level architecture User Agent](https://pixelated-project.org/assets/images/pixelated-user-agent.png)
@@ -14,11 +16,10 @@ The Pixelated User Agent is the mail client of the Pixelated ecosystem. It is co
 
 You are most welcome to contribute to the pixelated user agent code base. Please have a look at the [contributions how to](https://github.com/pixelated/pixelated-user-agent/blob/master/CONTRIBUTING.md).
 
-1) Listen to [this podcast](https://soundcloud.com/thoughtworks/pixelated-why-secure-communication-is-essential).
 
-2) Install [Vagrant](https://www.vagrantup.com/downloads.html) and a vagrant [compatible provider](https://www.vagrantup.com/docs/providers/), e.g. [Virtual Box](https://www.virtualbox.org/wiki/Downloads). Vagrant is a tool that automates the setup of a virtual machine with the development environment in your computer. Inside the virtual machine's filesystem, this repository will be automatically mounted in the `/vagrant` folder.
+1) Install [Vagrant](https://www.vagrantup.com/downloads.html) and a vagrant [compatible provider](https://www.vagrantup.com/docs/providers/), e.g. [Virtual Box](https://www.virtualbox.org/wiki/Downloads). Vagrant is a tool that automates the setup of a virtual machine with the development environment in your computer. Inside the virtual machine's filesystem, this repository will be automatically mounted in the `/vagrant` folder.
 
-3) Clone the repo and start the virtual machine (downloads 600MB):
+2) Clone the repo and start the virtual machine (downloads 600MB):
 
 ```
 $ git clone https://github.com/pixelated-project/pixelated-user-agent.git
@@ -26,27 +27,15 @@ $ cd pixelated-user-agent
 $ vagrant up
 ```
 
-4) (optional) If you want to run the tests in your IDE on your host machine outside of vagrant, set up your python virtualenv
-
-```
-$ pip install virtualenv setuptools
-$ cd ~
-$ virtualenv pixelated
-$ virtualenv -p [PATH/TO/YOUR/PYTHON/EXECUTABLE] pixelated
-$ source ~/.virtualenv/pixelated/bin/activate
-```
-
-5) (optional) If you want to run the tests in your IDE on your host machine outside of vagrant, there's a bug in a LEAP library that can't handle symlinks to your local GPG installation. To fix it, add the path to your GPG binary to your $PATH so that it is found before the symlink in `/usr/local/bin` (or similar)
-
-6) Log into the VM:
+3) Log into the VM:
 
 ```
 $ vagrant ssh
 ```
 
-7) Register with a LEAP provider. You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/). Please contact us at team@pixelated-project.org for an invite code.
+4) Register with a LEAP provider. You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/). Please contact us at team@pixelated-project.org for an invite code.
 
-8) Run the user agent:
+5) Run the user agent:
 
 ```
 $ pixelated-user-agent --host 0.0.0.0
@@ -61,11 +50,11 @@ Type your password:
 ******** (the one you created in previous step)
 ```
 
-9) Connect to the provider using your credentials. If the user agent starts up successfully, you will not see any other output.
+6) Connect to the provider using your credentials. If the user agent starts up successfully, you will not see any other output.
 
-10) Go to [localhost:3333](http://localhost:3333/). You should see a loading screen for a few seconds, then your inbox. If it sticks on the loading screen, check your terminal for errors, then [get help](https://pixelated-project.org/faq/#contact-the-project).
+7) Go to [localhost:3333](http://localhost:3333/). You should see a loading screen for a few seconds, then your inbox. If it sticks on the loading screen, check your terminal for errors, then [get help](https://pixelated-project.org/faq/#contact-the-project).
 
-11) If you like console output, you can also run the tests to see if everything went according to plan.
+8) If you like console output, you can also run the tests to see if everything went according to plan.
 
 To run the backend tests:
 
@@ -88,7 +77,24 @@ To run the functional tests:
  (user-agent-venv)vagrant@jessie:/vagrant/service$ ./go functional
 ```
 
-12) You're all set! We've prepared [a couple of issues labeled "Beginner"](https://github.com/pixelated/pixelated-user-agent/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3ABeginners+) that are a good place to dive into the project. Happy Hacking!
+9) You're all set! We've prepared [a couple of issues labeled "Beginner"](https://github.com/pixelated/pixelated-user-agent/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3ABeginners+) that are a good place to dive into the project. Happy Hacking!
+
+
+## Running tests inside your local IDE
+
+If you want to run the tests in your IDE on your host machine outside of vagrant, set up your python virtualenv
+
+```
+$ pip install virtualenv setuptools
+$ cd ~
+$ virtualenv pixelated
+$ virtualenv -p [PATH/TO/YOUR/PYTHON/EXECUTABLE] pixelated
+$ source ~/.virtualenv/pixelated/bin/activate
+```
+
+If you want to run the tests in your IDE on your host machine outside of vagrant, there's a bug in a LEAP library that can't handle symlinks to your local GPG installation.
+To fix it, add the path to your GPG binary to your $PATH so that it is found before the symlink in `/usr/local/bin` (or similar)
+
 
 ## How do I see the result of my changes?
 
@@ -130,11 +136,13 @@ All commits to the pixelated user agent code trigger all tests to be run in [sna
 ```
 
 ## Developer Setup On Native OS
+
 Please ensure that you have an email user from your preferred leap provider ([How to](#registering-with-a-leap-provider)).
 Details for developer installations [on OSX](#on-osx) and [Debian distributions](#on-debian-distributions) are explained below.
 In case of any issues, please ping us on IRC ([#pixelated on irc.freenode.net](irc://irc.freenode.net/pixelated)), we will be available to help you from there.
 
 ### On OSX
+
 First, you will need to install the [GPG tools](https://gpgtools.org/) for Mac.
 Then, run the following sequence of commands:
 ```bash
@@ -147,6 +155,7 @@ Please note that you will have to activate the virtualenv anytime you work on a 
 Running the user agent ([How to](#running-the-user-agent)), and the various tests ([How to](#running-tests)) are the same as in the vagrant setup above.
 
 ### On Debian distributions
+
 This is the setup for developers. Please run the following commands:
 
 ```bash
