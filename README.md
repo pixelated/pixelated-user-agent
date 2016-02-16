@@ -61,6 +61,7 @@ To run the backend tests:
 ```bash
  (user-agent-venv)vagrant@jessie:/vagrant$ cd service
  (user-agent-venv)vagrant@jessie:/vagrant/service$ ./go test
+ (user-agent-venv)vagrant@jessie:/vagrant/service$ cd ..
 ```
 
 To run the frontend tests:
@@ -68,6 +69,7 @@ To run the frontend tests:
 ```bash
  (user-agent-venv)vagrant@jessie:/vagrant$ cd web-ui
  (user-agent-venv)vagrant@jessie:/vagrant/web-ui$ ./go test
+ (user-agent-venv)vagrant@jessie:/vagrant/web-ui$ cd ..
 ```
 
 To run the functional tests:
@@ -75,6 +77,7 @@ To run the functional tests:
 ```bash
  (user-agent-venv)vagrant@jessie:/vagrant$ cd service
  (user-agent-venv)vagrant@jessie:/vagrant/service$ ./go functional
+ (user-agent-venv)vagrant@jessie:/vagrant/service$ cd ..
 ```
 
 9) You're all set! We've prepared [a couple of issues labeled "Beginner"](https://github.com/pixelated/pixelated-user-agent/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3ABeginners+) that are a good place to dive into the project. Happy Hacking!
