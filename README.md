@@ -120,6 +120,14 @@ To run the pixelated user agent multi user mode, please run the following:
 You will need to change `dev.pixelated-project.org` to the hostname of the leap provider that you will be using.
 Once that is done, you can use by browsing to [http://localhost:3333](http://localhost:3333), where you will be prompted for your email username and password.
 
+## Self-signed provider certs
+
+You might also need to add your LEAP provider ssl certificate to pixelated manually for now, with the following steps:
+
+The easiest way to get this is downloading if from https://your.provider.org/ca.crt.
+Rename the certificate based on your provider domain name like this `your.leapprovider.org.crt` and put it into `services/pixelated/certificates/`.
+
+
 ## Continuous Integration
 All commits to the pixelated user agent code trigger all tests to be run in [snap-ci](https://snap-ci.com/pixelated/pixelated-user-agent/branch/master).
 
