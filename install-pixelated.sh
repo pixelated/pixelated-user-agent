@@ -115,17 +115,13 @@ cat <<EOF
 
 ###############
 
-## You will need an account in a LEAP provider with mail support. You may find some at http://bitmask.net/
-
-## You might also need to add your LEAP provider ssl certificate to pixelated manually for now, with the following steps:
-## The easiest way to find this is accessing https://your.provider.org/ca.crt
-## Rename the certificate based on your provider domain name like this 'your.leapprovider.org.crt'
-## Put it in services/pixelated/certificates/
+## You will need an account in a LEAP provider with mail support. You can request an invite code for
+## https://dev.pixelated-project.org, please refer to point 4) in the [Getting started guide](https://github.com/pixelated/pixelated-user-agent#getting-started).
 
 ## Once you are done, activate your virtual environment by running:
 ## source $VIRTUALENV_PATH/bin/activate
 
-## The User agent will be available on localhost:3333 after running
-## pixelated-user-agent
+## The User agent will be available on http://localhost:3333 after running:
+##     pixelated-user-agent
 
 EOF
