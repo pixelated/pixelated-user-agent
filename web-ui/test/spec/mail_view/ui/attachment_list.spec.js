@@ -123,47 +123,49 @@ describeMixin('mail_view/ui/attachment_list', function () {
 
             describe('Remove attachment', function () {
                 it('should call the remove attachment method when triggered the removeAttachement event', function () {
-                    var stubAttachment = {ident: 'whatever'};
+                    var stubAttachment = {ident: 'whatever', element: 'element'};
                     spyOn(this.component, 'removeAttachmentFromList');
                     spyOn(this.component, 'destroyAttachmentElement');
 
                     $(document).trigger(Pixelated.events.mail.removeAttachment, stubAttachment);
 
-                    expect(this.component.removeAttachmentFromList).toHaveBeenCalledWith(stubAttachment);
-                    expect(this.component.destroyAttachmentElement).toHaveBeenCalledWith(stubAttachment);
+                    expect(this.component.removeAttachmentFromList).toHaveBeenCalledWith('whatever');
+                    expect(this.component.destroyAttachmentElement).toHaveBeenCalledWith('element');
                 });
 
                 it('should remove the attachment item from the DOM', function () {
-                    var stubAttachment = {ident: 'whatever'};
+                    var stubAttachment = {ident: 'whatever', element: 'element'};
                     this.setupComponent('<div id="attachment-list">' +
-                        '<ul id="attachment-list-item"><li data-ident="whatever"></li></ul>' +
+                        '<ul id="attachment-list-item"><li data-ident="whatever"><i class="remove-icon"></i></li></ul>' +
                         '<ul id="attachment-upload-item"></ul>' +
                         '</div>');
 
+                    var element = this.component.$node.find('i.remove-icon');
+
                     expect(this.component.$node.find('li[data-ident=whatever]').length).toEqual(1);
 
-                    this.component.destroyAttachmentElement(stubAttachment);
+                    this.component.destroyAttachmentElement(element);
 
                     expect(this.component.$node.find('li[data-ident=whatever]').length).toEqual(0);
                 });
 
 
                 it('should remove attachment from attachment list', function () {
-                    var stubAttachment = {ident: 'whatever'};
-                    this.component.attr.attachments = [stubAttachment, {ident: 'another attachment'}];
-                    this.component.removeAttachmentFromList(stubAttachment);
+                    var stubAttachment = {ident: 'whatever', element: 'element'};
+                    this.component.attr.attachments = [{ident: 'whatever'}, {ident: 'another attachment'}];
+                    this.component.removeAttachmentFromList('whatever');
 
                     expect(this.component.attr.attachments).toEqual([{ident: 'another attachment'}]);
                 });
 
 
                 it('when remove attachment that is not on the attachment list should not do anything', function () {
-                    var stubAttachment = {ident: 'whatever'};
-                    this.component.attr.attachments = [stubAttachment];
+                    var stubAttachment = {ident: 'whatever', element: 'element'};
+                    this.component.attr.attachments = [{ident: 'whatever'}];
 
                     this.component.removeAttachmentFromList({ident: 'different attachment'});
 
-                    expect(this.component.attr.attachments).toEqual([stubAttachment]);
+                    expect(this.component.attr.attachments).toEqual([{ident: 'whatever'}]);
                 });
             });
         });

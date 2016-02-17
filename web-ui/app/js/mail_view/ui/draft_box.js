@@ -71,7 +71,7 @@ define(
         this.$node.find('i.remove-icon').bind('click', function(event) {
           var element = $(this);
           var ident = element.closest('li').attr('data-ident');
-          self.trigger(document, events.mail.removeAttachment, {ident: ident});
+          self.trigger(document, events.mail.removeAttachment, {ident: ident, element: element});
           event.preventDefault();
         });
 

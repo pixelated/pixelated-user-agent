@@ -71,7 +71,7 @@ define(
                 element.find('i.remove-icon').bind('click', function(event) {
                     var element = $(this);
                     var ident = element.closest('li').attr('data-ident');
-                    self.trigger(document, events.mail.removeAttachment, {ident: ident});
+                    self.trigger(document, events.mail.removeAttachment, {ident: ident, element: element});
                     event.preventDefault();
                 });
                 return element;
@@ -181,22 +181,22 @@ define(
                 this.select('inputFileUpload').click();
             };
 
-            this.removeAttachmentFromList = function(attachment) {
+            this.removeAttachmentFromList = function(ident) {
               for (var i = 0; i < this.attr.attachments.length; i++) {
-                if (this.attr.attachments[i].ident === attachment.ident) {
+                if (this.attr.attachments[i].ident === ident) {
                   this.attr.attachments.remove(i);
                   break;
                 }
               }
             };
 
-            this.destroyAttachmentElement = function(attachment) {
-              this.$node.find('li[data-ident=' + attachment.ident + ']').remove();
+            this.destroyAttachmentElement = function(element) {
+              element.closest('li').remove();
             };
 
             this.removeAttachments = function(event, data) {
-              this.removeAttachmentFromList(data);
-              this.destroyAttachmentElement(data);
+              this.removeAttachmentFromList(data.ident);
+              this.destroyAttachmentElement(data.element);
             };
 
             this.after('initialize', function () {
