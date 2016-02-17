@@ -51,7 +51,7 @@
     "signed signature-not-trusted": "Avsändaren och/eller meddelandet är inte pålitligt.",
     "signed signature-unknown": "Avsändaren och/eller meddelandet är inte pålitligt.",
     "not-signed": "Avsändaren kunde inte säkert identifieras.",
-    "Search..." : "Sök...",
+    "search-placeholder" : "Sök...",
     "Search results for:": "Sökresultat för:",
     "Tags": "Taggar",
     "Forward": "Vidarebefodra",
