@@ -38,9 +38,19 @@ define(
         this.trigger(document, events.dispatchers.rightPane.openComposeBox);
       };
 
+      this.showEmailSuccess = function () {
+        this.trigger(document, events.ui.userAlerts.displayMessage, {message: 'Your message was sent!', class: 'success'});
+      };
+
+      this.showEmailError = function (ev, data) {
+        this.trigger(document, events.ui.userAlerts.displayMessage, {message: 'Error,  message not sent: ' + data.responseJSON.message, class: 'error'});
+      };
+
       this.after('initialize', function () {
         this.render();
         this.on('click', this.enableComposing);
+        this.on(document, events.mail.sent, this.showEmailSuccess);
+        this.on(document, events.mail.send_failed, this.showEmailError);
       });
     }
   }

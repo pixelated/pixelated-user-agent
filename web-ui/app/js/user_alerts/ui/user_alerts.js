@@ -40,7 +40,7 @@ define(
 
 
       this.displayMessage = function (ev, data) {
-        this.render({ message: data.message});
+        this.render({ message:  {content: data.message, class: (data.class || 'success')}});
       };
 
       this.after('initialize', function () {

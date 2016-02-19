@@ -36,7 +36,7 @@ define(
 
       function failureSendingMail(on) {
         return function(result) {
-          on.trigger(document, events.mail.send_failed);
+          on.trigger(document, events.mail.send_failed, result);
         };
       }
 
@@ -51,6 +51,7 @@ define(
       });
 
       this.sendMail = function(event, data) {
+        this.trigger(events.dispatchers.rightPane.openNoMessageSelected);
         monitoredAjax.call(_, this, this.attr.mailsResource, {
           type: 'POST',
           dataType: 'json',
