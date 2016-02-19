@@ -121,7 +121,7 @@ class MailsResource(BaseResource):
 
     def _register_smtp_error_handler(self):
 
-        def on_error(event):
+        def on_error(event, content):
             delivery_error_mail = InputMail.delivery_error_template(delivery_address=event.content)
             self._mail_service.mailboxes.inbox.add(delivery_error_mail)
 

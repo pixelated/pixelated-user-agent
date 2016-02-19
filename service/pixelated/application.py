@@ -139,7 +139,7 @@ def initialize():
         reactor.stop()
 
     def _register_shutdown_on_token_expire(leap_session):
-        register(events.SOLEDAD_INVALID_AUTH_TOKEN, lambda _: reactor.stop())
+        register(events.SOLEDAD_INVALID_AUTH_TOKEN, lambda *unused: reactor.stop())
         return leap_session
 
     deferred.addCallback(_register_shutdown_on_token_expire)
