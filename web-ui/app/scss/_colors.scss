@@ -1,6 +1,7 @@
 /* Pixelated Color Palette - don't change these! */
 $dark_slate_gray: #3E3A37;
 $light_gray: #C2C2C2;
+$lighter_blue: #91C2D1;
 $light_blue: #3DABC4;
 $dark_blue: #178CA6;
 $light_orange: #FF9C00;
@@ -24,8 +25,19 @@ $secondary_callout: darken($primary_highlight, 5);
 
 /* Grayscale */
 $contrast: #EEE;
+$white: #FFF;
+$dark_white: #FAFAFA;
+$lighter_gray: #DDD;
+$medium_light_grey: #999;
+$medium_grey: #777;
+$medium_dark_grey: #666;
+$dark_grey: #333;
+$black: #000;
 $top_pane: $contrast;
 $total_count_bg: #C0B9B9;
+
+$background_light_grey: #F5F5F5;
+$border_light_grey: #D9D9D9;
 
 /* Feedback to Users */
 $warning: #F7E8AF;
@@ -46,3 +58,5 @@ $recipients_font_color: #AAA;
 $attachment_text: #555;
 $attachment_icon: lighten($attachment_text, 30);
 $attachment_size: lighten($attachment_text, 30);
+$attachment_area_background: #F5F5F5;
+$attachment_area_border: #D9D9D9;

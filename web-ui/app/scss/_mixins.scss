@@ -9,7 +9,7 @@
 
 @mixin tooltip($top: 8px, $left: 40px) {
   background: rgba(0, 0, 0, 0.7);
-  color: #FFF;
+  color: $white;
   position: absolute;
   z-index: 2;
   left: $left;
@@ -22,7 +22,7 @@
 
 @mixin tt-hint {
   .tt-hint {
-    color: #999
+    color: $medium_light_grey
   }
   .tt-dropdown-menu {
     width: 400px;
@@ -36,7 +36,7 @@
     font-size: 18px;
     line-height: 24px;
     &.tt-cursor {
-      background-color: #FFF;
+      background-color: $white;
     }
     p {
       margin: 0;
@@ -46,8 +46,8 @@
 
 // FORM MIXINS
 @mixin check-box {
-  background-color: #FFF;
-  border: 1px solid #CCC;
+  background-color: $white;
+  border: 1px solid $light_gray;
   padding: 7px;
   margin: 3px 0;
   cursor: pointer;
@@ -58,16 +58,16 @@
 
   &:focus {
     outline: none;
-    border-color: #666;
+    border-color: $medium_dark_grey;
   }
 
   &:active, &:checked:active {
   }
 
   &:checked {
-    background-color: #EEE;
-    border: 1px solid darken(#DDD, 10%);
-    color: #333;
+    background-color: $contrast;
+    border: 1px solid darken($lighter_gray, 10%);
+    color: $dark_grey;
   }
 
   &:checked:after {
@@ -84,7 +84,7 @@
   i.tags-label {
     vertical-align: bottom;
     font-size: medium;
-    color: #c2c2c2;
+    color: $light_gray;
   }
 
   ul.tags {
@@ -99,7 +99,7 @@
       @include border-radius(2px);
       &[data-tag="drafts"] {
         color: $attention;
-        background: #EEE;
+        background: $contrast;
       }
       &.tag:hover {
         text-decoration: line-through;
@@ -109,14 +109,14 @@
         opacity: 0.6;
         transition: background-color 150ms ease-out;
         background: transparent;
-        border: 1px solid #DDD;
+        border: 1px solid $lighter_gray;
         line-height: 0;
         padding: 1px 2px;
         margin-left: -5px;
         @include border-radius(2px);
         &:hover {
           opacity: 1;
-          background: #DDD;
+          background: $lighter_gray;
         }
         i {
           &:before {
@@ -221,7 +221,7 @@
 
       .recipient-value {
         &.selected {
-          border: 1px solid #666666;
+          border: 1px solid $medium_dark_grey;
         }
         &:before {
           font-family: FontAwesome;
@@ -255,8 +255,8 @@
         }
         margin: 3px;
         padding: 5px;
-        background-color: #F5F5F5;
-        border: 1px solid #D9D9D9;
+        background-color: $background_light_grey;
+        border: 1px solid $border_light_grey;
         border-radius: 2px;
       }
 
@@ -280,8 +280,8 @@
       }
     }
   input.recipients-input:focus {
-    background-color: #fafafa !important;
-    border-color: #999999;
+    background-color: $dark_white !important;
+    border-color: $medium_light_grey;
     outline: none;
     width: 270px;
   }
@@ -292,13 +292,13 @@
     position: absolute;
     right: 10px;
     padding-right: 15px;
-    padding-left: 15px; 
+    padding-left: 15px;
     font-family: 'FontAwesome';
     font-weight: bolder;
     font-size: larger;
     cursor: pointer;
   }
-  
+
   .collapse + input, .collapse + input + * {
     display:none;
   }

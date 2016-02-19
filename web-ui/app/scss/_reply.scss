@@ -13,7 +13,7 @@
   }
 
   #all-recipients {
-    color: #000;
+    color: $black;
   }
 
   #all-recipients:focus {
@@ -24,8 +24,8 @@
     text-align: center;
     font-weight: 100;
     font-size: 1.1em;
-    background: #FFF;
-    color: #999;
+    background: $white;
+    color: $medium_light_grey;
     padding: 25px;
     margin: 0;
     @include border-radius(0);

@@ -40,7 +40,7 @@
       }
       .headline-area {
         clear: both;
-        border-top: 1px solid #DDD;
+        border-top: 1px solid $lighter_gray;
       }
     }
     h3 {
@@ -72,15 +72,15 @@
   padding: 0 30px;
 
   .attachmentsArea {
-    border-top: 1px solid #DDD;
+    border-top: 1px solid $lighter_gray;
     padding: 10px 0 0;
 
     li {
         position: relative;
         display: block;
-        border: 1px solid #D9D9D9;
+        border: 1px solid $border_light_grey;
         border-radius: 2px;
-        background-color: #F5F5F5;
+        background-color: $background_light_grey;
         margin-bottom: 8px;
 
       a {
@@ -110,7 +110,7 @@
           float: right;
           padding-right: 5px;
           padding-top: 7px;
-          color: #999;
+          color: $medium_light_grey;
         }
       }
     }
@@ -124,7 +124,7 @@
     display: inline-block;
     display: inline;
     line-height: 2em;
-    border: 1px solid #DDD;
+    border: 1px solid $lighter_gray;
     &#reply-button-top {
       @include border-right-radius(0);
       padding: 0 20px;
@@ -145,8 +145,8 @@
     text-align: left;
     display: block;
     position: absolute;
-    background: #FFF;
-    border: 1px solid #DDD;
+    background: $white;
+    border: 1px solid $lighter_gray;
     right: 0;
     top: 40px;
     z-index: 10;

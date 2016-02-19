@@ -10,11 +10,11 @@
 
 
 #logo {
-  color: #FFF;
+  color: $white;
 }
 
 #logout {
-  color: #FFF;
+  color: $white;
 }
 
 .search-highlight {
@@ -31,7 +31,7 @@
     bottom: 0px;
     z-index: 1;
     padding: 10px 16px 10px 18px;
-    background-color: rgba(#3E3A37, 0.9);
+    background-color: rgba($dark_slate_gray, 0.9);
     min-width: 230px;
 
     &.extra-bottom-space{
@@ -61,7 +61,7 @@
 
     p {
       font-size: 1.2em;
-      color: #FF9C00;
+      color: $light_orange;
     }
   }
 }
@@ -75,7 +75,7 @@
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-right-color: rgba(#3E3A37, 0.9);
+  border-right-color: rgba($dark_slate_gray, 0.9);
   margin-top: -20px;
 }
 
@@ -84,7 +84,7 @@
     width: 100%;
     height: 34px;
     margin: 0;
-    border-top: 1px solid #FFF;
+    border-top: 1px solid $white;
     border-bottom: 2px solid lighten($top_pane, 30%);
     background: $top_pane;
     clear: both;
@@ -105,7 +105,7 @@
         margin: 2px;
         padding: 4px 10px;
         background: lighten($contrast, 70%);
-        color: #333;
+        color: $dark_grey;
         text-transform: uppercase;
         font-weight: 400;
         font-size: 0.8em;
@@ -157,7 +157,7 @@
           margin-right: 2px;
         }
         a {
-          color: #333;
+          color: $dark_grey;
           display: block;
           height: 62px;
           margin-top: -8px;
@@ -220,17 +220,17 @@
       &.status-read {
         a {
           font-weight: normal;
-          color: #555;
+          color: $attachment_text;
         }
       }
       &:hover {
         background: darken($contrast, 5%);
       }
       &.selected {
-        background: #FFF;
+        background: $white;
         z-index: 3;
         a {
-          color: #333;
+          color: $dark_grey;
         }
       }
     }
@@ -239,7 +239,7 @@
 
 @mixin mail-count($bg_color) {
   background: $bg_color;
-  color: #FFF;
+  color: $white;
   padding: 2px 5px;
   font-size: 0.7em;
   margin-left: 5px;
@@ -271,7 +271,7 @@ section {
           a {
             transition: background-color 150ms ease-out;
             background: $top_pane;
-            color: #FFF;
+            color: $white;
             font-size: 1.5em;
             display: block;
             padding: 14px 20px;
@@ -312,7 +312,7 @@ section {
         position: absolute;
         padding: 0 10px;
         top: 15px;
-        color: #999;
+        color: $medium_light_grey;
       }
     }
   }
@@ -328,7 +328,7 @@ section {
           padding: 2px 10px;
           cursor: pointer;
           &:hover {
-            background: #CCC;
+            background: $light_gray;
             color: $navigation_background;
           }
           &.selected {
@@ -345,13 +345,13 @@ section {
           padding: 0px 5px 0;
           top: 1px;
           left: 0;
-          border: 1px solid #FFF;
+          border: 1px solid $white;
           border-bottom: 1px solid white;
           position: absolute;
           opacity: 0.95;
         }
         .total-count {
-          background: #999;
+          background: $medium_light_grey;
         }
         span.tag-label {
           padding-left: 2px;
@@ -359,7 +359,7 @@ section {
         li {
           padding: 5px 10px 5px 18px;
           position: relative;
-          @include searching(4px, 19px, #333, 0.7em);
+          @include searching(4px, 19px, $dark_grey, 0.7em);
 
           &:before {
             font-size: 1.5em;
@@ -462,7 +462,7 @@ section {
           background-color: $navigation_background;
           padding: 5px 10px;
           position: relative;
-          @include searching(4px, 19px, #333, 0.7em);
+          @include searching(4px, 19px, $dark_grey, 0.7em);
 
           &:hover {
             color: $navigation_background;
@@ -530,7 +530,7 @@ section {
 
   &#right-pane {
     padding: 0 10px 60px 0px;
-    background: #FFF;
+    background: $white;
     box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.12);
     z-index: 2;
     overflow-y: auto;
@@ -545,7 +545,7 @@ section {
   @include mail-count($secondary_callout);
 }
 .total-count {
-  @include mail-count(#999);
+  @include mail-count($medium_light_grey);
 }
 
 
@@ -579,7 +579,7 @@ section {
 #draft-save-status {
   float: right;
   padding: 0.4rem 1.1rem;
-  color: #91C2D1;
+  color: $lighter_blue;
 }
 
 button {
@@ -588,21 +588,21 @@ button {
     margin-left: 5px;
   }
   &#trash-button {
-    background: #FFF;
-    border: 1px solid #999;
-    color: #999;
+    background: $white;
+    border: 1px solid $medium_light_grey;
+    color: $medium_light_grey;
     float: right;
     margin-left: 5px;
     &:hover, &:focus {
-      background: #EEE;
+      background: $contrast;
     }
   }
   &.close-mail-button {
     background: transparent;
-    color: #999;
+    color: $medium_light_grey;
     float: right;
     &:hover {
-      color: darken(#999, 10%);
+      color: darken($medium_light_grey, 10%);
     }
   }
   &.close-mail-button {
@@ -611,7 +611,7 @@ button {
     top: 0;
     margin: 0;
     padding: 3px 6px 5px;
-    background: #DDD;
+    background: $lighter_gray;
     opacity: 0.7;
     @include border-radius(0);
     &:hover {
@@ -623,7 +623,7 @@ button {
   }
   &.no-style {
     background: transparent;
-    color: #999;
+    color: $medium_light_grey;
     padding: 0;
     margin: 0;
     i {
@@ -686,7 +686,7 @@ button {
           color: $navigation_background;
           }
         }
-      @include searching(6px, 26px, #666, 0.9em);
+      @include searching(6px, 26px, $medium_dark_grey, 0.9em);
       a {
         display: block;
         position: relative;
@@ -699,7 +699,7 @@ button {
           color: $navigation_background;
           @include btn-transition;
           &.logout{
-            color: #000000;
+            color: $black;
             background: $action_buttons;
           }
         }
@@ -713,18 +713,18 @@ button {
         padding: 1px 5px 0;
         top: 1px;
         left: 0;
-        border: 1px solid #FFF;
+        border: 1px solid $white;
         position: absolute;
         opacity: 0.95;
       }
       .total-count {
-        background: #999;
+        background: $medium_light_grey;
       }
     }
   }
   #custom-tags-shortcuts {
     li {
-      border-top: 1px solid #DDD;
+      border-top: 1px solid $lighter_gray;
     }
   }
   div.shortcut-label {

@@ -8,7 +8,7 @@
     padding: 5px;
     #compose-mails-trigger {
       background: $action_buttons;
-      color: #FFF;
+      color: $white;
       padding: 10px 30px;
       text-align: center;
       font-weight: 400;
@@ -61,7 +61,7 @@
     font-weight: bold;
   }
   label.showfloatlabel {
-    color: #64BCD0 !important;
+    color: $light_blue !important;
     top: -0.3rem;
     opacity: 1;
   }
@@ -76,13 +76,13 @@
   input#subject, #feedback-subject {
     font-size: 1.6875rem;
     line-height: 1.4;
-    border-top: 1px solid #DDD;
+    border-top: 1px solid $lighter_gray;
   }
   #feedback-subject {
-    color: #333;
+    color: $dark_grey;
   }
   textarea {
-    border-bottom: 2px solid #DDD;
+    border-bottom: 2px solid $lighter_gray;
     min-height: 400px;
     font-family: inherit;
     font-weight: normal;
@@ -96,7 +96,7 @@
     h4 {
       font-size: 0.9em;
       font-style: italic;
-      color: #777;
+      color: $medium_grey;
       margin: 2px 0;
       clear: both;
       cursor: pointer;
