@@ -1,7 +1,7 @@
 from twisted.web.server import Site, Request
 
 
-class AddCSPHeaderRequest(Request):
+class AddSecurityHeadersRequest(Request):
     CSP_HEADER_VALUES = "default-src 'self'; style-src 'self' 'unsafe-inline'"
 
     def process(self):
@@ -20,11 +20,11 @@ class AddCSPHeaderRequest(Request):
 
 class PixelatedSite(Site):
 
-    requestFactory = AddCSPHeaderRequest
+    requestFactory = AddSecurityHeadersRequest
 
     @classmethod
     def enable_csp_requests(cls):
-        cls.requestFactory = AddCSPHeaderRequest
+        cls.requestFactory = AddSecurityHeadersRequest
 
     @classmethod
     def disable_csp_requests(cls):
