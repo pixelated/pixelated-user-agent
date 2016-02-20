@@ -50,7 +50,7 @@ Type your password:
 ******** (the one you created in previous step)
 ```
 
-6) Connect to the provider using your credentials. If the user agent starts up successfully, you will not see any other output.
+6) Connect to the provider using your credentials, as shown in step 5 above. If the user agent starts up successfully, you will not see any other output.
 
 7) Go to [localhost:3333](http://localhost:3333/). You should see a loading screen for a few seconds, then your inbox. If it sticks on the loading screen, check your terminal for errors, then [get help](https://pixelated-project.org/faq/#contact-the-project).
 
@@ -96,7 +96,8 @@ $ source ~/.virtualenv/pixelated/bin/activate
 ```
 
 If you want to run the tests in your IDE on your host machine outside of vagrant, there's a bug in a LEAP library that can't handle symlinks to your local GPG installation.
-To fix it, add the path to your GPG binary to your $PATH so that it is found before the symlink in `/usr/local/bin` (or similar)
+To fix it, add the path to your GPG binary to your $PATH so that it is found before the symlink in `/usr/local/bin` (or similar).
+See also, installations on native OS [below](#developer-setup-on-native-os).
 
 
 ## How do I see the result of my changes?
@@ -139,7 +140,7 @@ All commits to the pixelated user agent code trigger all tests to be run in [sna
 * `/vagrant/` in the guest OS is mapped to the `pixelated-user-agent/` folder in the host OS. File changes on either side will reflect in the other.
 * First time email sync could be slow, please be patient. This could be the case if you have a lot of emails already and it is the first time you setup the user agent on your machine.
 * CTRL + \ will stop the server.
-* For all backend changes, you will need to stop and [restart the server](#running-the-user-agent).
+* For all backend changes, you will need to stop and restart the server again (Step 5 above).
 * For most frontend changes, you will just need to reload the browser. Some changes (in particular, those involving css or handlebars) you will need to run:
 ```bash
  (user-agent-venv)vagrant@jessie:/vagrant$ cd web-ui
@@ -163,7 +164,7 @@ $ cd pixelated-user-agent && source ~/.virtualenv/user-agent-venv/bin/activate
 
 Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenv/user-agent-venv/bin/activate` first.
 
-Running the user agent ([How to](#running-the-user-agent)), and the various tests ([How to](#running-tests)) are the same as in the vagrant setup above.
+Running the user agent and the various tests are the same as in the vagrant setup in step 5) and 8) above.
 
 ### On Debian distributions
 
@@ -176,7 +177,7 @@ $ cd pixelated-user-agent && source ~/.virtualenv/user-agent-venv/bin/activate
 
 Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenv/user-agent-venv/bin/activate` first.
 
-Running the user agent ([How to](#running-the-user-agent)), and the various tests ([How to](#running-tests)) are the same as in the vagrant setup above.
+Running the user agent and the various tests are the same as in the vagrant setup in step 5) and 8) above.
 
 ## Debian package
 
@@ -191,4 +192,9 @@ apt-key adv --keyserver pool.sks-keyservers.net --recv-key 287A1542472DC0E3
 apt-get update
 
 apt-get install pixelated-user-agent
+```
+
+for multi-user mode, change the last line above to
+```shell
+apt-get install pixelated-server
 ```
