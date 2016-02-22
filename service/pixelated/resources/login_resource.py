@@ -70,6 +70,8 @@ class DisclaimerElement(Element):
             return super(DisclaimerElement, self).render(request)
         except SAXParseException:
             return ["Invalid XML template format for %s." % self._banner_filename]
+        except IOError:
+            return ["Disclaimer banner file %s could not be read or does not exit." % self._banner_filename]
 
 
 class LoginWebSite(Element):

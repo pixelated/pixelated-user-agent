@@ -122,6 +122,23 @@ class TestLoginResource(unittest.TestCase):
         d.addCallback(tear_down)
         return d
 
+    def test_wrong_banner_file_location_will_send_default_invalid_format_banner(self):
+        request = DummyRequest([''])
+
+        non_existing_banner_file = 'banner.txt'
+
+        self.resource._disclaimer_banner = non_existing_banner_file
+
+        d = self.web.get(request)
+
+        def assert_default_invalid_banner_disclaimer_rendered(_):
+            self.assertEqual(200, request.responseCode)
+            written_response = ''.join(request.written)
+            self.assertIn("Disclaimer banner file banner.txt could not be read or does not exit.", written_response)
+
+        d.addCallback(assert_default_invalid_banner_disclaimer_rendered)
+        return d
+
 
 class TestLoginPOST(unittest.TestCase):
     def setUp(self):
