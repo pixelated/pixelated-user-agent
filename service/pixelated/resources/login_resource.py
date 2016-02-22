@@ -16,10 +16,12 @@
 
 import logging
 import os
+from xml.sax import SAXParseException
 
 from twisted.cred import credentials
 from twisted.internet import defer
 from twisted.web import util
+from twisted.web.error import FlattenerError
 from twisted.web.http import UNAUTHORIZED, OK
 from twisted.web.resource import IResource, NoResource
 from twisted.web.server import NOT_DONE_YET
@@ -55,12 +57,19 @@ class DisclaimerElement(Element):
     def __init__(self, banner):
         super(DisclaimerElement, self).__init__()
         self._set_loader(banner)
+        self._banner_filename = banner or "_login_disclaimer_banner.html"
 
     def _set_loader(self, banner):
         if banner:
             current_path = os.path.dirname(os.path.abspath(__file__))
             banner_file_path = os.path.join(current_path, "..", "..", "..", banner)
             self.loader = XMLFile(FilePath(banner_file_path))
+
+    def render(self, request):
+        try:
+            return super(DisclaimerElement, self).render(request)
+        except SAXParseException:
+            return ["Invalid XML template format for %s." % self._banner_filename]
 
 
 class LoginWebSite(Element):

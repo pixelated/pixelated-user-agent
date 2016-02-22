@@ -99,6 +99,29 @@ class TestLoginResource(unittest.TestCase):
         d.addCallback(tear_down)
         return d
 
+    def test_non_xml_compliant_banner_will_send_default_invalid_format_banner(self):
+        request = DummyRequest([''])
+
+        banner_file_name = 'banner.txt'
+        xml_invalid_banner = '<p>some unclosed paragraph'
+        self._write(banner_file_name, xml_invalid_banner)
+
+        self.resource._disclaimer_banner = 'service/_trial_temp/' + banner_file_name
+
+        d = self.web.get(request)
+
+        def assert_default_invalid_banner_disclaimer_rendered(_):
+            self.assertEqual(200, request.responseCode)
+            written_response = ''.join(request.written)
+            self.assertIn("Invalid XML template format for service/_trial_temp/banner.txt.", written_response)
+
+        def tear_down(_):
+            os.remove(banner_file_name)
+
+        d.addCallback(assert_default_invalid_banner_disclaimer_rendered)
+        d.addCallback(tear_down)
+        return d
+
 
 class TestLoginPOST(unittest.TestCase):
     def setUp(self):
