@@ -5,15 +5,18 @@ from twisted.protocols.basic import LineReceiver
 
 
 class TestPixelatedSite(unittest.TestCase):
-    def test_add_csp_header_request(self):
+    def test_add_security_headers(self):
         request = self.create_request()
         request.process()
         headers = request.headers
 
         header_value = "default-src 'self'; style-src 'self' 'unsafe-inline'"
-        self.assertEqual(headers.get("Content-Security-Policy"), header_value)
-        self.assertEqual(headers.get("X-Content-Security-Policy"), header_value)
-        self.assertEqual(headers.get("X-Webkit-CSP"), header_value)
+        self.assertEqual(headers.get('Content-Security-Policy'), header_value)
+        self.assertEqual(headers.get('X-Content-Security-Policy'), header_value)
+        self.assertEqual(headers.get('X-Webkit-CSP'), header_value)
+        self.assertEqual(headers.get('X-Frame-Options'), 'SAMEORIGIN')
+        self.assertEqual(headers.get('X-XSS-Protection'), '1; mode=block')
+        self.assertEqual(headers.get('X-Content-Type-Options'), 'nosniff')
 
     def test_add_strict_transport_security_header_if_secure(self):
         request = self.create_request()
