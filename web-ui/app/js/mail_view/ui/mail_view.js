@@ -51,7 +51,7 @@ define(
         data.mail.security_casing = data.mail.security_casing || {};
         signed = this.checkSigned(data.mail);
         encrypted = this.checkEncrypted(data.mail);
-        attachments = data.mail.attachments.map(function (attachment) { 
+        attachments = data.mail.attachments.map(function (attachment) {
             attachment.received = true;
             return attachment;
         });
@@ -125,7 +125,7 @@ define(
         });
 
         if(hasNoSignatureInformation) {
-          return '';
+          return 'not-signed';
         }
 
         var status = ['signed'];
