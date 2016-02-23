@@ -183,7 +183,7 @@ class MailsResource(BaseResource):
             if isinstance(error.value, SMTPDownException):
                 respond_json_deferred({'message': str(error.value)}, request, status_code=503)
             else:
-                err(error, 'something failed')
+                err(error, 'error occurred while sending')
                 respond_json_deferred({'message': 'an error occurred while sending'}, request, status_code=422)
 
         deferred = self._handle_post(request)
