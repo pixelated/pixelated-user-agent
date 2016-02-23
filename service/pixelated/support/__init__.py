@@ -22,13 +22,34 @@ from twisted.internet import defer
 log = logging.getLogger(__name__)
 
 
+def _start_stopwatch():
+    return (time.time(), time.clock())
+
+
+def _stop_stopwatch(start):
+    start_time, start_clock = start
+    end_clock = time.clock()
+    end_time = time.time()
+    clock_duration = end_clock - start_clock
+    time_duration = end_time - start_time
+    if time_duration < 0.00000001:    # avoid division by zero
+        time_duration = 0.00000001
+
+    estimate_percent_io = ((time_duration - clock_duration) / time_duration) * 100.0
+
+    return time_duration, clock_duration, estimate_percent_io
+
+
 def log_time(f):
 
     @wraps(f)
     def wrapper(*args, **kwds):
-        start = time.clock()
+        start = _start_stopwatch()
+
         result = f(*args, **kwds)
-        log.info('Needed %f ms to execute %s' % ((time.clock() - start), f))
+
+        time_duration, clock_duration, estimate_percent_io = _stop_stopwatch(start)
+        log.info('Needed %fs (%fs cpu time, %.2f%% spent outside process) to execute  %s' % (time_duration, clock_duration, estimate_percent_io, f))
 
         return result
 
@@ -38,12 +59,13 @@ def log_time(f):
 def log_time_deferred(f):
 
     def log_time(result, start):
-        log.info('after callback: Needed %f ms to execute %s' % ((time.clock() - start), f))
+        time_duration, clock_duration, estimate_percent_io = _stop_stopwatch(start)
+        log.info('after callback: Needed %fs (%fs cpu time, %.2f%% spent outside process) to execute  %s' % (time_duration, clock_duration, estimate_percent_io, f))
         return result
 
     @wraps(f)
     def wrapper(*args, **kwds):
-        start = time.clock()
+        start = _start_stopwatch()
         result = f(*args, **kwds)
         if isinstance(result, defer.Deferred):
             result.addCallback(log_time, start=start)
