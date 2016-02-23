@@ -16,7 +16,7 @@
 
 from mock import patch
 from mock import MagicMock
-
+from twisted.internet import defer
 from pixelated.bitmask_libraries.session import LeapSession, SessionCache
 from test_abstract_leap import AbstractLeapTest
 from leap.common.events.catalog import KEYMANAGER_FINISHED_KEY_GENERATION
@@ -28,14 +28,22 @@ class SessionTest(AbstractLeapTest):
         super(SessionTest, self).setUp()
         self.smtp_mock = MagicMock()
 
-    def test_background_jobs_are_started_during_initial_sync(self):
+    @patch('pixelated.bitmask_libraries.session.register')
+    @patch('pixelated.bitmask_libraries.session.IMAPAccount')
+    @defer.inlineCallbacks
+    def test_background_jobs_are_started_during_initial_sync(self, *unused):
+        mailFetcherMock = MagicMock()
         with patch('pixelated.bitmask_libraries.session.reactor.callFromThread', new=_execute_func) as _:
-            with patch('pixelated.bitmask_libraries.session.LeapSession._create_incoming_mail_fetcher') as mail_fetcher_mock:
+            with patch.object(LeapSession, '_create_incoming_mail_fetcher', return_value=mailFetcherMock) as _:
                 session = self._create_session()
                 yield session.initial_sync()
-                mail_fetcher_mock.startService.assert_called_once()
+                mailFetcherMock.startService.assert_called_once()
 
-    def test_that_close_stops_background_jobs(self):
+    @patch('pixelated.bitmask_libraries.session.register')
+    @patch('pixelated.bitmask_libraries.session.unregister')
+    @patch('pixelated.bitmask_libraries.session.IMAPAccount')
+    @defer.inlineCallbacks
+    def test_that_close_stops_background_jobs(self, *unused):
         with patch('pixelated.bitmask_libraries.session.reactor.callFromThread', new=_execute_func) as _:
             with patch('pixelated.bitmask_libraries.session.LeapSession._create_incoming_mail_fetcher') as mail_fetcher_mock:
                 session = self._create_session()
@@ -132,6 +140,19 @@ class SessionTest(AbstractLeapTest):
         session._set_fresh_account(None, 'another_email@somedomain.tld')
 
         self.assertFalse(session.fresh_account)
+
+    @patch('pixelated.bitmask_libraries.session.register')
+    @patch('pixelated.bitmask_libraries.session.unregister')
+    @patch('pixelated.bitmask_libraries.session.IMAPAccount')
+    @defer.inlineCallbacks
+    def test_session_initial_sync_only_triggered_once(self, *unused):
+        mailFetcherMock = MagicMock()
+        with patch('pixelated.bitmask_libraries.session.reactor.callFromThread', new=_execute_func) as _:
+            with patch.object(LeapSession, '_create_incoming_mail_fetcher', return_value=mailFetcherMock) as _:
+                session = self._create_session()
+                session._has_been_synced = True
+                yield session.initial_sync()
+                self.assertFalse(mailFetcherMock.startService.called)
 
     def _create_session(self):
         return LeapSession(self.provider, self.auth, self.mail_store, self.soledad_session, self.nicknym, self.smtp_mock)
