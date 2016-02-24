@@ -82,8 +82,7 @@ class LeapSession(object):
         reactor.callFromThread(self.incoming_mail_fetcher.startService)
 
     def _create_account(self, user_mail, soledad):
-        account = IMAPAccount(user_mail, soledad)
-        return account
+        return IMAPAccount(user_mail, soledad, defer.Deferred())
 
     def _set_fresh_account(self, event, email_address):
         log.debug('Key for email %s has been generated' % email_address)
