@@ -1,13 +1,6 @@
-
-@import "compass/css3";
-@import "colors";
-@import "mixins";
-@import "alerts";
-@import "read";
-@import "reply";
-@import "compose";
-@import "security";
-
+/*
+ * Miscellaneous styles without apparent grouping
+ */
 
 #logo {
   color: $white;
@@ -901,6 +894,3 @@ div.side-nav-bottom {
     cursor: progress;
   }
 }
-
-
-@import "mascot.scss";
