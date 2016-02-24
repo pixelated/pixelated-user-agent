@@ -1,5 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash -x
 
+# Test to make sure we are OSX
+if [ `/usr/bin/env | grep system_name | awk -F= '{print $2}'` != 'OSX' ]
+	then
+		exit $?
+fi
+
+# Read the shell configured for the user and set the variable file accordingly
+if [ `dscl . read ~ UserShell | grep -c bash` -eq 1 ]
+	then 
+		usershellvars='~/.bash_profile'
+elif [ `dscl . read ~ UserShell | grep -c zsh` -eq 1 ]
+	then
+		usershellvars='~/.zshrc'
+
+fi
+	
 function install_compass {
     rbenv install -s 2.2.3
     eval "$(rbenv init -)"
@@ -7,8 +23,8 @@ function install_compass {
     rbenv local 2.2.3
     gem install compass
     export PATH=$PATH:~/.rbenv/versions/2.2.3/bin
-    echo "export PATH=$PATH:~/.rbenv/versions/2.2.3/bin" >> ~/.bash_profile
-    echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
+    echo "export PATH=$PATH:~/.rbenv/versions/2.2.3/bin" >> $usershellvars
+    echo 'eval "$(rbenv init -)"' >> $usershellvars
 }
 
 function install_rbenv {
@@ -30,10 +46,11 @@ function clone_repo {
       cd pixelated-user-agent
     fi
 }
+
 #setup frontend
-install_rbenv
-install_compass
-install_npm
+		install_rbenv
+		install_compass
+		install_npm
 
 #setup backend
 brew install python # force brew install even if python is already installed
