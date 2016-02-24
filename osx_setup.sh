@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -x
+#!/usr/bin/env bash
 
 # Test to make sure we are OSX
 if [ `/usr/bin/env | grep system_name | awk -F= '{print $2}'` != 'OSX' ]
