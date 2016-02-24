@@ -22,7 +22,7 @@ You are most welcome to contribute to the pixelated user agent code base. Please
 2) Clone the repo and start the virtual machine (downloads 600MB):
 
 ```
-$ git clone https://github.com/pixelated-project/pixelated-user-agent.git
+$ git clone https://github.com/pixelated/pixelated-user-agent.git
 $ cd pixelated-user-agent
 $ vagrant up
 ```

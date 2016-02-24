@@ -53,12 +53,20 @@ class LeapSession(object):
         self.fresh_account = False
         self.incoming_mail_fetcher = None
         self.account = None
+        self._has_been_synced = False
+        self._sem_intial_sync = defer.DeferredLock()
         register(events.KEYMANAGER_FINISHED_KEY_GENERATION, self._set_fresh_account, uid=self.account_email())
 
     @defer.inlineCallbacks
     def initial_sync(self):
-        yield self.sync()
-        yield self.after_first_sync()
+        yield self._sem_intial_sync.acquire()
+        try:
+            if not self._has_been_synced:
+                yield self.sync()
+                yield self.after_first_sync()
+                self._has_been_synced = True
+        finally:
+            yield self._sem_intial_sync.release()
         defer.returnValue(self)
 
     @defer.inlineCallbacks

@@ -165,7 +165,7 @@ describeComponent('mail_view/ui/mail_view', function () {
   it('assumes that there is no signature info to show', function() {
     var email = testData;
     email.security_casing = {imprints: [{state: 'no_signature_information'}]};
-    expect(this.component.checkSigned(email)).toEqual('');
+    expect(this.component.checkSigned(email)).toEqual('not-signed');
   });
 
   it('shows that mail is encrypted if it is', function() {
