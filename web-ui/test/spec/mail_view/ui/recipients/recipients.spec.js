@@ -1,5 +1,3 @@
-/* global Pixelated */
-
 describeComponent('mail_view/ui/recipients/recipients',function () {
   'use strict';
   var recipientsUpdatedEvent;

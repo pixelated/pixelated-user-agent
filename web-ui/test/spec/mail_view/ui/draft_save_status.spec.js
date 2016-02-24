@@ -1,5 +1,3 @@
-/* global Pixelated */
-
 describeComponent('mail_view/ui/draft_save_status', function () {
   'use strict';
 

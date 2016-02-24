@@ -1,5 +1,3 @@
-/* global jasmine */
-
 require(['page/router/url_params'], function (urlParams) {
   'use strict';
 
