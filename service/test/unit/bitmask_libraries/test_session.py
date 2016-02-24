@@ -133,6 +133,16 @@ class SessionTest(AbstractLeapTest):
         self.assertTrue(session.fresh_account)
 
     @patch('pixelated.bitmask_libraries.session.register')
+    def test_closed_session_not_reused(self, _):
+        session = self._create_session()
+        SessionCache.remember_session('somekey', session)
+        session._is_closed = True
+
+        result = SessionCache.lookup_session('somekey')
+
+        self.assertIsNone(result)
+
+    @patch('pixelated.bitmask_libraries.session.register')
     def test_session_does_not_set_status_fresh_for_unkown_emails(self, _):
         session = self._create_session()
         self.provider.address_for.return_value = 'someone@somedomain.tld'
@@ -150,7 +160,7 @@ class SessionTest(AbstractLeapTest):
         with patch('pixelated.bitmask_libraries.session.reactor.callFromThread', new=_execute_func) as _:
             with patch.object(LeapSession, '_create_incoming_mail_fetcher', return_value=mailFetcherMock) as _:
                 session = self._create_session()
-                session._has_been_synced = True
+                session._has_been_initially_synced = True
                 yield session.initial_sync()
                 self.assertFalse(mailFetcherMock.startService.called)
 

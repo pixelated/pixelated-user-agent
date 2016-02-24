@@ -41,7 +41,6 @@ log = logging.getLogger(__name__)
 class LeapPasswordChecker(object):
     credentialInterfaces = (
         credentials.IUsernamePassword,
-        credentials.IUsernameHashedPassword
     )
 
     def __init__(self, leap_provider):
