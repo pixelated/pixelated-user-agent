@@ -90,13 +90,6 @@ define(['helpers/view_helper'], function (viewHelper) {
       });
     });
 
-    it('each line of plain text mail gets a new paragraph', function () {
-      var formattedMail = $('<div></div>');
-      formattedMail.html(viewHelper.formatMailBody(testData.parsedMail.simpleTextPlain));
-      expect(formattedMail).toContainHtml('<div>Hello Everyone<br/></div>');
-    });
-
-
     it('escape html in plain text body', function () {
       var formattedMail = $('<div></div>');
       var mail = testData.parsedMail.simpleTextPlain;

@@ -17,12 +17,12 @@
 define(
   [
     'helpers/contenttype',
-    'lib/html_whitelister',
     'views/i18n',
     'quoted-printable/quoted-printable',
-    'utf8/utf8'
+    'utf8/utf8',
+    'helpers/sanitizer'
   ],
-  function(contentType, htmlWhitelister, i18n, quotedPrintable, utf8) {
+  function(contentType, i18n, quotedPrintable, utf8, sanitizer) {
   'use strict';
 
   function formatStatusClasses(ss) {
@@ -31,37 +31,8 @@ define(
     }).join(' ');
   }
 
-  function addParagraphsToPlainText(textPlainBody) {
-    return textPlainBody.replace(/^(.*?)$/mg, '$1<br/>');
-  }
-
-  function escapeHtmlTags(body) {
-
-    var escapeIndex = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      '\'':'&#39;',
-      '/': '&#x2f;'
-    };
-
-    return body.replace(/["'<>\/&]/g, function(char){
-        return escapeIndex[char];
-   });
-
-  }
-
-  function escapeHtmlAndAddParagraphs(body) {
-    var escapedBody = escapeHtmlTags(body);
-    return addParagraphsToPlainText(escapedBody);
-  }
-
   function formatMailBody(mail) {
-    var body = mail.htmlBody ?
-                htmlWhitelister.sanitize(mail.htmlBody, htmlWhitelister.tagPolicy) :
-                escapeHtmlAndAddParagraphs(mail.textPlainBody);
-    return $('<div>' + body + '</div>');
+    return sanitizer.sanitize(mail);
   }
 
   function moveCaretToEnd(el) {

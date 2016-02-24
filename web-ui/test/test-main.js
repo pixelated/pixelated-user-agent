@@ -14,6 +14,8 @@ requirejs.config({
     'lib': 'app/js/lib',
     'hbs': 'app/js/generated/hbs',
     'flight': 'app/bower_components/flight',
+    'DOMPurify': 'app/bower_components/DOMPurify/dist/purify.min',
+    'he': 'app/bower_components/he/he',
     'views': 'app/js/views',
     'helpers': 'app/js/helpers',
     'feedback': 'app/js/feedback',
@@ -34,7 +36,6 @@ requirejs.config({
     'features': 'test/features',
     'user_settings': 'app/js/user_settings'
   },
-
 
   deps: tests,
 

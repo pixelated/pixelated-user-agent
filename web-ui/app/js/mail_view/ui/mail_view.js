@@ -72,6 +72,7 @@ define(
         }));
 
         this.$node.find('.bodyArea').html(viewHelpers.formatMailBody(data.mail));
+
         this.trigger(document, events.search.highlightResults, {where: '.bodyArea'});
         this.trigger(document, events.search.highlightResults, {where: '.subjectArea'});
         this.trigger(document, events.search.highlightResults, {where: '.msg-header .recipients'});
