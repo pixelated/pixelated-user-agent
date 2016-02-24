@@ -99,3 +99,7 @@ class UnAuthorizedResource(Resource):
     def render_GET(self, request):
         request.setResponseCode(UNAUTHORIZED)
         return "Unauthorized!"
+
+    def render_POST(self, request):
+        request.setResponseCode(UNAUTHORIZED)
+        return "Unauthorized!"

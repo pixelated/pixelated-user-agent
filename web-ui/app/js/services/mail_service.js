@@ -246,7 +246,7 @@ define(
             this.trigger(document, events.mails.available, _.merge({tag: this.attr.currentTag, forSearch: this.attr.lastQuery }, this.parseMails(data)));
           }.bind(this))
           .fail(function () {
-            this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n('Could not fetch messages') });
+            this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n('Could not fetch messages'), class: 'error' });
           }.bind(this));
       };
 

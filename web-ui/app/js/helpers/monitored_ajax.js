@@ -36,6 +36,8 @@ define(['page/events', 'views/i18n', 'helpers/browser'], function (events, i18n,
       }
     };
 
+    config.headers = {'X-XSRF-TOKEN': browser.getCookie('XSRF-TOKEN')};
+
     var originalComplete = config.complete;
     config.complete = function () {
       if (originalComplete) {
@@ -46,15 +48,15 @@ define(['page/events', 'views/i18n', 'helpers/browser'], function (events, i18n,
     return $.ajax(url, config).fail(function (xmlhttprequest, textstatus, message) {
       if (!config.skipErrorMessage) {
         var msg = (xmlhttprequest.responseJSON && xmlhttprequest.responseJSON.message) ||
-            messages[textstatus] ||
-            'unexpected problem while talking to server';
-        on.trigger(document, events.ui.userAlerts.displayMessage, {message: i18n(msg)});
+          messages[textstatus] ||
+          'unexpected problem while talking to server';
+        on.trigger(document, events.ui.userAlerts.displayMessage, {message: i18n(msg), class: 'error'});
       }
 
       if (xmlhttprequest.status === 302) {
         var redirectUrl = xmlhttprequest.getResponseHeader('Location');
         browser.redirect(redirectUrl);
-      }else if (xmlhttprequest.status === 401) {
+      } else if (xmlhttprequest.status === 401) {
         browser.redirect('/');
       }
 
