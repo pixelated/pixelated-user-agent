@@ -1,8 +1,9 @@
 <ul id="logout">
-    <a title="logout" href={{logout_url}}>
-    	<li>
+    <form id="logout-form" method="POST" action="{{ logout_url }}">
+        <input type="hidden" name="csrftoken" value="{{ csrf_token }}" />
+        <li>
           <div class="fa fa-sign-out"></div>
           <i class="shortcut-label"></i> Logout
       	</li>
-  	</a>
+    </form>
 </ul>

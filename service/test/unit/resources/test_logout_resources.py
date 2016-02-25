@@ -1,6 +1,7 @@
 from mock import patch
 from mockito import mock, verify
 from twisted.trial import unittest
+from twisted.web.error import UnsupportedMethod
 from twisted.web.test.requesthelper import DummyRequest
 
 from pixelated.resources.logout_resource import LogoutResource
@@ -16,6 +17,7 @@ class TestLogoutResource(unittest.TestCase):
     @patch('twisted.web.util.redirectTo')
     def test_logout(self, mock_redirect):
         request = DummyRequest(['/logout'])
+        request.method = 'POST'
 
         mock_redirect.return_value = 'haha'
 
@@ -29,3 +31,9 @@ class TestLogoutResource(unittest.TestCase):
 
         d.addCallback(expire_session_and_redirect)
         return d
+
+    def test_get_is_not_supported_for_logout(self):
+        request = DummyRequest(['/logout'])
+        request.method = 'GET'
+
+        self.assertRaises(UnsupportedMethod, self.web.get, request)

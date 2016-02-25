@@ -13,10 +13,11 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+import json
+
 from mockito import verify
 from twisted.internet import defer
 
-from test.support.integration import load_mail_from_file
 from test.support.integration.multi_user_client import MultiUserClient
 from test.support.integration.soledad_test_base import SoledadTestBase
 
@@ -34,7 +35,8 @@ class MultiUserLogoutTest(MultiUserClient, SoledadTestBase):
 
         yield self.wait_for_session_user_id_to_finish()
 
-        response, request = self.get("/logout", as_json=False, from_request=login_request)
+        response, request = self.post("/logout", json.dumps({'csrftoken': [login_request.getCookie('XSRF-TOKEN')]}),
+                                      from_request=login_request, as_json=False)
         yield response
 
         self.assertEqual(302, request.responseCode)     # redirected

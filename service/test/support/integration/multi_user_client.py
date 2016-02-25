@@ -82,3 +82,12 @@ class MultiUserClient(AppTestClient):
             session = from_request.getSession()
             request.session = session
         return self._render(request, as_json)
+
+    def post(self, path, body='', headers=None, ajax=True, csrf='token', as_json=True, from_request=None):
+        headers = headers or {'Content-Type': 'application/json'}
+        request = request_mock(path=path, method="POST", body=body, headers=headers, ajax=ajax, csrf=csrf)
+
+        if from_request:
+            session = from_request.getSession()
+            request.session = session
+        return self._render(request, as_json)
