@@ -5,6 +5,7 @@ from mock import MagicMock, patch
 from mockito import mock, when, any as ANY
 
 from pixelated.application import UserAgentMode
+from pixelated.resources.features_resource import FeaturesResource
 from test.unit.resources import DummySite
 from twisted.web.test.requesthelper import DummyRequest
 from pixelated.resources.root_resource import RootResource, MODE_STARTUP, MODE_RUNNING
@@ -90,7 +91,7 @@ class TestRootResource(unittest.TestCase):
         request = DummyRequest(['features'])
 
         request.getCookie = MagicMock(return_value='irrelevant -- stubbed')
-        self.root_resource.initialize()
+        self.root_resource._child_resources.add('features', FeaturesResource())
 
         d = self.web.get(request)
 

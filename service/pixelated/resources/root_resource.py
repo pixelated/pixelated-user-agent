@@ -45,7 +45,7 @@ class RootResource(BaseResource):
         self._static_folder = self._get_static_folder()
         self._html_template = open(os.path.join(self._static_folder, 'index.html')).read()
         self._services_factory = services_factory
-        self.child_resources = ChildResourcesMap()
+        self._child_resources = ChildResourcesMap()
         self._startup_mode()
 
     def _startup_mode(self):
@@ -56,7 +56,7 @@ class RootResource(BaseResource):
         if path == '':
             return self
         if self._is_xsrf_valid(request):
-            return self.child_resources.get(path)
+            return self._child_resources.get(path)
         return UnAuthorizedResource()
 
     def _is_xsrf_valid(self, request):
@@ -75,19 +75,19 @@ class RootResource(BaseResource):
         return csrf_input and csrf_input == xsrf_token
 
     def initialize(self, portal=None, disclaimer_banner=None):
-        self.child_resources.add('assets', File(self._static_folder))
-        self.child_resources.add('keys', KeysResource(self._services_factory))
-        self.child_resources.add(AttachmentsResource.BASE_URL, AttachmentsResource(self._services_factory))
-        self.child_resources.add('contacts', ContactsResource(self._services_factory))
-        self.child_resources.add('features', FeaturesResource(portal))
-        self.child_resources.add('tags', TagsResource(self._services_factory))
-        self.child_resources.add('mails', MailsResource(self._services_factory))
-        self.child_resources.add('mail', MailResource(self._services_factory))
-        self.child_resources.add('feedback', FeedbackResource(self._services_factory))
-        self.child_resources.add('user-settings', UserSettingsResource(self._services_factory))
-        self.child_resources.add(LoginResource.BASE_URL,
-                                 LoginResource(self._services_factory, portal, disclaimer_banner=disclaimer_banner))
-        self.child_resources.add(LogoutResource.BASE_URL, LogoutResource(self._services_factory))
+        self._child_resources.add('assets', File(self._static_folder))
+        self._child_resources.add('keys', KeysResource(self._services_factory))
+        self._child_resources.add(AttachmentsResource.BASE_URL, AttachmentsResource(self._services_factory))
+        self._child_resources.add('contacts', ContactsResource(self._services_factory))
+        self._child_resources.add('features', FeaturesResource(portal))
+        self._child_resources.add('tags', TagsResource(self._services_factory))
+        self._child_resources.add('mails', MailsResource(self._services_factory))
+        self._child_resources.add('mail', MailResource(self._services_factory))
+        self._child_resources.add('feedback', FeedbackResource(self._services_factory))
+        self._child_resources.add('user-settings', UserSettingsResource(self._services_factory))
+        self._child_resources.add(LoginResource.BASE_URL,
+                                  LoginResource(self._services_factory, portal, disclaimer_banner=disclaimer_banner))
+        self._child_resources.add(LogoutResource.BASE_URL, LogoutResource(self._services_factory))
 
         self._mode = MODE_RUNNING
 
