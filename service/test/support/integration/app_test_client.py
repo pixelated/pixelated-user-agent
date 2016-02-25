@@ -244,6 +244,9 @@ class AppTestClient(object):
         time.sleep(1)
         return lambda: process.terminate()
 
+    def stop(self):
+        reactor.stop()
+
     def get(self, path, get_args='', as_json=True, ajax=True, csrf='token'):
         request = request_mock(path, ajax=ajax, csrf=csrf)
         request.args = get_args
