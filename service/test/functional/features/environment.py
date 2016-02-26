@@ -44,11 +44,9 @@ def before_all(context):
     PixelatedSite.disable_csp_requests()
     client = AppTestClient()
     start_app_test_client(client, UserAgentMode(is_single_user=True))
-    client.listenTCP()
-    proxy = Proxy(proxy_port='8889', app_port='4567')
+    client.listenTCP(port=8889)
     FeaturesResource.DISABLED_FEATURES.append('autoRefresh')
     context.client = client
-    context.call_to_terminate_proxy = proxy.run_on_a_thread()
 
     multi_user_client = AppTestClient()
     start_app_test_client(multi_user_client, UserAgentMode(is_single_user=False))
@@ -57,7 +55,7 @@ def before_all(context):
 
 
 def after_all(context):
-    context.call_to_terminate_proxy()
+    context.client.stop()
 
 
 def before_feature(context, feature):

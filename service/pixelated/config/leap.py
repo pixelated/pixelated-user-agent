@@ -1,14 +1,13 @@
 from __future__ import absolute_import
-from leap.common.events import (server as events_server,
-                                register, catalog as events)
+from leap.common.events import (server as events_server)
+from leap.soledad.common.errors import InvalidAuthTokenError
+
 from pixelated.config import credentials
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.session import LeapSessionFactory
 from twisted.internet import defer
-import os
-import logging
 
 import logging
 log = logging.getLogger(__name__)
@@ -39,11 +38,29 @@ def initialize_leap_multi_user(provider_hostname,
     defer.returnValue((config, provider))
 
 
+def _create_session(provider, username, password, auth):
+    return LeapSessionFactory(provider).create(username, password, auth)
+
+
+def _force_close_session(session):
+    try:
+        session.close()
+    except Exception, e:
+        log.error(e)
+
+
 @defer.inlineCallbacks
 def authenticate_user(provider, username, password, initial_sync=True, auth=None):
-    leap_session = LeapSessionFactory(provider).create(username, password, auth)
-    if initial_sync:
-        yield leap_session.initial_sync()
+    leap_session = _create_session(provider, username, password, auth)
+    try:
+        if initial_sync:
+            yield leap_session.initial_sync()
+    except InvalidAuthTokenError:
+        _force_close_session(leap_session)
+
+        leap_session = _create_session(provider, username, password, auth)
+        if initial_sync:
+            yield leap_session.initial_sync()
 
     defer.returnValue(leap_session)
 

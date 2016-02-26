@@ -36,6 +36,8 @@ module.exports = function (config) {
       'node_modules/karma-requirejs/lib/adapter.js',
 
       // loaded with require
+      {pattern: 'app/bower_components/DOMPurify/dist/purify.min.js', included: false},
+      {pattern: 'app/bower_components/he/he.js', included: false},
       {pattern: 'app/bower_components/flight/**/*.js', included: false},
       {pattern: 'app/bower_components/i18next/**/*.js', included: false},
       {pattern: 'app/bower_components/quoted-printable/*.js', included: false},

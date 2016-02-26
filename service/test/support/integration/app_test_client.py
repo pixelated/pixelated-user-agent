@@ -244,22 +244,25 @@ class AppTestClient(object):
         time.sleep(1)
         return lambda: process.terminate()
 
-    def get(self, path, get_args='', as_json=True):
-        request = request_mock(path)
+    def stop(self):
+        reactor.stop()
+
+    def get(self, path, get_args='', as_json=True, ajax=True, csrf='token'):
+        request = request_mock(path, ajax=ajax, csrf=csrf)
         request.args = get_args
         return self._render(request, as_json)
 
-    def post(self, path, body='', headers=None):
+    def post(self, path, body='', headers=None, ajax=True, csrf='token'):
         headers = headers or {'Content-Type': 'application/json'}
-        request = request_mock(path=path, method="POST", body=body, headers=headers)
+        request = request_mock(path=path, method="POST", body=body, headers=headers, ajax=ajax, csrf=csrf)
         return self._render(request)
 
-    def put(self, path, body):
-        request = request_mock(path=path, method="PUT", body=body, headers={'Content-Type': ['application/json']})
+    def put(self, path, body, ajax=True, csrf='token'):
+        request = request_mock(path=path, method="PUT", body=body, headers={'Content-Type': ['application/json']}, ajax=ajax, csrf=csrf)
         return self._render(request)
 
-    def delete(self, path, body=""):
-        request = request_mock(path=path, body=body, headers={'Content-Type': ['application/json']}, method="DELETE")
+    def delete(self, path, body="", ajax=True, csrf='token'):
+        request = request_mock(path=path, body=body, headers={'Content-Type': ['application/json']}, method="DELETE", ajax=ajax, csrf=csrf)
         return self._render(request)
 
     @defer.inlineCallbacks
@@ -322,13 +325,13 @@ class AppTestClient(object):
         defer.returnValue(mails)
 
     @defer.inlineCallbacks
-    def get_attachment(self, ident, encoding, filename=None, content_type=None):
+    def get_attachment(self, ident, encoding, filename=None, content_type=None, ajax=True, csrf='token'):
         params = {'encoding': [encoding]}
         if filename:
             params['filename'] = [filename]
         if content_type:
             params['content_type'] = [content_type]
-        deferred_result, req = self.get("/attachment/%s" % ident, params, as_json=False)
+        deferred_result, req = self.get("/attachment/%s" % ident, params, as_json=False, ajax=ajax, csrf=csrf)
         res = yield deferred_result
         defer.returnValue((res, req))
 

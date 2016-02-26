@@ -1,6 +1,24 @@
 define(['helpers/monitored_ajax'], function (monitoredAjax) {
   'use strict';
   describe('monitoredAjaxCall', function () {
+
+    describe('default configs', function () {
+
+     it('should always attach the xsrf token in the header', function () {
+       var component = { trigger: function () {}};
+       var d = $.Deferred();
+       spyOn($, 'ajax').and.returnValue(d);
+       document.cookie = 'XSRF-TOKEN=ff895ffc45a4ce140bfc5dda6c61d232; i18next=en-us';
+       var anyUrl = '/';
+
+       monitoredAjax(component, anyUrl, {});
+
+       expect($.ajax.calls.mostRecent().args[1].headers).toEqual({ 'X-XSRF-TOKEN' : 'ff895ffc45a4ce140bfc5dda6c61d232' });
+
+     });
+
+     });
+
     describe('when dealing with errors', function () {
 
       _.each(
@@ -19,7 +37,7 @@ define(['helpers/monitored_ajax'], function (monitoredAjax) {
           d.reject({ responseJSON: {}}, errorType, '');
 
           expect(component.trigger).toHaveBeenCalledWith(document, Pixelated.events.ui.userAlerts.displayMessage,
-              { message: errorMessage });
+              { message: errorMessage, class: 'error' });
         });
       });
 
@@ -33,7 +51,7 @@ define(['helpers/monitored_ajax'], function (monitoredAjax) {
         d.reject({ responseJSON: { message: 'Server Message'}}, 'error', '');
 
         expect(component.trigger).toHaveBeenCalledWith(document, Pixelated.events.ui.userAlerts.displayMessage,
-            { message: 'Server Message' });
+            { message: 'Server Message', class: 'error' });
       });
     });
 

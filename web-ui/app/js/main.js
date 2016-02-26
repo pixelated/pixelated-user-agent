@@ -22,6 +22,8 @@ requirejs.config({
     'page': 'js/page',
     'feedback': 'js/feedback',
     'flight': 'bower_components/flight',
+    'DOMPurify': 'bower_components/DOMPurify/dist/purify.min',
+    'he': 'bower_components/he/he',
     'hbs': 'js/generated/hbs',
     'helpers': 'js/helpers',
     'lib': 'js/lib',

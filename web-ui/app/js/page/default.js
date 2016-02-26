@@ -51,6 +51,7 @@ define(
     'mail_view/data/feedback_sender',
     'page/version',
     'page/unread_count_title',
+    'helpers/browser'
   ],
 
   function (
@@ -88,7 +89,8 @@ define(
     feedbackBox,
     feedbackSender,
     version,
-    unreadCountTitle) {
+    unreadCountTitle,
+    browser) {
 
     'use strict';
     function initialize(path) {
@@ -129,6 +131,8 @@ define(
       feedbackSender.attachTo(document);
 
       unreadCountTitle.attachTo(document);
+
+      $.ajaxSetup({headers: {'X-XSRF-TOKEN': browser.getCookie('XSRF-TOKEN')}});
     }
 
     return initialize;

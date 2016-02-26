@@ -1,11 +1,14 @@
 import unittest
 import re
+
+from mock import MagicMock, patch
 from mockito import mock, when, any as ANY
 
 from pixelated.application import UserAgentMode
+from pixelated.resources.features_resource import FeaturesResource
 from test.unit.resources import DummySite
 from twisted.web.test.requesthelper import DummyRequest
-from pixelated.resources.root_resource import RootResource
+from pixelated.resources.root_resource import RootResource, MODE_STARTUP, MODE_RUNNING
 
 
 class TestRootResource(unittest.TestCase):
@@ -25,9 +28,11 @@ class TestRootResource(unittest.TestCase):
         root_resource._html_template = "<html><head><title>$account_email</title></head></html>"
         root_resource._mode = root_resource
         self.web = DummySite(root_resource)
+        self.root_resource = root_resource
 
     def test_render_GET_should_template_account_email(self):
         request = DummyRequest([''])
+        request.addCookie = lambda key, value: 'stubbed'
 
         d = self.web.get(request)
 
@@ -37,4 +42,80 @@ class TestRootResource(unittest.TestCase):
             self.assertEquals(len(matches), 1)
 
         d.addCallback(assert_response)
+        return d
+
+    def _test_should_renew_xsrf_cookie(self):
+        request = DummyRequest([''])
+        request.addCookie = MagicMock()
+        generated_csrf_token = 'csrf_token'
+        mock_sha = MagicMock()
+        mock_sha.hexdigest = MagicMock(return_value=generated_csrf_token)
+
+        with patch('hashlib.sha256', return_value=mock_sha):
+            d = self.web.get(request)
+
+        def assert_csrf_cookie(_):
+            request.addCookie.assert_called_once_with('XSRF-TOKEN', generated_csrf_token)
+
+        d.addCallback(assert_csrf_cookie)
+        return d
+
+    def test_should_renew_xsrf_cookie_on_startup_mode(self):
+        self.root_resource._mode = MODE_STARTUP
+        self._test_should_renew_xsrf_cookie()
+
+    def test_should_renew_xsrf_cookie_on_running_mode(self):
+        self.root_resource._mode = MODE_RUNNING
+        self._test_should_renew_xsrf_cookie()
+
+    def _mock_ajax_csrf(self, request, csrf_token):
+        request.headers['x-requested-with'] = 'XMLHttpRequest'
+        request.headers['x-xsrf-token'] = csrf_token
+
+    def test_should_unauthorize_child_resource_ajax_requests_when_csrf_mismatch(self):
+        request = DummyRequest(['/child'])
+        self._mock_ajax_csrf(request, 'stubbed csrf token')
+
+        request.getCookie = MagicMock(return_value='mismatched csrf token')
+
+        d = self.web.get(request)
+
+        def assert_unauthorized(_):
+            self.assertEqual(401, request.responseCode)
+            self.assertEqual("Unauthorized!", request.written[0])
+
+        d.addCallback(assert_unauthorized)
+        return d
+
+    def test_should_authorize_child_resource_non_ajax_GET_requests(self):
+        request = DummyRequest(['features'])
+
+        request.getCookie = MagicMock(return_value='irrelevant -- stubbed')
+        self.root_resource._child_resources.add('features', FeaturesResource())
+
+        d = self.web.get(request)
+
+        def assert_unauthorized(_):
+            self.assertEqual(200, request.code)
+
+        d.addCallback(assert_unauthorized)
+        return d
+
+    def test_should_unauthorize_child_resource_non_ajax_POST_requests_when_csrf_input_mismatch(self):
+        request = DummyRequest(['mails'])
+        request.method = 'POST'
+        request.addArg('csrftoken', 'some csrf token')
+        mock_content = MagicMock()
+        mock_content.read = MagicMock(return_value={})
+        request.content = mock_content
+
+        request.getCookie = MagicMock(return_value='mismatched csrf token')
+
+        d = self.web.get(request)
+
+        def assert_unauthorized(_):
+            self.assertEqual(401, request.responseCode)
+            self.assertEqual("Unauthorized!", request.written[0])
+
+        d.addCallback(assert_unauthorized)
         return d

@@ -88,6 +88,7 @@ class PixRequestMock(DummyRequest):
         DummyRequest.__init__(self, path)
         self.content = None
         self.code = None
+        self.cookies = {}
 
     def getWrittenData(self):
         if len(self.written):
@@ -97,8 +98,14 @@ class PixRequestMock(DummyRequest):
         self.setResponseCode(302)
         self.setHeader(b"location", url)
 
+    def addCookie(self, key, value):
+        self.cookies[key] = value
 
-def request_mock(path='', method='GET', body='', headers={}):
+    def getCookie(self, key):
+        return self.cookies.get(key)
+
+
+def request_mock(path='', method='GET', body='', headers={}, ajax=True, csrf='token'):
     dummy = PixRequestMock(path.split('/'))
     for name, val in headers.iteritems():
         dummy.headers[name.lower()] = val
@@ -108,5 +115,9 @@ def request_mock(path='', method='GET', body='', headers={}):
     else:
         for key, val in body.items():
             dummy.addArg(key, val)
+    if ajax:
+        dummy.headers['x-requested-with'] = 'XMLHttpRequest'
+        dummy.headers['x-xsrf-token'] = csrf
+        dummy.addCookie('XSRF-TOKEN', csrf)
 
     return dummy

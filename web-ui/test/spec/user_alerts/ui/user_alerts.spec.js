@@ -1,5 +1,3 @@
-/* global Pixelated */
-
 describeComponent('user_alerts/ui/user_alerts', function () {
   'use strict';
 

@@ -53,18 +53,19 @@ class LeapSession(object):
         self.fresh_account = False
         self.incoming_mail_fetcher = None
         self.account = None
-        self._has_been_synced = False
+        self._has_been_initially_synced = False
         self._sem_intial_sync = defer.DeferredLock()
+        self._is_closed = False
         register(events.KEYMANAGER_FINISHED_KEY_GENERATION, self._set_fresh_account, uid=self.account_email())
 
     @defer.inlineCallbacks
     def initial_sync(self):
         yield self._sem_intial_sync.acquire()
         try:
-            if not self._has_been_synced:
-                yield self.sync()
+            yield self.sync()
+            if not self._has_been_initially_synced:
                 yield self.after_first_sync()
-                self._has_been_synced = True
+                self._has_been_initially_synced = True
         finally:
             yield self._sem_intial_sync.release()
         defer.returnValue(self)
@@ -81,8 +82,7 @@ class LeapSession(object):
         reactor.callFromThread(self.incoming_mail_fetcher.startService)
 
     def _create_account(self, user_mail, soledad):
-        account = IMAPAccount(user_mail, soledad)
-        return account
+        return IMAPAccount(user_mail, soledad, defer.Deferred())
 
     def _set_fresh_account(self, event, email_address):
         log.debug('Key for email %s has been generated' % email_address)
@@ -94,11 +94,16 @@ class LeapSession(object):
         return self.provider.address_for(name)
 
     def close(self):
+        self._is_closed = True
         self.stop_background_jobs()
         unregister(events.KEYMANAGER_FINISHED_KEY_GENERATION, uid=self.account_email())
         self.soledad.close()
         self.remove_from_cache()
         self._close_account()
+
+    @property
+    def is_closed(self):
+        return self._is_closed
 
     def _close_account(self):
         if self.account:
@@ -284,7 +289,12 @@ class SessionCache(object):
 
     @staticmethod
     def lookup_session(key):
-        return SessionCache.sessions.get(key, None)
+        session = SessionCache.sessions.get(key, None)
+        if session is not None and session.is_closed:
+            SessionCache.remove_session(key)
+            return None
+        else:
+            return session
 
     @staticmethod
     def remember_session(key, session):

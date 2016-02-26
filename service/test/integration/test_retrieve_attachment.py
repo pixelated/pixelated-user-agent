@@ -43,6 +43,23 @@ class RetrieveAttachmentTest(SoledadTestBase):
         self.assertEquals(expected_content_disposition, req.outgoingHeaders['content-disposition'])
         self.assertEquals(expected_content_type, req.outgoingHeaders['content-type'])
 
+    @defer.inlineCallbacks
+    def test_should_retrieve_attachment_even_if_xsrf_token_not_passed(self):
+        attachment_id, input_mail = self._create_mail_with_attachment()
+        yield self.mail_store.add_mail('INBOX', input_mail.as_string())
+
+        requested_filename = "file name with space"
+        expected_content_type = 'text/plain'
+        expected_content_disposition = 'attachment; filename="file name with space"'
+
+        attachment, req = yield self.get_attachment(attachment_id, 'base64', filename=requested_filename,
+                                                    content_type=expected_content_type, ajax=False, csrf='mismatched token')
+
+        self.assertEqual(200, req.code)
+        self.assertEquals('pretend to be binary attachment data', attachment)
+        self.assertEquals(expected_content_disposition, req.outgoingHeaders['content-disposition'])
+        self.assertEquals(expected_content_type, req.outgoingHeaders['content-type'])
+
     def _create_mail_with_attachment(self):
         input_mail = MIMEMultipart()
         input_mail.attach(MIMEText(u'a utf8 message', _charset='utf-8'))

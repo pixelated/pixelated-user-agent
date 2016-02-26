@@ -8,7 +8,7 @@ class LogoutResource(BaseResource):
     BASE_URL = "logout"
     isLeaf = True
 
-    def render_GET(self, request):
+    def render_POST(self, request):
         session = self.get_session(request)
         self._services_factory.log_out_user(session.user_uuid)
         session.expire()

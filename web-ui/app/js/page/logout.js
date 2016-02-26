@@ -14,19 +14,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-define(['flight/lib/component', 'features', 'views/templates'], function (defineComponent, features, templates) {
+define(['flight/lib/component', 'features', 'views/templates', 'helpers/browser'],
+ function (defineComponent, features, templates, browser) {
   'use strict';
 
   return defineComponent(function () {
 
+    this.defaultAttrs({form: '#logout-form'});
+
     this.render = function () {
-      var logoutHTML = templates.page.logout({ logout_url: features.getLogoutUrl() });
+      var logoutHTML = templates.page.logout({ logout_url: features.getLogoutUrl(),
+       csrf_token: browser.getCookie('XSRF-TOKEN')});
       this.$node.html(logoutHTML);
+    };
+
+    this.logout = function(){
+      this.select('form').submit();
     };
 
     this.after('initialize', function () {
       if (features.isLogoutEnabled()) {
 	      this.render();
+	      this.on(this.$node, 'click', this.logout);
       }
     });
 

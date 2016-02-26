@@ -1,5 +1,3 @@
-/* global Pixelated */
-
 define(['mail_view/ui/recipients/recipients_iterator'], function (RecipientsIterator) {
   'use strict';
 
