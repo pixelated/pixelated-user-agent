@@ -71,7 +71,51 @@ define(
           attachments: attachments
         }));
 
-        this.$node.find('.bodyArea').html(viewHelpers.formatMailBody(data.mail));
+        var $iframe = $("#read-sandbox");
+        var iframe = $iframe[0];
+
+        var content = viewHelpers.formatMailBody(data.mail);
+
+        iframe.onload = function() {
+          // use iframe-resizer to dynamically adapt iframe size to its content
+          var config = {
+            resizedCallback: scaleToFit,
+            checkOrigin: false
+          };
+          $iframe.iFrameResize(config);
+
+          // transform scale iframe to fit container width
+          // necessary if iframe is wider than container
+          function scaleToFit() {
+              var parentWidth = $iframe.parent().width();
+              var w = $iframe.width();
+              var scale = 'none';
+
+              // only scale html mails
+              var mail = data.mail;
+              if (mail && mail.htmlBody && (w > parentWidth)) {
+                  scale = parentWidth / w;
+                  scale = 'scale(' + scale + ',' + scale + ')';
+              }
+
+              $iframe.css({
+                  '-webkit-transform-origin': '0 0',
+                  '-moz-transform-origin': '0 0',
+                  '-ms-transform-origin': '0 0',
+                  'transform-origin': '0 0',
+                  '-webkit-transform': scale,
+                  '-moz-transform': scale,
+                  '-ms-transform': scale,
+                  'transform': scale
+              });
+          }
+
+          iframe.contentWindow.postMessage({
+            html: content
+          }, '*');
+        };
+
+
 
         this.trigger(document, events.search.highlightResults, {where: '.bodyArea'});
         this.trigger(document, events.search.highlightResults, {where: '.subjectArea'});
