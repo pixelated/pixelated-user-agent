@@ -1,21 +1,27 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Test to make sure we are OSX
-if [ `/usr/bin/env | grep system_name | awk -F= '{print $2}'` != 'OSX' ]
-	then
-		exit $?
+if [ $(uname) != 'Darwin' ]
+then
+	echo "This script should run only on an OSX system!"
+	exit 1
 fi
 
 # Read the shell configured for the user and set the variable file accordingly
-if [ `dscl . read ~ UserShell | grep -c bash` -eq 1 ]
-	then 
-		usershellvars='~/.bash_profile'
-elif [ `dscl . read ~ UserShell | grep -c zsh` -eq 1 ]
-	then
-		usershellvars='~/.zshrc'
+function current_shell {
+	case $SHELL in
+	    *bash)
+			echo ~/.bash_profile
+		;;
 
-fi
-	
+		*zsh)
+			echo ~/.zshrc
+		;;
+		
+		#Other shells can go here
+	esac
+}	
+
 function install_compass {
     rbenv install -s 2.2.3
     eval "$(rbenv init -)"
@@ -23,8 +29,8 @@ function install_compass {
     rbenv local 2.2.3
     gem install compass
     export PATH=$PATH:~/.rbenv/versions/2.2.3/bin
-    echo "export PATH=$PATH:~/.rbenv/versions/2.2.3/bin" >> $usershellvars
-    echo 'eval "$(rbenv init -)"' >> $usershellvars
+    echo "export PATH=$PATH:~/.rbenv/versions/2.2.3/bin" >> $(current_shell)
+    echo 'eval "$(rbenv init -)"' >> $(current_shell)
 }
 
 function install_rbenv {
@@ -48,12 +54,12 @@ function clone_repo {
 }
 
 #setup frontend
-		install_rbenv
-		install_compass
-		install_npm
+install_rbenv
+install_compass
+install_npm
 
 #setup backend
-brew install python # force brew install even if python is already installed
+brew install python # force brew install even if python is already install
 export  LDFLAGS=-L/usr/local/opt/openssl/lib
 export  LDFLAGS=-L/usr/local/opt/openssl/lib
 pip install virtualenv
