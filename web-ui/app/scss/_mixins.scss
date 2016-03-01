@@ -310,7 +310,7 @@
 
 @mixin logo {
   @keyframes hideshow {
-  0% { fill: #2ba6cb; }
+  0% { fill: lighten($logo_color, 30); }
   25% { opacity: 1; }
   100% { opacity: 0; }
 } 
