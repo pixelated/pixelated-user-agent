@@ -308,4 +308,35 @@
   }
 }
 
+@mixin logo {
+  @keyframes hideshow {
+  0% { fill: #2ba6cb; }
+  25% { opacity: 1; }
+  100% { opacity: 0; }
+} 
+
+.logo-part {
+  animation: hideshow 0.6s ease infinite;
+  opacity: 1;
+
+  &:nth-child(2) {
+    opacity: 0;
+    animation-delay: 0.1s;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+  &:nth-child(4) {
+    animation-delay: 0.3s;
+  }
+  &:nth-child(5) {
+    animation-delay: 0.4s;
+  }
+  &:nth-child(6) {
+    animation-delay: 0.5s;
+  }
+}
+}
+
 @include tt-hint;
