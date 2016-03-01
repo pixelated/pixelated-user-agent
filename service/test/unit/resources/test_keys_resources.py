@@ -44,20 +44,16 @@ class TestKeysResource(unittest.TestCase):
         d = self.web.get(request)
 
         expected = {
-            "tags": ["keymanager-key"],
-            "fingerprint": '',
-            "private": False,
-            'sign_used': False,
-            'refreshed_at': 0,
-            "expiry_date": 0,
-            "address": 'some@key',
-            'encr_used': False,
-            'last_audited_at': 0,
-            'key_data': '',
-            'length': 0,
-            'key_id': '',
-            'validation': 'Weak_Chain',
-            'type': 'OpenPGPKey',
+            u'address': u'some@key',
+            u'encr_used': False,
+            u'fingerprint': u'',
+            u'last_audited_at': 0,
+            u'private': False,
+            u'sign_used': False,
+            u'tags': [u'keymanager-active'],
+            u'type': u'OpenPGPKey-active',
+            u'validation': u'Weak_Chain',
+            u'version': 1,
         }
 
         def assert_response(_):
