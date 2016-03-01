@@ -117,7 +117,6 @@ define(
 
 
 
-        this.trigger(document, events.search.highlightResults, {where: '.bodyArea'});
         this.trigger(document, events.search.highlightResults, {where: '.subjectArea'});
         this.trigger(document, events.search.highlightResults, {where: '.msg-header .recipients'});
         this.trigger(document, events.ui.replyBox.showReplyContainer);
