@@ -79,7 +79,8 @@ define(function () {
       },
       replyBox: {
         showReply: 'ui:replyBox:showReply',
-        showReplyAll: 'ui:replyBox:showReplyAll'
+        showReplyAll: 'ui:replyBox:showReplyAll',
+        showReplyContainer: 'ui:replyBox:showReplyContainer',
       },
       recipients: {
         entered: 'ui:recipients:entered',

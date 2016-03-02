@@ -5,6 +5,18 @@ describeComponent('mail_view/ui/reply_section', function () {
     this.setupComponent();
   });
 
+  describe('show/hide reply container', function () {
+    it('should hide reply container until mail data is loaded', function () {
+      this.component.checkForDraftReply();
+      expect(this.component.select('replyContainer')).toBeHidden();
+    });
+
+    it('should show reply container when mail data is loaded', function () {
+      this.component.trigger(document, Pixelated.events.ui.replyBox.showReplyContainer);
+      expect(this.component.select('replyContainer')).not.toBeHidden();
+    });
+  });
+
   describe('clicking reply buttons', function() {
     var mailWantEvent, expectEventData;
 
@@ -45,6 +57,7 @@ describeComponent('mail_view/ui/reply_section', function () {
       this.component.attr.replyType = 'reply';
       this.component.trigger(this.component, Pixelated.events.mail.here, { mail: mailData });
 
+      expect(this.component.select('replyContainer')).not.toBeHidden();
       expect(ReplyBox.attachTo).toHaveBeenCalledWith(jasmine.any(Object), {
         mail: mailData,
         replyType: 'reply'
@@ -55,6 +68,7 @@ describeComponent('mail_view/ui/reply_section', function () {
       this.component.attr.replyType = 'replyall';
       this.component.trigger(this.component, Pixelated.events.mail.here, { mail: mailData });
 
+      expect(this.component.select('replyContainer')).not.toBeHidden();
       expect(ReplyBox.attachTo).toHaveBeenCalledWith(jasmine.any(Object), {
         mail: mailData,
         replyType: 'replyall'
@@ -65,6 +79,7 @@ describeComponent('mail_view/ui/reply_section', function () {
       this.component.attr.replyType = 'forward';
       this.component.trigger(this.component, Pixelated.events.mail.here, { mail: mailData });
 
+      expect(this.component.select('replyContainer')).not.toBeHidden();
       expect(ForwardBox.attachTo).toHaveBeenCalledWith(jasmine.any(Object), {
         mail: mailData
       });
@@ -87,6 +102,7 @@ describeComponent('mail_view/ui/reply_section', function () {
 
     $(document).trigger(Pixelated.events.ui.composeBox.trashReply);
 
+    expect(this.component.select('replyContainer')).not.toBeHidden();
     expect(this.component.select('replyButton')).not.toBeHidden();
     expect(this.component.select('replyAllButton')).not.toBeHidden();
     expect(this.component.select('forwardButton')).not.toBeHidden();
