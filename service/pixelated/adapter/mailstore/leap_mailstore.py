@@ -27,6 +27,7 @@ from pixelated.adapter.mailstore.mailstore import MailStore, underscore_uuid
 from pixelated.adapter.model.mail import Mail, InputMail
 from pixelated.support import log_time_deferred
 from pixelated.support.functional import to_unicode
+from pixelated.support import date
 
 
 MIME_PGP_KEY = 'application/pgp-keys'
