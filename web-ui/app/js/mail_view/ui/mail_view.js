@@ -257,9 +257,17 @@ define(
         this.trigger(events.mail.want, {mail: this.attr.ident, caller: this});
       };
 
+      this.highlightMailContent = function (event, data) {
+        // we can't directly manipulate the iFrame to highlight the content
+        // so we need to take an indirection where we directly manipulate
+        // the mail content to accomodate the highlighting
+        this.trigger(document, events.mail.highlightMailContent, data);
+      };
+
       this.after('initialize', function () {
-        this.on(this, events.mail.here, this.displayMail);
         this.on(this, events.mail.notFound, this.openNoMessageSelectedPane);
+        this.on(this, events.mail.here, this.highlightMailContent);
+        this.on(document, events.mail.display, this.displayMail);
         this.on(document, events.dispatchers.rightPane.clear, this.teardown);
         this.on(document, events.mail.tags.updated, this.tagsUpdated);
         this.on(document, events.mail.deleted, this.mailDeleted);

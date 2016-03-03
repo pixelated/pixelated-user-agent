@@ -21,6 +21,12 @@ describeComponent('mail_view/ui/mail_view', function () {
     expect(spyEvent.mostRecentCall.data.mail).toEqual(1);
   });
 
+  it('triggers mail.highlightMailContent when receiving mail.here', function () {
+    var hightlightEvent = spyOnEvent(document,Pixelated.events.mail.highlightMailContent);
+    this.component.trigger(this.component, Pixelated.events.mail.here);
+    expect(hightlightEvent).toHaveBeenTriggeredOn(document);
+  });
+
   it('triggers dispatchers.rightPane.openNoMessageSelected when getting mail.notFound', function () {
     var openNoMessageSelectedEvent = spyOnEvent(document, Pixelated.events.dispatchers.rightPane.openNoMessageSelected);
 

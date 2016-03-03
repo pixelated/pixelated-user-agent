@@ -121,6 +121,8 @@ define(function () {
     mail: {
       here: 'mail:here',
       want: 'mail:want',
+      display: 'mail:display',
+      highlightMailContent: 'mail:highlightMailContent',
       send: 'mail:send',
       send_failed: 'mail:send_failed',
       sent: 'mail:sent',
