@@ -17,7 +17,7 @@ class KeysResource(BaseResource):
             if key.private:
                 respond_json_deferred(None, request, status_code=401)
             else:
-                respond_json_deferred(key.get_json(), request)
+                respond_json_deferred(key.get_active_json(), request)
 
         def key_not_found(_):
             respond_json_deferred(None, request, status_code=404)

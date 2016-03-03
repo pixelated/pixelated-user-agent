@@ -30,6 +30,7 @@ from whoosh.writing import AsyncWriter
 from whoosh import sorting
 from pixelated.support.functional import unique, to_unicode
 import traceback
+from pixelated.support import date
 
 
 class SearchEngine(object):
@@ -128,7 +129,7 @@ class SearchEngine(object):
         index_data = {
             'sender': self._empty_string_to_none(header.get('from', '')),
             'subject': self._empty_string_to_none(header.get('subject', '')),
-            'date': self._format_utc_integer(header.get('date', '')),
+            'date': self._format_utc_integer(header.get('date', date.mail_date_now())),
             'to': self._format_recipient(header, 'to'),
             'cc': self._format_recipient(header, 'cc'),
             'bcc': self._format_recipient(header, 'bcc'),

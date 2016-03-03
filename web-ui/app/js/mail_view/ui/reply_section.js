@@ -36,7 +36,8 @@ define(
         replyAllButton: '#reply-all-button',
         forwardButton: '#forward-button',
         replyBox: '#reply-box',
-        replyType: 'reply'
+        replyType: 'reply',
+        replyContainer: '.reply-container'
       });
 
       this.showReply = function() {
@@ -64,9 +65,7 @@ define(
 
       this.checkForDraftReply = function() {
         this.render();
-        this.select('replyButton').hide();
-        this.select('replyAllButton').hide();
-        this.select('forwardButton').hide();
+        this.hideContainer();
 
         this.trigger(document, events.mail.draftReply.want, {ident: this.attr.ident});
       };
@@ -76,17 +75,27 @@ define(
       };
 
       this.showDraftReply = function(ev, data) {
+        this.showContainer();
         this.hideButtons();
         ReplyBox.attachTo(this.select('replyBox'), { mail: data.mail, draftReply: true });
       };
 
       this.showReplyComposeBox = function (ev, data) {
+        this.showContainer();
         this.hideButtons();
         if(this.attr.replyType === 'forward') {
           ForwardBox.attachTo(this.select('replyBox'), { mail: data.mail });
         } else {
           ReplyBox.attachTo(this.select('replyBox'), { mail: data.mail, replyType: this.attr.replyType });
         }
+      };
+
+      this.hideContainer = function() {
+        this.select('replyContainer').hide();
+      };
+
+      this.showContainer = function() {
+        this.select('replyContainer').show();
       };
 
       this.hideButtons = function() {
@@ -96,6 +105,7 @@ define(
       };
 
       this.showButtons = function () {
+        this.showContainer();
         this.select('replyBox').empty();
         this.select('replyButton').show();
         this.select('replyAllButton').show();
@@ -109,7 +119,7 @@ define(
         this.on(this, events.mail.here, this.showReplyComposeBox);
         this.on(document, events.dispatchers.rightPane.clear, this.teardown);
 
-        this.on(document, events.mail.draftReply.notFound, this.showButtons);
+        this.on(document, events.ui.replyBox.showReplyContainer, this.showContainer);
         this.on(document, events.mail.draftReply.here, this.showDraftReply);
 
         this.checkForDraftReply();

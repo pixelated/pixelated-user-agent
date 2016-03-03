@@ -20,6 +20,7 @@ import unittest
 from pixelated.adapter.mailstore.leap_mailstore import LeapMail
 from pixelated.adapter.search import SearchEngine
 from tempdir import TempDir
+from datetime import datetime
 from test.support import test_helper
 
 from pixelated.support.functional import to_unicode
@@ -57,6 +58,7 @@ class SearchEngineTest(unittest.TestCase):
             'To': '=?utf-8?b?IsOEw7zDtiDDlsO8w6QiIDxmb2xrZXJAcGl4ZWxhdGVkLXByb2plY3Qub3Jn?=\n =?utf-8?b?PiwgRsO2bGtlciA8Zm9sa2VyQHBpeGVsYXRlZC1wcm9qZWN0Lm9yZz4=?=',
             'Cc': '=?utf-8?b?IsOEw7zDtiDDlsO8w6QiIDxmb2xrZXJAcGl4ZWxhdGVkLXByb2plY3Qub3Jn?=\n =?utf-8?b?PiwgRsO2bGtlciA8Zm9sa2VyQHBpeGVsYXRlZC1wcm9qZWN0Lm9yZz4=?=',
             'Subject': 'Some test mail',
+            'Date': str(datetime.now())
         }
 
         # when
@@ -75,6 +77,7 @@ class SearchEngineTest(unittest.TestCase):
             'To': '=?utf-8?b?IsOEw7zDtiDDlsO8w6QiIDxmb2xrZXJAcGl4ZWxhdGVkLXByb2plY3Qub3Jn?=\n =?utf-8?b?PiwgRsO2bGtlciA8Zm9sa2VyQHBpeGVsYXRlZC1wcm9qZWN0Lm9yZz4=?=',
             'Cc': '=?utf-8?b?IsOEw7zDtiDDlsO8w6QiIDxmb2xrZXJAcGl4ZWxhdGVkLXByb2plY3Qub3Jn?=\n =?utf-8?b?PiwgRsO2bGtlciA8Zm9sa2VyQHBpeGVsYXRlZC1wcm9qZWN0Lm9yZz4=?=',
             'Subject': 'Some test mail',
+            'Date': str(datetime.now())
         }
 
         body = "When doing the search, it's not possible to find words with graphical accents, e.g.: 'coração', 'é',  'Fièvre', La Pluie d'été, 'não'."
@@ -100,6 +103,7 @@ class SearchEngineTest(unittest.TestCase):
             'To': '=?utf-8?b?IsOEw7zDtiDDlsO8w6QiIDxmb2xrZXJAcGl4ZWxhdGVkLXByb2plY3Qub3Jn?=\n =?utf-8?b?PiwgRsO2bGtlciA8Zm9sa2VyQHBpeGVsYXRlZC1wcm9qZWN0Lm9yZz4=?=',
             'Cc': '=?utf-8?b?IsOEw7zDtiDDlsO8w6QiIDxmb2xrZXJAcGl4ZWxhdGVkLXByb2plY3Qub3Jn?=\n =?utf-8?b?PiwgRsO2bGtlciA8Zm9sa2VyQHBpeGVsYXRlZC1wcm9qZWN0Lm9yZz4=?=',
             'Subject': 'Some test mail',
+            'Date': str(datetime.now())
         }
 
         body = "When doing the search, 您好  أهلا"

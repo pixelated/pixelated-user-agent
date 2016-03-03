@@ -29,6 +29,11 @@ describeComponent('mail_view/ui/mail_view', function () {
     expect(openNoMessageSelectedEvent).toHaveBeenTriggeredOn(document);
   });
 
+  it('should open reply container', function () {
+    var showContainerEvent = spyOnEvent(document, Pixelated.events.ui.replyBox.showReplyContainer);
+    this.component.displayMail({}, testData);
+    expect(showContainerEvent).toHaveBeenTriggeredOn(document);
+  });
 
   it('removes the tag from the mail when the tag label is clicked', function() {
     var updateSpy = spyOnEvent(document, Pixelated.events.mail.tags.update);
