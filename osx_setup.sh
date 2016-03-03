@@ -3,23 +3,28 @@
 # Test to make sure we are OSX
 if [ $(uname) != 'Darwin' ]
 then
-	echo "This script should run only on an OSX system!"
-	exit 1
+    echo "This script should run only on an OSX system!"
+    exit 1
 fi
 
 # Read the shell configured for the user and set the variable file accordingly
 function current_shell {
-	case $SHELL in
-	    *bash)
-			echo ~/.bash_profile
-		;;
+    case $SHELL in
+        *bash)
+            echo ~/.bash_profile
+        ;;
 
-		*zsh)
-			echo ~/.zshrc
-		;;
+        *zsh)
+            echo ~/.zprofile
+        ;;
+		
+        /bin/sh
+            echo ~/.profile
+        ;;
+        
 		
 		#Other shells can go here
-	esac
+    esac
 }	
 
 function install_compass {
