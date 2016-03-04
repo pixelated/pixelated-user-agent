@@ -17,15 +17,15 @@ function current_shell {
         *zsh)
             echo ~/.zprofile
         ;;
-		
+        
         /bin/sh
             echo ~/.profile
         ;;
         
-		
-		#Other shells can go here
+        
+        #Other shells can go here
     esac
-}	
+}   
 
 function install_compass {
     rbenv install -s 2.2.3
