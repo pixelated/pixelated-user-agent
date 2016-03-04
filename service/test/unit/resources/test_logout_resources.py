@@ -1,6 +1,6 @@
-from mock import patch
-from mockito import mock, verify
+from mock import patch, MagicMock
 from twisted.trial import unittest
+from twisted.internet import defer
 from twisted.web.error import UnsupportedMethod
 from twisted.web.test.requesthelper import DummyRequest
 
@@ -10,8 +10,9 @@ from test.unit.resources import DummySite
 
 class TestLogoutResource(unittest.TestCase):
     def setUp(self):
-        self.services_factory = mock()
+        self.services_factory = MagicMock()
         self.resource = LogoutResource(self.services_factory)
+        self.services_factory.log_out_user.return_value = defer.succeed(None)
         self.web = DummySite(self.resource)
 
     @patch('twisted.web.util.redirectTo')
@@ -19,14 +20,16 @@ class TestLogoutResource(unittest.TestCase):
         request = DummyRequest(['/logout'])
         request.method = 'POST'
 
-        mock_redirect.return_value = 'haha'
+        session = self.resource.get_session(request)
+        session.expire = MagicMock()
+        mock_redirect.return_value = 'some redirect response'
 
         d = self.web.get(request)
 
         def expire_session_and_redirect(_):
             session = self.resource.get_session(request)
-            self.assertFalse(session.is_logged_in())
-            verify(self.services_factory).log_out_user(session.user_uuid)
+            self.services_factory.log_out_user.assert_called_once_with(session.user_uuid)
+            session.expire.assert_called_once_with()
             mock_redirect.assert_called_once_with('/login', request)
 
         d.addCallback(expire_session_and_redirect)
