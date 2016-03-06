@@ -22,7 +22,9 @@ function current_shell {
             echo ~/.profile
         ;;
         
-        
+        *)
+            echo "Your shell isn't supported yet!"
+        ;;
         #Other shells can go here
     esac
 }   
