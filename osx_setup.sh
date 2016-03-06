@@ -11,15 +11,15 @@ fi
 function current_shell {
     case $SHELL in
         *bash)
-            echo ~/.bash_profile
+          echo ~/.bash_profile
         ;;
 
         *zsh)
-            echo ~/.zprofile
+          echo ~/.zprofile
         ;;
-        
-        /bin/sh
-            echo ~/.profile
+
+        /bin/sh)
+          echo ~/.profile
         ;;
         
         *)
@@ -28,7 +28,7 @@ function current_shell {
 
         #Other shells can go here
     esac
-}   
+}
 
 function install_compass {
     rbenv install -s 2.2.3
