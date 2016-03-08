@@ -3,10 +3,11 @@
   clear: both;
   span {
     display: inline-block;
-    padding: 2px 5px;
+    padding: 2px 6px;
     white-space: nowrap;
     background: $success;
     color: $white;
+    border-radius: 12px;
     &:before {
       font-family: FontAwesome;
     }
