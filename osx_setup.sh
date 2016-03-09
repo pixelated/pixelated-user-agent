@@ -21,7 +21,7 @@ function current_shell {
         /bin/sh)
           echo ~/.profile
         ;;
-        
+
         *)
             echo "Your shell isn't supported yet!"
         ;;
@@ -37,6 +37,8 @@ function install_compass {
     rbenv local 2.2.3
     gem install compass
     export PATH=$PATH:~/.rbenv/versions/2.2.3/bin
+    echo "export PATH=$PATH:~/.rbenv/versions/2.2.3/bin" >> $(current_shell)
+    echo 'eval "$(rbenv init -)"' >> $(current_shell)
     echo "export PATH=$PATH:~/.rbenv/versions/2.2.3/bin" >> $(current_shell)
     echo 'eval "$(rbenv init -)"' >> $(current_shell)
 }
