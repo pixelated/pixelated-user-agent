@@ -25,8 +25,11 @@ def impl(context, subject):
 
 @then('I see that the body reads \'{expected_body}\'')
 def impl(context, expected_body):
-    e = find_element_by_css_selector(context, '#mail-view .bodyArea')
+    find_element_by_css_selector(context, '#read-sandbox')
+    context.browser.switch_to_frame('read-sandbox')
+    e = find_element_by_css_selector(context, 'body')
     assert e.text == expected_body
+    context.browser.switch_to_default_content()
 
 
 @then('that email has the \'{tag}\' tag')
