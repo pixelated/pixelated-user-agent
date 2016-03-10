@@ -528,10 +528,6 @@ section {
     box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.12);
     z-index: 2;
     overflow-y: auto;
-    @include read-msg;
-    [id^=fullView-] {
-      position: relative;
-    }
   }
 }
 
