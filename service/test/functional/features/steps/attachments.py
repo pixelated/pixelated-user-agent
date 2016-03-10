@@ -51,7 +51,7 @@ def load_mail_into_soledad(context, mail):
 
 @then(u'I see the mail has an attachment')
 def step_impl(context):
-    attachments_list = find_elements_by_css_selector(context, '.attachmentsArea li')
+    attachments_list = find_elements_by_css_selector(context, '.mail-read-view__attachments-item')
     assert len(attachments_list) == 1
 
 

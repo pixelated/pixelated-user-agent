@@ -19,7 +19,7 @@ from common import *
 
 @then('I see that the subject reads \'{subject}\'')
 def impl(context, subject):
-    e = find_element_by_css_selector(context, '#mail-view .subject')
+    e = find_element_by_css_selector(context, '#mail-view .mail-read-view__header-subject')
     assert e.text == subject
 
 
@@ -100,13 +100,13 @@ def impl(context):
 @when('I choose to trash')
 def impl(context):
     context.browser.execute_script("$('button#view-more-actions').click()")
-    click_button(context, 'Delete this message', 'span')
+    click_button(context, 'Delete this message', 'li')
 
 
 @then('I see the mail has a cc and a bcc recipient')
 def impl(context):
-    cc = find_element_by_css_selector(context, '.msg-header .cc')
-    bcc = find_element_by_css_selector(context, '.msg-header .bcc')
+    cc = find_element_by_css_selector(context, '.mail-read-view__header-recipients .cc')
+    bcc = find_element_by_css_selector(context, '.mail-read-view__header-recipients .bcc')
 
     assert cc is not None
     assert bcc is not None

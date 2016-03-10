@@ -1,0 +1,181 @@
+.mail-read-view {
+    $component-vertical-spacing: 10px;
+    $view-top-spacing: 3px;
+
+    // NB! Setting overflow: hidden on an element causes
+    // a new float context to be created, so elements that
+    // are floated inside an element that has overflow: hidden
+    // applied are cleared.
+    overflow-x: hidden;
+
+    hr {
+        margin: 0;
+    }
+
+    &__header {
+        @include scut-clearfix;
+
+        font-size: 0.9em;
+        margin: 0;
+        margin: $view-top-spacing 0 $component-vertical-spacing 0;
+
+        &-recipients {
+            display: inline;
+            margin-bottom: 5px;
+            line-height: 1.5em;
+
+            &-separator {
+                margin: 0 10px;
+            }
+
+            &--highlight-sender {
+                font-weight: bold;
+            }
+        }
+
+        &-date {
+            display: inline;
+            float: right;
+        }
+
+        &-subject {
+            display: inline;
+            float: left;
+            max-width: 80%;
+        }
+
+        &-actions {
+            display: inline;
+            float: right;
+            max-width: 20%;
+            background: $white;
+            white-space: nowrap;
+            margin-top: $component-vertical-spacing;
+
+            &-button {
+                color: $medium_light_grey;
+                background-color: inherit;
+                display: inline;
+                border: 1px solid $lighter_gray;
+                line-height: 2em;
+
+                margin-bottom: 0;
+
+                i {
+                    // workaround: remove padding and margin inserted by font-awesome
+                    margin: 0;
+                    padding: 0;
+                }
+
+                &:hover, &:active, &:focus {
+                    @include btn-transition;
+
+                    background: darken($contrast, 5%);
+                    color: inherit;
+                }
+
+                &--reply {
+                    padding: 0 20px;
+                    margin-right: -4px; // force buttons together
+
+                }
+
+                &--more {
+                    padding: 0 5px;
+                }
+            }
+
+            &-dropdown {
+                $container-right-padding: 10px;
+
+                background: inherit;
+                position: absolute;
+                border: 1px solid $lighter_gray;
+                right: $container-right-padding;
+
+                &-entry {
+                    box-sizing: border-box;
+                    background: inherit;
+                    padding: 5px 10px;
+                    display: block;
+                    border-bottom: 1px solid $lighter_gray;
+
+                    &:last-child {
+                        border-bottom: none;
+                    }
+
+                    &:hover {
+                        cursor: pointer;
+                        background: $contrast;
+                    }
+                }
+            }
+        }
+
+        &-tags {
+            clear: both;
+            margin: 0 0 10px;
+
+            // TODO refactor
+
+            @include tags;
+
+            ul li {
+                &.tag:hover {
+                    &:before {
+                        content: "click to remove";
+                        text-transform: lowercase;
+                        font-size: 0.5rem;
+
+                        @include tooltip(18px, 8px);
+                    }
+                }
+            }
+        }
+    }
+
+    &__body {
+        margin: $component-vertical-spacing 0;
+        width: 100%;
+        border: none;
+    }
+
+    &__attachments {
+        margin: $component-vertical-spacing 0;
+
+        &-header {
+            font-weight: bold;
+        }
+
+        &-item {
+            @include scut-clearfix;
+
+            display: block;
+            margin-bottom: 8px;
+            padding: 5px;
+            border: 1px solid $border_light_grey;
+            border-radius: 2px;
+            background-color: $background_light_grey;
+
+            &-label {
+                color: $attachment_text;
+                text-decoration: none;
+
+                &:hover, &:focus {
+                    i.download-icon {
+                        color: lighten($attachment_icon, 15);
+                    }
+
+                    color: $attachment_icon;
+                    outline: none;
+                }
+            }
+
+            &-download {
+                color: #a2a2a2;
+                float: right;
+                margin-top: 5px;
+            }
+        }
+    }
+}

@@ -574,9 +574,11 @@ section {
 
 button {
   border: 1px solid transparent;
+
   i {
     margin-left: 5px;
   }
+
   &#trash-button {
     background: $white;
     border: 1px solid $medium_light_grey;
@@ -587,30 +589,8 @@ button {
       background: $contrast;
     }
   }
-  &.close-mail-button {
-    background: transparent;
-    color: $medium_light_grey;
-    float: right;
-    &:hover {
-      color: darken($medium_light_grey, 10%);
-    }
-  }
-  &.close-mail-button {
-    position: absolute;
-    left: 0;
-    top: 0;
-    margin: 0;
-    padding: 3px 6px 5px;
-    background: $lighter_gray;
-    opacity: 0.7;
-    @include border-radius(0);
-    &:hover {
-      opacity: 1;
-    }
-    i {
-      margin: 0;
-    }
-  }
+
+
   &.no-style {
     background: transparent;
     color: $medium_light_grey;

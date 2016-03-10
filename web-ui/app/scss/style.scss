@@ -1,5 +1,6 @@
 // vendor stylesheets and resets
 @import "vendor/reset";
+@import "vendor/scut";
 @import "compass/css3";
 @import "vendor/foundation";
 
@@ -20,15 +21,16 @@
 
 // views
 @import "views/message-panel";
+@import "views/close-button";
 @import "views/no-message-selected";
 @import "views/no-mails-available";
+@import "views/read-view";
 
 // misc stuff
 @import "others";
 
 // TODO
 @import "compose";
-@import "read";
 @import "reply";
 @import "security";
 @import "styles";

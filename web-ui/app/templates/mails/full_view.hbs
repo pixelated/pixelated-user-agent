@@ -1,29 +1,25 @@
+<button class="close-mail-button">
+    <i class="fa fa-times"></i>
+</button>
 
-<div id="fullView-{{ ident }}" class="{{statuses}}">
+<div id="fullView-{{ ident }}" class="mail-read-view {{statuses}}">
+    <header class="mail-read-view__header row">
 
-    <header class="msg-header row">
-
-        <button class="close-mail-button">
-            <i class="fa fa-times"></i>
-        </button>
-
-
-      <div class="full-view-header">
-
+        <!-- TODO -->
         <div class="column large-12 no-padding security-status">
             {{#if signatureStatus}}
             <span class="{{signatureStatus}}">
               {{t signatureStatus }}
             </span>
-            {{/if}}
-            {{#if encryptionStatus}}
+            {{/if}} {{#if encryptionStatus}}
             <span class="{{encryptionStatus}}">
               {{t encryptionStatus }}
             </span>
             {{/if}}
         </div>
-        <div class="recipients column large-10 no-padding">
-            <span class="from">
+
+        <div class="mail-read-view__header-recipients">
+            <span class="mail-read-view__header-recipients--highlight-sender">
               {{#if header.from }}
                 {{ header.from }}
               {{else}}
@@ -33,52 +29,55 @@
             <i class="fa fa-long-arrow-right"></i>
             {{{formatRecipients header}}}
         </div>
-        <div class="recipients column large-2 text-right">
-            <span class="received-date">{{ formatDate header.date }}</span>
-        </div>
-        <div class="headline-area">
-            <h3 class="subjectArea column large-10 no-padding">
-                <span class="subject">{{ header.subject }}</span>
 
-                <div class="tagsArea">
-                    <ul class="tags">
-                    <i class="tags-label fa fa-tags"></i>
-                        {{#each tags }}
-                          <li class="tag" data-tag="{{this}}">{{ this }}</li>
-                        {{/each }}
-
-                        <li class="new-tag">
-                            <input type="text" id="new-tag-input" placeholder="{{t 'Press Enter to add tag'}}"/>
-                        </li>
-                        <li class="add-new">
-                            <button id="new-tag-button" class="no-style"><i class="fa fa-plus"></i></button>
-                        </li>
-                    </ul>
-                </div>
-            </h3>
-            <nav id="mail-actions" class="column large-2 no-padding">
-            </nav>
+        <div class="mail-read-view__header-date">
+            {{ formatDate header.date }}
         </div>
 
-      </div>
+        <hr>
+
+        <div class="mail-read-view__header-subject">
+            <h3>{{ header.subject }}</h3>
+        </div>
+
+        <nav id="mail-actions" class="mail-read-view__header-actions"></nav>
+
+        <div class="mail-read-view__header-tags">
+            <ul class="tags">
+                <i class="tags-label fa fa-tags"></i>
+                {{#each tags }}
+                <li class="tag" data-tag="{{this}}">{{ this }}</li>
+                {{/each }}
+
+                <li class="new-tag">
+                    <input type="text" id="new-tag-input" placeholder="{{t 'Press Enter to add tag'}}"
+                    />
+                </li>
+
+                <li class="add-new">
+                    <button id="new-tag-button" class="no-style"><i class="fa fa-plus"></i>
+                    </button>
+                </li>
+            </ul>
+        </div>
     </header>
 
-    <div class="bodyArea column large-12">
-        <iframe id="read-sandbox" sandbox="allow-popups allow-scripts" src="sandbox/sandbox.html" scrolling="no"></iframe>
-    </div>
+    <iframe class="mail-read-view__body" id="read-sandbox" sandbox="allow-popups allow-scripts" src="sandbox/sandbox.html" scrolling="no"></iframe>
 
     {{#if attachments}}
-      <div class="attachmentsAreaWrap">
-        <div class="attachmentsArea column large-12">
-        <p><strong><i class="fa fa-paperclip"></i> {{ attachments.length }} attachment(s):</strong></p>
-          <ul>
-          {{#each attachments }}
-            <li>
-              <a href="/attachment/{{ this.ident }}?content_type={{ this.content-type }}&encoding={{ this.encoding }}&filename={{ this.name }}">{{ this.name }} ({{ formatSize this.size}})<i class="fa fa-arrow-down download-icon"></i></a>
-            </li>
-          {{/each }}
-          </ul>
+        <hr>
+
+        <div id="attachmentsArea" class="mail-read-view__attachments">
+            <p class="mail-read-view__attachments-header"><i class="fa fa-paperclip"></i> {{ attachments.length }} attachment(s):</p>
+            <ul>
+                {{#each attachments }}
+                <li class="mail-read-view__attachments-item">
+                    <a class="mail-read-view__attachments-item-label" href="/attachment/{{ this.ident }}?content_type={{ this.content-type }}&encoding={{ this.encoding }}&filename={{ this.name }}">{{ this.name }} ({{ formatSize this.size}})
+                    <i class="fa fa-arrow-down mail-read-view__attachments-item-download"></i></a>
+                </li>
+                {{/each }}
+            </ul>
         </div>
-      </div>
     {{/if}}
 </div>
+
