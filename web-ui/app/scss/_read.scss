@@ -141,13 +141,13 @@
         line-height: 2em;
         border: 1px solid $lighter_gray;
 
-        &#reply-button-top {
+        #reply-button-top {
             @include border-right-radius(0);
 
             padding: 0 20px;
         }
 
-        &#view-more-actions {
+        #view-more-actions {
             @include border-left-radius(0);
 
             padding: 0 5px;
