@@ -53,19 +53,20 @@ class UserBehavior(TaskSet):
         username, password = self._get_or_create_user(number)
         response = self.client.post(
             "/%s" % LoginResource.BASE_URL,
-            {"username": username, "password": password})
+            {"username": username, "password": password},
+            verify=False)
         self.cookies.update(response.cookies.get_dict())
-        resp = self.client.get("/")
+        resp = self.client.get("/", verify=False)
         self.cookies.update(resp.cookies.get_dict())
         self.username = username
 
     @task(1)
     def index(self):
-        self.client.get("/")
+        self.client.get("/", verify=False)
 
     @task(2)
     def mail_box(self):
-        self.client.get("/mails?q=tag:'inbox'&p=1&w=25")
+        self.client.get("/mails?q=tag:'inbox'&p=1&w=25", verify=False)
 
     @task(3)
     def send_mail(self):
@@ -81,7 +82,7 @@ class UserBehavior(TaskSet):
                 "subject": "load testing"}}
 
         self.cookies.update(
-            self.client.get("/").cookies.get_dict())
+            self.client.get("/", verify=False).cookies.get_dict())
         print(self.cookies)
         with self.client.post(
             '/mails',
@@ -106,6 +107,7 @@ class UserBehavior(TaskSet):
             '/mails/delete',
             json=payload,
             cookies=self.cookies,
+            verify=False,
             headers={
                 'X-Requested-With': 'XMLHttpRequest',
                 'X-XSRF-TOKEN': self.cookies['XSRF-TOKEN']})
