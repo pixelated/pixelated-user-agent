@@ -4,7 +4,7 @@ https://launchpad.net/dirspec/stable-13-10/13.10/+download/dirspec-13.10.tar.gz
 --allow-external dirspec --allow-unverified dirspec
 https://launchpad.net/u1db/stable-13-10/13.10/+download/u1db-13.10.tar.bz2
 pyasn1==0.1.8
-requests==2.4.1
+requests==2.9.1
 srp==1.0.4
 whoosh==2.5.7
 pycryptopp
