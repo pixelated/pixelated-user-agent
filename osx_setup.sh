@@ -39,8 +39,6 @@ function install_compass {
     export PATH=$PATH:~/.rbenv/versions/2.2.3/bin
     echo "export PATH=$PATH:~/.rbenv/versions/2.2.3/bin" >> $(current_shell)
     echo 'eval "$(rbenv init -)"' >> $(current_shell)
-    echo "export PATH=$PATH:~/.rbenv/versions/2.2.3/bin" >> $(current_shell)
-    echo 'eval "$(rbenv init -)"' >> $(current_shell)
 }
 
 function install_rbenv {
