@@ -41,6 +41,9 @@ define(
         this.on(document, events.mails.available, this.stopSpinningLogo);
         this.on(document, events.mail.saveDraft, this.spinLogo);
         this.on(document, events.mail.draftSaved, this.stopSpinningLogo);
+        this.on(document, events.ui.mail.open, this.spinLogo);
+        this.on(document, events.dispatchers.rightPane.openDraft, this.spinLogo);
+        this.on(document, events.mail.want, this.stopSpinningLogo);
       });
     }
   }
