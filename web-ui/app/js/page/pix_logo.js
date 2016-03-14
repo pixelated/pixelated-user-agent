@@ -26,21 +26,21 @@ define(
     return defineComponent(pixLogo);
 
     function pixLogo() {
-      this.defaultAttrs({
-          'pixLogo': '#pix-logo'
-      });
-
       this.spinLogo = function (ev, data) {
-        this.$node.parents().eq(1).find('.logo-part-animation-off').attr('class', 'logo-part-animation-on');
+        $('.logo-part-animation-off').attr('class', 'logo-part-animation-on');
       };
 
       this.stopSpinningLogo = function (ev, data) {
-        this.$node.parents().eq(1).find('.logo-part-animation-on').attr('class', 'logo-part-animation-off');
+        setTimeout(function(){
+          $('.logo-part-animation-on').attr('class', 'logo-part-animation-off');
+        }, 600);
       };
 
       this.after('initialize', function () {
         this.on(document, events.ui.tag.select, this.spinLogo);
         this.on(document, events.mails.available, this.stopSpinningLogo);
+        this.on(document, events.mail.saveDraft, this.spinLogo);
+        this.on(document, events.mail.draftSaved, this.stopSpinningLogo);
       });
     }
   }
