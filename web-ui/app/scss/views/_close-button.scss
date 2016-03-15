@@ -10,8 +10,9 @@
     padding: 0;
     border-radius: 0;
 
-    &:hover {
-        color: darken($medium_light_grey, 10%);
+    &:hover, &:focus, &:active {
+        background-color: darken($lighter_gray, 2);
+        color: darken($medium_light_grey, 10);
     }
 
     i {
