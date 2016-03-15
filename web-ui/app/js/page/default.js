@@ -134,7 +134,7 @@ define(
 
       unreadCountTitle.attachTo(document);
 
-      pixLogo.attachTo('#pix-logo');
+      pixLogo.attachTo(document);
 
       $.ajaxSetup({headers: {'X-XSRF-TOKEN': browser.getCookie('XSRF-TOKEN')}});
     }

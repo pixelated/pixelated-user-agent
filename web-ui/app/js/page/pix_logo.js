@@ -26,24 +26,35 @@ define(
     return defineComponent(pixLogo);
 
     function pixLogo() {
-      this.spinLogo = function (ev, data) {
+      this.turnAnimationOn = function () {
         $('.logo-part-animation-off').attr('class', 'logo-part-animation-on');
       };
 
-      this.stopSpinningLogo = function (ev, data) {
+      this.turnAnimationOff = function () {
         setTimeout(function(){
           $('.logo-part-animation-on').attr('class', 'logo-part-animation-off');
         }, 600);
       };
 
+      this.triggerSpinLogo = function (ev, data) {
+        this.trigger(document, events.ui.page.spinLogo);
+      };
+
+      this.triggerStopSpinningLogo = function(ev, data) {
+        this.trigger(document, events.ui.page.stopSpinningLogo);
+      };
+
       this.after('initialize', function () {
-        this.on(document, events.ui.tag.select, this.spinLogo);
-        this.on(document, events.mails.available, this.stopSpinningLogo);
-        this.on(document, events.mail.saveDraft, this.spinLogo);
-        this.on(document, events.mail.draftSaved, this.stopSpinningLogo);
-        this.on(document, events.ui.mail.open, this.spinLogo);
-        this.on(document, events.dispatchers.rightPane.openDraft, this.spinLogo);
-        this.on(document, events.mail.want, this.stopSpinningLogo);
+        this.on(document, events.ui.page.spinLogo, this.turnAnimationOn);
+        this.on(document, events.ui.page.stopSpinningLogo, this.turnAnimationOff);
+
+        this.on(document, events.ui.tag.select, this.triggerSpinLogo);
+        this.on(document, events.mails.available, this.triggerStopSpinningLogo);
+        this.on(document, events.mail.saveDraft, this.triggerSpinLogo);
+        this.on(document, events.mail.draftSaved, this.triggerStopSpinningLogo);
+        this.on(document, events.ui.mail.open, this.triggerSpinLogo);
+        this.on(document, events.dispatchers.rightPane.openDraft, this.triggerSpinLogo);
+        this.on(document, events.mail.want, this.triggerStopSpinningLogo);
       });
     }
   }
