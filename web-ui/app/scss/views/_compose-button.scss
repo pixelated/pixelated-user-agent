@@ -1,0 +1,24 @@
+// COMPOSE BUTTON
+#compose {
+  margin-bottom: 5px;
+  padding-right: 4px;
+  #compose-trigger {
+    width: 100%;
+    display: inline-block;
+    padding: 5px;
+    #compose-mails-trigger {
+      background: $action_buttons;
+      color: $white;
+      padding: 10px 30px;
+      text-align: center;
+      font-weight: 400;
+      font-size: 1.2em;
+      @include btn-transition;
+      &:hover {
+        background: lighten($action_buttons, 10%);
+        cursor: pointer;
+      }
+    }
+  }
+}
+

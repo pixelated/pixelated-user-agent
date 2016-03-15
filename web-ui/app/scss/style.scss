@@ -22,12 +22,13 @@
 @import "views/no-message-selected";
 @import "views/no-mails-available";
 @import "views/read-view";
+@import "views/compose-view";
+@import "views/compose-button";
 
 // misc stuff
 @import "others";
 
 // TODO
-@import "compose";
 @import "reply";
 @import "security";
 @import "styles";

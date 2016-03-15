@@ -1,30 +1,32 @@
-{{> recipients }}
-
-<div class="clearfix">
-    <a id="to-trigger" class="hide">{{t 'To'}}</a>
-    <a id="ccs-trigger" class="hide">{{t 'CC'}}</a>
-    <a id="bccs-trigger" class="hide">{{t 'BCC'}}</a>
-</div>
-
 <button class="close-mail-button">
     <i class="fa fa-times"></i>
 </button>
-<div class="floatlabel">
-    <label class="floatlabel" for="subject">Subject</label>
-    <input class="floatlabel" name="subject" type="text" id="subject" value="{{subject}}" placeholder="{{t 'Subject'}}"
-           tabindex="4"/>
-</div>
-<div class="floatlabel">
-    <label class="floatlabel" for="body">Body</label>
-    <textarea class="floatlabel" name="body" id="text-box" placeholder="{{t 'Body'}}" tabindex="5">{{body}}</textarea>
-</div>
 
-{{> attachments_list }}
+<div class="compose-view">
 
-<div class="buttons-group columns">
-    <button id="send-button" tabindex="6"><i class="fa fa-send"></i></button>
-    <span id="attachment-button" tabindex="6"></span>
-    <button id="trash-button" tabindex="7">{{t 'trash-button'}}<i class="fa fa-trash-o"></i></button>
-    <div id="draft-save-status"></div>
-</div>
+    {{> recipients }}
+        <div class="clearfix">
+            <a id="to-trigger" class="hide">{{t 'To'}}</a>
+            <a id="ccs-trigger" class="hide">{{t 'CC'}}</a>
+            <a id="bccs-trigger" class="hide">{{t 'BCC'}}</a>
+        </div>
 
+        <div class="floatlabel">
+            <label class="floatlabel" for="subject">Subject</label>
+            <input class="floatlabel" name="subject" type="text" id="subject" value="{{subject}}" placeholder="{{t 'Subject'}}" tabindex="4"/>
+        </div>
+        <div class="floatlabel">
+            <label class="floatlabel" for="body">Body</label>
+            <textarea class="floatlabel" name="body" id="text-box" placeholder="{{t 'Body'}}" tabindex="5">{{body}}</textarea>
+        </div>
+
+    {{> attachments_list }}
+
+        <div class="buttons-group columns">
+            <button id="send-button" tabindex="6"><i class="fa fa-send"></i></button>
+            <span id="attachment-button" tabindex="6"></span>
+            <button id="trash-button" tabindex="7">{{t 'trash-button'}}<i class="fa fa-trash-o"></i></button>
+            <div id="draft-save-status"></div>
+        </div>
+
+</div> <!-- ./compose-view -->
