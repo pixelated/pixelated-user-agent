@@ -66,6 +66,13 @@
 
 .bodyArea {
   padding: 10px 30px 0 30px;
+  box-sizing: border-box;
+
+  iframe {
+    box-sizing: inherit;
+    border: none;
+    width: 100%;
+  }
 }
 
 .attachmentsAreaWrap {

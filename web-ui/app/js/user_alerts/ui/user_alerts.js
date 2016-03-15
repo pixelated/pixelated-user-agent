@@ -32,20 +32,26 @@ define(
         dismissTimeout: 3000
       });
 
-      this.render = function (message) {
+      this.render = function(message) {
         this.$node.html(templates.userAlerts.message(message));
         this.show();
         setTimeout(this.hide.bind(this), this.attr.dismissTimeout);
       };
 
 
-      this.displayMessage = function (ev, data) {
-        this.render({ message:  {content: data.message, class: (data.class || 'success')}});
+      this.displayMessage = function(ev, data) {
+        this.render({
+          message: {
+            content: data.message,
+            class: 'message-panel__growl--' + (data.class || 'success')
+          }
+        });
       };
 
-      this.after('initialize', function () {
+      this.after('initialize', function() {
         this.on(document, events.ui.userAlerts.displayMessage, this.displayMessage);
       });
     }
   }
 );
+

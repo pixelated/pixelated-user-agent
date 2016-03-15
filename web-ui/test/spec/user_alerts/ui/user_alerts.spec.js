@@ -8,13 +8,13 @@ describeComponent('user_alerts/ui/user_alerts', function () {
   it('should render message when ui:user_alerts:displayMessage is triggered', function () {
     this.component.trigger(Pixelated.events.ui.userAlerts.displayMessage, { message: 'a message' });
 
-    expect(this.component.$node.html()).toEqual('<span class="success">a message</span>\n');
+    expect(this.component.$node.html()).toEqual('<span class="message-panel__growl message-panel__growl--success">a message</span>\n');
   });
 
   it('should render error message', function () {
     this.component.trigger(Pixelated.events.ui.userAlerts.displayMessage, { message: 'send failed', class: 'error' });
 
-    expect(this.component.$node.html()).toEqual('<span class="error">send failed</span>\n');
+    expect(this.component.$node.html()).toEqual('<span class="message-panel__growl message-panel__growl--error">send failed</span>\n');
   });
 
   it('should be emptied and hidden when hide is called', function() {
@@ -23,7 +23,5 @@ describeComponent('user_alerts/ui/user_alerts', function () {
     expect(this.$node).toBeHidden();
     expect(this.$node.html()).toEqual('');
   });
-
-
 
 });

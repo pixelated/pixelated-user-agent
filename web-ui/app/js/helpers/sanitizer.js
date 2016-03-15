@@ -23,6 +23,16 @@ define(['DOMPurify', 'he'], function (DOMPurify, he) {
    */
   var sanitizer = {};
 
+  sanitizer.whitelist = [{
+    // highlight tag open
+    pre: '&#x3C;&#x65;&#x6D;&#x20;&#x63;&#x6C;&#x61;&#x73;&#x73;&#x3D;&#x22;&#x73;&#x65;&#x61;&#x72;&#x63;&#x68;&#x2D;&#x68;&#x69;&#x67;&#x68;&#x6C;&#x69;&#x67;&#x68;&#x74;&#x22;&#x3E;',
+    post: '<em class="search-highlight">'
+  }, {
+    // highlight tag close
+    pre: '&#x3C;&#x2F;&#x65;&#x6D;&#x3E;',
+    post: '</em>'
+  }];
+
   /**
    * Adds html line breaks to a plaintext with line breaks (incl carriage return)
    *
@@ -55,16 +65,24 @@ define(['DOMPurify', 'he'], function (DOMPurify, he) {
   };
 
   /**
-  * Runs a given dirty body through he, thereby encoding everything
-  * as HTML entities.
-  *
-  * @param  {string} dirtyBody The unsanitized string
-  * @return {string} Safe-to-display HTML string
-  */
+   * Runs a given dirty body through he, thereby encoding everything
+   * as HTML entities.
+   *
+   * @param  {string} dirtyBody The unsanitized string
+   * @return {string} Safe-to-display HTML string
+   */
   sanitizer.purifyText = function (dirtyBody) {
-    return he.encode(dirtyBody, {
+    var escapedBody = he.encode(dirtyBody, {
       encodeEverything: true
     });
+
+    this.whitelist.forEach(function(entry) {
+      while (escapedBody.indexOf(entry.pre) > -1) {
+        escapedBody = escapedBody.replace(entry.pre, entry.post);
+      }
+    });
+
+    return escapedBody;
   };
 
   /**

@@ -25,6 +25,12 @@ define(['helpers/sanitizer'], function (sanitizer) {
         var output = sanitizer.purifyText('123<a>asd</a>');
         expect(output).toEqual(expectedOutput);
       });
+
+      it('should leave highlighted text untouched', function () {
+        var expectedOutput = '<em class="search-highlight">&#x31;&#x32;&#x33;&#x3C;&#x61;&#x3E;&#x61;&#x73;&#x64;&#x3C;&#x2F;&#x61;&#x3E;</em>';
+        var output = sanitizer.purifyText('<em class="search-highlight">123<a>asd</a></em>');
+        expect(output).toEqual(expectedOutput);
+      });
     });
 
     describe('sanitizer.sanitize', function () {

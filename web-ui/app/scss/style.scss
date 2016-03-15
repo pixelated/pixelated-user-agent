@@ -1,0 +1,35 @@
+// vendor stylesheets and resets
+@import "vendor/reset";
+@import "compass/css3";
+@import "vendor/foundation";
+
+// basic configuration
+@import "base/fonts";
+@import "base/colors";
+@import "base/scaffolding";
+
+// mixins
+@import "mixins/position-helpers";
+@import "mixins";
+
+// templates
+@import "templates/no-content-placeholder";
+
+// layout
+@import "layout/message-panel";
+
+// views
+@import "views/message-panel";
+@import "views/no-message-selected";
+@import "views/no-mails-available";
+
+// misc stuff
+@import "others";
+
+// TODO
+@import "compose";
+@import "read";
+@import "reply";
+@import "security";
+@import "styles";
+

@@ -71,9 +71,52 @@ define(
           attachments: attachments
         }));
 
-        this.$node.find('.bodyArea').html(viewHelpers.formatMailBody(data.mail));
+        var $iframe = $("#read-sandbox");
+        var iframe = $iframe[0];
 
-        this.trigger(document, events.search.highlightResults, {where: '.bodyArea'});
+        var content = viewHelpers.formatMailBody(data.mail);
+
+        iframe.onload = function() {
+          // use iframe-resizer to dynamically adapt iframe size to its content
+          var config = {
+            resizedCallback: scaleToFit,
+            checkOrigin: false
+          };
+          $iframe.iFrameResize(config);
+
+          // transform scale iframe to fit container width
+          // necessary if iframe is wider than container
+          function scaleToFit() {
+              var parentWidth = $iframe.parent().width();
+              var w = $iframe.width();
+              var scale = 'none';
+
+              // only scale html mails
+              var mail = data.mail;
+              if (mail && mail.htmlBody && (w > parentWidth)) {
+                  scale = parentWidth / w;
+                  scale = 'scale(' + scale + ',' + scale + ')';
+              }
+
+              $iframe.css({
+                  '-webkit-transform-origin': '0 0',
+                  '-moz-transform-origin': '0 0',
+                  '-ms-transform-origin': '0 0',
+                  'transform-origin': '0 0',
+                  '-webkit-transform': scale,
+                  '-moz-transform': scale,
+                  '-ms-transform': scale,
+                  'transform': scale
+              });
+          }
+
+          iframe.contentWindow.postMessage({
+            html: content
+          }, '*');
+        };
+
+
+
         this.trigger(document, events.search.highlightResults, {where: '.subjectArea'});
         this.trigger(document, events.search.highlightResults, {where: '.msg-header .recipients'});
         this.trigger(document, events.ui.replyBox.showReplyContainer);
@@ -214,9 +257,17 @@ define(
         this.trigger(events.mail.want, {mail: this.attr.ident, caller: this});
       };
 
+      this.highlightMailContent = function (event, data) {
+        // we can't directly manipulate the iFrame to highlight the content
+        // so we need to take an indirection where we directly manipulate
+        // the mail content to accomodate the highlighting
+        this.trigger(document, events.mail.highlightMailContent, data);
+      };
+
       this.after('initialize', function () {
-        this.on(this, events.mail.here, this.displayMail);
         this.on(this, events.mail.notFound, this.openNoMessageSelectedPane);
+        this.on(this, events.mail.here, this.highlightMailContent);
+        this.on(document, events.mail.display, this.displayMail);
         this.on(document, events.dispatchers.rightPane.clear, this.teardown);
         this.on(document, events.mail.tags.updated, this.tagsUpdated);
         this.on(document, events.mail.deleted, this.mailDeleted);

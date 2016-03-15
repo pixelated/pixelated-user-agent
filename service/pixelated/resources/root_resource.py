@@ -20,6 +20,7 @@ from string import Template
 
 from pixelated.resources import BaseResource, UnAuthorizedResource
 from pixelated.resources.attachments_resource import AttachmentsResource
+from pixelated.resources.sandbox_resource import SandboxResource
 from pixelated.resources.contacts_resource import ContactsResource
 from pixelated.resources.features_resource import FeaturesResource
 from pixelated.resources.feedback_resource import FeedbackResource
@@ -75,6 +76,7 @@ class RootResource(BaseResource):
         return csrf_input and csrf_input == xsrf_token
 
     def initialize(self, portal=None, disclaimer_banner=None):
+        self._child_resources.add('sandbox', SandboxResource(self._static_folder))
         self._child_resources.add('assets', File(self._static_folder))
         self._child_resources.add('keys', KeysResource(self._services_factory))
         self._child_resources.add(AttachmentsResource.BASE_URL, AttachmentsResource(self._services_factory))

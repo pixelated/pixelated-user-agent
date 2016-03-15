@@ -1,0 +1,5 @@
+.no-content-placeholder {
+    @include absolute-center-unknown-height-width;
+
+    color: $medium_dark_grey;
+}

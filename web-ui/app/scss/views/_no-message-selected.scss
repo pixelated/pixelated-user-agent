@@ -1,0 +1,14 @@
+.no-message-selected-pane {
+    background: $contrast;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    &__text {
+        @extend .no-content-placeholder;
+
+        margin-bottom: 40px; // aligns label with "no results for XYZ"
+    }
+}
