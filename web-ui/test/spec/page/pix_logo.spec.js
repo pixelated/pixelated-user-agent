@@ -79,6 +79,15 @@ describeComponent('page/pix_logo', function () {
           done();
       }, 600);
     });
+
+    it('should spin when doing a search', function () {
+      this.setupComponent('<polygon id="clock1" class="logo-part-animation-off"></polygon>');
+      var eventSpy = spyOnEvent(document, Pixelated.events.ui.page.spinLogo);
+      $(document).trigger(Pixelated.events.search.perform);
+
+      expect(eventSpy).toHaveBeenTriggeredOn(document);
+      expect(this.component.$node.hasClass('logo-part-animation-on')).toBe(true);
+    });
   });
 });
 
