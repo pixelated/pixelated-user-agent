@@ -51,6 +51,7 @@ define(
     'mail_view/data/feedback_sender',
     'page/version',
     'page/unread_count_title',
+    'page/pix_logo',
     'helpers/browser'
   ],
 
@@ -90,6 +91,7 @@ define(
     feedbackSender,
     version,
     unreadCountTitle,
+    pixLogo,
     browser) {
 
     'use strict';
@@ -131,6 +133,8 @@ define(
       feedbackSender.attachTo(document);
 
       unreadCountTitle.attachTo(document);
+
+      pixLogo.attachTo(document);
 
       $.ajaxSetup({headers: {'X-XSRF-TOKEN': browser.getCookie('XSRF-TOKEN')}});
     }

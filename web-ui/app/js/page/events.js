@@ -34,7 +34,7 @@ define(function () {
       },
       tag: {
         selected: 'ui:tagSelected',
-        select: 'ui:tagSelect'
+        select: 'ui:tagSelect',
       },
       tags: {
         loaded: 'ui:tagsLoaded'
@@ -69,7 +69,9 @@ define(function () {
       page: {
         previous: 'ui:page:previous',
         next: 'ui:page:next',
-        changed: 'ui:page:changed'
+        changed: 'ui:page:changed',
+        spinLogo: 'ui:page:spinLogo',
+        stopSpinningLogo: 'ui:page:stopSpinningLogo'
       },
       composeBox: {
         newMessage: 'ui:composeBox:newMessage',
