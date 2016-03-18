@@ -45,6 +45,9 @@ bower_components/font-awesome/fonts/* \
 ../dist
 cd -
 
+# prepend -comma and space- to concatenated app js so that minify does not blow up
+echo '; '  |  cat - .tmp/app.concatenated.js > /tmp/out && mv /tmp/out .tmp/app.concatenated.js
+
 # concat js files and minify for app.min.js
 cat \
 app/bower_components/modernizr/modernizr.js \
