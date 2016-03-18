@@ -61,8 +61,7 @@ app/bower_components/foundation/js/foundation/foundation.offcanvas.js \
 app/js/foundation/initialize_foundation.js \
 app/bower_components/iframe-resizer/js/iframeResizer.min.js \
 .tmp/app.concatenated.js > dist/app.js
-node_modules/.bin/minify dist/app.js > dist/app.min.js
-rm dist/app.js
+mv dist/app.js dist/app.min.js
 
 # concat js files and minify for sandbox.min.js
 cat \
