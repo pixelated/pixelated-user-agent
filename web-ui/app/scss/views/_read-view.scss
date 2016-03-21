@@ -6,7 +6,7 @@
     // a new float context to be created, so elements that
     // are floated inside an element that has overflow: hidden
     // applied are cleared.
-    overflow-x: hidden;
+    overflow: hidden;
 
     hr {
         margin: 0;
