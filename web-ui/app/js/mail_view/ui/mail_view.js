@@ -117,8 +117,7 @@ define(
 
 
 
-        this.trigger(document, events.search.highlightResults, {where: '.subjectArea'});
-        this.trigger(document, events.search.highlightResults, {where: '.msg-header .recipients'});
+        this.trigger(document, events.search.highlightResults, {where: '.mail-read-view__header'});
         this.trigger(document, events.ui.replyBox.showReplyContainer);
 
         this.attachTagCompletion(this.attr.mail);

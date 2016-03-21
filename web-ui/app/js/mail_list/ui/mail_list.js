@@ -81,8 +81,7 @@ define(
       this.renderMails = function (mails) {
         _.each(mails, this.appendMail, this);
         this.trigger(document, events.search.highlightResults, {where: '#mail-list'});
-        this.trigger(document, events.search.highlightResults, {where: '.subjectArea'});
-        this.trigger(document, events.search.highlightResults, {where: '.msg-header .recipients'});
+        this.trigger(document, events.search.highlightResults, {where: '.mail-read-view__header'});
       };
 
       this.triggerScrollReset = function () {
