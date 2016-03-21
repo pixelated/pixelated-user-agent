@@ -132,7 +132,6 @@
   ul#mail-list {
     clear: both;
     li {
-      height: 66px;
       position: relative;
       padding: 8px 10px 10px 10px;
       background: $contrast;
@@ -159,33 +158,25 @@
           width: 106%;
         }
       }
-      .subject-and-tags {
+
+      .subject {
         display: block;
         width: 90%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        @include tags;
-        ul.tags {
-          display: block;
-          line-height: 1.2;
-          margin: -3px 0 0 0;
-          li {
-            font-size: 0.6rem;
-            background-color: lighten($action_buttons, 12);
-            color: white;
-            display: inline-block;
-            height: auto;
-            font-weight: 400;
-            border: none;
-            &.tag:hover {
-              text-decoration: none;
-            }
-          }
-        }
 
         i.fa-pencil, i.fa-trash-o {
             color: $indicator_icon_color;
+        }
+      }
+
+      .tags {
+        @include tags;
+
+        // HACK: overwrite default from ul li property
+        &-tag {
+            border-bottom: none;
         }
       }
 

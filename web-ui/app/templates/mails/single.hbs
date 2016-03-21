@@ -11,15 +11,13 @@
       {{/if}}
     </span>
     <div class="from">{{#if header.from }}{{ header.from }}{{else}}{{t "you"}}{{/if}}</div>
-    <div class="subject-and-tags">
+    <div class="subject">
       {{ header.subject }}
     </div>
-    <div class="subject-and-tags">
-      <ul class="tags">
-        {{#each tagsForListView }}
-            <li class="tag" data-tag="{{this}}">{{ this }}</li>
-        {{/each }}
-      </ul>
-    </div>
+    <ul class="tags">
+      {{#each tagsForListView }}
+          <li class="tags-tag" data-tag="{{this}}">{{ this }}</li>
+      {{/each }}
+    </ul>
   </a>
 </span>

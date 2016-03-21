@@ -20,30 +20,6 @@
   @include border-radius(2px);
 }
 
-@mixin tt-hint {
-  .tt-hint {
-    color: $medium_light_grey
-  }
-  .tt-dropdown-menu {
-    width: 400px;
-    margin-top: 6px;
-    padding: 8px 0;
-    background-color: $contrast;
-    border: 1px solid darken($contrast, 5%);
-  }
-  .tt-suggestion {
-    padding: 3px 10px;
-    font-size: 18px;
-    line-height: 24px;
-    &.tt-cursor {
-      background-color: $white;
-    }
-    p {
-      margin: 0;
-    }
-  }
-}
-
 // FORM MIXINS
 @mixin check-box {
   background-color: $white;
@@ -277,5 +253,4 @@
   }
 }
 
-@include tt-hint;
 @include logo;

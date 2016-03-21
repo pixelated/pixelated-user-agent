@@ -5,8 +5,8 @@ define([], function() {
       compare: function (mail, node) {
         var result = {}, equals = {}, subject, tags, from, date, messages = [], notMessages = [];
 
-        subject = node.find('#mail-' + mail.ident + ' .subject-and-tags')[0];
-        tags = _.map(node.find('#mail-' + mail.ident + ' .subject-and-tags .tag'), function (tag) { return tag.textContent; });
+        subject = node.find('#mail-' + mail.ident + ' .subject')[0];
+        tags = _.map(node.find('#mail-' + mail.ident + ' .tags .tags-tag'), function (tag) { return tag.textContent; });
         date = node.find('#mail-' + mail.ident + ' .received-date');
         from = node.find('#mail-' + mail.ident + ' .from');
 

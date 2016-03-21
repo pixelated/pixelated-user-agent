@@ -42,24 +42,24 @@
 
         <nav id="mail-actions" class="mail-read-view__header-actions"></nav>
 
-        <div class="mail-read-view__header-tags">
-            <ul class="tags">
-                <i class="tags-label fa fa-tags"></i>
-                {{#each tags }}
-                <li class="tag" data-tag="{{this}}">{{ this }}</li>
-                {{/each }}
+        <ul class="mail-read-view__header-tags">
+            <li class="mail-read-view__header-tags-label">
+                <i class="fa fa-tags"></i>
+            </li>
 
-                <li class="new-tag">
-                    <input type="text" id="new-tag-input" placeholder="{{t 'Press Enter to add tag'}}"
-                    />
-                </li>
+            {{#each tags }}
+                <li class="mail-read-view__header-tags-tag" data-tag="{{this}}">{{ this }}</li>
+            {{/each }}
 
-                <li class="add-new">
-                    <button id="new-tag-button" class="no-style"><i class="fa fa-plus"></i>
-                    </button>
-                </li>
-            </ul>
-        </div>
+            <li class="mail-read-view__header-tags-name-input">
+                <input type="text" id="new-tag-input" placeholder="{{t 'Press Enter to add tag'}}"
+                />
+            </li>
+
+            <li class="mail-read-view__header-tags-new-button">
+                <button id="new-tag-button" class="no-style"><i class="fa fa-plus"></i></button>
+            </li>
+        </ul>
     </header>
 
     <iframe class="mail-read-view__body" id="read-sandbox" sandbox="allow-popups allow-scripts" src="sandbox/sandbox.html" scrolling="no"></iframe>

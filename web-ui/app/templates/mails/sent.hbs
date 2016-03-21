@@ -19,19 +19,17 @@
               {{t 'no_recipient'}}
           {{/if}}
       </div>
-      <div class="subject-and-tags">
+      <div class="subject">
           {{#if header.subject }}
               {{header.subject}}
           {{else}}
               {{t 'no_subject'}}
           {{/if}}
       </div>
-      <div class="subject-and-tags">
-          <ul class="tags">
-              {{#each tagsForListView }}
-                  <li class="tag" data-tag="{{this}}">{{ this }}</li>
-              {{/each }}
-          </ul>
-      </div>
+      <ul class="tags">
+          {{#each tagsForListView }}
+              <li class="tags-tag" data-tag="{{this}}">{{ this }}</li>
+          {{/each }}
+      </ul>
   </a>
 </span>

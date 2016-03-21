@@ -58,9 +58,8 @@ describeComponent('mail_view/ui/mail_view', function () {
     testData.mail.tags = ['tag', 'other'];
     this.component.displayMail({}, testData);
 
-    var inboxTag = this.component.$node.find('.tag[data-tag="tag"]');
+    var inboxTag = this.component.$node.find('.mail-read-view__header-tags-tag[data-tag="tag"]');
     inboxTag.html('<em class="search-highlight">' + inboxTag.text() + '</em>');
-
     this.component.$node.find('.search-highlight').click();
 
     expect(updateSpy).toHaveBeenTriggeredOn(document);

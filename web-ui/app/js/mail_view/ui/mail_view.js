@@ -34,10 +34,10 @@ define(
 
     function mailView() {
       this.defaultAttrs({
-        tags: '.tag',
+        tags: '.mail-read-view__header-tags-tag',
         newTagInput: '#new-tag-input',
         newTagButton: '#new-tag-button',
-        addNew: '.add-new',
+        addNew: '.mail-read-view__header-tags-new-button',
         trashButton: '#trash-button',
         archiveButton: '#archive-button',
         closeMailButton: '.close-mail-button'

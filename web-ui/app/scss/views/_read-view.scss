@@ -113,24 +113,10 @@
         }
 
         &-tags {
+            @include tags-editable;
+
             clear: both;
             margin: 0 0 10px;
-
-            // TODO refactor
-
-            @include tags;
-
-            ul li {
-                &.tag:hover {
-                    &:before {
-                        content: "click to remove";
-                        text-transform: lowercase;
-                        font-size: 0.5rem;
-
-                        @include tooltip(18px, 8px);
-                    }
-                }
-            }
         }
     }
 
