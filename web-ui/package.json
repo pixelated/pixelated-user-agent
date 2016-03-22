@@ -18,7 +18,7 @@
     "karma-phantomjs-launcher": "0.1.4",
     "karma-requirejs": "0.2.2",
     "karma-coverage": "0.2.7",
-    "minify": "1.4.10",
+    "minify": "^2.0.5",
     "requirejs": "2.1.22",
     "watch": "0.17.1"
   },
