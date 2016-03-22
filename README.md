@@ -58,6 +58,10 @@ Type your password:
 
 8) If you like console output, you can also run the tests to see if everything went according to plan.
 
+```bash
+(user-agent-venv)vagrant@jessie:~$ cd /vagrant
+```
+
 To run the backend tests:
 
 ```bash
