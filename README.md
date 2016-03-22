@@ -37,6 +37,8 @@ $ vagrant ssh
 
 5) Run the user agent:
 
+Please note: If you don't have an account on any provider, go directly to step 6b).
+
 ```
 $ pixelated-user-agent --host 0.0.0.0
 
@@ -50,9 +52,18 @@ Type your password:
 ******** (the one you created in previous step)
 ```
 
-6) Connect to the provider using your credentials, as shown in step 5 above. If the user agent starts up successfully, you will not see any other output.
+6a) Connect to the provider using your credentials, as shown in step 5 above. If the user agent starts up successfully, you will not see any other output.
 
 **Note**: For more convenience during development, you can also create a config file with your credentials (see **Further Notes**).
+
+6b) If you don't have a `dev.pixelated-project.org` account or just want to connect to our `try.pixelated-project.org` environment, we have some sample configurations for you.
+
+Please navigate to the project root in your vagrant box with: `$ cd /vagrant`
+
+Then you can connect to `try.pixelated-project.org` ...
+
+* as Alice via: `$ pixelated-user-agent --host 0.0.0.0 -c try.alice.ini`
+* as Bob via: `$ pixelated-user-agent --host 0.0.0.0 -c try.bob.ini`
 
 7) Go to [localhost:3333](http://localhost:3333/). You should see a loading screen for a few seconds, then your inbox. If it sticks on the loading screen, check your terminal for errors, then [get help](https://pixelated-project.org/faq/#contact-the-project).
 
@@ -142,7 +153,7 @@ leap_server_name=dev.pixelated-project.org
 leap_username=<your_username>
 leap_password=<your_password>
 ```
-To use it start the user agent like this:  
+To use it start the user agent like this:
 `$ pixelated-user-agent --host 0.0.0.0 --config credentials.ini`
 
 You can also include the host in the config file, as shown in the example files given above.
