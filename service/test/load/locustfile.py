@@ -54,10 +54,11 @@ class UserBehavior(TaskSet):
         response = self.client.post(
             "/%s" % LoginResource.BASE_URL,
             {"username": username, "password": password},
-            verify=False)
+            verify=False,
+            cookies=self.cookies)
         self.cookies.update(response.cookies.get_dict())
-        resp = self.client.get("/", verify=False)
-        self.cookies.update(resp.cookies.get_dict())
+        #resp = self.client.get("/", verify=False)
+        #self.cookies.update(resp.cookies.get_dict())
         self.username = username
 
     @task(1)
@@ -83,7 +84,6 @@ class UserBehavior(TaskSet):
 
         self.cookies.update(
             self.client.get("/", verify=False).cookies.get_dict())
-        print(self.cookies)
         with self.client.post(
             '/mails',
             json=payload,
@@ -91,7 +91,7 @@ class UserBehavior(TaskSet):
             cookies=self.cookies,
             headers={
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-XSRF-TOKEN': self.cookies['XSRF-TOKEN']}) as email_response:
+                'X-XSRF-TOKEN': self.cookies.get('XSRF-TOKEN', '')}) as email_response:
             if email_response.status_code == 201:
                 email_id = json.loads(email_response.content)['ident']
                 print email_id
@@ -110,10 +110,10 @@ class UserBehavior(TaskSet):
             verify=False,
             headers={
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-XSRF-TOKEN': self.cookies['XSRF-TOKEN']})
+                'X-XSRF-TOKEN': self.cookies.get('XSRF-TOKEN', '')})
 
 
 class WebsiteUser(HttpLocust):
     task_set = UserBehavior
-    min_wait = 5000
-    max_wait = 15000
+    min_wait = 1000
+    max_wait = 5000
