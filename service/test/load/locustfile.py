@@ -57,8 +57,6 @@ class UserBehavior(TaskSet):
             verify=False,
             cookies=self.cookies)
         self.cookies.update(response.cookies.get_dict())
-        #resp = self.client.get("/", verify=False)
-        #self.cookies.update(resp.cookies.get_dict())
         self.username = username
 
     @task(1)
