@@ -142,26 +142,41 @@ define(
       };
 
       this.checkEncrypted = function(mail) {
-        if(_.isEmpty(mail.security_casing.locks)) { return 'not-encrypted'; }
+        if(_.isEmpty(mail.security_casing.locks)) {
+          return {
+            cssClass: 'security-status__label--not-encrypted',
+            label: 'not-encrypted'
+          }
+        }
 
-        var status = ['encrypted'];
+        var statusClass = ['security-status__label--encrypted'];
+        var statusLabel = ['encrypted'];
 
         var hasAnyEncryptionInfo = _.any(mail.security_casing.locks, function (lock) {
           return lock.state === 'valid';
         });
 
         if(hasAnyEncryptionInfo) {
-          status.push('encryption-valid');
+          statusLabel.push('encryption-valid');
         } else {
-          status.push('encryption-error');
+          statusClass.push('--with-error');
+          statusLabel.push('encryption-error');
         }
 
-        return status.join(' ');
+        return {
+          cssClass: statusClass.join(''),
+          label: statusLabel.join(' ')
+        }
       };
 
       this.checkSigned = function(mail) {
+        var statusNotSigned = {
+          cssClass: 'security-status__label--not-signed',
+          label: 'not-signed'
+        };
+
         if(_.isEmpty(mail.security_casing.imprints)) {
-          return 'not-signed';
+          return statusNotSigned;
         }
 
         var hasNoSignatureInformation = _.any(mail.security_casing.imprints, function (imprint) {
@@ -169,23 +184,31 @@ define(
         });
 
         if(hasNoSignatureInformation) {
-          return 'not-signed';
+          return statusNotSigned;
         }
 
-        var status = ['signed'];
+        var statusClass = ['security-status__label--signed']
+        var statusLabel = ['signed'];
 
         if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'from_revoked'; })) {
-          status.push('signature-revoked');
+          statusClass.push('--revoked');
+          statusLabel.push('signature-revoked');
         }
+
         if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'from_expired'; })) {
-          status.push('signature-expired');
+          statusClass.push('--expired');
+          statusLabel.push('signature-expired');
         }
 
         if(this.isNotTrusted(mail)) {
-          status.push('signature-not-trusted');
+          statusClass.push('--not-trusted');
+          statusLabel.push('signature-not-trusted');
         }
 
-        return status.join(' ');
+        return {
+          cssClass: statusClass.join(''),
+          label: statusLabel.join(' ')
+        }
       };
 
       this.isNotTrusted = function(mail){
