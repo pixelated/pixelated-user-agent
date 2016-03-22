@@ -146,7 +146,7 @@ define(
           return {
             cssClass: 'security-status__label--not-encrypted',
             label: 'not-encrypted'
-          }
+          };
         }
 
         var statusClass = ['security-status__label--encrypted'];
@@ -166,7 +166,7 @@ define(
         return {
           cssClass: statusClass.join(''),
           label: statusLabel.join(' ')
-        }
+        };
       };
 
       this.checkSigned = function(mail) {
@@ -187,7 +187,7 @@ define(
           return statusNotSigned;
         }
 
-        var statusClass = ['security-status__label--signed']
+        var statusClass = ['security-status__label--signed'];
         var statusLabel = ['signed'];
 
         if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'from_revoked'; })) {
@@ -208,7 +208,7 @@ define(
         return {
           cssClass: statusClass.join(''),
           label: statusLabel.join(' ')
-        }
+        };
       };
 
       this.isNotTrusted = function(mail){
