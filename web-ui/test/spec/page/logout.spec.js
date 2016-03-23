@@ -16,7 +16,7 @@ describeComponent('page/logout', function () {
       var logout_form = this.component.$node.find('form')[0];
       expect(logout_form).toExist();
       expect(logout_form.action).toMatch('test/logout/url');
-      expect(logout_form.method).toMatch('POST');
+      expect(logout_form.method).toMatch('post');
     });
 
     it('should not provide logout form if logout is disabled', function () {
@@ -75,4 +75,3 @@ describeComponent('page/logout', function () {
 
   });
 });
-

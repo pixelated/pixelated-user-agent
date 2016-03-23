@@ -137,7 +137,7 @@ describeComponent('mail_view/ui/compose_box', function () {
     });
 
     it('should show the subject label after the user starts typing', function() {
-      input.val('test');
+      input.text('test');
       input.trigger('keyup');
 
       expect(input.hasClass('showfloatlabel')).toEqual(true);
