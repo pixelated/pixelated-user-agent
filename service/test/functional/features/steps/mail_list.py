@@ -32,7 +32,7 @@ def open_current_mail(context):
 
 
 def get_first_email(context):
-    return wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-list li span a'))[0]
+    return wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '.mail-list-entry__item'))[0]
 
 
 @then('I see that mail under the \'{tag}\' tag')
@@ -78,13 +78,13 @@ def impl(context):
 @given('I have mails')
 @then(u'I have mails')
 def impl(context):
-    emails = wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-list li span a'))
+    emails = wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '.mail-list-entry__item'))
     assert len(emails) > 0
 
 
 @when('I mark the first unread email as read')
 def impl(context):
-    emails = wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-list li'))
+    emails = wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '.mail-list-entry'))
 
     for email in emails:
         if 'status-read' not in email.get_attribute('class'):
@@ -98,7 +98,7 @@ def impl(context):
 @when('I delete the email')
 def impl(context):
     def last_email():
-        return wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-list li'))
+        return wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, '.mail-list-entry'))
     mail = last_email()
     context.current_mail_id = mail.get_attribute('id')
     mail.find_element_by_tag_name('input').click()
@@ -112,7 +112,7 @@ def _wait_for_mail_list_to_be_empty(context):
     def mail_list_is_empty(_):
         with ImplicitWait(context, timeout=0.1):
             try:
-                return 0 == len(context.browser.find_elements_by_css_selector('#mail-list li'))
+                return 0 == len(context.browser.find_elements_by_css_selector('.mail-list-entry'))
             except TimeoutException:
                 return False
 

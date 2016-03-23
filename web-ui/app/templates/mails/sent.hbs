@@ -1,35 +1,36 @@
-<span>
-  <input type="checkbox"/>
-</span>
-<span>
-  <a href="/#/{{ currentTag }}/mail/{{ ident }}">
-    <span class="sent-date">{{ formatDate header.date }}
-        {{#if attachments}}
-            <div class="attachment-indicator">
-                <i class="fa fa-paperclip"></i>
-            </div>
-        {{/if}}
-    </span>
+<div class="mail-list-entry__checkbox">
+    <input type="checkbox" {{#if isChecked }}checked="true"{{/if}} />
+</div>
+<a class="mail-list-entry__item" href="/#/{{ currentTag }}/mail/{{ ident }}">
+    <div>
+        <div class="mail-list-entry__item-from">
+            {{t 'to:'}}
+            {{#if header.to }}
+                {{ header.to }}
+            {{else}}
+                {{t 'no_recipient'}}
+            {{/if}}
+        </div> <!-- /.mail-list-entry__item-from -->
 
-      <div class="from">
-          {{t 'to:'}}
-          {{#if header.to }}
-              {{ header.to }}
-          {{else}}
-              {{t 'no_recipient'}}
-          {{/if}}
-      </div>
-      <div class="subject">
-          {{#if header.subject }}
-              {{header.subject}}
-          {{else}}
-              {{t 'no_subject'}}
-          {{/if}}
-      </div>
-      <ul class="tags">
-          {{#each tagsForListView }}
-              <li class="tags-tag" data-tag="{{this}}">{{ this }}</li>
-          {{/each }}
-      </ul>
-  </a>
-</span>
+        <span class="mail-list-entry__item-date">{{ formatDate header.date }}</span> <!-- /.mail-list-entry__item-date -->
+    </div>
+    <div>
+        <div class="mail-list-entry__item-subject">
+            {{#if header.subject }}
+                {{header.subject}}
+            {{else}}
+                {{t 'no_subject'}}
+            {{/if}}
+         </div>
+
+        {{#if attachments}}
+            <div class="mail-list-entry__item-attachment"><i class="fa fa-paperclip"></i></div>
+        {{/if}}
+    </div>
+    <ul class="mail-list-entry__item-tags">
+        {{#each tagsForListView }}
+            <li class="mail-list-entry__item-tags-tag" data-tag="{{this}}">{{ this }}</li>
+        {{/each }}
+    </ul> <!-- /.mail-list-entry__item-tags -->
+</a>
+

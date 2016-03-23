@@ -49,7 +49,7 @@ def impl(context, tag):
             e = find_element_by_id(context, 'tag-%s' % tag)
             e.click()
 
-            wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, "#mail-list li span a[href*='%s']" % tag), timeout=20)
+            wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, ".mail-list-entry__item[href*='%s']" % tag), timeout=20)
             success = True
         except TimeoutException:
             pass

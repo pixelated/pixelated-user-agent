@@ -1,0 +1,91 @@
+.mail-list-entry {
+    @include scut-clearfix;
+
+    padding: 8px 10px 10px 10px;
+    border-bottom: 1px solid white;
+    transition: background-color 150ms ease-out;
+    cursor: pointer;
+    font-weight: bold;
+    height: 80px;
+    position: relative;
+
+    // Workaround:
+    // Foundation is of the opinion that a 1.6 line height for all lists
+    // is a totally good idea. Please remove when Foundation is gone
+    line-height: normal;
+
+    &.status-read {
+        font-weight: normal;
+    }
+
+    &.selected {
+        background: $white;
+        z-index: 10; // overlay the box-shadow of the right page (z-index: 2)
+    }
+
+    &:hover {
+        background: darken($contrast, 5%);
+    }
+
+    &__checkbox {
+        margin-right: 5px;
+        display: block;
+        float: left;
+        min-height: 100%;
+
+        & > input[type=checkbox] {
+            @include check-box;
+        }
+    }
+
+    &__item {
+        display: block;
+        color: $dark_grey;
+        padding-left: 24px;
+
+        &-from {
+            white-space: nowrap;
+            font-size: 0.8em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+        }
+
+        &-date {
+            font-size: 0.7em;
+            float: right;
+            display: inline-block;
+        }
+
+        &-subject {
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 85%;
+        }
+
+        &-attachment {
+            width: 14px;
+            text-align: right;
+            display: inline-block;
+            float: right;
+            color: $indicator_icon_color;
+        }
+
+        &-tags {
+            @include tags;
+
+            // Workaround:
+            // Foundation is of the opinion that a 1.6 line height and a 0.6 rem margin-bottom
+            // for all lists is a totally good idea. Please remove when Foundation is gone
+            line-height: normal;
+            margin-bottom: 0;
+        }
+
+        &:hover, &:focus, &:active {
+            color: $dark_grey;
+        }
+    }
+}
+

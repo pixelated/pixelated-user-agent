@@ -1,24 +1,32 @@
-<span>
-  <input type="checkbox" {{#if isChecked }}checked="true"{{/if}} />
-</span>
-<span>
-  <a href="/#/{{ currentTag }}/mail/{{ ident }}">
-    <span class="received-date">{{ header.formattedDate }}
-      {{#if attachments}}
-        <div class="attachment-indicator">
-          <i class="fa fa-paperclip"></i>
-        </div>
-      {{/if}}
-    </span>
-    <div class="from">{{#if header.from }}{{ header.from }}{{else}}{{t "you"}}{{/if}}</div>
-    <div class="subject">
-      <i class="fa fa-trash-o"></i>
-      {{ header.subject }}
+<div class="mail-list-entry__checkbox">
+    <input type="checkbox" {{#if isChecked }}checked="true"{{/if}} />
+</div>
+<a class="mail-list-entry__item" href="/#/{{ currentTag }}/mail/{{ ident }}">
+    <div>
+        <div class="mail-list-entry__item-from">
+            {{#if header.from }}
+                {{ header.from }}
+            {{else}}
+                {{t "you"}}
+            {{/if}}
+        </div> <!-- /.mail-list-entry__item-from -->
+
+        <span class="mail-list-entry__item-date">{{ formatDate header.date }}</span> <!-- /.mail-list-entry__item-date -->
     </div>
-    <ul class="tags">
-      {{#each tagsForListView }}
-          <li class="tags-tag" data-tag="{{this}}">{{ this }}</li>
-      {{/each }}
-    </ul>
-  </a>
-</span>
+    <div>
+        <div class="mail-list-entry__item-subject">
+            <i class="fa fa-trash-o"></i>
+            {{ header.subject }}
+        </div>
+
+        {{#if attachments}}
+            <div class="mail-list-entry__item-attachment"><i class="fa fa-paperclip"></i></div>
+        {{/if}}
+    </div>
+    <ul class="mail-list-entry__item-tags">
+        {{#each tagsForListView }}
+            <li class="mail-list-entry__item-tags-tag" data-tag="{{this}}">{{ this }}</li>
+        {{/each }}
+    </ul> <!-- /.mail-list-entry__item-tags -->
+</a>
+

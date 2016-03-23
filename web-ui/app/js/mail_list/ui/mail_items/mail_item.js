@@ -68,6 +68,7 @@ define(
       this.attr.mail.tagsForListView = _.without(this.attr.mail.tags, this.attr.tag);
       var mailItemHtml = templates.mails[this.attr.templateType](this.attr.mail);
       this.$node.html(mailItemHtml);
+      this.$node.addClass("mail-list-entry");
       this.$node.addClass(viewHelper.formatStatusClasses(this.attr.mail.status));
       if (this.attr.selected) { this.doSelect(); }
       this.on(this.$node.find('a'), 'click', this.triggerOpenMail);

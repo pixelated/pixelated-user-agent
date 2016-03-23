@@ -128,100 +128,6 @@
   }
 }
 
-@mixin email-list {
-  ul#mail-list {
-    clear: both;
-    li {
-      position: relative;
-      padding: 8px 10px 10px 10px;
-      background: $contrast;
-      border-bottom: 1px solid white;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background-color 150ms ease-out;
-      span {
-        display: inline-block;
-        vertical-align: top;
-        &:last-child {
-          width: 92%;
-        }
-        input[type=checkbox] {
-          @include check-box;
-          margin-right: 2px;
-        }
-        a {
-          color: $dark_grey;
-          display: block;
-          height: 62px;
-          margin-top: -8px;
-          padding-top: 3px;
-          width: 106%;
-        }
-      }
-
-      .subject {
-        display: block;
-        width: 90%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-
-        i.fa-pencil, i.fa-trash-o {
-            color: $indicator_icon_color;
-        }
-      }
-
-      .tags {
-        @include tags;
-
-        // HACK: overwrite default from ul li property
-        &-tag {
-            border-bottom: none;
-        }
-      }
-
-      .received-date, .sent-date {
-        position: absolute;
-        right: 10px;
-        font-size: 0.7em;
-      }
-
-      .attachment-indicator {
-        margin: 2px 0 0 25px;
-        font-size: initial;
-
-        i.fa-paperclip {
-            color: $indicator_icon_color;
-        }
-      }
-      .from {
-        white-space: nowrap;
-        font-size: 0.8em;
-        width: 80%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      &.status-read {
-        a {
-          font-weight: normal;
-          color: $attachment_text;
-        }
-      }
-      &:hover {
-        background: darken($contrast, 5%);
-      }
-      &.selected {
-        background: $white;
-        z-index: 3;
-        a {
-          color: $dark_grey;
-        }
-      }
-    }
-  }
-}
-
 @mixin mail-count($bg_color) {
   background: $bg_color;
   color: $white;
@@ -510,7 +416,6 @@ section {
 
   &#middle-pane {
     background: $contrast;
-    @include email-list;
   }
 
   &#right-pane {

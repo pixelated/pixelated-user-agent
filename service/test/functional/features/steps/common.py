@@ -168,7 +168,7 @@ def click_button(context, title, element='button'):
 
 
 def mail_list_with_subject_exists(context, subject):
-    return find_element_by_xpath(context, "//*[@class='subject' and contains(.,'%s')]" % subject)
+    return find_element_by_xpath(context, "//*[@class='mail-list-entry__item-subject' and contains(.,'%s')]" % subject)
 
 
 def mail_subject(context):
