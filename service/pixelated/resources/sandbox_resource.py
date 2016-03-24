@@ -32,4 +32,6 @@ class SandboxResource(File):
         request.setHeader('X-Content-Security-Policy', self.CSP_HEADER_VALUES)
         request.setHeader('X-Webkit-CSP', self.CSP_HEADER_VALUES)
         request.setHeader('Access-Control-Allow-Origin', '*')
+        request.setHeader('Access-Control-Allow-Methods', 'GET')
+
         return super(SandboxResource, self).render_GET(request)

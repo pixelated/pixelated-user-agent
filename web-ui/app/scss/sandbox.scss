@@ -1,5 +1,12 @@
 $search-highlight: #FFEF29;
 
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url('/sandbox/fonts/OpenSans.woff') format('woff');
+}
+
 body {
     font-family: "Open Sans", "Microsoft YaHei", "Hiragino Sans GB", "Hiragino Sans GB W3", "微软雅黑", "Helvetica Neue", Arial, sans-serif;
     font-size: 13px;
