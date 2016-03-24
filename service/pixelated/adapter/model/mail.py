@@ -19,11 +19,11 @@ import logging
 from email import message_from_file
 from email.mime.text import MIMEText
 from email.header import Header
+from hashlib import sha256
 
 import binascii
 from email.MIMEMultipart import MIMEMultipart
 from email.mime.nonmultipart import MIMENonMultipart
-from pycryptopp.hash import sha256
 import leap.mail.walk as walk
 from pixelated.adapter.model.status import Status
 from pixelated.support import date
@@ -137,7 +137,7 @@ class Mail(object):
         return self._mime_multipart.as_string()
 
     def _get_chash(self):
-        return sha256.SHA256(self.raw).hexdigest()
+        return sha256(self.raw).hexdigest()
 
 
 class InputMail(Mail):

@@ -7,7 +7,6 @@ pyasn1==0.1.8
 requests==2.9.1
 srp==1.0.4
 whoosh==2.5.7
-pycryptopp
 -e 'git+https://github.com/pixelated/leap_pycommon.git@develop#egg=leap.common'
 -e 'git+https://github.com/pixelated/leap_auth.git#egg=leap.auth'
 -e 'git+https://github.com/pixelated/soledad.git@develop#egg=leap.soledad.common&subdirectory=common/'
