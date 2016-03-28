@@ -121,85 +121,85 @@ describeComponent('mail_view/ui/mail_view', function () {
   it('assumes that the mail is encrypted and valid if at least one of the locks are valid', function() {
     var email = testData;
     email.security_casing = {locks: [{state: 'valid'}, {state: 'failure'}]};
-    expect(this.component.checkEncrypted(email)).toEqual('encrypted encryption-valid');
+    expect(this.component.checkEncrypted(email).cssClass).toEqual('security-status__label--encrypted');
   });
 
   it('assumes that the mail is encrypted and failure if all the locks are failed', function() {
     var email = testData;
     email.security_casing = {locks: [{state: 'failure'}, {state: 'failure'}]};
-    expect(this.component.checkEncrypted(email)).toEqual('encrypted encryption-error');
+    expect(this.component.checkEncrypted(email).cssClass).toEqual('security-status__label--encrypted--with-error');
   });
 
   it('assumes that the mail is not encrypted if it doesn\'t have any locks', function() {
     var email = testData;
     email.security_casing = {locks: []};
-    expect(this.component.checkEncrypted(email)).toEqual('not-encrypted');
+    expect(this.component.checkEncrypted(email).cssClass).toEqual('security-status__label--not-encrypted');
   });
 
   it('assumes that the mail is signed only if all imprints are valid', function() {
     var email = testData;
     email.security_casing = {imprints: [{state: 'valid', seal: {trust: 'marginal', validity: 'marginal'}}, {state: 'valid', seal: {trust: 'marginal', validity: 'marginal'}}]};
-    expect(this.component.checkSigned(email)).toEqual('signed');
+    expect(this.component.checkSigned(email).cssClass).toEqual('security-status__label--signed');
   });
 
   it('assumes that the mail is signed with failures if there is a revoke or expire', function() {
     var email = testData;
     email.security_casing = {imprints: [{state: 'valid', seal: {trust: 'marginal', validity: 'marginal'}}, {state: 'from_revoked', seal: {trust: 'marginal', validity: 'marginal'}}]};
-    expect(this.component.checkSigned(email)).toEqual('signed signature-revoked');
+    expect(this.component.checkSigned(email).cssClass).toEqual('security-status__label--signed--revoked');
   });
 
   it('assumes that mail is not trusted if its signature contains no_trust from the user', function() {
     var email = testData;
     email.security_casing = {imprints: [{seal: {trust: 'no_trust', validity: 'ultimate'}}]};
-    expect(this.component.checkSigned(email)).toEqual('signed signature-not-trusted');
+    expect(this.component.checkSigned(email).cssClass).toEqual('security-status__label--signed--not-trusted');
   });
 
   it('uses validity when trust is not present', function() {
     var email = testData;
     email.security_casing = {imprints: [{seal: { validity: 'no_trust'}}]};
-    expect(this.component.checkSigned(email)).toEqual('signed signature-not-trusted');
+    expect(this.component.checkSigned(email).cssClass).toEqual('security-status__label--signed--not-trusted');
   });
 
   it('assumes not trusted when the signature is not found', function(){
     var email = testData;
     email.security_casing = {imprints: [{seal: null}]};
-    expect(this.component.checkSigned(email)).toEqual('signed signature-not-trusted');
+    expect(this.component.checkSigned(email).cssClass).toEqual('security-status__label--signed--not-trusted');
   });
 
   it('assumes that the mail is not signed if there are no imprints', function() {
     var email = testData;
     email.security_casing = {imprints: []};
-    expect(this.component.checkSigned(email)).toEqual('not-signed');
+    expect(this.component.checkSigned(email).cssClass).toEqual('security-status__label--not-signed');
   });
 
   it('assumes that there is no signature info to show', function() {
     var email = testData;
     email.security_casing = {imprints: [{state: 'no_signature_information'}]};
-    expect(this.component.checkSigned(email)).toEqual('not-signed');
+    expect(this.component.checkSigned(email).cssClass).toEqual('security-status__label--not-signed');
   });
 
   it('shows that mail is encrypted if it is', function() {
-    spyOn(this.component, 'checkEncrypted').and.returnValue('encrypted');
+    spyOn(this.component, 'checkEncrypted').and.returnValue({cssClass: 'security-status__label--encrypted'});
     this.component.displayMail({}, testData);
-    expect(this.component.$node.find('.encrypted')).toExist();
+    expect(this.component.$node.find('.security-status__label--encrypted')).toExist();
   });
 
   it('shows that mail is signed if it is', function() {
-    spyOn(this.component, 'checkSigned').and.returnValue('signed');
+    spyOn(this.component, 'checkSigned').and.returnValue({cssClass: 'security-status__label--signed'});
     this.component.displayMail({}, testData);
-    expect(this.component.$node.find('.signed')).toExist();
+    expect(this.component.$node.find('.security-status__label--signed')).toExist();
   });
 
   it('shows that mail is not encrypted if it isn\'t', function() {
-    spyOn(this.component, 'checkEncrypted').and.returnValue('not-encrypted');
+    spyOn(this.component, 'checkEncrypted').and.returnValue({cssClass: 'security-status__label--not-encrypted'});
     this.component.displayMail({}, testData);
-    expect(this.component.$node.find('.not-encrypted')).toExist();
+    expect(this.component.$node.find('.security-status__label--not-encrypted')).toExist();
   });
 
   it('shows that mail is not signed if it isn\'t', function() {
-    spyOn(this.component, 'checkEncrypted').and.returnValue('not-signed');
+    spyOn(this.component, 'checkEncrypted').and.returnValue({cssClass: 'securty-status__label--not-signed'});
     this.component.displayMail({}, testData);
-    expect(this.component.$node.find('.not-signed')).toExist();
+    expect(this.component.$node.find('.security-status__label--not-signed')).toExist();
   });
 
   it('creates new tag when pressing Enter key on new tag input', function(){

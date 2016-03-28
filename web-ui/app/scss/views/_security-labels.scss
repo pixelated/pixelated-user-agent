@@ -1,0 +1,67 @@
+.security-status {
+  margin: 0 0 5px;
+
+  &__label {
+    display: inline-block;
+    padding: 2px 6px;
+    white-space: nowrap;
+    background: $success;
+    color: $white;
+    border-radius: 12px;
+
+    &:before {
+      font-family: FontAwesome;
+    }
+
+    &--encrypted {
+      &:before {
+        content: "\f023";
+      }
+
+      &--with-error {
+        background: $attention;
+        &:before {
+          content: "\f023 \f057";
+        }
+      }
+    }
+
+    &--not-encrypted {
+      background: $attention;
+
+      &:before {
+        content: "\f13e ";
+      }
+    }
+
+    &--signed {
+      &:before {
+        content: "\f00c";
+      }
+
+      &--revoked, &--expired {
+        background: $attention;
+
+        &:before {
+          content: "\f05e";
+        }
+      }
+
+      &--not-trusted {
+        background: $error;
+
+        &:before {
+          content: "\f05e";
+        }
+      }
+    }
+
+    &--not-signed {
+      background: $attention;
+
+      &:before {
+        content: "\f05e";
+      }
+    }
+  }
+}
