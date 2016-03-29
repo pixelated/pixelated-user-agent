@@ -7,6 +7,10 @@ from leap.exceptions import SRPAuthenticationError
 from locust import HttpLocust, TaskSet, task
 from pixelated.resources.login_resource import LoginResource
 
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
 LEAP_PROVIDER = os.environ.get('LEAP_PROVIDER', 'dev.pixelated-project.org')
 LEAP_SERVER_HOST = os.environ.get(
     'LEAP_SERVER_HOST',
@@ -14,7 +18,7 @@ LEAP_SERVER_HOST = os.environ.get(
 LEAP_VERIFY_CERTIFICATE = os.environ.get(
     'LEAP_VERIFY_CERTIFICATE',
     '~/.leap/ca.crt')
-MAX_NUMBER_USER = os.environ.get('MAX_NUMBER_USER', 100)
+MAX_NUMBER_USER = os.environ.get('MAX_NUMBER_USER', 80)
 INVITES_FILENAME = os.environ.get('INVITES_FILENAME', '/tmp/invite_codes.txt')
 INVITES_ENABLED = os.environ.get('INVITES_ENABLED', 'true') == 'true'
 
