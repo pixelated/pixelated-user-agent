@@ -23,14 +23,15 @@ define(
     'helpers/view_helper',
     'mixins/with_hide_and_show',
     'mixins/with_mail_tagging',
+    'mixins/with_mail_sandbox',
     'page/events',
     'views/i18n'
   ],
 
-  function (defineComponent, templates, mailActions, viewHelpers, withHideAndShow, withMailTagging, events, i18n) {
+  function (defineComponent, templates, mailActions, viewHelpers, withHideAndShow, withMailTagging, withMailSandbox, events, i18n) {
   'use strict';
 
-    return defineComponent(mailView, mailActions, withHideAndShow, withMailTagging);
+    return defineComponent(mailView, mailActions, withHideAndShow, withMailTagging, withMailSandbox);
 
     function mailView() {
       this.defaultAttrs({
@@ -71,54 +72,7 @@ define(
           attachments: attachments
         }));
 
-        var $iframe = $("#read-sandbox");
-        var iframe = $iframe[0];
-
-        var content = viewHelpers.formatMailBody(data.mail);
-
-        iframe.onload = function() {
-          // use iframe-resizer to dynamically adapt iframe size to its content
-          var config = {
-            resizedCallback: scaleToFit,
-            checkOrigin: false
-          };
-          $iframe.iFrameResize(config);
-
-          // transform scale iframe to fit container width
-          // necessary if iframe is wider than container
-          function scaleToFit() {
-              var parentWidth = $iframe.parent().width();
-              var w = $iframe.width();
-              var scale = 'none';
-
-              // only scale html mails
-              var mail = data.mail;
-              if (mail && mail.htmlBody && (w > parentWidth)) {
-                  scale = parentWidth / w;
-                  scale = 'scale(' + scale + ',' + scale + ')';
-              }
-
-              $iframe.css({
-                  '-webkit-transform-origin': '0 0',
-                  '-moz-transform-origin': '0 0',
-                  '-ms-transform-origin': '0 0',
-                  'transform-origin': '0 0',
-                  '-webkit-transform': scale,
-                  '-moz-transform': scale,
-                  '-ms-transform': scale,
-                  'transform': scale
-              });
-          }
-
-          iframe.contentWindow.postMessage({
-            html: content
-          }, '*');
-        };
-
-
-
-        this.trigger(document, events.search.highlightResults, {where: '.mail-read-view__header'});
-        this.trigger(document, events.ui.replyBox.showReplyContainer);
+        this.showMailOnSandbox(this.attr.mail);
 
         this.attachTagCompletion(this.attr.mail);
 
