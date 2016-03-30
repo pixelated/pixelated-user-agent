@@ -33,4 +33,5 @@ __pycache__/
 credentials.ini
 pixelated.cfg
 service/_trial_temp/
+_trial_temp
 web-ui/coverage
