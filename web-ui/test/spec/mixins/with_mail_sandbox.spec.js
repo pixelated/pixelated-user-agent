@@ -2,7 +2,7 @@ describeMixin('mixins/with_mail_sandbox', function() {
   'use strict';
 
   beforeEach(function() {
-    this.setupComponent();
+    this.setupComponent('<iframe id="read-sandbox" sandbox="allow-popups allow-scripts" src="sandbox/sandbox.html" scrolling="no"></iframe>');
   });
 
   it('should open reply container', function () {
