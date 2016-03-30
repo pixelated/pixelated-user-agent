@@ -71,7 +71,7 @@ define(
           }, '*');
         };
       };
-    };
+    }
 
     return withMailSandbox;
   }
