@@ -318,3 +318,44 @@
         display: block;
     }
 }
+
+#reply-section {
+    padding-left: 30px;
+
+    .reply-container {
+        margin: 10px 0;
+        padding: 10px;
+        border: 1px dashed darken($contrast, 10%);
+
+        @include btn-transition;
+    }
+
+    button {
+        margin: 0;
+    }
+
+    #all-recipients {
+        color: $black;
+    }
+
+    #all-recipients:focus {
+        background-color: darken($contrast, 10%);
+    }
+
+    #reply-button, #reply-all-button, #forward-button {
+        text-align: center;
+        font-weight: 100;
+        font-size: 1.1em;
+        background: $white;
+        color: $medium_light_grey;
+        padding: 25px;
+        margin: 0;
+
+        @include border-radius(0);
+
+        &:hover {
+            background: darken($contrast, 5%);
+            cursor: pointer;
+        }
+    }
+}
