@@ -1,5 +1,5 @@
 .hidden {
-  display: none;
+    display: none;
 }
 
 .no-padding {
@@ -8,4 +8,65 @@
 
 .text-right {
     text-align: right;
+}
+
+.search-highlight {
+    background-color: $search-highlight;
+}
+
+button {
+    border: 1px solid transparent;
+
+    i {
+        margin-left: 5px;
+    }
+
+    &#trash-button {
+        background: $white;
+        border: 1px solid $medium_light_grey;
+        color: $medium_light_grey;
+        float: right;
+        margin-left: 5px;
+
+        &:hover, &:focus {
+            background: $contrast;
+        }
+    }
+
+    &.no-style {
+        background: transparent;
+        color: $medium_light_grey;
+        padding: 0;
+        margin: 0;
+
+        i {
+            margin: 0;
+            padding: 0;
+            vertical-align: middle;
+        }
+    }
+}
+
+section {
+    display: inline-block;
+    vertical-align: top;
+    height: 100vh;
+    overflow-y: scroll;
+
+    &#left-pane {
+        background-color: $navigation_background;
+        color: white;
+    }
+
+    &#middle-pane {
+        background: $contrast;
+    }
+
+    &#right-pane {
+        padding: 0 10px 60px 0px;
+        background: $white;
+        box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.12);
+        z-index: 2;
+        overflow-y: auto;
+    }
 }

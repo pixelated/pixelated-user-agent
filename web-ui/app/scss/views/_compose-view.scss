@@ -382,3 +382,15 @@
         }
     }
 }
+
+.buttons-group {
+    clear: both;
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+#draft-save-status {
+    float: right;
+    padding: 0.4rem 1.1rem;
+    color: $lighter_blue;
+}

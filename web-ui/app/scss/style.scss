@@ -29,10 +29,9 @@
 @import "views/compose-view";
 @import "views/compose-button";
 @import "views/mail-list";
+@import "views/_action-bar.scss";
+@import "views/_navigation.scss";
 
 // misc stuff
 @import "others";
-
-// TODO
-@import "styles";
 

@@ -1,5 +1,3 @@
-@import 'base/colors';
-
 // SHARED MIXINS
 @mixin btn-transition {
   @include transition-property(background-color);
@@ -218,39 +216,14 @@
   }
 }
 
-@mixin logo {
-  @keyframes hideshow {
-    0% { fill: lighten($logo_color, 30); }
-    25% { opacity: 1; }
-    100% { opacity: 0; }
-  } 
-
-  .logo-part-animation-off {
-      animation: none;
-  }
-
-  .logo-part-animation-on {
-      animation: hideshow 0.6s ease infinite;
-      opacity: 1;
-
-      &:nth-child(2) {
-        opacity: 0;
-        animation-delay: 0.1s;
-      }
-
-      &:nth-child(3) {
-        animation-delay: 0.2s;
-      }
-      &:nth-child(4) {
-        animation-delay: 0.3s;
-      }
-      &:nth-child(5) {
-        animation-delay: 0.4s;
-      }
-      &:nth-child(6) {
-        animation-delay: 0.5s;
-      }
-  }
+@mixin mail-count($bg_color) {
+  background: $bg_color;
+  color: $white;
+  padding: 2px 5px;
+  font-size: 0.7em;
+  margin-left: 5px;
+  font-weight: 700;
+  position: relative;
+  @include border-radius(100px);
 }
 
-@include logo;
