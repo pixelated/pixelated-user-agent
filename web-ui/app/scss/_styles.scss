@@ -86,61 +86,6 @@
   margin-top: -20px;
 }
 
-@mixin list-actions {
-  #list-actions {
-    width: 100%;
-    height: 34px;
-    margin: 0;
-    border-top: 1px solid $white;
-    border-bottom: 2px solid lighten($top_pane, 30%);
-    background: $top_pane;
-    clear: both;
-    overflow: hidden;
-    li {
-      display: inline-block;
-      margin: 1px -3px;
-      vertical-align: top;
-      input[type=checkbox] {
-        @include check-box;
-        margin: 7px 13px 7px;
-      }
-      select {
-        padding: 1px 3px;
-        margin: 0;
-      }
-      input[type=button] {
-        margin: 2px;
-        padding: 4px 10px;
-        background: lighten($contrast, 70%);
-        color: $dark_grey;
-        text-transform: uppercase;
-        font-weight: 400;
-        font-size: 0.8em;
-        opacity: 0.7;
-        border: 1px solid darken($contrast, 10%);
-        @include border-radius(1px);
-        @include btn-transition;
-        &:hover {
-          opacity: 1;
-        }
-        &[disabled=disabled] {
-          opacity: 0.5;
-          cursor: default;
-        }
-      }
-    }
-
-    #pagination-trigger {
-      cursor: pointer;
-      margin: 4px 12px 0 5px;
-
-      span {
-        padding-left: 5px;
-      }
-    }
-  }
-}
-
 @mixin mail-count($bg_color) {
   background: $bg_color;
   color: $white;
@@ -162,7 +107,59 @@ section {
     overflow: hidden;
     background: $top_pane;
     border-top: 1px solid $top_pane;
-    @include list-actions;
+
+    #list-actions {
+      width: 100%;
+      height: 34px;
+      margin: 0;
+      border-top: 1px solid $white;
+      border-bottom: 2px solid lighten($top_pane, 30%);
+      background: $top_pane;
+      clear: both;
+      overflow: hidden;
+      li {
+        display: inline-block;
+        margin: 1px -3px;
+        vertical-align: top;
+        input[type=checkbox] {
+          @include check-box;
+          margin: 7px 13px 7px;
+        }
+        select {
+          padding: 1px 3px;
+          margin: 0;
+        }
+        input[type=button] {
+          margin: 2px;
+          padding: 4px 10px;
+          background: lighten($contrast, 70%);
+          color: $dark_grey;
+          text-transform: uppercase;
+          font-weight: 400;
+          font-size: 0.8em;
+          opacity: 0.7;
+          border: 1px solid darken($contrast, 10%);
+          @include border-radius(1px);
+          @include btn-transition;
+          &:hover {
+            opacity: 1;
+          }
+          &[disabled=disabled] {
+            opacity: 0.5;
+            cursor: default;
+          }
+        }
+      }
+
+      #pagination-trigger {
+        cursor: pointer;
+        margin: 4px 12px 0 5px;
+
+        span {
+          padding-left: 5px;
+        }
+      }
+    }
     #compose-search-trigger {
       padding: 4px;
     }
