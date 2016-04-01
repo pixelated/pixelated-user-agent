@@ -34,41 +34,43 @@ define(
         });
 
         iframe.onload = function() {
-          // use iframe-resizer to dynamically adapt iframe size to its content
-          var config = {
-            resizedCallback: scaleToFit,
-            checkOrigin: false
-          };
-          $iframe.iFrameResize(config);
-
-          // transform scale iframe to fit container width
-          // necessary if iframe is wider than container
-          function scaleToFit() {
-              var parentWidth = $iframe.parent().width();
-              var w = $iframe.width();
-              var scale = 'none';
-
-              // only scale html mails
-              if (mail && mail.htmlBody && (w > parentWidth)) {
-                  scale = parentWidth / w;
-                  scale = 'scale(' + scale + ',' + scale + ')';
-              }
-
-              $iframe.css({
-                  '-webkit-transform-origin': '0 0',
-                  '-moz-transform-origin': '0 0',
-                  '-ms-transform-origin': '0 0',
-                  'transform-origin': '0 0',
-                  '-webkit-transform': scale,
-                  '-moz-transform': scale,
-                  '-ms-transform': scale,
-                  'transform': scale
-              });
+          if ($iframe.iFrameResize) {
+            // use iframe-resizer to dynamically adapt iframe size to its content
+            var config = {
+              resizedCallback: scaleToFit,
+              checkOrigin: false
+            };
+            $iframe.iFrameResize(config);
           }
 
           iframe.contentWindow.postMessage({
             html: content
           }, '*');
+
+          // transform scale iframe to fit container width
+          // necessary if iframe is wider than container
+          function scaleToFit() {
+            var parentWidth = $iframe.parent().width();
+            var w = $iframe.width();
+            var scale = 'none';
+
+            // only scale html mails
+            if (mail && mail.htmlBody && (w > parentWidth)) {
+                scale = parentWidth / w;
+                scale = 'scale(' + scale + ',' + scale + ')';
+            }
+
+            $iframe.css({
+                '-webkit-transform-origin': '0 0',
+                '-moz-transform-origin': '0 0',
+                '-ms-transform-origin': '0 0',
+                'transform-origin': '0 0',
+                '-webkit-transform': scale,
+                '-moz-transform': scale,
+                '-ms-transform': scale,
+                'transform': scale
+            });
+          }
         };
       };
     }
