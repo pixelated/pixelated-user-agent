@@ -25,12 +25,12 @@ class IncomingMailTest(SoledadTestBase):
     @defer.inlineCallbacks
     def test_message_collection(self):
         # given
-        mbx = yield self.account.getMailbox('INBOX')
+        mail_collection = yield self.account.get_collection_by_mailbox('INBOX')
         input_mail = MailBuilder().build_input_mail()
 
         # when
         yield MailboxIndexerListener.listen(self.account, 'INBOX', self.mail_store, self.search_engine)
-        yield mbx.addMessage(input_mail.raw, [], notify_just_mdoc=False)
+        yield mail_collection.add_msg(input_mail.raw)
 
         # then
         yield self.wait_in_reactor()  # event handlers are called async, wait for it

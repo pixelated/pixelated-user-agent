@@ -25,7 +25,7 @@ import uuid
 import random
 
 
-from leap.mail.imap.account import IMAPAccount
+from leap.mail.mail import Account
 from leap.soledad.client import Soledad
 from mock import Mock
 from twisted.internet import reactor, defer
@@ -77,7 +77,7 @@ class AppTestAccount(object):
         self.mail_store = SearchableMailStore(LeapMailStore(self.soledad), self.search_engine)
         self.attachment_store = LeapAttachmentStore(self.soledad)
 
-        yield self._initialize_imap_account()
+        yield self._initialize_account()
 
         self.draft_service = DraftService(self.mail_store)
         self.leap_session = mock()
@@ -110,10 +110,9 @@ class AppTestAccount(object):
         soledad_test_folder = os.path.join(self._leap_home, self._uuid)
         shutil.rmtree(soledad_test_folder)
 
-    def _initialize_imap_account(self):
-        account_ready_cb = defer.Deferred()
-        self.account = IMAPAccount(self._user_id, self.soledad, account_ready_cb)
-        return account_ready_cb
+    def _initialize_account(self):
+        self.account = Account(self.soledad)
+        return self.account.deferred_initialization
 
     def _create_mail_service(self, mail_sender, mail_store, search_engine, attachment_store):
         return MailService(mail_sender, mail_store, search_engine, self._mail_address, attachment_store)

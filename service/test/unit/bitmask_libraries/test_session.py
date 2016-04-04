@@ -29,7 +29,7 @@ class SessionTest(AbstractLeapTest):
         self.smtp_mock = MagicMock()
 
     @patch('pixelated.bitmask_libraries.session.register')
-    @patch('pixelated.bitmask_libraries.session.IMAPAccount')
+    @patch('pixelated.bitmask_libraries.session.Account')
     @defer.inlineCallbacks
     def test_background_jobs_are_started_during_initial_sync(self, *unused):
         mailFetcherMock = MagicMock()
@@ -41,7 +41,7 @@ class SessionTest(AbstractLeapTest):
 
     @patch('pixelated.bitmask_libraries.session.register')
     @patch('pixelated.bitmask_libraries.session.unregister')
-    @patch('pixelated.bitmask_libraries.session.IMAPAccount')
+    @patch('pixelated.bitmask_libraries.session.Account')
     @defer.inlineCallbacks
     def test_that_close_stops_background_jobs(self, *unused):
         with patch('pixelated.bitmask_libraries.session.reactor.callFromThread', new=_execute_func) as _:
@@ -153,7 +153,7 @@ class SessionTest(AbstractLeapTest):
 
     @patch('pixelated.bitmask_libraries.session.register')
     @patch('pixelated.bitmask_libraries.session.unregister')
-    @patch('pixelated.bitmask_libraries.session.IMAPAccount')
+    @patch('pixelated.bitmask_libraries.session.Account')
     @defer.inlineCallbacks
     def test_session_initial_sync_only_triggered_once(self, *unused):
         mailFetcherMock = MagicMock()

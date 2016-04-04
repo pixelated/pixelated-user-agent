@@ -31,7 +31,7 @@ class MailboxListenerTest(unittest.TestCase):
     def test_add_itself_to_mailbox_listeners(self):
         self.account.mailboxes = ['INBOX']
         mailbox = mock()
-        when(self.account).getMailbox('INBOX').thenReturn(mailbox)
+        when(self.account).get_collection_by_mailbox('INBOX').thenReturn(mailbox)
         mailbox.listeners = set()
         when(mailbox).addListener = lambda x: mailbox.listeners.add(x)
 
@@ -49,7 +49,7 @@ class MailboxListenerTest(unittest.TestCase):
         listener = MailboxIndexerListener('INBOX', self.mail_store, search_engine)
         when(self.mail_store).get_mailbox_mail_ids('INBOX').thenReturn({'ident1', 'ident2', 'missing_ident'})
         when(self.mail_store).get_mails({'missing_ident'}, include_body=True).thenReturn([mail])
-        listener.newMessages(10, 5)
+        listener.notify_new()
 
         verify(self.mail_store, times=1).get_mails({'missing_ident'}, include_body=True)
         verify(search_engine).index_mails([mail])
@@ -59,6 +59,6 @@ class MailboxListenerTest(unittest.TestCase):
         when(logger).error(ANY()).thenReturn(None)
         listener = MailboxIndexerListener('INBOX', self.mail_store, mock())
 
-        yield listener.newMessages(1, 1)
+        yield listener.notify_new()
 
         verify(logger).error(ANY())

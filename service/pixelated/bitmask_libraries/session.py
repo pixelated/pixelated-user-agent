@@ -24,7 +24,7 @@ from twisted.internet import reactor, defer
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.adapter.mailstore import LeapMailStore
 from leap.mail.incoming.service import IncomingMail
-from leap.mail.imap.account import IMAPAccount
+from leap.mail.mail import Account
 from leap.auth import SRPAuth
 from .nicknym import NickNym
 from .smtp import LeapSMTPConfig
@@ -73,7 +73,7 @@ class LeapSession(object):
     @defer.inlineCallbacks
     def after_first_sync(self):
         yield self.nicknym.generate_openpgp_key()
-        self.account = self._create_account(self.account_email, self.soledad)
+        yield self._create_account(self.soledad)
         self.incoming_mail_fetcher = yield self._create_incoming_mail_fetcher(
             self.nicknym,
             self.soledad,
@@ -81,8 +81,9 @@ class LeapSession(object):
             self.account_email())
         reactor.callFromThread(self.incoming_mail_fetcher.startService)
 
-    def _create_account(self, user_mail, soledad):
-        return IMAPAccount(user_mail, soledad, defer.Deferred())
+    def _create_account(self, soledad):
+        self.account = Account(soledad)
+        return self.account.deferred_initialization
 
     def _set_fresh_account(self, event, email_address):
         log.debug('Key for email %s has been generated' % email_address)
@@ -115,10 +116,10 @@ class LeapSession(object):
 
     @defer.inlineCallbacks
     def _create_incoming_mail_fetcher(self, nicknym, soledad, account, user_mail):
-        inbox = yield account.callWhenReady(lambda _: account.getMailbox('INBOX'))
+        inbox = yield account.callWhenReady(lambda _: account.get_collection_by_mailbox('INBOX'))
         defer.returnValue(IncomingMail(nicknym.keymanager,
                           soledad,
-                          inbox.collection,
+                          inbox,
                           user_mail))
 
     def stop_background_jobs(self):
