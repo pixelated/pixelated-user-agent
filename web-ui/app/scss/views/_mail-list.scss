@@ -16,6 +16,7 @@
 
     &.status-read {
         font-weight: normal;
+        color: $attachment_text;
     }
 
     &.selected {
@@ -63,6 +64,10 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             width: 85%;
+
+            &-icon {
+                color: $light_gray;
+            }
         }
 
         &-attachment {
@@ -70,7 +75,7 @@
             text-align: right;
             display: inline-block;
             float: right;
-            color: $indicator_icon_color;
+            color: $light_gray;
         }
 
         &-tags {
