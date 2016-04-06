@@ -64,7 +64,7 @@ def impl(context):
     find_element_by_css_selector(context, '#mail-view #view-more-actions').click()
     context.browser.execute_script("$('#delete-button-top').click();")
 
-    e = find_element_by_css_selector(context, '#user-alerts')
+    e = find_element_by_css_selector(context, '.message-panel__growl--success')
     assert 'Your message was moved to trash!' == e.text
 
 
