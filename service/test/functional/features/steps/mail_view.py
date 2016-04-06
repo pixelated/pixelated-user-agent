@@ -58,14 +58,6 @@ def impl(context):
     click_button(context, 'Send')
 
 
-# NOT BEING USED
-@then('I see if the mail has html content')
-def impl(context):
-    e = find_element_by_css_selector(context, '#mail-view .bodyArea')
-    h2 = e.find_element_by_css_selector("h2[style*='color: #3f4944']")
-    assert 'cborim' in h2.text
-
-
 @when('I try to delete the first mail')
 def impl(context):
     context.execute_steps(u"When I open the first mail in the mail list")
