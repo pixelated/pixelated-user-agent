@@ -39,7 +39,7 @@ function setupjs {
         cd ../web-ui
         npm install
         node_modules/bower/bin/bower install --config.interactive=false --allow-root
-        LC_ALL=C.UTF-8 ./go build
+        LC_ALL=en_US.UTF-8 ./go build
         cd -
         echo "Done."
 }
