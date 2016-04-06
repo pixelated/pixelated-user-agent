@@ -98,14 +98,21 @@ define(
   }
 
 
+  function formatFingerPrint(fingerprint) {
+    fingerprint = fingerprint || '';
+    return fingerprint.replace(/(.{4})/g, '$1 ').trim();
+  }
+
   Handlebars.registerHelper('formatDate', formatDate);
   Handlebars.registerHelper('formatSize', formatSize);
   Handlebars.registerHelper('formatStatusClasses', formatStatusClasses);
+  Handlebars.registerHelper('formatFingerPrint', formatFingerPrint);
 
   return {
     formatStatusClasses: formatStatusClasses,
     formatSize: formatSize,
     formatMailBody: formatMailBody,
+    formatFingerPrint: formatFingerPrint,
     moveCaretToEndOfText: moveCaretToEndOfText,
     quoteMail: quoteMail,
     i18n: i18n

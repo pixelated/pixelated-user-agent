@@ -106,5 +106,11 @@ define(['helpers/view_helper'], function (viewHelper) {
 
       expect(window.setTimeout.calls.all()[0].args[1]).toEqual(1);
     });
+
+    describe('fingerprint helper', function () {
+      it('should format fingerprint', function () {
+        expect(viewHelper.formatFingerPrint('12345678')).toEqual('1234 5678');
+      });
+    });
   });
 });
