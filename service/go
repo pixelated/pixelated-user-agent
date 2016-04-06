@@ -67,7 +67,7 @@ function runPep8 {
 function runJSHint {
         echo "Executing JSHint."
         cd ../web-ui
-        LC_ALL=en_US.UTF-8 ./go jshint
+        LC_ALL=C.UTF-8 ./go jshint
         cd -
         echo "Done."
 }
