@@ -32,6 +32,11 @@
       bottom: 33px
     }
 
+    header {
+      border-bottom: 1px solid white;
+      margin-bottom: 10px;
+    }
+
     #user-settings-close {
       float: right;
     }
@@ -40,6 +45,14 @@
       font-size: 1.2em;
       color: white;
       line-height: 1.2em;
+    }
+
+    h2 {
+      font-size: 1.1em;
+      color: white;
+      line-height: 1.1em;
+      display: inline;
+      margin-left: 5px;
     }
 
     i.fa-user {
@@ -54,7 +67,7 @@
     }
 
     p {
-      font-size: 1.2em;
+      font-size: 1.1em;
       color: $light_orange;
     }
   }
