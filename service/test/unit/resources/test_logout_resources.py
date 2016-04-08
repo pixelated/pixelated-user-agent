@@ -1,11 +1,15 @@
+import logging
+
 from mock import patch, MagicMock
-from twisted.trial import unittest
 from twisted.internet import defer
+from twisted.trial import unittest
 from twisted.web.error import UnsupportedMethod
 from twisted.web.test.requesthelper import DummyRequest
 
 from pixelated.resources.logout_resource import LogoutResource
 from test.unit.resources import DummySite
+
+logging.getLogger('pixelated.resources').addHandler(logging.NullHandler())
 
 
 class TestLogoutResource(unittest.TestCase):
@@ -40,3 +44,21 @@ class TestLogoutResource(unittest.TestCase):
         request.method = 'GET'
 
         self.assertRaises(UnsupportedMethod, self.web.get, request)
+
+    def test_errback_is_called(self):
+        request = DummyRequest(['/logout'])
+        request.method = 'POST'
+
+        session = self.resource.get_session(request)
+        exception = Exception('haha')
+        session.expire = MagicMock(side_effect=exception)
+
+        d = self.web.get(request)
+
+        def assert_500_when_exception_is_thrown(_):
+            self.assertEqual(500, request.responseCode)
+            self.assertEqual('Something went wrong!', request.written[0])
+
+        d.addCallback(assert_500_when_exception_is_thrown)
+        return d
+
