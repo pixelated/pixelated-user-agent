@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import json
+import logging
 
 from twisted.web.http import UNAUTHORIZED
 from twisted.web.resource import Resource
@@ -22,6 +23,9 @@ from twisted.web.resource import Resource
 # from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.session import IPixelatedSession
 from pixelated.support import log_time
+
+from twisted.web.http import INTERNAL_SERVER_ERROR
+log = logging.getLogger(__name__)
 
 
 class SetEncoder(json.JSONEncoder):
@@ -47,7 +51,17 @@ def respond_json_deferred(entity, request, status_code=200):
     request.finish()
 
 
-class BaseResource(Resource):
+class GenericDeferredErrorHandler(object):
+
+    @classmethod
+    def generic_error_handling(cls, e, request):
+        log.error(e)
+        request.setResponseCode(INTERNAL_SERVER_ERROR)
+        request.write('Something went wrong!')
+        request.finish()
+
+
+class BaseResource(Resource, GenericDeferredErrorHandler):
 
     def __init__(self, services_factory):
         Resource.__init__(self)

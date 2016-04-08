@@ -50,7 +50,7 @@ class TestLogoutResource(unittest.TestCase):
         request.method = 'POST'
 
         session = self.resource.get_session(request)
-        exception = Exception('haha')
+        exception = Exception('')
         session.expire = MagicMock(side_effect=exception)
 
         d = self.web.get(request)
@@ -61,4 +61,3 @@ class TestLogoutResource(unittest.TestCase):
 
         d.addCallback(assert_500_when_exception_is_thrown)
         return d
-

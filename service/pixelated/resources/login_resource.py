@@ -141,6 +141,7 @@ class LoginResource(BaseResource):
 
         d = self._handle_login(request)
         d.addCallbacks(render_response, render_error)
+        d.addErrback(self.generic_error_handling, request)
 
         return NOT_DONE_YET
 

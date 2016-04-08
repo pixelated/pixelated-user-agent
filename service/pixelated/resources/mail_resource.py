@@ -4,7 +4,7 @@ from twisted.python.log import err
 from twisted.web.resource import Resource
 from twisted.web.server import NOT_DONE_YET
 
-from pixelated.resources import respond_json_deferred, BaseResource
+from pixelated.resources import respond_json_deferred, BaseResource, GenericDeferredErrorHandler
 from pixelated.support import replier
 
 
@@ -30,7 +30,7 @@ class MailTags(Resource):
         return NOT_DONE_YET
 
 
-class Mail(Resource):
+class Mail(Resource, GenericDeferredErrorHandler):
 
     def __init__(self, mail_id, mail_service):
         Resource.__init__(self)
@@ -51,6 +51,8 @@ class Mail(Resource):
         d = self._mail_service.mail(self._mail_id)
         d.addCallback(lambda mail: populate_reply(mail))
         d.addCallback(lambda mail_dict: respond_json_deferred(mail_dict, request))
+        d.addErrback(self.generic_error_handling, request)
+
         return NOT_DONE_YET
 
     def render_DELETE(self, request):
