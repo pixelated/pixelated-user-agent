@@ -13,7 +13,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from pixelated.support import log_time
 from pixelated.support.encrypted_file_storage import EncryptedFileStorage
 
 import os
@@ -173,7 +172,6 @@ class SearchEngine(object):
             results = searcher.search(query, **options)
         return results
 
-    @log_time
     def search(self, query, window=25, page=1, all_mails=False):
         query = self.prepare_query(query)
         return self._search_all_mails(query) if all_mails else self._paginated_search_mails(query, window, page)

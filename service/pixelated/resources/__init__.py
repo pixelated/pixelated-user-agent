@@ -22,7 +22,6 @@ from twisted.web.resource import Resource
 
 # from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.session import IPixelatedSession
-from pixelated.support import log_time
 
 from twisted.web.http import INTERNAL_SERVER_ERROR
 log = logging.getLogger(__name__)
@@ -42,7 +41,6 @@ def respond_json(entity, request, status_code=200):
     return json_response
 
 
-@log_time
 def respond_json_deferred(entity, request, status_code=200):
     json_response = json.dumps(entity, cls=SetEncoder)
     request.responseHeaders.addRawHeader(b"content-type", b"application/json")

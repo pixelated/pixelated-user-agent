@@ -25,7 +25,6 @@ from twisted.internet.defer import FirstError, DeferredList
 from pixelated.adapter.mailstore.body_parser import BodyParser
 from pixelated.adapter.mailstore.mailstore import MailStore, underscore_uuid
 from pixelated.adapter.model.mail import Mail, InputMail
-from pixelated.support import log_time_deferred
 from pixelated.support.functional import to_unicode
 from pixelated.support import date
 
@@ -208,7 +207,6 @@ class LeapMailStore(MailStore):
 
         defer.returnValue(leap_mail)
 
-    @log_time_deferred
     @defer.inlineCallbacks
     def get_mails(self, mail_ids, gracefully_ignore_errors=False, include_body=False):
         deferreds = []
@@ -229,7 +227,6 @@ class LeapMailStore(MailStore):
         message.get_wrapper().set_flags(tuple(mail.flags))
         yield self._update_mail(message)  # TODO assert this is yielded (otherwise asynchronous)
 
-    @log_time_deferred
     @defer.inlineCallbacks
     def all_mails(self, gracefully_ignore_errors=False):
         mdocs = yield self.soledad.get_from_index('by-type', 'meta')

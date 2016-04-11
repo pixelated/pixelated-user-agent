@@ -25,9 +25,6 @@ from pixelated.adapter.model.status import Status
 from pixelated.adapter.services.tag_service import extract_reserved_tags
 from leap.mail.adaptors.soledad import SoledadMailAdaptor
 
-from pixelated.support import log_time_deferred
-
-
 class MailService(object):
 
     def __init__(self, mail_sender, mail_store, search_engine, account_email, attachment_store):
@@ -45,7 +42,6 @@ class MailService(object):
     def save_attachment(self, content, content_type):
         return self.attachment_store.add_attachment(content, content_type)
 
-    @log_time_deferred
     @defer.inlineCallbacks
     def mails(self, query, window_size, page):
         mail_ids, total = self.search_engine.search(query, window_size, page)

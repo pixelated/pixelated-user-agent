@@ -11,7 +11,6 @@ from twisted.internet import defer
 from twisted.python.log import err
 from leap.common import events
 
-from pixelated.support import log_time
 from pixelated.support.functional import to_unicode
 
 
@@ -145,7 +144,6 @@ class MailsResource(BaseResource):
         if action == 'unread':
             return MailsUnreadResource(_mail_service)
 
-    @log_time
     def _build_mails_response(self, (mails, total)):
         return {
             "stats": {
