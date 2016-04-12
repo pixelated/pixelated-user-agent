@@ -153,12 +153,6 @@ class MailsResource(BaseResource):
         }
 
     def render_GET(self, request):
-        start = time.clock()
-
-        def log_after_completion(result, start):
-            end = time.clock()
-            log.info('Needed %f ms to render response' % (end - start))
-            return result
 
         _mail_service = self.mail_service(request)
         query, window_size, page = request.args.get('q')[0], request.args.get('w')[0], request.args.get('p')[0]
@@ -167,7 +161,6 @@ class MailsResource(BaseResource):
 
         d.addCallback(self._build_mails_response)
         d.addCallback(lambda res: respond_json_deferred(res, request))
-        d.addCallback(log_after_completion, start=start)
 
         def error_handler(error):
             print error
