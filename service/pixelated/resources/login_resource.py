@@ -27,7 +27,7 @@ from twisted.web.resource import IResource, NoResource
 from twisted.web.server import NOT_DONE_YET
 from twisted.web.static import File
 from twisted.web.template import Element, XMLFile, renderElement, renderer
-
+from pixelated.resources import handle_error_deferred
 from pixelated.adapter.welcome_mail import add_welcome_mail
 from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
 
@@ -141,7 +141,7 @@ class LoginResource(BaseResource):
 
         d = self._handle_login(request)
         d.addCallbacks(render_response, render_error)
-        d.addErrback(self.generic_error_handling, request)
+        d.addErrback(handle_error_deferred, request)
 
         return NOT_DONE_YET
 

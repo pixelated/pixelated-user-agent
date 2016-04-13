@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from pixelated.resources import respond_json_deferred, BaseResource
+from pixelated.resources import respond_json_deferred, BaseResource, handle_error_deferred
 from twisted.internet.threads import deferToThread
 from twisted.web.server import NOT_DONE_YET
 
@@ -33,6 +33,6 @@ class TagsResource(BaseResource):
 
         d = deferToThread(lambda: _search_engine.tags(query=query, skip_default_tags=skip_default_tags))
         d.addCallback(lambda tags: respond_json_deferred(tags, request))
-        d.addErrback(self.generic_error_handling, request)
+        d.addErrback(handle_error_deferred, request)
 
         return NOT_DONE_YET

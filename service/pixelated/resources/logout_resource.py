@@ -18,7 +18,7 @@ from twisted.internet import defer
 from twisted.web import util
 from twisted.web.server import NOT_DONE_YET
 
-from pixelated.resources import BaseResource
+from pixelated.resources import BaseResource, handle_error_deferred
 from pixelated.resources.login_resource import LoginResource
 
 
@@ -40,6 +40,6 @@ class LogoutResource(BaseResource):
 
         d = self._execute_logout(request)
         d.addCallback(_redirect_to_login)
-        d.addErrback(self.generic_error_handling, request)
+        d.addErrback(handle_error_deferred, request)
 
         return NOT_DONE_YET

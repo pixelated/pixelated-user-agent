@@ -49,17 +49,14 @@ def respond_json_deferred(entity, request, status_code=200):
     request.finish()
 
 
-class GenericDeferredErrorHandler(object):
-
-    @classmethod
-    def generic_error_handling(cls, e, request):
-        log.error(e)
-        request.setResponseCode(INTERNAL_SERVER_ERROR)
-        request.write('Something went wrong!')
-        request.finish()
+def handle_error_deferred(e, request):
+    log.error(e)
+    request.setResponseCode(INTERNAL_SERVER_ERROR)
+    request.write('Something went wrong!')
+    request.finish()
 
 
-class BaseResource(Resource, GenericDeferredErrorHandler):
+class BaseResource(Resource):
 
     def __init__(self, services_factory):
         Resource.__init__(self)
