@@ -111,7 +111,7 @@ class AppTestAccount(object):
         shutil.rmtree(soledad_test_folder)
 
     def _initialize_account(self):
-        self.account = Account(self.soledad)
+        self.account = Account(self.soledad, self._user_id)
         return self.account.deferred_initialization
 
     def _create_mail_service(self, mail_sender, mail_store, search_engine, attachment_store):

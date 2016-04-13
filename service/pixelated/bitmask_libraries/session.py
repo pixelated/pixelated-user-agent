@@ -73,7 +73,7 @@ class LeapSession(object):
     @defer.inlineCallbacks
     def after_first_sync(self):
         yield self.nicknym.generate_openpgp_key()
-        yield self._create_account(self.soledad)
+        yield self._create_account(self.soledad, self.user_auth.uuid)
         self.incoming_mail_fetcher = yield self._create_incoming_mail_fetcher(
             self.nicknym,
             self.soledad,
@@ -81,8 +81,8 @@ class LeapSession(object):
             self.account_email())
         reactor.callFromThread(self.incoming_mail_fetcher.startService)
 
-    def _create_account(self, soledad):
-        self.account = Account(soledad)
+    def _create_account(self, soledad, user_id):
+        self.account = Account(soledad, user_id)
         return self.account.deferred_initialization
 
     def _set_fresh_account(self, event, email_address):
