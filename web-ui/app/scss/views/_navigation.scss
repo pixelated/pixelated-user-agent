@@ -379,34 +379,6 @@ div.side-nav-bottom {
     }
 
     ul#default-tag-list {
-        //            .unread-count, .total-count {
-        //                font-size: 0.5em;
-        //                padding: 1px 5px 0;
-        //                top: 1px;
-        //                left: 0;
-        //                border: 1px solid $white;
-        //                position: absolute;
-        //                opacity: 0.95;
-        //            }
-        //
-        //            .total-count {
-        //                background: $medium_light_grey;
-        //            }
-
-        .unread-count, .total-count {
-            font-size: 0.7em;
-            padding: 0px 5px 0;
-            top: 1px;
-            left: 0;
-            border: 1px solid $white;
-            border-bottom: 1px solid white;
-            position: absolute;
-            opacity: 0.95;
-        }
-
-        .total-count {
-            background: $medium_light_grey;
-        }
 
         span.tag-label {
             padding-left: 2px;
@@ -591,9 +563,11 @@ div.side-nav-bottom {
 }
 
 .unread-count {
-    @include mail-count($secondary_callout);
+    @extend .mail-count;
+    background: $secondary_callout;
 }
 
 .total-count {
-    @include mail-count($medium_light_grey);
+    @extend .mail-count;
+    background: $medium_light_grey;
 }

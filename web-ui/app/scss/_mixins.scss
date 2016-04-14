@@ -216,14 +216,3 @@
   }
 }
 
-@mixin mail-count($bg_color) {
-  background: $bg_color;
-  color: $white;
-  padding: 2px 5px;
-  font-size: 0.7em;
-  margin-left: 5px;
-  font-weight: 700;
-  position: relative;
-  @include border-radius(100px);
-}
-
