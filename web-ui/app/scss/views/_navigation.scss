@@ -461,6 +461,12 @@ div.side-nav-bottom {
                 padding: 5px 20px 5px 38px;
             }
         }
+
+        .unread-count, .total-count {
+            padding: 1px 4px;
+            position: relative;
+        }
+
     }
 
     ul#custom-tag-list.expanded {
@@ -564,10 +570,12 @@ div.side-nav-bottom {
 
 .unread-count {
     @extend .mail-count;
+
     background: $secondary_callout;
 }
 
 .total-count {
     @extend .mail-count;
+
     background: $medium_light_grey;
 }
