@@ -103,10 +103,53 @@ define(
     return fingerprint.replace(/(.{4})/g, '$1 ').trim();
   }
 
+  function getSinceDate(sinceDate){
+    var commitDate = new Date(sinceDate);
+    var number = Date.now();
+    var millisecondsSince = number - commitDate;
+
+    var SECONDS = 1000,
+        MIN = 60 * SECONDS,
+        HOUR = MIN * 60,
+        DAY = HOUR * 24,
+        WEEK = DAY * 7,
+        MONTH = WEEK * 4,
+        YEAR = DAY * 365;
+
+    var years = Math.floor(millisecondsSince / YEAR);
+    if (years >= 1){
+      return years + ' year(s)';
+    }
+
+    var months = Math.floor(millisecondsSince / MONTH);
+    if (months >= 1) {
+      return months + ' month(s)';
+    }
+
+    var weeks = Math.floor(millisecondsSince / WEEK);
+    if (weeks >= 1) {
+      return weeks + ' week(s)';
+    }
+
+    var days = Math.floor(millisecondsSince / DAY);
+    if (days >= 1) {
+      return days + ' day(s)';
+    }
+
+    var hours = Math.floor(millisecondsSince / HOUR);
+    if (hours >= 1) {
+      return hours + ' hour(s)';
+    }
+
+    var minutes = Math.floor(millisecondsSince / MIN);
+    return minutes + ' minute(s)';
+  }
+
   Handlebars.registerHelper('formatDate', formatDate);
   Handlebars.registerHelper('formatSize', formatSize);
   Handlebars.registerHelper('formatStatusClasses', formatStatusClasses);
   Handlebars.registerHelper('formatFingerPrint', formatFingerPrint);
+  Handlebars.registerHelper('sinceDate', getSinceDate);
 
   return {
     formatStatusClasses: formatStatusClasses,
@@ -115,6 +158,7 @@ define(
     formatFingerPrint: formatFingerPrint,
     moveCaretToEndOfText: moveCaretToEndOfText,
     quoteMail: quoteMail,
+    sinceDate: getSinceDate,
     i18n: i18n
   };
 });

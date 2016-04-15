@@ -14,13 +14,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-define(['flight/lib/component', 'views/templates'], function (defineComponent, templates) {
+define(['flight/lib/component', 'views/templates', 'helpers/view_helper'], function (defineComponent, templates, viewHelper) {
   'use strict';
 
   return defineComponent(function () {
-
+      this.defaultAttrs({
+        'sinceDate': '#version-date'
+      });
+    
     this.render = function () {
         this.$node.html(templates.page.version());
+        this.renderCommitDate();
+    };
+
+    this.renderCommitDate = function(){
+      var since = this.select('sinceDate').attr('data-since'),
+        commitDate = viewHelper.sinceDate(since);
+      this.select('sinceDate').html(commitDate + ' ago');
     };
 
     this.after('initialize', function () {
