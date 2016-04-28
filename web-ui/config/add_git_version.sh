@@ -3,7 +3,7 @@
 TEMPLATE_FILE="app/js/generated/hbs/templates.js"
 
 COMMITISH=$(git rev-parse --short HEAD)
-COMMITDATE=$(git show -s --format=%cI)
+COMMITDATE=$(git show -s --format=%ci)
 
 perl -pi -e "s/UNKNOWN_VERSION/$COMMITISH/" $TEMPLATE_FILE
 perl -pi -e "s/COMMIT_DATE/$COMMITDATE/" $TEMPLATE_FILE
