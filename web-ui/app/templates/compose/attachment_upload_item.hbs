@@ -1,4 +1,5 @@
-<li>
-    <div id="attachment-upload-item-progress" class="progress"><div class="progress-bar progress-bar-success"></div></div>
-    <a>{{ this.name }} <span class="attachment-size">({{ formatSize this.size}})</span><i id="attachment-upload-item-abort" class="fa fa-close remove-icon"></i></a>
+<li class="compose-view__attachments-list-item">
+    <div id="attachment-upload-item-progress" class="compose-view__attachments-list-item-progress"><div class="compose-view__attachments-list-item-progress-bar"></div></div>
+    <a class="compose-view__attachments-list-item-label">{{ this.name }} <span class="attachment-size">({{ formatSize this.size}})</span></a>
+    <i id="attachment-upload-item-abort" class="fa fa-close remove-icon compose-view__attachments-list-item-icon"></i>
 </li>

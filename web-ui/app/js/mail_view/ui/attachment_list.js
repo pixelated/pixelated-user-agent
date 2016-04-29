@@ -35,7 +35,7 @@ define(
                 attachmentUploadItemAbort: '#attachment-upload-item-abort',
                 attachmentBaseUrl: '/attachment',
                 attachments: [],
-                closeIcon: '.close-icon',
+                closeIcon: '#upload-error-close',
                 uploadError: '#upload-error',
                 dismissButton: '#dismiss-button',
                 uploadFileButton: '#upload-file-button'
@@ -171,8 +171,6 @@ define(
                     }
                 }).bind('fileuploadstart', function (e) {
                     self.trigger(document, events.mail.uploadingAttachment);
-                }).bind('fileuploadadd', function (e) {
-                    $('.attachmentsAreaWrap').show();
                 });
             };
 

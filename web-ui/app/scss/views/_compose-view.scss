@@ -1,5 +1,110 @@
 .compose-view {
     overflow: auto;
+
+    &__buttons {
+        &-attachment {
+            cursor: pointer;
+            outline: 0;
+            margin-left: 18px;
+            padding-top: 0px;
+            -ms-transform: rotate(224deg);
+            -webkit-transform: rotate(224deg);
+            transform: rotate(224deg);
+
+            i.fa-paperclip {
+                font-size: 1.7em;
+            }
+
+            &--busy {
+                color: lighten($recipients_font_color, 10%);
+                cursor: progress;
+            }
+        }
+    }
+
+    &__attachments {
+        &-wrapper {
+            padding: 0;
+            margin-top: 30px;
+        }
+
+        &-list {
+            &-item {
+                display: block;
+                position: relative;
+                margin-bottom: 8px;
+                padding: 5px;
+                border: 1px solid $border_light_grey;
+                border-radius: 2px;
+                background-color: $background_light_grey;
+
+                &-label {
+                    color: $attachment_text;
+                    text-decoration: none;
+
+                    &:hover, &:focus {
+                        color: $attachment_icon;
+                        outline: none;
+                    }
+                }
+
+                &-icon {
+                    color: #a2a2a2;
+                    float: right;
+                    margin-top: 7px;
+                    cursor: pointer;
+                }
+
+                &-progress {
+                    width: 0%;
+                    position: absolute;
+                    right: 0;
+                    left: 0;
+                    top: 0;
+                    bottom: 0;
+                    min-height: 100%;
+
+                    &-bar {
+                        height: 100%;
+                        background-color: rgba($light_blue, 0.3);
+                    }
+                }
+
+            }
+
+            &--upload {
+                display: none;
+            }
+
+        }
+
+        &-error {
+            background-color: $background_light_grey;
+            border-radius: 2px;
+            border: 1px solid $error;
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            padding: 5px;
+            width: 100%;
+
+            &-close {
+                float: left;
+                margin: 5px 5px 0 0;
+            }
+
+            & > * {
+                color: $error;
+            }
+
+            & > a {
+                display: inline-block;
+                text-decoration: underline;
+                padding: 5px;
+            }
+        }
+    }
+
 }
 
 // COMPOSE PANE
@@ -116,77 +221,6 @@
 
     .buttons-group {
         margin-top: 0px;
-
-        span#attachment-button {
-            cursor: pointer;
-            outline: 0;
-            margin-left: 18px;
-            padding-top: 0px;
-            -ms-transform: rotate(224deg);
-
-            /* IE 9 */
-            -webkit-transform: rotate(224deg);
-
-            /* Chrome, Safari, Opera */
-            transform: rotate(224deg);
-
-            i.fa-paperclip {
-                font-size: 1.7em;
-            }
-
-            &.busy {
-                color: lighten($recipients_font_color, 10%);
-                cursor: progress;
-            }
-        }
-    }
-
-    #attachment-upload-item {
-        display: none;
-
-        .progress {
-            width: 0%;
-            position: absolute;
-            right: 0;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            min-height: 100%;
-
-            .progress-bar {
-                height: 100%;
-                background-color: rgba($light_blue, 0.3);
-            }
-        }
-    }
-
-    .attachmentsAreaWrap {
-        padding: 0;
-
-        .attachmentsArea {
-            padding: 0;
-            border-top: 0;
-
-            #upload-error {
-                color: $error;
-                margin-bottom: 20px;
-
-                .close-icon {
-                    font-size: 1.0rem;
-                    cursor: pointer;
-                }
-
-                span, a {
-                    color: $error;
-                    font-size: 0.9rem;
-                }
-
-                a {
-                    text-decoration: underline;
-                    padding: 5px;
-                }
-            }
-        }
     }
 
     .recipients-area {

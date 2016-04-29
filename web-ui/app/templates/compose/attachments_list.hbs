@@ -1,20 +1,14 @@
-<div id="attachment-list" class="buttons-group columns">
-    <span class="btn btn-success fileinput-button">
-        <!-- The file input field used as target for the file upload widget -->
-        <input id="fileupload" type="file" name="attachment">
-    </span>
+<div id="attachment-list" class="buttons-group columns compose-view__attachments">
+    <input id="fileupload" type="file" name="attachment" hidden>
 
     <!-- The container for the uploaded files -->
-    <div class="attachmentsAreaWrap {{#unless attachments}}hide{{/unless}}">
-        <div class="attachmentsArea column large-12">
-            <ul id="attachment-list-item">
-                {{#each attachments }}
-                    {{> attachment_item this }}
-                {{/each }}
-            </ul>
-            <ul id="attachment-upload-item"></ul>
-        </div>
+    <div class="compose-view__attachments-wrapper">
+        <ul id="attachment-list-item" class="compose-view__attachments-list">
+            {{#each attachments }}
+                {{> attachment_item this }}
+            {{/each }}
+        </ul>
+        <ul id="attachment-upload-item" class="compose-view__attachments-list compose-view__attachments-list--upload"></ul>
     </div>
 
-    <br>
 </div>

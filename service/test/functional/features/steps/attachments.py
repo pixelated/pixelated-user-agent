@@ -64,6 +64,7 @@ def find_icon(context):
 def upload_big_file(context):
     base_dir = "test/functional/features/files/"
     fname = "image_over_1MB.png"
+    context.browser.execute_script("$('#fileupload').removeAttr('hidden');")
     fill_by_css_selector(context, '#fileupload', base_dir + fname)
     wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, '#upload-error-message'))
 
