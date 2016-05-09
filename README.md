@@ -47,7 +47,7 @@ $ vagrant ssh
 
 4) Run the user agent:
 
-Please note: If you don't have an account on any provider, go directly to step 6b).
+Please note: If you don't have an account on any provider, go directly to step 5b).
 
 ```
 $ pixelated-user-agent --host 0.0.0.0
@@ -62,7 +62,7 @@ Type your password:
 ******** (the one you created in previous step)
 ```
 
-5a) Connect to the provider using your credentials, as shown in step 5 above. If the user agent starts up successfully, you will not see any other output.
+5a) Connect to the provider using your credentials, as shown in step 4 above. If the user agent starts up successfully, you will not see any other output.
 
 **Note**: For more convenience during development, you can also create a config file with your credentials (see **Further Notes**).
 
