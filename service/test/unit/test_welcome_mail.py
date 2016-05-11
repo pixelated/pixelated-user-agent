@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import re
 import unittest
 from mockito import verify, mock
 from mockito.matchers import Matcher
@@ -61,13 +62,12 @@ class WelcomeMailCapture(Matcher):
 
     def _format(self, mail):
         splitter = '\n'
-        arr = mail.split(splitter)
-        arr = self._remove_variable_value(arr)
+        mail_lines = mail.split(splitter)
+        mail_lines = self._remove_boundaries(mail_lines)
+        return splitter.join(mail_lines)
 
-        return splitter.join(arr)
-
-    def _remove_variable_value(self, arr):
-        arr.pop(0)
-        arr.pop(6)
-        arr.pop(44)
-        return arr
+    def _remove_boundaries(self, mail_lines):
+        # boundary example --===============5031169581469213585==--
+        boundary_regex = re.compile("^(.*)(\={15})(\w*)(\={2})(.*)$")
+        boundaries = filter(boundary_regex.match, mail_lines)
+        return [line for line in mail_lines if line not in boundaries]

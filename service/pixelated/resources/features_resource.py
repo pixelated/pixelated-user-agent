@@ -30,18 +30,8 @@ class FeaturesResource(Resource):
         self._multi_user = multi_user
 
     def render_GET(self, request):
-        dispatcher_features = self._dispatcher_features()
         disabled_features = self._disabled_features()
-        return respond_json(
-            {'disabled_features': disabled_features, 'dispatcher_features': dispatcher_features}, request)
-
-    def _dispatcher_features(self):
-        dispatcher_features = {}
-        if os.environ.get('DISPATCHER_LOGOUT_URL'):
-            dispatcher_features['logout'] = os.environ.get('DISPATCHER_LOGOUT_URL')
-        if self._multi_user:
-            dispatcher_features['logout'] = '/%s' % LogoutResource.BASE_URL
-        return dispatcher_features
+        return respond_json({'disabled_features': disabled_features}, request)
 
     def _disabled_features(self):
         disabled_features = [default_disabled_feature for default_disabled_feature in self.DISABLED_FEATURES]

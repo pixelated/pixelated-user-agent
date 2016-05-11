@@ -22,7 +22,6 @@ from twisted.internet import defer
 
 from pixelated.application import UserAgentMode
 from pixelated.config.site import PixelatedSite
-from test.support.dispatcher.proxy import Proxy
 from test.support.integration import AppTestClient
 from selenium import webdriver
 

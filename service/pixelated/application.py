@@ -192,7 +192,6 @@ def _start_in_single_user_mode(args, resource, services_factory):
     deferred = initialize_leap_single_user(args.leap_provider_cert,
                                            args.leap_provider_cert_fingerprint,
                                            args.credentials_file,
-                                           args.organization_mode,
                                            args.leap_home)
     deferred.addCallback(
         lambda leap_session: start_user_agent_in_single_user_mode(

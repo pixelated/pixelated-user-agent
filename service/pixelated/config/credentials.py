@@ -21,13 +21,10 @@ import sys
 import ConfigParser
 
 
-def read(organization_mode, credentials_file):
-    if organization_mode:
-        return read_from_dispatcher()
-    else:
-        if credentials_file:
-            return read_from_file(credentials_file)
-        return prompt_for_credentials()
+def read(credentials_file):
+    if credentials_file:
+        return read_from_file(credentials_file)
+    return prompt_for_credentials()
 
 
 def prompt_for_credentials():
@@ -46,8 +43,3 @@ def read_from_file(credentials_file):
         config_parser.get('pixelated', 'leap_username'), \
         config_parser.get('pixelated', 'leap_password')
     return provider, user, password
-
-
-def read_from_dispatcher():
-    config = json.loads(sys.stdin.read())
-    return config['leap_provider_hostname'], config['user'], config['password']

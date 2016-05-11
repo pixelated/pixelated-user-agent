@@ -47,7 +47,6 @@ def initialize():
             args.leap_provider_cert,
             args.leap_provider_cert_fingerprint,
             args.credentials_file,
-            organization_mode=False,
             leap_home=args.leap_home,
             initial_sync=_do_initial_sync(args))
 

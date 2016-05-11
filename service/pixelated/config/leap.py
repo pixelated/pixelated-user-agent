@@ -30,7 +30,6 @@ def initialize_leap_multi_user(provider_hostname,
                                leap_provider_cert,
                                leap_provider_cert_fingerprint,
                                credentials_file,
-                               organization_mode,
                                leap_home):
 
     config, provider = initialize_leap_provider(provider_hostname, leap_provider_cert, leap_provider_cert_fingerprint, leap_home)
@@ -69,15 +68,13 @@ def authenticate_user(provider, username, password, initial_sync=True, auth=None
 def initialize_leap_single_user(leap_provider_cert,
                                 leap_provider_cert_fingerprint,
                                 credentials_file,
-                                organization_mode,
                                 leap_home,
                                 initial_sync=True):
 
     init_monkeypatches()
     events_server.ensure_server()
 
-    provider, username, password = credentials.read(organization_mode,
-                                                    credentials_file)
+    provider, username, password = credentials.read(credentials_file)
 
     config, provider = initialize_leap_provider(provider, leap_provider_cert, leap_provider_cert_fingerprint, leap_home)
 

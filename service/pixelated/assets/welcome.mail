@@ -15,7 +15,7 @@ Pixelated Mail should provide functionality that is similar to what you've come 
 To compose a message look for the big blue button on the top left. You can add tags to received messages by clicking on the "+" sign under the message subject. You can also find the encryption status of messages just above the sender/recipient information.
 
 A bit more about Pixelated
-Pixelated is an open source project licensed under AGPL 3.0. It is composed of 3 main parts, the User Agent (what you are using right now), the Dispatcher (what allows you to log in with different accounts to the same instance) and the Platform (which provides the email service you will use to send and receive messages - the server behind the @ sign on your new mail address). You can learn more by visiting https://pixelated-project.org/.
+Pixelated is an open source project licensed under AGPL 3.0. It is composed of 2 main parts, the User Agent (what you are using right now) and the Platform (which provides the email service you will use to send and receive messages - the server behind the @ sign on your new mail address). You can learn more by visiting https://pixelated-project.org/.
 
 About this message and encryption status
 This message was not encrypted, in other words, it could have been read by others at some point during transmission, like any other email client.
@@ -30,10 +30,12 @@ Enjoy your secure messaging!
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 <p>
-Welcome to Pixelated Mail, a modern email with encryption. 
+Welcome to Pixelated Mail, a modern email with encryption.
 </p>
 <p>
-Pixelated Mail is an open source project that aims to provide secure email on the browser with all the functionality we've come to expect of a modern email client.
+Pixelated Mail is an open source project that aims to provide secure email =
+on the browser with all the functionality we've come to expect of a modern =
+email client.
 </p>
 <p>
 <b>How to use it</b><br>
@@ -52,18 +54,17 @@ e sender/recipient information.
 <p>
 <b>A bit more about Pixelated</b><br>
 Pixelated is an open source project licensed under AGPL 3.0. It is composed=
- of 3 main parts, the User Agent (what you are using right now), the Dispat=
-cher (what allows you to log in with different accounts to the same instanc=
-e) and the Platform (which provides the email service you will use to send =
-and receive messages - the server behind the @ sign on your new mail addres=
-s). You can learn more by visiting <a src=3D"https://pixelated-project.org/=
-">https://pixelated-project.org/</a>.
+ of 2 main parts, the User Agent (what you are using right now) and the Pla=
+tform (which provides the email service you will use to send and receive me=
+ssages - the server behind the @ sign on your new mail address). You can le=
+arn more by visiting <a src=3D"https://pixelated-project.org/">https://pixe=
+lated-project.org/</a>.
 </p>
 <p>
 <b>About this message and encryption status</b><br>
 This message was not encrypted, in other words, it could have been read by others at some point during transmission like any other email client.
 To send encrypted messages you have to have the public Keys of the recipients, in Pixelated you have 2 options:
-<p>- sending an email to another Pixelated account: public keys are exchanged by default. 
+<p>- sending an email to another Pixelated account: public keys are exchanged by default.
 <br>- sending an email to another email provider: you should had exchanged public keys with the recipients previously.
 </p>
 <p>
