@@ -1,5 +1,5 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: Pixelated Dispatcher
+Upstream-Name: Pixelated User Agent
 Source: https://github.com/pixelated-project/pixelated-user-agent
 
 Files: *
