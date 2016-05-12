@@ -6,9 +6,8 @@ Pixelated User Agent Maintenance
 The command line tool pixelated-maintenace allows you to run some common tasks, mostly related to soledad.
 
 ```
-usage: pixelated-maintenance [-h] [--debug] [--dispatcher file]
-                             [--dispatcher-stdin] [-c <configfile>]
-                             [--home HOME] [-lc <leap-provider.crt>]
+usage: pixelated-maintenance [-h] [--debug] [-c <configfile>]
+                             [--leap-home HOME] [-lc <leap-provider.crt>]
                              [-lf <leap provider certificate fingerprint>]
                              {reset,load-mails,dump-soledad,sync} ...
 
@@ -25,14 +24,10 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   --debug               DEBUG mode.
-  --dispatcher file     run in organization mode, the credentials will be read
-                        from specified file
-  --dispatcher-stdin    run in organization mode, the credentials will be read
-                        from stdin
   -c <configfile>, --config <configfile>
                         use specified file for credentials (for test purposes
                         only)
-  --home HOME           The folder where the user agent stores its data.
+  --leap-home HOME      The folder where the user agent stores its data.
                         Defaults to ~/.leap
   -lc <leap-provider.crt>, --leap-provider-cert <leap-provider.crt>
                         use specified file for LEAP provider cert authority
@@ -47,8 +42,11 @@ The commands you can run are:
 
 * reset - Use this to remove all mails from your account. Existing encryption keys like your GnuPG key is not affected
 * load-mails - Loads existing mails into your account
+* markov-generate - Generate mails using markov chains
 * dump-soledad - Get a soledad database dump. Mostly for debugging use cases
 * sync - Sync your soledad database
+* repair - Repair database if possible
+* integrity-check - Run integrity check on database
 
 Like with other such tools, to get detailed help for a single command, call it with the --help option.
 
@@ -75,7 +73,7 @@ X-TW-Pixelated-Tags: nite, macro, trash
 This is a test mail
 ```
 
-*Preparation* 
+*Preparation*
 
 Steps you might want to consider before importing mails into an account:
 
