@@ -47,7 +47,7 @@ class AttachmentsResourceTest(unittest.TestCase):
 
         def assert_response(_):
             self.assertEqual(201, request.code)
-            self.assertEqual('/attachment/%s' % attachment_id, request.headers['Location'])
+            self.assertEqual('/attachment/%s' % attachment_id, request.responseHeaders.getRawHeaders("location")[0])
             response_json = {'ident': attachment_id, 'content-type': 'some mocked type',
                              'name': 'filename.txt', 'size': 17, 'encoding': 'base64'}
             self.assertEqual(response_json, json.loads(request.written[0]))
@@ -72,7 +72,7 @@ class AttachmentsResourceTest(unittest.TestCase):
 
         def assert_response(_):
             self.assertEqual(500, request.code)
-            self.assertFalse('Location' in request.headers)
+            self.assertFalse(request.responseHeaders.hasHeader('Location'.lower()))
             self.assertIn("message", json.loads(request.written[0]))
             verify(self.mail_service).save_attachment('some mocked value', 'some mocked type')
 

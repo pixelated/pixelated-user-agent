@@ -40,8 +40,8 @@ class RetrieveAttachmentTest(SoledadTestBase):
 
         self.assertEqual(200, req.code)
         self.assertEquals('pretend to be binary attachment data', attachment)
-        self.assertEquals(expected_content_disposition, req.outgoingHeaders['content-disposition'])
-        self.assertEquals(expected_content_type, req.outgoingHeaders['content-type'])
+        self.assertEquals(expected_content_disposition, req.responseHeaders.getRawHeaders('content-disposition')[0])
+        self.assertEquals(expected_content_type, req.responseHeaders.getRawHeaders('content-type')[0])
 
     @defer.inlineCallbacks
     def test_should_retrieve_attachment_even_if_xsrf_token_not_passed(self):
@@ -57,8 +57,8 @@ class RetrieveAttachmentTest(SoledadTestBase):
 
         self.assertEqual(200, req.code)
         self.assertEquals('pretend to be binary attachment data', attachment)
-        self.assertEquals(expected_content_disposition, req.outgoingHeaders['content-disposition'])
-        self.assertEquals(expected_content_type, req.outgoingHeaders['content-type'])
+        self.assertEquals(expected_content_disposition, req.responseHeaders.getRawHeaders('content-disposition')[0])
+        self.assertEquals(expected_content_type, req.responseHeaders.getRawHeaders('content-type')[0])
 
     def _create_mail_with_attachment(self):
         input_mail = MIMEMultipart()
@@ -89,7 +89,7 @@ class RetrieveAttachmentTest(SoledadTestBase):
         _, req = yield self.post_attachment(post_data, headers)
 
         self.assertEqual(201, req.code)
-        self.assertEqual('/attachment/B5B4ED80AC3B894523D72E375DACAA2FC6606C18EDF680FE95903086C8B5E14A', req.headers['Location'])
+        self.assertEqual('/attachment/B5B4ED80AC3B894523D72E375DACAA2FC6606C18EDF680FE95903086C8B5E14A', req.responseHeaders.getRawHeaders('location')[0])
         response_json = {'ident': 'B5B4ED80AC3B894523D72E375DACAA2FC6606C18EDF680FE95903086C8B5E14A',
                          'content-type': content_type,
                          'name': filename,

@@ -69,8 +69,8 @@ class TestRootResource(unittest.TestCase):
         self._test_should_renew_xsrf_cookie()
 
     def _mock_ajax_csrf(self, request, csrf_token):
-        request.headers['x-requested-with'] = 'XMLHttpRequest'
-        request.headers['x-xsrf-token'] = csrf_token
+        request.requestHeaders.setRawHeaders('x-requested-with', ['XMLHttpRequest'])
+        request.requestHeaders.setRawHeaders('x-xsrf-token', [csrf_token])
 
     def test_should_unauthorize_child_resource_ajax_requests_when_csrf_mismatch(self):
         request = DummyRequest(['/child'])

@@ -108,7 +108,7 @@ class PixRequestMock(DummyRequest):
 def request_mock(path='', method='GET', body='', headers={}, ajax=True, csrf='token'):
     dummy = PixRequestMock(path.split('/'))
     for name, val in headers.iteritems():
-        dummy.headers[name.lower()] = val
+        dummy.requestHeaders.setRawHeaders(name.lower(), [val])
     dummy.method = method
     if isinstance(body, str):
         dummy.content = io.BytesIO(body)
@@ -116,8 +116,8 @@ def request_mock(path='', method='GET', body='', headers={}, ajax=True, csrf='to
         for key, val in body.items():
             dummy.addArg(key, val)
     if ajax:
-        dummy.headers['x-requested-with'] = 'XMLHttpRequest'
-        dummy.headers['x-xsrf-token'] = csrf
+        dummy.requestHeaders.setRawHeaders('x-requested-with', ['XMLHttpRequest'])
+        dummy.requestHeaders.setRawHeaders('x-xsrf-token', [csrf])
         dummy.addCookie('XSRF-TOKEN', csrf)
 
     return dummy

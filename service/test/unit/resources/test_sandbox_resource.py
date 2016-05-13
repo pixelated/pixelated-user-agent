@@ -33,6 +33,6 @@ class TestSandBoxResource(unittest.TestCase):
 
         yield self.web.get(request)
 
-        self.assertEquals(expected_csp_headers, request.outgoingHeaders.get('X-Content-Security-Policy'.lower()))
-        self.assertEquals(expected_csp_headers, request.outgoingHeaders.get('Content-Security-Policy'.lower()))
-        self.assertEquals(expected_csp_headers, request.outgoingHeaders.get('X-Webkit-CSP'.lower()))
+        self.assertEquals(expected_csp_headers, request.responseHeaders.getRawHeaders('X-Content-Security-Policy'.lower())[0])
+        self.assertEquals(expected_csp_headers, request.responseHeaders.getRawHeaders('Content-Security-Policy'.lower())[0])
+        self.assertEquals(expected_csp_headers, request.responseHeaders.getRawHeaders('X-Webkit-CSP'.lower())[0])

@@ -91,7 +91,7 @@ class AttachmentsResource(BaseResource):
         deferred = _mail_service.save_attachment(_file.value, _file.type)
 
         def send_location(attachment_id):
-            request.headers['Location'] = '/%s/%s' % (self.BASE_URL, attachment_id)
+            request.setHeader('Location', '/%s/%s' % (self.BASE_URL, attachment_id))
             response_json = {"ident": attachment_id,
                              "content-type": _file.type,
                              "encoding": "base64",  # hard coded for now -- not really used
