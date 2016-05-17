@@ -22,7 +22,7 @@ from pixelated.adapter.services.mail_sender import MailSender, MailSenderExcepti
 from pixelated.adapter.model.mail import InputMail
 from pixelated.bitmask_libraries.smtp import LeapSMTPConfig
 from pixelated.support.functional import flatten
-from test.support.test_helper import mail_dict
+from test.support.test_helper import mail_dict, duplicates_in_fields_mail_dict
 from twisted.internet import reactor, defer
 from twisted.internet.defer import Deferred
 from mockito.matchers import Matcher
@@ -100,6 +100,30 @@ class MailSenderTest(unittest.TestCase):
 
         for recipient in flatten([input_mail.to, input_mail.cc, input_mail.bcc]):
             verify(OutgoingMail).send_message(MailToSmtpFormatCapture(recipient, bccs), TwistedSmtpUserCapture(recipient))
+
+
+    @defer.inlineCallbacks
+    def test_if_recipent_doubled_in_fields_send_only_in_bcc(self):
+        input_mail = InputMail.from_dict(duplicates_in_fields_mail_dict(), from_address='pixelated@org')
+        when(OutgoingMail).send_message(any(), any()).thenReturn(defer.succeed(None))
+
+        yield self.sender.sendmail(input_mail)
+
+        self.assertIn('to@pixelated.org', input_mail.to)
+        self.assertNotIn('another@pixelated.org', input_mail.to)
+        #self.assertIn('another@pixelated.org', input_mail.bcc)
+
+    @defer.inlineCallbacks
+    def test_if_recipent_doubled_in_fields_send_only_in_to(self):
+        input_mail = InputMail.from_dict(duplicates_in_fields_mail_dict(), from_address='pixelated@org')
+        when(OutgoingMail).send_message(any(), any()).thenReturn(defer.succeed(None))
+
+        yield self.sender.sendmail(input_mail)
+
+        self.assertIn('third@pixelated.org', input_mail.to)
+        self.assertNotIn('third@pixelated.org', input_mail.cc)
+        self.assertIn('cc@pixelated.org', input_mail.cc)
+        self.assertNotIn(['third@pixelated.org', 'another@pixelated.org'], input_mail.cc)
 
     def test_remove_canonical_recipient_when_it_is_not_canonical(self):
         recipient = u'user@pixelated.org'

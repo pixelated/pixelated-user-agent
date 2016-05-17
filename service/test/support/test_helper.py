@@ -45,6 +45,20 @@ def mail_dict():
     }
 
 
+def duplicates_in_fields_mail_dict():
+    return {
+        'header': {
+            'to': ['to@pixelated.org', 'another@pixelated.org', 'third@pixelated.org'],
+            'cc': ['cc@pixelated.org', 'another@pixelated.org', 'third@pixelated.org'],
+            'bcc': ['bcc@pixelated.org', 'another@pixelated.org'],
+            'subject': 'Subject'
+        },
+        'body': 'Body',
+        'ident': '',
+        'tags': []
+    }
+
+
 class TestDoc(object):
     def __init__(self, content):
         self.content = content
