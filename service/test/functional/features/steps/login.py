@@ -42,3 +42,14 @@ def step_impl(context):
 
 def _wait_for_interstitial_to_reload():
     time.sleep(6)
+
+
+@when(u'I logout')
+def click_logout(context):
+    logout_button = wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, 'ul#logout'))
+    logout_button.click()
+
+
+@then(u'I should see the login page')
+def see_login_page(context):
+    assert find_element_by_css_selector(context, 'form#login_form')

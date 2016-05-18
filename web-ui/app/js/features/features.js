@@ -18,16 +18,16 @@
 define(['helpers/monitored_ajax'], function(monitoredAjax) {
  'use strict';
   var cachedDisabledFeatures;
-  var cachedDispatcherFeatures;
+  var cachedMultiUserFeatures;
 
   function getDisabledFeatures() {
     cachedDisabledFeatures = cachedDisabledFeatures || fetchFeatures().disabled_features;
     return cachedDisabledFeatures;
   }
 
-  function getDispatcherFeatures() {
-    cachedDispatcherFeatures = cachedDispatcherFeatures || fetchFeatures().dispatcher_features;
-    return cachedDispatcherFeatures;
+  function getMultiUserFeatures() {
+    cachedMultiUserFeatures = cachedMultiUserFeatures || fetchFeatures().multi_user;
+    return cachedMultiUserFeatures;
   }
 
   function fetchFeatures() {
@@ -52,10 +52,10 @@ define(['helpers/monitored_ajax'], function(monitoredAjax) {
       return this.isEnabled('autoRefresh');
     },
     isLogoutEnabled: function () {
-      return _.has(getDispatcherFeatures(), 'logout');
+      return _.has(getMultiUserFeatures(), 'logout');
     },
     getLogoutUrl: function () {
-      return getDispatcherFeatures().logout;
+      return getMultiUserFeatures().logout;
     }
   };
 });

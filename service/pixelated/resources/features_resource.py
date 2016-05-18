@@ -31,10 +31,16 @@ class FeaturesResource(Resource):
 
     def render_GET(self, request):
         disabled_features = self._disabled_features()
-        return respond_json({'disabled_features': disabled_features}, request)
+        features = {'disabled_features': disabled_features}
+        self._add_multi_user_to(features)
+        return respond_json(features, request)
 
     def _disabled_features(self):
         disabled_features = [default_disabled_feature for default_disabled_feature in self.DISABLED_FEATURES]
         if os.environ.get('FEEDBACK_URL') is None:
             disabled_features.append('feedback')
         return disabled_features
+
+    def _add_multi_user_to(self, features):
+        if self._multi_user:
+            features.update({'multi_user': {'logout': LogoutResource.BASE_URL}})

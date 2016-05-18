@@ -27,3 +27,5 @@ Feature: login and logout
     And I click on the login button
     Then I should see the fancy interstitial
     Then I have mails
+    When I logout
+    Then I should see the login page
