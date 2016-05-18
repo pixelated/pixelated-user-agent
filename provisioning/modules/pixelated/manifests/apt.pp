@@ -30,7 +30,7 @@ class pixelated::apt {
 
   # leap repo
   file { '/etc/apt/sources.list.d/leap.list':
-    content => 'deb http://deb.leap.se/0.6 jessie main',
+    content => 'deb http://deb.leap.se/0.9 jessie main',
     owner   => 'root',
     require => Exec['add_leap_key'],
     notify  => Exec['apt_get_update'],
