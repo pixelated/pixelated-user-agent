@@ -253,3 +253,7 @@ for multi-user mode, change the last line above to
 ```shell
 apt-get install pixelated-server
 ```
+
+## Docker
+
+For people who want to run the user agent on docker container can use the Dockerfile.
