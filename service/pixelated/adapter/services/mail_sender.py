@@ -63,29 +63,12 @@ class MailSender(object):
         bccs = mail.bcc
         deferreds = []
 
-        recipients = self._remove_canonical(mail, recipients)
-        self._remove_duplicates_form_cc_and_to(mail)
-
         for recipient in recipients:
             self._define_bcc_field(mail, recipient, bccs)
             smtp_recipient = self._create_twisted_smtp_recipient(recipient)
             deferreds.append(outgoing_mail.send_message(mail.to_smtp_format(), smtp_recipient))
 
         return defer.DeferredList(deferreds, fireOnOneErrback=False, consumeErrors=True)
-
-    def _remove_duplicates_form_cc_and_to(self, mail):
-        mail.headers['To'] = list(set(self._remove_duplicates(mail.to)).difference(set(mail.bcc)))
-        mail.headers['Cc'] = list((set(self._remove_duplicates(mail.cc)).difference(set(mail.bcc)).difference(set(mail.to))))
-
-    def _remove_canonical(self, mail, recipients):
-        mail.headers['To'] = self._remove_duplicates(map(self._remove_canonical_recipient, mail.to))
-        mail.headers['Cc'] = self._remove_duplicates(map(self._remove_canonical_recipient, mail.cc))
-        mail.headers['Bcc'] = self._remove_duplicates(map(self._remove_canonical_recipient, mail.bcc))
-
-        return self._remove_duplicates(map(self._remove_canonical_recipient, recipients))
-
-    def _remove_duplicates(self, recipient):
-        return list(set(recipient))
 
     def _define_bcc_field(self, mail, recipient, bccs):
         if recipient in bccs:
@@ -110,6 +93,3 @@ class MailSender(object):
     def _create_twisted_smtp_recipient(self, recipient):
         # TODO: Better is fix Twisted instead
         return User(str(recipient), NOT_NEEDED, NOT_NEEDED, NOT_NEEDED)
-
-    def _remove_canonical_recipient(self, recipient):
-        return recipient.split('<')[1][0:-1] if '<' in recipient else recipient

@@ -48,9 +48,9 @@ def mail_dict():
 def duplicates_in_fields_mail_dict():
     return {
         'header': {
-            'to': ['to@pixelated.org', 'another@pixelated.org', 'third@pixelated.org'],
-            'cc': ['cc@pixelated.org', 'another@pixelated.org', 'third@pixelated.org'],
-            'bcc': ['bcc@pixelated.org', 'another@pixelated.org'],
+            'to': ['to@pixelated.org', 'another@pixelated.org', 'third@pixelated.org', 'third@pixelated.org'],
+            'cc': ['cc@pixelated.org', 'another@pixelated.org', 'third@pixelated.org', 'cc@pixelated.org'],
+            'bcc': ['bcc@pixelated.org', 'another@pixelated.org', 'bcc@pixelated.org'],
             'subject': 'Subject'
         },
         'body': 'Body',

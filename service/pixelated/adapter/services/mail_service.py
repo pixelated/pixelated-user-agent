@@ -98,10 +98,32 @@ class MailService(object):
     def send_mail(self, content_dict):
         mail = InputMail.from_dict(content_dict, self.account_email)
         draft_id = content_dict.get('ident')
+        self._deduplicate_recipients(mail)
         yield self.mail_sender.sendmail(mail)
 
         sent_mail = yield self.move_to_sent(draft_id, mail)
         defer.returnValue(sent_mail)
+
+    def _deduplicate_recipients(self, mail):
+        self._remove_canonical(mail)
+        self._remove_duplicates_form_cc_and_to(mail)
+
+    def _remove_canonical(self, mail):
+        mail.headers['To'] = map(self._remove_canonical_recipient, mail.to)
+        mail.headers['Cc'] = map(self._remove_canonical_recipient, mail.cc)
+        mail.headers['Bcc'] = map(self._remove_canonical_recipient, mail.bcc)
+
+    def _remove_duplicates_form_cc_and_to(self, mail):
+        mail.headers['To'] = list(set(self._remove_duplicates(mail.to)).difference(set(mail.bcc)))
+        mail.headers['Cc'] = list((set(self._remove_duplicates(mail.cc)).difference(set(mail.bcc)).difference(set(mail.to))))
+        mail.headers['Bcc'] = self._remove_duplicates(mail.bcc)
+
+    def _remove_duplicates(self, recipient):
+        return list(set(recipient))
+
+    # TODO removing canocical should, be added back later
+    def _remove_canonical_recipient(self, recipient):
+        return recipient.split('<')[1][0:-1] if '<' in recipient else recipient
 
     @defer.inlineCallbacks
     def move_to_sent(self, last_draft_ident, mail):
