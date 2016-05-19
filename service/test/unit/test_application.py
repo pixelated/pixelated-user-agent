@@ -1,5 +1,6 @@
 import unittest
 
+from leap.common.events import catalog as events
 from mock import patch, MagicMock, ANY
 import pixelated
 
@@ -72,4 +73,35 @@ class ApplicationTest(unittest.TestCase):
             services_mock.assert_called_once_with(leap_session)
 
         d.addCallback(_assert)
+        return d
+
+    @patch('leap.common.events.client')
+    @patch('pixelated.application.reactor')
+    @patch('pixelated.application.services.Services')
+    def test_should_log_user_out_if_invalid_soledad_token(self, services_mock, reactor_mock, events_mock):
+        app_mock = MagicMock()
+        services_factory_mock = MagicMock()
+
+        mock_service_log_user_out = MagicMock(return_value=None)
+        services_factory_mock.log_out_user = mock_service_log_user_out
+
+        leap_session = MagicMock()
+        register_mock = events_mock.register
+        register_mock.register.return_value = None
+
+        config = ApplicationTest.MockConfig(12345, '127.0.0.1')
+        d = pixelated.application.start_user_agent_in_single_user_mode(app_mock, services_factory_mock, config.home, leap_session)
+
+        pixelated.application.add_top_level_system_callbacks(d, services_factory_mock)
+
+        def _assert_user_logged_out(_):
+            used_arguments = register_mock.call_args[0]
+            self.assertIsNotNone(used_arguments)
+            soledad_invalid_auth_event = used_arguments[0]
+            self.assertEqual(soledad_invalid_auth_event, events.SOLEDAD_INVALID_AUTH_TOKEN)
+            used_log_out_method = used_arguments[1]
+            used_log_out_method({'uuid': 'some_uuid'})
+            mock_service_log_user_out.assert_called_once_with('some_uuid')
+
+        d.addCallback(_assert_user_logged_out)
         return d

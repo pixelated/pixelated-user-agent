@@ -78,6 +78,9 @@ class SingleUserServicesFactory(object):
     def services(self, user_id):
         return self._services
 
+    def log_out_user(self, user_id):
+        reactor.stop()
+
 
 class UserAgentMode(object):
     def __init__(self, is_single_user):
@@ -132,22 +135,28 @@ def initialize():
     services_factory = _create_service_factory(args)
     resource = RootResource(services_factory)
 
-    deferred = _start_mode(args, resource, services_factory)
+    start_async = _start_mode(args, resource, services_factory)
+    add_top_level_system_callbacks(start_async, services_factory)
+    log.info('Running the reactor')
+    reactor.run()
+
+
+def add_top_level_system_callbacks(deferred, services_factory):
 
     def _quit_on_error(failure):
         failure.printTraceback()
         reactor.stop()
 
-    def _register_shutdown_on_token_expire(leap_session):
-        register(events.SOLEDAD_INVALID_AUTH_TOKEN, lambda *unused: reactor.stop())
+    def _log_user_out(user_data):
+        log.info('Invalid soledad token, logging out %s' % user_data)
+        services_factory.log_out_user(user_data['uuid'])
+
+    def _log_user_out_on_token_expire(leap_session):
+        register(events.SOLEDAD_INVALID_AUTH_TOKEN, _log_user_out)
         return leap_session
 
-    deferred.addCallback(_register_shutdown_on_token_expire)
+    deferred.addCallback(_log_user_out_on_token_expire)
     deferred.addErrback(_quit_on_error)
-
-    log.info('Running the reactor')
-
-    reactor.run()
 
 
 def _start_mode(args, resource, services_factory):
