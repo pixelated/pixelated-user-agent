@@ -100,7 +100,7 @@ class ApplicationTest(unittest.TestCase):
             soledad_invalid_auth_event = used_arguments[0]
             self.assertEqual(soledad_invalid_auth_event, events.SOLEDAD_INVALID_AUTH_TOKEN)
             used_log_out_method = used_arguments[1]
-            used_log_out_method({'uuid': 'some_uuid'})
+            used_log_out_method(events.SOLEDAD_INVALID_AUTH_TOKEN, {'uuid': 'some_uuid'})
             mock_service_log_user_out.assert_called_once_with('some_uuid')
 
         d.addCallback(_assert_user_logged_out)

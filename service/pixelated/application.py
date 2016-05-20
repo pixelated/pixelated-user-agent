@@ -147,7 +147,7 @@ def add_top_level_system_callbacks(deferred, services_factory):
         failure.printTraceback()
         reactor.stop()
 
-    def _log_user_out(user_data):
+    def _log_user_out(event, user_data):
         log.info('Invalid soledad token, logging out %s' % user_data)
         services_factory.log_out_user(user_data['uuid'])
 
