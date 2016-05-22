@@ -44,6 +44,10 @@ class ServicesFactory(object):
     def __init__(self, mode):
         self._services_by_user = {}
         self.mode = mode
+        self._map_email = {}
+
+    def map_email(self, username, user_id):
+        self._map_email[username] = user_id
 
     def is_logged_in(self, user_id):
         return user_id in self._services_by_user
@@ -51,7 +55,10 @@ class ServicesFactory(object):
     def services(self, user_id):
         return self._services_by_user[user_id]
 
-    def log_out_user(self, user_id):
+    def log_out_user(self, user_id, using_email=False):
+        if using_email:
+            user_id = self._map_email[user_id.split('@')[0]]
+
         if self.is_logged_in(user_id):
             _services = self._services_by_user[user_id]
             _services.close()
@@ -78,7 +85,7 @@ class SingleUserServicesFactory(object):
     def services(self, user_id):
         return self._services
 
-    def log_out_user(self, user_id):
+    def log_out_user(self, user_id, using_email=False):
         reactor.stop()
 
 
@@ -149,7 +156,8 @@ def add_top_level_system_callbacks(deferred, services_factory):
 
     def _log_user_out(event, user_data):
         log.info('Invalid soledad token, logging out %s' % user_data)
-        services_factory.log_out_user(user_data['uuid'])
+        user_data = {'user_id': user_data['uuid']} if 'uuid' in user_data else {'user_id': user_data, 'using_email': True}
+        services_factory.log_out_user(**user_data)
 
     def _log_user_out_on_token_expire(leap_session):
         register(events.SOLEDAD_INVALID_AUTH_TOKEN, _log_user_out)

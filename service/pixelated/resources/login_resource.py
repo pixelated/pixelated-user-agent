@@ -161,14 +161,12 @@ class LoginResource(BaseResource):
         user_id = leap_session.user_auth.uuid
         if not self._services_factory.is_logged_in(user_id):
             yield self._services_factory.create_services_from(leap_session)
-        self._init_http_session(request, user_id)
-
-    @defer.inlineCallbacks
-    def _initialize_services(self, leap_session):
-        yield self._services_factory.create_services_from(leap_session)
+            self._services_factory.map_email(self.creds.username, user_id)
 
         if leap_session.fresh_account:
             yield add_welcome_mail(leap_session.mail_store)
+
+        self._init_http_session(request, user_id)
 
     def _init_http_session(self, request, user_id):
         session = IPixelatedSession(request.getSession())

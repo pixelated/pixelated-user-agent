@@ -180,6 +180,7 @@ class TestLoginPOST(unittest.TestCase):
         def assert_login_setup_service_for_user(_):
             verify(self.portal).login(ANY(), None, IResource)
             verify(self.services_factory).create_services_from(self.leap_session)
+            verify(self.services_factory).map_email('ayoyo', 'some_user_uuid')
             interstitial_js_in_template = '<script src="startup-assets/Interstitial.js"></script>'
             self.assertIn(interstitial_js_in_template, self.request.written[0])
             self.assertTrue(self.resource.is_logged_in(self.request))

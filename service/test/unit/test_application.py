@@ -94,14 +94,22 @@ class ApplicationTest(unittest.TestCase):
 
         pixelated.application.add_top_level_system_callbacks(d, services_factory_mock)
 
-        def _assert_user_logged_out(_):
+        def _assert_user_logged_out_using_uuid(_):
             used_arguments = register_mock.call_args[0]
             self.assertIsNotNone(used_arguments)
             soledad_invalid_auth_event = used_arguments[0]
             self.assertEqual(soledad_invalid_auth_event, events.SOLEDAD_INVALID_AUTH_TOKEN)
             used_log_out_method = used_arguments[1]
             used_log_out_method(events.SOLEDAD_INVALID_AUTH_TOKEN, {'uuid': 'some_uuid'})
-            mock_service_log_user_out.assert_called_once_with('some_uuid')
+            mock_service_log_user_out.assert_called_once_with(user_id='some_uuid')
 
-        d.addCallback(_assert_user_logged_out)
+        def _assert_user_logged_out_using_email_id(_):
+            mock_service_log_user_out.reset_mock()
+            used_arguments = register_mock.call_args[0]
+            used_log_out_method = used_arguments[1]
+            used_log_out_method(events.SOLEDAD_INVALID_AUTH_TOKEN, 'haha@ayo.yo')
+            mock_service_log_user_out.assert_called_once_with(user_id='haha@ayo.yo', using_email=True)
+
+        d.addCallback(_assert_user_logged_out_using_uuid)
+        d.addCallback(_assert_user_logged_out_using_email_id)
         return d
