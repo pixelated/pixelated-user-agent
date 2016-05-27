@@ -77,6 +77,20 @@ class MailSenderTest(unittest.TestCase):
             verify(OutgoingMail).send_message(any(), TwistedSmtpUserCapture(recipient))
 
     @defer.inlineCallbacks
+    def test_send_leaves_mail_in_tact(self):
+        input_mail_dict = mail_dict()
+        input_mail = InputMail.from_dict(input_mail_dict, from_address='pixelated@org')
+
+        when(OutgoingMail).send_message(any(), any()).thenReturn(defer.succeed(None))
+
+        yield self.sender.sendmail(input_mail)
+
+        self.assertEqual(input_mail.to, input_mail_dict["header"]["to"])
+        self.assertEqual(input_mail.cc, input_mail_dict["header"]["cc"])
+        self.assertEqual(input_mail.bcc, input_mail_dict["header"]["bcc"])
+        self.assertEqual(input_mail.subject, input_mail_dict["header"]["subject"])
+
+    @defer.inlineCallbacks
     def test_problem_with_email_raises_exception(self):
         input_mail = InputMail.from_dict(mail_dict(), from_address='pixelated@org')
 

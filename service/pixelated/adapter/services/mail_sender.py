@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from StringIO import StringIO
 from email.utils import parseaddr
+from copy import deepcopy
 from leap.mail.outgoing.service import OutgoingMail
 
 from twisted.internet.defer import Deferred, fail
@@ -47,6 +48,9 @@ class MailSender(object):
 
     @defer.inlineCallbacks
     def sendmail(self, mail):
+        # message is changed in sending, but should be saved unaltered
+        mail = deepcopy(mail)
+
         recipients = flatten([mail.to, mail.cc, mail.bcc])
 
         results = yield self._send_mail_to_all_recipients(mail, recipients)
