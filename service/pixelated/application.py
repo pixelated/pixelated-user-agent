@@ -14,12 +14,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import logging
 
 from OpenSSL import SSL
 from OpenSSL import crypto
 from leap.common.events import (server as events_server,
                                 register, catalog as events)
+from leap.soledad.common.errors import InvalidAuthTokenError
 from twisted.cred import portal
 from twisted.cred.checkers import AllowAnonymousAccess
 from twisted.internet import defer
@@ -210,12 +212,20 @@ def _start_in_single_user_mode(args, resource, services_factory):
                                            args.leap_provider_cert_fingerprint,
                                            args.credentials_file,
                                            args.leap_home)
-    deferred.addCallback(
+
+    def _handle_error(exception):
+        if(exception.type is InvalidAuthTokenError):
+            log.critical('Got an invalid soledad token, the user agent can\'t synchronize data, exiting')
+            os._exit(1)
+        else:
+            exception.raiseException()
+
+    deferred.addCallbacks(
         lambda leap_session: start_user_agent_in_single_user_mode(
             resource,
             services_factory,
             args.leap_home,
-            leap_session))
+            leap_session), _handle_error)
     return deferred
 
 
