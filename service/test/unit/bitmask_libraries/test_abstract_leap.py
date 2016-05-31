@@ -26,7 +26,6 @@ class AbstractLeapTest(unittest.TestCase):
 
     def setUp(self):
         self._uuid = str(uuid4())
-        self._session_id = str(uuid4())
         self._token = str(uuid4())
 
         self.leap_home = os.path.join(tempfile.mkdtemp(), 'leap')
@@ -39,7 +38,6 @@ class AbstractLeapTest(unittest.TestCase):
         self.auth = Mock(username='test_user',
                          api_server_name='some-server.test',
                          uuid=self._uuid,
-                         session_id=self._session_id,
                          token=self._token)
 
         self.nicknym = MagicMock()

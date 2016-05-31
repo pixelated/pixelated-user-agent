@@ -57,7 +57,6 @@ class TestSmtpCertDownloader(unittest.TestCase):
         self._provider.server_name = 'some.host.tld'
 
         self._auth.username = USERNAME
-        self._auth.session_id = 'some session id'
         self._auth.token = 'some token'
 
     def tearDown(self):

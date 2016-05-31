@@ -177,7 +177,6 @@ class SmtpCertDownloader(object):
 
     def download(self):
         cert_url = '%s/%s/smtp_cert' % (self._provider.api_uri, self._provider.api_version)
-        cookies = {"_session_id": self._auth.session_id}
         headers = {}
         headers["Authorization"] = 'Token token="{0}"'.format(self._auth.token)
         params = {'address': self._auth.username}
@@ -186,7 +185,6 @@ class SmtpCertDownloader(object):
             params=params,
             data=params,
             verify=LeapCertificate(self._provider).provider_api_cert,
-            cookies=cookies,
             timeout=self._provider.config.timeout_in_s,
             headers=headers)
         response.raise_for_status()
