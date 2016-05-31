@@ -40,6 +40,10 @@ from pixelated.resources.root_resource import RootResource
 
 log = logging.getLogger(__name__)
 
+from multiprocessing import Lock
+from threading import current_thread
+import foobar
+
 
 class ServicesFactory(object):
 
@@ -136,8 +140,33 @@ def _create_service_factory(args):
     else:
         return ServicesFactory(UserAgentMode(is_single_user=False))
 
+CRYPTO_LOCK=1
+CRYPTO_UNLOCK=2
+CRYPTO_READ=4
+CRYPTO_WRITE=8
+
+
+def idfunc():
+    return current_thread().ident
+
+
+locks = [Lock(), Lock(), Lock(), Lock(), Lock(),Lock(), Lock(), Lock(), Lock(), Lock()]
+
+
+def lockfunc(mode, n, file, line):
+    if mode & CRYPTO_LOCK == CRYPTO_LOCK:
+        print "acquire lock %d" % n
+        locks[n].acquire()
+    elif mode & CRYPTO_UNLOCK == CRYPTO_UNLOCK:
+        print "release lock %d" % n
+        locks[n].release()
+    else:
+        print "unexpected call with mode %d and n %d" % (mode, n)
+
 
 def initialize():
+    foobar.enable_mutexes(idfunc, lockfunc)
+
     log.info('Starting the Pixelated user agent')
     args = arguments.parse_user_agent_args()
     logger.init(debug=args.debug)
