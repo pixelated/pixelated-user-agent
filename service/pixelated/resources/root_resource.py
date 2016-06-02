@@ -18,7 +18,7 @@ import json
 import os
 from string import Template
 
-from pixelated.resources import BaseResource, UnAuthorizedResource
+from pixelated.resources import BaseResource, UnAuthorizedResource, UnavailableResource
 from pixelated.resources.attachments_resource import AttachmentsResource
 from pixelated.resources.sandbox_resource import SandboxResource
 from pixelated.resources.contacts_resource import ContactsResource
@@ -57,7 +57,10 @@ class RootResource(BaseResource):
         if path == '':
             return self
         if self._is_xsrf_valid(request):
-            return self._child_resources.get(path)
+            if self._mode == MODE_RUNNING:
+                return self._child_resources.get(path)
+            else:
+                return UnavailableResource()
         return UnAuthorizedResource()
 
     def _is_xsrf_valid(self, request):
