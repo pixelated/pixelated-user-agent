@@ -14,7 +14,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from setuptools import Extension
 
 from setuptools import setup
 import os
@@ -56,6 +55,4 @@ setup(name='pixelated-user-agent',
               'pixelated-register = pixelated.register:initialize'
           ]
       },
-      include_package_data=True,
-      ext_modules=[
-          Extension("foobar", ["extension/extension.c"], libraries=["crypto"])])
+      include_package_data=True)
