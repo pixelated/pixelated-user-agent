@@ -13,8 +13,8 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from leap.keymanager.keys import KEY_TYPE_KEY, KEY_PRIVATE_KEY, KEY_FINGERPRINT_KEY, KEY_ADDRESS_KEY
-from leap.keymanager.openpgp import OpenPGPKey
+from leap.keymanager import documents as leap_doc
+from leap.keymanager.keys import OpenPGPKey
 
 from twisted.internet import defer
 import logging
@@ -29,27 +29,27 @@ logger = logging.getLogger(__name__)
 
 
 def _is_key_doc(doc):
-    return doc.content.get(KEY_TYPE_KEY, None) in KEY_DOC_TYPES
+    return doc.content.get(leap_doc.KEY_TYPE_KEY, None) in KEY_DOC_TYPES
 
 
 def _is_private_key_doc(doc):
-    return _is_key_doc(doc) and doc.content.get(KEY_PRIVATE_KEY, False)
+    return _is_key_doc(doc) and doc.content.get(leap_doc.KEY_PRIVATE_KEY, False)
 
 
 def _is_active_key_doc(doc):
-    return _is_key_doc(doc) and doc.content.get(KEY_TYPE_KEY, None) == TYPE_OPENPGP_ACTIVE
+    return _is_key_doc(doc) and doc.content.get(leap_doc.KEY_TYPE_KEY, None) == TYPE_OPENPGP_ACTIVE
 
 
 def _is_public_key(doc):
-    return _is_key_doc(doc) and not doc.content.get(KEY_PRIVATE_KEY, False)
+    return _is_key_doc(doc) and not doc.content.get(leap_doc.KEY_PRIVATE_KEY, False)
 
 
 def _key_fingerprint(doc):
-    return doc.content.get(KEY_FINGERPRINT_KEY, None)
+    return doc.content.get(leap_doc.KEY_FINGERPRINT_KEY, None)
 
 
 def _address(doc):
-    return doc.content.get(KEY_ADDRESS_KEY, None)
+    return doc.content.get(leap_doc.KEY_ADDRESS_KEY, None)
 
 
 class SoledadMaintenance(object):
@@ -79,7 +79,7 @@ class SoledadMaintenance(object):
                 yield self._soledad.create_doc_from_json(OpenPGPKey(email, fingerprint=fingerprint, private=False).get_active_json())
 
     def _key_fingerprints_with_private_key(self, docs):
-        return [doc.content[KEY_FINGERPRINT_KEY] for doc in docs if _is_private_key_doc(doc)]
+        return [doc.content[leap_doc.KEY_FINGERPRINT_KEY] for doc in docs if _is_private_key_doc(doc)]
 
     def _missing_active_docs(self, docs, private_key_fingerprints):
         active_doc_ids = self._active_docs_for_key_fingerprint(docs)
@@ -97,4 +97,4 @@ class SoledadMaintenance(object):
                 return [email]
 
     def _active_docs_for_key_fingerprint(self, docs):
-        return [doc.content[KEY_FINGERPRINT_KEY] for doc in docs if _is_active_key_doc(doc) and _is_public_key(doc)]
+        return [doc.content[leap_doc.KEY_FINGERPRINT_KEY] for doc in docs if _is_active_key_doc(doc) and _is_public_key(doc)]

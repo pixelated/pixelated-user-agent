@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from leap.keymanager import KeyManager, openpgp, KeyNotFound
+from leap.keymanager import KeyManager, KeyNotFound
 from .certs import LeapCertificate
 from twisted.internet import defer
 import logging
@@ -48,13 +48,13 @@ class NickNym(object):
             defer.returnValue(False)
 
     def fetch_key(self, email, private=False, fetch_remote=True):
-        return self.keymanager.get_key(email, openpgp.OpenPGPKey, private=private, fetch_remote=fetch_remote)
+        return self.keymanager.get_key(email, private=private, fetch_remote=fetch_remote)
 
     def _gen_key(self):
-        return self.keymanager.gen_key(openpgp.OpenPGPKey)
+        return self.keymanager.gen_key()
 
     def _send_key_to_leap(self):
-        return self.keymanager.send_key(openpgp.OpenPGPKey)
+        return self.keymanager.send_key()
 
 
 def _discover_nicknym_server(provider):

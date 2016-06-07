@@ -1,7 +1,8 @@
 import json
 import ast
 from mockito import mock, when, any as ANY
-from leap.keymanager import OpenPGPKey, KeyNotFound
+from leap.keymanager import KeyNotFound
+from leap.keymanager.keys import OpenPGPKey
 
 from pixelated.application import ServicesFactory, UserAgentMode
 from pixelated.resources.keys_resource import KeysResource
