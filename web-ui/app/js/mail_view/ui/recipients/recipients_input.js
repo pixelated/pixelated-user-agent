@@ -166,7 +166,7 @@ define([
         self = this;
         this.init();
         this.on('typeahead:selected typeahead:autocompleted', this.recipientSelected);
-        this.on(this.$node, 'blur', this.tokenizeRecipient);
+        this.on(this.$node, 'focusout', this.tokenizeRecipient);
         this.on(this.$node, 'keydown', this.processSpecialKey);
         this.on(this.$node, 'keyup', this.warnSendButtonOfInputState);
 

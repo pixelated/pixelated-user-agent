@@ -109,20 +109,20 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
     });
   });
 
-  describe('on blur', function() {
-    var addressEnteredEvent, blurEvent;
+  describe('on focusout', function() {
+    var addressEnteredEvent, focusoutEvent;
 
     beforeEach(function() {
       addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
-      blurEvent = $.Event('blur');
-      spyOn(blurEvent, 'preventDefault');
+      focusoutEvent = $.Event('focusout');
+      spyOn(focusoutEvent, 'preventDefault');
     });
 
     it('tokenizes and sanitize recipient email if there is an input val', function() {
       this.$node.val('a@b.c, Friend <friend@domain.com>; d@e.f  , , , , , , , ,');
-      this.$node.trigger(blurEvent);
+      this.$node.trigger(focusoutEvent);
 
-      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(focusoutEvent.preventDefault).toHaveBeenCalled();
       expect(addressEnteredEvent.callCount).toEqual(3);
 
       expect(addressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'a@b.c'});
@@ -132,9 +132,9 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
 
     it('tokenizes and sanitize adresses separated by space, comma and semicolon', function() {
       this.$node.val('a@b.c Friend <friend@domain.com>, d@e.f; g@h.i');
-      this.$node.trigger(blurEvent);
+      this.$node.trigger(focusoutEvent);
 
-      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(focusoutEvent.preventDefault).toHaveBeenCalled();
       expect(addressEnteredEvent.callCount).toEqual(4);
 
       expect(addressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'a@b.c'});
@@ -145,61 +145,61 @@ describeComponent('mail_view/ui/recipients/recipients_input',function () {
   });
 
   describe('validate email format', function() {
-    var invalidAddressEnteredEvent, addressEnteredEvent, blurEvent;
+    var invalidAddressEnteredEvent, addressEnteredEvent, focusoutEvent;
 
     beforeEach(function () {
       invalidAddressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.enteredInvalid);
       addressEnteredEvent = spyOnEvent(this.$node, Pixelated.events.ui.recipients.entered);
-      blurEvent = $.Event('blur');
-      spyOn(blurEvent, 'preventDefault');
+      focusoutEvent = $.Event('focusout');
+      spyOn(focusoutEvent, 'preventDefault');
     });
 
     it('displays it as an invalid address token', function() {
       this.$node.val('invalid');
-      this.$node.trigger(blurEvent);
+      this.$node.trigger(focusoutEvent);
 
-      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(focusoutEvent.preventDefault).toHaveBeenCalled();
       expect(invalidAddressEnteredEvent).toHaveBeenTriggeredOnAndWith(this, { name: 'to', address: 'invalid' });
     });
 
     it('displays it as an invalid address token when cannot parse', function() {
       this.$node.val('invalid_format, email@example.com');
-      this.$node.trigger(blurEvent);
+      this.$node.trigger(focusoutEvent);
 
-      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(focusoutEvent.preventDefault).toHaveBeenCalled();
       expect(invalidAddressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'invalid_format'});
       expect(addressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'email@example.com'});
     });
 
     it('displays it as an invalid address token when domain isn`t complete', function() {
       this.$node.val('email@example');
-      this.$node.trigger(blurEvent);
+      this.$node.trigger(focusoutEvent);
 
-      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(focusoutEvent.preventDefault).toHaveBeenCalled();
       expect(invalidAddressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'email@example'});
     });
 
     it('displays it as an invalid address token when cannonical email domain isn`t complete', function() {
       this.$node.val('Invalid <email@example>');
-      this.$node.trigger(blurEvent);
+      this.$node.trigger(focusoutEvent);
 
-      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(focusoutEvent.preventDefault).toHaveBeenCalled();
       expect(invalidAddressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'Invalid <email@example>'});
     });
 
     it('parses email with dash' , function() {
       this.$node.val('team@pixelated-project.org');
-      this.$node.trigger(blurEvent);
+      this.$node.trigger(focusoutEvent);
 
-      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(focusoutEvent.preventDefault).toHaveBeenCalled();
       expect(addressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'team@pixelated-project.org'});
     });
-   
+
     it('parses cannonical email with dash' , function() {
       this.$node.val('Pixelated <team@pixelated-project.org>');
-      this.$node.trigger(blurEvent);
+      this.$node.trigger(focusoutEvent);
 
-      expect(blurEvent.preventDefault).toHaveBeenCalled();
+      expect(focusoutEvent.preventDefault).toHaveBeenCalled();
       expect(addressEnteredEvent.calls[0].data).toEqual({name: 'to', address: 'Pixelated <team@pixelated-project.org>'});
     });
  });
