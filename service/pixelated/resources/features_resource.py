@@ -37,7 +37,7 @@ class FeaturesResource(Resource):
 
     def _disabled_features(self):
         disabled_features = [default_disabled_feature for default_disabled_feature in self.DISABLED_FEATURES]
-        if os.environ.get('FEEDBACK_URL') is None:
+        if not os.environ.get('FEEDBACK_URL'):
             disabled_features.append('feedback')
         return disabled_features
 
