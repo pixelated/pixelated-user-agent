@@ -132,7 +132,6 @@ class ApplicationTest(unittest.TestCase):
         d.addErrback(_assert_the_same_error_is_relayed_in_the_deferred)
         return d
 
-
     @patch('pixelated.application.reactor')
     @patch('pixelated.application.start_site')
     @patch('pixelated.application._setup_multi_user')
