@@ -113,3 +113,41 @@ class ApplicationTest(unittest.TestCase):
         d.addCallback(_assert_user_logged_out_using_uuid)
         d.addCallback(_assert_user_logged_out_using_email_id)
         return d
+
+    @patch('pixelated.application.reactor')
+    @patch('pixelated.application._setup_multi_user')
+    def test_should_defer_fail_errors_during_multi_user_start_site(self, mock_multi_user_bootstrap, reactor_mock):
+        args_mock = MagicMock()
+        root_resources_mock = MagicMock()
+        services_factory_mock = MagicMock()
+
+        mock_multi_user_bootstrap.side_effect = Exception('multi-user failed bootstrap for whatever reason')
+
+        d = pixelated.application._start_in_multi_user_mode(args_mock, root_resources_mock, services_factory_mock)
+
+        def _assert_the_same_error_is_relayed_in_the_deferred(e):
+            self.assertIsInstance(e.value, Exception)
+            self.assertEqual(e.value.message, 'multi-user failed bootstrap for whatever reason')
+
+        d.addErrback(_assert_the_same_error_is_relayed_in_the_deferred)
+        return d
+
+
+    @patch('pixelated.application.reactor')
+    @patch('pixelated.application.start_site')
+    @patch('pixelated.application._setup_multi_user')
+    def test_should_defer_fail_errors_during_multi_user_bootstrap(self, ignore_setup_multi_user, mock_start_site, reactor_mock):
+        args_mock = MagicMock()
+        root_resources_mock = MagicMock()
+        services_factory_mock = MagicMock()
+
+        mock_start_site.side_effect = Exception('multi-user failed start site for whatever reason')
+
+        d = pixelated.application._start_in_multi_user_mode(args_mock, root_resources_mock, services_factory_mock)
+
+        def _assert_the_same_error_is_relayed_in_the_deferred(e):
+            self.assertIsInstance(e.value, Exception)
+            self.assertEqual(e.value.message, 'multi-user failed start site for whatever reason')
+
+        d.addErrback(_assert_the_same_error_is_relayed_in_the_deferred)
+        return d

@@ -144,9 +144,12 @@ def initialize():
     services_factory = _create_service_factory(args)
     resource = RootResource(services_factory)
 
-    start_async = _start_mode(args, resource, services_factory)
-    add_top_level_system_callbacks(start_async, services_factory)
+    def start():
+        start_async = _start_mode(args, resource, services_factory)
+        add_top_level_system_callbacks(start_async, services_factory)
+
     log.info('Running the reactor')
+    reactor.callWhenRunning(start)
     reactor.run()
 
 
@@ -178,17 +181,24 @@ def _start_mode(args, resource, services_factory):
 
 
 def _start_in_multi_user_mode(args, root_resource, services_factory):
+    try:
+        protected_resources = _setup_multi_user(args, root_resource, services_factory)
+        start_site(args, protected_resources)
+        reactor.getThreadPool().adjustPoolsize(5, 15)
+        return defer.succeed(None)
+    except Exception as e:
+        return defer.fail(e)
+
+
+def _setup_multi_user(args, root_resource, services_factory):
     if args.provider is None:
-        raise ValueError('provider name is required')
+        raise ValueError('Multi-user mode: provider name is required')
 
     init_monkeypatches()
     events_server.ensure_server()
-
     config, provider = initialize_leap_provider(args.provider, args.leap_provider_cert, args.leap_provider_cert_fingerprint, args.leap_home)
     protected_resource = set_up_protected_resources(root_resource, provider, services_factory, banner=args.banner)
-    start_site(args, protected_resource)
-    reactor.getThreadPool().adjustPoolsize(5, 15)
-    return defer.succeed(None)
+    return protected_resource
 
 
 def set_up_protected_resources(root_resource, provider, services_factory, checker=None, banner=None):
