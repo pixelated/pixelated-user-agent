@@ -240,7 +240,7 @@ For people that just want to try the user agent, we have debian packages availab
 
 ```shell
 
-echo "deb http://packages.pixelated-project.org/debian jessie-snapshots main" > /etc/apt/sources.list.d/pixelated.list
+echo "deb [arch=amd64] http://packages.pixelated-project.org/debian jessie-snapshots main" > /etc/apt/sources.list.d/pixelated.list
 
 apt-key adv --keyserver pool.sks-keyservers.net --recv-key 287A1542472DC0E3
 
