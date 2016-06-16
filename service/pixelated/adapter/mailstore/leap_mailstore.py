@@ -29,9 +29,6 @@ from pixelated.support.functional import to_unicode
 from pixelated.support import date
 
 
-MIME_PGP_KEY = 'application/pgp-keys'
-
-
 class AttachmentInfo(object):
     def __init__(self, ident, name, encoding=None, ctype='application/octet-stream', size=0):
         self.ident = ident
@@ -323,13 +320,9 @@ class LeapMailStore(MailStore):
         mbox_uuid = message.get_wrapper().fdoc.mbox_uuid
         mbox_name = yield self._mailbox_name_from_uuid(mbox_uuid)
         attachments = self._extract_attachment_info_from(message)
-        attachments = self._filter_public_keys_from_attachments(attachments)
         mail = LeapMail(mail_id, mbox_name, message.get_wrapper().hdoc.headers, set(message.get_tags()), set(message.get_flags()), body=body, attachments=attachments)   # TODO assert flags are passed on
 
         defer.returnValue(mail)
-
-    def _filter_public_keys_from_attachments(self, attachments):
-        return filter(lambda attachment: attachment.ctype != MIME_PGP_KEY, attachments)
 
     @defer.inlineCallbacks
     def _raw_message_body(self, message):

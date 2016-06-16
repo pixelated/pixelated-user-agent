@@ -50,19 +50,6 @@ class LeapMailStoreTest(SoledadTestBase):
         self.assertEqual(expected_mail_dict['header'], fetched_mail.as_dict()['header'])
 
     @defer.inlineCallbacks
-    def test_remove_key_from_attachments(self):
-        input_mail = MIMEMultipart()
-        input_mail.attach(MIMEText(u'a utf8 message', _charset='utf-8'))
-        attachment = MIMEApplication('pretend to be binary attachment data')
-        attachment.add_header('Content-Disposition', 'attachment', filename='pub.key')
-        attachment.replace_header('Content-Type', 'application/pgp-keys')
-        input_mail.attach(attachment)
-
-        mail = yield self.mail_store.add_mail('INBOX', input_mail.as_string())
-        fetched_mail = yield self.mail_store.get_mail(mail.ident, include_body=True)
-        self.assertEquals(fetched_mail.as_dict().get('attachments'), [])
-
-    @defer.inlineCallbacks
     def test_round_trip_through_soledad_keeps_attachment(self):
         input_mail = MIMEMultipart()
         input_mail.attach(MIMEText(u'a utf8 message', _charset='utf-8'))
