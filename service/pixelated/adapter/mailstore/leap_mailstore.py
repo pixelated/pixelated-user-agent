@@ -166,7 +166,7 @@ class LeapMail(Mail):
 
 
 def _extract_filename(headers, default_filename='UNNAMED'):
-    content_disposition = headers.get('Content-Disposition', '')
+    content_disposition = headers.get('Content-Disposition') or headers.get('content-disposition', '')
     filename = _extract_filename_from_name_header_part(content_disposition)
     if not filename:
         filename = headers.get('Content-Description', '')
@@ -363,7 +363,7 @@ class LeapMailStore(MailStore):
         return self._extract_part_map(part_maps)
 
     def _is_attachment(self, part_map, headers):
-        disposition = headers.get('Content-Disposition', None)
+        disposition = headers.get('Content-Disposition') or headers.get('content-disposition')
         content_type = part_map['ctype']
 
         if 'multipart' in content_type:
