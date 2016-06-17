@@ -39,6 +39,18 @@ class LeapMailStoreTest(SoledadTestBase):
         self.assertEqual(expected_mail_dict, result.as_dict())
 
     @defer.inlineCallbacks
+    def test_get_mail_with_lowercase_attachment(self):
+        input_mail = MIMEMultipart()
+        input_mail.attach(MIMEText(u'a utf8 message', _charset='utf-8'))
+        attachment = MIMEApplication('pretend to be binary attachment data')
+        attachment.add_header('content-disposition', 'attachment', filename='filename.txt')
+        input_mail.attach(attachment)
+
+        mail = yield self.mail_store.add_mail('INBOX', input_mail.as_string())
+        fetched_mail = yield self.mail_store.get_mail(mail.ident, include_body=True)
+        self.assertTrue(fetched_mail.as_dict()['attachments'])
+
+    @defer.inlineCallbacks
     def test_get_mail_with_attachment(self):
         input_mail = MIMEMultipart()
         input_mail.attach(MIMEText(u'a utf8 message', _charset='utf-8'))
