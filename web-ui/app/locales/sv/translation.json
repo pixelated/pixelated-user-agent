@@ -21,6 +21,7 @@
     "Reply": "Svara",
     "reply-to-all": "Svara Alla",
     "mark-as-read": "Markera som läst",
+    "mark-as-unread": "Mark as unread",
     "delete": "Ta bort",
     "archive": "Arkivera",
     "Close": "Stäng",
@@ -49,10 +50,14 @@
     "signed signature-not-trusted": "Avsändaren och/eller meddelandet är inte pålitligt.",
     "signed signature-unknown": "Avsändaren och/eller meddelandet är inte pålitligt.",
     "not-signed": "Avsändaren kunde inte säkert identifieras.",
+    "send-button": "Send",
+    "sending-mail": "Sending...",
+    "trash-button": "Delete it",
     "search-placeholder" : "Sök...",
     "Search results for:": "Sökresultat för:",
     "Tags": "Taggar",
     "Forward": "Vidarebefodra",
+    "feedback-placeholder": "Tell us what you liked, didn't like, what is missing and generally what you think about Pixelated.",
 
     "tags": {
         "inbox": "Inlåda",
