@@ -257,3 +257,17 @@ apt-get install pixelated-server
 ## Docker
 
 For people who want to run the user agent on docker container can use the Dockerfile.
+
+
+## Managing translations
+
+All the translation work is managed at [Transifex](https://www.transifex.com). To sync translation files at Transifex and those versioned with the source code itself, we use [The Transifex Client](http://docs.transifex.com/client/). To get it up and running you can follow the [Client installation guide](http://docs.transifex.com/client/setup/). For more informations about, see the [Client Usage](http://docs.transifex.com/client/#client-usage).
+
+With the Client installed, the most common operations is really simple:
+
+* `tx pull -a` to pull the most recent version of translation files at Transifex
+* `tx push -s -t` to push source (-s) translation files and the translations (-t) as well.
+
+After pulling the updates from Transifex, probably you will see differences pointed by git. So, it's just a matter of commit and push these new changes.
+
+*Important:* since the Transifex Client uses api calls to comunicate with Transifex, you need a Transifex account to use it.
