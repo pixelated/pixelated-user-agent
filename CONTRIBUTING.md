@@ -67,7 +67,18 @@ Contributions we appreciate:
 * Quality Assurance: While every software change should be covered by automated tests, there are certain types of errors that are best spotted by a human. We apply QA to dev-complete changes.
 * Documentation: Feedback & improvements of our guides & tutorial copywritings.
 * Security review
+* Translations
 * Asking questions on IRC
+
+## Translating UI
+
+Anyone can contribute with Pixelated translating our user interface and making it accessible for more people. All the translation work is managed at [Transifex](https://www.transifex.com). Follow the steps below to start contributing:
+
+* Sign up at [Transifex](https://www.transifex.com) and visit our [Pixelated project](https://www.transifex.com/pixelated/) page.
+* On the project page, choose the language you want to work on. If the language doesn’t exist yet you can request a new language by clicking on the “Request language”.
+* Then, click the “Join this Team” button to become a member of this team. You will be accepted as soon as possible.
+
+We strongly recommend you read [Transifex User Guide](http://docs.transifex.com/) if it's the first time using this tool.
 
 ## ThoughtWorks' role
 
