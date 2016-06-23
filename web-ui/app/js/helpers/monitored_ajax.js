@@ -20,9 +20,9 @@ define(['page/events', 'views/i18n', 'helpers/browser'], function (events, i18n,
   'use strict';
 
   var messages = {
-    timeout: i18n('error.timeout'),
-    error: i18n('error.general'),
-    parseerror: i18n('error.parse')
+    timeout: 'error.timeout',
+    error: 'error.general',
+    parseerror: 'error.parse'
   };
 
   function monitoredAjax(on, url, config) {
