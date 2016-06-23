@@ -90,17 +90,17 @@ class ServicesFactory(object):
     def map_email(self, username, user_id):
         self._map_email[username] = user_id
 
-    def is_logged_in(self, user_id):
+    def has_session(self, user_id):
         return user_id in self._services_by_user
 
     def services(self, user_id):
         return self._services_by_user[user_id]
 
-    def log_out_user(self, user_id, using_email=False):
+    def destroy_session(self, user_id, using_email=False):
         if using_email:
             user_id = self._map_email[user_id.split('@')[0]]
 
-        if self.is_logged_in(user_id):
+        if self.has_session(user_id):
             _services = self._services_by_user[user_id]
             _services.close()
             del self._services_by_user[user_id]
@@ -126,5 +126,8 @@ class SingleUserServicesFactory(object):
     def services(self, user_id):
         return self._services
 
-    def log_out_user(self, user_id, using_email=False):
+    def has_session(self, user_id):
+        return True
+
+    def destroy_session(self, user_id, using_email=False):
         reactor.stop()

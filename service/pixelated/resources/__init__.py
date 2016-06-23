@@ -72,7 +72,7 @@ class BaseResource(Resource):
 
     def is_logged_in(self, request):
         session = self.get_session(request)
-        return session.is_logged_in() and self._services_factory.is_logged_in(session.user_uuid)
+        return session.is_logged_in() and self._services_factory.has_session(session.user_uuid)
 
     def get_session(self, request):
         return IPixelatedSession(request.getSession())

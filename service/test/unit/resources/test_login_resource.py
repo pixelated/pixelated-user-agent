@@ -37,7 +37,7 @@ class TestLoginResource(unittest.TestCase):
     def test_there_are_no_grand_children_resources_when_logged_in(self, mock_is_logged_in):
         request = DummyRequest(['/login/grand_children'])
         mock_is_logged_in.return_value = True
-        when(self.services_factory).is_logged_in(ANY()).thenReturn(True)
+        when(self.services_factory).has_session(ANY()).thenReturn(True)
 
         d = self.web.get(request)
 
@@ -168,7 +168,7 @@ class TestLoginPOST(unittest.TestCase):
         self.user_auth = user_auth
 
     def mock_user_has_services_setup(self):
-        when(self.services_factory).is_logged_in('some_user_uuid').thenReturn(True)
+        when(self.services_factory).has_session('some_user_uuid').thenReturn(True)
 
     def test_login_responds_interstitial_and_add_corresponding_session_to_services_factory(self):
         irrelevant = None
@@ -191,13 +191,13 @@ class TestLoginPOST(unittest.TestCase):
     def test_login_does_not_reload_services_if_already_loaded(self):
         irrelevant = None
         when(self.portal).login(ANY(), None, IResource).thenReturn((irrelevant, self.leap_session, irrelevant))
-        when(self.services_factory).is_logged_in('some_user_uuid').thenReturn(True)
+        when(self.services_factory).has_session('some_user_uuid').thenReturn(True)
 
         d = self.web.get(self.request)
 
         def assert_login_setup_service_for_user(_):
             verify(self.portal).login(ANY(), None, IResource)
-            verify(self.services_factory).is_logged_in('some_user_uuid')
+            verify(self.services_factory).has_session('some_user_uuid')
             verifyNoMoreInteractions(self.services_factory)
             interstitial_js_in_template = '<script src="startup-assets/Interstitial.js"></script>'
             self.assertIn(interstitial_js_in_template, self.request.written[0])
@@ -242,7 +242,7 @@ class TestLoginPOST(unittest.TestCase):
     @patch('pixelated.resources.session.PixelatedSession.is_logged_in')
     def test_should_not_process_login_if_already_logged_in(self, mock_logged_in, mock_redirect):
         mock_logged_in.return_value = True
-        when(self.services_factory).is_logged_in(ANY()).thenReturn(True)
+        when(self.services_factory).has_session(ANY()).thenReturn(True)
         mock_redirect.return_value = "mocked redirection"
         when(self.portal).login(ANY(), None, IResource).thenRaise(Exception())
         d = self.web.get(self.request)

@@ -113,7 +113,7 @@ def add_top_level_system_callbacks(deferred, services_factory):
     def _log_user_out(event, user_data):
         log.info('Invalid soledad token, logging out %s' % user_data)
         user_data = {'user_id': user_data['uuid']} if 'uuid' in user_data else {'user_id': user_data, 'using_email': True}
-        services_factory.log_out_user(**user_data)
+        services_factory.destroy_session(**user_data)
 
     def _log_user_out_on_token_expire(leap_session):
         register(events.SOLEDAD_INVALID_AUTH_TOKEN, _log_user_out)

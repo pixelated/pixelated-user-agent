@@ -159,7 +159,7 @@ class LoginResource(BaseResource):
     @defer.inlineCallbacks
     def _setup_user_services(self, leap_session, request):
         user_id = leap_session.user_auth.uuid
-        if not self._services_factory.is_logged_in(user_id):
+        if not self._services_factory.has_session(user_id):
             yield self._services_factory.create_services_from(leap_session)
             self._services_factory.map_email(self.creds.username, user_id)
 

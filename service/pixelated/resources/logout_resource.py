@@ -28,9 +28,9 @@ class LogoutResource(BaseResource):
 
     @defer.inlineCallbacks
     def _execute_logout(self, request):
-        session = self.get_session(request)
-        yield self._services_factory.log_out_user(session.user_uuid)
-        session.expire()
+        http_session = self.get_session(request)
+        yield self._services_factory.destroy_session(http_session.user_uuid)
+        http_session.expire()
 
     def render_POST(self, request):
         def _redirect_to_login(_):

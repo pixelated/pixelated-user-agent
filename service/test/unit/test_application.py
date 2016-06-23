@@ -83,7 +83,7 @@ class ApplicationTest(unittest.TestCase):
         services_factory_mock = MagicMock()
 
         mock_service_log_user_out = MagicMock(return_value=None)
-        services_factory_mock.log_out_user = mock_service_log_user_out
+        services_factory_mock.destroy_session = mock_service_log_user_out
 
         leap_session = MagicMock()
         register_mock = events_mock.register
