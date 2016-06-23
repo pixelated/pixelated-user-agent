@@ -3,7 +3,6 @@ host = https://www.transifex.com
 
 [pixelated-user-agent.web-ui]
 file_filter = app/locales/<lang>/translation.json
-source_file = app/locales/en/translation.json
-source_lang = en
+source_file = app/locales/en_US/translation.json
+source_lang = en_US
 type = KEYVALUEJSON
-
