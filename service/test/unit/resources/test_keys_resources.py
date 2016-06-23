@@ -4,7 +4,8 @@ from mockito import mock, when, any as ANY
 from leap.keymanager import KeyNotFound
 from leap.keymanager.keys import OpenPGPKey
 
-from pixelated.application import ServicesFactory, UserAgentMode
+from pixelated.application import UserAgentMode
+from pixelated.config.services import ServicesFactory
 from pixelated.resources.keys_resource import KeysResource
 import twisted.trial.unittest as unittest
 from twisted.web.test.requesthelper import DummyRequest

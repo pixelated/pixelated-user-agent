@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import logging
+import os
 
 from OpenSSL import SSL
 from OpenSSL import crypto
@@ -31,64 +31,15 @@ from twisted.internet import ssl
 from pixelated.adapter.welcome_mail import add_welcome_mail
 from pixelated.config import arguments
 from pixelated.config import logger
-from pixelated.config.leap import initialize_leap_single_user, init_monkeypatches, initialize_leap_provider
 from pixelated.config import services
+from pixelated.config.leap import initialize_leap_single_user, init_monkeypatches, initialize_leap_provider
+from pixelated.config.services import ServicesFactory, SingleUserServicesFactory
 from pixelated.config.site import PixelatedSite
 from pixelated.resources.auth import LeapPasswordChecker, PixelatedRealm, PixelatedAuthSessionWrapper, SessionChecker
 from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
 
 log = logging.getLogger(__name__)
-
-
-class ServicesFactory(object):
-
-    def __init__(self, mode):
-        self._services_by_user = {}
-        self.mode = mode
-        self._map_email = {}
-
-    def map_email(self, username, user_id):
-        self._map_email[username] = user_id
-
-    def is_logged_in(self, user_id):
-        return user_id in self._services_by_user
-
-    def services(self, user_id):
-        return self._services_by_user[user_id]
-
-    def log_out_user(self, user_id, using_email=False):
-        if using_email:
-            user_id = self._map_email[user_id.split('@')[0]]
-
-        if self.is_logged_in(user_id):
-            _services = self._services_by_user[user_id]
-            _services.close()
-            del self._services_by_user[user_id]
-
-    def add_session(self, user_id, services):
-        self._services_by_user[user_id] = services
-
-    @defer.inlineCallbacks
-    def create_services_from(self, leap_session):
-        _services = services.Services(leap_session)
-        yield _services.setup()
-        self._services_by_user[leap_session.user_auth.uuid] = _services
-
-
-class SingleUserServicesFactory(object):
-    def __init__(self, mode):
-        self._services = None
-        self.mode = mode
-
-    def add_session(self, user_id, services):
-        self._services = services
-
-    def services(self, user_id):
-        return self._services
-
-    def log_out_user(self, user_id, using_email=False):
-        reactor.stop()
 
 
 class UserAgentMode(object):

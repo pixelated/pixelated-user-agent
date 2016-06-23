@@ -39,7 +39,7 @@ from pixelated.adapter.services.feedback_service import FeedbackService
 from pixelated.application import ServicesFactory, UserAgentMode, SingleUserServicesFactory, set_up_protected_resources
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.session import LeapSession
-from pixelated.config.services import Services
+from pixelated.config.services import Services, ServicesFactory, SingleUserServicesFactory
 from pixelated.config.site import PixelatedSite
 
 from pixelated.adapter.mailstore import LeapMailStore

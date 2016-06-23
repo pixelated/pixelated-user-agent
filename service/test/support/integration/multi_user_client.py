@@ -19,7 +19,8 @@ from twisted.internet import defer
 
 from leap.auth import SRPAuth
 
-from pixelated.application import UserAgentMode, ServicesFactory, set_up_protected_resources
+from pixelated.application import UserAgentMode, set_up_protected_resources
+from pixelated.config.services import ServicesFactory
 
 from pixelated.bitmask_libraries.session import LeapSession, LeapSessionFactory
 import pixelated.config.services
