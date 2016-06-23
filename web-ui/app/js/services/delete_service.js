@@ -22,14 +22,14 @@ define(['flight/lib/component', 'page/events', 'views/i18n'], function (defineCo
 
     this.successDeleteMessageFor = function(mail) {
       return mail.isInTrash() ?
-        i18n('Your message was permanently deleted!') :
-        i18n('Your message was moved to trash!');
+        i18n('delete-single') :
+        i18n('trash-single');
     };
 
     this.successDeleteManyMessageFor = function(mail) {
       return mail.isInTrash() ?
-        i18n('Your messages were permanently deleted!') :
-        i18n('Your messages were moved to trash!');
+        i18n('delete-bulk') :
+        i18n('trash-bulk');
     };
 
     this.deleteEmail = function (event, data) {

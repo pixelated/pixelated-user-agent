@@ -20,9 +20,9 @@ define(['page/events', 'views/i18n', 'helpers/browser'], function (events, i18n,
   'use strict';
 
   var messages = {
-    timeout: 'a timeout occurred',
-    error: 'problems talking to server',
-    parseerror: 'got invalid response from server'
+    timeout: i18n('error.timeout'),
+    error: i18n('error.general'),
+    parseerror: i18n('error.parse')
   };
 
   function monitoredAjax(on, url, config) {
@@ -48,8 +48,7 @@ define(['page/events', 'views/i18n', 'helpers/browser'], function (events, i18n,
     return $.ajax(url, config).fail(function (xmlhttprequest, textstatus, message) {
       if (!config.skipErrorMessage) {
         var msg = (xmlhttprequest.responseJSON && xmlhttprequest.responseJSON.message) ||
-          messages[textstatus] ||
-          'unexpected problem while talking to server';
+          messages[textstatus] || messages.error;
         on.trigger(document, events.ui.userAlerts.displayMessage, {message: i18n(msg), class: 'error'});
       }
 
