@@ -77,6 +77,10 @@ class BaseResource(Resource):
     def get_session(self, request):
         return IPixelatedSession(request.getSession())
 
+    def is_admin(self, request):
+        services = self._services(request)
+        return services._leap_session.user_auth.is_admin()
+
     def _services(self, request):
         user_id = self._get_user_id_from_request(request)
         return self._services_factory.services(user_id)

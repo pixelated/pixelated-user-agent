@@ -17,7 +17,7 @@ import unittest
 
 from mockito import mock, verify
 
-from pixelated.config.services import Services
+from pixelated.config.services import Services, ServicesFactory
 
 
 class ServicesTest(unittest.TestCase):
@@ -32,3 +32,13 @@ class ServicesTest(unittest.TestCase):
     def test_close_services_closes_the_underlying_leap_session(self):
         self.services.close()
         verify(self.leap_session).close()
+
+
+class ServicesFactoryTest(unittest.TestCase):
+
+    def test_online_sessions_counts_logged_in_users(self):
+        service_factory = ServicesFactory(mock())
+        service_factory.add_session('some_id1', mock())
+        service_factory.add_session('some_id2', mock())
+
+        self.assertEqual(2, service_factory.online_sessions())

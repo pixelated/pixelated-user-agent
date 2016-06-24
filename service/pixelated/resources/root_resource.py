@@ -33,6 +33,8 @@ from pixelated.resources.tags_resource import TagsResource
 from pixelated.resources.keys_resource import KeysResource
 from twisted.web.static import File
 
+from pixelated.resources.users import UsersResource
+
 CSRF_TOKEN_LENGTH = 32
 
 MODE_STARTUP = 1
@@ -90,6 +92,7 @@ class RootResource(BaseResource):
         self._child_resources.add('mail', MailResource(self._services_factory))
         self._child_resources.add('feedback', FeedbackResource(self._services_factory))
         self._child_resources.add('user-settings', UserSettingsResource(self._services_factory))
+        self._child_resources.add('users', UsersResource(self._services_factory))
         self._child_resources.add(LoginResource.BASE_URL,
                                   LoginResource(self._services_factory, portal, disclaimer_banner=disclaimer_banner))
         self._child_resources.add(LogoutResource.BASE_URL, LogoutResource(self._services_factory))

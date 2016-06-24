@@ -30,7 +30,7 @@ class TestSmtpClientCertificate(unittest.TestCase):
         self.tmp_dir = tempdir.TempDir()
         self.provider = mock()
         self.provider.domain = 'some-provider.tld'
-        self.auth = SRPSession('username', 'token', 'uuid', 'session_id')
+        self.auth = SRPSession('username', 'token', 'uuid', 'session_id', {})
         self.pem_path = os.path.join(self.tmp_dir.name, 'providers', 'some-provider.tld', 'keys', 'client', 'smtp.pem')
         self.downloader = mock()
         when(session).SmtpCertDownloader(self.provider, self.auth).thenReturn(self.downloader)

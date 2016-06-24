@@ -60,6 +60,7 @@ class MultiUserClient(AppTestClient):
         leap_session.fresh_account = False
         self.leap_session = leap_session
         self.services = self._test_account.services
+        self.user_auth = user_auth
 
         self._set_leap_srp_auth(username, password, user_auth)
         when(LeapSessionFactory).create(username, password, user_auth).thenReturn(leap_session)

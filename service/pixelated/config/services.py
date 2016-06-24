@@ -108,6 +108,9 @@ class ServicesFactory(object):
     def add_session(self, user_id, services):
         self._services_by_user[user_id] = services
 
+    def online_sessions(self):
+        return len(self._services_by_user.keys())
+
     @defer.inlineCallbacks
     def create_services_from(self, leap_session):
         _services = Services(leap_session)
@@ -131,3 +134,6 @@ class SingleUserServicesFactory(object):
 
     def destroy_session(self, user_id, using_email=False):
         reactor.stop()
+
+    def online_sessions(self):
+        return 1
