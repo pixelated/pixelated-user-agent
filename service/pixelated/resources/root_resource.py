@@ -70,7 +70,7 @@ class RootResource(BaseResource):
 
         ajax_request = (request.getHeader('x-requested-with') == 'XMLHttpRequest')
         if ajax_request:
-            xsrf_header = request.getHeader('x-xsrf-token')
+            xsrf_header = xsrf_token or request.getHeader('x-xsrf-token')
             return xsrf_header and xsrf_header == xsrf_token
 
         get_request = (request.method == 'GET')
