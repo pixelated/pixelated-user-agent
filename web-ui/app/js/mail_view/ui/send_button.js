@@ -89,7 +89,7 @@ define([
         }.bind(this)));
 
         this.disableButton();
-        this.$node.text(viewHelper.i18n('sending-mail'));
+        this.$node.text(viewHelper.i18n.t('sending-mail'));
 
         this.attr.sendingInProgress = true;
 
@@ -99,7 +99,7 @@ define([
       this.resetButton = function () {
         this.attr.sendingInProgress = false;
         this.attr.uploading = false;
-        this.$node.html(viewHelper.i18n('send-button'));
+        this.$node.html(viewHelper.i18n.t('send-button'));
         this.enableButton();
       };
 

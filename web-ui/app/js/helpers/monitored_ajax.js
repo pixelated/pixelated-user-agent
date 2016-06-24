@@ -49,7 +49,7 @@ define(['page/events', 'views/i18n', 'helpers/browser'], function (events, i18n,
       if (!config.skipErrorMessage) {
         var msg = (xmlhttprequest.responseJSON && xmlhttprequest.responseJSON.message) ||
           messages[textstatus] || messages.error;
-        on.trigger(document, events.ui.userAlerts.displayMessage, {message: i18n(msg), class: 'error'});
+        on.trigger(document, events.ui.userAlerts.displayMessage, {message: i18n.t(msg), class: 'error'});
       }
 
       if (xmlhttprequest.status === 302) {

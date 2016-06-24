@@ -25,7 +25,7 @@ define(['flight/lib/component', 'page/events', 'views/i18n'], function (defineCo
 
       this.trigger(document, events.mail.recoverMany, {
         mails: emails,
-        successMessage: i18n('Your messages were moved to inbox!')
+        successMessage: i18n.t('Your messages were moved to inbox!')
       });
 
     };

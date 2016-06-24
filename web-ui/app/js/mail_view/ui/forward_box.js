@@ -31,7 +31,7 @@ define(
     return defineComponent(forwardBox, withHideAndShow, withComposeInline);
 
     function forwardBox() {
-      var fwd = function(v) { return i18n('fwd') + ': ' + v; };
+      var fwd = function(v) { return i18n.t('fwd') + v; };
 
       this.fetchTargetMail = function (ev) {
         this.trigger(document, events.mail.want, { mail: this.attr.ident, caller: this });

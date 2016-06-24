@@ -14,15 +14,49 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-define(['i18next'], function(i18n) {
+define(['i18next',
+        'i18nextXHRBackend',
+        'i18nextBrowserLanguageDetector'],
+function(i18n, i18n_backend, I18n_detector) {
   'use strict';
 
-  var self = i18n.t;
+  var detector = new I18n_detector();
+  var detect = detector.detect.bind(detector);
 
-  self.init = function(path) {
-    i18n.init({detectLngQS: 'lang', fallbackLng: 'en_US', lowerCaseLng: true, getAsync: false, resGetPath: path + 'locales/__lng__/__ns__.json'});
-    Handlebars.registerHelper('t', self.bind(self));
+  detector.detect = function(detectionOrder)  {
+    var result = detect(detectionOrder);
+    return result.replace('-', '_');
   };
 
-  return self;
+  function t(i18n_key) {
+    var result = i18n.t(i18n_key);
+    var safe_string = new Handlebars.SafeString(result);
+    return safe_string.string;
+  }
+
+  function loaded(callback) {
+    i18n.on('loaded', function(loaded) {
+        callback();
+    });
+  }
+
+  function init(path) {
+    i18n
+      .use(i18n_backend)
+      .use(detector)
+      .init({
+        fallbackLng: 'en_US',
+        backend: {
+          loadPath: path + 'locales/{{lng}}/{{ns}}.json'
+        }
+      });
+    // Handlebars.registerHelper('t', self.bind(self));
+    Handlebars.registerHelper('t', t);
+  }
+
+  return {
+    t: t,
+    init: init,
+    loaded: loaded
+  };
 });

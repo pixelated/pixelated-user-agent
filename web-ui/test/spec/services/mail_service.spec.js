@@ -167,7 +167,7 @@ describeComponent('services/mail_service', function () {
 
     deferred.reject({mailsJSON: {}});
 
-    expect(spyEvent).toHaveBeenTriggeredOnAndWith(document, {message: i18n('Could not delete email')} );
+    expect(spyEvent).toHaveBeenTriggeredOnAndWith(document, {message: i18n.t('Could not delete email')} );
   });
 
   it('will try to recover a message when requested to', function() {
@@ -202,11 +202,11 @@ describeComponent('services/mail_service', function () {
       spyOn(this.component, 'errorMessage');
 
       this.component.trigger(Pixelated.events.mail.archiveMany, mails);
-      
+
       deferred.reject({});
-      expect(this.component.errorMessage).toHaveBeenCalledWith(i18n('Could not archive emails'));
+      expect(this.component.errorMessage).toHaveBeenCalledWith(i18n.t('Could not archive emails'));
     });
-    
+
     it('make an ajax request to /mails/archive', function() {
       this.component.trigger(Pixelated.events.mail.archiveMany,
                             {checkedMails: [{ident: '43'}, {ident: '44'}]});

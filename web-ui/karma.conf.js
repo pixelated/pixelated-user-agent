@@ -40,6 +40,8 @@ module.exports = function (config) {
       {pattern: 'app/bower_components/he/he.js', included: false},
       {pattern: 'app/bower_components/flight/**/*.js', included: false},
       {pattern: 'app/bower_components/i18next/**/*.js', included: false},
+      {pattern: 'app/bower_components/i18next-xhr-backend/**/*.js', included: false},
+      {pattern: 'app/bower_components/i18next-browser-languagedetector/**/*.js', included: false},
       {pattern: 'app/bower_components/quoted-printable/*.js', included: false},
       {pattern: 'app/bower_components/utf8/utf8.js', included: false},
       {pattern: 'app/locales/**/*.json', included: false},

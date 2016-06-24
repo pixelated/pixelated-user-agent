@@ -2,6 +2,7 @@
     "compose": "Escrever",
     "re": "Res: ",
     "fwd": "Enc",
+    "Your message was moved to trash!": "Sua mensagem foi movida para a lixeira!",
     "Your message was archived": "Sua mensagem foi arquivada!",
     "Saved as draft.": "Mensagem salva como rascunho.",
     "One or more of the recipients are not valid emails": "Email de um ou mais destinatários é inválido",

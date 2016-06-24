@@ -28,7 +28,7 @@ describeComponent('services/delete_service', function () {
 
     var expectedDeleteEventData = {
       mail: mailWithoutTrashTag,
-      successMessage: i18n('Your message was moved to trash!')
+      successMessage: i18n.t('Your message was moved to trash!')
     };
 
     expect(mailDeleteEvent).toHaveBeenTriggeredOnAndWith(document, expectedDeleteEventData);
@@ -42,7 +42,7 @@ describeComponent('services/delete_service', function () {
 
     var expectedDeleteEventData = {
       mail: mailWithTrashTag,
-      successMessage: i18n('Your message was permanently deleted!')
+      successMessage: i18n.t('Your message was permanently deleted!')
     };
 
     expect(mailDeleteEvent).toHaveBeenTriggeredOnAndWith(document, expectedDeleteEventData );

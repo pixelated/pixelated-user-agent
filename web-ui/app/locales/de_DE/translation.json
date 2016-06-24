@@ -1,7 +1,7 @@
 {
     "compose": "Compose",
     "re": "Re: ",
-    "Fwd: ": "Fwd: ",
+    "fwd": "Fwd: ",
     "Your message was moved to trash!": "Your message was moved to trash!",
     "Your message was archived": "Your message was archived",
     "Your message was permanently deleted!": "Your message was permanently deleted!",

@@ -24,7 +24,7 @@ describeComponent('services/recover_service', function () {
 
     var expectedRecoverManyEventData = {
       mails: [mail1, mail2],
-      successMessage: i18n('Your messages were moved to inbox!')
+      successMessage: i18n.t('Your messages were moved to inbox!')
     };
 
     expect(mailRecoverManyEvent).toHaveBeenTriggeredOnAndWith(document, expectedRecoverManyEventData);

@@ -60,9 +60,9 @@ define(
         };
 
         var failure = function (resp) {
-          var msg = i18n('Could not update mail tags');
+          var msg = i18n.t('Could not update mail tags');
           if (resp.status === 403) {
-            msg = i18n('Invalid tag name');
+            msg = i18n.t('Invalid tag name');
           }
           this.trigger(document, events.ui.userAlerts.displayMessage, { message: msg });
         };
@@ -128,7 +128,7 @@ define(
           var mails = dataToRecover.mails || [dataToRecover.mail];
 
           this.refreshMails();
-          this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n(dataToRecover.successMessage)});
+          this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n.t(dataToRecover.successMessage)});
           this.trigger(document, events.ui.mails.uncheckAll);
         }, this);
       };
@@ -136,7 +136,7 @@ define(
       this.triggerArchived = function (dataToArchive) {
         return _.bind(function (response) {
           this.refreshMails();
-          this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n(response.successMessage)});
+          this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n.t(response.successMessage)});
           this.trigger(document, events.ui.mails.uncheckAll);
         }, this);
       };
@@ -151,14 +151,14 @@ define(
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify({idents: mailIdents})
         }).done(this.triggerArchived(dataToArchive))
-          .fail(this.errorMessage(i18n('Could not archive emails')));
+          .fail(this.errorMessage(i18n.t('Could not archive emails')));
       };
 
       this.deleteMail = function (ev, data) {
         monitoredAjax(this, '/mail/' + data.mail.ident,
           {type: 'DELETE'})
           .done(this.triggerDeleted(data))
-          .fail(this.errorMessage(i18n('Could not delete email')));
+          .fail(this.errorMessage(i18n.t('Could not delete email')));
       };
 
       this.deleteManyMails = function (ev, data) {
@@ -173,7 +173,7 @@ define(
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify({idents: mailIdents})
         }).done(this.triggerDeleted(dataToDelete))
-          .fail(this.errorMessage(i18n('Could not delete emails')));
+          .fail(this.errorMessage(i18n.t('Could not delete emails')));
       };
 
       this.recoverManyMails = function (ev, data) {
@@ -188,7 +188,7 @@ define(
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify({idents: mailIdents})
         }).done(this.triggerRecovered(dataToRecover))
-          .fail(this.errorMessage(i18n('Could not move emails to inbox')));
+          .fail(this.errorMessage(i18n.t('Could not move emails to inbox')));
       };
 
       function compileQuery(data) {
@@ -246,7 +246,7 @@ define(
             this.trigger(document, events.mails.available, _.merge({tag: this.attr.currentTag, forSearch: this.attr.lastQuery }, this.parseMails(data)));
           }.bind(this))
           .fail(function () {
-            this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n('Could not fetch messages'), class: 'error' });
+            this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n.t('Could not fetch messages'), class: 'error' });
           }.bind(this));
       };
 

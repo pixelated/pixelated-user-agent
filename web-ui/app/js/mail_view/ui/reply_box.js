@@ -46,7 +46,7 @@ define(
         }
       };
 
-      var re = function(v) { return i18n('re') + v; };
+      var re = function(v) { return i18n.t('re') + v; };
 
       this.setupReplyBox = function() {
         var recipients, body;

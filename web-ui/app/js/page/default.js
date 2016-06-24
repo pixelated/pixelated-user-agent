@@ -97,46 +97,48 @@ define(
     'use strict';
     function initialize(path) {
       viewI18n.init(path + '/assets/');
-      paneContractExpand.attachTo(document);
+      viewI18n.loaded(function() {
+        paneContractExpand.attachTo(document);
 
-      userAlerts.attachTo('#user-alerts');
+        userAlerts.attachTo('#user-alerts');
 
-      mailList.attachTo('#mail-list');
-      mailListActions.attachTo('#list-actions');
+        mailList.attachTo('#mail-list');
+        mailListActions.attachTo('#list-actions');
 
-      searchTrigger.attachTo('#search-trigger');
-      resultsHighlighter.attachTo(document);
+        searchTrigger.attachTo('#search-trigger');
+        resultsHighlighter.attachTo(document);
 
-      mailSender.attachTo(document);
+        mailSender.attachTo(document);
 
-      mailService.attachTo(document);
-      deleteService.attachTo(document);
-      recoverService.attachTo(document);
+        mailService.attachTo(document);
+        deleteService.attachTo(document);
+        recoverService.attachTo(document);
 
-      tags.attachTo(document);
-      tagList.attachTo('#tag-list');
+        tags.attachTo(document);
+        tagList.attachTo('#tag-list');
 
-      router.attachTo(document);
+        router.attachTo(document);
 
-      rightPaneDispatcher.attachTo(document);
-      middlePaneDispatcher.attachTo(document);
-      leftPaneDispatcher.attachTo(document);
+        rightPaneDispatcher.attachTo(document);
+        middlePaneDispatcher.attachTo(document);
+        leftPaneDispatcher.attachTo(document);
 
-      offCanvas.attachTo(document);
-      userSettings.attachTo(document);
-      userSettingsIcon.attachTo('#user-settings-icon');
-      logout.attachTo('#logout');
-      logoutShortcut.attachTo('#logout-shortcut');
-      version.attachTo('.version');
+        offCanvas.attachTo(document);
+        userSettings.attachTo(document);
+        userSettingsIcon.attachTo('#user-settings-icon');
+        logout.attachTo('#logout');
+        logoutShortcut.attachTo('#logout-shortcut');
+        version.attachTo('.version');
 
-      feedback.attachTo('#feedback');
-      feedbackSender.attachTo(document);
+        feedback.attachTo('#feedback');
+        feedbackSender.attachTo(document);
 
-      unreadCountTitle.attachTo(document);
+        unreadCountTitle.attachTo(document);
 
-      pixLogo.attachTo(document);
+        pixLogo.attachTo(document);
 
-      $.ajaxSetup({headers: {'X-XSRF-TOKEN': browser.getCookie('XSRF-TOKEN')}});
+        $.ajaxSetup({headers: {'X-XSRF-TOKEN': browser.getCookie('XSRF-TOKEN')}});
+      });
     }
 
     return initialize;

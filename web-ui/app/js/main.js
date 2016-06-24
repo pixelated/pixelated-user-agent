@@ -38,7 +38,9 @@ requirejs.config({
     'search': 'js/search',
     'foundation': 'js/foundation',
     'features': 'js/features/features',
-    'i18next': 'bower_components/i18next/i18next.amd',
+    'i18next': 'bower_components/i18next/i18next',
+    'i18nextXHRBackend': 'bower_components/i18next-xhr-backend/i18nextXHRBackend',
+    'i18nextBrowserLanguageDetector': 'bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector',
     'quoted-printable': 'bower_components/quoted-printable',
     'utf8': 'bower_components/utf8',
     'user_settings': 'js/user_settings'
@@ -68,6 +70,7 @@ require(
 
   function(compose, registry, advice, withLogging, debug, events, initializeDefault, _monkeyPatched) {
     'use strict';
+
     window.Pixelated = window.Pixelated || {};
     window.Pixelated.events = events;
 

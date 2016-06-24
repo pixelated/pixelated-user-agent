@@ -72,7 +72,7 @@ define(
   }
 
   function prependFrom(mail) {
-    return i18n(
+    return i18n.t(
       'On __date__, <__from__> wrote:\n',
       {'date': new Date(mail.header.date).toString(), 'from': mail.header.from}
     );

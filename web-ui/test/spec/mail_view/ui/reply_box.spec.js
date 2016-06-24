@@ -13,7 +13,7 @@ describeComponent('mail_view/ui/reply_box', function () {
 
   describe('reply compose box', function() {
     it('should display subject of the reply', function() {
-      expect(this.component.select('subjectDisplay').text()).toBe(i18n('Re: ') + attrs.mail.header.subject);
+      expect(this.component.select('subjectDisplay').text()).toBe(i18n.t('re') + attrs.mail.header.subject);
     });
 
     it('should show recipient fields when clicking on recipient display', function() {
@@ -43,7 +43,7 @@ describeComponent('mail_view/ui/reply_box', function () {
 
       this.setupComponent(attrs);
 
-      expect(this.component.select('subjectDisplay').text()).toEqual(i18n('Re: ')+ attrs.mail.header.subject);
+      expect(this.component.select('subjectDisplay').text()).toEqual(i18n.t('re')+ attrs.mail.header.subject);
     });
 
     it('should use set In-Reply-To header when Message-Id header is set', function() {

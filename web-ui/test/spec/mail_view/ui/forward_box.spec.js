@@ -3,9 +3,10 @@ describeComponent('mail_view/ui/forward_box', function () {
 
   var attrs;
   var testMail;
+  var i18n;
   beforeEach(function () {
     testMail = Pixelated.testData().parsedMail.simpleTextPlain;
-
+    i18n = require('views/i18n');
     Pixelated.mockBloodhound();
   });
 
@@ -13,7 +14,7 @@ describeComponent('mail_view/ui/forward_box', function () {
     testMail.header.subject = 'Very interesting';
     this.setupComponent({ mail: testMail });
 
-    expect(this.component.select('subjectDisplay').text()).toEqual('Fwd: '+ testMail.header.subject);
+    expect(this.component.select('subjectDisplay').text()).toEqual(i18n.t('fwd') + testMail.header.subject);
   });
 
   it('should have no recipients', function () {

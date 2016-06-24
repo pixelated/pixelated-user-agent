@@ -2,6 +2,11 @@ describeComponent('mail_view/ui/send_button', function () {
 
   'use strict';
 
+  var i18n;
+  beforeEach(function () {
+    i18n = require('views/i18n');
+  });
+
   describe('send button', function () {
     beforeEach(function () {
       this.setupComponent('<button></button>');
@@ -29,7 +34,7 @@ describeComponent('mail_view/ui/send_button', function () {
         $(document).trigger(Pixelated.events.ui.recipients.updated, { newRecipients: ['InvalidEmail']});
 
         expect(this.$node).not.toBeDisabled();
-        expect(this.$node.text()).toBe('Send');
+        expect(this.$node.text()).toBe(i18n.t('send-button'));
       });
     });
 
@@ -82,22 +87,22 @@ describeComponent('mail_view/ui/send_button', function () {
       });
 
       it('disables the button after clicking', function () {
-        expect(this.$node.text()).toBe('Send');
+        expect(this.$node.text()).toBe(i18n.t('send-button'));
 
         this.$node.click();
 
-        expect(this.$node.text()).toBe('Sending...');
+        expect(this.$node.text()).toBe(i18n.t('sending-mail'));
         expect(this.$node.prop('disabled')).toBeTruthy();
       });
 
       it('enables again if sending errors out', function() {
-        expect(this.$node.text()).toBe('Send');
+        expect(this.$node.text()).toBe(i18n.t('send-button'));
 
         this.$node.click();
 
         $(document).trigger(Pixelated.events.mail.send_failed);
 
-        expect(this.$node.text()).toBe('Send');
+        expect(this.$node.text()).toBe(i18n.t('send-button'));
         expect(this.$node.prop('disabled')).not.toBeTruthy();
 
       });

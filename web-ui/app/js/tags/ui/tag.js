@@ -78,7 +78,7 @@ define(
 
       this.viewFor = function (tag, template, currentTag) {
         return template({
-          tagName: tag.default ? i18n('tags.' + tag.name) : tag.name,
+          tagName: tag.default ? i18n.t('tags.' + tag.name) : tag.name,
           ident: this.hashIdent(tag.ident),
           count: this.badgeType(tag) === 'total' ? tag.counts.total : (tag.counts.total - tag.counts.read),
           displayBadge: this.displayBadge(tag),
