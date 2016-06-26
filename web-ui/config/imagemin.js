@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2014 ThoughtWorks, Inc.
-   *
+ * Copyright (c) 2016 ThoughtWorks, Inc.
+ *
  * Pixelated is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -15,17 +15,11 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var Imagemin = require('imagemin');
+const imagemin = require('imagemin');
 
-var imagemin = new Imagemin()
-  .src('app/images/*.{gif,jpg,png,svg}')
-  .dest('dist/images')
-  .use(Imagemin.jpegtran({ progressive: true }));
-
-imagemin.run(function (err, files) {
-  if (err) {
-  throw err;
-  }
-
-  console.log(files[0]);
+imagemin(['app/images/*.{gif,jpg,png,svg}'],
+         'dist/images'
+).then(files => {
+  console.log('Images list:')
+  files.map(function(file) { console.log(file.path); });
 });
