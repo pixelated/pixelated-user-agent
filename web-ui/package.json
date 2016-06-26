@@ -5,7 +5,7 @@
   "repository": "https://github.com/pixelated-project/pixelated-user-agent",
   "private": true,
   "devDependencies": {
-    "bower": "1.7.2",
+    "bower": "1.7.9",
     "handlebars": "2.0.0",
     "html-minifier": "2.1.6",
     "imagemin": "5.2.1",
@@ -33,7 +33,7 @@
     "compass-watch": "compass watch",
     "build": "npm run clean && npm run handlebars && npm run add_git_version && npm run compass",
     "jshint": "node_modules/jshint/bin/jshint --config=.jshintrc app test",
-    "clean": "rm -rf .tmp/ dist/**/* app/js/generated/hbs/* app/css/*",
+    "clean": "rm -rf .tmp/ 'dist/*' app/js/generated/hbs/* app/css/*",
     "buildmain": "node_modules/requirejs/bin/r.js -o config/buildoptions.js",
     "package": "/bin/bash config/package.sh",
     "imagemin": "node config/imagemin.js",
