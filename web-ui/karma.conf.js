@@ -59,7 +59,7 @@ module.exports = function (config) {
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress', 'junit', 'coverage'],
+    reporters: ['dots', 'junit', 'coverage'],
 
     preprocessors: {
         'app/js/!(lib)/**/*.js': ['coverage']
