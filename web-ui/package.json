@@ -6,7 +6,7 @@
   "private": true,
   "devDependencies": {
     "bower": "1.7.9",
-    "handlebars": "2.0.0",
+    "handlebars": "4.0.5",
     "html-minifier": "2.1.6",
     "imagemin": "5.2.1",
     "jshint": "2.9.2",
