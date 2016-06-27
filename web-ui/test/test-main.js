@@ -43,7 +43,8 @@ requirejs.config({
 
   callback: function () {
     'use strict';
-    require(['page/events','test/test_data', 'views/i18n', 'monkey_patching/array', 'views/recipientListFormatter', 'test/custom_matchers'], function (events, testData, i18n, mp, recipientListFormatter, customMatchers) {
+    require(['page/events','test/test_data', 'views/i18n', 'i18next', 'i18nextXHRBackend', 'monkey_patching/array', 'views/recipientListFormatter', 'test/custom_matchers'],
+      function (events, testData, i18n, i18next, i18n_backend, mp, recipientListFormatter, customMatchers) {
       window.Pixelated = window.Pixelated || {};
       window.Pixelated.events = events;
       window.Pixelated.testData = testData;
@@ -57,9 +58,19 @@ requirejs.config({
         $.fn.typeahead = function() {};
       };
 
-      i18n.init('/base/app/');
-      // start test run, once Require.js is done
-      window.__karma__.start();
+      i18next
+      .use(i18n_backend)
+      .init({
+        lng: 'en_US',
+        backend: {
+          loadPath: '/base/app/locales/en_US/translation.json'
+        }
+      });
+      Handlebars.registerHelper('t', i18n.t);
+
+      i18next.on('loaded', function() {
+        window.__karma__.start();
+      });
     });
   }
 });
