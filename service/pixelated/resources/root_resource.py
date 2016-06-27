@@ -66,16 +66,16 @@ class RootResource(BaseResource):
         return UnAuthorizedResource()
 
     def _is_xsrf_valid(self, request):
+        get_request = (request.method == 'GET')
+        if get_request:
+            return True
+
         xsrf_token = request.getCookie('XSRF-TOKEN')
 
         ajax_request = (request.getHeader('x-requested-with') == 'XMLHttpRequest')
         if ajax_request:
-            xsrf_header = xsrf_token or request.getHeader('x-xsrf-token')
+            xsrf_header = request.getHeader('x-xsrf-token')
             return xsrf_header and xsrf_header == xsrf_token
-
-        get_request = (request.method == 'GET')
-        if get_request:
-            return True
 
         csrf_input = request.args.get('csrftoken', [None])[0] or json.loads(request.content.read()).get('csrftoken', [None])[0]
         return csrf_input and csrf_input == xsrf_token
