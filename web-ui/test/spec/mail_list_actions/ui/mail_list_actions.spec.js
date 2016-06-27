@@ -17,7 +17,7 @@ describeComponent('mail_list_actions/ui/mail_list_actions', function () {
 
     it('should render button text delete permanently if tag trash', function () {
       $(document).trigger(Pixelated.events.ui.tag.select, {tag: 'trash'});
-      expect(this.component.$node.html()).toMatch('<li><input type="button" id="delete-selected" value="Delete permanently" disabled="disabled"></li>');
+      expect(this.component.$node.html()).toMatch('<li><input type="button" id="delete-selected" value="Delete Permanently" disabled="disabled"></li>');
     });
 
     it('should render button delete permanently if url contains trash tag', function () {
