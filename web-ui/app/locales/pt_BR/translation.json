@@ -59,6 +59,7 @@
     "Tags": "Tags",
     "Forward": "Encaminhar",
     "feedback-placeholder": "Nos diga o que gosta, não gosta, o que está faltando e o que pensa sobre o Pixelated.",
+    "reply-author-line": "Em {{date}}, <{{from}}> escreveu:\n",
 
     "tags": {
         "inbox": "Caixa de Entrada",

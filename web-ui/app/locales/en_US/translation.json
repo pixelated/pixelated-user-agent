@@ -70,6 +70,7 @@
     "logout": "Logout",
     "delete-permanently": "Delete Permanently",
     "move-to-inbox": "Move to Inbox",
+    "reply-author-line": "On {{date}}, <{{from}}> wrote:\n",
     "error": {
         "timeout": "a timeout occurred",
         "general": "problems talking to server",

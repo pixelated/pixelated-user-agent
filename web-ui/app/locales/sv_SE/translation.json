@@ -59,6 +59,7 @@
     "Tags": "Taggar",
     "Forward": "Vidarebefodra",
     "feedback-placeholder": "Tell us what you liked, didn't like, what is missing and generally what you think about Pixelated.",
+    "reply-author-line": "On {{date}}, <{{from}}> wrote:\n",
 
     "tags": {
         "inbox": "Inlåda",

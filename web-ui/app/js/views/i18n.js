@@ -28,8 +28,8 @@ function(i18n, i18n_backend, I18n_detector) {
     return result.replace('-', '_');
   };
 
-  function t(i18n_key) {
-    var result = i18n.t(i18n_key);
+  function t(i18n_key, options) {
+    var result = i18n.t(i18n_key, options);
     var safe_string = new Handlebars.SafeString(result);
     return safe_string.string;
   }
