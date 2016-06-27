@@ -89,6 +89,7 @@ class TestRootResource(unittest.TestCase):
 
     def test_should_unauthorize_child_resource_ajax_requests_when_csrf_mismatch(self):
         request = DummyRequest(['/child'])
+        request.method = 'POST'
         self._mock_ajax_csrf(request, 'stubbed csrf token')
 
         request.getCookie = MagicMock(return_value='mismatched csrf token')
