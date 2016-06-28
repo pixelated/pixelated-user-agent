@@ -1,22 +1,11 @@
 # install phantomjs for unit tests
+# we ship our local copy of phantomjs
+# because downloading phantomjs fails regularly
 class phantomjs {
-  package{['tar','bzip2']:}
-
-  exec{'download_phantomjs':
-    command => '/usr/bin/wget -O /var/local/phantomjs-2.1.1.tar.bz2 https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2',
-    creates => '/var/local/phantomjs-2.1.1.tar.bz2',
-    notify  => Exec['unpack_phantomjs'],
-    timeout => '0',
-  }
-  exec{'unpack_phantomjs':
-    command     => '/bin/tar xvfj phantomjs-2.1.1.tar.bz2',
-    cwd         => '/var/local/',
-    refreshonly => true,
-    require     => [ Package['tar'], Package['bzip2'] ],
-    notify      => Exec['install_phantomjs'],
-  }
-  exec{'install_phantomjs':
-    command     => '/usr/bin/install /var/local/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/bin/phantomjs',
-    refreshonly => true,
+  file{'/usr/local/bin/phantomjs':
+    source => 'puppet:///modules/phantomjs/phantomjs',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
   }
 }
