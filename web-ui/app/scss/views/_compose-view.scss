@@ -339,7 +339,7 @@
 
                 &.deleteTooltip:hover:after {
                     position: absolute;
-                    content: "Click to remove";
+                    content: attr(data-label);
                     font-size: 0.5rem;
 
                     @include tooltip(25px, 0px);

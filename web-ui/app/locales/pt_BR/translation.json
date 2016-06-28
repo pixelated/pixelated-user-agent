@@ -7,18 +7,16 @@
     "Your message was archived": "Sua mensagem foi arquivada",
     "delete-single": "Sua mensagem foi permanentemente deletada!",
     "delete-bulk": "Suas mensagens foram permanentemente deletadas!",
-    "Saved as draft.": "Salvo como rascunho.",
     "One or more of the recipients are not valid emails": "Um ou mais destinatários não são emails válidos",
     "Could not update mail tags": "Não pode atualizar as tags do email",
     "Invalid tag name": "Nome inválido para tag",
     "Could not delete email": "Não pode deletar o email",
     "Could not fetch messages": "Não pode receber as mensagens",
-    "TO": "TO",
-    "To": "To",
+    "to": "para",
     "CC": "CC",
     "BCC": "CCO",
-    "Body": "Mensagem",
-    "Subject": "Assunto",
+    "body": "Mensagem",
+    "subject": "Assunto",
     "Don't worry about recipients right now, you'll be able to add them just before sending.": "Não se preocupme com destinatários agora, você poderá adicioná-los antes de enviar.",
     "Send": "Enviar",
     "Cancel": "Cancelar",
@@ -59,7 +57,7 @@
     "sending-mail": "Enviando...",
     "trash-button": "Deletar",
     "search-placeholder" : "Pesquisar...",
-    "Search results for:": "Resultado da pesquisa por:",
+    "search-results-for": "Resultado da pesquisa por",
     "Tags": "Tags",
     "Forward": "Encaminhar",
     "feedback-placeholder": "Nos diga o que gosta, não gosta, o que está faltando e o que pensa sobre o Pixelated.",
@@ -71,10 +69,12 @@
     "delete-permanently": "Excluir permanentemente",
     "move-to-inbox": "Mover para Caixa de Entrada",
     "reply-author-line": "Em {{date}}, <{{from}}> escreveu:\n",
+    "refresh": "atualizar",
+    "click-to-remove": "Pressione para remover",
     "error": {
-        "timeout": "a operação escedeu o limite de tempo",
-        "general": "problemas ao se comunicar com o servidor",
-        "parse": "obteve uma resposta inválida do servidor"
+        "timeout": "A operação excedeu o limite de tempo",
+        "general": "Problemas ao se comunicar com o servidor",
+        "parse": "Obteve uma resposta inválida do servidor"
     },
     "tags": {
         "inbox": "Caixa de Entrada",
@@ -82,6 +82,6 @@
         "drafts": "Rascunhos",
         "trash": "Lixeira",
         "all": "Todas",
-        "tags": "Tags"
+        "tags": "Etiquetas"
     }
 }

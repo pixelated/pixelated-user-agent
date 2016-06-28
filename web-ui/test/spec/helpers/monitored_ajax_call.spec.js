@@ -23,9 +23,9 @@ define(['helpers/monitored_ajax'], function (monitoredAjax) {
 
       _.each(
         {
-         timeout: 'a timeout occurred',
-         error: 'problems talking to server',
-         parseerror: 'got invalid response from server'
+         timeout: 'A timeout occurred',
+         error: 'Problems talking to server',
+         parseerror: 'Got invalid response from server'
         }, function (errorMessage, errorType) {
         it('shows message for a server ' + errorType, function () {
           var component = { trigger: function () {}};

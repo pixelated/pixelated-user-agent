@@ -17,10 +17,11 @@
 define(
   [
     'flight/lib/component',
-    'page/events'
+    'page/events',
+    'views/i18n'
   ],
 
-  function (defineComponent, events) {
+  function (defineComponent, events, i18n) {
     'use strict';
 
     return defineComponent(draftSaveStatus);
@@ -32,8 +33,8 @@ define(
       };
 
       this.after('initialize', function () {
-        this.on(document, events.mail.saveDraft, this.setMessage('Saving to Drafts...'));
-        this.on(document, events.mail.draftSaved, this.setMessage('Draft Saved.'));
+        this.on(document, events.mail.saveDraft, this.setMessage(i18n.t('draft-saving')));
+        this.on(document, events.mail.draftSaved, this.setMessage(i18n.t('draft-saved')));
         this.on(document, events.ui.mail.changedSinceLastSave, this.setMessage(''));
       });
     }

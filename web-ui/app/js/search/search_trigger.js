@@ -19,19 +19,19 @@ define(
   [
     'flight/lib/component',
     'views/templates',
-    'page/events'
-  ], function (defineComponent, templates, events) {
+    'page/events',
+    'views/i18n'
+  ], function (defineComponent, templates, events, i18n) {
 
     'use strict';
 
     return defineComponent(searchTrigger);
 
     function searchTrigger() {
-      var placeHolder = 'Search results for: ';
-
       this.defaultAttrs({
         input: 'input[type=search]',
-        form: 'form'
+        form: 'form',
+        searchResultsPrefix: 'search-results-for'
       });
 
       this.render = function() {
@@ -57,14 +57,14 @@ define(
 
       this.showOnlySearchTerms = function(event){
         var value = this.select('input').val();
-        var searchTerms = value.slice(placeHolder.length);
+        var searchTerms = value.slice((i18n.t(this.attr.searchResultsPrefix) + ': ').length);
         this.select('input').val(searchTerms);
       };
 
       this.showSearchTermsAndPlaceHolder = function(event){
         var value = this.select('input').val();
         if (value.length > 0){
-          this.select('input').val(placeHolder + value);
+          this.select('input').val(i18n.t(this.attr.searchResultsPrefix) + ': ' + value);
         }
       };
 

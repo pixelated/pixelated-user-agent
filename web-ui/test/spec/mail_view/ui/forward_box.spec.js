@@ -14,7 +14,7 @@ describeComponent('mail_view/ui/forward_box', function () {
     testMail.header.subject = 'Very interesting';
     this.setupComponent({ mail: testMail });
 
-    expect(this.component.select('subjectDisplay').text()).toEqual(i18n.t('fwd') + testMail.header.subject);
+    expect(this.component.select('subjectDisplay').text()).toEqual(i18n.t('fwd') + ': ' + testMail.header.subject);
   });
 
   it('should have no recipients', function () {

@@ -151,7 +151,7 @@ define(
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify({idents: mailIdents})
         }).done(this.triggerArchived(dataToArchive))
-          .fail(this.errorMessage(i18n.t('Could not archive emails')));
+          .fail(this.errorMessage(i18n.t('could-not-archive')));
       };
 
       this.deleteMail = function (ev, data) {
