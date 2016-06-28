@@ -99,7 +99,7 @@ define([
       this.resetButton = function () {
         this.attr.sendingInProgress = false;
         this.attr.uploading = false;
-        this.$node.html(viewHelper.i18n.t('send-button'));
+        this.$node.html(viewHelper.i18n.t('send'));
         this.enableButton();
       };
 

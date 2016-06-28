@@ -60,9 +60,9 @@ define(
         };
 
         var failure = function (resp) {
-          var msg = i18n.t('Could not update mail tags');
+          var msg = i18n.t('failed-change-tags');
           if (resp.status === 403) {
-            msg = i18n.t('Invalid tag name');
+            msg = i18n.t('invalid-tag-name');
           }
           this.trigger(document, events.ui.userAlerts.displayMessage, { message: msg });
         };
@@ -151,14 +151,14 @@ define(
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify({idents: mailIdents})
         }).done(this.triggerArchived(dataToArchive))
-          .fail(this.errorMessage(i18n.t('could-not-archive')));
+          .fail(this.errorMessage(i18n.t('failed-archive')));
       };
 
       this.deleteMail = function (ev, data) {
         monitoredAjax(this, '/mail/' + data.mail.ident,
           {type: 'DELETE'})
           .done(this.triggerDeleted(data))
-          .fail(this.errorMessage(i18n.t('Could not delete email')));
+          .fail(this.errorMessage(i18n.t('failed-delete-single')));
       };
 
       this.deleteManyMails = function (ev, data) {
@@ -173,7 +173,7 @@ define(
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify({idents: mailIdents})
         }).done(this.triggerDeleted(dataToDelete))
-          .fail(this.errorMessage(i18n.t('Could not delete emails')));
+          .fail(this.errorMessage(i18n.t('failed-delete-bulk')));
       };
 
       this.recoverManyMails = function (ev, data) {
@@ -246,7 +246,7 @@ define(
             this.trigger(document, events.mails.available, _.merge({tag: this.attr.currentTag, forSearch: this.attr.lastQuery }, this.parseMails(data)));
           }.bind(this))
           .fail(function () {
-            this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n.t('Could not fetch messages'), class: 'error' });
+            this.trigger(document, events.ui.userAlerts.displayMessage, { message: i18n.t('failed-fetch-messages'), class: 'error' });
           }.bind(this));
       };
 

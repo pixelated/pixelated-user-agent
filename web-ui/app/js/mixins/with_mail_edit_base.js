@@ -147,7 +147,7 @@ define(
                 } else {
                     this.trigger(
                         events.ui.userAlerts.displayMessage,
-                        {message: i18n.t('One or more of the recipients are not valid emails')}
+                        {message: i18n.t('recipients-not-valid')}
                     );
                     this.trigger(events.mail.send_failed);
                 }

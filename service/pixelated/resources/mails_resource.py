@@ -111,7 +111,7 @@ class MailsArchiveResource(Resource):
         for ident in idents:
             deferreds.append(self._mail_service.archive_mail(ident))
         d = defer.gatherResults(deferreds, consumeErrors=True)
-        d.addCallback(lambda _: respond_json_deferred({'successMessage': 'Your message was archived'}, request))
+        d.addCallback(lambda _: respond_json_deferred({'successMessage': 'your-message-was-archived'}, request))
         d.addErrback(lambda _: respond_json_deferred(None, request, status_code=500))
         return NOT_DONE_YET
 

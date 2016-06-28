@@ -204,7 +204,7 @@ describeComponent('services/mail_service', function () {
       this.component.trigger(Pixelated.events.mail.archiveMany, mails);
 
       deferred.reject({});
-      expect(this.component.errorMessage).toHaveBeenCalledWith(i18n.t('could-not-archive'));
+      expect(this.component.errorMessage).toHaveBeenCalledWith(i18n.t('failed-archive'));
     });
 
     it('make an ajax request to /mails/archive', function() {
