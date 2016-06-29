@@ -96,7 +96,7 @@ module.exports = function (config) {
 
     // Karma will report all the tests that are slower than given time limit (in
     // ms).
-    reportSlowerThan: 500,
+    reportSlowerThan: 1000,
 
     junitReporter: {
       outputFile: 'test-results.xml',
