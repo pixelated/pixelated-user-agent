@@ -50,9 +50,14 @@ module.exports = function (config) {
       {pattern: 'test/custom_matchers.js', included: false},
       {pattern: 'test/features.js', included: false},
       {pattern: 'test/spec/**/*.spec.js', included: false},
+      {pattern: 'app/sandbox.html', included: true, served: true},
 
       'test/test-main.js'
     ],
+
+    proxies: {
+        '/sandbox/sandbox.html': '/base/app/sandbox.html',
+    },
 
     // list of files to exclude
     exclude: [
