@@ -25,7 +25,7 @@ module.exports = function (config) {
       'app/bower_components/jasmine-flight/lib/jasmine-flight.js',
       'app/bower_components/jasmine-jquery/lib/jasmine-jquery.js',
       'app/bower_components/handlebars/handlebars.min.js',
-      'app//bower_components/modernizr/modernizr.js',
+      'app/bower_components/modernizr/modernizr.js',
       'app/bower_components/foundation/js/foundation.js',
       'app/bower_components/foundation/js/foundation/foundation.reveal.js',
       'app/bower_components/foundation/js/foundation/foundation.offcanvas.js',
