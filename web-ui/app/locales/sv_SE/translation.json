@@ -30,7 +30,7 @@
     "signed": "Certifierad avsändare.",
     "not-signed": "Avsändaren kunde inte säkert identifieras.",
     "search-placeholder" : "Sök...",
-    "search-results-for": "Sökresultat för:",
+    "search-results-for": "Sökresultat för",
     "forward": "Vidarebefodra",
     "tags": {
         "inbox": "Inlåda",
