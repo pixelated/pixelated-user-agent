@@ -104,22 +104,22 @@ define(
         }
 
         var statusClass = ['security-status__label--encrypted'];
-        var statusLabel = ['encrypted'];
+        var statusLabel;
 
         var hasAnyEncryptionInfo = _.any(mail.security_casing.locks, function (lock) {
           return lock.state === 'valid';
         });
 
         if(hasAnyEncryptionInfo) {
-          statusLabel.push('encryption-valid');
+          statusLabel = 'encrypted';
         } else {
           statusClass.push('--with-error');
-          statusLabel.push('encryption-error');
+          statusLabel = 'encryption-error';
         }
 
         return {
           cssClass: statusClass.join(''),
-          label: statusLabel.join(' ')
+          label: statusLabel
         };
       };
 
