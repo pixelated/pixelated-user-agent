@@ -18,6 +18,7 @@
 # test dependencies
 
 set -e
+export NODE_PATH='/home/vagrant/boxed_node_modules/node_modules/'
 
 if [ ! $USERNAME ]
 then
