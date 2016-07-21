@@ -72,6 +72,8 @@ class LeapSession(object):
 
     @defer.inlineCallbacks
     def after_first_sync(self):
+        from datetime import datetime
+        before = datetime.now()
         yield self.nicknym.generate_openpgp_key()
         yield self._create_account(self.soledad, self.user_auth.uuid)
         self.incoming_mail_fetcher = yield self._create_incoming_mail_fetcher(
@@ -80,6 +82,11 @@ class LeapSession(object):
             self.account,
             self.account_email())
         reactor.callFromThread(self.incoming_mail_fetcher.startService)
+        after = datetime.now()
+        from os.path import expanduser
+        with open(expanduser('~/MetricsTime'), 'a') as f:
+            f.write('session-after-sync ' + str(after - before) + '\n')
+
 
     def _create_account(self, soledad, user_id):
         self.account = Account(soledad, user_id)
@@ -129,7 +136,17 @@ class LeapSession(object):
 
     def sync(self):
         try:
-            return self.soledad.sync()
+            from datetime import datetime
+            before = datetime.now()
+            soledad_sync = self.soledad.sync()
+            def afeter(param):
+                after = datetime.now()
+                from os.path import expanduser
+                with open(expanduser('~/MetricsTime'), 'a') as f:
+                    f.write('session-sync ' + str(after - before) + '\n')
+                return param
+            soledad_sync.addCallbacks(afeter,afeter)
+            return soledad_sync
         except:
             traceback.print_exc(file=sys.stderr)
             raise

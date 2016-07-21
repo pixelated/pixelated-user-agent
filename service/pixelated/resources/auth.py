@@ -50,13 +50,35 @@ class LeapPasswordChecker(object):
     def requestAvatarId(self, credentials):
         def _validate_credentials():
             try:
+                from datetime import datetime
+                before = datetime.now()
                 srp_auth = SRPAuth(self._leap_provider.api_uri, self._leap_provider.local_ca_crt)
-                return srp_auth.authenticate(credentials.username, credentials.password)
+                auth = srp_auth.authenticate(credentials.username, credentials.password)
+                after = datetime.now()
+                from os.path import expanduser
+                with open(expanduser('~/MetricsTime'), 'a') as f:
+                  f.write('auth-validate-credentials ' + str(after - before) + '\n')
+                return auth
             except SRPAuthenticationError:
                 raise UnauthorizedLogin()
 
         def _get_leap_session(srp_auth):
-            return authenticate_user(self._leap_provider, credentials.username, credentials.password, auth=srp_auth)
+            from datetime import datetime
+            before = datetime.now()
+            auth = authenticate_user(self._leap_provider, credentials.username, credentials.password, auth=srp_auth)
+            after = datetime.now()
+            from os.path import expanduser
+            with open(expanduser('~/MetricsTime'), 'a') as f:
+                f.write('auth-create-leap-session ' + str(after - before) + '\n')
+
+            def after(param):
+                after = datetime.now()
+                from os.path import expanduser
+                with open(expanduser('~/MetricsTime'), 'a') as f:
+                    f.write('auth-create-leap-session-with-sync ' + str(after - before) + '\n')
+                return param
+            auth.addCallbacks(after, after)
+            return auth
 
         d = threads.deferToThread(_validate_credentials)
         d.addCallback(_get_leap_session)

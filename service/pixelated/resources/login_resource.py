@@ -129,7 +129,15 @@ class LoginResource(BaseResource):
 
         def render_response(leap_session):
             request.setResponseCode(OK)
+            from datetime import datetime
+            before = datetime.now()
             request.write(open(os.path.join(self._startup_folder, 'Interstitial.html')).read())
+            after = datetime.now()
+            from os.path import expanduser
+            with open(expanduser('~/MetricsTime'), 'a') as f:
+                if leap_session.fresh_account:
+                    f.write('fresh-account-')
+                f.write('login-reading-interstitial ' + str(after - before) + '\n')
             request.finish()
             self._setup_user_services(leap_session, request)
 
@@ -148,7 +156,15 @@ class LoginResource(BaseResource):
     @defer.inlineCallbacks
     def _handle_login(self, request):
         self.creds = self._get_creds_from(request)
+        from datetime import datetime
+        before = datetime.now()
         iface, leap_session, logout = yield self._portal.login(self.creds, None, IResource)
+        after = datetime.now()
+        from os.path import expanduser
+        with open(expanduser('~/MetricsTime'), 'a') as f:
+            if leap_session.fresh_account:
+                f.write('fresh-account-')
+            f.write('login-leap-session ' + str(after - before) + '\n')
         defer.returnValue(leap_session)
 
     def _get_creds_from(self, request):
@@ -158,6 +174,8 @@ class LoginResource(BaseResource):
 
     @defer.inlineCallbacks
     def _setup_user_services(self, leap_session, request):
+        from datetime import datetime
+        before = datetime.now()
         user_id = leap_session.user_auth.uuid
         if not self._services_factory.has_session(user_id):
             yield self._services_factory.create_services_from(leap_session)
@@ -167,6 +185,13 @@ class LoginResource(BaseResource):
             yield add_welcome_mail(leap_session.mail_store)
 
         self._init_http_session(request, user_id)
+        after = datetime.now()
+        from os.path import expanduser
+        with open(expanduser('~/MetricsTime'), 'a') as f:
+            if leap_session.fresh_account:
+                f.write('fresh-account-')
+            f.write('login-setup-services ' + str(after - before) + '\n')
+
 
     def _init_http_session(self, request, user_id):
         session = IPixelatedSession(request.getSession())
