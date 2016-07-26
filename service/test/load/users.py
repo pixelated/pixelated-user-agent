@@ -36,7 +36,7 @@ class User(object):
         self._srp_auth.register(self._username, self._password, invite_code)
 
 
-def next_user():
+def number():
     i = 1
     while True:
         i += 1

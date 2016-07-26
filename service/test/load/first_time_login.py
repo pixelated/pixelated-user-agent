@@ -5,7 +5,7 @@ from pixelated.resources.login_resource import LoginResource
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from test.load.users import next_user, User
+from users import number, User
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
@@ -22,8 +22,9 @@ class FirstTimeLogin(TaskSet):
         self.login()
 
     def login(self):
-        user = User(next_user(), LEAP_PROVIDER)
-        username, password = user.get_or_create_user(INVITE_CODE)
+        index = number().next()
+        load_test_user = User(index, LEAP_PROVIDER)
+        username, password = load_test_user.get_or_create_user(INVITE_CODE)
         login_payload = {"username": username, "password": password}
         response = self.client.post("/%s" % LoginResource.BASE_URL,
                                     login_payload, verify=False, cookies=self.cookies)
