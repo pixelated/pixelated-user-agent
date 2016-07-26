@@ -125,16 +125,9 @@ class RootResource(BaseResource):
         if self._is_starting():
             return open(os.path.join(self._startup_assets_folder, 'Interstitial.html')).read()
         else:
-            from datetime import datetime
-            before = datetime.now()
             account_email = self.mail_service(request).account_email
             response = Template(self._html_template).safe_substitute(account_email=account_email)
-            ha = str(response)
-            after = datetime.now()
-            from os.path import expanduser
-            with open(expanduser('~/MetricsTime'), 'a') as f:
-              f.write('root-render-get ' + str(after - before) + '\n')
-            return ha
+            return str(response)
 
 
 class ChildResourcesMap(object):

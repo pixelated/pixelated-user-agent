@@ -139,13 +139,13 @@ class LeapSession(object):
             from datetime import datetime
             before = datetime.now()
             soledad_sync = self.soledad.sync()
-            def afeter(param):
+            def _after(param):
                 after = datetime.now()
                 from os.path import expanduser
                 with open(expanduser('~/MetricsTime'), 'a') as f:
                     f.write('session-sync ' + str(after - before) + '\n')
                 return param
-            soledad_sync.addCallbacks(afeter,afeter)
+            soledad_sync.addCallbacks(_after,_after)
             return soledad_sync
         except:
             traceback.print_exc(file=sys.stderr)

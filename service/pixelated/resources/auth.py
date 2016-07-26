@@ -71,13 +71,13 @@ class LeapPasswordChecker(object):
             with open(expanduser('~/MetricsTime'), 'a') as f:
                 f.write('auth-create-leap-session ' + str(after - before) + '\n')
 
-            def after(param):
+            def _after(param):
                 after = datetime.now()
                 from os.path import expanduser
                 with open(expanduser('~/MetricsTime'), 'a') as f:
                     f.write('auth-create-leap-session-with-sync ' + str(after - before) + '\n')
                 return param
-            auth.addCallbacks(after, after)
+            auth.addCallbacks(_after, _after)
             return auth
 
         d = threads.deferToThread(_validate_credentials)
