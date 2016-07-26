@@ -13,5 +13,5 @@ Twisted==16.1.1
 -e 'git+https://github.com/pixelated/soledad.git@develop#egg=leap.soledad.client&subdirectory=client/'
 -e 'git+https://github.com/pixelated/soledad.git@develop#egg=leap.soledad.server&subdirectory=server/'
 -e 'git+https://github.com/pixelated/keymanager.git@develop#egg=leap.keymanager'
--e 'git+https://github.com/pixelated/leap_mail.git@develop#egg=leap.mail'
+-e 'git+https://github.com/pixelated/leap_mail.git@migrate_to_l2db#egg=leap.mail'
 -e .
