@@ -13,7 +13,7 @@ LEAP_VERIFY_CERTIFICATE = os.environ.get('LEAP_VERIFY_CERTIFICATE', '~/.leap/ca.
 
 class User(object):
     def __init__(self, number, leap_provider=LEAP_PROVIDER):
-        self._username = 'ltest%d' % number
+        self._username = 'loadtest%d' % number
         self._password = 'password_%d' % number
         self._set_srp_auth(leap_provider)
 
@@ -36,13 +36,6 @@ class User(object):
         self._srp_auth.register(self._username, self._password, invite_code)
 
 
-def number_generator():
-    i = 1
-    while True:
-        i += 1
-        yield i
-
-
 def mass_register(number, invite_code):
     for index in xrange(1, number):
         User(index).register(invite_code)
@@ -62,7 +55,7 @@ def _parse_args():
     parser.add_argument('--number', '-n',  default=1, type=int, help='the number of user to be registered')
     parser.add_argument('--invite-code', '-i', default=None, help='invite code')
     parser.add_argument('--leap-provider', '-p', default=None, help='leap provider e.g. unstable.pix.org')
-    parser.add_argument('--leap-ca-home', '-h', default=None, help='leap certificate home e.g. ~/.leap/ca.crt')
+    parser.add_argument('--leap-ca-home', '-c', default=None, help='leap certificate home e.g. ~/.leap/ca.crt')
     return parser.parse_args()
 
 if __name__ == '__main__':
