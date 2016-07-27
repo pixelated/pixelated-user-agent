@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REQUESTS=$(($1 * 4))
+REQUESTS=$(($1 * 20))
 
 for i in `seq 9`; do 
     LEAP_PROVIDER=dev.pixelated-project.org locust \

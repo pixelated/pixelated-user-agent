@@ -7,6 +7,7 @@ from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.session import LeapSessionFactory
+from pixelated.support.clock import Clock
 from twisted.internet import defer
 
 import logging
@@ -41,12 +42,9 @@ def initialize_leap_multi_user(provider_hostname,
 
 
 def _create_session(provider, username, password, auth):
-    before = datetime.now()
+    t = Clock('create-session-factory')
     leap_session = LeapSessionFactory(provider).create(username, password, auth)
-    after = datetime.now()
-    with open(expanduser('~/MetricsTime'), 'a') as f:
-        f.write('create-session ' + str(after - before) + '\n')
-
+    t.stop()
     return leap_session
 
 
