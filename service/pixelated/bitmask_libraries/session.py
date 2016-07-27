@@ -35,6 +35,8 @@ from leap.common.events import (
     register, unregister,
     catalog as events
 )
+from datetime import datetime
+from os.path import expanduser
 
 
 log = logging.getLogger(__name__)
@@ -60,6 +62,7 @@ class LeapSession(object):
 
     @defer.inlineCallbacks
     def initial_sync(self):
+        before = datetime.now()
         yield self._sem_intial_sync.acquire()
         try:
             yield self.sync()
@@ -68,6 +71,9 @@ class LeapSession(object):
                 self._has_been_initially_synced = True
         finally:
             yield self._sem_intial_sync.release()
+        after = datetime.now()
+        with open(expanduser('~/MetricsTime'), 'a') as f:
+            f.write('initial sync' + str(after - before) + '\n')
         defer.returnValue(self)
 
     @defer.inlineCallbacks
