@@ -33,7 +33,7 @@ from twisted.web.resource import IResource, ErrorPage
 
 from pixelated.config.leap import authenticate_user
 from pixelated.resources import IPixelatedSession
-
+from pixelated.support.clock import Clock
 
 log = logging.getLogger(__name__)
 
@@ -50,32 +50,22 @@ class LeapPasswordChecker(object):
     def requestAvatarId(self, credentials):
         def _validate_credentials():
             try:
-                from datetime import datetime
-                before = datetime.now()
+                t = Clock('auth-validate-credentials')
                 srp_auth = SRPAuth(self._leap_provider.api_uri, self._leap_provider.local_ca_crt)
                 auth = srp_auth.authenticate(credentials.username, credentials.password)
-                after = datetime.now()
-                from os.path import expanduser
-                with open(expanduser('~/MetricsTime'), 'a') as f:
-                  f.write('auth-validate-credentials ' + str(after - before) + '\n')
+                t.stop()
                 return auth
             except SRPAuthenticationError:
                 raise UnauthorizedLogin()
 
         def _get_leap_session(srp_auth):
-            from datetime import datetime
-            before = datetime.now()
+            t1 = Clock('auth-create-leap-session')
+            t2 = Clock('auth-create-leap-session-with-sync')
             auth = authenticate_user(self._leap_provider, credentials.username, credentials.password, auth=srp_auth)
-            after = datetime.now()
-            from os.path import expanduser
-            with open(expanduser('~/MetricsTime'), 'a') as f:
-                f.write('auth-create-leap-session ' + str(after - before) + '\n')
+            t1.stop()
 
             def _after(param):
-                after = datetime.now()
-                from os.path import expanduser
-                with open(expanduser('~/MetricsTime'), 'a') as f:
-                    f.write('auth-create-leap-session-with-sync ' + str(after - before) + '\n')
+                t2.stop()
                 return param
             auth.addCallbacks(_after, _after)
             return auth

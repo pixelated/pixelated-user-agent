@@ -30,6 +30,7 @@ from .nicknym import NickNym
 from .smtp import LeapSMTPConfig
 from .soledad import SoledadFactory
 import leap.common.certs as leap_certs
+from pixelated.support.clock import Clock
 
 from leap.common.events import (
     register, unregister,
@@ -78,25 +79,22 @@ class LeapSession(object):
 
     @defer.inlineCallbacks
     def after_first_sync(self):
-        from datetime import datetime
-        before = datetime.now()
+        t = Clock('session-after-sync')
+        t1 = Clock('key-generation')
         yield self.nicknym.generate_openpgp_key()
-        done_generating_keys = datetime.now()
+        t1.stop()
+        t2 = Clock('account-creation')
         yield self._create_account(self.soledad, self.user_auth.uuid)
-        done_creating_account = datetime.now()
+        t2.stop()
+        t3 = Clock('mail-fetcher')
         self.incoming_mail_fetcher = yield self._create_incoming_mail_fetcher(
             self.nicknym,
             self.soledad,
             self.account,
             self.account_email())
         reactor.callFromThread(self.incoming_mail_fetcher.startService)
-        after = datetime.now()
-        from os.path import expanduser
-        with open(expanduser('~/MetricsTime'), 'a') as f:
-            f.write('key-generation' + str(done_generating_keys - before) + '\n')
-            f.write('account-creation' + str(done_creating_account - done_generating_keys) + '\n')
-            f.write('mail-fetcher' + str(after - done_creating_account) + '\n')
-            f.write('session-after-sync ' + str(after - before) + '\n')
+        t3.stop()
+        t.stop()
 
     def _create_account(self, soledad, user_id):
         self.account = Account(soledad, user_id)
@@ -146,14 +144,10 @@ class LeapSession(object):
 
     def sync(self):
         try:
-            from datetime import datetime
-            before = datetime.now()
+            t = Clock('session-sync')
             soledad_sync = self.soledad.sync()
             def _after(param):
-                after = datetime.now()
-                from os.path import expanduser
-                with open(expanduser('~/MetricsTime'), 'a') as f:
-                    f.write('session-sync ' + str(after - before) + '\n')
+                t.stop()
                 return param
             soledad_sync.addCallbacks(_after,_after)
             return soledad_sync
