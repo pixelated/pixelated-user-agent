@@ -16,7 +16,7 @@
     "karma-jasmine": "0.2.2",
     "karma-jasmine-ajax": "0.1.13",
     "karma-junit-reporter": "0.2.2",
-    "karma-phantomjs-launcher": "1.0.0",
+    "karma-phantomjs-launcher": "1.0.1",
     "karma-requirejs": "1.0.0",
     "karma-coverage": "0.2.7",
     "minify": "2.0.9",
