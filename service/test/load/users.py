@@ -36,7 +36,7 @@ class User(object):
         self._srp_auth.register(self._username, self._password, invite_code)
 
 
-def number():
+def number_generator():
     i = 1
     while True:
         i += 1

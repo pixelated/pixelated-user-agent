@@ -5,12 +5,20 @@ from pixelated.resources.login_resource import LoginResource
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from users import number, User
+from users import number_generator, User
+from locust.stats import RequestStats
 
+
+def noop(*arg, **kwargs):
+    print "Stats reset prevented by monkey patch!"
+
+RequestStats.reset_all = noop
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 LEAP_PROVIDER = os.environ.get('LEAP_PROVIDER', 'unstable.pixelated-project.org')
 INVITE_CODE = ''
+
+user_number = number_generator()
 
 
 class UserBehavior(TaskSet):
@@ -22,7 +30,7 @@ class UserBehavior(TaskSet):
         self.login()
 
     def login(self):
-        index = number().next()
+        index = user_number.next()
         load_test_user = User(index, LEAP_PROVIDER)
         username, password = load_test_user.get_or_create_user(INVITE_CODE)
         login_payload = {"username": username, "password": password}
