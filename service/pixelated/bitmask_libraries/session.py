@@ -81,7 +81,9 @@ class LeapSession(object):
         from datetime import datetime
         before = datetime.now()
         yield self.nicknym.generate_openpgp_key()
+        done_generating_keys = datetime.now()
         yield self._create_account(self.soledad, self.user_auth.uuid)
+        done_creating_account = datetime.now()
         self.incoming_mail_fetcher = yield self._create_incoming_mail_fetcher(
             self.nicknym,
             self.soledad,
@@ -91,8 +93,10 @@ class LeapSession(object):
         after = datetime.now()
         from os.path import expanduser
         with open(expanduser('~/MetricsTime'), 'a') as f:
+            f.write('key-generation' + str(done_generating_keys - before) + '\n')
+            f.write('account-creation' + str(done_creating_account - done_generating_keys) + '\n')
+            f.write('mail-fetcher' + str(after - done_creating_account) + '\n')
             f.write('session-after-sync ' + str(after - before) + '\n')
-
 
     def _create_account(self, soledad, user_id):
         self.account = Account(soledad, user_id)
