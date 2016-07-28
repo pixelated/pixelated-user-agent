@@ -92,3 +92,4 @@ def initialize_leap_single_user(leap_provider_cert,
 
 def init_monkeypatches():
     import pixelated.extensions.requests_urllib3
+    import pixelated.extensions.clock_internals
