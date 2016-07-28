@@ -14,7 +14,9 @@ pid=$(pgrep -f "^$monitored")
 echo `pgrep -f "cron"`
 echo "$pid $monitored"
 
-echo "Time Threads CPU Mem TCP/UDP Entropy" >> $output
+couchpid=$(pgrep -f "beam.smp")
+
+echo "Time Date Threads CPU Mem CouchCPU CouchMem TCP/UDP Entropy" >> $output
 
 time=0
 while true; do
@@ -24,7 +26,11 @@ while true; do
 
     tcp_udp=$(sudo netstat -tuapen | grep $pid | wc -l)
 
-    echo "$time $threads $cpu_mem $tcp_udp $entropy" >> $output
+    date=$(date +'%Y-%m-%d %H:%M:%S.%5N')
+
+    couch_cpu_mem=$(ps -p  $couchpid  -o \%cpu,\%mem | sed -n 2p)
+
+    echo "$time $date $threads $cpu_mem $couch_cpu_mem $tcp_udp $entropy" >> $output
 
     sleep 2
 

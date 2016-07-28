@@ -35,7 +35,7 @@ class UserBehavior(TaskSet):
         username, password = load_test_user.get_or_create_user(INVITE_CODE)
         login_payload = {"username": username, "password": password}
         response = self.client.post("/%s" % LoginResource.BASE_URL,
-                                    login_payload, verify=False, cookies=self.cookies)
+                                    login_payload, verify=False, **self._request_params())
         self.cookies.update(response.cookies.get_dict())
         self.username = username
 
@@ -61,8 +61,7 @@ class UserBehavior(TaskSet):
                 "subject": "load testing"}}
 
         self.cookies.update(self.client.get("/", verify=False).cookies.get_dict())
-        with self.client.post('/mails', json=payload, catch_response=True, cookies=self.cookies,
-                              headers=self._ajax_headers()) as email_response:
+        with self.client.post('/mails', json=payload, catch_response=True, **self._request_params()) as email_response:
             if email_response.status_code == 201:
                 email_id = json.loads(email_response.content)['ident']
                 self.read_mail(email_id)
@@ -73,13 +72,20 @@ class UserBehavior(TaskSet):
     def _ajax_headers(self):
         return {'X-Requested-With': 'XMLHttpRequest', 'X-XSRF-TOKEN': self.cookies.get('XSRF-TOKEN', '')}
 
+    def _request_params(self):
+        return {
+            'cookies': self.cookies,
+            'timeout': 1000000.0,
+            'headers': self._ajax_headers()
+        }
+
     def read_mail(self, ident):
         url = '/mail/%s' % ident
-        self.client.get(url, cookies=self.cookies, headers=self._ajax_headers(), name='/read_mail')
+        self.client.get(url, name='/read_mail', **self._request_params())
 
     def delete_mail(self, ident):
         payload = {"idents": [ident]}
-        self.client.post('/mails/delete', json=payload, cookies=self.cookies, verify=False, headers=self._ajax_headers())
+        self.client.post('/mails/delete', json=payload, verify=False, **self._request_params())
 
 
 class WebsiteUser(HttpLocust):
