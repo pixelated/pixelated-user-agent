@@ -35,15 +35,16 @@ class FirstTimeLogin(TaskSet):
         load_test_user = User(index, LEAP_PROVIDER)
         username, password = load_test_user.get_or_create_user(INVITE_CODE)
         login_payload = {"username": username, "password": password}
-        response = self.client.post("/%s" % LoginResource.BASE_URL,
-                                    login_payload, verify=False, cookies=self.cookies)
+        response = self.client.post("/%s" % LoginResource.BASE_URL, login_payload,
+                                    timeout=1000000.0, verify=False, cookies=self.cookies)
         self._wait_for_interstitial(response)
 
     def _wait_for_interstitial(self, response):
-        while not response.cookies.get('XSRF-TOKEN', ''):
-            time.sleep(1)
-            response = self.client.get("/", verify=False)
-        self.cookies.update(response.cookies.get_dict())
+        if response.status_code == 200:
+            while not response.cookies.get('XSRF-TOKEN', ''):
+                time.sleep(2)
+                response = self.client.get("/", verify=False)
+            self.cookies.update(response.cookies.get_dict())
 
     @task
     def index(self):
