@@ -1,5 +1,7 @@
 import os
 import json
+import time
+
 from locust import HttpLocust, TaskSet, task
 from pixelated.resources.login_resource import LoginResource
 
@@ -38,8 +40,14 @@ class UserBehavior(TaskSet):
         login_payload = {"username": username, "password": password}
         response = self.client.post("/%s" % LoginResource.BASE_URL,
                                     login_payload, verify=False, cookies=self.cookies)
-        self.cookies.update(response.cookies.get_dict())
+        self._wait_for_interstitial(response)
         self.username = username
+
+    def _wait_for_interstitial(self, response):
+        while not response.cookies.get('XSRF-TOKEN', ''):
+            time.sleep(1)
+            response = self.client.get("/", verify=False)
+        self.cookies.update(response.cookies.get_dict())
 
     @task(1)
     def index(self):
