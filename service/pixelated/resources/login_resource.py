@@ -130,7 +130,7 @@ class LoginResource(BaseResource):
 
         def render_response(leap_session):
             request.setResponseCode(OK)
-            t = Clock('login-reading-interstitial')
+            t = Clock('login-reading-interstitial', leap_session.user_auth.uuid)
             request.write(open(os.path.join(self._startup_folder, 'Interstitial.html')).read())
             t.stop(leap_session.fresh_account)
             request.finish()
@@ -153,7 +153,7 @@ class LoginResource(BaseResource):
         self.creds = self._get_creds_from(request)
         t = Clock('login-leap-session')
         iface, leap_session, logout = yield self._portal.login(self.creds, None, IResource)
-        t.stop(leap_session.fresh_account)
+        t.stop(leap_session.fresh_account, leap_session.user_auth.uuid)
         defer.returnValue(leap_session)
 
     def _get_creds_from(self, request):
@@ -163,8 +163,8 @@ class LoginResource(BaseResource):
 
     @defer.inlineCallbacks
     def _setup_user_services(self, leap_session, request):
-        t = Clock('login-setup-services')
         user_id = leap_session.user_auth.uuid
+        t = Clock('login-setup-services', user_id)
         if not self._services_factory.has_session(user_id):
             yield self._services_factory.create_services_from(leap_session)
             self._services_factory.map_email(self.creds.username, user_id)

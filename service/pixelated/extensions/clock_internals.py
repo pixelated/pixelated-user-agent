@@ -3,7 +3,7 @@ from pixelated.support.clock import Clock
 from leap.mail.incoming.service import IncomingMail
 def _sync_soledad_with_clock(funct):
     def wrapper(*args, **kwargs):
-        t1 = Clock('sync-leap-mail-recurrent')
+        t1 = Clock('sync-leap-mail-recurrent', args[0]._soledad.uuid)
         def after(param):
             t1.stop()
             return param
@@ -16,7 +16,7 @@ IncomingMail._sync_soledad = _sync_soledad_with_clock(IncomingMail._sync_soledad
 from leap.soledad.client.http_target.send import HTTPDocSender
 def _send_docs_with_clock(funct):
     def wrapper(*args, **kwargs):
-        t1 = Clock('sync-soledad-upload-docs')
+        t1 = Clock('sync-soledad-upload-docs', args[0].uuid)
         def after(param):
             t1.stop()
             return param
@@ -30,7 +30,7 @@ HTTPDocSender._send_docs = _send_docs_with_clock(HTTPDocSender._send_docs)
 from leap.soledad.client.http_target.fetch import HTTPDocFetcher
 def _receive_docs_with_clock(funct):
     def wrapper(*args, **kwargs):
-        t1 = Clock('sync-soledad-download-docs')
+        t1 = Clock('sync-soledad-download-docs', args[0].uuid)
         def after(param):
             t1.stop()
             return param
@@ -44,7 +44,7 @@ HTTPDocFetcher._receive_docs = _receive_docs_with_clock(HTTPDocFetcher._receive_
 from leap.soledad.client.http_target.api import SyncTargetAPI
 def _get_sync_info_with_clock(funct):
     def wrapper(*args, **kwargs):
-        t1 = Clock('sync-soledad-get-remote-state')
+        t1 = Clock('sync-soledad-get-remote-state', args[0]._uuid)
         def after(param):
             t1.stop()
             return param

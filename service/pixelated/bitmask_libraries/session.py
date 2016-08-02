@@ -63,7 +63,7 @@ class LeapSession(object):
 
     @defer.inlineCallbacks
     def initial_sync(self):
-        t = Clock('initial-sync')
+        t = Clock('initial-sync', self.user_auth.uuid)
         yield self._sem_intial_sync.acquire()
         try:
             yield self.sync()
@@ -77,14 +77,14 @@ class LeapSession(object):
 
     @defer.inlineCallbacks
     def after_first_sync(self):
-        t = Clock('session-after-sync')
-        t1 = Clock('key-generation')
+        t = Clock('session-after-sync', self.user_auth.uuid)
+        t1 = Clock('key-generation', self.user_auth.uuid)
         yield self.nicknym.generate_openpgp_key()
         t1.stop()
-        t2 = Clock('account-creation')
+        t2 = Clock('account-creation', self.user_auth.uuid)
         yield self._create_account(self.soledad, self.user_auth.uuid)
         t2.stop()
-        t3 = Clock('mail-fetcher')
+        t3 = Clock('mail-fetcher', self.user_auth.uuid)
         self.incoming_mail_fetcher = yield self._create_incoming_mail_fetcher(
             self.nicknym,
             self.soledad,
@@ -142,7 +142,7 @@ class LeapSession(object):
 
     def sync(self):
         try:
-            t = Clock('session-sync')
+            t = Clock('session-sync', self.user_auth.uuid)
             soledad_sync = self.soledad.sync()
             def _after(param):
                 t.stop()

@@ -53,14 +53,14 @@ class LeapPasswordChecker(object):
                 t = Clock('auth-validate-credentials')
                 srp_auth = SRPAuth(self._leap_provider.api_uri, self._leap_provider.local_ca_crt)
                 auth = srp_auth.authenticate(credentials.username, credentials.password)
-                t.stop()
+                t.stop(user=auth.uuid)
                 return auth
             except SRPAuthenticationError:
                 raise UnauthorizedLogin()
 
         def _get_leap_session(srp_auth):
-            t1 = Clock('auth-create-leap-session')
-            t2 = Clock('auth-create-leap-session-with-sync')
+            t1 = Clock('auth-create-leap-session', srp_auth.uuid)
+            t2 = Clock('auth-create-leap-session-with-sync', srp_auth.uuid)
             auth = authenticate_user(self._leap_provider, credentials.username, credentials.password, auth=srp_auth)
             t1.stop()
 

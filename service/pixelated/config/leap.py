@@ -42,7 +42,7 @@ def initialize_leap_multi_user(provider_hostname,
 
 
 def _create_session(provider, username, password, auth):
-    t = Clock('create-session-factory')
+    t = Clock('create-session-factory', auth.uuid)
     leap_session = LeapSessionFactory(provider).create(username, password, auth)
     t.stop()
     return leap_session
