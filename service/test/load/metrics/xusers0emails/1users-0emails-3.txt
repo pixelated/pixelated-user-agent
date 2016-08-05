@@ -1,9 +1,0 @@
-auth-validate-credentials 2.17718
-create-session-factory 0.00002
-auth-create-leap-session 0.00294
-session-sync 1.70584
-initial-sync 1.70599
-auth-create-leap-session-with-sync 1.70620
-login-leap-session 3.88420
-login-reading-interstitial 0.00157
-login-setup-services 0.00005

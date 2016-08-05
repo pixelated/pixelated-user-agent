@@ -1,269 +1,459 @@
-auth-validate-credentials 2.24267
-create-session-factory 0.00002
-auth-create-leap-session 0.00451
-auth-validate-credentials 1.97528
-create-session-factory 0.00002
-auth-create-leap-session 0.00324
-session-sync 1.03927
-session-sync 0.90711
-auth-validate-credentials 2.11699
-create-session-factory 0.00002
-auth-create-leap-session 0.00389
-auth-validate-credentials 2.16622
-key-generation 1.92697
-create-session-factory 0.00002
-auth-create-leap-session 0.00309
-account-creation 0.00683
-mail-fetcher 0.00191
-session-after-sync 1.93604
-initial-sync 2.97565
-auth-create-leap-session-with-sync 2.97594
-login-leap-session 5.22450
-login-reading-interstitial 0.00210
-login-setup-services 0.12002
-session-sync 0.98320
-initial-sync 0.98337
-auth-create-leap-session-with-sync 0.98362
-login-leap-session 3.10195
-login-reading-interstitial 0.00134
-login-setup-services 0.00007
-session-sync 0.54091
-key-generation 1.74889
-account-creation 0.00373
-mail-fetcher 0.00160
-session-after-sync 1.75460
-initial-sync 2.66201
-auth-create-leap-session-with-sync 2.66223
-login-leap-session 4.63830
-login-reading-interstitial 0.00153
-login-setup-services 0.14606
-auth-validate-credentials 1.98939
-create-session-factory 0.00002
-auth-create-leap-session 0.00402
-key-generation 0.80120
-account-creation 0.00443
-mail-fetcher 0.00206
-session-after-sync 0.80806
-initial-sync 1.34928
-auth-create-leap-session-with-sync 1.34947
-login-leap-session 3.52017
-login-reading-interstitial 0.00120
-session-sync 0.51664
-initial-sync 0.51679
-auth-create-leap-session-with-sync 0.51700
-login-leap-session 2.50741
-login-reading-interstitial 0.00109
-login-setup-services 0.00007
-login-setup-services 0.20577
-auth-validate-credentials 2.16971
-create-session-factory 0.00002
-auth-create-leap-session 0.00439
-session-sync 0.54589
-auth-validate-credentials 2.18569
-create-session-factory 0.00002
-auth-create-leap-session 0.00754
-session-sync 0.55455
-key-generation 0.82325
-account-creation 0.00417
-mail-fetcher 0.00207
-session-after-sync 0.82983
-initial-sync 1.37616
-auth-create-leap-session-with-sync 1.37638
-login-leap-session 3.54710
-login-reading-interstitial 0.00164
-login-setup-services 0.20043
-auth-validate-credentials 2.04717
-create-session-factory 0.00003
-auth-create-leap-session 0.00378
-key-generation 0.73359
-account-creation 0.00387
-mail-fetcher 0.00199
-session-after-sync 0.73982
-initial-sync 1.29466
-auth-create-leap-session-with-sync 1.29510
-login-leap-session 3.48231
-login-reading-interstitial 0.00225
-login-setup-services 0.25994
-session-sync 0.55853
-auth-validate-credentials 2.12106
-create-session-factory 0.00002
-auth-create-leap-session 0.00362
-key-generation 0.80520
-account-creation 0.00349
-mail-fetcher 0.00160
-session-after-sync 0.81072
-initial-sync 1.36949
-auth-create-leap-session-with-sync 1.36975
-login-leap-session 3.41845
-login-reading-interstitial 0.00103
-login-setup-services 0.12881
-session-sync 0.62037
-auth-validate-credentials 2.18101
-create-session-factory 0.00002
-auth-create-leap-session 0.00367
-key-generation 0.80844
-account-creation 0.00407
-mail-fetcher 0.00303
-session-after-sync 0.81588
-initial-sync 1.43662
-auth-create-leap-session-with-sync 1.43681
-login-leap-session 3.55906
-login-reading-interstitial 0.00097
-login-setup-services 0.11371
-session-sync 0.61153
-auth-validate-credentials 2.23139
-create-session-factory 0.00002
-auth-create-leap-session 0.00370
-key-generation 0.71383
-account-creation 0.00382
-mail-fetcher 0.00185
-session-after-sync 0.71981
-initial-sync 1.33159
-auth-create-leap-session-with-sync 1.33181
-login-leap-session 3.51446
-login-reading-interstitial 0.00116
-login-setup-services 0.14018
-session-sync 0.52190
-auth-validate-credentials 2.06987
-create-session-factory 0.00002
-auth-create-leap-session 0.00519
-key-generation 0.75662
-account-creation 0.00383
-mail-fetcher 0.00151
-session-after-sync 0.76229
-initial-sync 1.28445
-auth-create-leap-session-with-sync 1.28467
-login-leap-session 3.51759
-login-reading-interstitial 0.00128
-login-setup-services 0.12834
-session-sync 0.64901
-auth-validate-credentials 2.22323
-create-session-factory 0.00003
-auth-create-leap-session 0.00537
-session-sync 0.51336
-key-generation 0.75048
-account-creation 0.01194
-mail-fetcher 0.00289
-session-after-sync 0.76562
-initial-sync 1.41485
-auth-create-leap-session-with-sync 1.41505
-login-leap-session 3.48946
-login-reading-interstitial 0.00122
-login-setup-services 0.14016
-auth-validate-credentials 2.30505
-create-session-factory 0.00002
-auth-create-leap-session 0.00357
-key-generation 0.78006
-account-creation 0.00418
-mail-fetcher 0.00291
-session-after-sync 0.78754
-initial-sync 1.30127
-auth-create-leap-session-with-sync 1.30172
-login-leap-session 3.52619
-login-reading-interstitial 0.00218
-login-setup-services 0.14496
-session-sync 0.57735
-initial-sync 0.57768
-auth-create-leap-session-with-sync 0.57801
-login-leap-session 2.88461
-login-reading-interstitial 0.00207
-login-setup-services 0.00006
-auth-validate-credentials 1.98110
-create-session-factory 0.00002
-auth-create-leap-session 0.00343
-session-sync 0.51780
-initial-sync 0.51795
-auth-create-leap-session-with-sync 0.51818
-login-leap-session 2.50025
-login-reading-interstitial 0.00147
-login-setup-services 0.00006
-auth-validate-credentials 2.04191
-create-session-factory 0.00002
-auth-create-leap-session 0.00679
-session-sync 0.52117
-initial-sync 0.52140
-auth-create-leap-session-with-sync 0.52169
-login-leap-session 2.56531
-login-reading-interstitial 0.00150
-login-setup-services 0.00021
-auth-validate-credentials 2.01561
-create-session-factory 0.00002
-auth-create-leap-session 0.00588
-session-sync 0.52288
-initial-sync 0.52413
-auth-create-leap-session-with-sync 0.52443
-login-leap-session 2.54118
-login-reading-interstitial 0.00119
-login-setup-services 0.00006
-auth-validate-credentials 1.96304
-create-session-factory 0.00003
-auth-create-leap-session 0.00702
-session-sync 0.52747
-initial-sync 0.52765
-auth-create-leap-session-with-sync 0.52795
-login-leap-session 2.49226
-login-reading-interstitial 0.00103
-login-setup-services 0.00005
-auth-validate-credentials 1.97087
-create-session-factory 0.00002
-auth-create-leap-session 0.00329
-session-sync 0.51640
-initial-sync 0.51661
-auth-create-leap-session-with-sync 0.51687
-login-leap-session 2.48885
-login-reading-interstitial 0.00178
-login-setup-services 0.00008
-auth-validate-credentials 1.97389
-create-session-factory 0.00002
-auth-create-leap-session 0.00427
-session-sync 0.54491
-initial-sync 0.54508
-auth-create-leap-session-with-sync 0.54534
-login-leap-session 2.52014
-login-reading-interstitial 0.00121
-login-setup-services 0.00006
-auth-validate-credentials 2.23561
-create-session-factory 0.00002
-auth-create-leap-session 0.00410
-session-sync 0.51864
-initial-sync 0.51882
-auth-create-leap-session-with-sync 0.51917
-login-leap-session 2.75658
-login-reading-interstitial 0.00152
-login-setup-services 0.00005
-auth-validate-credentials 1.95661
-create-session-factory 0.00012
-auth-create-leap-session 0.00428
-session-sync 0.53866
-initial-sync 0.53957
-auth-create-leap-session-with-sync 0.53998
-login-leap-session 2.49786
-login-reading-interstitial 0.00117
-login-setup-services 0.00009
-auth-validate-credentials 1.98034
-create-session-factory 0.00003
-auth-create-leap-session 0.00597
-session-sync 0.52333
-initial-sync 0.52353
-auth-create-leap-session-with-sync 0.52386
-login-leap-session 2.50604
-login-reading-interstitial 0.00175
-login-setup-services 0.00007
-auth-validate-credentials 2.09737
-create-session-factory 0.00003
-auth-create-leap-session 0.00368
-session-sync 0.56425
-initial-sync 0.56442
-auth-create-leap-session-with-sync 0.56467
-login-leap-session 2.66294
-login-reading-interstitial 0.00117
-login-setup-services 0.00006
-auth-validate-credentials 1.97377
-create-session-factory 0.00009
-auth-create-leap-session 0.00492
-session-sync 0.51568
-initial-sync 0.51588
-auth-create-leap-session-with-sync 0.51629
-login-leap-session 2.49136
-login-reading-interstitial 0.00145
-login-setup-services 0.00015
+56f541d9275429eed70e3af4d35ab937 auth-validate-credentials 2.38626
+56f541d9275429eed70e3af4d35ab546 auth-validate-credentials 2.24042
+56f541d9275429eed70e3af4d35ab535 auth-validate-credentials 1.97141
+56f541d9275429eed70e3af4d35ab937 create-session-factory 4.00984
+56f541d9275429eed70e3af4d35ab937 auth-create-leap-session 4.01480
+56f541d9275429eed70e3af4d35ab546 create-session-factory 4.10017
+56f541d9275429eed70e3af4d35ab546 auth-create-leap-session 4.10894
+56f541d9275429eed70e3af4d35ab535 create-session-factory 4.14060
+56f541d9275429eed70e3af4d35ab535 auth-create-leap-session 4.14513
+56f541d9275429eed70e3af4d35a7da7 auth-validate-credentials 2.80862
+56f541d9275429eed70e3af4d35a9230 auth-validate-credentials 3.07477
+56f541d9275429eed70e3af4d35a5bcf auth-validate-credentials 4.11802
+56f541d9275429eed70e3af4d35a9945 auth-validate-credentials 4.17750
+56f541d9275429eed70e3af4d35a7539 auth-validate-credentials 4.31743
+56f541d9275429eed70e3af4d35a4c86 auth-validate-credentials 4.30497
+56f541d9275429eed70e3af4d35aa9bf auth-validate-credentials 4.40720
+56f541d9275429eed70e3af4d35aa881 auth-validate-credentials 4.52186
+56f541d9275429eed70e3af4d35a8875 auth-validate-credentials 4.68382
+56f541d9275429eed70e3af4d35a6d43 auth-validate-credentials 4.66470
+56f541d9275429eed70e3af4d35a2b74 auth-validate-credentials 4.50824
+56f541d9275429eed70e3af4d35a2f25 auth-validate-credentials 5.09434
+56f541d9275429eed70e3af4d35a3e06 auth-validate-credentials 5.10921
+56f541d9275429eed70e3af4d35a6a60 auth-validate-credentials 5.34001
+56f541d9275429eed70e3af4d35a7da7 create-session-factory 4.64621
+56f541d9275429eed70e3af4d35a7da7 auth-create-leap-session 4.65140
+56f541d9275429eed70e3af4d35ab535 sync-soledad-get-remote-state 7.52378
+Unknown sync-soledad-diff-docs 0.00008
+56f541d9275429eed70e3af4d35ab535 session-sync 7.53874
+56f541d9275429eed70e3af4d35ab546 sync-soledad-get-remote-state 11.69547
+Unknown sync-soledad-diff-docs 0.00007
+56f541d9275429eed70e3af4d35ab546 session-sync 11.70572
+56f541d9275429eed70e3af4d35ab937 sync-soledad-get-remote-state 15.81419
+Unknown sync-soledad-diff-docs 0.00009
+56f541d9275429eed70e3af4d35ab937 session-sync 15.82597
+56f541d9275429eed70e3af4d35a9230 create-session-factory 4.13298
+56f541d9275429eed70e3af4d35a9230 auth-create-leap-session 4.14328
+56f541d9275429eed70e3af4d35a9945 create-session-factory 4.26284
+56f541d9275429eed70e3af4d35a9945 auth-create-leap-session 4.26759
+56f541d9275429eed70e3af4d35a5bcf create-session-factory 4.29227
+56f541d9275429eed70e3af4d35a5bcf auth-create-leap-session 4.29616
+56f541d9275429eed70e3af4d35a7539 create-session-factory 4.59617
+56f541d9275429eed70e3af4d35a7539 auth-create-leap-session 4.60263
+56f541d9275429eed70e3af4d35a4c86 create-session-factory 4.47915
+56f541d9275429eed70e3af4d35a4c86 auth-create-leap-session 4.48330
+56f541d9275429eed70e3af4d35aa9bf create-session-factory 4.38193
+56f541d9275429eed70e3af4d35aa9bf auth-create-leap-session 4.38593
+56f541d9275429eed70e3af4d35aa881 create-session-factory 4.77868
+56f541d9275429eed70e3af4d35aa881 auth-create-leap-session 4.78329
+56f541d9275429eed70e3af4d35a8875 create-session-factory 4.33160
+56f541d9275429eed70e3af4d35a8875 auth-create-leap-session 4.33601
+56f541d9275429eed70e3af4d35a6d43 create-session-factory 4.66288
+56f541d9275429eed70e3af4d35a6d43 auth-create-leap-session 4.66699
+56f541d9275429eed70e3af4d35a2b74 create-session-factory 4.68223
+56f541d9275429eed70e3af4d35a2b74 auth-create-leap-session 4.68654
+56f541d9275429eed70e3af4d35a2f25 create-session-factory 4.60416
+56f541d9275429eed70e3af4d35a2f25 auth-create-leap-session 4.60837
+56f541d9275429eed70e3af4d35a3e06 create-session-factory 4.27817
+56f541d9275429eed70e3af4d35a3e06 auth-create-leap-session 4.28210
+56f541d9275429eed70e3af4d35a6a60 create-session-factory 4.79437
+56f541d9275429eed70e3af4d35a6a60 auth-create-leap-session 4.80366
+56f541d9275429eed70e3af4d35a9945 sync-soledad-get-remote-state 51.93935
+Unknown sync-soledad-diff-docs 0.00023
+56f541d9275429eed70e3af4d35a9945 session-sync 51.94735
+56f541d9275429eed70e3af4d35a5bcf sync-soledad-get-remote-state 47.65458
+Unknown sync-soledad-diff-docs 0.00013
+56f541d9275429eed70e3af4d35a5bcf session-sync 47.66053
+56f541d9275429eed70e3af4d35a7da7 sync-soledad-get-remote-state 60.53941
+Unknown sync-soledad-diff-docs 0.00018
+56f541d9275429eed70e3af4d35a7da7 session-sync 60.54695
+56f541d9275429eed70e3af4d35a3e06 sync-soledad-get-remote-state 7.01162
+Unknown sync-soledad-diff-docs 0.00008
+56f541d9275429eed70e3af4d35a3e06 session-sync 7.01841
+56f541d9275429eed70e3af4d35a2f25 sync-soledad-get-remote-state 11.30362
+Unknown sync-soledad-diff-docs 0.00007
+56f541d9275429eed70e3af4d35a2f25 session-sync 11.31133
+56f541d9275429eed70e3af4d35a6d43 sync-soledad-get-remote-state 20.66793
+Unknown sync-soledad-diff-docs 0.00021
+56f541d9275429eed70e3af4d35a6d43 session-sync 20.67618
+56f541d9275429eed70e3af4d35a8875 sync-soledad-get-remote-state 25.36431
+Unknown sync-soledad-diff-docs 0.00008
+56f541d9275429eed70e3af4d35a8875 session-sync 25.37144
+56f541d9275429eed70e3af4d35a2b74 sync-soledad-get-remote-state 16.02315
+Unknown sync-soledad-diff-docs 0.00007
+56f541d9275429eed70e3af4d35a2b74 session-sync 16.02914
+56f541d9275429eed70e3af4d35a4c86 sync-soledad-get-remote-state 38.91704
+Unknown sync-soledad-diff-docs 0.00008
+56f541d9275429eed70e3af4d35a4c86 session-sync 38.92361
+56f541d9275429eed70e3af4d35a6a60 sync-soledad-get-remote-state 2.39587
+Unknown sync-soledad-diff-docs 0.00012
+56f541d9275429eed70e3af4d35a6a60 session-sync 2.40856
+56f541d9275429eed70e3af4d35a7539 sync-soledad-get-remote-state 43.44901
+Unknown sync-soledad-diff-docs 0.00007
+56f541d9275429eed70e3af4d35a7539 session-sync 43.45581
+56f541d9275429eed70e3af4d35ab535 key-generation 60.79737
+56f541d9275429eed70e3af4d35a9230 sync-soledad-get-remote-state 56.63369
+Unknown sync-soledad-diff-docs 0.00013
+56f541d9275429eed70e3af4d35a9230 session-sync 56.64266
+56f541d9275429eed70e3af4d35ab546 key-generation 60.81378
+56f541d9275429eed70e3af4d35ab535 account-creation 0.04844
+56f541d9275429eed70e3af4d35ab937 key-generation 60.82690
+56f541d9275429eed70e3af4d35ab535 mail-fetcher 0.03435
+56f541d9275429eed70e3af4d35ab535 session-after-sync 60.88047
+56f541d9275429eed70e3af4d35ab535 initial-sync 68.41944
+56f541d9275429eed70e3af4d35ab535 auth-create-leap-session-with-sync 72.56057
+56f541d9275429eed70e3af4d35ab535 login-leap-session 81.45446
+56f541d9275429eed70e3af4d35ab535 login-reading-interstitial 0.00250
+56f541d9275429eed70e3af4d35ab546 account-creation 0.06871
+56f541d9275429eed70e3af4d35ab937 account-creation 0.05357
+56f541d9275429eed70e3af4d35ab546 mail-fetcher 0.01398
+56f541d9275429eed70e3af4d35ab546 session-after-sync 60.89679
+56f541d9275429eed70e3af4d35ab546 initial-sync 72.60278
+56f541d9275429eed70e3af4d35ab546 auth-create-leap-session-with-sync 76.70334
+56f541d9275429eed70e3af4d35ab546 login-leap-session 82.26474
+56f541d9275429eed70e3af4d35ab546 login-reading-interstitial 0.00871
+56f541d9275429eed70e3af4d35a2829 auth-validate-credentials 2.52098
+56f541d9275429eed70e3af4d359ff6c auth-validate-credentials 2.55981
+56f541d9275429eed70e3af4d35a196d auth-validate-credentials 2.57512
+56f541d9275429eed70e3af4d359edec auth-validate-credentials 2.61178
+56f541d9275429eed70e3af4d359f533 auth-validate-credentials 2.73101
+56f541d9275429eed70e3af4d359f9be auth-validate-credentials 2.78923
+56f541d9275429eed70e3af4d35a09d1 auth-validate-credentials 2.82136
+56f541d9275429eed70e3af4d35a23aa auth-validate-credentials 2.81992
+56f541d9275429eed70e3af4d35a2829 create-session-factory 4.07238
+56f541d9275429eed70e3af4d35a2829 auth-create-leap-session 4.07610
+56f541d9275429eed70e3af4d35ab546 sync-soledad-get-remote-state 4.34556
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d35ab546 sync-leap-mail-recurrent 4.37017
+56f541d9275429eed70e3af4d35aa9bf sync-soledad-get-remote-state 39.10111
+Unknown sync-soledad-diff-docs 0.00012
+56f541d9275429eed70e3af4d35aa9bf session-sync 39.11035
+56f541d9275429eed70e3af4d35aa881 sync-soledad-get-remote-state 34.33509
+Unknown sync-soledad-diff-docs 0.00008
+56f541d9275429eed70e3af4d35aa881 session-sync 34.34350
+56f541d9275429eed70e3af4d35a7539 key-generation 4.57144
+56f541d9275429eed70e3af4d35a4c86 key-generation 4.62094
+56f541d9275429eed70e3af4d35a6a60 key-generation 4.59034
+56f541d9275429eed70e3af4d35ab535 sync-soledad-get-remote-state 4.47197
+Unknown sync-soledad-diff-docs 0.00006
+56f541d9275429eed70e3af4d35ab535 sync-leap-mail-recurrent 4.48154
+56f541d9275429eed70e3af4d35ab937 mail-fetcher 4.47282
+56f541d9275429eed70e3af4d35ab937 session-after-sync 65.35365
+56f541d9275429eed70e3af4d35ab937 initial-sync 81.17992
+56f541d9275429eed70e3af4d35ab937 auth-create-leap-session-with-sync 85.19009
+56f541d9275429eed70e3af4d35ab937 login-leap-session 87.57812
+56f541d9275429eed70e3af4d35ab937 login-reading-interstitial 0.00144
+56f541d9275429eed70e3af4d359ff6c create-session-factory 4.44801
+56f541d9275429eed70e3af4d359ff6c auth-create-leap-session 4.45157
+56f541d9275429eed70e3af4d35a196d create-session-factory 4.72835
+56f541d9275429eed70e3af4d35a196d auth-create-leap-session 4.73202
+56f541d9275429eed70e3af4d359edec create-session-factory 4.55545
+56f541d9275429eed70e3af4d359edec auth-create-leap-session 4.55935
+56f541d9275429eed70e3af4d359f533 create-session-factory 4.21482
+56f541d9275429eed70e3af4d359f533 auth-create-leap-session 4.21839
+56f541d9275429eed70e3af4d359f9be create-session-factory 4.16842
+56f541d9275429eed70e3af4d359f9be auth-create-leap-session 4.17348
+56f541d9275429eed70e3af4d35a09d1 create-session-factory 4.28097
+56f541d9275429eed70e3af4d35a09d1 auth-create-leap-session 4.28660
+56f541d9275429eed70e3af4d35a23aa create-session-factory 4.42481
+56f541d9275429eed70e3af4d35a23aa auth-create-leap-session 4.42833
+56f541d9275429eed70e3af4d35a9945 auth-create-leap-session-with-sync 92.29427
+56f541d9275429eed70e3af4d35a5bcf auth-create-leap-session-with-sync 88.03741
+56f541d9275429eed70e3af4d35a7da7 auth-create-leap-session-with-sync 101.16115
+56f541d9275429eed70e3af4d35a2f25 auth-create-leap-session-with-sync 51.81681
+56f541d9275429eed70e3af4d35a3e06 auth-create-leap-session-with-sync 47.21918
+56f541d9275429eed70e3af4d35a6d43 auth-create-leap-session-with-sync 61.19433
+56f541d9275429eed70e3af4d35a2b74 auth-create-leap-session-with-sync 56.53927
+56f541d9275429eed70e3af4d35a8875 auth-create-leap-session-with-sync 65.55427
+56f541d9275429eed70e3af4d35a9230 auth-create-leap-session-with-sync 96.52899
+56f541d9275429eed70e3af4d35a7539 account-creation 31.57416
+56f541d9275429eed70e3af4d35ab535 login-setup-services 37.04542
+56f541d9275429eed70e3af4d359ff6c sync-soledad-get-remote-state 28.10629
+Unknown sync-soledad-diff-docs 0.00023
+56f541d9275429eed70e3af4d359ff6c session-sync 28.11437
+56f541d9275429eed70e3af4d35a196d sync-soledad-get-remote-state 23.38463
+Unknown sync-soledad-diff-docs 0.00009
+56f541d9275429eed70e3af4d35a196d session-sync 23.39100
+56f541d9275429eed70e3af4d35a23aa sync-soledad-get-remote-state 1.72619
+Unknown sync-soledad-diff-docs 0.00051
+56f541d9275429eed70e3af4d35a23aa session-sync 1.73501
+56f541d9275429eed70e3af4d359f533 sync-soledad-get-remote-state 14.62800
+Unknown sync-soledad-diff-docs 0.00018
+56f541d9275429eed70e3af4d359f533 session-sync 14.63571
+56f541d9275429eed70e3af4d35a09d1 sync-soledad-get-remote-state 6.17943
+Unknown sync-soledad-diff-docs 0.00009
+56f541d9275429eed70e3af4d35a09d1 session-sync 6.18611
+56f541d9275429eed70e3af4d359edec sync-soledad-get-remote-state 18.86528
+Unknown sync-soledad-diff-docs 0.00007
+56f541d9275429eed70e3af4d359edec session-sync 18.87195
+56f541d9275429eed70e3af4d359f9be sync-soledad-get-remote-state 10.48342
+Unknown sync-soledad-diff-docs 0.00008
+56f541d9275429eed70e3af4d359f9be session-sync 10.48987
+56f541d9275429eed70e3af4d35a4c86 account-creation 32.69779
+56f541d9275429eed70e3af4d35ab937 sync-soledad-get-remote-state 1.71405
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d35ab937 sync-leap-mail-recurrent 1.73097
+56f541d9275429eed70e3af4d35a6a60 account-creation 32.97290
+56f541d9275429eed70e3af4d35ab546 login-setup-services 38.62221
+56f541d9275429eed70e3af4d35a7539 mail-fetcher 3.19146
+56f541d9275429eed70e3af4d35a7539 session-after-sync 39.33820
+56f541d9275429eed70e3af4d35a7539 initial-sync 82.79435
+56f541d9275429eed70e3af4d35a7539 auth-create-leap-session-with-sync 87.39080
+56f541d9275429eed70e3af4d35a7539 login-leap-session 107.60961
+56f541d9275429eed70e3af4d35a7539 login-reading-interstitial 0.01320
+56f541d9275429eed70e3af4d35a4c86 mail-fetcher 3.26005
+56f541d9275429eed70e3af4d35a4c86 session-after-sync 40.57928
+56f541d9275429eed70e3af4d35a4c86 initial-sync 79.50316
+56f541d9275429eed70e3af4d35a4c86 auth-create-leap-session-with-sync 83.98255
+56f541d9275429eed70e3af4d35a4c86 login-leap-session 108.77342
+56f541d9275429eed70e3af4d35a4c86 login-reading-interstitial 0.00119
+56f541d9275429eed70e3af4d35ab937 login-setup-services 38.49161
+56f541d9275429eed70e3af4d35a7539 sync-soledad-get-remote-state 3.12843
+Unknown sync-soledad-diff-docs 0.00006
+56f541d9275429eed70e3af4d35a7539 sync-leap-mail-recurrent 3.13870
+56f541d9275429eed70e3af4d35a6a60 mail-fetcher 5.61027
+56f541d9275429eed70e3af4d35a6a60 session-after-sync 43.17391
+56f541d9275429eed70e3af4d35a6a60 initial-sync 45.58270
+56f541d9275429eed70e3af4d35a6a60 auth-create-leap-session-with-sync 50.37740
+56f541d9275429eed70e3af4d35a6a60 login-leap-session 111.42288
+56f541d9275429eed70e3af4d35a6a60 login-reading-interstitial 0.01003
+56f541d9275429eed70e3af4d35a7539 login-setup-services 4.15169
+56f541d9275429eed70e3af4d35a4c86 login-setup-services 3.26551
+56f541d9275429eed70e3af4d35a4c86 sync-soledad-get-remote-state 0.67257
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d35a4c86 sync-leap-mail-recurrent 0.68267
+56f541d9275429eed70e3af4d35a2829 sync-soledad-get-remote-state 39.57423
+Unknown sync-soledad-diff-docs 0.00009
+56f541d9275429eed70e3af4d35a2829 session-sync 39.58256
+56f541d9275429eed70e3af4d35a6a60 sync-soledad-get-remote-state 0.65240
+Unknown sync-soledad-diff-docs 0.00009
+56f541d9275429eed70e3af4d35a6a60 sync-leap-mail-recurrent 0.66620
+56f541d9275429eed70e3af4d35a6a60 login-setup-services 0.84852
+56f541d9275429eed70e3af4d35aa9bf key-generation 40.04885
+56f541d9275429eed70e3af4d35aa881 key-generation 40.03908
+56f541d9275429eed70e3af4d35aa9bf account-creation 0.00912
+56f541d9275429eed70e3af4d35aa9bf mail-fetcher 0.00571
+56f541d9275429eed70e3af4d35aa9bf session-after-sync 40.06431
+56f541d9275429eed70e3af4d35aa9bf initial-sync 79.17514
+56f541d9275429eed70e3af4d35aa9bf auth-create-leap-session-with-sync 83.55733
+56f541d9275429eed70e3af4d35aa9bf login-leap-session 112.90907
+56f541d9275429eed70e3af4d35aa9bf login-reading-interstitial 0.00145
+56f541d9275429eed70e3af4d35aa881 account-creation 0.01529
+56f541d9275429eed70e3af4d35aa881 mail-fetcher 0.01371
+56f541d9275429eed70e3af4d35aa881 session-after-sync 40.06849
+56f541d9275429eed70e3af4d35aa881 initial-sync 74.41231
+56f541d9275429eed70e3af4d35aa881 auth-create-leap-session-with-sync 79.19128
+56f541d9275429eed70e3af4d35aa881 login-leap-session 112.90990
+56f541d9275429eed70e3af4d35aa881 login-reading-interstitial 0.00162
+56f541d9275429eed70e3af4d35a09d1 key-generation 8.30003
+56f541d9275429eed70e3af4d35a196d key-generation 8.33440
+56f541d9275429eed70e3af4d359f9be key-generation 8.28927
+56f541d9275429eed70e3af4d359edec key-generation 8.30462
+56f541d9275429eed70e3af4d35aa9bf sync-soledad-get-remote-state 0.95962
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d35aa9bf sync-leap-mail-recurrent 0.96755
+56f541d9275429eed70e3af4d359f533 key-generation 8.39440
+56f541d9275429eed70e3af4d359ff6c key-generation 8.42874
+56f541d9275429eed70e3af4d35a23aa key-generation 8.41377
+56f541d9275429eed70e3af4d35aa881 sync-soledad-get-remote-state 0.97461
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d35aa881 sync-leap-mail-recurrent 0.98504
+56f541d9275429eed70e3af4d35aa9bf login-setup-services 2.93249
+56f541d9275429eed70e3af4d35a09d1 account-creation 2.03259
+56f541d9275429eed70e3af4d35aa881 login-setup-services 4.16133
+56f541d9275429eed70e3af4d35a196d account-creation 3.27873
+56f541d9275429eed70e3af4d35a2829 key-generation 5.01010
+56f541d9275429eed70e3af4d359f9be account-creation 3.38585
+56f541d9275429eed70e3af4d359edec account-creation 3.44016
+56f541d9275429eed70e3af4d359f533 account-creation 3.41768
+56f541d9275429eed70e3af4d359ff6c account-creation 3.45491
+56f541d9275429eed70e3af4d35a23aa account-creation 3.46235
+56f541d9275429eed70e3af4d35a09d1 mail-fetcher 1.52509
+56f541d9275429eed70e3af4d35a09d1 session-after-sync 11.85808
+56f541d9275429eed70e3af4d35a09d1 initial-sync 18.04449
+56f541d9275429eed70e3af4d35a09d1 auth-create-leap-session-with-sync 22.32578
+56f541d9275429eed70e3af4d35a09d1 login-leap-session 51.32603
+56f541d9275429eed70e3af4d35a09d1 login-reading-interstitial 0.00147
+56f541d9275429eed70e3af4d35a196d mail-fetcher 0.29305
+56f541d9275429eed70e3af4d35a196d session-after-sync 11.90653
+56f541d9275429eed70e3af4d35a196d initial-sync 35.29784
+56f541d9275429eed70e3af4d35a196d auth-create-leap-session-with-sync 40.02643
+56f541d9275429eed70e3af4d35a196d login-leap-session 51.33819
+56f541d9275429eed70e3af4d35a196d login-reading-interstitial 0.00134
+56f541d9275429eed70e3af4d359f9be mail-fetcher 0.19753
+56f541d9275429eed70e3af4d359f9be session-after-sync 11.87361
+56f541d9275429eed70e3af4d359f9be initial-sync 22.36373
+56f541d9275429eed70e3af4d359f9be auth-create-leap-session-with-sync 26.53238
+56f541d9275429eed70e3af4d359f9be login-leap-session 51.34035
+56f541d9275429eed70e3af4d359f9be login-reading-interstitial 0.00155
+56f541d9275429eed70e3af4d35a2829 account-creation 0.25209
+56f541d9275429eed70e3af4d359edec mail-fetcher 0.15507
+56f541d9275429eed70e3af4d359edec session-after-sync 11.90020
+56f541d9275429eed70e3af4d359edec initial-sync 30.77243
+56f541d9275429eed70e3af4d359edec auth-create-leap-session-with-sync 35.32813
+56f541d9275429eed70e3af4d359edec login-leap-session 51.34439
+56f541d9275429eed70e3af4d359edec login-reading-interstitial 0.00143
+56f541d9275429eed70e3af4d359f533 mail-fetcher 0.12220
+56f541d9275429eed70e3af4d359f533 session-after-sync 11.93474
+56f541d9275429eed70e3af4d359f533 initial-sync 26.57070
+56f541d9275429eed70e3af4d359f533 auth-create-leap-session-with-sync 30.78581
+56f541d9275429eed70e3af4d359f533 login-leap-session 51.37017
+56f541d9275429eed70e3af4d359f533 login-reading-interstitial 0.00131
+56f541d9275429eed70e3af4d359ff6c mail-fetcher 0.09993
+56f541d9275429eed70e3af4d359ff6c session-after-sync 11.98391
+56f541d9275429eed70e3af4d359ff6c initial-sync 40.09852
+56f541d9275429eed70e3af4d359ff6c auth-create-leap-session-with-sync 44.54674
+56f541d9275429eed70e3af4d359ff6c login-leap-session 51.40086
+56f541d9275429eed70e3af4d359ff6c login-reading-interstitial 0.00153
+56f541d9275429eed70e3af4d35a23aa mail-fetcher 0.10347
+56f541d9275429eed70e3af4d35a23aa session-after-sync 11.98034
+56f541d9275429eed70e3af4d35a23aa initial-sync 13.71566
+56f541d9275429eed70e3af4d35a23aa auth-create-leap-session-with-sync 18.14072
+56f541d9275429eed70e3af4d35a23aa login-leap-session 51.43908
+56f541d9275429eed70e3af4d35a23aa login-reading-interstitial 0.00159
+56f541d9275429eed70e3af4d35a2829 mail-fetcher 0.08820
+56f541d9275429eed70e3af4d35a2829 session-after-sync 5.35077
+56f541d9275429eed70e3af4d35a2829 initial-sync 44.93362
+56f541d9275429eed70e3af4d35a2829 auth-create-leap-session-with-sync 49.00627
+56f541d9275429eed70e3af4d35a2829 login-leap-session 51.55905
+56f541d9275429eed70e3af4d35a2829 login-reading-interstitial 0.00187
+56f541d9275429eed70e3af4d35a09d1 login-setup-services 0.25153
+56f541d9275429eed70e3af4d35a196d login-setup-services 0.42454
+56f541d9275429eed70e3af4d359f9be login-setup-services 0.59867
+56f541d9275429eed70e3af4d35a09d1 sync-soledad-get-remote-state 0.62824
+Unknown sync-soledad-diff-docs 0.00012
+56f541d9275429eed70e3af4d35a09d1 sync-leap-mail-recurrent 0.63938
+56f541d9275429eed70e3af4d35a196d sync-soledad-get-remote-state 0.62233
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d35a196d sync-leap-mail-recurrent 0.63040
+56f541d9275429eed70e3af4d359f9be sync-soledad-get-remote-state 0.61427
+Unknown sync-soledad-diff-docs 0.00008
+56f541d9275429eed70e3af4d359f9be sync-leap-mail-recurrent 0.62402
+56f541d9275429eed70e3af4d359edec sync-soledad-get-remote-state 0.60498
+Unknown sync-soledad-diff-docs 0.00060
+56f541d9275429eed70e3af4d359edec sync-leap-mail-recurrent 0.61682
+56f541d9275429eed70e3af4d359ff6c sync-soledad-get-remote-state 0.58075
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d359ff6c sync-leap-mail-recurrent 0.59022
+56f541d9275429eed70e3af4d35a23aa sync-soledad-get-remote-state 0.58938
+Unknown sync-soledad-diff-docs 0.00006
+56f541d9275429eed70e3af4d35a23aa sync-leap-mail-recurrent 0.59851
+56f541d9275429eed70e3af4d359f533 sync-soledad-get-remote-state 0.63317
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d359f533 sync-leap-mail-recurrent 0.64211
+56f541d9275429eed70e3af4d359ff6c login-setup-services 0.77951
+56f541d9275429eed70e3af4d35a2829 sync-soledad-get-remote-state 0.73154
+Unknown sync-soledad-diff-docs 0.00009
+56f541d9275429eed70e3af4d35a2829 sync-leap-mail-recurrent 0.74071
+56f541d9275429eed70e3af4d35a23aa login-setup-services 0.96061
+56f541d9275429eed70e3af4d35a2829 login-setup-services 1.22480
+56f541d9275429eed70e3af4d359f533 login-setup-services 1.79949
+56f541d9275429eed70e3af4d359edec login-setup-services 1.96855
+56f541d9275429eed70e3af4d35ab546 sync-soledad-get-remote-state 0.97341
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d35ab546 sync-leap-mail-recurrent 0.98201
+56f541d9275429eed70e3af4d35ab535 sync-soledad-get-remote-state 1.03809
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d35ab535 sync-leap-mail-recurrent 1.04442
+56f541d9275429eed70e3af4d35ab937 sync-soledad-get-remote-state 1.44493
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d35ab937 sync-leap-mail-recurrent 1.45301
+56f541d9275429eed70e3af4d35a7539 sync-soledad-get-remote-state 0.64963
+Unknown sync-soledad-diff-docs 0.00003
+56f541d9275429eed70e3af4d35a7539 sync-leap-mail-recurrent 0.65272
+56f541d9275429eed70e3af4d35a4c86 sync-soledad-get-remote-state 0.52900
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d35a4c86 sync-leap-mail-recurrent 0.53798
+56f541d9275429eed70e3af4d35a6a60 sync-soledad-get-remote-state 0.50897
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d35a6a60 sync-leap-mail-recurrent 0.51696
+56f541d9275429eed70e3af4d35aa881 sync-soledad-get-remote-state 0.75061
+Unknown sync-soledad-diff-docs 0.00006
+56f541d9275429eed70e3af4d35aa881 sync-leap-mail-recurrent 0.75605
+56f541d9275429eed70e3af4d35aa9bf sync-soledad-get-remote-state 0.77336
+Unknown sync-soledad-diff-docs 0.00006
+56f541d9275429eed70e3af4d35aa9bf sync-leap-mail-recurrent 0.78263
+56f541d9275429eed70e3af4d359edec sync-soledad-get-remote-state 0.53406
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d359edec sync-leap-mail-recurrent 0.54522
+56f541d9275429eed70e3af4d35a09d1 sync-soledad-get-remote-state 0.59656
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d35a09d1 sync-leap-mail-recurrent 0.60231
+56f541d9275429eed70e3af4d35a196d sync-soledad-get-remote-state 0.58657
+Unknown sync-soledad-diff-docs 0.00007
+56f541d9275429eed70e3af4d35a196d sync-leap-mail-recurrent 0.59577
+56f541d9275429eed70e3af4d359f9be sync-soledad-get-remote-state 0.59027
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d359f9be sync-leap-mail-recurrent 0.60047
+56f541d9275429eed70e3af4d35a2829 sync-soledad-get-remote-state 0.51680
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d35a2829 sync-leap-mail-recurrent 0.52599
+56f541d9275429eed70e3af4d359ff6c sync-soledad-get-remote-state 0.57309
+Unknown sync-soledad-diff-docs 0.00006
+56f541d9275429eed70e3af4d359ff6c sync-leap-mail-recurrent 0.58213
+56f541d9275429eed70e3af4d35a23aa sync-soledad-get-remote-state 0.56207
+Unknown sync-soledad-diff-docs 0.00009
+56f541d9275429eed70e3af4d35a23aa sync-leap-mail-recurrent 0.57142
+56f541d9275429eed70e3af4d359f533 sync-soledad-get-remote-state 0.62795
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d359f533 sync-leap-mail-recurrent 0.63803
+56f541d9275429eed70e3af4d35ab535 sync-soledad-get-remote-state 0.93831
+Unknown sync-soledad-diff-docs 0.00029
+56f541d9275429eed70e3af4d35ab535 sync-leap-mail-recurrent 0.94906
+56f541d9275429eed70e3af4d35ab546 sync-soledad-get-remote-state 0.91456
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d35ab546 sync-leap-mail-recurrent 0.92202
+56f541d9275429eed70e3af4d35ab937 sync-soledad-get-remote-state 1.45249
+Unknown sync-soledad-diff-docs 0.00008
+56f541d9275429eed70e3af4d35ab937 sync-leap-mail-recurrent 1.46200
+56f541d9275429eed70e3af4d35a7539 sync-soledad-get-remote-state 0.55007
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d35a7539 sync-leap-mail-recurrent 0.56092
+56f541d9275429eed70e3af4d35a4c86 sync-soledad-get-remote-state 0.54728
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d35a4c86 sync-leap-mail-recurrent 0.55668
+56f541d9275429eed70e3af4d35a6a60 sync-soledad-get-remote-state 0.52795
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d35a6a60 sync-leap-mail-recurrent 0.53714
+56f541d9275429eed70e3af4d35aa9bf sync-soledad-get-remote-state 0.65360
+Unknown sync-soledad-diff-docs 0.00003
+56f541d9275429eed70e3af4d35aa9bf sync-leap-mail-recurrent 0.65851
+56f541d9275429eed70e3af4d35aa881 sync-soledad-get-remote-state 0.78684
+Unknown sync-soledad-diff-docs 0.00006
+56f541d9275429eed70e3af4d35aa881 sync-leap-mail-recurrent 0.79480
+56f541d9275429eed70e3af4d35a09d1 sync-soledad-get-remote-state 0.56451
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d35a09d1 sync-leap-mail-recurrent 0.57398
+56f541d9275429eed70e3af4d35a196d sync-soledad-get-remote-state 0.56011
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d35a196d sync-leap-mail-recurrent 0.56986
+56f541d9275429eed70e3af4d359f9be sync-soledad-get-remote-state 0.56575
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d359f9be sync-leap-mail-recurrent 0.57281
+56f541d9275429eed70e3af4d359edec sync-soledad-get-remote-state 0.56888
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d359edec sync-leap-mail-recurrent 0.57808
+56f541d9275429eed70e3af4d35a23aa sync-soledad-get-remote-state 0.52512
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d35a23aa sync-leap-mail-recurrent 0.53271
+56f541d9275429eed70e3af4d359ff6c sync-soledad-get-remote-state 0.56590
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d359ff6c sync-leap-mail-recurrent 0.57368
+56f541d9275429eed70e3af4d35a2829 sync-soledad-get-remote-state 0.53142
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d35a2829 sync-leap-mail-recurrent 0.53828
+56f541d9275429eed70e3af4d359f533 sync-soledad-get-remote-state 0.60626
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d359f533 sync-leap-mail-recurrent 0.61314
+56f541d9275429eed70e3af4d35ab535 sync-soledad-get-remote-state 0.98317
+Unknown sync-soledad-diff-docs 0.00007
+56f541d9275429eed70e3af4d35ab535 sync-leap-mail-recurrent 0.99279
+56f541d9275429eed70e3af4d35ab546 sync-soledad-get-remote-state 1.01052
+Unknown sync-soledad-diff-docs 0.00006
+56f541d9275429eed70e3af4d35ab546 sync-leap-mail-recurrent 1.02048
+56f541d9275429eed70e3af4d35ab937 sync-soledad-get-remote-state 1.31019
+Unknown sync-soledad-diff-docs 0.00005
+56f541d9275429eed70e3af4d35ab937 sync-leap-mail-recurrent 1.31753
+56f541d9275429eed70e3af4d35a7539 sync-soledad-get-remote-state 0.53290
+Unknown sync-soledad-diff-docs 0.00004
+56f541d9275429eed70e3af4d35a7539 sync-leap-mail-recurrent 0.54375
