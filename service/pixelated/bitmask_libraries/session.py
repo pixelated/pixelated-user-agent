@@ -72,7 +72,7 @@ class LeapSession(object):
                 self._has_been_initially_synced = True
         finally:
             yield self._sem_intial_sync.release()
-        t.stop()
+            t.stop()
         defer.returnValue(self)
 
     @defer.inlineCallbacks
