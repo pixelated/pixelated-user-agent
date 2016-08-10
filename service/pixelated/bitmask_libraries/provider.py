@@ -21,6 +21,7 @@ import requests
 from .certs import LeapCertificate
 from pixelated.support.tls_adapter import EnforceTLSv1Adapter
 from pixelated.bitmask_libraries.soledad import SoledadDiscoverException
+from pixelated.support.clock import Clock
 
 
 class LeapProvider(object):
@@ -119,7 +120,9 @@ class LeapProvider(object):
         session = requests.session()
         try:
             session.mount('https://', EnforceTLSv1Adapter(assert_fingerprint=LeapCertificate.LEAP_FINGERPRINT))
+	    t = Clock('GET %s from LeapProvider._validated_get' % url)
             response = session.get(url, verify=LeapCertificate(self).provider_web_cert, timeout=self.config.timeout_in_s)
+	    t.stop()
             response.raise_for_status()
             return response
         finally:
@@ -134,14 +137,18 @@ class LeapProvider(object):
     def fetch_soledad_json(self):
         service_url = "%s/%s/config/soledad-service.json" % (
             self.api_uri, self.api_version)
+        t = Clock('GET %s from LeapProvider.fetch_soledad_json' % service_url)
         response = requests.get(service_url, verify=LeapCertificate(self).provider_api_cert, timeout=self.config.timeout_in_s)
+        t.stop()
         response.raise_for_status()
         return json.loads(response.content)
 
     def fetch_smtp_json(self):
         service_url = '%s/%s/config/smtp-service.json' % (
             self.api_uri, self.api_version)
+        t = Clock('GET %s from LeapProvider.fetch_smtp_json' % service_url)
         response = requests.get(service_url, verify=LeapCertificate(self).provider_api_cert, timeout=self.config.timeout_in_s)
+        t.stop()
         response.raise_for_status()
         return json.loads(response.content)
 
