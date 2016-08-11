@@ -35,6 +35,12 @@ from pixelated.config.leap import authenticate_user
 from pixelated.resources import IPixelatedSession
 from pixelated.support.clock import Clock
 
+from leap.bonafide.session import Session
+from leap.bonafide import provider
+from leap.bonafide._http import httpRequest
+from leap.srp_session import SRPSession
+import json
+
 log = logging.getLogger(__name__)
 
 
@@ -70,9 +76,31 @@ class LeapPasswordChecker(object):
             auth.addCallbacks(_after, _after)
             return auth
 
-        d = threads.deferToThread(_validate_credentials)
-        d.addCallback(_get_leap_session)
-        return d
+        def throw_unauthorized(failure):
+            log.error(failure.value)
+            raise UnauthorizedLogin(failure.getErrorMessage())
+
+        srp_provider = provider.Api(self._leap_provider.api_uri)
+        srp_auth = Session(credentials, srp_provider, self._leap_provider.local_ca_crt)
+
+        def srp_session(user_attribute):
+            return SRPSession(credentials.username, srp_auth.token, srp_auth.uuid, 'session_id', json.loads(user_attribute))
+
+        def fetch_attribute(_):
+            uri = srp_auth._api._get_uri('update_user', uid=srp_auth._uuid)
+            attributes = httpRequest(srp_auth._agent, uri, method='GET')
+            attributes.addCallback(srp_session)
+            return attributes
+
+        auth = srp_auth.authenticate()
+        auth.addCallback(fetch_attribute)
+        #auth.addCallback(srp_session)
+        auth.addErrback(throw_unauthorized)
+        auth.addCallback(_get_leap_session)
+        return auth
+        #d = threads.deferToThread(_validate_credentials)
+        #d.addCallback(_get_leap_session)
+        #return d
 
 
 class ISessionCredential(ICredentials):
