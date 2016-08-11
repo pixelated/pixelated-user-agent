@@ -32,16 +32,15 @@ user_number = itertools.count(1)
 class UserBehavior(TaskSet):
     def __init__(self, *args, **kwargs):
         super(UserBehavior, self).__init__(*args, **kwargs)
-        self.cookies = {}
 
     @task(1)
     def index(self):
+        self.client.cookies = requests.cookies.RequestsCookieJar()
         number = user_number.next()
         username = 'loadtest%d' % number
         password = 'password_%d' % number
-        print "Logging in user: %s" % username
+        print("Logging in user: %s" % username)
         login_payload = {"username": username, "password": password}
-        self.cookies["XSRF-TOKEN"] = "blablabla"
         self.client.post("/%s" % LoginResource.BASE_URL,
                          login_payload,
                          timeout=3600000.0,
@@ -49,8 +48,8 @@ class UserBehavior(TaskSet):
                          headers={
                             'X-Requested-With': 'XMLHttpRequest',
                             'X-XSRF-TOKEN': "blablabla"
-                        },
-                        cookies=self.cookies)
+                         },
+                         cookies={"XSRF-TOKEN": "blablabla"})
 
 class WebsiteUser(HttpLocust):
     task_set = UserBehavior
