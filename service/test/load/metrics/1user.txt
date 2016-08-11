@@ -1,0 +1,24 @@
+Unknown 0.98724 GET https://dev.pixelated-project.org/provider.json from LeapProvider._validated_get 
+Unknown 1.09990 GET https://dev.pixelated-project.org/ca.crt from LeapProvider._validated_get 
+Unknown 1.04145 GET https://dev.pixelated-project.org/ca.crt from LeapProvider._validated_get 
+9f1f4ed601c962c403da94f9b9a60ec9 1.86488 auth-validate-credentials 
+Unknown 0.91740 GET https://dev.pixelated-project.org/ca.crt from LeapProvider._validated_get 
+Unknown 0.99124 GET https://api.dev.pixelated-project.org:4430/1/config/soledad-service.json from LeapProvider.fetch_soledad_json 
+Unknown 1.34728 GET https://api.dev.pixelated-project.org:4430/1/config/smtp-service.json from LeapProvider.fetch_smtp_json 
+9f1f4ed601c962c403da94f9b9a60ec9 3.44983 create-session-factory 
+9f1f4ed601c962c403da94f9b9a60ec9 3.45407 auth-create-leap-session 
+9f1f4ed601c962c403da94f9b9a60ec9 1.15920 sync-soledad-get-remote-state 
+Unknown 0.00008 sync-soledad-diff-docs 
+9f1f4ed601c962c403da94f9b9a60ec9 1.17339 session-sync 
+9f1f4ed601c962c403da94f9b9a60ec9 1.27489 key-generation 
+9f1f4ed601c962c403da94f9b9a60ec9 0.00360 account-creation 
+9f1f4ed601c962c403da94f9b9a60ec9 0.00122 mail-fetcher 
+9f1f4ed601c962c403da94f9b9a60ec9 1.28005 session-after-sync 
+9f1f4ed601c962c403da94f9b9a60ec9 2.45363 initial-sync 
+9f1f4ed601c962c403da94f9b9a60ec9 5.90365 auth-create-leap-session-with-sync 
+9f1f4ed601c962c403da94f9b9a60ec9 7.76924 login-leap-session 
+9f1f4ed601c962c403da94f9b9a60ec9 0.00156 login-reading-interstitial 
+9f1f4ed601c962c403da94f9b9a60ec9 0.09915 login-setup-services 
+9f1f4ed601c962c403da94f9b9a60ec9 0.42040 sync-soledad-get-remote-state 
+Unknown 0.00004 sync-soledad-diff-docs 
+9f1f4ed601c962c403da94f9b9a60ec9 0.42841 sync-leap-mail-recurrent 
