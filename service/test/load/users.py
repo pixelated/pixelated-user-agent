@@ -37,9 +37,9 @@ class User(object):
 
 
 def mass_register(number, invite_code):
-    for index in xrange(1, number):
+    for index in xrange(1, number+1):
         User(index).register(invite_code)
-        print 'done registering %d' % index
+        print 'done registering loadtest%d' % index
 
 
 def ensure_leap_certificate(leap_provider, leap_certificate_home):
