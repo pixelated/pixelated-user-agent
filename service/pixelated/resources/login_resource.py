@@ -125,7 +125,10 @@ class LoginResource(BaseResource):
         return renderElement(request, site)
 
     def render_POST(self, request):
+        before = datetime.datetime.now()
+        tl = Clock('naval login user: %s' % request.args['username'][0])
         if self.is_logged_in(request):
+            log.info('naval already logged in %s' % request.args['username'][0])
             return util.redirectTo("/", request)
 
         def render_response(leap_session):
@@ -133,6 +136,7 @@ class LoginResource(BaseResource):
             t = Clock('login-reading-interstitial', leap_session.user_auth.uuid)
             request.write(open(os.path.join(self._startup_folder, 'Interstitial.html')).read())
             t.stop(leap_session.fresh_account)
+            tl.stop()
             request.finish()
             self._setup_user_services(leap_session, request)
 
