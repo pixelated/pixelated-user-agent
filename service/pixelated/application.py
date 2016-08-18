@@ -38,7 +38,6 @@ from pixelated.config.site import PixelatedSite
 from pixelated.resources.auth import LeapPasswordChecker, PixelatedRealm, PixelatedAuthSessionWrapper, SessionChecker
 from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
-from theseus._tracer import Tracer
 
 log = logging.getLogger(__name__)
 
@@ -95,21 +94,13 @@ def initialize():
     logger.init(debug=args.debug)
     services_factory = _create_service_factory(args)
     resource = RootResource(services_factory)
-    t = Tracer()
 
     def start():
         start_async = _start_mode(args, resource, services_factory)
         add_top_level_system_callbacks(start_async, services_factory)
 
-    def save_theuses_stats():
-        with open('/tmp/callgrind.theseus', 'wb') as outfile:
-            t.write_data(outfile)
-            log.info('theuses data written')
-        t.uninstall()
-
     log.info('Running the reactor')
     reactor.callWhenRunning(start)
-    reactor.addSystemEventTrigger('before', 'shutdown', save_theuses_stats)
     reactor.run()
 
 
