@@ -205,7 +205,7 @@ class LeapSessionFactory(object):
         self._provider = provider
         self._config = provider.config
 
-    def create(self, username, password, auth=None):
+    def create(self, username, password, auth):
         key = SessionCache.session_key(self._provider, username)
         session = SessionCache.lookup_session(key)
         if not session:
@@ -214,12 +214,7 @@ class LeapSessionFactory(object):
 
         return session
 
-    def _auth_leap(self, username, password):
-        srp_auth = SRPAuth(self._provider.api_uri, self._provider.local_ca_crt)
-        return srp_auth.authenticate(username, password)
-
-    def _create_new_session(self, username, password, auth=None):
-        auth = auth or self._auth_leap(username, password)
+    def _create_new_session(self, username, password, auth):
         account_email = self._provider.address_for(username)
 
         self._create_database_dir(auth.uuid)
