@@ -219,9 +219,6 @@ class LeapSessionFactory(object):
         return srp_auth.authenticate(username, password)
 
     def _create_new_session(self, username, password, auth=None):
-        self._create_dir(self._provider.config.leap_home)
-        self._provider.download_certificate()
-
         auth = auth or self._auth_leap(username, password)
         account_email = self._provider.address_for(username)
 
