@@ -17,12 +17,11 @@
 import logging
 import re
 
-from leap.auth import SRPAuth
 from leap.exceptions import SRPAuthenticationError
 from twisted.cred.checkers import ANONYMOUS
 from twisted.cred.credentials import ICredentials
 from twisted.cred.error import UnauthorizedLogin
-from twisted.internet import defer, threads
+from twisted.internet import defer
 from twisted.web._auth.wrapper import UnauthorizedResource
 from twisted.web.error import UnsupportedMethod
 from zope.interface import implements, implementer, Attribute
@@ -31,7 +30,7 @@ from twisted.web import util
 from twisted.cred import error
 from twisted.web.resource import IResource, ErrorPage
 
-from pixelated.config.leap import authenticate_user
+from pixelated.config.leap import create_leap_session, authenticate
 from pixelated.resources import IPixelatedSession
 
 
@@ -44,23 +43,18 @@ class LeapPasswordChecker(object):
         credentials.IUsernamePassword,
     )
 
-    def __init__(self, leap_provider):
-        self._leap_provider = leap_provider
+    def __init__(self, provider):
+        self.provider = provider
 
+    @defer.inlineCallbacks
     def requestAvatarId(self, credentials):
-        def _validate_credentials():
-            try:
-                srp_auth = SRPAuth(self._leap_provider.api_uri, self._leap_provider.local_ca_crt)
-                return srp_auth.authenticate(credentials.username, credentials.password)
-            except SRPAuthenticationError:
-                raise UnauthorizedLogin()
+        try:
+            auth = yield authenticate(self.provider, credentials.username, credentials.password)
+        except SRPAuthenticationError:
+            raise UnauthorizedLogin()
 
-        def _get_leap_session(srp_auth):
-            return authenticate_user(self._leap_provider, credentials.username, credentials.password, auth=srp_auth)
-
-        d = threads.deferToThread(_validate_credentials)
-        d.addCallback(_get_leap_session)
-        return d
+        leap_session = yield create_leap_session(self.provider, credentials.username, credentials.password, auth)
+        defer.returnValue(leap_session)
 
 
 class ISessionCredential(ICredentials):

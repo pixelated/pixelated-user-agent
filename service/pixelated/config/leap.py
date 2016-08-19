@@ -1,15 +1,16 @@
 from __future__ import absolute_import
+import logging
+from twisted.internet import defer, threads
 from leap.common.events import (server as events_server)
 from leap.soledad.common.errors import InvalidAuthTokenError
+from leap.auth import SRPAuth
 
 from pixelated.config import credentials
 from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.bitmask_libraries.session import LeapSessionFactory
-from twisted.internet import defer
 
-import logging
 log = logging.getLogger(__name__)
 
 
@@ -37,29 +38,18 @@ def initialize_leap_multi_user(provider_hostname,
     defer.returnValue((config, provider))
 
 
-def _create_session(provider, username, password, auth):
-    return LeapSessionFactory(provider).create(username, password, auth)
-
-
-def _force_close_session(session):
-    try:
-        session.close()
-    except Exception, e:
-        log.error(e)
-
-
 @defer.inlineCallbacks
-def authenticate_user(provider, username, password, initial_sync=True, auth=None):
-    leap_session = _create_session(provider, username, password, auth)
+def create_leap_session(provider, username, password, auth=None):
+    leap_session = LeapSessionFactory(provider).create(username, password, auth)
     try:
-        if initial_sync:
-            yield leap_session.initial_sync()
+        yield leap_session.initial_sync()
     except InvalidAuthTokenError:
-        _force_close_session(leap_session)
-
-        leap_session = _create_session(provider, username, password, auth)
-        if initial_sync:
-            yield leap_session.initial_sync()
+        try:
+            leap_session.close()
+        except Exception, e:
+            log.error(e)
+        leap_session = LeapSessionFactory(provider).create(username, password, auth)
+        yield leap_session.initial_sync()
 
     defer.returnValue(leap_session)
 
@@ -68,8 +58,7 @@ def authenticate_user(provider, username, password, initial_sync=True, auth=None
 def initialize_leap_single_user(leap_provider_cert,
                                 leap_provider_cert_fingerprint,
                                 credentials_file,
-                                leap_home,
-                                initial_sync=True):
+                                leap_home):
 
     init_monkeypatches()
     events_server.ensure_server()
@@ -78,9 +67,20 @@ def initialize_leap_single_user(leap_provider_cert,
 
     config, provider = initialize_leap_provider(provider, leap_provider_cert, leap_provider_cert_fingerprint, leap_home)
 
-    leap_session = yield authenticate_user(provider, username, password, initial_sync=initial_sync)
+    try:
+        auth = yield authenticate(provider, username, password)
+    except SRPAuthenticationError:
+        raise UnauthorizedLogin()
+
+    leap_session = yield create_leap_session(provider, username, password, auth)
 
     defer.returnValue(leap_session)
+
+
+def authenticate(provider, user, password):
+    srp_auth = SRPAuth(provider.api_uri, provider.local_ca_crt)
+    d = threads.deferToThread(srp_auth.authenticate, user, password)
+    return d
 
 
 def init_monkeypatches():

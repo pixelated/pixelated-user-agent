@@ -47,17 +47,12 @@ def initialize():
             args.leap_provider_cert,
             args.leap_provider_cert_fingerprint,
             args.credentials_file,
-            leap_home=args.leap_home,
-            initial_sync=_do_initial_sync(args))
+            leap_home=args.leap_home)
 
         execute_command(args, leap_session)
 
     reactor.callWhenRunning(_run)
     reactor.run()
-
-
-def _do_initial_sync(args):
-    return (not _is_repair_command(args)) and (not _is_integrity_check_command(args))
 
 
 def _is_repair_command(args):
