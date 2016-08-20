@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from leap.keymanager import KeyManager, KeyNotFound
+from pixelated.config import leap_config
 from .certs import LeapCertificate
 from twisted.internet import defer
 import logging
@@ -21,15 +22,15 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class NickNym(object):
-    def __init__(self, provider, config, soledad, email_address, token, uuid):
-        nicknym_url = _discover_nicknym_server(provider)
+class Keymanager(object):
+    def __init__(self, provider, soledad, email_address, token, uuid):
+        nicknym_url = provider._discover_nicknym_server()
         self._email = email_address
         self.keymanager = KeyManager(self._email, nicknym_url,
                                      soledad,
                                      token=token, ca_cert_path=LeapCertificate(provider).provider_api_cert, api_uri=provider.api_uri,
                                      api_version=provider.api_version,
-                                     uid=uuid, gpgbinary=config.gpg_binary)
+                                     uid=uuid, gpgbinary=leap_config.gpg_binary)
 
     @defer.inlineCallbacks
     def generate_openpgp_key(self):
@@ -55,7 +56,3 @@ class NickNym(object):
 
     def _send_key_to_leap(self):
         return self.keymanager.send_key()
-
-
-def _discover_nicknym_server(provider):
-    return 'https://nicknym.%s:6425/' % provider.domain

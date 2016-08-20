@@ -37,8 +37,7 @@ from twisted.cred import checkers, credentials
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
 from pixelated.adapter.services.feedback_service import FeedbackService
 from pixelated.application import ServicesFactory, UserAgentMode, SingleUserServicesFactory, set_up_protected_resources
-from pixelated.bitmask_libraries.config import LeapConfig
-from pixelated.bitmask_libraries.session import LeapSession
+from pixelated.config.sessions import LeapSession
 from pixelated.config.services import Services, ServicesFactory, SingleUserServicesFactory
 from pixelated.config.site import PixelatedSite
 
@@ -197,7 +196,6 @@ class AppTestClient(object):
         else:
             self.service_factory = StubServicesFactory(self.accounts, mode)
             provider = mock()
-            provider.config = LeapConfig(self._tmp_dir.name)
 
             self.resource = set_up_protected_resources(RootResource(self.service_factory), provider, self.service_factory, checker=StubSRPChecker(provider))
 

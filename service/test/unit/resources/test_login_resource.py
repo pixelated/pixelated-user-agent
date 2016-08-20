@@ -9,7 +9,7 @@ from twisted.trial import unittest
 from twisted.web.resource import IResource
 from twisted.web.test.requesthelper import DummyRequest
 
-from pixelated.bitmask_libraries.session import LeapSession, LeapSessionFactory
+from pixelated.config.sessions import LeapSessionFactory, LeapSession
 from pixelated.resources.login_resource import LoginResource
 from test.unit.resources import DummySite
 
@@ -220,7 +220,7 @@ class TestLoginPOST(unittest.TestCase):
         d.addCallback(assert_login_setup_service_for_user)
         return d
 
-    @patch('pixelated.bitmask_libraries.session.LeapSessionFactory.create')
+    @patch('pixelated.config.sessions.LeapSessionFactory.create')
     @patch('leap.auth.SRPAuth.authenticate')
     @patch('pixelated.config.services.Services.setup')
     def test_leap_session_is_not_created_when_leap_auth_fails(self, mock_service_setup, mock_leap_srp_auth, mock_leap_session_create):

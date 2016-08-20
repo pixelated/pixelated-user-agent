@@ -21,9 +21,8 @@ import sys
 from pixelated.config import arguments
 from pixelated.config import logger as logger_config
 from pixelated.bitmask_libraries.certs import LeapCertificate
-from pixelated.bitmask_libraries.config import LeapConfig
 from pixelated.bitmask_libraries.provider import LeapProvider
-from pixelated.bitmask_libraries.session import LeapSessionFactory
+from pixelated.config.sessions import LeapSessionFactory
 from leap.auth import SRPAuth
 from leap.common.events import server as events_server
 import pixelated.extensions.shared_db
@@ -53,7 +52,7 @@ def register(
     events_server.ensure_server()
     LeapCertificate.set_cert_and_fingerprint(provider_cert, provider_cert_fingerprint)
     config = LeapConfig(leap_home=leap_home)
-    provider = LeapProvider(server_name, config)
+    provider = LeapProvider(server_name)
     LeapCertificate(provider).setup_ca_bundle()
     srp_auth = SRPAuth(provider.api_uri, LeapCertificate(provider).provider_api_cert)
 

@@ -17,7 +17,7 @@ import unittest
 import email
 
 from pixelated.maintenance import delete_all_mails, load_mails
-from pixelated.bitmask_libraries.session import LeapSession
+from pixelated.config.sessions import LeapSession
 from pixelated.adapter.mailstore import MailStore
 from leap.soledad.client import Soledad
 from leap.soledad.common.document import SoledadDocument

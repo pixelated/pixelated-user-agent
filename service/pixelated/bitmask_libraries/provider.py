@@ -19,16 +19,18 @@ import os
 from leap.common.certs import get_digest
 import requests
 from .certs import LeapCertificate
+from pixelated.config import leap_config
 from pixelated.support.tls_adapter import EnforceTLSv1Adapter
-from pixelated.bitmask_libraries.soledad import SoledadDiscoverException
+
+REQUESTS_TIMEOUT = 15
 
 
 class LeapProvider(object):
-    def __init__(self, server_name, config):
+    def __init__(self, server_name):
         self.server_name = server_name
-        self.config = config
-        self.local_ca_crt = '%s/ca.crt' % self.config.leap_home
+        self.local_ca_crt = '%s/ca.crt' % leap_config.leap_home
         self.provider_json = self.fetch_provider_json()
+        self.soledad_json = self.fetch_soledad_json()
 
     @property
     def api_uri(self):
@@ -119,7 +121,7 @@ class LeapProvider(object):
         session = requests.session()
         try:
             session.mount('https://', EnforceTLSv1Adapter(assert_fingerprint=LeapCertificate.LEAP_FINGERPRINT))
-            response = session.get(url, verify=LeapCertificate(self).provider_web_cert, timeout=self.config.timeout_in_s)
+            response = session.get(url, verify=LeapCertificate(self).provider_web_cert, timeout=REQUESTS_TIMEOUT)
             response.raise_for_status()
             return response
         finally:
@@ -134,14 +136,14 @@ class LeapProvider(object):
     def fetch_soledad_json(self):
         service_url = "%s/%s/config/soledad-service.json" % (
             self.api_uri, self.api_version)
-        response = requests.get(service_url, verify=LeapCertificate(self).provider_api_cert, timeout=self.config.timeout_in_s)
+        response = requests.get(service_url, verify=LeapCertificate(self).provider_api_cert, timeout=REQUESTS_TIMEOUT)
         response.raise_for_status()
         return json.loads(response.content)
 
     def fetch_smtp_json(self):
         service_url = '%s/%s/config/smtp-service.json' % (
             self.api_uri, self.api_version)
-        response = requests.get(service_url, verify=LeapCertificate(self).provider_api_cert, timeout=self.config.timeout_in_s)
+        response = requests.get(service_url, verify=LeapCertificate(self).provider_api_cert, timeout=REQUESTS_TIMEOUT)
         response.raise_for_status()
         return json.loads(response.content)
 
@@ -152,14 +154,11 @@ class LeapProvider(object):
         return '%s@%s' % (username, self.domain)
 
     def discover_soledad_server(self, user_uuid):
-        try:
-            json_data = self.fetch_soledad_json()
+        hosts = self.soledad_json['hosts']
+        host = hosts.keys()[0]
+        server_url = 'https://%s:%d/user-%s' % \
+                     (hosts[host]['hostname'], hosts[host]['port'], user_uuid)
+        return server_url
 
-            hosts = json_data['hosts']
-            host = hosts.keys()[0]
-            server_url = 'https://%s:%d/user-%s' % \
-                         (hosts[host]['hostname'], hosts[host]['port'],
-                          user_uuid)
-            return server_url
-        except Exception, e:
-            raise SoledadDiscoverException(e)
+    def _discover_nicknym_server(self):
+        return 'https://nicknym.%s:6425/' % self.domain

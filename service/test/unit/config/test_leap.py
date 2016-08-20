@@ -9,7 +9,7 @@ class TestAuth(unittest.TestCase):
 
     @patch('pixelated.config.leap.LeapSessionFactory')
     @defer.inlineCallbacks
-    def test_create_leap_session_calls_initinal_sync(self, session_factory__ctor_mock):
+    def test_create_leap_session_calls_initial_sync(self, session_factory__ctor_mock):
         session_factory_mock = session_factory__ctor_mock.return_value
         provider_mock = MagicMock()
         auth_mock = MagicMock()
@@ -19,7 +19,7 @@ class TestAuth(unittest.TestCase):
 
         yield create_leap_session(provider_mock, 'username', 'password', auth=auth_mock)
 
-        session.initial_sync.assert_called_with()
+        session.first_required_sync.assert_called_with()
 
     @patch('pixelated.config.leap.LeapSessionFactory')
     @defer.inlineCallbacks
@@ -29,10 +29,10 @@ class TestAuth(unittest.TestCase):
         auth_mock = MagicMock()
         session = MagicMock()
 
-        session.initial_sync.side_effect = [InvalidAuthTokenError, defer.succeed(None)]
+        session.first_required_sync.side_effect = [InvalidAuthTokenError, defer.succeed(None)]
         session_factory_mock.create.return_value = session
 
         yield create_leap_session(provider_mock, 'username', 'password', auth=auth_mock)
 
         session.close.assert_called_with()
-        self.assertEqual(2, session.initial_sync.call_count)
+        self.assertEqual(2, session.first_required_sync.call_count)

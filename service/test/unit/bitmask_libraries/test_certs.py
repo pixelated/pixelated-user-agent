@@ -1,14 +1,16 @@
 import unittest
 
 from pixelated.bitmask_libraries.certs import LeapCertificate
+from pixelated.config import leap_config
 from mock import MagicMock
 
 
 class CertsTest(unittest.TestCase):
 
     def setUp(self):
-        config = MagicMock(leap_home='/some/leap/home')
-        self.provider = MagicMock(server_name=u'test.leap.net', config=config)
+        leap_config.leap_home = '/some/leap/home'
+
+        self.provider = MagicMock(server_name=u'test.leap.net')
 
     def test_set_cert_and_fingerprint_sets_cert(self):
         LeapCertificate.set_cert_and_fingerprint('some cert', None)

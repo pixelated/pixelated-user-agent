@@ -16,12 +16,36 @@
 import os
 import unittest
 import tempdir
-from pixelated.bitmask_libraries import session
 from leap.srp_session import SRPSession
 import leap.common.certs as certs
 from mockito import mock, unstub, when, verify, never, any as ANY
 
-from pixelated.bitmask_libraries.session import SmtpClientCertificate
+from pixelated.config.sessions import SmtpClientCertificate
+
+from tempfile import NamedTemporaryFile
+from httmock import all_requests, HTTMock, urlmatch
+
+CERTIFICATE_DATA = 'some cert data'
+USERNAME = 'some_user_name'
+
+
+@all_requests
+def not_found_mock(url, request):
+    return {'status_code': 404,
+            'content': 'foobar'}
+
+
+@urlmatch(netloc='api.some-server.test:4430', path='/1/smtp_cert', method='POST')
+def smtp_cert_mock(url, request):
+    if request.body == 'address=%s' % USERNAME:
+        return {
+            "status_code": 200,
+            "content": CERTIFICATE_DATA
+        }
+    else:
+        return {
+            'status_code': 401
+        }
 
 
 class TestSmtpClientCertificate(unittest.TestCase):
@@ -29,11 +53,12 @@ class TestSmtpClientCertificate(unittest.TestCase):
     def setUp(self):
         self.tmp_dir = tempdir.TempDir()
         self.provider = mock()
+        self.provider.api_uri = 'https://api.some-server.test:4430'
+        self.provider.api_version = '1'
+        self.provider.server_name = 'some.host.tld'
         self.provider.domain = 'some-provider.tld'
-        self.auth = SRPSession('username', 'token', 'uuid', 'session_id', {})
+        self.auth = SRPSession(USERNAME, 'token', 'uuid', 'session_id', {})
         self.pem_path = os.path.join(self.tmp_dir.name, 'providers', 'some-provider.tld', 'keys', 'client', 'smtp.pem')
-        self.downloader = mock()
-        when(session).SmtpCertDownloader(self.provider, self.auth).thenReturn(self.downloader)
 
     def tearDown(self):
         self.tmp_dir.dissolve()
@@ -41,20 +66,20 @@ class TestSmtpClientCertificate(unittest.TestCase):
 
     def test_download_certificate(self):
         cert = SmtpClientCertificate(self.provider, self.auth, self.tmp_dir.name)
+        when(cert).download_to(ANY()).thenReturn(None)
         result = cert.cert_path()
 
         self.assertEqual(self.pem_path, result)
-        verify(self.downloader).download_to(self.pem_path)
 
     def test_download_certificate_if_redownload_necessary_e_g_certificate_expired(self):
         self.pretend_all_paths_exist()
         when(certs).should_redownload(self.pem_path).thenReturn(True)
 
         cert = SmtpClientCertificate(self.provider, self.auth, self.tmp_dir.name)
+        when(cert).download_to(ANY()).thenReturn(None)
         result = cert.cert_path()
 
         self.assertEqual(self.pem_path, result)
-        verify(self.downloader).download_to(self.pem_path)
 
     def pretend_all_paths_exist(self):
         when(os.path).exists(ANY()).thenReturn(True)
@@ -66,4 +91,13 @@ class TestSmtpClientCertificate(unittest.TestCase):
         result = cert.cert_path()
 
         self.assertEqual(self.pem_path, result)
-        verify(self.downloader, never).download_to(ANY())
+
+    def test_download_to(self):
+        cert = SmtpClientCertificate(self.provider, self.auth, self.tmp_dir.name)
+
+        with NamedTemporaryFile() as tmp_file:
+            with HTTMock(smtp_cert_mock, not_found_mock):
+                cert.download_to(tmp_file.name)
+
+            file_content = open(tmp_file.name).read()
+            self.assertEqual(CERTIFICATE_DATA, file_content)

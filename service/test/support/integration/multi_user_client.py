@@ -22,7 +22,7 @@ from leap.auth import SRPAuth
 from pixelated.application import UserAgentMode, set_up_protected_resources
 from pixelated.config.services import ServicesFactory
 
-from pixelated.bitmask_libraries.session import LeapSession, LeapSessionFactory
+from pixelated.config.sessions import LeapSessionFactory, LeapSession
 import pixelated.config.services
 from pixelated.resources.root_resource import RootResource
 from test.support.integration import AppTestClient

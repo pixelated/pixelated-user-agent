@@ -40,7 +40,7 @@ class AbstractLeapTest(unittest.TestCase):
                          uuid=self._uuid,
                          token=self._token)
 
-        self.nicknym = MagicMock()
+        self.keymanager = MagicMock()
 
         self.soledad_account = MagicMock()
 

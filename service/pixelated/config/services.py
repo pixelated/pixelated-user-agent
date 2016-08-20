@@ -12,14 +12,14 @@ from pixelated.adapter.listeners.mailbox_indexer_listener import listen_all_mail
 from twisted.internet import defer, reactor
 from pixelated.adapter.search.index_storage_key import SearchIndexStorageKey
 from pixelated.adapter.services.feedback_service import FeedbackService
-
+from pixelated.config import leap_config
 logger = logging.getLogger(__name__)
 
 
 class Services(object):
 
     def __init__(self, leap_session):
-        self._leap_home = leap_session.config.leap_home
+        self._leap_home = leap_config.leap_home
         self._leap_session = leap_session
 
     @defer.inlineCallbacks
@@ -33,7 +33,7 @@ class Services(object):
 
         self.mail_service = self._setup_mail_service(self.search_engine)
 
-        self.keymanager = self._leap_session.nicknym
+        self.keymanager = self._leap_session.keymanager
         self.draft_service = self._setup_draft_service(self._leap_session.mail_store)
         self.feedback_service = self._setup_feedback_service()
 
@@ -61,7 +61,7 @@ class Services(object):
         self.search_engine = search_engine
 
     def _setup_mail_service(self, search_engine):
-        pixelated_mail_sender = MailSender(self._leap_session.smtp_config, self._leap_session.nicknym.keymanager)
+        pixelated_mail_sender = MailSender(self._leap_session.smtp_config, self._leap_session.keymanager.keymanager)
 
         return MailService(
             pixelated_mail_sender,

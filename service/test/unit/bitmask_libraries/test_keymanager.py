@@ -14,28 +14,28 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from mock import patch
+from mockito import when
 
 from test_abstract_leap import AbstractLeapTest
 from leap.keymanager import openpgp, KeyNotFound
-from pixelated.bitmask_libraries.nicknym import NickNym
+from pixelated.bitmask_libraries.keymanager import Keymanager
 from pixelated.bitmask_libraries.certs import LeapCertificate
+from pixelated.config import leap_config
 
 
-class NickNymTest(AbstractLeapTest):
-    # @patch('pixelated.bitmask_libraries.nicknym.KeyManager.__init__', return_value=None)
-    @patch('pixelated.bitmask_libraries.nicknym.KeyManager')
+class KeymanagerTest(AbstractLeapTest):
+    @patch('pixelated.bitmask_libraries.keymanager.KeyManager')
     def test_that_keymanager_is_created(self, keymanager_mock):
-        # given
         LeapCertificate.provider_api_cert = '/some/path/to/provider_ca_cert'
-        # when
-        NickNym(self.provider,
-                self.config,
-                self.soledad,
-                'test_user@some-server.test',
-                self.auth.token,
-                self.auth.uuid)
+        when(self.provider)._discover_nicknym_server().thenReturn('https://nicknym.some-server.test:6425/')
+        leap_config.gpg_binary = '/path/to/gpg'
 
-        # then
+        Keymanager(self.provider,
+                   self.soledad,
+                   'test_user@some-server.test',
+                   self.auth.token,
+                   self.auth.uuid)
+
         keymanager_mock.assert_called_with(
             'test_user@some-server.test',
             'https://nicknym.some-server.test:6425/',
@@ -47,20 +47,19 @@ class NickNymTest(AbstractLeapTest):
             uid=self.auth.uuid,
             gpgbinary='/path/to/gpg')
 
-    @patch('pixelated.bitmask_libraries.nicknym.KeyManager')
+    @patch('pixelated.bitmask_libraries.keymanager.KeyManager')
     def test_gen_key(self, keymanager_mock):
         # given
         keyman = keymanager_mock.return_value
         keyman.get_key.side_effect = KeyNotFound
-        nicknym = NickNym(self.provider,
-                          self.config,
-                          self.soledad,
-                          'test_user@some-server.test',
-                          self.auth.token,
-                          self.auth.uuid)
+        keymanager = Keymanager(self.provider,
+                                self.soledad,
+                                'test_user@some-server.test',
+                                self.auth.token,
+                                self.auth.uuid)
 
         # when/then
-        nicknym.generate_openpgp_key()
+        keymanager.generate_openpgp_key()
 
         keyman.get_key.assert_called_with('test_user@some-server.test', private=True, fetch_remote=False)
         keyman.gen_key.assert_called()

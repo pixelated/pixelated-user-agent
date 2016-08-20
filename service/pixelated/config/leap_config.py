@@ -30,17 +30,13 @@ def discover_gpg_binary():
 
 
 SYSTEM_CA_BUNDLE = True
+leap_home = '~/.leap/'
+gpg_binary = discover_gpg_binary()
 
 
-class LeapConfig(object):
+def set_leap_home(new_home):
+    leap_home = new_home
 
-    def __init__(self,
-                 leap_home=None,
-                 timeout_in_s=15,
-                 start_background_jobs=False,
-                 gpg_binary=discover_gpg_binary()):
 
-        self.leap_home = leap_home
-        self.timeout_in_s = timeout_in_s
-        self.start_background_jobs = start_background_jobs
-        self.gpg_binary = gpg_binary
+def set_gpg_binary(new_binary):
+    gpg_binary = binary

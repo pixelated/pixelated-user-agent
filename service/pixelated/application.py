@@ -144,10 +144,9 @@ def _start_in_multi_user_mode(args, root_resource, services_factory):
 def _setup_multi_user(args, root_resource, services_factory):
     if args.provider is None:
         raise ValueError('Multi-user mode: provider name is required')
-
     init_monkeypatches()
     events_server.ensure_server()
-    config, provider = initialize_leap_provider(args.provider, args.leap_provider_cert, args.leap_provider_cert_fingerprint, args.leap_home)
+    provider = initialize_leap_provider(args.provider, args.leap_provider_cert, args.leap_provider_cert_fingerprint, args.leap_home)
     protected_resource = set_up_protected_resources(root_resource, provider, services_factory, banner=args.banner)
     return protected_resource
 
