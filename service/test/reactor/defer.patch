@@ -1,0 +1,47 @@
+33a34,46
+> from datetime import datetime
+> 
+> class Clock():
+>     def __init__(self, label):
+>         self.start = datetime.now()
+>         self.label = label
+> 
+>     def stop(self):
+>         end = datetime.now()
+>         total = (end - self.start).total_seconds()
+>         if total > 0.1:
+>             print('EXECUTING {} {:.5f}'.format(self.label, total))
+> 
+195c208,221
+< 
+---
+> import threading
+> import inspect
+> def identifyItem(i):
+>     if i is None:
+>         return "(None)"
+>     else:
+>         if inspect.isbuiltin(i):
+>             return str(i)
+>         else:
+>             if 'gotResult' == i.__name__:
+>                 return str(i.__closure__[1].cell_contents)
+>             f = inspect.getsourcefile(i)
+>             ln = inspect.getsourcelines(i)[1]
+>             return "%s (%s:%d)" % (str(i), f, ln)
+300a327,329
+> 
+> #        print "addCallbacks(%s, %s)" % (identifyItem(callback), identifyItem(errback))
+> 
+588c617,625
+<                         current.result = callback(current.result, *args, **kw)
+---
+>                         currentItem = identifyItem(callback)
+>                         currentThreadId = threading.current_thread().ident
+> 
+>                         clock = Clock("%s in thread %d" % (currentItem, currentThreadId))
+>                         try:
+>                             current.result = callback(current.result, *args, **kw)
+>                         finally:
+>                             clock.stop()
+>                             
