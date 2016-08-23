@@ -31,7 +31,3 @@ ts = (1...(1+COUNT)).map do |ix|
 end
 
 ts.each(&:join)
-
-
-
-./blocking_spawner.rb 5
