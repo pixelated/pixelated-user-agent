@@ -30,7 +30,6 @@ class LeapProvider(object):
         self.server_name = server_name
         self.local_ca_crt = '%s/ca.crt' % leap_config.leap_home
         self.provider_json = self.fetch_provider_json()
-        self.soledad_json = self.fetch_soledad_json()
 
     @property
     def api_uri(self):
@@ -65,6 +64,9 @@ class LeapProvider(object):
     def ensure_supports_mx(self):
         if 'mx' not in self.services:
             raise Exception
+
+    def download_soledad_json(self):
+        self.soledad_json = self.fetch_soledad_json()
 
     def download_certificate(self, filename=None):
         """
