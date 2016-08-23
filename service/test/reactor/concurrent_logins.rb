@@ -24,7 +24,7 @@ end
 
 ts = (1...(1+COUNT)).map do |ix|
   t = Thread.new do
-    `#{curl_command(ix+19)}`
+    `#{curl_command(ix)}`
   end
   sleep 1
   t
