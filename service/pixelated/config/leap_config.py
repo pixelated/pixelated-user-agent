@@ -30,7 +30,7 @@ def discover_gpg_binary():
 
 
 SYSTEM_CA_BUNDLE = True
-leap_home = '~/.leap/'
+leap_home = os.path.expanduser('~/.leap/')
 gpg_binary = discover_gpg_binary()
 
 
