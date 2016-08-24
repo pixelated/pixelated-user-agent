@@ -68,6 +68,9 @@ class LeapProvider(object):
     def download_soledad_json(self):
         self.soledad_json = self.fetch_soledad_json()
 
+    def download_smtp_json(self):
+        self.smtp_json = self.fetch_smtp_json()
+
     def download_certificate(self, filename=None):
         """
         Downloads the server certificate, validates it against the provided fingerprint and stores it to file
@@ -113,8 +116,7 @@ class LeapProvider(object):
             raise Exception('Certificate fingerprints don\'t match! Expected [%s] but got [%s]' % (fingerprint.strip(), digest))
 
     def smtp_info(self):
-        json_data = self.fetch_smtp_json()
-        hosts = json_data['hosts']
+        hosts = self.smtp_json['hosts']
         hostname = hosts.keys()[0]
         host = hosts[hostname]
         return host['hostname'], host['port']

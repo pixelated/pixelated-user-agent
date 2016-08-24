@@ -22,6 +22,7 @@ def initialize_leap_provider(provider_hostname, provider_cert, provider_fingerpr
     provider.download_certificate()
     LeapCertificate(provider).setup_ca_bundle()
     provider.download_soledad_json()
+    provider.download_smtp_json()
     return provider
 
 
