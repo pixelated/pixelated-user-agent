@@ -6,11 +6,11 @@
 >         self.start = datetime.now()
 >         self.label = label
 > 
->     def stop(self):
+>     def stop(self, callback_type):
 >         end = datetime.now()
 >         total = (end - self.start).total_seconds()
 >         if total > 0.1:
->             print('EXECUTING {} {:.5f}'.format(self.label, total))
+>             print('EXECUTING {}: {} {:.5f}'.format(callback_type, self.label, total))
 > 
 195c208,221
 < 
@@ -25,23 +25,27 @@
 >             return str(i)
 >         else:
 >             if 'gotResult' == i.__name__:
->                 return str(i.__closure__[1].cell_contents)
+>                 return False
 >             f = inspect.getsourcefile(i)
 >             ln = inspect.getsourcelines(i)[1]
 >             return "%s (%s:%d)" % (str(i), f, ln)
-300a327,329
-> 
-> #        print "addCallbacks(%s, %s)" % (identifyItem(callback), identifyItem(errback))
-> 
-588c617,625
+588c614,624
 <                         current.result = callback(current.result, *args, **kw)
 ---
 >                         currentItem = identifyItem(callback)
 >                         currentThreadId = threading.current_thread().ident
 > 
->                         clock = Clock("%s in thread %d" % (currentItem, currentThreadId))
+>                         if currentItem:
+>                             clock = Clock("%s in thread %d" % (currentItem, currentThreadId))
 >                         try:
 >                             current.result = callback(current.result, *args, **kw)
 >                         finally:
->                             clock.stop()
+>                             if currentItem:
+>                                 clock.stop('deferred')
 >                             
+1123a1160,1161
+>             currentThreadId = threading.current_thread().ident
+>             c = Clock("%s in thread %d" % (str(g.gi_code), currentThreadId))
+1175a1214,1215
+>         finally:
+>             c.stop('inlineCallback')
