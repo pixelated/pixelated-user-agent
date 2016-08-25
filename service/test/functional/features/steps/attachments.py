@@ -96,7 +96,7 @@ def upload_attachment(context):
     fname = "upload_test_file.txt"
     fill_by_css_selector(context, '#fileupload', base_dir + fname)
     attachment_list_item = wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, '#attachment-list-item li a'))
-    assert attachment_list_item.text == "%s (36.00 b)" % fname
+    assert attachment_list_item.text == "%s (3.00 Mb)" % fname
 
 
 @when(u'remove the file')
