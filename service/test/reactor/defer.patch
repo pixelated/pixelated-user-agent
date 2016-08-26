@@ -1,5 +1,5 @@
 diff --git a/lib/python2.7/site-packages/twisted/internet/defer.py b/lib/python2.7/site-packages/twisted/internet/defer.py
-index fe9f0a0..5c428d3 100644
+index fe9f0a0..92bf379 100644
 --- a/lib/python2.7/site-packages/twisted/internet/defer.py
 +++ b/lib/python2.7/site-packages/twisted/internet/defer.py
 @@ -31,6 +31,19 @@ from twisted.logger import Logger
@@ -69,7 +69,7 @@ index fe9f0a0..5c428d3 100644
                  "instead got %r" % (f, gen))
 -        return _inlineCallbacks(None, gen, Deferred())
 +        currentThreadId = threading.current_thread().ident
-+        c = Clock("%s in thread %d" % (f, currentThreadId))
++        c = Clock("%s in thread %d" % (str(gen.gi_code), currentThreadId))
 +        result = _inlineCallbacks(None, gen, Deferred())
 +        c.stop('inlineCallback')
 +        return result
