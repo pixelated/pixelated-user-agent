@@ -65,7 +65,7 @@ def initialize_leap_single_user(leap_provider_cert,
 
     provider, username, password = credentials.read(credentials_file)
 
-    config, provider = initialize_leap_provider(provider, leap_provider_cert, leap_provider_cert_fingerprint, leap_home)
+    provider = initialize_leap_provider(provider, leap_provider_cert, leap_provider_cert_fingerprint, leap_home)
 
     try:
         auth = yield authenticate(provider, username, password)
