@@ -1,51 +1,79 @@
-33a34,46
-> from datetime import datetime
-> 
-> class Clock():
->     def __init__(self, label):
->         self.start = datetime.now()
->         self.label = label
-> 
->     def stop(self, callback_type):
->         end = datetime.now()
->         total = (end - self.start).total_seconds()
->         if total > 0.1:
->             print('EXECUTING {}: {} {:.5f}'.format(callback_type, self.label, total))
-> 
-195c208,221
-< 
----
-> import threading
-> import inspect
-> def identifyItem(i):
->     if i is None:
->         return "(None)"
->     else:
->         if inspect.isbuiltin(i):
->             return str(i)
->         else:
->             if 'gotResult' == i.__name__:
->                 return False
->             f = inspect.getsourcefile(i)
->             ln = inspect.getsourcelines(i)[1]
->             return "%s (%s:%d)" % (str(i), f, ln)
-588c614,624
-<                         current.result = callback(current.result, *args, **kw)
----
->                         currentItem = identifyItem(callback)
->                         currentThreadId = threading.current_thread().ident
-> 
->                         if currentItem:
->                             clock = Clock("%s in thread %d" % (currentItem, currentThreadId))
->                         try:
->                             current.result = callback(current.result, *args, **kw)
->                         finally:
->                             if currentItem:
->                                 clock.stop('deferred')
->                             
-1123a1160,1161
->             currentThreadId = threading.current_thread().ident
->             c = Clock("%s in thread %d" % (str(g.gi_code), currentThreadId))
-1175a1214,1215
->         finally:
->             c.stop('inlineCallback')
+diff --git a/lib/python2.7/site-packages/twisted/internet/defer.py b/lib/python2.7/site-packages/twisted/internet/defer.py
+index fe9f0a0..5c428d3 100644
+--- a/lib/python2.7/site-packages/twisted/internet/defer.py
++++ b/lib/python2.7/site-packages/twisted/internet/defer.py
+@@ -31,6 +31,19 @@ from twisted.logger import Logger
+ from twisted.python.deprecate import warnAboutFunction, deprecated
+ from twisted.python.versions import Version
+ 
++from datetime import datetime
++
++class Clock():
++    def __init__(self, label):
++        self.start = datetime.now()
++        self.label = label
++
++    def stop(self, callback_type):
++        end = datetime.now()
++        total = (end - self.start).total_seconds()
++        if total > 0.001:
++            print('{:.5f} EXECUTING {}: {}'.format(total, callback_type, self.label))
++
+ log = Logger()
+ 
+ 
+@@ -192,7 +205,20 @@ def getDebugging():
+ _NO_RESULT = object()
+ _CONTINUE = object()
+ 
+-
++import threading
++import inspect
++def identifyItem(i):
++    if i is None:
++        return "(None)"
++    else:
++        if inspect.isbuiltin(i):
++            return str(i)
++        else:
++            if 'gotResult' == i.__name__:
++                return False
++            f = inspect.getsourcefile(i)
++            ln = inspect.getsourcelines(i)[1]
++            return "%s (%s:%d)" % (str(i), f, ln)
+ 
+ class Deferred:
+     """
+@@ -585,7 +611,17 @@ class Deferred:
+                 try:
+                     current._runningCallbacks = True
+                     try:
+-                        current.result = callback(current.result, *args, **kw)
++                        currentItem = identifyItem(callback)
++                        currentThreadId = threading.current_thread().ident
++
++                        if currentItem:
++                            clock = Clock("%s in thread %d" % (currentItem, currentThreadId))
++                        try:
++                            current.result = callback(current.result, *args, **kw)
++                        finally:
++                            if currentItem:
++                                clock.stop('deferred')
++                            
+                         if current.result is current:
+                             warnAboutFunction(
+                                 callback,
+@@ -1271,7 +1307,12 @@ def inlineCallbacks(f):
+             raise TypeError(
+                 "inlineCallbacks requires %r to produce a generator; "
+                 "instead got %r" % (f, gen))
+-        return _inlineCallbacks(None, gen, Deferred())
++        currentThreadId = threading.current_thread().ident
++        c = Clock("%s in thread %d" % (f, currentThreadId))
++        result = _inlineCallbacks(None, gen, Deferred())
++        c.stop('inlineCallback')
++        return result
++#        return _inlineCallbacks(None, gen, Deferred())
+     return unwindGenerator
+ 
+ 
