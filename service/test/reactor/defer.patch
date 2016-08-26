@@ -1,18 +1,20 @@
-33a34,46
+33a34,48
 > from datetime import datetime
 > 
 > class Clock():
->     def __init__(self, label):
+>     def __init__(self, label, callback_type, thread_id):
 >         self.start = datetime.now()
 >         self.label = label
+>         self.thread_id = thread_id
+>         self.callback_type = callback_type
 > 
->     def stop(self, callback_type):
+>     def stop(self):
 >         end = datetime.now()
 >         total = (end - self.start).total_seconds()
 >         if total > 0.1:
->             print('EXECUTING {}: {} {:.5f}'.format(callback_type, self.label, total))
+>             print('{:.4f} {}: function {} in thread {}'.format(total, self.callback_type, self.label, self.thread_id))
 > 
-195c208,221
+195c210,223
 < 
 ---
 > import threading
@@ -28,26 +30,26 @@
 >                 return False
 >             f = inspect.getsourcefile(i)
 >             ln = inspect.getsourcelines(i)[1]
->             return "%s (%s:%d)" % (str(i), f, ln)
-588c614,624
+>             return "%s (%s:%d)" % (i.__name__, f, ln)
+588c616,626
 <                         current.result = callback(current.result, *args, **kw)
 ---
 >                         currentItem = identifyItem(callback)
 >                         currentThreadId = threading.current_thread().ident
 > 
 >                         if currentItem:
->                             clock = Clock("%s in thread %d" % (currentItem, currentThreadId))
+>                             clock = Clock(currentItem, 'callback', currentThreadId)
 >                         try:
 >                             current.result = callback(current.result, *args, **kw)
 >                         finally:
 >                             if currentItem:
->                                 clock.stop('deferred')
+>                                 clock.stop()
 >                             
-1123a1160
->             currentThreadId = threading.current_thread().ident
-1127a1165
->                 c = Clock("%s in thread %d" % (str(g.gi_code), currentThreadId))
-1128a1167
->                 c.stop('inlineCallback')
-1133a1173
->             c.stop('inlineCallback')
+1127a1166,1168
+>                 currentThreadId = threading.current_thread().ident
+>                 label = "%s (%s:%d)" % (g.__name__, g.gi_code.co_filename, g.gi_code.co_firstlineno)
+>                 c = Clock(label, 'inlineCallback', currentThreadId)
+1128a1170
+>                 c.stop()
+1133a1176
+>             c.stop()
