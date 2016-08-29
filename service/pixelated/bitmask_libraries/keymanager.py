@@ -28,9 +28,10 @@ class Keymanager(object):
         self._email = email_address
         self.keymanager = KeyManager(self._email, nicknym_url,
                                      soledad,
-                                     token=token, ca_cert_path=LeapCertificate(provider).provider_api_cert, api_uri=provider.api_uri,
+                                     token=token, ca_cert_path=provider.provider_api_cert, api_uri=provider.api_uri,
                                      api_version=provider.api_version,
-                                     uid=uuid, gpgbinary=leap_config.gpg_binary)
+                                     uid=uuid, gpgbinary=leap_config.gpg_binary,
+                                     combined_ca_bundle=provider.combined_ca_bundle)
 
     @defer.inlineCallbacks
     def generate_openpgp_key(self):

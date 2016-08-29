@@ -35,8 +35,3 @@ class CertsTest(unittest.TestCase):
 
         self.assertIsNone(certs.LEAP_FINGERPRINT)
         self.assertEqual(True, certs.provider_web_cert)
-
-    def test_provider_api_cert(self):
-        certs = LeapCertificate(self.provider).provider_api_cert
-
-        self.assertEqual('/some/leap/home/providers/test.leap.net/keys/client/api.pem', certs)

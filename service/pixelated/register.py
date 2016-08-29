@@ -53,8 +53,8 @@ def register(
     LeapCertificate.set_cert_and_fingerprint(provider_cert, provider_cert_fingerprint)
     config = LeapConfig(leap_home=leap_home)
     provider = LeapProvider(server_name)
-    LeapCertificate(provider).setup_ca_bundle()
-    srp_auth = SRPAuth(provider.api_uri, LeapCertificate(provider).provider_api_cert)
+    provider.setup_ca_bundle()
+    srp_auth = SRPAuth(provider.api_uri, provider.provider_api_cert)
 
     if srp_auth.register(username, password):
         LeapSessionFactory(provider).create(username, password)

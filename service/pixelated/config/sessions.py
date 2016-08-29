@@ -43,7 +43,7 @@ class LeapSessionFactory(object):
 
         self._create_database_dir(auth.uuid)
 
-        api_cert = LeapCertificate(self._provider).provider_api_cert
+        api_cert = self._provider.provider_api_cert
 
         soledad = yield self.setup_soledad(auth.token, auth.uuid, password, api_cert)
 
@@ -283,7 +283,7 @@ class SmtpClientCertificate(object):
             cert_url,
             params=params,
             data=params,
-            verify=LeapCertificate(self._provider).provider_api_cert,
+            verify=self._provider.provider_api_cert,
             timeout=15,
             headers=headers)
         response.raise_for_status()

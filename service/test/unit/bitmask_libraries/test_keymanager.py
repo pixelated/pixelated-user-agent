@@ -26,8 +26,9 @@ from pixelated.config import leap_config
 class KeymanagerTest(AbstractLeapTest):
     @patch('pixelated.bitmask_libraries.keymanager.KeyManager')
     def test_that_keymanager_is_created(self, keymanager_mock):
-        LeapCertificate.provider_api_cert = '/some/path/to/provider_ca_cert'
         when(self.provider)._discover_nicknym_server().thenReturn('https://nicknym.some-server.test:6425/')
+        self.provider.combined_ca_bundle = 'combined_ca_bundle'
+        self.provider.provider_api_cert = '/some/path/to/provider_ca_cert'
         leap_config.gpg_binary = '/path/to/gpg'
 
         Keymanager(self.provider,
@@ -45,7 +46,8 @@ class KeymanagerTest(AbstractLeapTest):
             api_uri='https://api.some-server.test:4430',
             api_version='1',
             uid=self.auth.uuid,
-            gpgbinary='/path/to/gpg')
+            gpgbinary='/path/to/gpg',
+            combined_ca_bundle='combined_ca_bundle')
 
     @patch('pixelated.bitmask_libraries.keymanager.KeyManager')
     def test_gen_key(self, keymanager_mock):

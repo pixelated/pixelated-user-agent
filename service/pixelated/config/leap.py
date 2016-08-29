@@ -19,10 +19,8 @@ def initialize_leap_provider(provider_hostname, provider_cert, provider_fingerpr
                                              provider_fingerprint)
     leap_config.set_leap_home(leap_home)
     provider = LeapProvider(provider_hostname)
-    provider.download_certificate()
-    LeapCertificate(provider).setup_ca_bundle()
-    provider.download_soledad_json()
-    provider.download_smtp_json()
+    provider.setup_ca()
+    provider.download_settings()
     return provider
 
 
