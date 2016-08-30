@@ -39,6 +39,10 @@ class LeapProvider(object):
         return str(os.path.join(leap_config.leap_home, 'providers', self.server_name, 'keys', 'client', 'api.pem'))
 
     @property
+    def combined_cerfificates_path(self):
+        return str(os.path.join(leap_config.leap_home, 'providers', self.server_name, 'keys', 'client', 'ca_bundle'))
+
+    @property
     def api_uri(self):
         return self.provider_json.get('api_uri')
 
@@ -182,15 +186,11 @@ class LeapProvider(object):
         elif not self.provider_api_cert:
             return leap_ca_bundle
 
-        tmp_file = tempfile.NamedTemporaryFile(delete=False)
-
-        with open(tmp_file.name, 'w') as fout:
+        with open(self.combined_cerfificates_path, 'w') as fout:
             fin = fileinput.input(files=(leap_ca_bundle, self.provider_api_cert))
             for line in fin:
                 fout.write(line)
             fin.close()
-
-        self.combined_ca_bundle = tmp_file.name
 
     def setup_ca_bundle(self):
         path = os.path.join(leap_config.leap_home, 'providers', self.server_name, 'keys', 'client')

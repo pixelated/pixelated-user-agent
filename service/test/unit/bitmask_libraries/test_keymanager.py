@@ -27,7 +27,7 @@ class KeymanagerTest(AbstractLeapTest):
     @patch('pixelated.bitmask_libraries.keymanager.KeyManager')
     def test_that_keymanager_is_created(self, keymanager_mock):
         when(self.provider)._discover_nicknym_server().thenReturn('https://nicknym.some-server.test:6425/')
-        self.provider.combined_ca_bundle = 'combined_ca_bundle'
+        self.provider.combined_cerfificates_path = 'combined_cerfificates_path'
         self.provider.provider_api_cert = '/some/path/to/provider_ca_cert'
         leap_config.gpg_binary = '/path/to/gpg'
 
@@ -47,7 +47,7 @@ class KeymanagerTest(AbstractLeapTest):
             api_version='1',
             uid=self.auth.uuid,
             gpgbinary='/path/to/gpg',
-            combined_ca_bundle='combined_ca_bundle')
+            combined_ca_bundle='combined_cerfificates_path')
 
     @patch('pixelated.bitmask_libraries.keymanager.KeyManager')
     def test_gen_key(self, keymanager_mock):

@@ -31,7 +31,7 @@ class Keymanager(object):
                                      token=token, ca_cert_path=provider.provider_api_cert, api_uri=provider.api_uri,
                                      api_version=provider.api_version,
                                      uid=uuid, gpgbinary=leap_config.gpg_binary,
-                                     combined_ca_bundle=provider.combined_ca_bundle)
+                                     combined_ca_bundle=provider.combined_cerfificates_path)
 
     @defer.inlineCallbacks
     def generate_openpgp_key(self):
