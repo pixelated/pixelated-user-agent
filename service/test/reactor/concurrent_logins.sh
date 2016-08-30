@@ -27,12 +27,16 @@ function curl_login {
     username=${USER_PREFIX}${index}
     password=${PASSWORD_PREFIX}${index}
 
-    curl -siL -X POST \
+    curl -siLD - \
+        -w "total time: %{time_total}\n" \
+        -o /dev/null \
+        -X POST \
         --data "username=${username}&password=${password}" \
         --cookie 'XSRF-TOKEN: blablabla' \
         --header 'X-Requested-With: XMLHttpRequest' \
         --header 'X-XSRF-TOKEN: blablabla' \
         http://localhost:3333/login |\
+    tee -a load-test.log |\
     grep '^HTTP' |\
     sed 's/\(.*\)/      - \1/'
 }
