@@ -9,7 +9,7 @@ USERS=1
 SLEEP=1
 
 function show_help {
-    echo "Run several tests against login"
+    echo "Run several tests against login in the pixelated-user-agent vagrant machine"
     echo
     echo " --user|-u - array with amount of tests split by comma"
     echo " --runs|-r - how many times a tests is going to run"
@@ -28,7 +28,7 @@ function curl_login {
     password=${PASSWORD_PREFIX}${index}
 
     curl -siLD - \
-        -w "total time: %{time_total}\n" \
+        -w "request time: %{time_total}\n\n\n" \
         -o /dev/null \
         -X POST \
         --data "username=${username}&password=${password}" \
@@ -36,8 +36,8 @@ function curl_login {
         --header 'X-Requested-With: XMLHttpRequest' \
         --header 'X-XSRF-TOKEN: blablabla' \
         http://localhost:3333/login |\
+    grep '^HTTP\|^request' |\
     tee -a load-test.log |\
-    grep '^HTTP' |\
     sed 's/\(.*\)/      - \1/'
 }
 
@@ -77,8 +77,10 @@ for user in $(tr ',' ' ' <<< $USERS); do
     for run in $(seq $RUNS); do
         echo "  > Running $run of $RUNS runs"
         echo "  > Starting Pixelated UA"
-        run_on_vagrant "nohup pixelated-user-agent --host 0.0.0.0 --multi-user --provider=$PROVIDER & sleep 1"
-        until curl -s "http://localhost:3333" -o /dev/null 2>&1; do :; done
+
+        until curl -s "http://localhost:3333" -o /dev/null 2>&1; do
+            run_on_vagrant "nohup pixelated-user-agent --host 0.0.0.0 --multi-user --provider=$PROVIDER & sleep 1"
+        done
 
         for index in $(seq $user); do
             echo "    > Logging $USER_PREFIX$index"
@@ -95,5 +97,6 @@ for user in $(tr ',' ' ' <<< $USERS); do
         echo
     done
     run_on_vagrant "mv ~/MetricsTime /vagrant/service/test/login/metrics/${user}-users.txt"
+    mv load-test.log ../login/metrics/${user}-curl.txt
     echo
 done
