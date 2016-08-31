@@ -9,7 +9,10 @@ USERS=1
 SLEEP=1
 
 function show_help {
+    echo
     echo "Run several tests against login in the pixelated-user-agent vagrant machine"
+    echo
+    echo "It saves the logs to service/test/login/metrics"
     echo
     echo " --user|-u - array with amount of tests split by comma"
     echo " --runs|-r - how many times a tests is going to run"
@@ -70,6 +73,7 @@ done
 run_on_vagrant "pkill pixelated"
 run_on_vagrant "rm ~/MetricsTime"
 run_on_vagrant "mkdir -p /vagrant/service/test/login/metrics"
+run_on_vagrant "sudo ln -s /home/vagrant/user-agent-venv/bin/pixelated-user-agent /usr/local/bin"
 
 for user in $(tr ',' ' ' <<< $USERS); do
     echo "> Run for $user user(s)"
