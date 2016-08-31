@@ -49,6 +49,8 @@ class RootResource(BaseResource):
         self._html_template = open(os.path.join(self._static_folder, 'index.html')).read()
         self._services_factory = services_factory
         self._child_resources = ChildResourcesMap()
+        with open(os.path.join(self._startup_assets_folder, 'Interstitial.html')) as f:
+            self.interstitial = f.read()
         self._startup_mode()
 
     def _startup_mode(self):
@@ -123,7 +125,7 @@ class RootResource(BaseResource):
     def render_GET(self, request):
         self._add_csrf_cookie(request)
         if self._is_starting():
-            return open(os.path.join(self._startup_assets_folder, 'Interstitial.html')).read()
+            return self.interstitial
         else:
             account_email = self.mail_service(request).account_email
             response = Template(self._html_template).safe_substitute(account_email=account_email)

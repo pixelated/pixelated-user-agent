@@ -102,6 +102,8 @@ class LoginResource(BaseResource):
         self._portal = portal
         self._disclaimer_banner = disclaimer_banner
         self.putChild('startup-assets', File(self._startup_folder))
+        with open(os.path.join(self._startup_folder, 'Interstitial.html')) as f:
+            self.interstitial = f.read()
 
     def set_portal(self, portal):
         self._portal = portal
@@ -129,7 +131,7 @@ class LoginResource(BaseResource):
 
         def render_response(leap_session):
             request.setResponseCode(OK)
-            request.write(open(os.path.join(self._startup_folder, 'Interstitial.html')).read())
+            request.write(self.interstitial)
             request.finish()
             self._setup_user_services(leap_session, request)
 
