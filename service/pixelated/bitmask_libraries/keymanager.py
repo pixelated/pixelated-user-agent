@@ -39,7 +39,7 @@ class Keymanager(object):
         if not key_present:
             logger.info("Generating keys - this could take a while...")
             yield self._gen_key()
-        yield self._send_key_to_leap()
+            yield self._send_key_to_leap()
 
     @defer.inlineCallbacks
     def _key_exists(self, email):
