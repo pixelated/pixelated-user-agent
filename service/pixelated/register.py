@@ -51,13 +51,14 @@ def register(
 
     events_server.ensure_server()
     LeapCertificate.set_cert_and_fingerprint(provider_cert, provider_cert_fingerprint)
-    config = LeapConfig(leap_home=leap_home)
     provider = LeapProvider(server_name)
-    provider.setup_ca_bundle()
+    provider.setup_ca()
+    provider.download_settings()
     srp_auth = SRPAuth(provider.api_uri, provider.provider_api_cert)
 
     if srp_auth.register(username, password):
-        LeapSessionFactory(provider).create(username, password)
+        auth = srp_auth.authenticate(username, password)
+        LeapSessionFactory(provider).create(username, password, auth)
     else:
         logger.error("Register failed")
 
