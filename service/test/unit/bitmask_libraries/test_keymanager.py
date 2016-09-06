@@ -19,7 +19,6 @@ from mockito import when
 from test_abstract_leap import AbstractLeapTest
 from leap.keymanager import openpgp, KeyNotFound
 from pixelated.bitmask_libraries.keymanager import Keymanager
-from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.config import leap_config
 
 
@@ -64,4 +63,20 @@ class KeymanagerTest(AbstractLeapTest):
         keymanager.generate_openpgp_key()
 
         keyman.get_key.assert_called_with('test_user@some-server.test', private=True, fetch_remote=False)
-        keyman.gen_key.assert_called()
+        keyman.gen_key.assert_called_once()
+        keyman.send_key.assert_called_once()
+
+    @patch('pixelated.bitmask_libraries.keymanager.KeyManager')
+    def test_existing_key_not_sent_to_leap(self, keymanager_mock):
+        keyman = keymanager_mock.return_value
+        keyman.get_key.side_effect = KeyNotFound
+        keymanager = Keymanager(self.provider,
+                                self.soledad,
+                                'test_user@some-server.test',
+                                self.auth.token,
+                                self.auth.uuid)
+
+        when(keymanager)._key_exists('test_user@some-server.test').thenReturn(True)
+        keymanager.generate_openpgp_key()
+        keyman.gen_key.assert_not_called()
+        keyman.send_key.assert_not_called()
