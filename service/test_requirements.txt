@@ -1,6 +1,6 @@
 behave==1.2.4
 selenium==2.44.0
-mock==1.0.1
+mock==2.0.0
 httmock==1.2.2
 mockito==0.5.2
 funkload==1.16.1
