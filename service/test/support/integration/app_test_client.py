@@ -31,7 +31,6 @@ from mock import Mock
 from twisted.internet import reactor, defer
 from twisted.internet.defer import succeed
 from twisted.web.resource import getChildForRequest
-# from twisted.web.server import Site as PixelatedSite
 from zope.interface import implementer
 from twisted.cred import checkers, credentials
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
@@ -136,8 +135,11 @@ class StubSRPChecker(object):
         self._credentials[username] = password
 
     def requestAvatarId(self, credentials):
-        leap_auth = SRPSession(credentials.username, uuid.uuid4(), uuid.uuid4(), uuid.uuid4(), {})
-        return defer.succeed(LeapSession(self._leap_provider, leap_auth, None, None, None, None))
+        if(self._credentials[credentials.username] == credentials.password):
+            leap_auth = SRPSession(credentials.username, uuid.uuid4(), uuid.uuid4(), uuid.uuid4(), {})
+            return defer.succeed(LeapSession(self._leap_provider, leap_auth, None, None, None, None))
+        else:
+            return defer.fail()
 
 
 class StubServicesFactory(ServicesFactory):
@@ -196,7 +198,6 @@ class AppTestClient(object):
         else:
             self.service_factory = StubServicesFactory(self.accounts, mode)
             provider = mock()
-
             self.resource = set_up_protected_resources(RootResource(self.service_factory), provider, self.service_factory, checker=StubSRPChecker(provider))
 
     @defer.inlineCallbacks
