@@ -24,7 +24,9 @@ end
 
 ts = (1...(1+COUNT)).map do |ix|
   t = Thread.new do
+    time = Time.now()
     `#{curl_command(ix)}`
+    puts "Request time: #{Time.now() - time}"
   end
   sleep 1
   t
