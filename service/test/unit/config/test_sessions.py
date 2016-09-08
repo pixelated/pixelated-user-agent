@@ -33,20 +33,21 @@ class SessionTest(AbstractLeapTest):
     @patch('pixelated.config.sessions.Account')
     @defer.inlineCallbacks
     def test_background_jobs_are_started_during_initial_sync(self, *unused):
-        mailFetcherMock = MagicMock()
+        mail_fetcher_mock = MagicMock()
         with patch('pixelated.config.sessions.reactor.callFromThread', new=_execute_func) as _:
-            with patch.object(LeapSession, '_create_incoming_mail_fetcher', return_value=mailFetcherMock) as _:
+            with patch.object(LeapSession, '_create_incoming_mail_fetcher', return_value=mail_fetcher_mock) as _:
                 session = self._create_session()
                 yield session.first_required_sync()
-                mailFetcherMock.startService.assert_called_once()
+                mail_fetcher_mock.startService.assert_called_once()
 
     @patch('pixelated.config.sessions.register')
     @patch('pixelated.config.sessions.unregister')
     @patch('pixelated.config.sessions.Account')
     @defer.inlineCallbacks
     def test_that_close_stops_background_jobs(self, *unused):
+        mail_fetcher_mock = MagicMock()
         with patch('pixelated.config.sessions.reactor.callFromThread', new=_execute_func) as _:
-            with patch('pixelated.config.sessions.LeapSession._create_incoming_mail_fetcher') as mail_fetcher_mock:
+            with patch.object(LeapSession, '_create_incoming_mail_fetcher', return_value=mail_fetcher_mock) as _:
                 session = self._create_session()
                 yield session.first_required_sync()
                 session.close()
