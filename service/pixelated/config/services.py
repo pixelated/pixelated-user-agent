@@ -98,9 +98,10 @@ class ServicesFactory(object):
 
     def destroy_session(self, user_id, using_email=False):
         if using_email:
-            user_id = self._map_email[user_id.split('@')[0]]
+            username = user_id.split('@')[0]
+            user_id = self._map_email.get(username, None)
 
-        if self.has_session(user_id):
+        if user_id is not None and self.has_session(user_id):
             _services = self._services_by_user[user_id]
             _services.close()
             del self._services_by_user[user_id]
