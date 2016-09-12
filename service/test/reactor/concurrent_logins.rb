@@ -46,6 +46,7 @@ def complete_login(user_index, user, password)
   if status_code.to_i == 200
     interstitial = Time.now
     begin
+      sleep 0.05
       inbox = `#{check_inbox(user_index)}`
     end until /compose-trigger/.match(inbox)
     puts "Login loading #{sprintf('%.3f',Time.now - interstitial)}"
