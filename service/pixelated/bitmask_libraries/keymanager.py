@@ -21,6 +21,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+class UploadKeyError(Exception):
+    pass
+
+
 class Keymanager(object):
     def __init__(self, provider, soledad, email_address, token, uuid):
         nicknym_url = provider._discover_nicknym_server()
@@ -38,7 +42,11 @@ class Keymanager(object):
         if not key_present:
             logger.info("Generating keys - this could take a while...")
             yield self._gen_key()
-            yield self._send_key_to_leap()
+            try:
+                yield self._send_key_to_leap()
+            except Exception as e:
+                yield self.delete_key_pair(self._email)
+                raise UploadKeyError(e.message)
 
     @defer.inlineCallbacks
     def _key_exists(self, email):
@@ -56,3 +64,11 @@ class Keymanager(object):
 
     def _send_key_to_leap(self):
         return self.keymanager.send_key()
+
+    @defer.inlineCallbacks
+    def delete_key_pair(self, key):
+        private_key = yield self.get_key(self._email, private=True, fetch_remote=False)
+        public_key = yield self.get_key(self._email, private=False, fetch_remote=False)
+
+        self.keymanager.delete_key(private_key)
+        self.keymanager.delete_key(public_key)

@@ -17,7 +17,9 @@ from mock import patch, MagicMock
 from mockito import when
 from unittest import TestCase
 from pixelated.bitmask_libraries.keymanager import Keymanager
+from pixelated.bitmask_libraries.keymanager import UploadKeyError
 from pixelated.config import leap_config
+from twisted.internet import defer
 
 
 class KeymanagerTest(TestCase):
@@ -74,7 +76,7 @@ class KeymanagerTest(TestCase):
         self.keymanager._gen_key.assert_called_once()
         self.keymanager._send_key_to_leap.assert_called_once()
 
-    def test_keymanager_generate_openpgp_key_dont_regenerate_preexisting_key(self):
+    def test_keymanager_generate_openpgp_key_doesnt_regenerate_preexisting_key(self):
         when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(True)
 
         self.keymanager._gen_key = MagicMock()
@@ -83,7 +85,7 @@ class KeymanagerTest(TestCase):
 
         self.keymanager._gen_key.assert_not_called()
 
-    def test_keymanager_generate_openpgp_key_dont_upload_preexisting_key(self):
+    def test_keymanager_generate_openpgp_key_doesnt_upload_preexisting_key(self):
         when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(True)
 
         self.keymanager._send_key_to_leap = MagicMock()
@@ -91,3 +93,15 @@ class KeymanagerTest(TestCase):
         self.keymanager.generate_openpgp_key()
 
         self.keymanager._send_key_to_leap.assert_not_called()
+
+    @defer.inlineCallbacks
+    def test_keymanager_generate_openpgp_key_deletes_key_when_upload_fails(self):
+        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(False)
+
+        self.keymanager.delete_key_pair = MagicMock()
+        when(self.keymanager)._send_key_to_leap().thenRaise(Exception('Could not upload key'))
+
+        with self.assertRaises(UploadKeyError):
+            yield self.keymanager.generate_openpgp_key()
+
+        self.keymanager.delete_key_pair.assert_called_once_with('test_user@some-server.test')
