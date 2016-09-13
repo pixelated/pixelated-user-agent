@@ -13,21 +13,36 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from mock import patch
+from mock import patch, MagicMock
 from mockito import when
-
-from test_abstract_leap import AbstractLeapTest
-from leap.keymanager import openpgp, KeyNotFound
+from unittest import TestCase
 from pixelated.bitmask_libraries.keymanager import Keymanager
 from pixelated.config import leap_config
 
 
-class KeymanagerTest(AbstractLeapTest):
+class KeymanagerTest(TestCase):
+
+    def setUp(self):
+        self.provider = MagicMock()
+        self.soledad = MagicMock()
+        self.auth = MagicMock(token='token', auth='auth')
+        with patch('pixelated.bitmask_libraries.keymanager.KeyManager'):
+            self.keymanager = Keymanager(self.provider,
+                                         self.soledad,
+                                         'test_user@some-server.test',
+                                         self.auth.token,
+                                         self.auth.uuid)
+
+    def tearDown(self):
+        reload(leap_config)
+
     @patch('pixelated.bitmask_libraries.keymanager.KeyManager')
-    def test_that_keymanager_is_created(self, keymanager_mock):
-        when(self.provider)._discover_nicknym_server().thenReturn('https://nicknym.some-server.test:6425/')
-        self.provider.combined_cerfificates_path = 'combined_cerfificates_path'
-        self.provider.provider_api_cert = '/some/path/to/provider_ca_cert'
+    def test_keymanager_is_created(self, keymanager_mock):
+        when(self.provider)._discover_nicknym_server().thenReturn('nicknym_server')
+        self.provider.provider_api_cert = 'ca_cert_path'
+        self.provider.api_uri = 'api_uri'
+        self.provider.api_version = '1'
+        self.provider.combined_cerfificates_path = 'combined_ca_bundle'
         leap_config.gpg_binary = '/path/to/gpg'
 
         Keymanager(self.provider,
@@ -38,45 +53,41 @@ class KeymanagerTest(AbstractLeapTest):
 
         keymanager_mock.assert_called_with(
             'test_user@some-server.test',
-            'https://nicknym.some-server.test:6425/',
+            'nicknym_server',
             self.soledad,
             token=self.auth.token,
-            ca_cert_path='/some/path/to/provider_ca_cert',
-            api_uri='https://api.some-server.test:4430',
+            ca_cert_path='ca_cert_path',
+            api_uri='api_uri',
             api_version='1',
             uid=self.auth.uuid,
             gpgbinary='/path/to/gpg',
-            combined_ca_bundle='combined_cerfificates_path')
+            combined_ca_bundle='combined_ca_bundle')
 
-    @patch('pixelated.bitmask_libraries.keymanager.KeyManager')
-    def test_gen_key(self, keymanager_mock):
-        # given
-        keyman = keymanager_mock.return_value
-        keyman.get_key.side_effect = KeyNotFound
-        keymanager = Keymanager(self.provider,
-                                self.soledad,
-                                'test_user@some-server.test',
-                                self.auth.token,
-                                self.auth.uuid)
+    def test_keymanager_generate_openpgp_key_generates_key_correctly(self):
+        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(False)
 
-        # when/then
-        keymanager.generate_openpgp_key()
+        self.keymanager._gen_key = MagicMock()
+        self.keymanager._send_key_to_leap = MagicMock()
 
-        keyman.get_key.assert_called_with('test_user@some-server.test', private=True, fetch_remote=False)
-        keyman.gen_key.assert_called_once()
-        keyman.send_key.assert_called_once()
+        self.keymanager.generate_openpgp_key()
 
-    @patch('pixelated.bitmask_libraries.keymanager.KeyManager')
-    def test_existing_key_not_sent_to_leap(self, keymanager_mock):
-        keyman = keymanager_mock.return_value
-        keyman.get_key.side_effect = KeyNotFound
-        keymanager = Keymanager(self.provider,
-                                self.soledad,
-                                'test_user@some-server.test',
-                                self.auth.token,
-                                self.auth.uuid)
+        self.keymanager._gen_key.assert_called_once()
+        self.keymanager._send_key_to_leap.assert_called_once()
 
-        when(keymanager)._key_exists('test_user@some-server.test').thenReturn(True)
-        keymanager.generate_openpgp_key()
-        keyman.gen_key.assert_not_called()
-        keyman.send_key.assert_not_called()
+    def test_keymanager_generate_openpgp_key_dont_regenerate_preexisting_key(self):
+        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(True)
+
+        self.keymanager._gen_key = MagicMock()
+
+        self.keymanager.generate_openpgp_key()
+
+        self.keymanager._gen_key.assert_not_called()
+
+    def test_keymanager_generate_openpgp_key_dont_upload_preexisting_key(self):
+        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(True)
+
+        self.keymanager._send_key_to_leap = MagicMock()
+
+        self.keymanager.generate_openpgp_key()
+
+        self.keymanager._send_key_to_leap.assert_not_called()

@@ -139,8 +139,11 @@ PROVIDER_WEB_CERT = '/tmp/bootstrap-ca.crt'
 
 class LeapProviderTest(AbstractLeapTest):
     def setUp(self):
-        leap_config.set_leap_home('/tmp/foobar')
+        leap_config.leap_home = '/tmp/foobar'
         LeapCertificate.set_cert_and_fingerprint(PROVIDER_WEB_CERT, None)
+
+    def tearDown(self):
+        reload(leap_config)
 
     def test_provider_fetches_provider_json(self):
         with HTTMock(provider_json_mock, soledad_json_mock):
@@ -212,7 +215,7 @@ class LeapProviderTest(AbstractLeapTest):
             with HTTMock(provider_json_mock, soledad_json_mock, not_found_mock):
                 provider = LeapProvider('some-provider.test')
                 provider.fetch_soledad_json()
-        get_func.assert_called_with('https://api.some-provider.test:4430/1/config/soledad-service.json', verify='/some/leap/home/providers/some-provider.test/keys/client/api.pem', timeout=15)
+        get_func.assert_called_with('https://api.some-provider.test:4430/1/config/soledad-service.json', verify='/tmp/foobar/providers/some-provider.test/keys/client/api.pem', timeout=15)
 
     def test_that_leap_fingerprint_is_validated(self):
         session = MagicMock(wraps=requests.session())
@@ -232,4 +235,4 @@ class LeapProviderTest(AbstractLeapTest):
             provider = LeapProvider('some-provider.test')
             certs = provider.provider_api_cert
 
-        self.assertEqual('/some/leap/home/providers/some-provider.test/keys/client/api.pem', certs)
+        self.assertEqual('/tmp/foobar/providers/some-provider.test/keys/client/api.pem', certs)
