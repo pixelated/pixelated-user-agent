@@ -35,7 +35,7 @@ class TestUserSettingsResource(unittest.TestCase):
         key = OpenPGPKey(MAIL_ADDRESS)
         key.fingerprint = FINGERPRINT
         request = DummyRequest(['/user-settings'])
-        when(self.keymanager).fetch_key(MAIL_ADDRESS).thenReturn(defer.succeed(key))
+        when(self.keymanager).get_key(MAIL_ADDRESS).thenReturn(defer.succeed(key))
 
         d = self.web.get(request)
 
@@ -51,7 +51,7 @@ class TestUserSettingsResource(unittest.TestCase):
         key = OpenPGPKey(MAIL_ADDRESS)
         key.fingerprint = FINGERPRINT
         request = DummyRequest(['/user-settings'])
-        when(self.keymanager).fetch_key(MAIL_ADDRESS).thenReturn(defer.fail(Failure))
+        when(self.keymanager).get_key(MAIL_ADDRESS).thenReturn(defer.fail(Failure))
 
         d = self.web.get(request)
 

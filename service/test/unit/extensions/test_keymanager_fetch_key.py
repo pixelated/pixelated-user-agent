@@ -20,7 +20,6 @@ from leap.keymanager import KeyManager
 from leap.keymanager.keys import KEY_ADDRESS_KEY, KEY_TYPE_KEY, KEY_ID_KEY, KEY_FINGERPRINT_KEY, KEY_DATA_KEY, KEY_PRIVATE_KEY, KEY_LENGTH_KEY, KEY_EXPIRY_DATE_KEY, KEY_FIRST_SEEN_AT_KEY, KEY_LAST_AUDITED_AT_KEY, KEY_VALIDATION_KEY, KEY_TAGS_KEY
 from leap.keymanager.openpgp import OpenPGPKey
 from leap.keymanager.errors import KeyNotFound
-import pixelated.support.ext_keymanager_fetch_key
 from requests.exceptions import HTTPError
 
 

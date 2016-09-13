@@ -15,7 +15,6 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from leap.keymanager import KeyManager, KeyNotFound
 from pixelated.config import leap_config
-from .certs import LeapCertificate
 from twisted.internet import defer
 import logging
 
@@ -44,12 +43,12 @@ class Keymanager(object):
     @defer.inlineCallbacks
     def _key_exists(self, email):
         try:
-            yield self.fetch_key(email, private=True, fetch_remote=False)
+            yield self.get_key(email, private=True, fetch_remote=False)
             defer.returnValue(True)
         except KeyNotFound:
             defer.returnValue(False)
 
-    def fetch_key(self, email, private=False, fetch_remote=True):
+    def get_key(self, email, private=False, fetch_remote=True):
         return self.keymanager.get_key(email, private=private, fetch_remote=fetch_remote)
 
     def _gen_key(self):
