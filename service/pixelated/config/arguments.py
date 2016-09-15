@@ -30,6 +30,7 @@ def parse_user_agent_args():
     parser.add_argument('--multi-user', help='Run user agent in multi user mode', action='store_false', default=True, dest='single_user')
     parser.add_argument('-p', '--provider', help='specify a provider for mutli-user mode', metavar='<provider host>', default=None, dest='provider')
     parser.add_argument('--banner', help='banner file to show on login screen')
+    parser.add_argument('--manhole', help='Run an interactive Python shell on port 8008', action='store_true', default=False, dest='manhole')
 
     args = parser.parse_args()
 

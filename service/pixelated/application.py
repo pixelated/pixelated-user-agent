@@ -191,6 +191,22 @@ def _start_in_single_user_mode(args, resource, services_factory):
 
 def start_site(config, resource):
     log.info('Starting the API on port %s' % config.port)
+    if config.manhole:
+        MANHOLE_PORT = 8008
+        log.info('Starting the manhole on port %s' % MANHOLE_PORT)
+        from twisted.conch import manhole, manhole_tap, telnet
+        from twisted.conch.insults import insults
+        from twisted.cred import portal, checkers
+        from twisted.internet.protocol import ServerFactory
+        passwdFile, namespace = 'passwd', globals()
+        telnetRealm = manhole_tap._StupidRealm(telnet.TelnetBootstrapProtocol,
+                                               insults.ServerProtocol,
+                                               manhole.ColoredManhole,
+                                               namespace)
+        telnetPortal = portal.Portal(telnetRealm, [checkers.FilePasswordDB(passwdFile)])
+        telnetFactory = ServerFactory()
+        telnetFactory.protocol = manhole_tap.makeTelnetProtocol(telnetPortal)
+        reactor.listenTCP(MANHOLE_PORT, telnetFactory)
     if config.sslkey and config.sslcert:
         reactor.listenSSL(config.port, PixelatedSite(resource), _ssl_options(config.sslkey, config.sslcert),
                           interface=config.host)
