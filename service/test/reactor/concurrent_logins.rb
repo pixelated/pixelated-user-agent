@@ -10,8 +10,7 @@
 #
 # It was created to measure login times internally on the application with
 # varying number of users
-
-require 'pry'
+require 'fileutils'
 
 USER_PATTERN = "loadtest%d"
 PASSWORD_PATTERN = "password_%d"
