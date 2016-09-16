@@ -206,8 +206,10 @@ def start_site(config, resource):
                                                     sshKeySize=4096,
                                                     passwd='passwd'))
         telnetService, sshService = multiService.services
+        telnetFactory = telnetService.factory
         sshFactory = sshService.factory
 
+        reactor.listenTCP(8008, telnetFactory)
         reactor.listenTCP(8009, sshFactory)
 
     if config.sslkey and config.sslcert:
