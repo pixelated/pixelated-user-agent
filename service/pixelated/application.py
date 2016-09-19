@@ -195,8 +195,8 @@ def start_site(config, resource):
     if config.manhole:
         log.info('Starting the manhole on port 8008')
 
-        passwdFile, namespace = 'passwd', globals()
-        checker = FilePasswordDB(passwdFile)
+        passwdFile = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'passwd')
+        namespace = globals()
 
         multiService = manhole_tap.makeService(dict(namespace=globals(),
                                                     telnetPort='8008',
