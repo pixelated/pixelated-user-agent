@@ -28,6 +28,8 @@ from twisted.cred.checkers import AllowAnonymousAccess, FilePasswordDB
 from twisted.internet import defer
 from twisted.internet import reactor
 from twisted.internet import ssl
+from twisted.internet.task import LoopingCall
+from twisted.plugin import getPlugins
 
 from pixelated.adapter.welcome_mail import add_welcome_mail
 from pixelated.config import arguments
@@ -39,6 +41,7 @@ from pixelated.config.site import PixelatedSite
 from pixelated.resources.auth import LeapPasswordChecker, PixelatedRealm, PixelatedAuthSessionWrapper, SessionChecker
 from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
+from loglinegenerator import ILogLineGenerator
 
 log = logging.getLogger(__name__)
 
@@ -98,11 +101,24 @@ def initialize():
 
     def start():
         start_async = _start_mode(args, resource, services_factory)
+        start_plugins()
         add_top_level_system_callbacks(start_async, services_factory)
 
     log.info('Running the reactor')
     reactor.callWhenRunning(start)
     reactor.run()
+
+
+def start_plugins():
+    log.info('start_plugins')
+
+    def logGeneratedLines():
+        for p in getPlugins(ILogLineGenerator):
+            logLine = p.getLogLine()
+            if logLine is not None:
+                log.info(logLine)
+
+    LoopingCall(logGeneratedLines).start(1)
 
 
 def add_top_level_system_callbacks(deferred, services_factory):
@@ -125,6 +141,7 @@ def add_top_level_system_callbacks(deferred, services_factory):
 
 
 def _start_mode(args, resource, services_factory):
+    log.debug('_start_mode')
     if services_factory.mode.is_single_user:
         deferred = _start_in_single_user_mode(args, resource, services_factory)
     else:
@@ -192,6 +209,7 @@ def _start_in_single_user_mode(args, resource, services_factory):
 
 def start_site(config, resource):
     log.info('Starting the API on port %s' % config.port)
+
     if config.manhole:
         log.info('Starting the manhole on port 8008')
 
