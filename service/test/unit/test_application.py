@@ -8,12 +8,13 @@ import pixelated
 class ApplicationTest(unittest.TestCase):
 
     class MockConfig:
-        def __init__(self, port, host, sslkey=None, sslcert=None):
+        def __init__(self, port, host, sslkey=None, sslcert=None, manhole=False):
             self.port = port
             self.host = host
             self.sslkey = sslkey
             self.sslcert = sslcert
             self.home = 'leap_home'
+            self.manhole = manhole
 
     @patch('leap.common.events.client')
     @patch('pixelated.application.reactor')
