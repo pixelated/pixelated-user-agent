@@ -227,8 +227,8 @@ def start_site(config, resource):
         telnetFactory = telnetService.factory
         sshFactory = sshService.factory
 
-        reactor.listenTCP(8008, telnetFactory)
-        reactor.listenTCP(8009, sshFactory)
+        reactor.listenTCP(8008, telnetFactory, interface='localhost')
+        reactor.listenTCP(8009, sshFactory, interface='localhost')
 
     if config.sslkey and config.sslcert:
         reactor.listenSSL(config.port, PixelatedSite(resource), _ssl_options(config.sslkey, config.sslcert),
