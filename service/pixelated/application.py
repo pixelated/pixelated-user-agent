@@ -101,7 +101,6 @@ def initialize():
 
     def start():
         start_async = _start_mode(args, resource, services_factory)
-        start_plugins()
         add_top_level_system_callbacks(start_async, services_factory)
 
     log.info('Running the reactor')
@@ -212,6 +211,8 @@ def start_site(config, resource):
 
     if config.manhole:
         log.info('Starting the manhole on port 8008')
+
+        start_plugins()
 
         multiService = manhole_tap.makeService(dict(namespace=globals(),
                                                     telnetPort='8008',
