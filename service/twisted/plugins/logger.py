@@ -3,7 +3,7 @@ import sys
 
 from zope.interface import implementer
 from twisted.plugin import IPlugin
-from loglinegenerator import ILogLineGenerator
+from pixelated.support.loglinegenerator import ILogLineGenerator
 
 
 @implementer(IPlugin, ILogLineGenerator)

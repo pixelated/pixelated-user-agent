@@ -41,7 +41,7 @@ from pixelated.config.site import PixelatedSite
 from pixelated.resources.auth import LeapPasswordChecker, PixelatedRealm, PixelatedAuthSessionWrapper, SessionChecker
 from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
-from loglinegenerator import ILogLineGenerator
+from pixelated.support.loglinegenerator import ILogLineGenerator
 
 log = logging.getLogger(__name__)
 
@@ -212,9 +212,6 @@ def start_site(config, resource):
 
     if config.manhole:
         log.info('Starting the manhole on port 8008')
-
-        passwdFile = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'passwd')
-        namespace = globals()
 
         multiService = manhole_tap.makeService(dict(namespace=globals(),
                                                     telnetPort='8008',
