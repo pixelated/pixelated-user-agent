@@ -56,7 +56,7 @@ class Services(object):
         key = str(key_unicode)
         logger.debug('The key len is: %s' % len(key))
         user_id = self._leap_session.user_auth.uuid
-        user_folder = os.path.join(self._leap_home, user_id)
+        user_folder = os.path.join(self._leap_home, 'pixelated', user_id)
         search_engine = SearchEngine(key, user_home=user_folder)
         self.search_engine = search_engine
 

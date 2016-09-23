@@ -64,12 +64,12 @@ class AppTestAccount(object):
         self._mail_address = '%s@pixelated.org' % user_id
         self._soledad = None
         self._services = None
+        self.soledad_test_folder = os.path.join(self._leap_home, 'pixelated', self._uuid)
 
     @defer.inlineCallbacks
     def start(self):
-        soledad_test_folder = os.path.join(self._leap_home, self._uuid)
-        self.soledad = yield initialize_soledad(tempdir=soledad_test_folder, uuid=self._uuid)
-        self.search_engine = SearchEngine(self.INDEX_KEY, user_home=soledad_test_folder)
+        self.soledad = yield initialize_soledad(tempdir=self.soledad_test_folder, uuid=self._uuid)
+        self.search_engine = SearchEngine(self.INDEX_KEY, user_home=self.soledad_test_folder)
         self.keymanager = mock()
         self.mail_sender = self._create_mail_sender()
         self.mail_store = SearchableMailStore(LeapMailStore(self.soledad), self.search_engine)
@@ -105,8 +105,7 @@ class AppTestAccount(object):
         return self._services
 
     def cleanup(self):
-        soledad_test_folder = os.path.join(self._leap_home, self._uuid)
-        shutil.rmtree(soledad_test_folder)
+        shutil.rmtree(self.soledad_test_folder)
 
     def _initialize_account(self):
         self.account = Account(self.soledad, self._user_id)
