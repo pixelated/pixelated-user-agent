@@ -175,7 +175,7 @@ class LoginResource(BaseResource):
             self._services_factory.map_email(self.creds.username, user_id)
 
         if leap_session.fresh_account:
-            language = parse_accept_language(request.allHeaders())
+            language = parse_accept_language(request.getAllHeaders())
             yield add_welcome_mail(leap_session.mail_store, language)
 
         self._init_http_session(request, user_id)
