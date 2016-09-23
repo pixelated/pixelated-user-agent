@@ -16,10 +16,10 @@
 import os
 import unittest
 import tempdir
-from leap.srp_session import SRPSession
 import leap.common.certs as certs
-from mockito import mock, unstub, when, verify, never, any as ANY
+from mockito import mock, unstub, when, any as ANY
 
+from pixelated.config.authentication import Authentication
 from pixelated.config.sessions import SmtpClientCertificate
 
 from tempfile import NamedTemporaryFile
@@ -57,7 +57,7 @@ class TestSmtpClientCertificate(unittest.TestCase):
         self.provider.api_version = '1'
         self.provider.server_name = 'some.host.tld'
         self.provider.domain = 'some-provider.tld'
-        self.auth = SRPSession(USERNAME, 'token', 'uuid', 'session_id', {})
+        self.auth = Authentication(USERNAME, 'token', 'uuid', 'session_id', {})
         self.pem_path = os.path.join(self.tmp_dir.name, 'providers', 'some-provider.tld', 'keys', 'client', 'smtp.pem')
 
     def tearDown(self):

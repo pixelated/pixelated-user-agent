@@ -13,16 +13,14 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from leap.exceptions import SRPAuthenticationError
 from mockito import mock, when, any as ANY
 from twisted.internet import defer
-
-from leap.auth import SRPSession
 
 from pixelated.application import UserAgentMode, set_up_protected_resources
 from pixelated.config.services import ServicesFactory
 
-from pixelated.config.sessions import LeapSessionFactory, LeapSession
+from pixelated.config.sessions import LeapSessionFactory
+from pixelated.config.authentication import Authentication
 import pixelated.config.services
 from pixelated.resources.root_resource import RootResource
 from test.support.integration import AppTestClient
@@ -53,7 +51,7 @@ class MultiUserClient(AppTestClient):
     def login(self, username='username', password='password'):
         if(username == 'username' and password == 'password'):
             self.credentials_checker.add_user(username, password)
-        session = SRPSession(username, 'some_user_token', 'some_user_uuid', 'session_id', {'is_admin': False})
+        session = Authentication(username, 'some_user_token', 'some_user_uuid', 'session_id', {'is_admin': False})
         leap_session = self._test_account.leap_session
         leap_session.user_auth = session
         config = mock()

@@ -4,12 +4,12 @@ from collections import namedtuple
 from twisted.internet import defer, threads
 from leap.common.events import (server as events_server)
 from leap.soledad.common.errors import InvalidAuthTokenError
-from leap.auth import SRPSession
-
+from leap.bonafide._srp import SRPAuthError
 from leap.bonafide.session import Session
 from leap.bonafide.provider import Api
 from pixelated.config import credentials
 from pixelated.config import leap_config
+from pixelated.config.authentication import Authentication
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.config.sessions import LeapSessionFactory
@@ -73,7 +73,7 @@ def initialize_leap_single_user(leap_provider_cert,
 
     try:
         auth = yield authenticate(provider, username, password)
-    except SRPAuthenticationError:
+    except SRPAuthError:
         raise UnauthorizedLogin()
 
     leap_session = yield create_leap_session(provider, username, password, auth)
@@ -87,7 +87,7 @@ def authenticate(provider, user, password):
     credentials = Credentials(user, password)
     srp_auth = Session(credentials, srp_provider, provider.local_ca_crt)
     yield srp_auth.authenticate()
-    defer.returnValue(SRPSession(user, srp_auth.token, srp_auth.uuid, 'session_id', {'is_admin': False}))
+    defer.returnValue(Authentication(user, srp_auth.token, srp_auth.uuid, 'session_id', {'is_admin': False}))
 
 
 def init_monkeypatches():

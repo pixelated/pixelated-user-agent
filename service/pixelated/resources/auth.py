@@ -17,7 +17,6 @@
 import logging
 import re
 
-from leap.exceptions import SRPAuthenticationError
 from twisted.cred.checkers import ANONYMOUS
 from twisted.cred.credentials import ICredentials
 from twisted.cred.error import UnauthorizedLogin
@@ -30,6 +29,7 @@ from twisted.web import util
 from twisted.cred import error
 from twisted.web.resource import IResource, ErrorPage
 
+from leap.bonafide._srp import SRPAuthError
 from pixelated.config.leap import create_leap_session, authenticate
 from pixelated.resources import IPixelatedSession
 
@@ -50,7 +50,7 @@ class LeapPasswordChecker(object):
     def requestAvatarId(self, credentials):
         try:
             auth = yield authenticate(self.provider, credentials.username, credentials.password)
-        except SRPAuthenticationError:
+        except SRPAuthError:
             raise UnauthorizedLogin()
 
         leap_session = yield create_leap_session(self.provider, credentials.username, credentials.password, auth)

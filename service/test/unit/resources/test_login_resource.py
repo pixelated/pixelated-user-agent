@@ -2,17 +2,16 @@ import os
 
 import test.support.mockito
 
-from leap.exceptions import SRPAuthenticationError
+from leap.bonafide._srp import SRPAuthError
 from mock import patch
 from mockito import mock, when, any as ANY, verify, verifyZeroInteractions, verifyNoMoreInteractions
 from twisted.trial import unittest
 from twisted.web.resource import IResource
 from twisted.web.test.requesthelper import DummyRequest
 
-from pixelated.config.sessions import LeapSessionFactory, LeapSession
-from pixelated.resources.login_resource import (
-    LoginResource,
-    parse_accept_language)
+from pixelated.config.sessions import LeapSession
+from pixelated.resources.login_resource import LoginResource
+from pixelated.resources.login_resource import parse_accept_language
 from test.unit.resources import DummySite
 
 
@@ -246,7 +245,7 @@ class TestLoginPOST(unittest.TestCase):
     @patch('leap.auth.SRPAuth.authenticate')
     @patch('pixelated.config.services.Services.setup')
     def test_leap_session_is_not_created_when_leap_auth_fails(self, mock_service_setup, mock_leap_srp_auth, mock_leap_session_create):
-        mock_leap_srp_auth.side_effect = SRPAuthenticationError()
+        mock_leap_srp_auth.side_effect = SRPAuthError()
 
         d = self.web.get(self.request)
 

@@ -16,7 +16,6 @@
 import json
 import multiprocessing
 from leap.mail.adaptors.soledad import SoledadMailAdaptor
-from leap.srp_session import SRPSession
 from mockito import mock
 import os
 import shutil
@@ -35,10 +34,11 @@ from zope.interface import implementer
 from twisted.cred import checkers, credentials
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
 from pixelated.adapter.services.feedback_service import FeedbackService
-from pixelated.application import ServicesFactory, UserAgentMode, SingleUserServicesFactory, set_up_protected_resources
+from pixelated.application import UserAgentMode, set_up_protected_resources
 from pixelated.config.sessions import LeapSession
 from pixelated.config.services import Services, ServicesFactory, SingleUserServicesFactory
 from pixelated.config.site import PixelatedSite
+from pixelated.config.authentication import Authentication
 
 from pixelated.adapter.mailstore import LeapMailStore
 from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
@@ -136,7 +136,7 @@ class StubSRPChecker(object):
 
     def requestAvatarId(self, credentials):
         if(self._credentials[credentials.username] == credentials.password):
-            leap_auth = SRPSession(credentials.username, uuid.uuid4(), uuid.uuid4(), uuid.uuid4(), {})
+            leap_auth = Authentication(credentials.username, uuid.uuid4(), uuid.uuid4(), uuid.uuid4(), {})
             return defer.succeed(LeapSession(self._leap_provider, leap_auth, None, None, None, None))
         else:
             return defer.fail()
