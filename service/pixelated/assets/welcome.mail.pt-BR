@@ -1,0 +1,80 @@
+From: Pixelated Team <pixelated-team@pixelated-project.org>
+Date: Sat, 21 Mar 2015 19:30:09 -0300
+Subject: Bem vindo ao Pixelated
+To: Replace <will.be@the.user>
+Content-Type: multipart/alternative; boundary=000boundary000
+
+--000boundary000
+Bem vindo ao Pixelated Mail, um email moderno com criptografia.
+
+Pixelated Mail é um projeto de código aberto que visa prover um email seguro no navegador com todas a funcionalidades que se espera de um cliente moderno de email.
+
+Como usar
+Pixelated Mail deve prover uma forma de uso parecida com o que você encontra com o seu software de email.  À esquerda, você vai encontrar a barra de navegação que prove acesso a todas as suas pastas e etiquetas. Clicando nelas você carregará as mensagens correspondentes no painel do meio - a lista de emails. Clicando em um email ele será aberto nesse painel aqui, mas você já sabe disso, né?
+
+Para compor uma mensagem procure por um grande botão azul no canto superior esquerdo. Você pode adicionar etiquetas clicando no sinal de "+" abaixo do assunto da mensagem. Você também pode visualizar o estado de criptografia das mensagens logo abaixo das informações do remetente.
+
+Um pouco mais sobre o Pixelated
+Pixelated é um projeto de código-aberto licenciado sob AGPL 3.0. É composto de duas partes principais, o cliente web (que você está usando agora) e a plataforma (o servidor por trás do sinal de "@", que provê o serviço de email que você usará para mandar e receber mensagens). Você pode aprender mais visitando https://pixelated-project.org/.
+
+Sobre esta mensagem e seu estado de criptografia
+Esta mensagem não foi criptografada, em outras palavras, ela poderia ter sido lida por outras pessoas em algum ponto durante a transmissão, como em qualquer cliente de email.
+Para enviar mensagens criptografadas, you precisa ter a chave pública dos recipientes. No Pixelated, existem 2 possibilidades:
+• enviar um email para outra conta do Pixelated: as chaves públicas são trocadas por padrão;
+• enviar um email para outro servidor de email: você deverá trocar as chaves públicas com os recipientes anteriormente.
+
+Aproveite seu email seguro!
+
+--000boundary000
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+<p>
+Bem vindo ao Pixelated Mail, um email moderno com criptografia.
+</p>
+<p>
+Pixelated Mail =C3=A9 um projeto de c=C3=B3digo aberto que visa prover um e=
+mail seguro no navegador com todas a funcionalidades que se espera de um cl=
+iente moderno de email.
+</p>
+<p>
+<b>Como usar</b><br>
+Pixelated Mail deve prover uma forma de uso parecida com o que voc=C3=AA en=
+contra com o seu software de email.  =C3=80 esquerda, voc=C3=AA vai encontr=
+ar a barra de navega=C3=A7=C3=A3o que prove acesso a todas as suas pastas e=
+ etiquetas. Clicando nelas voc=C3=AA carregar=C3=A1 as mensagens correspond=
+ entes no painel do meio - a lista de emails. Clicando em um email ele ser=
+ =C3=A1 aberto nesse painel aqui, mas voc=C3=AA j=C3=A1 sabe disso, n=C3=A9?
+</p>
+<p>
+Para compor uma mensagem procure por um grande bot=C3=A3o azul no canto sup=
+erior esquerdo. Voc=C3=AA pode adicionar etiquetas clicando no sinal de "+"=
+ abaixo do assunto da mensagem. Voc=C3=AA tamb=C3=A9m pode visualizar o est=
+ ado de criptografia das mensagens logo abaixo das informa=C3=A7=C3=B5es do =
+ remetente. =20
+</p>
+<p>
+<b>Um pouco mais sobre o Pixelated</b><br>
+Pixelated =C3=A9 um projeto de c=C3=B3digo-aberto licenciado sob AGPL 3.0. =
+=C3=89 composto de duas partes principais, o cliente web (que voc=C3=AA est=
+=C3=A1 usando agora) e a plataforma (o servidor por tr=C3=A1s do sinal de "=
+@", que prov=C3=AA o servi=C3=A7o de email que voc=C3=AA usar=C3=A1 para ma=
+ndar e receber mensagens). Voc=C3=AA pode aprender mais visitando https://p=
+ixelated-project.org/.
+</p>
+<p>
+<b>Sobre esta mensagem e seu estado de criptografia</b><br>
+Esta mensagem n=C3=A3o foi criptografada, em outras palavras, ela poderia t=
+er sido lida por outras pessoas em algum ponto durante a transmiss=C3=A3o, =
+como em qualquer cliente de email.
+Para enviar mensagens criptografadas, you precisa ter a chave p=C3=BAblica =
+dos recipientes. No Pixelated, existem 2 possibilidades:
+<p>=E2=80=A2 enviar um email para outra conta do Pixelated: as chaves p=C3=BAb=
+licas s=C3=A3o trocadas por padr=C3=A3o;
+<br>=E2=80=A2 enviar um email para outro servidor de email: voc=C3=AA dever=C3=
+=A1 trocar as chaves p=C3=BAblicas com os recipientes anteriormente.
+</p>
+<p>
+Aproveite seu email seguro!
+</p>
+--000boundary000--
+

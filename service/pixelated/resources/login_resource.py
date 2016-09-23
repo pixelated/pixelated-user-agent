@@ -50,6 +50,15 @@ def _get_static_folder():
     return static_folder
 
 
+def parse_accept_language(all_headers):
+    accepted_languages = ['pt-BR', 'en-US']
+    for language in accepted_languages:
+        languages = all_headers['accept-language'].split(';')[0]
+        if language in languages:
+            return language
+    return 'pt-BR'
+
+
 class DisclaimerElement(Element):
     loader = XMLFile(FilePath(os.path.join(_get_startup_folder(), '_login_disclaimer_banner.html')))
 
@@ -166,7 +175,8 @@ class LoginResource(BaseResource):
             self._services_factory.map_email(self.creds.username, user_id)
 
         if leap_session.fresh_account:
-            yield add_welcome_mail(leap_session.mail_store)
+            language = parse_accept_language(request.allHeaders())
+            yield add_welcome_mail(leap_session.mail_store, language)
 
         self._init_http_session(request, user_id)
 
