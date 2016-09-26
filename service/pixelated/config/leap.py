@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 import logging
 from collections import namedtuple
+from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer, threads
 from leap.common.events import (server as events_server)
 from leap.soledad.common.errors import InvalidAuthTokenError
@@ -45,16 +46,6 @@ def initialize_leap_multi_user(provider_hostname,
 @defer.inlineCallbacks
 def create_leap_session(provider, username, password, auth=None):
     leap_session = yield LeapSessionFactory(provider).create(username, password, auth)
-    try:
-        yield leap_session.first_required_sync()
-    except InvalidAuthTokenError:
-        try:
-            leap_session.close()
-        except Exception, e:
-            log.error(e)
-        leap_session = LeapSessionFactory(provider).create(username, password, auth)
-        yield leap_session.first_required_sync()
-
     defer.returnValue(leap_session)
 
 

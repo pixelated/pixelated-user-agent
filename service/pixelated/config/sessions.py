@@ -2,8 +2,12 @@ from __future__ import absolute_import
 
 import os
 import errno
+import traceback
+
 import requests
 import logging
+
+import sys
 from twisted.internet import defer, threads, reactor
 from leap.soledad.common.crypto import WrongMacError, UnknownMacMethodError
 from leap.soledad.client import Soledad
@@ -34,6 +38,7 @@ class LeapSessionFactory(object):
         session = SessionCache.lookup_session(key)
         if not session:
             session = yield self._create_new_session(username, password, auth)
+            yield session.first_required_sync()
             SessionCache.remember_session(key, session)
         defer.returnValue(session)
 
@@ -178,8 +183,8 @@ class LeapSession(object):
         self.stop_background_jobs()
         unregister(events.KEYMANAGER_FINISHED_KEY_GENERATION, uid=self.account_email())
         self.soledad.close()
-        self.remove_from_cache()
         self._close_account()
+        self.remove_from_cache()
 
     @property
     def is_closed(self):
@@ -224,8 +229,7 @@ class SessionCache(object):
         if session is not None and session.is_closed:
             SessionCache.remove_session(key)
             return None
-        else:
-            return session
+        return session
 
     @staticmethod
     def remember_session(key, session):
