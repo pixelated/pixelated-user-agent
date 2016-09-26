@@ -20,6 +20,7 @@ class Services(object):
 
     def __init__(self, leap_session):
         self._leap_home = leap_config.leap_home
+        self._pixelated_home = os.path.join(self._leap_home, 'pixelated')
         self._leap_session = leap_session
 
     @defer.inlineCallbacks
@@ -56,7 +57,7 @@ class Services(object):
         key = str(key_unicode)
         logger.debug('The key len is: %s' % len(key))
         user_id = self._leap_session.user_auth.uuid
-        user_folder = os.path.join(self._leap_home, 'pixelated', user_id)
+        user_folder = os.path.join(self._pixelated_home, user_id)
         search_engine = SearchEngine(key, user_home=user_folder)
         self.search_engine = search_engine
 

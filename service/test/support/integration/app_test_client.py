@@ -60,11 +60,12 @@ class AppTestAccount(object):
     def __init__(self, user_id, leap_home):
         self._user_id = user_id
         self._leap_home = leap_home
+        self._pixelated_home = os.path.join(self._leap_home, 'pixelated')
         self._uuid = str(uuid.uuid4())
         self._mail_address = '%s@pixelated.org' % user_id
         self._soledad = None
         self._services = None
-        self.soledad_test_folder = os.path.join(self._leap_home, 'pixelated', self._uuid)
+        self.soledad_test_folder = os.path.join(self._pixelated_home, self._uuid)
 
     @defer.inlineCallbacks
     def start(self):
