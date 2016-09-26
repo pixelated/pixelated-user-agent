@@ -111,6 +111,10 @@ function runFunctionalTests {
         echo "Done."
 }
 
+function cleanPyc {
+    find . -name '*.pyc'  -delete
+}
+
 if [ "$1" == 'test' ]; then
         set -e
         runPep8
@@ -118,9 +122,11 @@ if [ "$1" == 'test' ]; then
         runIntegrationTests "${@:2}"
 elif [ "$1" == 'unit' ]; then
         set -e
+        cleanPyc
         runUnitTests
 elif [ "$1" == 'integration' ]; then
         set -e
+        cleanPyc
         runIntegrationTests
 elif [ "$1" == 'pep8' ]; then
         set -e
