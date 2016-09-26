@@ -60,11 +60,10 @@ class RootResource(BaseResource):
     def getChild(self, path, request):
         if path == '':
             return self
+        if self._mode == MODE_STARTUP:
+            return UnavailableResource()
         if self._is_xsrf_valid(request):
-            if self._mode == MODE_RUNNING:
-                return self._child_resources.get(path)
-            else:
-                return UnavailableResource()
+            return self._child_resources.get(path)
         return UnAuthorizedResource()
 
     def _is_xsrf_valid(self, request):
