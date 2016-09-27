@@ -212,6 +212,7 @@ class InputMail(Mail):
         for payload in mail.get_payload():
             input_mail._mime_multipart.attach(payload)
             if payload.get_content_type() == 'text/plain':
-                input_mail.body = unicode(payload.as_string())
+                content_charset = payload.get_content_charset()
+                input_mail.body = unicode(payload.get_payload(decode=True), content_charset)
         input_mail._mime = input_mail.to_mime_multipart()
         return input_mail

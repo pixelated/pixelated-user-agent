@@ -5,29 +5,47 @@ To: Replace <will.be@the.user>
 Content-Type: multipart/alternative; boundary=000boundary000
 
 --000boundary000
-Bem vindo ao Pixelated Mail, um email moderno com criptografia.
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-Pixelated Mail é um projeto de código aberto que visa prover um email seguro no navegador com todas a funcionalidades que se espera de um cliente moderno de email.
-
-Como usar
-Pixelated Mail deve prover uma forma de uso parecida com o que você encontra com o seu software de email.  À esquerda, você vai encontrar a barra de navegação que prove acesso a todas as suas pastas e etiquetas. Clicando nelas você carregará as mensagens correspondentes no painel do meio - a lista de emails. Clicando em um email ele será aberto nesse painel aqui, mas você já sabe disso, né?
-
-Para compor uma mensagem procure por um grande botão azul no canto superior esquerdo. Você pode adicionar etiquetas clicando no sinal de "+" abaixo do assunto da mensagem. Você também pode visualizar o estado de criptografia das mensagens logo abaixo das informações do remetente.
-
-Um pouco mais sobre o Pixelated
-Pixelated é um projeto de código-aberto licenciado sob AGPL 3.0. É composto de duas partes principais, o cliente web (que você está usando agora) e a plataforma (o servidor por trás do sinal de "@", que provê o serviço de email que você usará para mandar e receber mensagens). Você pode aprender mais visitando https://pixelated-project.org/.
-
-Sobre esta mensagem e seu estado de criptografia
-Esta mensagem não foi criptografada, em outras palavras, ela poderia ter sido lida por outras pessoas em algum ponto durante a transmissão, como em qualquer cliente de email.
-Para enviar mensagens criptografadas, you precisa ter a chave pública dos recipientes. No Pixelated, existem 2 possibilidades:
-• enviar um email para outra conta do Pixelated: as chaves públicas são trocadas por padrão;
-• enviar um email para outro servidor de email: você deverá trocar as chaves públicas com os recipientes anteriormente.
-
-Aproveite seu email seguro!
-
+QmVtIHZpbmRvIGFvIFBpeGVsYXRlZCBNYWlsLCB1bSBlbWFpbCBtb2Rlcm5vIGNvbSBjcmlwdG9ncm
+FmaWEuCgpQaXhlbGF0ZWQgTWFpbCDDqSB1bSBwcm9qZXRvIGRlIGPDs2RpZ28gYWJlcnRvIHF1ZSB2
+aXNhIHByb3ZlciB1bSBlbWFpbCBzZWd1cm8gbm8gbmF2ZWdhZG9yIGNvbSB0b2RhcyBhIGZ1bmNpb2
+5hbGlkYWRlcyBxdWUgc2UgZXNwZXJhIGRlIHVtIGNsaWVudGUgbW9kZXJubyBkZSBlbWFpbC4KCkNv
+bW8gdXNhcgpQaXhlbGF0ZWQgTWFpbCBkZXZlIHByb3ZlciB1bWEgZm9ybWEgZGUgdXNvIHBhcmVjaW
+RhIGNvbSBvIHF1ZSB2b2PDqiBlbmNvbnRyYSBjb20gbyBzZXUgc29mdHdhcmUgZGUgZW1haWwuICDD
+gCBlc3F1ZXJkYSwgdm9jw6ogdmFpIGVuY29udHJhciBhIGJhcnJhIGRlIG5hdmVnYcOnw6NvIHF1ZS
+Bwcm92ZSBhY2Vzc28gYSB0b2RhcyBhcyBzdWFzIHBhc3RhcyBlIGV0aXF1ZXRhcy4gQ2xpY2FuZG8g
+bmVsYXMgdm9jw6ogY2FycmVnYXLDoSBhcyBtZW5zYWdlbnMgY29ycmVzcG9uZGVudGVzIG5vIHBhaW
+5lbCBkbyBtZWlvIC0gYSBsaXN0YSBkZSBlbWFpbHMuIENsaWNhbmRvIGVtIHVtIGVtYWlsIGVsZSBz
+ZXLDoSBhYmVydG8gbmVzc2UgcGFpbmVsIGFxdWksIG1hcyB2b2PDqiBqw6Egc2FiZSBkaXNzbywgbs
+OpPwoKUGFyYSBjb21wb3IgdW1hIG1lbnNhZ2VtIHByb2N1cmUgcG9yIHVtIGdyYW5kZSBib3TDo28g
+YXp1bCBubyBjYW50byBzdXBlcmlvciBlc3F1ZXJkby4gVm9jw6ogcG9kZSBhZGljaW9uYXIgZXRpcX
+VldGFzIGNsaWNhbmRvIG5vIHNpbmFsIGRlICIrIiBhYmFpeG8gZG8gYXNzdW50byBkYSBtZW5zYWdl
+bS4gVm9jw6ogdGFtYsOpbSBwb2RlIHZpc3VhbGl6YXIgbyBlc3RhZG8gZGUgY3JpcHRvZ3JhZmlhIG
+RhcyBtZW5zYWdlbnMgbG9nbyBhYmFpeG8gZGFzIGluZm9ybWHDp8O1ZXMgZG8gcmVtZXRlbnRlLgoK
+VW0gcG91Y28gbWFpcyBzb2JyZSBvIFBpeGVsYXRlZApQaXhlbGF0ZWQgw6kgdW0gcHJvamV0byBkZS
+Bjw7NkaWdvLWFiZXJ0byBsaWNlbmNpYWRvIHNvYiBBR1BMIDMuMC4gw4kgY29tcG9zdG8gZGUgZHVh
+cyBwYXJ0ZXMgcHJpbmNpcGFpcywgbyBjbGllbnRlIHdlYiAocXVlIHZvY8OqIGVzdMOhIHVzYW5kby
+BhZ29yYSkgZSBhIHBsYXRhZm9ybWEgKG8gc2Vydmlkb3IgcG9yIHRyw6FzIGRvIHNpbmFsIGRlICJA
+IiwgcXVlIHByb3bDqiBvIHNlcnZpw6dvIGRlIGVtYWlsIHF1ZSB2b2PDqiB1c2Fyw6EgcGFyYSBtYW
+5kYXIgZSByZWNlYmVyIG1lbnNhZ2VucykuIFZvY8OqIHBvZGUgYXByZW5kZXIgbWFpcyB2aXNpdGFu
+ZG8gaHR0cHM6Ly9waXhlbGF0ZWQtcHJvamVjdC5vcmcvLgoKU29icmUgZXN0YSBtZW5zYWdlbSBlIH
+NldSBlc3RhZG8gZGUgY3JpcHRvZ3JhZmlhCkVzdGEgbWVuc2FnZW0gbsOjbyBmb2kgY3JpcHRvZ3Jh
+ZmFkYSwgZW0gb3V0cmFzIHBhbGF2cmFzLCBlbGEgcG9kZXJpYSB0ZXIgc2lkbyBsaWRhIHBvciBvdX
+RyYXMgcGVzc29hcyBlbSBhbGd1bSBwb250byBkdXJhbnRlIGEgdHJhbnNtaXNzw6NvLCBjb21vIGVt
+IHF1YWxxdWVyIGNsaWVudGUgZGUgZW1haWwuClBhcmEgZW52aWFyIG1lbnNhZ2VucyBjcmlwdG9ncm
+FmYWRhcywgeW91IHByZWNpc2EgdGVyIGEgY2hhdmUgcMO6YmxpY2EgZG9zIHJlY2lwaWVudGVzLiBO
+byBQaXhlbGF0ZWQsIGV4aXN0ZW0gMiBwb3NzaWJpbGlkYWRlczoK4oCiIGVudmlhciB1bSBlbWFpbC
+BwYXJhIG91dHJhIGNvbnRhIGRvIFBpeGVsYXRlZDogYXMgY2hhdmVzIHDDumJsaWNhcyBzw6NvIHRy
+b2NhZGFzIHBvciBwYWRyw6NvOwrigKIgZW52aWFyIHVtIGVtYWlsIHBhcmEgb3V0cm8gc2Vydmlkb3
+IgZGUgZW1haWw6IHZvY8OqIGRldmVyw6EgdHJvY2FyIGFzIGNoYXZlcyBww7pibGljYXMgY29tIG9z
+IHJlY2lwaWVudGVzIGFudGVyaW9ybWVudGUuCgpBcHJvdmVpdGUgc2V1IGVtYWlsIHNlZ3VybyEKCg
+o=
 --000boundary000
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+
 <p>
 Bem vindo ao Pixelated Mail, um email moderno com criptografia.
 </p>
