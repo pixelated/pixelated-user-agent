@@ -31,6 +31,7 @@ from pixelated.resources.mail_resource import MailResource
 from pixelated.resources.mails_resource import MailsResource
 from pixelated.resources.tags_resource import TagsResource
 from pixelated.resources.keys_resource import KeysResource
+from twisted.web.resource import NoResource
 from twisted.web.static import File
 
 from pixelated.resources.users import UsersResource
@@ -139,4 +140,4 @@ class ChildResourcesMap(object):
         self._registry[path] = resource
 
     def get(self, path):
-        return self._registry.get(path)
+        return self._registry.get(path) or NoResource()
