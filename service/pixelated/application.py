@@ -115,7 +115,7 @@ def start_plugins():
         for p in getPlugins(ILogLineGenerator):
             logLine = p.getLogLine()
             if logLine is not None:
-                log.info(logLine)
+                log.debug(logLine)
 
     LoopingCall(logGeneratedLines).start(1)
 
