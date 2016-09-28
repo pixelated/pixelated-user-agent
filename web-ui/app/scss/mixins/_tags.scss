@@ -7,10 +7,10 @@ $tags-font-size: 0.6rem;
 
     &-tag {
         font-size: $tags-font-size;
-        font-weight: normal;
-        background-color: lighten($action_buttons, 12);
+        font-weight: 700;
+        background-color: $dark_blue;
         color: white;
-        padding: 2px 3px;
+        padding: 2px 4px;
         margin: 0 1px;
         border-radius: 2px;
     }
