@@ -134,7 +134,7 @@
         &:before {
           font-family: FontAwesome;
           padding-right: 4px;
-
+          font-size: 1.2em;
         }
         &.encrypted {
           border-bottom-color: $will_be_encrypted;
