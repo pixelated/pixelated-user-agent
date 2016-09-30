@@ -8,54 +8,51 @@ Content-Type: multipart/alternative; boundary=000boundary000
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: base64
 
-QmVtIHZpbmRvIGFvIFBpeGVsYXRlZCBNYWlsLCB1bSBlLW1haWwgbW9kZXJubyBjb20gY3JpcHRvZ3
-JhZmlhLgoKUGl4ZWxhdGVkIE1haWwgw6kgdW0gcHJvamV0byBkZSBjw7NkaWdvIGFiZXJ0byBxdWUg
-ZGVzZW52b2x2ZSB1bSBlLW1haWwgc2VndXJvIHBhcmEgbyBzZXUgbmF2ZWdhZG9yLgoKCkNvbW8gdX
-NhcgoKTyBQaXhlbGF0ZWQgTWFpbCBmdW5jaW9uYSBjb21vIHF1YWxxdWVyIG91dHJvIGNsaWVudGUg
-ZGUgZS1tYWlsLiDDgCBlc3F1ZXJkYSwgdm9jw6ogdmFpIGVuY29udHJhciBhIGJhcnJhIGRlIG5hdm
-VnYcOnw6NvIGNvbSBhY2Vzc28gYSB0b2RhcyBhcyBzdWFzIHBhc3RhcyBlIG1hcmNhZG9yZXMuIENs
-aWNhbmRvIG5lbGFzIHZvY8OqIGNhcnJlZ2Fyw6EgYXMgbWVuc2FnZW5zIGNvcnJlc3BvbmRlbnRlcy
-BubyBwYWluZWwgZG8gbWVpbyAtIGEgbGlzdGEgZGUgZS1tYWlscy4gQ2xpY2FuZG8gZW0gdW0gZS1t
-YWlsIGVsZSBzZXLDoSBhYmVydG8gbmVzdGUgcGFpbmVsIGFxdWksIG1hcyB2b2PDqiBqw6Egc2FiZS
-BkaXNzbywgbsOpPwoKUGFyYSBjcmlhciB1bWEgbm92YSBtZW5zYWdlbSBwcm9jdXJlIHBvciB1bSBn
-cmFuZGUgYm90w6NvIGF6dWwgbm8gY2FudG8gc3VwZXJpb3IgZXNxdWVyZG8uIFZvY8OqIHBvZGUgYW
-RpY2lvbmFyIGV0aXF1ZXRhcyBjbGljYW5kbyBubyBzaW5hbCBkZSAiKyIgYWJhaXhvIGRvIGFzc3Vu
-dG8gZGEgbWVuc2FnZW0uIFZvY8OqIHZpc3VhbGl6YSBvIGVzdGFkbyBkZSBjcmlwdG9ncmFmaWEgZG
-FzIG1lbnNhZ2VucyBsb2dvIGFiYWl4byBkYXMgaW5mb3JtYcOnw7VlcyBkbyByZW1ldGVudGUuCgoK
-ClNvYnJlIGVzdGEgbWVuc2FnZW0gZSBzZXUgZXN0YWRvIGRlIGNyaXB0b2dyYWZpYQoKRXN0YSBtZW
-5zYWdlbSBuw6NvIGZvaSBjcmlwdG9ncmFmYWRhLCBlbSBvdXRyYXMgcGFsYXZyYXMsIGVsYSBwb2Rl
-cmlhIHRlciBzaWRvIGxpZGEgcG9yIG91dHJhcyBwZXNzb2FzIGVtIGFsZ3VtIHBvbnRvIGR1cmFudG
-UgYSB0cmFuc21pc3PDo28sIGNvbW8gZW0gcXVhbHF1ZXIgb3V0cm8gY2xpZW50ZSBkZSBlLW1haWwu
-CgpQYXJhIGVudmlhciBtZW5zYWdlbnMgY3JpcHRvZ3JhZmFkYXMgbm8gUGl4ZWxhdGVkLCBleGlzdG
-VtIDIgcG9zc2liaWxpZGFkZXM6CgrigKIgZW52aWFyIHVtIGUtbWFpbCBwYXJhIG91dHJhIGNvbnRh
-IGRvIFBpeGVsYXRlZDogYSBtZW5zYWdlbSDDqSBlbnZpYWRhIGNyaXB0b2dyYWZhZGEgZSBhc3Npbm
-FkYSBwb3IgcGFkcsOjbzsK4oCiIGVudmlhciB1bSBlLW1haWwgcGFyYSBvdXRyYXMgY29udGFzOiBh
-byBjcmlhciB1bWEgbWVuc2FnZW0sIGRpZ2l0ZSBvIGVuZGVyZcOnbyBkZSBlLW1haWwgZG8gZGVzdG
-luYXTDoXJpby4gU2UganVudG8gYW8gZW5kZXJlw6dvIGFwYXJlY2VyIHVtIGNhZGVhZG8gZmVjaGFk
-bywgbyBlLW1haWwgZXN0YXLDoSBjcmlwdG9ncmFmYWRvOyBzZSBlc3RpdmVyIGFiZXJ0bywgYSBtZW
-5zYWdlbSB2YWkgbm9ybWFsbWVudGUgY29tbyBxdWFscXVlciBvdXRybyBlLW1haWwuIE8gUGl4ZWxh
-dGVkIGZheiB0dWRvIGF1dG9tYXRpY2FtZW50ZSA6KQoKClVtIHBvdWNvIG1haXMgc29icmUgbyBQaX
-hlbGF0ZWQKClBpeGVsYXRlZCDDqSB1bSBwcm9qZXRvIGRlIGPDs2RpZ28tYWJlcnRvIGxpY2VuY2lh
-ZG8gc29iIEFHUEwgMy4wLiDDiSBjb21wb3N0byBkZSBkdWFzIHBhcnRlcyBwcmluY2lwYWlzLCBvIG
-NsaWVudGUgd2ViIChxdWUgdm9jw6ogZXN0w6EgdXNhbmRvIGFnb3JhKSBlIGEgcGxhdGFmb3JtYSAo
-byBzZXJ2aWRvciBwb3IgdHLDoXMgZG8gc2luYWwgZGUgIkAiLCBxdWUgcHJvdsOqIG8gc2VydmnDp2
-8gZGUgZS1tYWlsIHF1ZSB2b2PDqiB1c2Fyw6EgcGFyYSBtYW5kYXIgZSByZWNlYmVyIG1lbnNhZ2Vu
-cykuIFZvY8OqIHBvZGUgYXByZW5kZXIgbWFpcyB2aXNpdGFuZG8gaHR0cHM6Ly9waXhlbGF0ZWQtcH
-JvamVjdC5vcmcvLgoKQXByb3ZlaXRlIHNldSBlLW1haWwgc2VndXJvIQo=
+QmVtIHZpbmRvIGFvIFBpeGVsYXRlZCBNYWlsLCB1bSBlbWFpbCBtb2Rlcm5vIGNvbSBjcmlwdG9ncm
+FmaWEuCgpQaXhlbGF0ZWQgTWFpbCDDqSB1bSBwcm9qZXRvIGRlIGPDs2RpZ28tYWJlcnRvIHF1ZSBk
+ZXNlbnZvbHZlIHVtIGVtYWlsIHNlZ3VybyBwYXJhIG8gc2V1IG5hdmVnYWRvci4KCgoKQ29tbyB1c2
+FyCgpPIFBpeGVsYXRlZCBNYWlsIGZ1bmNpb25hIGNvbW8gcXVhbHF1ZXIgb3V0cm8gY2xpZW50ZSBk
+ZSBlbWFpbC4gw4AgZXNxdWVyZGEsIHZvY8OqIHZhaSBlbmNvbnRyYXIgYSBiYXJyYSBkZSBuYXZlZ2
+HDp8OjbyBjb20gYWNlc3NvIGEgdG9kYXMgYXMgc3VhcyBwYXN0YXMgZSBtYXJjYWRvcmVzLiBDbGlj
+YW5kbyBuZWxhcyB2b2PDqiBjYXJyZWdhcsOhIGFzIG1lbnNhZ2VucyBjb3JyZXNwb25kZW50ZXMgbm
+8gcGFpbmVsIGRvIG1laW8gLSBhIGxpc3RhIGRlIGVtYWlscy4gQ2xpY2FuZG8gZW0gdW0gZW1haWwg
+ZWxlIHNlcsOhIGFiZXJ0byBuZXN0ZSBwYWluZWwgYXF1aSwgbWFzIHZvY8OqIGrDoSBzYWJlIGRpc3
+NvLCBuw6k/CgpQYXJhIGNyaWFyIHVtYSBub3ZhIG1lbnNhZ2VtIHByb2N1cmUgcG9yIHVtIGdyYW5k
+ZSBib3TDo28gYXp1bCBubyBjYW50byBzdXBlcmlvciBlc3F1ZXJkby4gVm9jw6ogcG9kZSBhZGljaW
+9uYXIgbWFyY2Fkb3JlcyBjbGljYW5kbyBubyBzaW5hbCBkZSAiKyIgYWJhaXhvIGRvIGFzc3VudG8g
+ZGEgbWVuc2FnZW0uIFZvY8OqIHZpc3VhbGl6YSBvIGVzdGFkbyBkZSBjcmlwdG9ncmFmaWEgZGFzIG
+1lbnNhZ2VucyBsb2dvIGFiYWl4byBkYXMgaW5mb3JtYcOnw7VlcyBkbyByZW1ldGVudGUuCgoKClNv
+YnJlIGVzdGEgbWVuc2FnZW0gZSBzZXUgZXN0YWRvIGRlIGNyaXB0b2dyYWZpYQoKRXN0YSBtZW5zYW
+dlbSBuw6NvIGZvaSBjcmlwdG9ncmFmYWRhLiBFbSBvdXRyYXMgcGFsYXZyYXMsIGVsYSBwb2Rlcmlh
+IHRlciBzaWRvIGxpZGEgcG9yIG91dHJhcyBwZXNzb2FzIGVtIGFsZ3VtIHBvbnRvIGR1cmFudGUgYS
+B0cmFuc21pc3PDo28sIGNvbW8gZW0gcXVhbHF1ZXIgb3V0cm8gY2xpZW50ZSBkZSBlbWFpbC4KClBh
+cmEgZW52aWFyIG1lbnNhZ2VucyBjcmlwdG9ncmFmYWRhcyBubyBQaXhlbGF0ZWQsIGV4aXN0ZW0gMi
+Bwb3NzaWJpbGlkYWRlczoKCuKAoiBlbnZpYXIgdW0gZW1haWwgcGFyYSBvdXRyYSBjb250YSBkbyBQ
+aXhlbGF0ZWQ6IGEgbWVuc2FnZW0gw6kgZW52aWFkYSBjcmlwdG9ncmFmYWRhIGUgYXNzaW5hZGEgcG
+9yIHBhZHLDo287CuKAoiBlbnZpYXIgdW0gZW1haWwgcGFyYSBvdXRyYXMgY29udGFzOiBhbyBjcmlh
+ciB1bWEgbWVuc2FnZW0sIGRpZ2l0ZSBvIGVuZGVyZcOnbyBkZSBlbWFpbCBkbyBkZXN0aW5hdMOhcm
+lvLiBTZSBqdW50byBhbyBlbmRlcmXDp28gYXBhcmVjZXIgdW0gY2FkZWFkbyBmZWNoYWRvLCBvIGVt
+YWlsIGVzdGFyw6EgY3JpcHRvZ3JhZmFkbzsgc2UgZXN0aXZlciBhYmVydG8sIGEgbWVuc2FnZW0gdm
+FpIG5vcm1hbG1lbnRlIGNvbW8gcXVhbHF1ZXIgb3V0cm8gZW1haWwuIE8gUGl4ZWxhdGVkIGZheiB0
+dWRvIGF1dG9tYXRpY2FtZW50ZS4gOkQKCgoKVW0gcG91Y28gbWFpcyBzb2JyZSBvIFBpeGVsYXRlZA
+oKUGl4ZWxhdGVkIMOpIHVtIHByb2pldG8gZGUgY8OzZGlnby1hYmVydG8gbGljZW5jaWFkbyBzb2Ig
+QUdQTCAzLjAuIMOJIGNvbXBvc3RvIGRlIGR1YXMgcGFydGVzIHByaW5jaXBhaXMsIG8gY2xpZW50ZS
+B3ZWIgKHF1ZSB2b2PDqiBlc3TDoSB1c2FuZG8gYWdvcmEpIGUgYSBwbGF0YWZvcm1hIChvIHNlcnZp
+ZG9yIHBvciB0csOhcyBkbyBzaW5hbCBkZSAiQCIsIHF1ZSBwcm92w6ogbyBzZXJ2acOnbyBkZSBlbW
+FpbCBxdWUgdm9jw6ogdXNhcsOhIHBhcmEgbWFuZGFyIGUgcmVjZWJlciBtZW5zYWdlbnMpLiBWb2PD
+qiBwb2RlIGFwcmVuZGVyIG1haXMgdmlzaXRhbmRvIGh0dHBzOi8vcGl4ZWxhdGVkLXByb2plY3Qub3
+JnLy4KCkFwcm92ZWl0ZSBzZXUgZW1haWwgc2VndXJvIQo=
 --000boundary000
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<p>
-Bem vindo ao Pixelated Mail, um email moderno com criptografia.
-</p>
-<p>
-Pixelated Mail =C3=A9 um projeto de c=C3=B3digo-aberto que desenvolve um em=
-ail seguro para o seu navegador.
-</p>
-<p>
-Como usar
-</p>
+<h1>Bem vindo ao Pixelated Mail, um email moderno com criptografia.</h1>
+
+<p>Pixelated Mail =C3=A9 um projeto de c=C3=B3digo-aberto que desenvolve um em=
+ail seguro para o seu navegador.</p>
+
+<h2>Como usar</h2>
+
 <p>
 O Pixelated Mail funciona como qualquer outro cliente de email. =C3=80 esqu=
 erda, voc=C3=AA vai encontrar a barra de navega=C3=A7=C3=A3o com acesso a t=
@@ -70,9 +67,9 @@ Para criar uma nova mensagem procure por um grande bot=C3=A3o azul no canto=
 e "+" abaixo do assunto da mensagem. Voc=C3=AA visualiza o estado de cripto=
 grafia das mensagens logo abaixo das informa=C3=A7=C3=B5es do remetente.
 </p>
-<p>
-Sobre esta mensagem e seu estado de criptografia
-</p>
+
+<h2>Sobre esta mensagem e seu estado de criptografia</h2>
+
 <p>
 Esta mensagem n=C3=A3o foi criptografada. Em outras palavras, ela poderia t=
 er sido lida por outras pessoas em algum ponto durante a transmiss=C3=A3o, =
@@ -81,32 +78,25 @@ como em qualquer outro cliente de email.
 <p>
 Para enviar mensagens criptografadas no Pixelated, existem 2 possibilidades:
 </p>
+
 <ul>
-<li>
-enviar um email para outra conta do Pixelated: a mensagem =C3=A9 =
-enviada criptografada e assinada por padr=C3=A3o;
-</li>
-<li>
-enviar um email para outras contas: ao criar uma mensagem, digite=
+<li>enviar um email para outra conta do Pixelated: a mensagem =C3=A9 =
+enviada criptografada e assinada por padr=C3=A3o;</li>
+<li>enviar um email para outras contas: ao criar uma mensagem, digite=
  o endere=C3=A7o de email do destinat=C3=A1rio. Se junto ao endere=C3=A7o a=
 parecer um cadeado fechado, o email estar=C3=A1 criptografado; se estiver a=
 berto, a mensagem vai normalmente como qualquer outro email. O Pixelated fa=
-z tudo automaticamente :)
-</li>
+z tudo automaticamente. :D</li>
 </ul>
 
-<p>
-Um pouco mais sobre o Pixelated
-</p>
-<p>
-Pixelated =C3=A9 um projeto de c=C3=B3digo-aberto licenciado sob AGPL 3.0. =
+<h2>Um pouco mais sobre o Pixelated</h2>
+
+<p>Pixelated =C3=A9 um projeto de c=C3=B3digo-aberto licenciado sob AGPL 3.0. =
 =C3=89 composto de duas partes principais, o cliente web (que voc=C3=AA est=
 =C3=A1 usando agora) e a plataforma (o servidor por tr=C3=A1s do sinal de "=
 @", que prov=C3=AA o servi=C3=A7o de email que voc=C3=AA usar=C3=A1 para ma=
 ndar e receber mensagens). Voc=C3=AA pode aprender mais visitando https://p=
-ixelated-project.org/.
-</p>
-<p>
-Aproveite seu email seguro!
-</p>
+ixelated-project.org/.</p>
+
+<p>Aproveite seu email seguro!</p>
 --000boundary000--
