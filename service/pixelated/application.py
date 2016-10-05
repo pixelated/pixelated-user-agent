@@ -45,6 +45,7 @@ from pixelated.support.loglinegenerator import ILogLineGenerator
 
 log = Logger()
 
+
 class UserAgentMode(object):
     def __init__(self, is_single_user):
         self.is_single_user = is_single_user
