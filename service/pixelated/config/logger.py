@@ -16,7 +16,7 @@
 
 import logging
 import os
-from twisted.python import log
+from twisted.logger import globalLogBeginner, STDLibLogObserver
 
 
 class PrivateKeyFilter(logging.Filter):
@@ -38,5 +38,6 @@ def init(debug=False):
 
     logging.getLogger('gnupg').addFilter(PrivateKeyFilter())
 
-    observer = log.PythonLoggingObserver()
-    observer.start()
+    observers = [STDLibLogObserver()]
+
+    globalLogBeginner.beginLoggingTo(observers)
