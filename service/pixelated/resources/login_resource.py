@@ -114,9 +114,6 @@ class LoginResource(BaseResource):
         with open(os.path.join(self._startup_folder, 'Interstitial.html')) as f:
             self.interstitial = f.read()
 
-    def set_portal(self, portal):
-        self._portal = portal
-
     def getChild(self, path, request):
         if path == '':
             return self
