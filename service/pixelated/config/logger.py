@@ -16,7 +16,9 @@
 
 import logging
 import os
-from twisted.logger import globalLogBeginner, STDLibLogObserver
+import sys
+import time
+from twisted.logger import globalLogBeginner, FileLogObserver
 
 
 class PrivateKeyFilter(logging.Filter):
@@ -38,6 +40,12 @@ def init(debug=False):
 
     logging.getLogger('gnupg').addFilter(PrivateKeyFilter())
 
-    observers = [STDLibLogObserver()]
+    def formatter(event):
+        event['log_time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(event['log_time']))
+        event['log_level'] = event['log_level'].name.upper()
+        logstring = u'{log_time} [{log_namespace}] {log_level} ' + event['log_format'] + '\n'
+        return logstring.format(**event)
+
+    observers = [FileLogObserver(sys.stdout, formatter)]
 
     globalLogBeginner.beginLoggingTo(observers)
