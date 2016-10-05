@@ -59,6 +59,7 @@ define(
 
         if(data.mail.mailbox === 'sent') {
           encrypted = undefined;
+          signed = undefined;
         }
 
         this.$node.html(templates.mails.fullView({
