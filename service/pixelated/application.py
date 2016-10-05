@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import logging
 import os
 
 from OpenSSL import SSL
@@ -22,6 +21,7 @@ from OpenSSL import crypto
 from leap.common.events import (server as events_server,
                                 register, catalog as events)
 from leap.soledad.common.errors import InvalidAuthTokenError
+from twisted.logger import Logger
 from twisted.conch import manhole_tap
 from twisted.cred import portal
 from twisted.cred.checkers import AllowAnonymousAccess, FilePasswordDB
@@ -43,8 +43,7 @@ from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
 from pixelated.support.loglinegenerator import ILogLineGenerator
 
-log = logging.getLogger(__name__)
-
+log = Logger()
 
 class UserAgentMode(object):
     def __init__(self, is_single_user):
