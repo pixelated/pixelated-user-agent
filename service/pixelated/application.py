@@ -174,7 +174,7 @@ def set_up_protected_resources(root_resource, provider, services_factory, checke
     session_checker = SessionChecker(services_factory)
     anonymous_resource = LoginResource(services_factory, disclaimer_banner=banner)
 
-    realm = PixelatedRealm()
+    realm = PixelatedRealm(root_resource, anonymous_resource)
     _portal = portal.Portal(realm, [checker, session_checker, AllowAnonymousAccess()])
 
     protected_resource = PixelatedAuthSessionWrapper(_portal, root_resource, anonymous_resource, [])
