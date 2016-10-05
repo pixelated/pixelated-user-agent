@@ -88,10 +88,6 @@ class SessionChecker(object):
 class PixelatedRealm(object):
     implements(portal.IRealm)
 
-    def __init__(self, root_resource, anonymous_resource):
-        self._root_resource = root_resource
-        self._anonymous_resource = anonymous_resource
-
     def requestAvatar(self, avatarId, mind, *interfaces):
         if IResource in interfaces:
             return IResource, avatarId, lambda: None
