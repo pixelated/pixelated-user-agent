@@ -4,7 +4,6 @@ mock==2.0.0
 httmock==1.2.2
 mockito==0.5.2
 funkload==1.16.1
-tornado==4.0.2
 pep8==1.5.7
 tempdir==0.6
 coverage
