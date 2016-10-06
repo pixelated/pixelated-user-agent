@@ -1,7 +1,5 @@
 import os
 
-import test.support.mockito
-
 from leap.bonafide._srp import SRPAuthError
 from mock import patch
 from mockito import mock, when, any as ANY, verify, verifyZeroInteractions, verifyNoMoreInteractions
@@ -13,6 +11,7 @@ from pixelated.config.sessions import LeapSession
 from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.login_resource import parse_accept_language
 from test.unit.resources import DummySite
+from test.support.mockito import AnswerSelector
 
 
 class TestParseAcceptLanguage(unittest.TestCase):
@@ -194,7 +193,8 @@ class TestLoginPOST(unittest.TestCase):
     def test_login_responds_interstitial_and_add_corresponding_session_to_services_factory(self):
         irrelevant = None
         when(self.portal).login(ANY(), None, IResource).thenReturn((irrelevant, self.leap_session, irrelevant))
-        when(self.services_factory).create_services_from(self.leap_session).thenAnswer(self.mock_user_has_services_setup)
+        with patch('mockito.invocation.AnswerSelector', AnswerSelector):
+            when(self.services_factory).create_services_from(self.leap_session).thenAnswer(self.mock_user_has_services_setup)
 
         d = self.web.get(self.request)
 

@@ -20,13 +20,14 @@ import u1db
 
 from leap.mail.adaptors.soledad_indexes import MAIL_INDEXES
 from leap.soledad.common.document import SoledadDocument
+from mock import patch
 from mockito import mock, when, verify
-import test.support.mockito
 from twisted.internet import defer
 from twisted.trial.unittest import TestCase
 from leap.mail.adaptors.soledad import SoledadMailAdaptor, MailboxWrapper, ContentDocWrapper
 
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
+from test.support.mockito import AnswerSelector
 
 
 class TestLeapAttachmentStore(TestCase):
@@ -37,7 +38,8 @@ class TestLeapAttachmentStore(TestCase):
         self.mbox_uuid_by_name = {}
         self.mbox_soledad_docs = []
 
-        when(self.soledad).get_from_index('by-type', 'mbox').thenAnswer(lambda: defer.succeed(self.mbox_soledad_docs))
+        with patch('mockito.invocation.AnswerSelector', AnswerSelector):
+            when(self.soledad).get_from_index('by-type', 'mbox').thenAnswer(lambda: defer.succeed(self.mbox_soledad_docs))
         self._mock_get_mailbox('INBOX')
 
     @defer.inlineCallbacks
@@ -134,7 +136,7 @@ class TestLeapAttachmentStore(TestCase):
     def _mock_get_soledad_doc(self, doc_id, doc):
         soledad_doc = SoledadDocument(doc_id, json=json.dumps(doc.serialize()))
 
-        # when(self.soledad).get_doc(doc_id).thenReturn(defer.succeed(soledad_doc))
-        when(self.soledad).get_doc(doc_id).thenAnswer(lambda: defer.succeed(soledad_doc))
+        with patch('mockito.invocation.AnswerSelector', AnswerSelector):
+            when(self.soledad).get_doc(doc_id).thenAnswer(lambda: defer.succeed(soledad_doc))
 
         self.doc_by_id[doc_id] = soledad_doc

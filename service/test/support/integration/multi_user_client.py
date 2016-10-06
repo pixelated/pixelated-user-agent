@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from mock import patch
 from mockito import mock, when, any as ANY
 from twisted.internet import defer
 
@@ -25,8 +26,8 @@ import pixelated.config.services
 from pixelated.resources.root_resource import RootResource
 from test.support.integration import AppTestClient
 from test.support.integration.app_test_client import AppTestAccount, StubSRPChecker
-import test.support.mockito
 from test.support.test_helper import request_mock
+from test.support.mockito import AnswerSelector
 
 
 class MultiUserClient(AppTestClient):
@@ -63,7 +64,8 @@ class MultiUserClient(AppTestClient):
         self.user_auth = session
 
         when(LeapSessionFactory).create(username, password, session).thenReturn(leap_session)
-        when(leap_session).initial_sync().thenAnswer(lambda: defer.succeed(None))
+        with patch('mockito.invocation.AnswerSelector', AnswerSelector):
+            when(leap_session).initial_sync().thenAnswer(lambda: defer.succeed(None))
         when(pixelated.config.services).Services(ANY()).thenReturn(self.services)
 
         request = request_mock(path='/login', method="POST", body={'username': username, 'password': password})

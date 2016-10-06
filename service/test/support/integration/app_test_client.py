@@ -155,6 +155,7 @@ class StubServicesFactory(ServicesFactory):
         yield defer.succeed(None)
 
 
+# TODO: some methods are used by 1 test class only, maybe push them down there
 class AppTestClient(object):
     INDEX_KEY = '\xde3?\x87\xff\xd9\xd3\x14\xf0\xa7>\x1f%C{\x16.\\\xae\x8c\x13\xa7\xfb\x04\xd4]+\x8d_\xed\xd1\x8d\x0bI' \
                 '\x8a\x0e\xa4tm\xab\xbf\xb4\xa5\x99\x00d\xd5w\x9f\x18\xbc\x1d\xd4_W\xd2\xb6\xe8H\x83\x1b\xd8\x9d\xad'
@@ -273,6 +274,7 @@ class AppTestClient(object):
     def account_for(self, username):
         return self.accounts[username]
 
+    # TODO: remove
     def add_mail_to_user_inbox(self, input_mail, username):
         return self.account_for(username).mail_store.add_mail('INBOX', input_mail.raw)
 
@@ -301,6 +303,7 @@ class AppTestClient(object):
         mail_sender.sendmail.side_effect = lambda mail: succeed(mail)
         return mail_sender
 
+    # TODO: remove
     def _generate_soledad_test_folder_name(self, soledad_test_folder='/tmp/soledad-test/test'):
         return os.path.join(soledad_test_folder, str(uuid.uuid4()))
 
@@ -318,6 +321,7 @@ class AppTestClient(object):
         res = yield res
         defer.returnValue([ResponseMail(m) for m in res['mails']])
 
+    # TODO: remove
     @defer.inlineCallbacks
     def get_mails_by_mailbox_name(self, mbox_name):
         mail_ids = yield self.mail_store.get_mailbox_mail_ids(mbox_name)
@@ -357,6 +361,7 @@ class AppTestClient(object):
         res, req = self.get('/mail/%s' % mail_ident)
         return res
 
+    # TODO: remove
     def delete_mail(self, mail_ident):
         res, req = self.delete("/mail/%s" % mail_ident)
         return res

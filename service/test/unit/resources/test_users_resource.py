@@ -1,5 +1,3 @@
-import test.support.mockito
-
 from mockito import mock, when, verify
 from twisted.trial import unittest
 from twisted.web.test.requesthelper import DummyRequest
