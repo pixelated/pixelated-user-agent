@@ -179,12 +179,12 @@ class LeapSession(object):
         return self.provider.address_for(name)
 
     def close(self):
-        self._is_closed = True
         self.stop_background_jobs()
         unregister(events.KEYMANAGER_FINISHED_KEY_GENERATION, uid=self.account_email())
         self.soledad.close()
         self._close_account()
         self.remove_from_cache()
+        self._is_closed = True
 
     @property
     def is_closed(self):
