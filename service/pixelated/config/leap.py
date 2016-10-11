@@ -5,9 +5,9 @@ from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer, threads
 from leap.common.events import (server as events_server)
 from leap.soledad.common.errors import InvalidAuthTokenError
-from leap.bonafide._srp import SRPAuthError
-from leap.bonafide.session import Session
-from leap.bonafide.provider import Api
+from leap.bitmask.bonafide._srp import SRPAuthError
+from leap.bitmask.bonafide.session import Session
+from leap.bitmask.bonafide.provider import Api
 from pixelated.config import credentials
 from pixelated.config import leap_config
 from pixelated.config.authentication import Authentication

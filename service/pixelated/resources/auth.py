@@ -29,7 +29,7 @@ from twisted.web import util
 from twisted.cred import error
 from twisted.web.resource import IResource, ErrorPage
 
-from leap.bonafide._srp import SRPAuthError
+from leap.bitmask.bonafide._srp import SRPAuthError
 from pixelated.config.leap import create_leap_session, authenticate
 from pixelated.resources import IPixelatedSession
 
