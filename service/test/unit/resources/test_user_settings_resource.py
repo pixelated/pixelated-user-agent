@@ -7,7 +7,7 @@ from pixelated.resources.user_settings_resource import UserSettingsResource, FIN
 from mockito import mock, when, any
 from test.unit.resources import DummySite
 from twisted.web.test.requesthelper import DummyRequest
-from leap.keymanager.keys import OpenPGPKey
+from leap.bitmask.keymanager.keys import OpenPGPKey
 from twisted.internet import defer
 from twisted.python.failure import Failure
 

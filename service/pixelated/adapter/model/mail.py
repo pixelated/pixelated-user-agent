@@ -22,7 +22,7 @@ from hashlib import sha256
 import binascii
 from email.MIMEMultipart import MIMEMultipart
 from email.mime.nonmultipart import MIMENonMultipart
-import leap.mail.walk as walk
+import leap.bitmask.mail.walk as walk
 from pixelated.adapter.model.status import Status
 from pixelated.support import date
 

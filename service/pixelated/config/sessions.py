@@ -12,8 +12,8 @@ from twisted.internet import defer, threads, reactor
 from leap.soledad.common.crypto import WrongMacError, UnknownMacMethodError
 from leap.soledad.client import Soledad
 from pixelated.bitmask_libraries.keymanager import Keymanager
-from leap.mail.incoming.service import IncomingMail
-from leap.mail.mail import Account
+from leap.bitmask.mail.incoming.service import IncomingMail
+from leap.bitmask.mail.mail import Account
 import leap.common.certs as leap_certs
 from leap.common.events import (
     register, unregister,

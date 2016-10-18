@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from leap.keymanager import KeyManager, KeyNotFound
+from leap.bitmask.keymanager import KeyManager, KeyNotFound
 from pixelated.config import leap_config
 from twisted.internet import defer
 import logging

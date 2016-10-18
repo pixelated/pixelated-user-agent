@@ -25,16 +25,16 @@ from uuid import uuid4
 from email.parser import Parser
 import os
 from leap.soledad.common.document import SoledadDocument
-from leap.mail.adaptors.soledad_indexes import MAIL_INDEXES
+from leap.bitmask.mail.adaptors.soledad_indexes import MAIL_INDEXES
 from twisted.internet.defer import FirstError
 from twisted.trial.unittest import TestCase
-from leap.mail import constants
+from leap.bitmask.mail import constants
 from twisted.internet import defer
 from mock import patch
 from mockito import mock, when, verify, any as ANY
-from leap.mail.adaptors.soledad import SoledadMailAdaptor, MailboxWrapper, ContentDocWrapper
+from leap.bitmask.mail.adaptors.soledad import SoledadMailAdaptor, MailboxWrapper, ContentDocWrapper
 import pkg_resources
-from leap.mail.mail import Message
+from leap.bitmask.mail.mail import Message
 from pixelated.adapter.mailstore import underscore_uuid
 
 from pixelated.adapter.mailstore.leap_mailstore import LeapMailStore, LeapMail
@@ -242,7 +242,7 @@ class TestLeapMailStore(TestCase):
 
         message = yield store.add_mail('INBOX', input_mail.as_string())
 
-        expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'filename.txt', 'encoding': 'base64', 'size': 197, 'content-type': 'application/octet-stream'}]
+        expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'filename.txt', 'encoding': 'base64', 'size': 48, 'content-type': 'application/octet-stream'}]
         self.assertEqual(expected, message.as_dict()['attachments'])
 
     @defer.inlineCallbacks
@@ -257,7 +257,7 @@ class TestLeapMailStore(TestCase):
 
         message = yield store.add_mail('INBOX', input_mail.as_string())
 
-        expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'super_nice_photo.jpg', 'encoding': 'base64', 'size': 202, 'content-type': 'application/octet-stream'}]
+        expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'super_nice_photo.jpg', 'encoding': 'base64', 'size': 48, 'content-type': 'application/octet-stream'}]
         self.assertEqual(expected, message.as_dict()['attachments'])
 
     @defer.inlineCallbacks
@@ -274,7 +274,7 @@ class TestLeapMailStore(TestCase):
 
         message = yield store.add_mail('INBOX', input_mail.as_string())
 
-        expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'filename.txt', 'encoding': 'base64', 'size': 197, 'content-type': 'application/octet-stream'}]
+        expected = [{'ident': self._cdoc_phash_from_message(mocked_message, 2), 'name': 'filename.txt', 'encoding': 'base64', 'size': 48, 'content-type': 'application/octet-stream'}]
         self.assertEqual(expected, message.as_dict()['attachments'])
 
     def test_extract_attachment_filename_with_or_without_quotes(self):

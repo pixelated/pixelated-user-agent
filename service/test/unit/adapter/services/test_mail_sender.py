@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from leap.mail.outgoing.service import OutgoingMail
+from leap.bitmask.mail.outgoing.service import OutgoingMail
 from twisted.mail.smtp import User
 from twisted.trial import unittest
 

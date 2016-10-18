@@ -17,8 +17,8 @@ import re
 from email.header import decode_header
 from uuid import uuid4
 
-from leap.mail.adaptors.soledad import SoledadMailAdaptor
-from leap.mail.mail import Message
+from leap.bitmask.mail.adaptors.soledad import SoledadMailAdaptor
+from leap.bitmask.mail.mail import Message
 from twisted.internet import defer
 from twisted.internet.defer import FirstError, DeferredList
 

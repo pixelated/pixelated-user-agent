@@ -1,7 +1,5 @@
 --index-url https://pypi.python.org/simple/
 
-https://launchpad.net/dirspec/stable-13-10/13.10/+download/dirspec-13.10.tar.gz
-https://launchpad.net/u1db/stable-13-10/13.10/+download/u1db-13.10.tar.bz2
 pyasn1==0.1.8
 requests==2.9.1
 srp==1.0.4
@@ -13,6 +11,4 @@ Twisted==16.1.1
 -e 'git+https://github.com/pixelated/soledad.git@develop#egg=leap.soledad.common&subdirectory=common/'
 -e 'git+https://github.com/pixelated/soledad.git@develop#egg=leap.soledad.client&subdirectory=client/'
 -e 'git+https://github.com/pixelated/soledad.git@develop#egg=leap.soledad.server&subdirectory=server/'
--e 'git+https://github.com/pixelated/keymanager.git@develop#egg=leap.keymanager'
--e 'git+https://github.com/pixelated/leap_mail.git@develop#egg=leap.mail'
 -e .

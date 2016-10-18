@@ -13,8 +13,8 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from leap.keymanager import documents as leap_doc
-from leap.keymanager.keys import OpenPGPKey
+from leap.bitmask.keymanager import documents as leap_doc
+from leap.bitmask.keymanager.keys import OpenPGPKey
 
 from twisted.internet import defer
 import logging

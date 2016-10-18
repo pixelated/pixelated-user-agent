@@ -15,23 +15,25 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 import multiprocessing
-from leap.mail.adaptors.soledad import SoledadMailAdaptor
-from mockito import mock
 import os
 import shutil
 import time
 import uuid
 import random
+from tempdir import TempDir
 
-
-from leap.mail.mail import Account
-from leap.soledad.client import Soledad
 from mock import Mock
+from mockito import mock
+
+from twisted.cred import checkers, credentials
 from twisted.internet import reactor, defer
 from twisted.internet.defer import succeed
 from twisted.web.resource import getChildForRequest
 from zope.interface import implementer
-from twisted.cred import checkers, credentials
+
+from leap.bitmask.mail.mail import Account
+from leap.soledad.client import Soledad
+from leap.bitmask.mail.adaptors.soledad import SoledadMailAdaptor
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
 from pixelated.adapter.services.feedback_service import FeedbackService
 from pixelated.application import UserAgentMode, set_up_protected_resources
@@ -42,7 +44,6 @@ from pixelated.config.authentication import Authentication
 
 from pixelated.adapter.mailstore import LeapMailStore
 from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
-
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.services.mail_service import MailService
@@ -50,7 +51,6 @@ from pixelated.resources.root_resource import RootResource
 from test.support.integration.model import MailBuilder
 from test.support.test_helper import request_mock
 from test.support.integration.model import ResponseMail
-from tempdir import TempDir
 
 
 class AppTestAccount(object):

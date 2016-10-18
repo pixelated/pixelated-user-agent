@@ -18,7 +18,7 @@ from os.path import isfile
 from mailbox import Maildir, mbox, MaildirMessage
 import random
 
-from leap.mail.adaptors.soledad import MetaMsgDocWrapper
+from leap.bitmask.mail.adaptors.soledad import MetaMsgDocWrapper
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
 from pixelated.adapter.mailstore.maintenance import SoledadMaintenance
@@ -26,7 +26,7 @@ from pixelated.config.leap import initialize_leap_single_user
 from pixelated.config import logger, arguments
 import logging
 
-from leap.mail.constants import MessageFlags
+from leap.bitmask.mail.constants import MessageFlags
 from pixelated.support.mail_generator import MailGenerator
 
 REPAIR_COMMAND = 'repair'

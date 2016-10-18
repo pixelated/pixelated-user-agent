@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from email.mime.application import MIMEApplication
 from time import sleep
-from leap.mail.mail import Message
+from leap.bitmask.mail.mail import Message
 from common import *
 from test.support.integration import MailBuilder
 from behave import given

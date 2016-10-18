@@ -16,15 +16,15 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 from uuid import uuid4
-import u1db
 
-from leap.mail.adaptors.soledad_indexes import MAIL_INDEXES
+from leap.soledad.common import l2db
+from leap.bitmask.mail.adaptors.soledad_indexes import MAIL_INDEXES
 from leap.soledad.common.document import SoledadDocument
 from mock import patch
 from mockito import mock, when, verify
 from twisted.internet import defer
 from twisted.trial.unittest import TestCase
-from leap.mail.adaptors.soledad import SoledadMailAdaptor, MailboxWrapper, ContentDocWrapper
+from leap.bitmask.mail.adaptors.soledad import SoledadMailAdaptor, MailboxWrapper, ContentDocWrapper
 
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
 from test.support.mockito import AnswerSelector
@@ -84,7 +84,7 @@ class TestLeapAttachmentStore(TestCase):
 
         store = LeapAttachmentStore(self.soledad)
 
-        when(self.soledad).create_doc(cdoc_serialized, doc_id=attachment_id).thenRaise(u1db.errors.RevisionConflict())
+        when(self.soledad).create_doc(cdoc_serialized, doc_id=attachment_id).thenRaise(l2db.errors.RevisionConflict())
 
         actual_attachment_id = yield store.add_attachment(content, content_type)
 
