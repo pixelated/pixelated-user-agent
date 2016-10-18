@@ -25,7 +25,6 @@ from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.config.sessions import LeapSessionFactory
 from leap.auth import SRPAuth
 from leap.common.events import server as events_server
-import pixelated.extensions.shared_db
 
 
 logger = logging.getLogger(__name__)
