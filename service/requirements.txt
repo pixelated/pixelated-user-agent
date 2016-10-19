@@ -1,5 +1,6 @@
 --index-url https://pypi.python.org/simple/
 
+gnupg
 pyasn1==0.1.8
 requests==2.9.1
 srp==1.0.4
