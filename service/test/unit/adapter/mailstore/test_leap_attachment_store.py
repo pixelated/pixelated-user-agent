@@ -60,7 +60,7 @@ class TestLeapAttachmentStore(TestCase):
         cdoc_serialized = {'content_transfer_encoding': 'base64', 'lkf': [], 'content_disposition': 'attachment',
                            'ctype': '', 'raw': 'dGhpcyBpcyBzb21lIGF0dGFjaG1lbnQgY29udGVudA==',
                            'phash': '9863729729D2E2EE8E52F0A7115CE33AD18DDA4B58E49AE08DD092D1C8E699B0',
-                           'content_type': 'text/plain', 'type': 'cnt'}
+                           'content_type': 'text/plain', 'type': 'cnt', 'charset': None}
 
         store = LeapAttachmentStore(self.soledad)
 
