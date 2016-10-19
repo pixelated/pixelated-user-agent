@@ -14,27 +14,27 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import logging
 import re
 
+from zope.interface import implements, implementer, Attribute
 from twisted.cred.checkers import ANONYMOUS
 from twisted.cred.credentials import ICredentials
 from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer
 from twisted.web._auth.wrapper import UnauthorizedResource
 from twisted.web.error import UnsupportedMethod
-from zope.interface import implements, implementer, Attribute
 from twisted.cred import portal, checkers, credentials
 from twisted.web import util
 from twisted.cred import error
 from twisted.web.resource import IResource, ErrorPage
+from twisted.logger import Logger
 
 from leap.bitmask.bonafide._srp import SRPAuthError
 from pixelated.config.leap import create_leap_session, authenticate
 from pixelated.resources import IPixelatedSession
 
 
-log = logging.getLogger(__name__)
+log = Logger()
 
 
 @implementer(checkers.ICredentialsChecker)

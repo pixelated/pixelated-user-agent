@@ -15,19 +15,20 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import re
 import getpass
-import logging
 import sys
+
+from twisted.logger import Logger
+
+from leap.auth import SRPAuth
+from leap.common.events import server as events_server
 
 from pixelated.config import arguments
 from pixelated.config import logger as logger_config
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.config.sessions import LeapSessionFactory
-from leap.auth import SRPAuth
-from leap.common.events import server as events_server
 
-
-logger = logging.getLogger(__name__)
+logger = Logger()
 
 
 def register(

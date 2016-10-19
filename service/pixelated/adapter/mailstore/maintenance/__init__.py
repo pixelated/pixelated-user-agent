@@ -17,7 +17,7 @@ from leap.bitmask.keymanager import documents as leap_doc
 from leap.bitmask.keymanager.keys import OpenPGPKey
 
 from twisted.internet import defer
-import logging
+from twisted.logger import Logger
 
 
 TYPE_OPENPGP_KEY = 'OpenPGPKey'
@@ -25,7 +25,7 @@ TYPE_OPENPGP_ACTIVE = 'OpenPGPKey-active'
 
 KEY_DOC_TYPES = {TYPE_OPENPGP_ACTIVE, TYPE_OPENPGP_KEY}
 
-logger = logging.getLogger(__name__)
+logger = Logger()
 
 
 def _is_key_doc(doc):

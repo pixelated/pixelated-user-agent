@@ -3,15 +3,14 @@ from __future__ import absolute_import
 import os
 import errno
 import traceback
-
 import requests
-import logging
-
 import sys
+
 from twisted.internet import defer, threads, reactor
+from twisted.logger import Logger
+
 from leap.soledad.common.crypto import WrongMacError, UnknownMacMethodError
 from leap.soledad.client import Soledad
-from pixelated.bitmask_libraries.keymanager import Keymanager
 from leap.bitmask.mail.incoming.service import IncomingMail
 from leap.bitmask.mail.mail import Account
 import leap.common.certs as leap_certs
@@ -20,12 +19,13 @@ from leap.common.events import (
     catalog as events
 )
 
+from pixelated.bitmask_libraries.keymanager import Keymanager
 from pixelated.adapter.mailstore import LeapMailStore
 from pixelated.config import leap_config
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.smtp import LeapSMTPConfig
 
-logger = logging.getLogger(__name__)
+logger = Logger()
 
 
 class LeapSessionFactory(object):

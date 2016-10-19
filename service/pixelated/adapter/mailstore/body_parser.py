@@ -14,11 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from email.parser import Parser
 import re
-import logging
+from email.parser import Parser
 
-logger = logging.getLogger(__name__)
+from twisted.logger import Logger
+
+logger = Logger()
 
 
 def _parse_charset_header(content_type_and_charset_header, default_charset='us-ascii'):

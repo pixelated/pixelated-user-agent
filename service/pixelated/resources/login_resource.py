@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import logging
 import os
 from xml.sax import SAXParseException
 
@@ -27,11 +26,13 @@ from twisted.web.resource import IResource, NoResource
 from twisted.web.server import NOT_DONE_YET
 from twisted.web.static import File
 from twisted.web.template import Element, XMLFile, renderElement, renderer
+from twisted.logger import Logger
+
 from pixelated.resources import handle_error_deferred
 from pixelated.adapter.welcome_mail import add_welcome_mail
 from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
 
-log = logging.getLogger(__name__)
+log = Logger()
 
 
 def _get_startup_folder():

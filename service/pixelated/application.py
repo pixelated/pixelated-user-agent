@@ -140,7 +140,6 @@ def add_top_level_system_callbacks(deferred, services_factory):
 
 
 def _start_mode(args, resource, services_factory):
-    log.debug('_start_mode')
     if services_factory.mode.is_single_user:
         deferred = _start_in_single_user_mode(args, resource, services_factory)
     else:

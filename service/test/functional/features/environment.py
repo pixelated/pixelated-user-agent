@@ -13,23 +13,31 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import logging
 import uuid
+import os
 
+from selenium import webdriver
 from crochet import setup, wait_for
-from leap.common.events.server import ensure_server
+
 from twisted.internet import defer
+from twisted.logger import globalLogBeginner, textFileLogObserver, Logger
+
+from test.support.integration import AppTestClient
+from steps.common import *
+
+from leap.common.events.server import ensure_server
 
 from pixelated.application import UserAgentMode
 from pixelated.config.site import PixelatedSite
-from test.support.integration import AppTestClient
-from selenium import webdriver
-
 from pixelated.resources.features_resource import FeaturesResource
-from steps.common import *
-import os
 
 setup()
+
+observers = [textFileLogObserver(open(os.devnull, 'w'))]
+
+globalLogBeginner.beginLoggingTo(observers)
+
+Logger('twisted')
 
 
 @wait_for(timeout=5.0)
@@ -39,7 +47,6 @@ def start_app_test_client(client, mode):
 
 def before_all(context):
     ensure_server()
-    logging.disable('INFO')
     PixelatedSite.disable_csp_requests()
     client = AppTestClient()
     start_app_test_client(client, UserAgentMode(is_single_user=True))

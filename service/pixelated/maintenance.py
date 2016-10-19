@@ -14,26 +14,27 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+import random
 from os.path import isfile
 from mailbox import Maildir, mbox, MaildirMessage
-import random
 
-from leap.bitmask.mail.adaptors.soledad import MetaMsgDocWrapper
 from twisted.internet import reactor, defer
 from twisted.internet.threads import deferToThread
+from twisted.logger import Logger
+
+from leap.bitmask.mail.adaptors.soledad import MetaMsgDocWrapper
+from leap.bitmask.mail.constants import MessageFlags
+
 from pixelated.adapter.mailstore.maintenance import SoledadMaintenance
 from pixelated.config.leap import initialize_leap_single_user
 from pixelated.config import logger, arguments
-import logging
-
-from leap.bitmask.mail.constants import MessageFlags
 from pixelated.support.mail_generator import MailGenerator
 
 REPAIR_COMMAND = 'repair'
 INTEGRITY_CHECK_COMMAND = 'integrity-check'
 
 
-log = logging.getLogger(__name__)
+log = Logger()
 
 
 def initialize():

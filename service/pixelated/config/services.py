@@ -1,5 +1,7 @@
 import os
-import logging
+
+from twisted.internet import defer, reactor
+from twisted.logger import Logger
 
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
 from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
@@ -9,11 +11,11 @@ from pixelated.adapter.services.mail_sender import MailSender
 from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.listeners.mailbox_indexer_listener import listen_all_mailboxes
-from twisted.internet import defer, reactor
 from pixelated.adapter.search.index_storage_key import SearchIndexStorageKey
 from pixelated.adapter.services.feedback_service import FeedbackService
 from pixelated.config import leap_config
-logger = logging.getLogger(__name__)
+
+logger = Logger()
 
 
 class Services(object):

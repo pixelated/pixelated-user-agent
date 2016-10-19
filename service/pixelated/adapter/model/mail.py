@@ -14,20 +14,22 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import re
-import logging
+import binascii
 from email.mime.text import MIMEText
 from email.header import Header
 from hashlib import sha256
-
-import binascii
 from email.MIMEMultipart import MIMEMultipart
 from email.mime.nonmultipart import MIMENonMultipart
-import leap.bitmask.mail.walk as walk
+
+from twisted.logger import Logger
+
+from leap.bitmask.mail import walk
+
 from pixelated.adapter.model.status import Status
 from pixelated.support import date
 
 
-logger = logging.getLogger(__name__)
+logger = Logger()
 
 
 class Mail(object):

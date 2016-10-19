@@ -1,13 +1,16 @@
 from __future__ import absolute_import
-import logging
 from collections import namedtuple
+
 from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer, threads
+from twisted.logger import Logger
+
 from leap.common.events import (server as events_server)
 from leap.soledad.common.errors import InvalidAuthTokenError
 from leap.bitmask.bonafide._srp import SRPAuthError
 from leap.bitmask.bonafide.session import Session
 from leap.bitmask.bonafide.provider import Api
+
 from pixelated.config import credentials
 from pixelated.config import leap_config
 from pixelated.config.authentication import Authentication
@@ -15,7 +18,7 @@ from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.config.sessions import LeapSessionFactory
 
-log = logging.getLogger(__name__)
+log = Logger()
 
 
 Credentials = namedtuple('Credentials', 'username, password')

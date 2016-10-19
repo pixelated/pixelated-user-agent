@@ -13,12 +13,14 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from leap.bitmask.keymanager import KeyManager, KeyNotFound
-from pixelated.config import leap_config
 from twisted.internet import defer
-import logging
+from twisted.logger import Logger
 
-logger = logging.getLogger(__name__)
+from leap.bitmask.keymanager import KeyManager, KeyNotFound
+
+from pixelated.config import leap_config
+
+logger = Logger()
 
 
 class UploadKeyError(Exception):
