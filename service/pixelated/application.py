@@ -28,8 +28,6 @@ from twisted.cred.checkers import AllowAnonymousAccess, FilePasswordDB
 from twisted.internet import defer
 from twisted.internet import reactor
 from twisted.internet import ssl
-from twisted.internet.task import LoopingCall
-from twisted.plugin import getPlugins
 
 from pixelated.adapter.welcome_mail import add_welcome_mail
 from pixelated.config import arguments
@@ -41,7 +39,6 @@ from pixelated.config.site import PixelatedSite
 from pixelated.resources.auth import LeapPasswordChecker, PixelatedRealm, PixelatedAuthSessionWrapper, SessionChecker
 from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
-from pixelated.support.loglinegenerator import ILogLineGenerator
 
 log = Logger()
 
@@ -106,18 +103,6 @@ def initialize():
     log.info('Running the reactor')
     reactor.callWhenRunning(start)
     reactor.run()
-
-
-def start_plugins():
-    log.info('start_plugins')
-
-    def logGeneratedLines():
-        for p in getPlugins(ILogLineGenerator):
-            logLine = p.getLogLine()
-            if logLine is not None:
-                log.debug(logLine)
-
-    LoopingCall(logGeneratedLines).start(1)
 
 
 def add_top_level_system_callbacks(deferred, services_factory):
@@ -209,8 +194,6 @@ def start_site(config, resource):
 
     if config.manhole:
         log.info('Starting the manhole on port 8008')
-
-        start_plugins()
 
         multiService = manhole_tap.makeService(dict(namespace=globals(),
                                                     telnetPort='8008',
