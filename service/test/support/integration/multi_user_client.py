@@ -21,7 +21,7 @@ from pixelated.application import UserAgentMode, set_up_protected_resources
 from pixelated.config.services import ServicesFactory
 
 from pixelated.config.sessions import LeapSessionFactory
-from pixelated.config.authentication import Authentication
+from pixelated.authentication import Authentication
 import pixelated.config.services
 from pixelated.resources.root_resource import RootResource
 from test.support.integration import AppTestClient

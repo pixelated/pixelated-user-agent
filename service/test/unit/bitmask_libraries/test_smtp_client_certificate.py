@@ -19,7 +19,7 @@ import tempdir
 import leap.common.certs as certs
 from mockito import mock, unstub, when, any as ANY
 
-from pixelated.config.authentication import Authentication
+from pixelated.authentication import Authentication
 from pixelated.config.sessions import SmtpClientCertificate
 
 from tempfile import NamedTemporaryFile

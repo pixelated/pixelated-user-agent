@@ -13,7 +13,7 @@ from leap.bitmask.bonafide.provider import Api
 
 from pixelated.config import credentials
 from pixelated.config import leap_config
-from pixelated.config.authentication import Authentication
+from pixelated.authentication import Authentication
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.config.sessions import LeapSessionFactory
