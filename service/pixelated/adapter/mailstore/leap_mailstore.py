@@ -330,7 +330,8 @@ class LeapMailStore(MailStore):
         parser = BodyParser('', content_type='text/plain', content_transfer_encoding='UTF-8')
         # It fix the problem when leap doesn'r found body_phash and returns empty string
         if not isinstance(content_doc, str):
-            parser = BodyParser(content_doc.raw, content_type=content_doc.content_type, content_transfer_encoding=content_doc.content_transfer_encoding)
+            parser = BodyParser(content_doc.raw, content_type=content_doc.content_type,
+                                content_transfer_encoding=content_doc.content_transfer_encoding, charset=content_doc.charset)
 
         defer.returnValue(parser.parsed_content())
 
