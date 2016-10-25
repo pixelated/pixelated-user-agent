@@ -1,29 +1,33 @@
 import re
+from pixelated.config.leap import authenticate
+from leap.bitmask.bonafide._srp import SRPAuthError
 
-
-class Authentication(object):
-    def __init__(self, username, token, uuid, session_id, user_attributes):
-        self.username = username
-        self.token = token
-        self.uuid = uuid
-        self.session_id = session_id
-        self._user_attributes = user_attributes
-
-    def is_admin(self):
-        return self._user_attributes.get('is_admin', False)
+from twisted.cred.error import UnauthorizedLogin
+from twisted.internet.defer import inlineCallbacks
 
 
 class Authenticator(object):
-    def __init__(self, domain):
-        self.domain = domain
+    def __init__(self, leap_provider):
+        self._leap_provider = leap_provider
+        self.domain = leap_provider.server_name
 
+    @inlineCallbacks
     def authenticate(self, username, password):
-        self.username = self.validate_username(username)
-        self.srp_auth(username, password)
+        if self.validate_username(username):
+            yield self._srp_auth(username, password)
+        else:
+            raise UnauthorizedLogin()
+
+    @inlineCallbacks
+    def _srp_auth(self, username, password):
+        try:
+            auth = yield authenticate(self._leap_provider, username, password)
+        except SRPAuthError:
+            raise UnauthorizedLogin()
 
     def validate_username(self, username):
         if '@' not in username:
-            return True
+                return True
         extracted_username = self.extract_username(username)
         return self.username_with_domain(extracted_username) == username
 

@@ -13,7 +13,6 @@ from leap.bitmask.bonafide.provider import Api
 
 from pixelated.config import credentials
 from pixelated.config import leap_config
-from pixelated.authentication import Authentication
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.config.sessions import LeapSessionFactory
@@ -86,3 +85,15 @@ def authenticate(provider, user, password):
 
 def init_monkeypatches():
     import pixelated.extensions.requests_urllib3
+
+
+class Authentication(object):
+    def __init__(self, username, token, uuid, session_id, user_attributes):
+        self.username = username
+        self.token = token
+        self.uuid = uuid
+        self.session_id = session_id
+        self._user_attributes = user_attributes
+
+    def is_admin(self):
+        return self._user_attributes.get('is_admin', False)

@@ -15,13 +15,13 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from mock import patch
 from mockito import mock, when, any as ANY
+from pixelated.config.leap import Authentication
 from twisted.internet import defer
 
 from pixelated.application import UserAgentMode, set_up_protected_resources
 from pixelated.config.services import ServicesFactory
 
 from pixelated.config.sessions import LeapSessionFactory
-from pixelated.authentication import Authentication
 import pixelated.config.services
 from pixelated.resources.root_resource import RootResource
 from test.support.integration import AppTestClient

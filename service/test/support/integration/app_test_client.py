@@ -20,6 +20,8 @@ import shutil
 import time
 import uuid
 import random
+
+from pixelated.config.leap import Authentication
 from tempdir import TempDir
 
 from mock import Mock
@@ -40,7 +42,6 @@ from pixelated.application import UserAgentMode, set_up_protected_resources
 from pixelated.config.sessions import LeapSession
 from pixelated.config.services import Services, ServicesFactory, SingleUserServicesFactory
 from pixelated.config.site import PixelatedSite
-from pixelated.authentication import Authentication
 
 from pixelated.adapter.mailstore import LeapMailStore
 from pixelated.adapter.mailstore.searchable_mailstore import SearchableMailStore
