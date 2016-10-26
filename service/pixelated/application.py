@@ -152,17 +152,16 @@ def _setup_multi_user(args, root_resource, services_factory):
     return protected_resource
 
 
-def set_up_protected_resources(root_resource, provider, services_factory, checker=None, banner=None):
-    if not checker:
-        checker = LeapPasswordChecker(provider)
+def set_up_protected_resources(root_resource, provider, services_factory, checker=None, banner=None, authenticator=None):
+    checker = checker or LeapPasswordChecker(provider)
     session_checker = SessionChecker(services_factory)
 
     realm = PixelatedRealm()
     _portal = portal.Portal(realm, [checker, session_checker, AllowAnonymousAccess()])
 
-    anonymous_resource = LoginResource(services_factory, _portal, disclaimer_banner=banner)
+    anonymous_resource = LoginResource(services_factory, provider, disclaimer_banner=banner, authenticator=authenticator)
     protected_resource = PixelatedAuthSessionWrapper(_portal, root_resource, anonymous_resource, [])
-    root_resource.initialize(_portal, disclaimer_banner=banner)
+    root_resource.initialize(provider, disclaimer_banner=banner, authenticator=authenticator)
     return protected_resource
 
 

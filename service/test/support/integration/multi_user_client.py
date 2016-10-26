@@ -13,8 +13,10 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+from leap.bitmask.bonafide._srp import SRPAuthError
 from mock import patch
 from mockito import mock, when, any as ANY
+from pixelated.authentication import Authenticator
 from pixelated.config.leap import Authentication
 from twisted.internet import defer
 
@@ -49,9 +51,14 @@ class MultiUserClient(AppTestClient):
         self.credentials_checker = StubSRPChecker(leap_provider)
         self.resource = set_up_protected_resources(root_resource, leap_provider, self.service_factory, checker=self.credentials_checker)
 
-    def login(self, username='username', password='password'):
-        if(username == 'username' and password == 'password'):
+    def _mock_bonafide_auth(self, username, password):
+        if username == 'username' and password == 'password':
             self.credentials_checker.add_user(username, password)
+            when(Authenticator)._bonafide_auth(username, password).thenReturn(self.user_auth)
+        else:
+            when(Authenticator)._bonafide_auth(username, password).thenRaise(SRPAuthError)
+
+    def login(self, username='username', password='password'):
         session = Authentication(username, 'some_user_token', 'some_user_uuid', 'session_id', {'is_admin': False})
         leap_session = self._test_account.leap_session
         leap_session.user_auth = session
@@ -62,6 +69,8 @@ class MultiUserClient(AppTestClient):
         self.leap_session = leap_session
         self.services = self._test_account.services
         self.user_auth = session
+
+        self._mock_bonafide_auth(username, password)
 
         when(LeapSessionFactory).create(username, password, session).thenReturn(leap_session)
         with patch('mockito.invocation.AnswerSelector', AnswerSelector):

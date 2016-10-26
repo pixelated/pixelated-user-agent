@@ -52,6 +52,7 @@ from pixelated.resources.root_resource import RootResource
 from test.support.integration.model import MailBuilder
 from test.support.test_helper import request_mock
 from test.support.integration.model import ResponseMail
+from pixelated.config.sessions import SessionCache
 
 
 class AppTestAccount(object):
@@ -143,6 +144,27 @@ class StubSRPChecker(object):
             return defer.fail()
 
 
+class StubAuthenticator(object):
+    def __init__(self, provider, credentials={}):
+        self._leap_provider = provider
+        self._credentials = credentials.copy()
+
+    def add_user(self, username, password):
+        self._credentials[username] = password
+
+    def _set_leap_session_cache(self, auth):
+        key = SessionCache.session_key(self._leap_provider, 'username')
+        SessionCache.remember_session(key, LeapSession(self._leap_provider, auth, None, None, None, None))
+
+    def authenticate(self, username, password):
+        if self._credentials[username] == password:
+            leap_auth = Authentication(username, uuid.uuid4(), uuid.uuid4(), uuid.uuid4(), {})
+            self._set_leap_session_cache(leap_auth)
+            return defer.succeed(leap_auth)
+        else:
+            return defer.fail()
+
+
 class StubServicesFactory(ServicesFactory):
 
     def __init__(self, accounts, mode):
@@ -196,13 +218,16 @@ class AppTestClient(object):
             self.service_factory.add_session('someuserid', services)
 
             self.resource = RootResource(self.service_factory)
-            self.resource.initialize()
+            provider = mock()
+            self.resource.initialize(provider)
         else:
             self.service_factory = StubServicesFactory(self.accounts, mode)
             provider = mock()
             srp_checker = StubSRPChecker(provider)
-            srp_checker.add_user('username', 'password')
-            self.resource = set_up_protected_resources(RootResource(self.service_factory), provider, self.service_factory, checker=srp_checker)
+            bonafide_checker = StubAuthenticator(provider)
+            bonafide_checker.add_user('username', 'password')
+
+            self.resource = set_up_protected_resources(RootResource(self.service_factory), provider, self.service_factory, checker=srp_checker, authenticator=bonafide_checker)
 
     @defer.inlineCallbacks
     def create_user(self, account_name):

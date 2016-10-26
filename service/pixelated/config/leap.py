@@ -1,26 +1,19 @@
 from __future__ import absolute_import
-from collections import namedtuple
 
-from twisted.cred.error import UnauthorizedLogin
-from twisted.internet import defer, threads
-from twisted.logger import Logger
-
-from leap.common.events import (server as events_server)
-from leap.soledad.common.errors import InvalidAuthTokenError
-from leap.bitmask.bonafide._srp import SRPAuthError
-from leap.bitmask.bonafide.session import Session
 from leap.bitmask.bonafide.provider import Api
-
-from pixelated.config import credentials
-from pixelated.config import leap_config
+from leap.bitmask.bonafide.session import Session
+from leap.common.events import (server as events_server)
+from pixelated.adapter.welcome_mail import add_welcome_mail
+from pixelated.authentication import Authenticator, Credentials, Authentication
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
+from pixelated.config import credentials
+from pixelated.config import leap_config
 from pixelated.config.sessions import LeapSessionFactory
+from twisted.internet import defer
+from twisted.logger import Logger
 
 log = Logger()
-
-
-Credentials = namedtuple('Credentials', 'username, password')
 
 
 def initialize_leap_provider(provider_hostname, provider_cert, provider_fingerprint, leap_home):
@@ -64,10 +57,7 @@ def initialize_leap_single_user(leap_provider_cert,
 
     provider = initialize_leap_provider(provider, leap_provider_cert, leap_provider_cert_fingerprint, leap_home)
 
-    try:
-        auth = yield authenticate(provider, username, password)
-    except SRPAuthError:
-        raise UnauthorizedLogin()
+    auth = Authenticator(provider).authenticate(username, password)
 
     leap_session = yield create_leap_session(provider, username, password, auth)
 
@@ -84,16 +74,29 @@ def authenticate(provider, user, password):
 
 
 def init_monkeypatches():
-    import pixelated.extensions.requests_urllib3
+    pass
 
 
-class Authentication(object):
-    def __init__(self, username, token, uuid, session_id, user_attributes):
-        self.username = username
-        self.token = token
-        self.uuid = uuid
-        self.session_id = session_id
-        self._user_attributes = user_attributes
+class BootstrapUserServices(object):
 
-    def is_admin(self):
-        return self._user_attributes.get('is_admin', False)
+    def __init__(self, services_factory, provider):
+        self._services_factory = services_factory
+        self._provider = provider
+
+    @defer.inlineCallbacks
+    def setup(self, user_auth, password, language='pt-BR'):
+        leap_session = yield create_leap_session(self._provider, user_auth.username, password, user_auth)
+        yield self._setup_user_services(leap_session)
+        yield self._add_welcome_email(leap_session, language)
+
+    @defer.inlineCallbacks
+    def _setup_user_services(self, leap_session):
+        user_id = leap_session.user_auth.uuid
+        if not self._services_factory.has_session(user_id):
+            yield self._services_factory.create_services_from(leap_session)
+            self._services_factory.map_email(leap_session.user_auth.username, user_id)
+
+    @defer.inlineCallbacks
+    def _add_welcome_email(self, leap_session, language):
+        if leap_session.fresh_account:
+            yield add_welcome_mail(leap_session.mail_store, language)

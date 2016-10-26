@@ -15,7 +15,6 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 
-from mock import patch
 from mockito import verify
 from twisted.internet import defer
 

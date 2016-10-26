@@ -8,7 +8,7 @@ from mock import patch, Mock
 
 from pixelated.authentication import Authenticator
 from pixelated.bitmask_libraries.provider import LeapProvider
-
+from pixelated.config.leap import Authentication
 
 PROVIDER_JSON = {
     "api_uri": "https://api.domain.org:4430",
@@ -21,36 +21,60 @@ PROVIDER_JSON = {
 
 class AuthenticatorTest(unittest.TestCase):
     def setUp(self):
+        self._domain = 'domain.org'
         with patch.object(LeapProvider, 'fetch_provider_json', return_value=PROVIDER_JSON):
-            self._leap_provider = LeapProvider('domain.org')
+            self._leap_provider = LeapProvider(self._domain)
 
     @inlineCallbacks
     def test_bonafide_srp_exceptions_should_raise_unauthorized_login(self):
         auth = Authenticator(self._leap_provider)
         mock_bonafide_session = Mock()
         mock_bonafide_session.authenticate = Mock(side_effect=SRPAuthError())
-        with patch('pixelated.config.leap.Session', return_value=mock_bonafide_session):
+        with patch('pixelated.authentication.Session', return_value=mock_bonafide_session):
             with self.assertRaises(UnauthorizedLogin):
                 yield auth.authenticate('username', 'password')
 
     @inlineCallbacks
-    def test_auth_username_with_domain_only_makes_bonafide_auth_with_username(self):
+    def test_domain_name_is_stripped_before_making_bonafide_srp_auth(self):
+        username_without_domain = 'username'
+        username_with_domain = '%s@%s' % (username_without_domain, self._domain)
         auth = Authenticator(self._leap_provider)
-        with patch('pixelated.authentication.authenticate') as mock_leap_authenticate:
-            yield auth.authenticate('username@domain.org', 'password')
-            mock_leap_authenticate.assert_called_once_with(self._leap_provider, 'username', 'password')
+        with patch.object(Authenticator, '_bonafide_auth') as mock_leap_authenticate:
+            yield auth.authenticate(username_with_domain, 'password')
+            mock_leap_authenticate.assert_called_once_with(username_without_domain, 'password')
 
-    def test_validate_username_accepts_username(self):
+    @inlineCallbacks
+    def test_successful_bonafide_auth_should_return_the_user_authentication_object(self):
         auth = Authenticator(self._leap_provider)
-        self.assertTrue(auth.validate_username('username'))
+        mock_bonafide_session = Mock()
+        mock_srp_auth = Mock()
+        mock_srp_auth.token = 'some_token'
+        mock_srp_auth.uuid = 'some_uuid'
+        mock_bonafide_session.authenticate = Mock(return_value=mock_srp_auth)
+        with patch('pixelated.authentication.Session', return_value=mock_srp_auth):
+            resulting_auth = yield auth.authenticate('username@domain.org', 'password')
+            self.assertIsInstance(resulting_auth, Authentication)
+            self.assertEquals('username', resulting_auth.username)
+            self.assertEquals('some_token', resulting_auth.token)
+            self.assertEquals('some_uuid', resulting_auth.uuid)
 
-    def test_validate_username_accepts_email_address(self):
+    def test_username_without_domain_is_not_changed(self):
+        username_without_domain = 'username'
         auth = Authenticator(self._leap_provider)
-        self.assertTrue(auth.validate_username('username@domain.org'))
+        self.assertEqual(username_without_domain, auth.clean_username(username_without_domain))
 
-    def test_validate_username_denies_other_domains(self):
+    def test_username_with_domain_is_stripped(self):
+        username_without_domain = 'username'
+        username_with_domain = '%s@%s' % (username_without_domain, self._domain)
         auth = Authenticator(self._leap_provider)
-        self.assertFalse(auth.validate_username('username@wrongdomain.org'))
+        self.assertEqual(username_without_domain, auth.clean_username(username_with_domain))
+
+    def test_username_with_wrong_domain_raises_exception(self):
+        username_without_domain = 'username'
+        username_with_wrong_domain = '%s@%s' % (username_without_domain, 'wrongdomain.org')
+        auth = Authenticator(self._leap_provider)
+        with self.assertRaises(UnauthorizedLogin):
+            auth.clean_username(username_with_wrong_domain)
 
     def test_username_with_domain(self):
         auth = Authenticator(self._leap_provider)
