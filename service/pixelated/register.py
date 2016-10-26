@@ -13,35 +13,29 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import re
 import getpass
+import re
 import sys
+from collections import namedtuple
 
-from twisted.logger import Logger
-
-from leap.auth import SRPAuth
+from leap.bitmask.bonafide.provider import Api
+from leap.bitmask.bonafide.session import Session
 from leap.common.events import server as events_server
-
-from pixelated.config import arguments
-from pixelated.config import logger as logger_config
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
+from pixelated.config import arguments
+from pixelated.config import logger as logger_config
+from pixelated.config.authentication import Authentication
 from pixelated.config.sessions import LeapSessionFactory
+from twisted.internet.defer import inlineCallbacks
+from twisted.logger import Logger
+
+Credentials = namedtuple('Credentials', 'username, password')
 
 logger = Logger()
 
 
-def register(
-        server_name,
-        username,
-        password,
-        leap_home,
-        provider_cert,
-        provider_cert_fingerprint):
-
-    if not password:
-        password = getpass.getpass('Please enter password for %s: ' % username)
-
+def _validate(username, password):
     try:
         validate_username(username)
         validate_password(password)
@@ -49,16 +43,40 @@ def register(
         print(e.message)
         sys.exit(1)
 
+
+def _set_provider(provider_cert, provider_cert_fingerprint, server_name):
     events_server.ensure_server()
     LeapCertificate.set_cert_and_fingerprint(provider_cert, provider_cert_fingerprint)
     provider = LeapProvider(server_name)
     provider.setup_ca()
     provider.download_settings()
-    srp_auth = SRPAuth(provider.api_uri, provider.provider_api_cert)
+    return provider
 
-    if srp_auth.register(username, password):
-        auth = srp_auth.authenticate(username, password)
-        LeapSessionFactory(provider).create(username, password, auth)
+
+def _bonafide_session(username, password, provider):
+    srp_provider = Api(provider.api_uri)
+    credentials = Credentials(username, password)
+    return Session(credentials, srp_provider, provider.local_ca_crt)
+
+
+@inlineCallbacks
+def _bootstrap_leap_session(username, password, leap_provider, srp_auth):
+    auth = Authentication(username, srp_auth.token, srp_auth.uuid, 'session_id', {'is_admin': False})
+    yield LeapSessionFactory(leap_provider).create(username, password, auth)
+
+
+@inlineCallbacks
+def register(server_name, username, password, leap_home, provider_cert, provider_cert_fingerprint):
+    if not password:
+        password = getpass.getpass('Please enter password for %s: ' % username)
+
+    _validate(username, password)
+    leap_provider = _set_provider(provider_cert, provider_cert_fingerprint, server_name)
+    srp_auth = _bonafide_session(username, password, leap_provider)
+
+    created, user = yield srp_auth.signup(username, password, invite=None)
+    if created:
+        yield _bootstrap_leap_session(username, password, leap_provider, srp_auth)
     else:
         logger.error("Register failed")
 

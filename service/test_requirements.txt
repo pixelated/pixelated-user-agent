@@ -10,3 +10,4 @@ coverage
 crochet==1.4.0
 poster==0.8.1
 locustio==0.7.3
+-e 'git+https://github.com/pixelated/leap_auth.git#egg=leap.auth'

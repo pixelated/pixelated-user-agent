@@ -241,24 +241,6 @@ class TestLoginPOST(unittest.TestCase):
         d.addCallback(assert_login_setup_service_for_user)
         return d
 
-    @patch('pixelated.config.sessions.LeapSessionFactory.create')
-    @patch('leap.auth.SRPAuth.authenticate')
-    @patch('pixelated.config.services.Services.setup')
-    def test_leap_session_is_not_created_when_leap_auth_fails(self, mock_service_setup, mock_leap_srp_auth, mock_leap_session_create):
-        mock_leap_srp_auth.side_effect = SRPAuthError()
-
-        d = self.web.get(self.request)
-
-        def assert_login_setup_service_for_user(_):
-            verify(self.portal).login(ANY(), None, IResource)
-            self.assertFalse(mock_leap_session_create.called)
-            self.assertFalse(mock_service_setup.called)
-            self.assertEqual(401, self.request.responseCode)
-            self.assertFalse(self.resource.is_logged_in(self.request))
-
-        d.addCallback(assert_login_setup_service_for_user)
-        return d
-
     @patch('twisted.web.util.redirectTo')
     @patch('pixelated.resources.session.PixelatedSession.is_logged_in')
     def test_should_not_process_login_if_already_logged_in(self, mock_logged_in, mock_redirect):
