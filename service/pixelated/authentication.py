@@ -21,7 +21,8 @@ class Authenticator(object):
     @inlineCallbacks
     def _srp_auth(self, username, password):
         try:
-            auth = yield authenticate(self._leap_provider, username, password)
+            extracted_username = self.extract_username(username)
+            auth = yield authenticate(self._leap_provider, extracted_username, password)
         except SRPAuthError:
             raise UnauthorizedLogin()
 

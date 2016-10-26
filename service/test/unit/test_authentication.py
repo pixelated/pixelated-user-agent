@@ -33,6 +33,13 @@ class AuthenticatorTest(unittest.TestCase):
             with self.assertRaises(UnauthorizedLogin):
                 yield auth.authenticate('username', 'password')
 
+    @inlineCallbacks
+    def test_auth_username_with_domain_only_makes_bonafide_auth_with_username(self):
+        auth = Authenticator(self._leap_provider)
+        with patch('pixelated.authentication.authenticate') as mock_leap_authenticate:
+            yield auth.authenticate('username@domain.org', 'password')
+            mock_leap_authenticate.assert_called_once_with(self._leap_provider, 'username', 'password')
+
     def test_validate_username_accepts_username(self):
         auth = Authenticator(self._leap_provider)
         self.assertTrue(auth.validate_username('username'))
