@@ -17,6 +17,7 @@ import hashlib
 import json
 import os
 from string import Template
+from pixelated.resources.users import UsersResource
 
 from pixelated.resources import BaseResource, UnAuthorizedResource, UnavailableResource
 from pixelated.resources import IPixelatedSession
@@ -39,7 +40,6 @@ from twisted.logger import Logger
 
 log = Logger()
 
-from pixelated.resources.users import UsersResource
 
 CSRF_TOKEN_LENGTH = 32
 
