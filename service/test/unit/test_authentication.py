@@ -32,7 +32,11 @@ class AuthenticatorTest(unittest.TestCase):
         mock_bonafide_session.authenticate = Mock(side_effect=SRPAuthError())
         with patch('pixelated.authentication.Session', return_value=mock_bonafide_session):
             with self.assertRaises(UnauthorizedLogin):
-                yield auth.authenticate('username', 'password')
+                try:
+                    yield auth.authenticate('username', 'password')
+                except UnauthorizedLogin as e:
+                    self.assertEqual("User typed wrong password/username combination.", e.message)
+                    raise
 
     @inlineCallbacks
     def test_domain_name_is_stripped_before_making_bonafide_srp_auth(self):
@@ -74,7 +78,11 @@ class AuthenticatorTest(unittest.TestCase):
         username_with_wrong_domain = '%s@%s' % (username_without_domain, 'wrongdomain.org')
         auth = Authenticator(self._leap_provider)
         with self.assertRaises(UnauthorizedLogin):
-            auth.clean_username(username_with_wrong_domain)
+            try:
+                auth.clean_username(username_with_wrong_domain)
+            except UnauthorizedLogin as e:
+                self.assertEqual("User typed a wrong domain.", e.message)
+                raise
 
     def test_username_with_domain(self):
         auth = Authenticator(self._leap_provider)

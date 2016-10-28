@@ -42,7 +42,7 @@ class Authenticator(object):
         try:
             auth = yield self._bonafide_auth(username, password)
         except SRPAuthError:
-            raise UnauthorizedLogin()
+            raise UnauthorizedLogin("User typed wrong password/username combination.")
         returnValue(auth)
 
     @inlineCallbacks
@@ -59,7 +59,7 @@ class Authenticator(object):
         extracted_username = self.extract_username(username)
         if self.username_with_domain(extracted_username) == username:
             return extracted_username
-        raise UnauthorizedLogin()
+        raise UnauthorizedLogin('User typed a wrong domain.')
 
     def extract_username(self, username):
         return re.search('^([^@]+)@?.*$', username).group(1)
