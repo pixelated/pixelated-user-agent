@@ -223,11 +223,10 @@ class AppTestClient(object):
         else:
             self.service_factory = StubServicesFactory(self.accounts, mode)
             provider = mock()
-            srp_checker = StubSRPChecker(provider)
             bonafide_checker = StubAuthenticator(provider)
             bonafide_checker.add_user('username', 'password')
 
-            self.resource = set_up_protected_resources(RootResource(self.service_factory), provider, self.service_factory, checker=srp_checker, authenticator=bonafide_checker)
+            self.resource = set_up_protected_resources(RootResource(self.service_factory), provider, self.service_factory, authenticator=bonafide_checker)
 
     @defer.inlineCallbacks
     def create_user(self, account_name):

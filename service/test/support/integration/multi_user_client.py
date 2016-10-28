@@ -48,7 +48,7 @@ class MultiUserClient(AppTestClient):
         root_resource = RootResource(self.service_factory)
         leap_provider = mock()
         self.credentials_checker = StubSRPChecker(leap_provider)
-        self.resource = set_up_protected_resources(root_resource, leap_provider, self.service_factory, checker=self.credentials_checker)
+        self.resource = set_up_protected_resources(root_resource, leap_provider, self.service_factory)
 
     def _mock_bonafide_auth(self, username, password):
         if username == 'username' and password == 'password':

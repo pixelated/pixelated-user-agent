@@ -24,7 +24,7 @@ from leap.soledad.common.errors import InvalidAuthTokenError
 from twisted.logger import Logger
 from twisted.conch import manhole_tap
 from twisted.cred import portal
-from twisted.cred.checkers import AllowAnonymousAccess, FilePasswordDB
+from twisted.cred.checkers import AllowAnonymousAccess
 from twisted.internet import defer
 from twisted.internet import reactor
 from twisted.internet import ssl
@@ -36,7 +36,7 @@ from pixelated.config import services
 from pixelated.config.leap import initialize_leap_single_user, init_monkeypatches, initialize_leap_provider
 from pixelated.config.services import ServicesFactory, SingleUserServicesFactory
 from pixelated.config.site import PixelatedSite
-from pixelated.resources.auth import LeapPasswordChecker, PixelatedRealm, PixelatedAuthSessionWrapper, SessionChecker
+from pixelated.resources.auth import PixelatedRealm, PixelatedAuthSessionWrapper, SessionChecker
 from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
 
@@ -152,12 +152,11 @@ def _setup_multi_user(args, root_resource, services_factory):
     return protected_resource
 
 
-def set_up_protected_resources(root_resource, provider, services_factory, checker=None, banner=None, authenticator=None):
-    checker = checker or LeapPasswordChecker(provider)
+def set_up_protected_resources(root_resource, provider, services_factory, banner=None, authenticator=None):
     session_checker = SessionChecker(services_factory)
 
     realm = PixelatedRealm()
-    _portal = portal.Portal(realm, [checker, session_checker, AllowAnonymousAccess()])
+    _portal = portal.Portal(realm, [session_checker, AllowAnonymousAccess()])
 
     anonymous_resource = LoginResource(services_factory, provider, disclaimer_banner=banner, authenticator=authenticator)
     protected_resource = PixelatedAuthSessionWrapper(_portal, root_resource, anonymous_resource, [])

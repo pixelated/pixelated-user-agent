@@ -16,45 +16,21 @@
 
 import re
 
-from zope.interface import implements, implementer, Attribute
+from pixelated.resources import IPixelatedSession
+from twisted.cred import error
+from twisted.cred import portal, checkers
 from twisted.cred.checkers import ANONYMOUS
 from twisted.cred.credentials import ICredentials
-from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer
+from twisted.logger import Logger
+from twisted.web import util
 from twisted.web._auth.wrapper import UnauthorizedResource
 from twisted.web.error import UnsupportedMethod
-from twisted.cred import portal, checkers, credentials
-from twisted.web import util
-from twisted.cred import error
 from twisted.web.resource import IResource, ErrorPage
-from twisted.logger import Logger
-
-from leap.bitmask.bonafide._srp import SRPAuthError
-from pixelated.config.leap import create_leap_session, authenticate
-from pixelated.resources import IPixelatedSession
+from zope.interface import implements, implementer, Attribute
 
 
 log = Logger()
-
-
-@implementer(checkers.ICredentialsChecker)
-class LeapPasswordChecker(object):
-    credentialInterfaces = (
-        credentials.IUsernamePassword,
-    )
-
-    def __init__(self, provider):
-        self.provider = provider
-
-    @defer.inlineCallbacks
-    def requestAvatarId(self, credentials):
-        try:
-            auth = yield authenticate(self.provider, credentials.username, credentials.password)
-        except SRPAuthError:
-            raise UnauthorizedLogin()
-
-        leap_session = yield create_leap_session(self.provider, credentials.username, credentials.password, auth)
-        defer.returnValue(leap_session)
 
 
 class ISessionCredential(ICredentials):

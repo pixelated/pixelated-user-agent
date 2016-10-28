@@ -62,17 +62,8 @@ def initialize_leap_single_user(leap_provider_cert,
     defer.returnValue(leap_session)
 
 
-@defer.inlineCallbacks
-def authenticate(provider, user, password):
-    srp_provider = Api(provider.api_uri)
-    credentials = Credentials(user, password)
-    srp_auth = Session(credentials, srp_provider, provider.local_ca_crt)
-    yield srp_auth.authenticate()
-    defer.returnValue(Authentication(user, srp_auth.token, srp_auth.uuid, 'session_id', {'is_admin': False}))
-
-
 def init_monkeypatches():
-    pass
+    import pixelated.extensions.requests_urllib3
 
 
 class BootstrapUserServices(object):
