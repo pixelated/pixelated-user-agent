@@ -1,10 +1,8 @@
 from __future__ import absolute_import
 
-from leap.bitmask.bonafide.provider import Api
-from leap.bitmask.bonafide.session import Session
 from leap.common.events import (server as events_server)
 from pixelated.adapter.welcome_mail import add_welcome_mail
-from pixelated.authentication import Authenticator, Credentials, Authentication
+from pixelated.authentication import Authenticator
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.config import credentials

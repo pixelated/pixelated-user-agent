@@ -25,7 +25,7 @@ from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.config import arguments
 from pixelated.config import logger as logger_config
-from pixelated.config.leap import Authentication
+from pixelated.authentication import Authentication
 from pixelated.config.sessions import LeapSessionFactory
 from twisted.internet.defer import inlineCallbacks
 from twisted.logger import Logger

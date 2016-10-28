@@ -16,8 +16,7 @@
 from leap.bitmask.bonafide._srp import SRPAuthError
 from mock import patch
 from mockito import mock, when, any as ANY
-from pixelated.authentication import Authenticator
-from pixelated.config.leap import Authentication
+from pixelated.authentication import Authenticator, Authentication
 from twisted.internet import defer
 
 from pixelated.application import UserAgentMode, set_up_protected_resources

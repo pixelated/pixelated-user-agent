@@ -21,7 +21,7 @@ import time
 import uuid
 import random
 
-from pixelated.config.leap import Authentication
+from pixelated.authentication import Authentication
 from tempdir import TempDir
 
 from mock import Mock

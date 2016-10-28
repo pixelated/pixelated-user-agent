@@ -8,7 +8,7 @@ from mock import patch, Mock
 
 from pixelated.authentication import Authenticator
 from pixelated.bitmask_libraries.provider import LeapProvider
-from pixelated.config.leap import Authentication
+from pixelated.authentication import Authentication
 
 PROVIDER_JSON = {
     "api_uri": "https://api.domain.org:4430",
