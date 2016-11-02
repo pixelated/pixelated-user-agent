@@ -67,7 +67,7 @@ class MailsDeleteResource(Resource):
 
     def render_POST(self, request):
         def response_failed(failure):
-            logger.error(failure, 'something failed')
+            log.error(failure, 'something failed')
             request.finish()
 
         idents = json.loads(request.content.read())['idents']
@@ -175,7 +175,7 @@ class MailsResource(BaseResource):
             if isinstance(error.value, SMTPDownException):
                 respond_json_deferred({'message': str(error.value)}, request, status_code=503)
             else:
-                logger.error(error, 'error occurred while sending')
+                log.error(error, 'error occurred while sending')
                 respond_json_deferred({'message': 'an error occurred while sending'}, request, status_code=422)
 
         deferred = self._handle_post(request)
@@ -185,7 +185,7 @@ class MailsResource(BaseResource):
 
     def render_PUT(self, request):
         def onError(error):
-                logger.error(error, 'error saving draft')
+                log.error(error, 'error saving draft')
                 respond_json_deferred("", request, status_code=422)
 
         deferred = self._handle_put(request)
