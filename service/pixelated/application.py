@@ -207,8 +207,10 @@ def start_site(config, resource):
         reactor.listenTCP(8008, telnetFactory, interface='localhost')
         reactor.listenTCP(8009, sshFactory, interface='localhost')
 
+    site = PixelatedSite(resource)
+    site.displayTracebacks = False
     if config.sslkey and config.sslcert:
-        reactor.listenSSL(config.port, PixelatedSite(resource), _ssl_options(config.sslkey, config.sslcert),
+        reactor.listenSSL(config.port, site, _ssl_options(config.sslkey, config.sslcert),
                           interface=config.host)
     else:
-        reactor.listenTCP(config.port, PixelatedSite(resource), interface=config.host)
+        reactor.listenTCP(config.port, site, interface=config.host)
