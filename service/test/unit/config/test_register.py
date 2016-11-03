@@ -2,6 +2,7 @@ import unittest
 
 from mock import patch, Mock
 from pixelated.register import validate_username, validate_password, _set_provider, register
+from twisted.internet import defer
 from twisted.internet.defer import inlineCallbacks
 
 
@@ -34,15 +35,15 @@ class TestRegister(unittest.TestCase):
             self.assertTrue(mock_provider.setup_ca.called)
             self.assertTrue(mock_provider.download_settings.called)
 
-    @patch('pixelated.register._set_provider')
+    @patch('pixelated.register.logger')
     @inlineCallbacks
-    def test_register_uses_bonafide_auth(self, mock_set_provider):
+    def test_register_uses_bonafide_auth(self, mock_logger):
         mock_provider = Mock()
         mock_provider.api_uri = 'https://pro.vi.der'
-        mock_set_provider.return_value = mock_provider
         mock_bonafide_session = Mock()
-        mock_bonafide_session.signup.return_value = ('created', 'user')
+        mock_bonafide_session.signup.return_value = defer.succeed(('created', 'user'))
         with patch('pixelated.register.Session', return_value=mock_bonafide_session) as mock_instantiate_bonafide_session:
-            yield register('server_name', 'username', 'password', 'leap_home', 'provider_cert', 'provider_cert_fingerprint', 'invite')
+            yield register('username', 'password', mock_provider, 'invite')
             mock_instantiate_bonafide_session.assert_called_once()
             mock_bonafide_session.signup.assert_called_once_with('username', 'password', 'invite')
+            mock_logger.info.assert_called_with('User username successfully registered')

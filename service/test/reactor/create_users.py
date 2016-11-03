@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # This script is used to mass register users
 # ATTENTION: this script does not log
 # the user in, so key creation will only
@@ -7,13 +8,15 @@
 # python create_users.py -n<number of users> -p<provider> -i<invite_code>
 
 import argparse
-import os
-import tempfile
-from leap.auth import SRPAuth
-from leap.exceptions import SRPAuthenticationError
 
 import requests
+from pixelated.authentication import Authenticator
+from pixelated.register import register, _set_provider
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from twisted.cred.error import UnauthorizedLogin
+from twisted.internet import reactor
+from twisted.internet.defer import inlineCallbacks, returnValue, gatherResults
+
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
@@ -21,38 +24,45 @@ class User(object):
     def __init__(self, number, provider, certificate):
         self._username = 'loadtest%d' % number
         self._password = 'password_%d' % number
-        self._set_srp_auth(provider, certificate)
+        self._leap_provider = _set_provider(provider, None, certificate, None)
+        self._authenticator = Authenticator(self._leap_provider)
 
-    def _set_srp_auth(self, leap_provider, certificate):
-        leap_api_server = 'https://api.%s:4430' % leap_provider
-        self._srp_auth = SRPAuth(leap_api_server, certificate)
-
+    @inlineCallbacks
     def get_or_create_user(self, invite_code=None):
         try:
-            self.authenticate()
-        except SRPAuthenticationError:
-            self.register(invite_code)
-        return self._username, self._password
+            yield self.authenticate()
+        except UnauthorizedLogin:
+            yield self.register(invite_code)
+        user = (self._username, self._password)
+        returnValue(user)
 
+    @inlineCallbacks
     def authenticate(self):
-        self._srp_auth.authenticate(self._username, self._password)
+        yield self._authenticator.authenticate(self._username, self._password)
 
+    @inlineCallbacks
     def register(self, invite_code=None):
-        self._srp_auth.register(self._username, self._password, invite_code)
+        yield register(self._username, self._password, self._leap_provider, invite=invite_code)
 
 
-def mass_register(number, invite_code, provider, certificate):
+def mass_register(number, invite_code, provider):
+    leap_provider = _set_provider(None, None, provider, None)
+    deferreds = []
     for index in xrange(1, number + 1):
-        User(index, provider, certificate).register(invite_code)
-        print 'done registering loadtest%d' % index
+        _username = 'loadtest%d' % index
+        _password = 'password_%d' % index
 
+        def success(x, username):
+            print 'done registering %s ' % username
 
-def fetch_leap_certificate(leap_provider):
-    _, certificate_path = tempfile.mkstemp()
-    certificate = requests.get('https://%s/ca.crt' % leap_provider)
-    with open(certificate_path, 'w') as cert:
-        cert.write('%s' % certificate.content)
-    return certificate_path
+        def failed(err, username):
+            print 'ERROR registering %s: %s' % (username, err.getErrorMessage())
+
+        d = register(_username, _password, leap_provider, invite=invite_code)
+        d.addCallback(success, _username)
+        d.addErrback(failed, _username)
+        deferreds.append(d)
+    return gatherResults(deferreds, consumeErrors=True)
 
 
 def _parse_args():
@@ -63,7 +73,22 @@ def _parse_args():
     return parser.parse_args()
 
 
-if __name__ == '__main__':
+def run():
     args = _parse_args()
-    certificate_file = fetch_leap_certificate(args.provider)
-    mass_register(args.number, args.invite_code, args.provider, certificate_file)
+
+    def show_error(err):
+        print "ERROR: %s" % err.getErrorMessage()
+
+    def shut_down(_):
+        reactor.stop()
+
+    def _run():
+        d = mass_register(args.number, args.invite_code, args.provider)
+        d.addErrback(show_error)
+        d.addBoth(shut_down)
+
+    reactor.callWhenRunning(_run)
+    reactor.run()
+
+if __name__ == '__main__':
+    run()

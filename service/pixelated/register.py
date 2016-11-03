@@ -49,36 +49,39 @@ def _set_provider(provider_cert, provider_cert_fingerprint, server_name, leap_ho
     return provider
 
 
+def _set_leap_provider(args):
+    return _set_provider(args.leap_provider_cert, args.leap_provider_cert_fingerprint, args.provider, args.leap_home)
+
+
 def _bonafide_session(username, password, provider):
     srp_provider = Api(provider.api_uri)
     credentials = Credentials(username, password)
     return Session(credentials, srp_provider, provider.local_ca_crt)
 
 
-def log_results(created, username, server_name):
+def log_results(created, username):
     if created:
-        logger.info('User %s@%s successfully registered' % (username, server_name))
+        logger.info('User %s successfully registered' % username)
     else:
         logger.error("Register failed")
 
 
 @inlineCallbacks
-def register(server_name, username, password, leap_home, provider_cert, provider_cert_fingerprint, invite=None):
+def register(username, password, leap_provider, invite=None):
     if not password:
         password = getpass.getpass('Please enter password for %s: ' % username)
 
     _validate(username, password)
     logger.info('password validated...')
-    leap_provider = _set_provider(provider_cert, provider_cert_fingerprint, server_name, leap_home)
     srp_auth = _bonafide_session(username, password, leap_provider)
 
     created, user = yield srp_auth.signup(username, password, invite)
-    log_results(created, username, server_name)
+    log_results(created, username)
 
 
 def validate_username(username):
     accepted_characters = '^[a-z0-9\-\_\.]*$'
-    if (not re.match(accepted_characters, username)):
+    if not re.match(accepted_characters, username):
         raise ValueError('Only lowercase letters, digits, . - and _ allowed.')
 
 
@@ -91,6 +94,7 @@ def validate_password(password):
 def initialize():
     logger_config.init(debug=False)
     args = arguments.parse_register_args()
+    leap_provider = _set_leap_provider(args)
 
     def show_error(err):
         logger.info('error: %s' % err)
@@ -100,12 +104,9 @@ def initialize():
 
     def _register():
         d = register(
-            args.provider,
             args.username,
             args.password,
-            args.leap_home,
-            args.leap_provider_cert,
-            args.leap_provider_cert_fingerprint,
+            leap_provider,
             args.invite_code)
         d.addErrback(show_error)
         d.addBoth(shut_down)
