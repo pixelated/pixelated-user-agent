@@ -15,18 +15,16 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import getpass
 import re
-import sys
 from collections import namedtuple
 
 from leap.bitmask.bonafide.provider import Api
 from leap.bitmask.bonafide.session import Session
-from leap.common.events import server as events_server
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.config import arguments
+from pixelated.config import leap_config
 from pixelated.config import logger as logger_config
-from pixelated.authentication import Authentication
-from pixelated.config.sessions import LeapSessionFactory
+from twisted.internet import reactor
 from twisted.internet.defer import inlineCallbacks
 from twisted.logger import Logger
 
@@ -36,16 +34,14 @@ logger = Logger()
 
 
 def _validate(username, password):
-    try:
-        validate_username(username)
-        validate_password(password)
-    except ValueError, e:
-        print(e.message)
-        sys.exit(1)
+    validate_username(username)
+    validate_password(password)
 
 
-def _set_provider(provider_cert, provider_cert_fingerprint, server_name):
-    events_server.ensure_server()
+def _set_provider(provider_cert, provider_cert_fingerprint, server_name, leap_home=None):
+    if leap_home:
+        leap_config.set_leap_home(leap_home)
+
     LeapCertificate.set_cert_and_fingerprint(provider_cert, provider_cert_fingerprint)
     provider = LeapProvider(server_name)
     provider.setup_ca()
@@ -59,26 +55,25 @@ def _bonafide_session(username, password, provider):
     return Session(credentials, srp_provider, provider.local_ca_crt)
 
 
-@inlineCallbacks
-def _bootstrap_leap_session(username, password, leap_provider, srp_auth):
-    auth = Authentication(username, srp_auth.token, srp_auth.uuid, 'session_id', {'is_admin': False})
-    yield LeapSessionFactory(leap_provider).create(username, password, auth)
+def log_results(created, username, server_name):
+    if created:
+        logger.info('User %s@%s successfully registered' % (username, server_name))
+    else:
+        logger.error("Register failed")
 
 
 @inlineCallbacks
-def register(server_name, username, password, leap_home, provider_cert, provider_cert_fingerprint):
+def register(server_name, username, password, leap_home, provider_cert, provider_cert_fingerprint, invite=None):
     if not password:
         password = getpass.getpass('Please enter password for %s: ' % username)
 
     _validate(username, password)
-    leap_provider = _set_provider(provider_cert, provider_cert_fingerprint, server_name)
+    logger.info('password validated...')
+    leap_provider = _set_provider(provider_cert, provider_cert_fingerprint, server_name, leap_home)
     srp_auth = _bonafide_session(username, password, leap_provider)
 
-    created, user = yield srp_auth.signup(username, password, invite=None)
-    if created:
-        yield _bootstrap_leap_session(username, password, leap_provider, srp_auth)
-    else:
-        logger.error("Register failed")
+    created, user = yield srp_auth.signup(username, password, invite)
+    log_results(created, username, server_name)
 
 
 def validate_username(username):
@@ -89,16 +84,31 @@ def validate_username(username):
 
 def validate_password(password):
     if len(password) < 8:
+        logger.info('password not validated...')
         raise ValueError('The password must have at least 8 characters')
 
 
 def initialize():
     logger_config.init(debug=False)
     args = arguments.parse_register_args()
-    register(
-        args.provider,
-        args.username,
-        args.password,
-        args.leap_home,
-        args.leap_provider_cert,
-        args.leap_provider_cert_fingerprint)
+
+    def show_error(err):
+        logger.info('error: %s' % err)
+
+    def shut_down(_):
+        reactor.stop()
+
+    def _register():
+        d = register(
+            args.provider,
+            args.username,
+            args.password,
+            args.leap_home,
+            args.leap_provider_cert,
+            args.leap_provider_cert_fingerprint,
+            args.invite_code)
+        d.addErrback(show_error)
+        d.addBoth(shut_down)
+
+    reactor.callWhenRunning(_register)
+    reactor.run()

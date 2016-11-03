@@ -1,6 +1,8 @@
 import unittest
 
-from pixelated.register import validate_username, validate_password
+from mock import patch, Mock
+from pixelated.register import validate_username, validate_password, _set_provider, register
+from twisted.internet.defer import inlineCallbacks
 
 
 class TestRegister(unittest.TestCase):
@@ -22,3 +24,25 @@ class TestRegister(unittest.TestCase):
             validate_username('a.valid_username-123')
         except:
             self.fail('Valid username should not raise an exception')
+
+    def test_sets_provider(self):
+        mock_provider = Mock()
+        with patch('pixelated.register.LeapProvider', return_value=mock_provider) as mock_instantiate_provider:
+            provider = _set_provider('mocked_provider_cert', 'mocked_provider_cert_fingerprint', 'mocked_server_name')
+            mock_instantiate_provider.assert_called_once_with('mocked_server_name')
+            self.assertEqual(provider, mock_provider)
+            self.assertTrue(mock_provider.setup_ca.called)
+            self.assertTrue(mock_provider.download_settings.called)
+
+    @patch('pixelated.register._set_provider')
+    @inlineCallbacks
+    def test_register_uses_bonafide_auth(self, mock_set_provider):
+        mock_provider = Mock()
+        mock_provider.api_uri = 'https://pro.vi.der'
+        mock_set_provider.return_value = mock_provider
+        mock_bonafide_session = Mock()
+        mock_bonafide_session.signup.return_value = ('created', 'user')
+        with patch('pixelated.register.Session', return_value=mock_bonafide_session) as mock_instantiate_bonafide_session:
+            yield register('server_name', 'username', 'password', 'leap_home', 'provider_cert', 'provider_cert_fingerprint', 'invite')
+            mock_instantiate_bonafide_session.assert_called_once()
+            mock_bonafide_session.signup.assert_called_once_with('username', 'password', 'invite')
