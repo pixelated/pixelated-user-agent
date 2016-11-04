@@ -55,7 +55,7 @@ def initialize_leap_single_user(leap_provider_cert,
 
     provider = initialize_leap_provider(provider, leap_provider_cert, leap_provider_cert_fingerprint, leap_home)
 
-    auth = Authenticator(provider).authenticate(username, password)
+    auth = yield Authenticator(provider).authenticate(username, password)
 
     leap_session = yield create_leap_session(provider, username, password, auth)
 

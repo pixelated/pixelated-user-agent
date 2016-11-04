@@ -2,11 +2,11 @@ from leap.soledad.common.errors import InvalidAuthTokenError
 from mock import MagicMock, patch, Mock
 from twisted.trial import unittest
 from twisted.internet import defer
-from pixelated.config.leap import create_leap_session, BootstrapUserServices
+from pixelated.config.leap import create_leap_session, BootstrapUserServices, initialize_leap_single_user
 from pixelated.config.sessions import LeapSessionFactory, SessionCache
 
 
-class TestAuth(unittest.TestCase):
+class TestLeapInit(unittest.TestCase):
 
     @patch('pixelated.config.sessions.SessionCache.session_key')
     @defer.inlineCallbacks
@@ -35,6 +35,32 @@ class TestAuth(unittest.TestCase):
 
         self.assertFalse(session.first_required_sync.called)
         self.assertEqual(session, returned_session)
+
+    @patch('pixelated.config.leap.initialize_leap_provider')
+    @patch('pixelated.config.leap.credentials')
+    @patch('pixelated.config.leap.events_server')
+    @defer.inlineCallbacks
+    def test_init_single_user_does_bonafide_auth_and_gives_a_leap_session(self, mock_event_server, mock_credentials, mock_init_leap_provider):
+        provider_mock = MagicMock()
+        mock_init_leap_provider.return_value = provider_mock
+        mock_credentials.read.return_value = ('provider_url', 'username', 'password')
+        mock_authenticator = MagicMock()
+
+        with patch('pixelated.config.leap.Authenticator', return_value=mock_authenticator) as mock_instantiate_authenticator:
+            auth_mock = MagicMock()
+            mock_authenticator.authenticate.return_value = defer.succeed(auth_mock)
+            leap_session = MagicMock()
+            deferred_leap_session = defer.succeed(leap_session)
+            with patch.object(LeapSessionFactory, 'create', return_value=deferred_leap_session) as mock_create_leap_session:
+                returned_session = yield initialize_leap_single_user('leap_provider_cert', 'leap_provider_cert_fingerprint', 'credentials_file', 'leap_home')
+
+        mock_event_server.ensure_server.assert_called_once()
+        mock_credentials.read.assert_called_once_with('credentials_file')
+        mock_init_leap_provider.asser_called_once_with('provider_url', 'leap_provider_cert', 'leap_provider_cert_fingerprint', 'leap_home')
+        mock_instantiate_authenticator.assert_called_once_with(provider_mock)
+        mock_authenticator.authenticate.assert_called_once_with('username', 'password')
+        mock_create_leap_session.assert_called_once_with('username', 'password', auth_mock)
+        self.assertEqual(leap_session, returned_session)
 
 
 class TestUserBootstrap(unittest.TestCase):
