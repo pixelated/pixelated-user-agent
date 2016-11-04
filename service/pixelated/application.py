@@ -60,7 +60,7 @@ def start_user_agent_in_single_user_mode(root_resource, services_factory, leap_h
 
     services_factory.add_session(leap_session.user_auth.uuid, _services)
 
-    root_resource.initialize()
+    root_resource.initialize(provider=leap_session.provider)
 
     # soledad needs lots of threads
     reactor.getThreadPool().adjustPoolsize(5, 15)
