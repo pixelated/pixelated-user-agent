@@ -285,8 +285,8 @@
 
                 &:before {
                     font-family: FontAwesome;
-                    padding-right: 4px;
-                    font-size: 1.2em;
+                    padding-right: 6px;
+                    font-size: 1.4em;
                 }
 
                 &.encrypted {
@@ -313,7 +313,8 @@
 
                 & span {
                     margin: 0px;
-                    padding: 0px;
+                    padding: 0px 0px 0px 0px;
+                    vertical-align: top;
                     cursor: pointer;
                 }
 
