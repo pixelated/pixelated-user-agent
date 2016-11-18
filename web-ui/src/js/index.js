@@ -26,10 +26,8 @@ class PixelatedForm extends PixelatedComponent {
     const immutableActionProperties = new Map(actionProperties);
     this.props.store.dispatch(immutableActionProperties.merge({status: 'STARTED'}).toJS());
     fetch(url).then((response) => {
-      console.debug('got a reply', response);
       return response.json()
     }).then((json) => {
-      console.debug('got json', json);
       setTimeout(() => {
         this.props.store.dispatch(immutableActionProperties.merge({status: 'SUCCESS', json: json}).toJS());
       }, 3000);
@@ -43,13 +41,19 @@ class PixelatedForm extends PixelatedComponent {
 
 class InviteCodeForm extends PixelatedForm {
   render() {
+    let className = "blue-button validation-link";
+
+    if(!this.state.inviteCodeValidation) {
+      className = className + " disabled";
+    }
+
     return (
       <form onSubmit={this._handleClick.bind(this)}>
         <div className="field-group">
-          <input type="text" name="invite-code" className="invite-code" required/>
+          <input type="text" name="invite-code" className="invite-code" onChange={this._handleInputEmpty.bind(this)} required/>
           <label className="animated-label" htmlFor="invite-code">invite code</label>
         </div>
-        <input type="submit" value="Get Started" className="blue-button validation-link" />
+        <input type="submit" value="Get Started" className={className} />
       </form>
     );
   }
@@ -58,6 +62,10 @@ class InviteCodeForm extends PixelatedForm {
     event.stopPropagation();
     event.preventDefault();
     this.props.store.dispatch({type: 'SUBMIT_INVITE_CODE', inviteCode: event.target['invite-code'].value});
+  }
+
+  _handleInputEmpty(event) {
+    this.props.store.dispatch({type: 'VALIDATE_INVITE_CODE', inviteCode: event.target.value});
   }
 }
 
@@ -211,6 +219,10 @@ const store = createStore((state=initialState, action) => {
     }
   case 'SUBMIT_BACKUP_EMAIL_SENT':
     return state.merge({});
+  case 'VALIDATE_INVITE_CODE':
+    return state.merge({
+      inviteCodeValidation: Boolean(action.inviteCode)
+    });
   default:
     return state;
   }
