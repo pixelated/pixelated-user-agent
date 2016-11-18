@@ -5,10 +5,8 @@
 *.egg-info
 web-ui/node_modules
 web-ui/app/bower_components
-web-ui/target
-web-ui/signup/bundle.css
-web-ui/signup/bundle.js
-web-ui/signup/lib/
+web-ui/lib/
+web-ui/public/signup.js
 .tmp
 .sass-cache/
 dist/

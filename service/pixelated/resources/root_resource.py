@@ -51,6 +51,7 @@ class RootResource(BaseResource):
     def __init__(self, services_factory):
         BaseResource.__init__(self, services_factory)
         self._startup_assets_folder = self._get_startup_folder()
+        self._public_assets_folder = self._get_public_folder()
         self._static_folder = self._get_static_folder()
         self._html_template = open(os.path.join(self._static_folder, 'index.html')).read()
         self._services_factory = services_factory
@@ -61,6 +62,7 @@ class RootResource(BaseResource):
 
     def _startup_mode(self):
         self.putChild('startup-assets', File(self._startup_assets_folder))
+        self.putChild('public-assets', File(self._public_assets_folder))
         self._mode = MODE_STARTUP
 
     def getChild(self, path, request):
@@ -106,9 +108,21 @@ class RootResource(BaseResource):
 
         self._mode = MODE_RUNNING
 
+    # TODO: use the public folder for this
     def _get_startup_folder(self):
         path = os.path.dirname(os.path.abspath(__file__))
         return os.path.join(path, '..', 'assets')
+
+    def _get_public_folder(self):
+        public_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "public"))
+        # this is a workaround for packaging
+        if not os.path.exists(public_folder):
+            public_folder = os.path.abspath(
+                os.path.join(os.path.abspath(__file__), "..", "..", "..", "..", "web-ui", "public"))
+        if not os.path.exists(public_folder):
+            # TODO: how is this packaged?
+            public_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
+        return public_folder
 
     def _get_static_folder(self):
         static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))

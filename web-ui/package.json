@@ -36,7 +36,7 @@
     "compass": "compass compile",
     "compass-watch": "compass watch",
     "build": "npm run clean && npm run handlebars && npm run add_git_version && npm run compass && npm run build-signup",
-    "build-signup": "babel signup/src -d signup/lib && browserify signup/lib/index.js >signup/bundle.js",
+    "build-signup": "babel src/js -d lib/js && browserify lib/js/index.js >public/signup.js",
     "jshint": "node_modules/jshint/bin/jshint --config=.jshintrc app test",
     "clean": "rm -rf .tmp/ 'dist/*' app/js/generated/hbs/* app/css/*",
     "buildmain": "node_modules/requirejs/bin/r.js -o config/buildoptions.js",
