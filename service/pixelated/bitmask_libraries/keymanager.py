@@ -40,23 +40,33 @@ class Keymanager(object):
 
     @defer.inlineCallbacks
     def generate_openpgp_key(self):
-        key_present = yield self._key_exists(self._email)
-        if not key_present:
-            logger.info("Generating keys - this could take a while...")
-            yield self._gen_key()
-            try:
-                yield self._send_key_to_leap()
-            except Exception as e:
-                yield self.delete_key_pair(self._email)
-                raise UploadKeyError(e.message)
+        current_key = yield self._key_exists(self._email)
+        if not current_key:
+            yield self._generate_key_and_send_to_leap()
+        elif current_key.has_expired():
+            yield self._regenerate_key()
+            yield self._send_key_to_leap()
+
+    def _regenerate_key(self):
+        yield self.keymanager.regenerate_key()
+
+    @defer.inlineCallbacks
+    def _generate_key_and_send_to_leap(self):
+        logger.info("Generating keys - this could take a while...")
+        yield self._gen_key()
+        try:
+            yield self._send_key_to_leap()
+        except Exception as e:
+            yield self.delete_key_pair(self._email)
+            raise UploadKeyError(e.message)
 
     @defer.inlineCallbacks
     def _key_exists(self, email):
         try:
-            yield self.get_key(email, private=True, fetch_remote=False)
-            defer.returnValue(True)
+            current_key = yield self.get_key(email, private=True, fetch_remote=False)
+            defer.returnValue(current_key)
         except KeyNotFound:
-            defer.returnValue(False)
+            defer.returnValue(None)
 
     def get_key(self, email, private=False, fetch_remote=True):
         return self.keymanager.get_key(email, private=private, fetch_remote=fetch_remote)

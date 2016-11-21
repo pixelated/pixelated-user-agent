@@ -66,7 +66,7 @@ class KeymanagerTest(TestCase):
             combined_ca_bundle='combined_ca_bundle')
 
     def test_keymanager_generate_openpgp_key_generates_key_correctly(self):
-        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(False)
+        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(None)
 
         self.keymanager._gen_key = MagicMock()
         self.keymanager._send_key_to_leap = MagicMock()
@@ -77,7 +77,9 @@ class KeymanagerTest(TestCase):
         self.keymanager._send_key_to_leap.assert_called_once()
 
     def test_keymanager_generate_openpgp_key_doesnt_regenerate_preexisting_key(self):
-        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(True)
+        mock_open_pgp_key = MagicMock()
+        mock_open_pgp_key.has_expired = MagicMock(return_value=False)
+        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
 
         self.keymanager._gen_key = MagicMock()
 
@@ -86,7 +88,9 @@ class KeymanagerTest(TestCase):
         self.keymanager._gen_key.assert_not_called()
 
     def test_keymanager_generate_openpgp_key_doesnt_upload_preexisting_key(self):
-        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(True)
+        mock_open_pgp_key = MagicMock()
+        mock_open_pgp_key.has_expired = MagicMock(return_value=False)
+        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
 
         self.keymanager._send_key_to_leap = MagicMock()
 
@@ -96,7 +100,7 @@ class KeymanagerTest(TestCase):
 
     @defer.inlineCallbacks
     def test_keymanager_generate_openpgp_key_deletes_key_when_upload_fails(self):
-        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(False)
+        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(None)
 
         self.keymanager.delete_key_pair = MagicMock()
         when(self.keymanager)._send_key_to_leap().thenRaise(Exception('Could not upload key'))
@@ -105,3 +109,32 @@ class KeymanagerTest(TestCase):
             yield self.keymanager.generate_openpgp_key()
 
         self.keymanager.delete_key_pair.assert_called_once_with('test_user@some-server.test')
+
+    def test_keymanager_regenerate_key_pair_if_current_key_expired(self):
+        mock_open_pgp_key = MagicMock()
+        mock_open_pgp_key.has_expired = MagicMock(return_value=True)
+        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
+
+        self.keymanager._regenerate_key = MagicMock()
+        self.keymanager._send_key_to_leap = MagicMock()
+
+        self.keymanager.generate_openpgp_key()
+
+        self.keymanager._regenerate_key.assert_called_once()
+        self.keymanager._send_key_to_leap.assert_called_once()
+
+    @defer.inlineCallbacks
+    def test_key_regeneration_does_not_delete_key_when_upload_fails(self):
+        mock_open_pgp_key = MagicMock()
+        mock_open_pgp_key.has_expired = MagicMock(return_value=True)
+        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
+
+        self.keymanager._regenerate_key = MagicMock()
+        self.keymanager.delete_key_pair = MagicMock()
+        when(self.keymanager)._send_key_to_leap().thenRaise(UploadKeyError('Could not upload key'))
+
+        with self.assertRaises(UploadKeyError):
+            yield self.keymanager.generate_openpgp_key()
+
+        self.keymanager._regenerate_key.assert_called_once()
+        self.keymanager.delete_key_pair.assert_not_called()
