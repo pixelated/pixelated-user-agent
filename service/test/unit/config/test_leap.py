@@ -18,7 +18,7 @@ class TestLeapInit(unittest.TestCase):
         with patch.object(LeapSessionFactory, '_create_new_session', return_value=session):
             yield create_leap_session(provider_mock, 'username', 'password', auth=auth_mock)
 
-        session.first_required_sync.assert_called_with()
+        session.first_required_sync.assert_called_once()
         self.assertEqual({'mocked key': session}, SessionCache.sessions)
 
     @patch('pixelated.config.sessions.SessionCache.lookup_session')

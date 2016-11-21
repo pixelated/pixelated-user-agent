@@ -47,6 +47,7 @@ class Keymanager(object):
             yield self._regenerate_key()
             yield self._send_key_to_leap()
 
+    @defer.inlineCallbacks
     def _regenerate_key(self):
         yield self.keymanager.regenerate_key()
 
@@ -57,7 +58,7 @@ class Keymanager(object):
         try:
             yield self._send_key_to_leap()
         except Exception as e:
-            yield self.delete_key_pair(self._email)
+            yield self.delete_key_pair()
             raise UploadKeyError(e.message)
 
     @defer.inlineCallbacks
@@ -68,17 +69,22 @@ class Keymanager(object):
         except KeyNotFound:
             defer.returnValue(None)
 
+    @defer.inlineCallbacks
     def get_key(self, email, private=False, fetch_remote=True):
-        return self.keymanager.get_key(email, private=private, fetch_remote=fetch_remote)
-
-    def _gen_key(self):
-        return self.keymanager.gen_key()
-
-    def _send_key_to_leap(self):
-        return self.keymanager.send_key()
+        key = yield self.keymanager.get_key(email, private=private, fetch_remote=fetch_remote)
+        defer.returnValue(key)
 
     @defer.inlineCallbacks
-    def delete_key_pair(self, key):
+    def _gen_key(self):
+        key = yield self.keymanager.gen_key()
+        defer.returnValue(key)
+
+    @defer.inlineCallbacks
+    def _send_key_to_leap(self):
+        yield self.keymanager.send_key()
+
+    @defer.inlineCallbacks
+    def delete_key_pair(self):
         private_key = yield self.get_key(self._email, private=True, fetch_remote=False)
         public_key = yield self.get_key(self._email, private=False, fetch_remote=False)
 
