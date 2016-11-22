@@ -1,30 +1,36 @@
-import unittest
-
-from mockito import mock
-
-from test.unit.resources import DummySite
-from twisted.web.test.requesthelper import DummyRequest
+from mockito import mock, when, any as ANY
 from pixelated.resources.auth import PixelatedAuthSessionWrapper
+from pixelated.resources.login_resource import LoginResource
+from pixelated.resources.root_resource import RootResource
+from test.unit.resources import DummySite
+from twisted.cred.checkers import ANONYMOUS
+from twisted.internet.defer import succeed
+from twisted.trial import unittest
+from twisted.web.resource import IResource
+from twisted.web.test.requesthelper import DummyRequest
 
 
-class TestRootResource(unittest.TestCase):
+class TestPixelatedAuthSessionWrapper(unittest.TestCase):
 
     def setUp(self):
-        self.portal = mock()
-        self.mock_root_resource = mock()
-        self.anonymous_resource = mock()
-        self.credential_factories = mock()
+        self.portal_mock = mock()
+        self.root_resource_mock = mock()
+        self.anonymous_resource_mock = mock()
+        credential_factories_mock = mock()
 
-        self.session_wrapper = PixelatedAuthSessionWrapper(self.portal, self.mock_root_resource, self.anonymous_resource, self.credential_factories)
-        self.web = DummySite(self.session_wrapper)
+        self.session_wrapper = PixelatedAuthSessionWrapper(self.portal_mock, self.root_resource_mock, self.anonymous_resource_mock, credential_factories_mock)
 
-    def test_should_use_login_resource_when_the_user_is_not_logged_in (self):
-        request = DummyRequest([''])
-        self.session_wrapper.getChildWithDefault('/', request)
+    def test_should_use_login_resource_when_the_user_is_not_logged_in(self):
+        request = DummyRequest([])
+        request.prepath = ['']
+        request.path = '/'
+        when(self.portal_mock).login(ANY(), None, IResource).thenReturn(succeed((IResource, ANONYMOUS, lambda: None)))
 
-        def assert_response(_):
-            self.assertEquals(len(matches), 1)
+        deferred_resource = self.session_wrapper.getChildWithDefault('/', request)
+        d = deferred_resource.d
 
-        d.addCallback(assert_response)
+        def assert_anonymous_resource(resource):
+            self.assertIs(resource, self.anonymous_resource_mock)
+
+        d.addCallback(assert_anonymous_resource)
         return d
-

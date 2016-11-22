@@ -1,4 +1,3 @@
-import unittest
 import re
 
 from mock import MagicMock, patch
@@ -7,6 +6,7 @@ from mockito import mock, when, any as ANY
 from pixelated.application import UserAgentMode
 from pixelated.resources.features_resource import FeaturesResource
 from test.unit.resources import DummySite
+from twisted.trial import unittest
 from twisted.web.test.requesthelper import DummyRequest
 from pixelated.resources.root_resource import RootResource, MODE_STARTUP, MODE_RUNNING
 
