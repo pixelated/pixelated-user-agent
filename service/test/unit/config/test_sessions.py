@@ -53,8 +53,9 @@ class SessionTest(AbstractLeapTest):
                 session.close()
                 mail_fetcher_mock.stopService.assert_called_once()
 
+    @patch('pixelated.config.sessions.register')
     @defer.inlineCallbacks
-    def test_that_sync_defers_to_soledad(self):
+    def test_that_sync_defers_to_soledad(self, *unused):
         session = self._create_session()
         yield session.sync()
         self.soledad_session.sync.assert_called_once()
