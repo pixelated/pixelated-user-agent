@@ -1,4 +1,4 @@
-import unittest
+from twisted.trial import unittest
 import json
 import ast
 

@@ -1,4 +1,4 @@
-import unittest
+from twisted.trial import unittest
 
 from mock import patch, Mock
 from pixelated.register import validate_username, validate_password, _set_provider, register

@@ -1,4 +1,4 @@
-import unittest
+from twisted.trial import unittest
 from mockito import mock
 from pixelated.config.site import PixelatedSite
 from twisted.protocols.basic import LineReceiver

@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import os
-import unittest
+from twisted.trial import unittest
 import tempdir
 import leap.common.certs as certs
 from mockito import mock, unstub, when, any as ANY

@@ -1,4 +1,4 @@
-import unittest
+from twisted.trial import unittest
 
 from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.config import leap_config
