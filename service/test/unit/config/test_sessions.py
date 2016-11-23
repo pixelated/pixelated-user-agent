@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+import os
 from mock import patch
 from mock import MagicMock
 from twisted.internet import defer
@@ -56,7 +57,9 @@ class SessionTest(AbstractLeapTest):
 
     @defer.inlineCallbacks
     def test_that_sync_defers_to_soledad(self):
-        raise unittest.SkipTest('fails on snap, but not locally')
+        # TODO: fix this in SnapCI
+        if os.environ.get('SNAP_CI') == 'true':
+            raise unittest.SkipTest('Skip this test in SnapCI, because it fails for misterious reasons')
         with patch('pixelated.config.sessions.reactor.callFromThread', new=_execute_func) as _:
             with patch('pixelated.config.sessions.LeapSession._create_incoming_mail_fetcher') as mail_fetcher_mock:
                 session = self._create_session()
