@@ -3,6 +3,7 @@
 NUM_OF_CORES=''
 NUM_OF_JOBS=''
 TRIAL_PATH=''
+TRIAL_REPORTER='verbose'
 
 function getTrialAbsolutePath {
     TRIAL_PATH="$(which trial)"
@@ -58,14 +59,14 @@ function setupjs {
 function runIntegrationTests {
         echo "Executing Integration Tests."
         resolveNumOfJobs
-        trial -j $NUM_OF_JOBS --reporter=text $* test.integration
+        trial -j $NUM_OF_JOBS --reporter=$TRIAL_REPORTER $* test.integration
         echo "Done."
 }
 
 function runUnitTests {
         echo "Executing Unit Tests."
         removeZmqCertificates
-        trial --reporter=text $* test.unit
+        trial --reporter=$TRIAL_REPORTER $* test.unit
         echo "Done."
 }
 
@@ -87,7 +88,7 @@ function runCoverageUnit {
         echo "Generating Unit Test Converage Information."
         coverage erase
         getTrialAbsolutePath
-        coverage run -p --source=pixelated $TRIAL_PATH --reporter=text $* test.unit
+        coverage run -p --source=pixelated $TRIAL_PATH --reporter=$TRIAL_REPORTER $* test.unit
         coverage combine
         coverage html
         echo "Done."
@@ -97,9 +98,9 @@ function runCoverageIntegration {
         echo "Generating Integration Test Converage Information."
         coverage erase
         getTrialAbsolutePath
-        coverage run -p --source=pixelated $TRIAL_PATH --reporter=text $* test.integration
+        coverage run -p --source=pixelated $TRIAL_PATH --reporter=$TRIAL_REPORTER $* test.integration
         coverage combine
-        coverage html --ignore-errors
+        coverage html
         echo "Done."
 }
 
@@ -107,8 +108,8 @@ function runCoverageUnitAndIntegration {
         echo "Generating Unit and Integration Test Converage Information."
         coverage erase
         getTrialAbsolutePath
-        coverage run -p --source=pixelated $TRIAL_PATH --reporter=text test.unit
-        coverage run -p --source=pixelated $TRIAL_PATH --reporter=text test.integration
+        coverage run -p --source=pixelated $TRIAL_PATH --reporter=$TRIAL_REPORTER test.unit
+        coverage run -p --source=pixelated $TRIAL_PATH --reporter=$TRIAL_REPORTER test.integration
         coverage combine
         coverage html
         echo "Done."
