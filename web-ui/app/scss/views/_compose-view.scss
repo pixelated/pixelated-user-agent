@@ -4,12 +4,20 @@
     &__buttons {
         &-attachment {
             cursor: pointer;
-            outline: 0;
             margin-left: 18px;
             padding-top: 0px;
-            -ms-transform: rotate(224deg);
-            -webkit-transform: rotate(224deg);
-            transform: rotate(224deg);
+            display: inline;
+            border: 1px $contrast solid;
+            background: $background_light_grey;
+            padding: 7px 4px;
+            font-size: 0.8em;
+
+            span {
+              -ms-transform: rotate(224deg);
+              -webkit-transform: rotate(224deg);
+              transform: rotate(224deg);
+              outline: 0;
+            }
 
             i.fa-paperclip {
                 font-size: 1.7em;
