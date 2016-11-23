@@ -1,4 +1,4 @@
-import unittest
+from twisted.trial import unittest
 
 from leap.common.events import catalog as events
 from mock import patch, MagicMock, ANY

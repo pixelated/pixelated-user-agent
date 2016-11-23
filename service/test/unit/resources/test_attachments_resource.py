@@ -1,5 +1,5 @@
 import json
-import unittest
+from twisted.trial import unittest
 
 from mock import patch, MagicMock
 from mockito import mock, when, verify, any as ANY

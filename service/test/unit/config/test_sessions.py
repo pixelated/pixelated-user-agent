@@ -53,6 +53,7 @@ class SessionTest(AbstractLeapTest):
                 session.close()
                 mail_fetcher_mock.stopService.assert_called_once()
 
+    @defer.inlineCallbacks
     def test_that_sync_defers_to_soledad(self):
         with patch('pixelated.config.sessions.reactor.callFromThread', new=_execute_func) as _:
             with patch('pixelated.config.sessions.LeapSession._create_incoming_mail_fetcher') as mail_fetcher_mock:

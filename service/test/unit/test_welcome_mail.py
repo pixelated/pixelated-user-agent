@@ -16,7 +16,7 @@
 
 import os
 import re
-import unittest
+from twisted.trial import unittest
 from mockito import verify, mock
 from mockito.matchers import Matcher
 from email import message_from_file
