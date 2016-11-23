@@ -19,12 +19,8 @@ class TestArchiveResource(unittest.TestCase):
         content = mock()
         when(content).read().thenReturn(json.dumps({'idents': ['1', '2']}))
 
-        d1 = defer.Deferred()
-        d1.callback(None)
-        when(self.mail_service).archive_mail('1').thenReturn(d1)
-        d2 = defer.Deferred()
-        d2.callback(None)
-        when(self.mail_service).archive_mail('2').thenReturn(d2)
+        when(self.mail_service).archive_mail('1').thenReturn(defer.succeed(None))
+        when(self.mail_service).archive_mail('2').thenReturn(defer.succeed(None))
 
         request.content = content
         d = self.web.get(request)
