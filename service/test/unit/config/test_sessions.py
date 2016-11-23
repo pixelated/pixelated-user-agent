@@ -55,10 +55,9 @@ class SessionTest(AbstractLeapTest):
 
     @defer.inlineCallbacks
     def test_that_sync_defers_to_soledad(self):
-        with patch('pixelated.config.sessions.LeapSession._create_incoming_mail_fetcher') as mail_fetcher_mock:
-            session = self._create_session()
-            yield session.sync()
-            self.soledad_session.sync.assert_called_once()
+        session = self._create_session()
+        yield session.sync()
+        self.soledad_session.sync.assert_called_once()
 
     def test_session_registers_to_generated_keys(self):
         email = 'someone@somedomain.tld'
@@ -158,6 +157,4 @@ class SessionTest(AbstractLeapTest):
 
 
 def _execute_func(func):
-    print 'in _execute_func, before executing', func
     func()
-    print 'in _execute_func, after executing', func
