@@ -105,7 +105,8 @@ def add_command_callback(args, prepareDeferred, finalizeDeferred):
         prepareDeferred.addCallback(load_mails, args.file)
         prepareDeferred.addCallback(flush_to_soledad, finalizeDeferred)
     elif args.command == 'markov-generate':
-        prepareDeferred.addCallback(markov_generate, args.file, int(args.limit), args.seed)
+        prepareDeferred.addCallback(
+            markov_generate, args.file, int(args.limit), args.seed)
         prepareDeferred.addCallback(flush_to_soledad, finalizeDeferred)
     elif args.command == 'dump-soledad':
         prepareDeferred.addCallback(dump_soledad)
