@@ -3,9 +3,12 @@ from pixelated.resources.auth import PixelatedAuthSessionWrapper
 from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
 from test.unit.resources import DummySite
+from twisted.cred import error
 from twisted.cred.checkers import ANONYMOUS
-from twisted.internet.defer import succeed
+from twisted.internet.defer import succeed, fail
+from twisted.python import failure
 from twisted.trial import unittest
+from twisted.web._auth.wrapper import UnauthorizedResource
 from twisted.web.resource import IResource
 from twisted.web.test.requesthelper import DummyRequest
 
@@ -46,4 +49,16 @@ class TestPixelatedAuthSessionWrapper(unittest.TestCase):
             self.assertIs(resource, self.root_resource_mock)
 
         d.addCallback(assert_root_resource)
+        return d
+
+    def test_should_proxy_to_unauthorized_resource_when_login_fails(self):
+        when(self.portal_mock).login(ANY(), None, IResource).thenReturn(fail(failure.Failure(error.UnhandledCredentials('dummy message'))))
+
+        deferred_resource = self.session_wrapper.getChildWithDefault('/', self.request)
+        d = deferred_resource.d
+
+        def assert_unauthorized_resource(resource):
+            self.assertIsInstance(resource, UnauthorizedResource)
+
+        d.addCallback(assert_unauthorized_resource)
         return d
