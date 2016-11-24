@@ -108,7 +108,7 @@ class PixelatedAuthSessionWrapper(object):
             else:
                 log.err(
                     result,
-                    "HTTPAuthSessionWrapper.getChildWithDefault encountered "
+                    "PixelatedAuthSessionWrapper.getChildWithDefault encountered "
                     "unexpected error")
                 return ErrorPage(500, None, None)
 

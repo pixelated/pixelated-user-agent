@@ -47,6 +47,18 @@ MODE_STARTUP = 1
 MODE_RUNNING = 2
 
 
+class PublicRootResource(BaseResource, object):
+
+    def __init__(self, services_factory, assets_path):
+        super(PublicRootResource, self).__init__(services_factory)
+        self._child_resources = dict(
+            assets=File(assets_path)
+        )
+
+    def getChild(self, path, request):
+        return self._child_resources.get(path) or NoResource()
+
+
 class RootResource(BaseResource):
     def __init__(self, services_factory):
         BaseResource.__init__(self, services_factory)

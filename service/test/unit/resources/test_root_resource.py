@@ -1,14 +1,42 @@
+import os
 import re
 
 from mock import MagicMock, patch
 from mockito import mock, when, any as ANY
 
+import pixelated
 from pixelated.application import UserAgentMode
 from pixelated.resources.features_resource import FeaturesResource
 from test.unit.resources import DummySite
+from twisted.cred.checkers import ANONYMOUS
+from twisted.internet.defer import succeed
 from twisted.trial import unittest
+from twisted.web.resource import IResource
+from twisted.web.static import File
 from twisted.web.test.requesthelper import DummyRequest
-from pixelated.resources.root_resource import RootResource, MODE_STARTUP, MODE_RUNNING
+from pixelated.resources.root_resource import PublicRootResource, RootResource, MODE_STARTUP, MODE_RUNNING
+
+
+class TestPublicRootResource(unittest.TestCase):
+
+    def setUp(self):
+        self.portal_mock = mock()
+        assets_path = os.path.abspath(
+            os.path.join(os.path.abspath(pixelated.__file__), '..', '..', '..', 'web-ui', 'public')
+        )
+        services_factory = mock()
+        self.public_root_resource = PublicRootResource(services_factory, assets_path=assets_path)
+        self.web = DummySite(self.public_root_resource)
+        self.request = DummyRequest(['assets', 'dummy.json'])
+
+    def test_assets_should_be_available(self):
+        d = self.web.get(self.request)
+
+        def assert_response(_):
+            self.assertEqual(200, self.request.responseCode)
+
+        d.addCallback(assert_response)
+        return d
 
 
 class TestRootResource(unittest.TestCase):
@@ -101,6 +129,20 @@ class TestRootResource(unittest.TestCase):
             self.assertEqual("Unauthorized!", request.written[0])
 
         d.addCallback(assert_unauthorized)
+        return d
+
+    def test_GET_should_return_404_for_non_existing_resource(self):
+        request = DummyRequest(['/non-existing-child'])
+        request.method = 'GET'
+
+        request.getCookie = MagicMock(return_value='stubbed csrf token')
+
+        d = self.web.get(request)
+
+        def assert_not_found(_):
+            self.assertEqual(404, request.responseCode)
+
+        d.addCallback(assert_not_found)
         return d
 
     def test_should_404_non_existing_resource_with_valid_csrf(self):
