@@ -25,15 +25,25 @@ class TestPublicRootResource(unittest.TestCase):
             os.path.join(os.path.abspath(pixelated.__file__), '..', '..', '..', 'web-ui', 'public')
         )
         services_factory = mock()
-        self.public_root_resource = PublicRootResource(services_factory, assets_path=assets_path)
+        self.public_root_resource = PublicRootResource(services_factory, assets_path=assets_path, provider=mock())
         self.web = DummySite(self.public_root_resource)
-        self.request = DummyRequest(['assets', 'dummy.json'])
 
     def test_assets_should_be_available(self):
-        d = self.web.get(self.request)
+        request = DummyRequest(['assets', 'dummy.json'])
+        d = self.web.get(request)
 
         def assert_response(_):
-            self.assertEqual(200, self.request.responseCode)
+            self.assertEqual(200, request.responseCode)
+
+        d.addCallback(assert_response)
+        return d
+
+    def test_login_should_be_available(self):
+        request = DummyRequest(['login'])
+        d = self.web.get(request)
+
+        def assert_response(_):
+            self.assertEqual(200, request.responseCode)
 
         d.addCallback(assert_response)
         return d

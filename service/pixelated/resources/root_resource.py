@@ -49,10 +49,11 @@ MODE_RUNNING = 2
 
 class PublicRootResource(BaseResource, object):
 
-    def __init__(self, services_factory, assets_path):
+    def __init__(self, services_factory, assets_path, **kwargs):
         super(PublicRootResource, self).__init__(services_factory)
         self._child_resources = dict(
-            assets=File(assets_path)
+            assets=File(assets_path),
+            login=LoginResource(services_factory, **{k: kwargs[k] for k in kwargs if k in ('provider', 'disclaimer_banner', 'authenticator')})
         )
 
     def getChild(self, path, request):
