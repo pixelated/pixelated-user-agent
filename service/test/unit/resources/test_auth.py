@@ -20,9 +20,8 @@ class TestPixelatedAuthSessionWrapper(unittest.TestCase):
         self.user_uuid_mock = mock()
         self.root_resource_mock = mock()
         self.anonymous_resource_mock = mock()
-        credential_factories_mock = mock()
 
-        self.session_wrapper = PixelatedAuthSessionWrapper(self.portal_mock, self.root_resource_mock, self.anonymous_resource_mock, credential_factories_mock)
+        self.session_wrapper = PixelatedAuthSessionWrapper(self.portal_mock, self.root_resource_mock, self.anonymous_resource_mock)
         self.request = DummyRequest([])
         self.request.prepath = ['']
         self.request.path = '/'
