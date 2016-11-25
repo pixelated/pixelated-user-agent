@@ -1,5 +1,5 @@
-behave==1.2.4
-selenium==2.44.0
+behave==1.2.5
+selenium==3.0.1
 mock==2.0.0
 httmock==1.2.2
 mockito==0.5.2
