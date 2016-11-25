@@ -18,10 +18,11 @@ class TestPixelatedAuthSessionWrapper(unittest.TestCase):
     def setUp(self):
         self.portal_mock = mock()
         self.user_uuid_mock = mock()
-        self.root_resource_mock = mock()
+        services_factory = mock()
+        self.root_resource = RootResource(services_factory)
         self.anonymous_resource_mock = mock()
 
-        self.session_wrapper = PixelatedAuthSessionWrapper(self.portal_mock, self.root_resource_mock, self.anonymous_resource_mock)
+        self.session_wrapper = PixelatedAuthSessionWrapper(self.portal_mock, self.root_resource, self.anonymous_resource_mock)
         self.request = DummyRequest([])
         self.request.prepath = ['']
         self.request.path = '/'
@@ -45,7 +46,7 @@ class TestPixelatedAuthSessionWrapper(unittest.TestCase):
         d = deferred_resource.d
 
         def assert_root_resource(resource):
-            self.assertIs(resource, self.root_resource_mock)
+            self.assertIs(resource, self.root_resource)
 
         d.addCallback(assert_root_resource)
         return d
