@@ -29,7 +29,7 @@ class TestPixelatedAuthSessionWrapper(unittest.TestCase):
     def test_should_proxy_to_login_resource_when_the_user_is_not_logged_in(self):
         when(self.portal_mock).login(ANY(), None, IResource).thenReturn(succeed((IResource, ANONYMOUS, lambda: None)))
 
-        deferred_resource = self.session_wrapper.getChildWithDefault('/', self.request)
+        deferred_resource = self.session_wrapper.getChildWithDefault('', self.request)
         d = deferred_resource.d
 
         def assert_anonymous_resource(resource):
@@ -41,7 +41,7 @@ class TestPixelatedAuthSessionWrapper(unittest.TestCase):
     def test_should_proxy_to_root_resource_when_the_user_is_logged_in(self):
         when(self.portal_mock).login(ANY(), None, IResource).thenReturn(succeed((IResource, self.user_uuid_mock, lambda: None)))
 
-        deferred_resource = self.session_wrapper.getChildWithDefault('/', self.request)
+        deferred_resource = self.session_wrapper.getChildWithDefault('', self.request)
         d = deferred_resource.d
 
         def assert_root_resource(resource):
@@ -53,7 +53,7 @@ class TestPixelatedAuthSessionWrapper(unittest.TestCase):
     def test_should_proxy_to_unauthorized_resource_when_login_fails(self):
         when(self.portal_mock).login(ANY(), None, IResource).thenReturn(fail(failure.Failure(error.UnhandledCredentials('dummy message'))))
 
-        deferred_resource = self.session_wrapper.getChildWithDefault('/', self.request)
+        deferred_resource = self.session_wrapper.getChildWithDefault('', self.request)
         d = deferred_resource.d
 
         def assert_unauthorized_resource(resource):
