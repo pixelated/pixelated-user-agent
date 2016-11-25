@@ -13,11 +13,16 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+
+import time
+
+from selenium.common.exceptions import (
+    StaleElementReferenceException,
+    TimeoutException)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
-import time
+
 from test.support.integration import MailBuilder
 
 LOADING = 'loading'

@@ -13,23 +13,23 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import uuid
 import os
+import uuid
 
-from selenium import webdriver
 from crochet import setup, wait_for
-
+from leap.common.events.server import ensure_server
+from selenium import webdriver
 from twisted.internet import defer
 from twisted.logger import globalLogBeginner, textFileLogObserver, Logger
-
-from test.support.integration import AppTestClient
-from steps.common import *
-
-from leap.common.events.server import ensure_server
 
 from pixelated.application import UserAgentMode
 from pixelated.config.site import PixelatedSite
 from pixelated.resources.features_resource import FeaturesResource
+from test.support.integration import AppTestClient
+from steps.common import (
+    DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S,
+    HOMEPAGE_URL,
+    MULTI_USER_PORT)
 
 setup()
 

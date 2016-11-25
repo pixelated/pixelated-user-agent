@@ -13,16 +13,21 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from email.mime.application import MIMEApplication
-from time import sleep
-from leap.bitmask.mail.mail import Message
-from common import *
-from test.support.integration import MailBuilder
-from behave import given
-from crochet import wait_for
-from uuid import uuid4
 from email.MIMEMultipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
+from uuid import uuid4
+
+from behave import given, then, when
+from crochet import wait_for
+from selenium.webdriver.common.by import By
+
+from common import (
+    fill_by_css_selector,
+    find_element_by_css_selector,
+    find_elements_by_css_selector,
+    page_has_css,
+    wait_until_element_is_visible_by_locator)
 
 
 @given(u'I have a mail with an attachment in my inbox')

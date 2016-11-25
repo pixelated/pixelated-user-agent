@@ -13,8 +13,20 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from common import *
-from selenium.common.exceptions import NoSuchElementException
+
+from behave import when, then, given
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+
+from common import (
+    ImplicitWait,
+    execute_ignoring_staleness,
+    find_element_by_id,
+    mail_list_with_subject_exists,
+    wait_for_condition,
+    wait_for_loading_to_finish,
+    wait_until_element_is_visible_by_locator,
+    wait_until_elements_are_visible_by_locator)
 
 
 def find_current_mail(context):
