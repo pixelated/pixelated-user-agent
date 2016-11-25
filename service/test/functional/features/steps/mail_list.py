@@ -18,7 +18,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 
 def find_current_mail(context):
-    print 'searching for mail [%s]' % context.current_mail_id
+    print('searching for mail [%s]' % context.current_mail_id)
     return find_element_by_id(context, '%s' % context.current_mail_id)
 
 

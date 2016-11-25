@@ -186,7 +186,7 @@ def get_console_log(context):
     for entry in logs:
         msg = entry['message']
         if not (msg.startswith('x  off') or msg.startswith('<- on')):
-            print entry['message']
+            print(entry['message'])
 
 
 def create_email(context):
