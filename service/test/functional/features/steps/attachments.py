@@ -112,6 +112,5 @@ def click_remove_icon(context):
 
 @then(u'I should not see it attached')
 def assert_attachment_removed(context):
-    attachments_list_ul = find_elements_by_css_selector(context, '#attachment-list-item')
     attachments_list_li = context.browser.find_elements(By.CSS_SELECTOR, '#attachment-list-item li a')
     assert len(attachments_list_li) == 0
