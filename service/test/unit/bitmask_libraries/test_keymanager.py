@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+import datetime
 from mock import patch, MagicMock
 from mockito import when
 from unittest import TestCase
@@ -111,10 +112,23 @@ class KeymanagerTest(TestCase):
 
         self.keymanager.delete_key_pair.assert_called_once()
 
+    def test_key_should_be_renewed_two_months_prior_to_expiry(self):
+        today = datetime.datetime.now()
+        mock_key = MagicMock()
+        mock_key.expiry_date = today - datetime.timedelta(days=20)
+        self.assertTrue(self.keymanager.should_renew(mock_key))
+
+    def test_key_should_not_be_renewed_before_two_months_prior_to_expiry(self):
+        today = datetime.datetime.now()
+        mock_key = MagicMock()
+        mock_key.expiry_date = today + datetime.timedelta(days=61)
+        self.assertFalse(self.keymanager.should_renew(mock_key))
+
     @defer.inlineCallbacks
-    def test_keymanager_regenerate_key_pair_if_current_key_expired(self):
+    def test_keymanager_regenerate_key_pair_if_current_key_is_about_to_expire(self):
+        today = datetime.datetime.now()
         mock_open_pgp_key = MagicMock()
-        mock_open_pgp_key.has_expired = MagicMock(return_value=True)
+        mock_open_pgp_key.expiry_date = today - datetime.timedelta(days=20)
         when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
 
         yield self.keymanager.generate_openpgp_key()
@@ -124,8 +138,9 @@ class KeymanagerTest(TestCase):
 
     @defer.inlineCallbacks
     def test_key_regeneration_does_not_delete_key_when_upload_fails(self):
+        today = datetime.datetime.now()
         mock_open_pgp_key = MagicMock()
-        mock_open_pgp_key.has_expired = MagicMock(return_value=True)
+        mock_open_pgp_key.expiry_date = today - datetime.timedelta(days=20)
         self.leap_keymanager.get_key = MagicMock(return_value=defer.succeed(mock_open_pgp_key))
         self.leap_keymanager.send_key = MagicMock(side_effect=UploadKeyError('Could not upload key'))
 

@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+import datetime
 from twisted.internet import defer
 from twisted.logger import Logger
 
@@ -27,7 +28,12 @@ class UploadKeyError(Exception):
     pass
 
 
+TWO_MONTHS = 60
+DEFAULT_EXTENSION_THRESHOLD = TWO_MONTHS
+
+
 class Keymanager(object):
+
     def __init__(self, provider, soledad, email_address, token, uuid):
         nicknym_url = provider._discover_nicknym_server()
         self._email = email_address
@@ -43,7 +49,7 @@ class Keymanager(object):
         current_key = yield self._key_exists(self._email)
         if not current_key:
             yield self._generate_key_and_send_to_leap()
-        elif current_key.has_expired():
+        elif self.should_renew(current_key):
             yield self._regenerate_key()
             yield self._send_key_to_leap()
 
@@ -68,6 +74,11 @@ class Keymanager(object):
             defer.returnValue(current_key)
         except KeyNotFound:
             defer.returnValue(None)
+
+    def should_renew(self, key):
+        # feature envy -- should be in keymanager
+        till_expiry_date = (key.expiry_date - datetime.datetime.now())
+        return till_expiry_date.days < DEFAULT_EXTENSION_THRESHOLD
 
     @defer.inlineCallbacks
     def get_key(self, email, private=False, fetch_remote=True):
