@@ -21,13 +21,12 @@ from selenium.webdriver.common.by import By
 from common import (
     fill_by_css_selector,
     find_element_by_css_selector,
-    MULTI_USER_URL,
     wait_until_element_is_visible_by_locator)
 
 
 @when(u'I open the login page')
 def login_page(context):
-    context.browser.get(MULTI_USER_URL + '/login')
+    context.browser.get(context.multi_user_url + '/login')
 
 
 @when(u'I enter {username} and {password} as credentials')

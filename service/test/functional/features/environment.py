@@ -26,10 +26,7 @@ from pixelated.application import UserAgentMode
 from pixelated.config.site import PixelatedSite
 from pixelated.resources.features_resource import FeaturesResource
 from test.support.integration import AppTestClient
-from steps.common import (
-    DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S,
-    HOMEPAGE_URL,
-    MULTI_USER_PORT)
+from steps.common import DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S
 
 setup()
 
@@ -46,6 +43,11 @@ def start_app_test_client(client, mode):
 
 
 def before_all(context):
+    userdata = context.config.userdata
+    context.homepage_url = userdata.get('homepage_url', 'http://localhost:8889')
+    context.multi_user_port = userdata.getint('multi_user_port', default=4568)
+    context.multi_user_url = userdata.get('multi_user_url', 'http://localhost:4568')
+
     ensure_server()
     PixelatedSite.disable_csp_requests()
     client = AppTestClient()
@@ -56,7 +58,7 @@ def before_all(context):
 
     multi_user_client = AppTestClient()
     start_app_test_client(multi_user_client, UserAgentMode(is_single_user=False))
-    multi_user_client.listenTCP(port=MULTI_USER_PORT)
+    multi_user_client.listenTCP(port=context.multi_user_port)
     context.multi_user_client = multi_user_client
 
 
@@ -69,7 +71,7 @@ def before_feature(context, feature):
     context.browser.set_window_size(1280, 1024)
     context.browser.implicitly_wait(DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S)
     context.browser.set_page_load_timeout(60)  # wait for data
-    context.browser.get(HOMEPAGE_URL)
+    context.browser.get(context.homepage_url)
 
 
 def after_step(context, step):

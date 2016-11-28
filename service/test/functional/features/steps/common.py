@@ -25,17 +25,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from test.support.integration import MailBuilder
 
-LOADING = 'loading'
-
 TIMEOUT_IN_S = 20
 
 DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S = 10.0
-
-HOMEPAGE_URL = 'http://localhost:8889/'
-
-MULTI_USER_PORT = 4568
-
-MULTI_USER_URL = 'http://localhost:%d/' % MULTI_USER_PORT
 
 
 class ImplicitWait(object):
