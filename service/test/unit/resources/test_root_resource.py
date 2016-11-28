@@ -14,39 +14,7 @@ from twisted.trial import unittest
 from twisted.web.resource import IResource
 from twisted.web.static import File
 from twisted.web.test.requesthelper import DummyRequest
-from pixelated.resources.root_resource import PublicRootResource, RootResource, MODE_STARTUP, MODE_RUNNING
-
-
-class TestPublicRootResource(unittest.TestCase):
-
-    def setUp(self):
-        self.portal_mock = mock()
-        assets_path = os.path.abspath(
-            os.path.join(os.path.abspath(pixelated.__file__), '..', '..', '..', 'web-ui', 'public')
-        )
-        services_factory = mock()
-        self.public_root_resource = PublicRootResource(services_factory, assets_path=assets_path, provider=mock())
-        self.web = DummySite(self.public_root_resource)
-
-    def test_assets_should_be_available(self):
-        request = DummyRequest(['assets', 'dummy.json'])
-        d = self.web.get(request)
-
-        def assert_response(_):
-            self.assertEqual(200, request.responseCode)
-
-        d.addCallback(assert_response)
-        return d
-
-    def test_login_should_be_available(self):
-        request = DummyRequest(['login'])
-        d = self.web.get(request)
-
-        def assert_response(_):
-            self.assertEqual(200, request.responseCode)
-
-        d.addCallback(assert_response)
-        return d
+from pixelated.resources.root_resource import InboxResource, RootResource, MODE_STARTUP, MODE_RUNNING
 
 
 class TestRootResource(unittest.TestCase):
@@ -63,12 +31,13 @@ class TestRootResource(unittest.TestCase):
         self.mail_service.account_email = self.MAIL_ADDRESS
 
         root_resource = RootResource(self.services_factory)
-        root_resource._html_template = "<html><head><title>$account_email</title></head></html>"
-        root_resource._mode = root_resource
         self.web = DummySite(root_resource)
         self.root_resource = root_resource
 
     def test_render_GET_should_template_account_email(self):
+        self.root_resource._inbox_resource._html_template = "<html><head><title>$account_email</title></head></html>"
+        self.root_resource.initialize(provider=mock(), authenticator=mock())
+
         request = DummyRequest([''])
         request.addCookie = lambda key, value: 'stubbed'
 
@@ -126,6 +95,8 @@ class TestRootResource(unittest.TestCase):
         request.requestHeaders.setRawHeaders('x-xsrf-token', [csrf_token])
 
     def test_should_unauthorize_child_resource_ajax_requests_when_csrf_mismatch(self):
+        self.root_resource.initialize(provider=mock(), authenticator=mock())
+
         request = DummyRequest(['/child'])
         request.method = 'POST'
         self._mock_ajax_csrf(request, 'stubbed csrf token')
@@ -141,10 +112,25 @@ class TestRootResource(unittest.TestCase):
         d.addCallback(assert_unauthorized)
         return d
 
-    def test_GET_should_return_404_for_non_existing_resource(self):
-        request = DummyRequest(['/non-existing-child'])
+    def test_GET_should_return_503_for_uninitialized_resource(self):
+        request = DummyRequest(['/sandbox/'])
         request.method = 'GET'
 
+        request.getCookie = MagicMock(return_value='stubbed csrf token')
+
+        d = self.web.get(request)
+
+        def assert_unavailable(_):
+            self.assertEqual(503, request.responseCode)
+
+        d.addCallback(assert_unavailable)
+        return d
+
+    def test_GET_should_return_404_for_non_existing_resource(self):
+        self.root_resource.initialize(provider=mock(), authenticator=mock())
+
+        request = DummyRequest(['/non-existing-child'])
+        request.method = 'GET'
         request.getCookie = MagicMock(return_value='stubbed csrf token')
 
         d = self.web.get(request)
@@ -156,10 +142,11 @@ class TestRootResource(unittest.TestCase):
         return d
 
     def test_should_404_non_existing_resource_with_valid_csrf(self):
+        self.root_resource.initialize(provider=mock(), authenticator=mock())
+
         request = DummyRequest(['/non-existing-child'])
         request.method = 'POST'
         self._mock_ajax_csrf(request, 'stubbed csrf token')
-
         request.getCookie = MagicMock(return_value='stubbed csrf token')
 
         d = self.web.get(request)
@@ -175,7 +162,7 @@ class TestRootResource(unittest.TestCase):
         request = DummyRequest(['features'])
 
         request.getCookie = MagicMock(return_value='irrelevant -- stubbed')
-        self.root_resource._child_resources.add('features', FeaturesResource())
+        self.root_resource.putChild('features', FeaturesResource())
         self.root_resource._mode = MODE_RUNNING
 
         d = self.web.get(request)
@@ -187,6 +174,8 @@ class TestRootResource(unittest.TestCase):
         return d
 
     def test_should_unauthorize_child_resource_non_ajax_POST_requests_when_csrf_input_mismatch(self):
+        self.root_resource.initialize(provider=mock(), authenticator=mock())
+
         request = DummyRequest(['mails'])
         request.method = 'POST'
         request.addArg('csrftoken', 'some csrf token')
@@ -204,3 +193,45 @@ class TestRootResource(unittest.TestCase):
 
         d.addCallback(assert_unauthorized)
         return d
+
+    def test_assets_should_be_publicly_available(self):
+        self.root_resource.initialize(provider=mock(), authenticator=mock())
+
+        request = DummyRequest(['assets', 'dummy.json'])
+        d = self.web.get(request)
+
+        def assert_response(_):
+            self.assertEqual(200, request.responseCode)
+
+        d.addCallback(assert_response)
+        return d
+
+    def test_login_should_be_publicly_available(self):
+        self.root_resource.initialize(provider=mock(), authenticator=mock())
+
+        request = DummyRequest(['login'])
+        d = self.web.get(request)
+
+        def assert_response(_):
+            self.assertEqual(200, request.responseCode)
+
+        d.addCallback(assert_response)
+        return d
+
+    def test_root_should_be_handled_by_inbox_resource(self):
+        request = DummyRequest([])
+        request.prepath = ['']
+        request.path = '/'
+        # TODO: setup mocked portal
+
+        resource = self.root_resource.getChildWithDefault(request.prepath[-1], request)
+        self.assertIsInstance(resource, InboxResource)
+
+    def test_inbox_should_not_be_public(self):
+        request = DummyRequest([])
+        request.prepath = ['']
+        request.path = '/'
+        # TODO: setup mocked portal
+
+        resource = self.root_resource.getChildWithDefault(request.prepath[-1], request)
+        self.assertIsInstance(resource, InboxResource)
