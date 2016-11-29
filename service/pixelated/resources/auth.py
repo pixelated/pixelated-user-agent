@@ -64,10 +64,18 @@ class SessionChecker(object):
 class PixelatedRealm(object):
     implements(portal.IRealm)
 
+    def __init__(self, authenticated_resource, public_resource):
+        self._authenticated_resource = authenticated_resource
+        self._public_resource = public_resource
+
     def requestAvatar(self, avatarId, mind, *interfaces):
-        if IResource in interfaces:
-            return IResource, avatarId, lambda: None
-        raise NotImplementedError()
+        if IResource not in interfaces:
+            raise NotImplementedError()
+        if avatarId == checkers.ANONYMOUS:
+            avatar = self._public_resource
+        else:
+            avatar = self._authenticated_resource
+        return IResource, avatar, lambda: None
 
 
 @implementer(IResource)
@@ -93,23 +101,18 @@ class PixelatedAuthSessionWrapper(object):
         return util.DeferredResource(self._login(creds, request))
 
     def _login(self, credentials, request):
-        pattern = re.compile("^/sandbox/")
-
         def loginSucceeded(args):
             interface, avatar, logout = args
-            if avatar == checkers.ANONYMOUS and not pattern.match(request.path):
-                return self._anonymous_resource
-            else:
-                return self._root_resource
+            # TODO: make sandbox public
+            return avatar
 
         def loginFailed(result):
             if result.check(error.Unauthorized, error.LoginFailed):
                 return UnauthorizedResource(self._credentialFactories)
             else:
-                log.err(
-                    result,
+                log.error(
                     "PixelatedAuthSessionWrapper.getChildWithDefault encountered "
-                    "unexpected error")
+                    "unexpected error: %s" % result)
                 return ErrorPage(500, None, None)
 
         d = self._portal.login(credentials, None, IResource)
