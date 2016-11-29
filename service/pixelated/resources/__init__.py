@@ -13,8 +13,9 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-
+import hashlib
 import json
+import os
 
 from twisted.web.http import UNAUTHORIZED
 from twisted.web.resource import Resource
@@ -25,6 +26,8 @@ from pixelated.resources.session import IPixelatedSession
 from twisted.web.http import INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE
 
 log = Logger()
+
+CSRF_TOKEN_LENGTH = 32
 
 
 class SetEncoder(json.JSONEncoder):
@@ -61,6 +64,11 @@ class BaseResource(Resource):
     def __init__(self, services_factory):
         Resource.__init__(self)
         self._services_factory = services_factory
+
+    def _add_csrf_cookie(self, request):
+        csrf_token = hashlib.sha256(os.urandom(CSRF_TOKEN_LENGTH)).hexdigest()
+        request.addCookie('XSRF-TOKEN', csrf_token)
+        log.debug('XSRF-TOKEN added: %s' % csrf_token)
 
     def _get_user_id_from_request(self, request):
         if self._services_factory.mode.is_single_user:

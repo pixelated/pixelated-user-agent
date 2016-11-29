@@ -13,10 +13,8 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import hashlib
 import json
 import os
-from string import Template
 from pixelated.resources.users import UsersResource
 
 import pixelated
@@ -34,56 +32,20 @@ from pixelated.resources.mail_resource import MailResource
 from pixelated.resources.mails_resource import MailsResource
 from pixelated.resources.tags_resource import TagsResource
 from pixelated.resources.keys_resource import KeysResource
+from pixelated.resources.inbox_resource import InboxResource, MODE_STARTUP, MODE_RUNNING
 from twisted.web.resource import NoResource
 from twisted.web.static import File
 
 from twisted.logger import Logger
 
-log = Logger()
+logger = Logger()
 
 
-CSRF_TOKEN_LENGTH = 32
-
-MODE_STARTUP = 1
-MODE_RUNNING = 2
+class PublicRootResource(BaseResource):
+    pass
 
 
-class InboxResource(BaseResource):
-    isLeaf = True
-
-    def __init__(self, services_factory):
-        BaseResource.__init__(self, services_factory)
-        self._templates_folder = self._get_templates_folder()
-        self._html_template = open(os.path.join(self._templates_folder, 'index.html')).read()
-        with open(os.path.join(self._templates_folder, 'Interstitial.html')) as f:
-            self.interstitial = f.read()
-        self._mode = MODE_STARTUP
-
-    def initialize(self):
-        self._mode = MODE_RUNNING
-
-    def _get_templates_folder(self):
-        path = os.path.dirname(os.path.abspath(pixelated.__file__))
-        return os.path.join(path, 'assets')
-
-    def _add_csrf_cookie(self, request):
-        csrf_token = hashlib.sha256(os.urandom(CSRF_TOKEN_LENGTH)).hexdigest()
-        request.addCookie('XSRF-TOKEN', csrf_token)
-
-    def _is_starting(self):
-        return self._mode == MODE_STARTUP
-
-    def render_GET(self, request):
-        self._add_csrf_cookie(request)
-        if self._is_starting():
-            return self.interstitial
-        else:
-            account_email = self.mail_service(request).account_email
-            response = Template(self._html_template).safe_substitute(account_email=account_email)
-            return str(response)
-
-
-class RootResource(BaseResource):
+class RootResource(PublicRootResource):
     def __init__(self, services_factory):
         BaseResource.__init__(self, services_factory)
         self._assets_folder = self._get_assets_folder()
@@ -100,6 +62,7 @@ class RootResource(BaseResource):
         self.putChild('assets', File(self._assets_folder))
         self.putChild('startup-assets', File(self._startup_assets_folder))
         self._mode = MODE_STARTUP
+        logger.debug('Root in STARTUP mode. %s' % self)
 
     def getChildWithDefault(self, path, request):
         if path == '':
@@ -116,7 +79,9 @@ class RootResource(BaseResource):
             return True
 
         xsrf_token = request.getCookie('XSRF-TOKEN')
+        logger.debug('CSRF token: %s' % xsrf_token)
 
+        # TODO: how is comparing the cookie-csrf with the HTTP-header-csrf adding any csrf protection?
         ajax_request = (request.getHeader('x-requested-with') == 'XMLHttpRequest')
         if ajax_request:
             xsrf_header = request.getHeader('x-xsrf-token')
@@ -143,6 +108,7 @@ class RootResource(BaseResource):
 
         self._inbox_resource.initialize()
         self._mode = MODE_RUNNING
+        logger.debug('Root in RUNNING mode. %s' % self)
 
     def _get_assets_folder(self):
         pixelated_path = os.path.dirname(os.path.abspath(pixelated.__file__))
