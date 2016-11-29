@@ -20,7 +20,6 @@ from crochet import setup, wait_for
 from leap.common.events.server import ensure_server
 from selenium import webdriver
 from twisted.internet import defer
-from twisted.logger import globalLogBeginner, textFileLogObserver, Logger
 
 from pixelated.application import UserAgentMode
 from pixelated.config.site import PixelatedSite
@@ -29,12 +28,6 @@ from test.support.integration import AppTestClient
 from steps.common import DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S
 
 setup()
-
-observers = [textFileLogObserver(open(os.devnull, 'w'))]
-
-globalLogBeginner.beginLoggingTo(observers)
-
-Logger('twisted')
 
 
 @wait_for(timeout=5.0)
