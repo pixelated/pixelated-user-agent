@@ -7,6 +7,7 @@ from mockito import mock, when, any as ANY
 import pixelated
 from pixelated.application import UserAgentMode
 from pixelated.resources.features_resource import FeaturesResource
+from pixelated.resources.login_resource import LoginResource
 from test.unit.resources import DummySite
 from twisted.cred.checkers import ANONYMOUS
 from twisted.internet.defer import succeed
@@ -14,7 +15,11 @@ from twisted.trial import unittest
 from twisted.web.resource import IResource, getChildForRequest
 from twisted.web.static import File
 from twisted.web.test.requesthelper import DummyRequest
-from pixelated.resources.root_resource import InboxResource, RootResource, MODE_STARTUP, MODE_RUNNING
+from pixelated.resources.root_resource import InboxResource, PublicRootResource, RootResource, MODE_STARTUP, MODE_RUNNING
+
+
+class TestPublicRootResource(unittest.TestCase):
+    pass
 
 
 class TestRootResource(unittest.TestCase):
@@ -34,11 +39,18 @@ class TestRootResource(unittest.TestCase):
         self.web = DummySite(root_resource)
         self.root_resource = root_resource
 
-    def test_root_should_delegate_to_inbox(self):
+    def test_root_url_should_delegate_to_inbox(self):
         request = DummyRequest([''])
         request.addCookie = lambda key, value: 'stubbed'
         child_resource = getChildForRequest(self.root_resource, request)
         self.assertIsInstance(child_resource, InboxResource)
+
+    def test_login_url_should_delegate_to_login_resource(self):
+        self.root_resource.initialize(provider=mock(), authenticator=mock())
+        request = DummyRequest(['login'])
+        request.addCookie = lambda key, value: 'stubbed'
+        child_resource = getChildForRequest(self.root_resource, request)
+        self.assertIsInstance(child_resource, LoginResource)
 
     def _test_should_renew_xsrf_cookie(self):
         request = DummyRequest([''])
