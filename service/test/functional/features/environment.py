@@ -14,7 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import os
-import uuid
+import re
+import time
 
 from crochet import setup, wait_for
 from leap.common.events.server import ensure_server
@@ -68,12 +69,23 @@ def before_feature(context, feature):
 
 
 def after_step(context, step):
-    if step.status == 'failed':
-        id = str(uuid.uuid4())
-        os.chdir("screenshots")
-        context.browser.save_screenshot('failed ' + str(step.name) + '_' + id + ".png")
-        save_source(context, 'failed ' + str(step.name) + '_' + id + ".html")
-        os.chdir("../")
+    _debug_on_error(context, step)
+    _save_screenshot(context, step)
+
+
+def _debug_on_error(context, step):
+    if step.status == 'failed' and context.config.userdata.getbool("debug"):
+        import pdb
+        pdb.post_mortem(step.exc_traceback)
+
+
+def _save_screenshot(context, step):
+    if (step.status == 'failed' and
+            context.config.userdata.getbool("screenshots", True)):
+        timestamp = time.strftime("%Y-%m-%d-%H-%M-%S")
+        filename = re.sub('\W', '-', timestamp + ' failed ' + str(step.name))
+        filepath = os.path.join('screenshots', filename + '.png')
+        context.browser.save_screenshot(filepath)
 
 
 def after_feature(context, feature):
@@ -92,8 +104,3 @@ def cleanup_all_mails(context):
             yield context.client.mail_store.delete_mail(mail.ident)
 
     return _delete_all_mails()
-
-
-def save_source(context, filename='/tmp/source.html'):
-    with open(filename, 'w') as out:
-        out.write(context.browser.page_source.encode('utf8'))
