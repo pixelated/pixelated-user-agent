@@ -42,12 +42,15 @@ logger = Logger()
 
 
 class PublicRootResource(BaseResource):
-    pass
+
+    def __init__(self, services_factory):
+        BaseResource.__init__(self, services_factory)
 
 
 class RootResource(PublicRootResource):
+
     def __init__(self, services_factory):
-        BaseResource.__init__(self, services_factory)
+        PublicRootResource.__init__(self, services_factory)
         self._assets_folder = self._get_assets_folder()
         self._startup_assets_folder = self._get_startup_folder()
         self._static_folder = self._get_static_folder()
