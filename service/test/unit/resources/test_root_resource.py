@@ -54,7 +54,8 @@ class TestRootResource(unittest.TestCase):
         child_resource = getChildForRequest(self.root_resource, request)
         self.assertIsInstance(child_resource, InboxResource)
 
-    def test_login_url_should_delegate_to_login_resource(self):
+    @patch('pixelated.config.sessions.register')
+    def test_login_url_should_delegate_to_login_resource(self, *mocks):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
         request = DummyRequest(['login'])
         request.addCookie = lambda key, value: 'stubbed'
@@ -104,7 +105,8 @@ class TestRootResource(unittest.TestCase):
         request.requestHeaders.setRawHeaders('x-requested-with', ['XMLHttpRequest'])
         request.requestHeaders.setRawHeaders('x-xsrf-token', [csrf_token])
 
-    def test_should_unauthorize_child_resource_ajax_requests_when_csrf_mismatch(self):
+    @patch('pixelated.config.sessions.register')
+    def test_should_unauthorize_child_resource_ajax_requests_when_csrf_mismatch(self, *mocks):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
 
         request = DummyRequest(['/child'])
@@ -136,10 +138,11 @@ class TestRootResource(unittest.TestCase):
         d.addCallback(assert_unavailable)
         return d
 
-    def test_GET_should_return_404_for_non_existing_resource(self):
+    @patch('pixelated.config.sessions.register')
+    def test_GET_should_return_404_for_non_existing_resource(self, *mocks):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
 
-        request = DummyRequest(['/non-existing-child'])
+        request = DummyRequest(['non-existing-child'])
         request.method = 'GET'
         request.getCookie = MagicMock(return_value='stubbed csrf token')
 
@@ -151,10 +154,11 @@ class TestRootResource(unittest.TestCase):
         d.addCallback(assert_not_found)
         return d
 
-    def test_should_404_non_existing_resource_with_valid_csrf(self):
+    @patch('pixelated.config.sessions.register')
+    def test_should_404_non_existing_resource_with_valid_csrf(self, *mocks):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
 
-        request = DummyRequest(['/non-existing-child'])
+        request = DummyRequest(['non-existing-child'])
         request.method = 'POST'
         self._mock_ajax_csrf(request, 'stubbed csrf token')
         request.getCookie = MagicMock(return_value='stubbed csrf token')
@@ -183,7 +187,8 @@ class TestRootResource(unittest.TestCase):
         d.addCallback(assert_unauthorized)
         return d
 
-    def test_should_unauthorize_child_resource_non_ajax_POST_requests_when_csrf_input_mismatch(self):
+    @patch('pixelated.config.sessions.register')
+    def test_should_unauthorize_child_resource_non_ajax_POST_requests_when_csrf_input_mismatch(self, *mocks):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
 
         request = DummyRequest(['mails'])
@@ -204,7 +209,8 @@ class TestRootResource(unittest.TestCase):
         d.addCallback(assert_unauthorized)
         return d
 
-    def test_assets_should_be_publicly_available(self):
+    @patch('pixelated.config.sessions.register')
+    def test_assets_should_be_publicly_available(self, *mocks):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
 
         request = DummyRequest(['assets', 'dummy.json'])
@@ -216,7 +222,8 @@ class TestRootResource(unittest.TestCase):
         d.addCallback(assert_response)
         return d
 
-    def test_login_should_be_publicly_available(self):
+    @patch('pixelated.config.sessions.register')
+    def test_login_should_be_publicly_available(self, *mocks):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
 
         request = DummyRequest(['login'])
