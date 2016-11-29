@@ -80,7 +80,7 @@ class KeymanagerTest(TestCase):
 
     def test_keymanager_generate_openpgp_key_doesnt_regenerate_preexisting_key(self):
         mock_open_pgp_key = MagicMock()
-        mock_open_pgp_key.has_expired = MagicMock(return_value=False)
+        mock_open_pgp_key.should_be_renewed = MagicMock(return_value=False)
         when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
 
         self.keymanager._gen_key = MagicMock()
@@ -91,7 +91,7 @@ class KeymanagerTest(TestCase):
 
     def test_keymanager_generate_openpgp_key_doesnt_upload_preexisting_key(self):
         mock_open_pgp_key = MagicMock()
-        mock_open_pgp_key.has_expired = MagicMock(return_value=False)
+        mock_open_pgp_key.should_be_renewed = MagicMock(return_value=False)
         when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
 
         self.keymanager._send_key_to_leap = MagicMock()
@@ -112,23 +112,10 @@ class KeymanagerTest(TestCase):
 
         self.keymanager.delete_key_pair.assert_called_once()
 
-    def test_key_should_be_renewed_two_months_prior_to_expiry(self):
-        today = datetime.datetime.now()
-        mock_key = MagicMock()
-        mock_key.expiry_date = today - datetime.timedelta(days=20)
-        self.assertTrue(self.keymanager.should_renew(mock_key))
-
-    def test_key_should_not_be_renewed_before_two_months_prior_to_expiry(self):
-        today = datetime.datetime.now()
-        mock_key = MagicMock()
-        mock_key.expiry_date = today + datetime.timedelta(days=61)
-        self.assertFalse(self.keymanager.should_renew(mock_key))
-
     @defer.inlineCallbacks
     def test_keymanager_regenerate_key_pair_if_current_key_is_about_to_expire(self):
-        today = datetime.datetime.now()
         mock_open_pgp_key = MagicMock()
-        mock_open_pgp_key.expiry_date = today - datetime.timedelta(days=20)
+        mock_open_pgp_key.should_be_renewed.return_value(True)
         when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
 
         yield self.keymanager.generate_openpgp_key()
@@ -138,9 +125,8 @@ class KeymanagerTest(TestCase):
 
     @defer.inlineCallbacks
     def test_key_regeneration_does_not_delete_key_when_upload_fails(self):
-        today = datetime.datetime.now()
         mock_open_pgp_key = MagicMock()
-        mock_open_pgp_key.expiry_date = today - datetime.timedelta(days=20)
+        mock_open_pgp_key.should_be_renewed.return_value(True)
         self.leap_keymanager.get_key = MagicMock(return_value=defer.succeed(mock_open_pgp_key))
         self.leap_keymanager.send_key = MagicMock(side_effect=UploadKeyError('Could not upload key'))
 

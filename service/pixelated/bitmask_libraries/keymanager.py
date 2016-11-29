@@ -49,7 +49,7 @@ class Keymanager(object):
         current_key = yield self._key_exists(self._email)
         if not current_key:
             yield self._generate_key_and_send_to_leap()
-        elif self.should_renew(current_key):
+        elif current_key.should_be_renewed(DEFAULT_EXTENSION_THRESHOLD):
             yield self._regenerate_key()
             yield self._send_key_to_leap()
 
