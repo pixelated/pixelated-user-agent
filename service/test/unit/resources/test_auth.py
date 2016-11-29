@@ -1,7 +1,7 @@
 from mockito import mock, when, any as ANY
 from pixelated.resources.auth import SessionChecker, PixelatedRealm, PixelatedAuthSessionWrapper
 from pixelated.resources.login_resource import LoginResource
-from pixelated.resources.root_resource import RootResource
+from pixelated.resources.root_resource import PublicRootResource, RootResource
 from test.unit.resources import DummySite
 from twisted.cred import error
 from twisted.cred.checkers import ANONYMOUS, AllowAnonymousAccess
@@ -41,45 +41,31 @@ class TestPixelatedAuthSessionWrapper(unittest.TestCase):
         self.portal = Portal(self.realm_mock, [session_checker, AllowAnonymousAccess()])
         self.user_uuid_mock = mock()
         self.root_resource = RootResource(services_factory)
-        self.anonymous_resource_mock = mock()
+        self.anonymous_resource = PublicRootResource(services_factory)
 
-        self.session_wrapper = PixelatedAuthSessionWrapper(self.portal, self.root_resource, self.anonymous_resource_mock)
+        self.session_wrapper = PixelatedAuthSessionWrapper(self.portal, self.root_resource, self.anonymous_resource)
         self.request = DummyRequest([])
         self.request.prepath = ['']
         self.request.path = '/'
 
-    def test_should_proxy_to_login_resource_when_the_user_is_not_logged_in(self):
-        when(self.realm_mock).requestAvatar(ANONYMOUS, None, IResource).thenReturn((IResource, self.anonymous_resource_mock, lambda: None))
-
-        deferred_resource = self.session_wrapper.getChildWithDefault('', self.request)
+    def test_root_url_should_delegate_to_public_root_resource_for_unauthenticated_user(self):
+        when(self.realm_mock).requestAvatar(ANONYMOUS, None, IResource).thenReturn((IResource, self.anonymous_resource, lambda: None))
+        request = DummyRequest([''])
+        deferred_resource = getChildForRequest(self.session_wrapper, request)
         d = deferred_resource.d
 
-        def assert_anonymous_resource(resource):
-            self.assertIs(resource, self.anonymous_resource_mock)
+        def assert_public_root_resource(resource):
+            self.assertIsInstance(resource, PublicRootResource)
 
-        d.addCallback(assert_anonymous_resource)
-        return d
+        return d.addCallback(assert_public_root_resource)
 
-    def test_should_proxy_to_root_resource_when_the_user_is_logged_in(self):
+    def test_root_url_should_delegate_to_protected_root_resource_for_authenticated_user(self):
         when(self.realm_mock).requestAvatar(ANY(), None, IResource).thenReturn((IResource, self.root_resource, lambda: None))
-
-        deferred_resource = self.session_wrapper.getChildWithDefault('', self.request)
+        request = DummyRequest([''])
+        deferred_resource = getChildForRequest(self.session_wrapper, request)
         d = deferred_resource.d
 
-        def assert_root_resource(resource):
-            self.assertIs(resource, self.root_resource)
+        def assert_protected_root_resource(resource):
+            self.assertIsInstance(resource, RootResource)
 
-        d.addCallback(assert_root_resource)
-        return d
-
-    def test_should_X_when_unauthenticated_user_requests_non_public_resource(self):
-        when(self.realm_mock).requestAvatar(ANONYMOUS, None, IResource).thenReturn((IResource, self.anonymous_resource_mock, lambda: None))
-
-        deferred_resource = self.session_wrapper.getChildWithDefault('', self.request)
-        d = deferred_resource.d
-
-        def assert_unauthorized_resource(resource):
-            self.assertIs(resource, self.anonymous_resource_mock)
-
-        d.addCallback(assert_unauthorized_resource)
-        return d
+        return d.addCallback(assert_protected_root_resource)
