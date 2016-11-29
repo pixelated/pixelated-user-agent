@@ -178,7 +178,7 @@ class LoginResource(BaseResource):
 
     def _complete_bootstrap(self, user_auth, request):
         def log_error(error):
-            log.error('Login error during %s services setup: %s' % (user_auth.username, error.getErrorMessage()))
+            log.error('Login error during %s services setup: %s \n %s' % (user_auth.username, error.getErrorMessage(), error.getTraceback()))
 
         def set_session_cookies(_):
             session = IPixelatedSession(request.getSession())

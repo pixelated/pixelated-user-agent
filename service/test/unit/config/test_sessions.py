@@ -14,9 +14,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+import os
 from mock import patch
 from mock import MagicMock
 from twisted.internet import defer
+from twisted.trial import unittest
 from pixelated.config.sessions import LeapSession, SessionCache
 
 from test.unit.bitmask_libraries.test_abstract_leap import AbstractLeapTest

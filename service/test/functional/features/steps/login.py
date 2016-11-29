@@ -13,8 +13,16 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+import time
+
 from behave import when, then
-from common import *
+from selenium.webdriver.common.by import By
+
+from common import (
+    fill_by_css_selector,
+    find_element_by_css_selector,
+    MULTI_USER_URL,
+    wait_until_element_is_visible_by_locator)
 
 
 @when(u'I open the login page')
