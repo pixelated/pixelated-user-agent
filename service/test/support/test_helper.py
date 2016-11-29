@@ -121,7 +121,7 @@ class PixRequestMock(DummyRequest):
 
 
 def request_mock(path='', method='GET', body='', headers={}, ajax=True, csrf='token'):
-    dummy = PixRequestMock(path.split('/'))
+    dummy = PixRequestMock(path[1:].split('/'))
     for name, val in headers.iteritems():
         dummy.requestHeaders.setRawHeaders(name.lower(), [val])
     dummy.method = method
