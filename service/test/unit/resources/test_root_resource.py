@@ -19,7 +19,17 @@ from pixelated.resources.root_resource import InboxResource, PublicRootResource,
 
 
 class TestPublicRootResource(unittest.TestCase):
-    pass
+
+    def setUp(self):
+        self.public_root_resource = PublicRootResource(mock())
+        self.web = DummySite(self.public_root_resource)
+
+    def test_login_url_should_delegate_to_login_resource(self):
+        self.public_root_resource.initialize(provider=mock(), authenticator=mock())
+        request = DummyRequest(['login'])
+        request.addCookie = lambda key, value: 'stubbed'
+        child_resource = getChildForRequest(self.public_root_resource, request)
+        self.assertIsInstance(child_resource, LoginResource)
 
 
 class TestRootResource(unittest.TestCase):
@@ -35,9 +45,8 @@ class TestRootResource(unittest.TestCase):
         when(self.services_factory).services(ANY()).thenReturn(self.services)
         self.mail_service.account_email = self.MAIL_ADDRESS
 
-        root_resource = RootResource(self.services_factory)
-        self.web = DummySite(root_resource)
-        self.root_resource = root_resource
+        self.root_resource = RootResource(self.services_factory)
+        self.web = DummySite(self.root_resource)
 
     def test_root_url_should_delegate_to_inbox(self):
         request = DummyRequest([''])

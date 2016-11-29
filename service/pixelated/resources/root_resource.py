@@ -46,6 +46,10 @@ class PublicRootResource(BaseResource):
     def __init__(self, services_factory):
         BaseResource.__init__(self, services_factory)
 
+    def initialize(self, provider=None, disclaimer_banner=None, authenticator=None):
+        self.putChild(LoginResource.BASE_URL,
+                      LoginResource(self._services_factory, provider, disclaimer_banner=disclaimer_banner, authenticator=authenticator))
+
 
 class RootResource(PublicRootResource):
 
@@ -94,6 +98,7 @@ class RootResource(PublicRootResource):
         return csrf_input and csrf_input == xsrf_token
 
     def initialize(self, provider=None, disclaimer_banner=None, authenticator=None):
+        PublicRootResource.initialize(self, provider, disclaimer_banner, authenticator)
         self.putChild('sandbox', SandboxResource(self._static_folder))
         self.putChild('keys', KeysResource(self._services_factory))
         self.putChild(AttachmentsResource.BASE_URL, AttachmentsResource(self._services_factory))
@@ -105,8 +110,6 @@ class RootResource(PublicRootResource):
         self.putChild('feedback', FeedbackResource(self._services_factory))
         self.putChild('user-settings', UserSettingsResource(self._services_factory))
         self.putChild('users', UsersResource(self._services_factory))
-        self.putChild(LoginResource.BASE_URL,
-                      LoginResource(self._services_factory, provider, disclaimer_banner=disclaimer_banner, authenticator=authenticator))
         self.putChild(LogoutResource.BASE_URL, LogoutResource(self._services_factory))
 
         self._inbox_resource.initialize()
