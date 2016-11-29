@@ -155,10 +155,10 @@ def _setup_multi_user(args, root_resource, services_factory):
 def set_up_protected_resources(root_resource, provider, services_factory, banner=None, authenticator=None):
     session_checker = SessionChecker(services_factory)
 
-    realm = PixelatedRealm()
+    anonymous_resource = LoginResource(services_factory, provider, disclaimer_banner=banner, authenticator=authenticator)
+    realm = PixelatedRealm(root_resource, anonymous_resource)
     _portal = portal.Portal(realm, [session_checker, AllowAnonymousAccess()])
 
-    anonymous_resource = LoginResource(services_factory, provider, disclaimer_banner=banner, authenticator=authenticator)
     protected_resource = PixelatedAuthSessionWrapper(_portal, root_resource, anonymous_resource)
     root_resource.initialize(provider, disclaimer_banner=banner, authenticator=authenticator)
     return protected_resource
