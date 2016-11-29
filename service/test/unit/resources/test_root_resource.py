@@ -11,7 +11,7 @@ from test.unit.resources import DummySite
 from twisted.cred.checkers import ANONYMOUS
 from twisted.internet.defer import succeed
 from twisted.trial import unittest
-from twisted.web.resource import IResource
+from twisted.web.resource import IResource, getChildForRequest
 from twisted.web.static import File
 from twisted.web.test.requesthelper import DummyRequest
 from pixelated.resources.root_resource import InboxResource, RootResource, MODE_STARTUP, MODE_RUNNING
@@ -34,22 +34,11 @@ class TestRootResource(unittest.TestCase):
         self.web = DummySite(root_resource)
         self.root_resource = root_resource
 
-    def test_render_GET_should_template_account_email(self):
-        self.root_resource._inbox_resource._html_template = "<html><head><title>$account_email</title></head></html>"
-        self.root_resource.initialize(provider=mock(), authenticator=mock())
-
+    def test_root_should_delegate_to_inbox(self):
         request = DummyRequest([''])
         request.addCookie = lambda key, value: 'stubbed'
-
-        d = self.web.get(request)
-
-        def assert_response(_):
-            expected = "<title>{0}</title>".format(self.MAIL_ADDRESS)
-            matches = re.findall(expected, request.written[0])
-            self.assertEquals(len(matches), 1)
-
-        d.addCallback(assert_response)
-        return d
+        child_resource = getChildForRequest(self.root_resource, request)
+        self.assertIsInstance(child_resource, InboxResource)
 
     def _test_should_renew_xsrf_cookie(self):
         request = DummyRequest([''])
