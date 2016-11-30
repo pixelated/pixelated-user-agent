@@ -188,4 +188,4 @@ def get_console_log(context):
 
 def create_email(context):
     input_mail = MailBuilder().build_input_mail()
-    context.client.add_mail_to_inbox(input_mail)
+    context.single_user_client.add_mail_to_inbox(input_mail)

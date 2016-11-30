@@ -26,8 +26,8 @@ def add_mail_impl(context):
 
     input_mail = MailBuilder().with_subject(subject).build_input_mail()
 
-    context.client.add_mail_to_inbox(input_mail)
-    wait_for_condition(context, lambda _: context.client.search_engine.search(subject)[1] > 0, poll_frequency=0.1)
+    context.single_user_client.add_mail_to_inbox(input_mail)
+    wait_for_condition(context, lambda _: context.single_user_client.search_engine.search(subject)[1] > 0, poll_frequency=0.1)
 
     context.last_subject = subject
 

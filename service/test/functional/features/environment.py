@@ -40,34 +40,45 @@ def before_all(context):
     context.browser = webdriver.PhantomJS()
     context.browser.set_window_size(1280, 1024)
     context.browser.implicitly_wait(DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S)
-    context.browser.set_page_load_timeout(60)  # wait for data
+    context.browser.set_page_load_timeout(60)
 
     userdata = context.config.userdata
-    context.homepage_url = userdata.get('homepage_url', 'http://localhost:8889')
-    context.multi_user_port = userdata.getint('multi_user_port', default=4568)
-    context.multi_user_url = userdata.get('multi_user_url', 'http://localhost:4568')
+    context.host = userdata.get('host', 'http://localhost')
 
+    if 'localhost' in context.host:
+        _mock_user_agent(context)
+
+
+def _mock_user_agent(context):
     ensure_server()
     PixelatedSite.disable_csp_requests()
-    client = AppTestClient()
-    start_app_test_client(client, UserAgentMode(is_single_user=True))
-    client.listenTCP(port=8889)
     FeaturesResource.DISABLED_FEATURES.append('autoRefresh')
-    context.client = client
 
-    multi_user_client = AppTestClient()
-    start_app_test_client(multi_user_client, UserAgentMode(is_single_user=False))
-    multi_user_client.listenTCP(port=context.multi_user_port)
-    context.multi_user_client = multi_user_client
+    context.single_user_url = _define_url(8889)
+    context.single_user_client = _start_user_agent(8889, is_single_user=True)
+
+    context.multi_user_url = _define_url(4568)
+    context.multi_user_client = _start_user_agent(4568, is_single_user=False)
+
+
+def _start_user_agent(port, is_single_user):
+    client = AppTestClient()
+    start_app_test_client(client, UserAgentMode(is_single_user=is_single_user))
+    client.listenTCP(port=port)
+    return client
+
+
+def _define_url(port):
+    return 'http://localhost:{port}'.format(port=port)
 
 
 def after_all(context):
     context.browser.quit()
-    context.client.stop()
+    context.single_user_client.stop()
 
 
 def before_feature(context, feature):
-    context.browser.get(context.homepage_url)
+    context.browser.get(context.single_user_url)
 
 
 def after_feature(context, feature):
@@ -103,8 +114,8 @@ def _slugify(string_):
 def cleanup_all_mails(context):
     @defer.inlineCallbacks
     def _delete_all_mails():
-        mails = yield context.client.mail_store.all_mails()
+        mails = yield context.single_user_client.mail_store.all_mails()
         for mail in mails:
-            yield context.client.mail_store.delete_mail(mail.ident)
+            yield context.single_user_client.mail_store.delete_mail(mail.ident)
 
     return _delete_all_mails()
