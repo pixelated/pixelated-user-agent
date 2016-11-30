@@ -157,6 +157,19 @@ class TestLoginResource(unittest.TestCase):
         d.addCallback(assert_default_invalid_banner_disclaimer_rendered)
         return d
 
+    def test_form_should_contain_csrftoken_input(self):
+        request = DummyRequest([''])
+
+        d = self.web.get(request)
+
+        def assert_form_has_csrftoken_input(_):
+            input_username = 'name="csrftoken"'
+            written_response = ''.join(request.written)
+            self.assertIn(input_username, written_response)
+
+        d.addCallback(assert_form_has_csrftoken_input)
+        return d
+
 
 class TestLoginPOST(unittest.TestCase):
     def setUp(self):
