@@ -108,6 +108,11 @@ class LoginWebSite(Element):
         return tag('')
 
     @renderer
+    def csrftoken(self, request, tag):
+        tag.fillSlots(csrftoken=IPixelatedSession(request.getSession()).get_csrf_token())
+        return tag
+
+    @renderer
     def disclaimer(self, request, tag):
         return DisclaimerElement(self.disclaimer_banner_file).render(request)
 
@@ -140,6 +145,7 @@ class LoginResource(BaseResource):
         return NoResource()
 
     def render_GET(self, request):
+        request.getSession()
         request.setResponseCode(OK)
         return self._render_template(request)
 

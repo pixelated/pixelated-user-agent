@@ -18,6 +18,7 @@
 
 
         <form class="standard" id="login_form" action="/login" method="post">
+            <input t:render="csrftoken" type="hidden" name="csrftoken" id="csrftoken"><t:attr name="value"><t:slot name="csrftoken" /></t:attr></input>
             <input type="text" name="username" id="email" class="text-field" placeholder="username" tabindex="1"
                    autofocus="" />
             <input type="password" name="password" id="password" class="text-field" placeholder="password"
