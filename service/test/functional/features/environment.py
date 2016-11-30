@@ -90,11 +90,13 @@ def _save_screenshot(context, step):
     if (step.status == 'failed' and
             context.config.userdata.getbool("screenshots", True)):
         timestamp = time.strftime("%Y-%m-%d-%H-%M-%S")
-        filename = re.sub('\W', '-', timestamp + ' failed ' + str(step.name))
+        filename = _slugify('{} failed {}'.format(timestamp, str(step.name)))
         filepath = os.path.join('screenshots', filename + '.png')
         context.browser.save_screenshot(filepath)
 
 
+def _slugify(string_):
+    return re.sub('\W', '-', string_)
 
 
 @wait_for(timeout=10.0)
