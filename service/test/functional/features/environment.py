@@ -37,6 +37,11 @@ def start_app_test_client(client, mode):
 
 
 def before_all(context):
+    context.browser = webdriver.PhantomJS()
+    context.browser.set_window_size(1280, 1024)
+    context.browser.implicitly_wait(DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S)
+    context.browser.set_page_load_timeout(60)  # wait for data
+
     userdata = context.config.userdata
     context.homepage_url = userdata.get('homepage_url', 'http://localhost:8889')
     context.multi_user_port = userdata.getint('multi_user_port', default=4568)
@@ -57,15 +62,17 @@ def before_all(context):
 
 
 def after_all(context):
+    context.browser.quit()
     context.client.stop()
 
 
 def before_feature(context, feature):
-    context.browser = webdriver.PhantomJS()
-    context.browser.set_window_size(1280, 1024)
-    context.browser.implicitly_wait(DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S)
-    context.browser.set_page_load_timeout(60)  # wait for data
     context.browser.get(context.homepage_url)
+
+
+def after_feature(context, feature):
+    cleanup_all_mails(context)
+    context.last_mail = None
 
 
 def after_step(context, step):
@@ -88,11 +95,6 @@ def _save_screenshot(context, step):
         context.browser.save_screenshot(filepath)
 
 
-def after_feature(context, feature):
-    context.browser.quit()
-
-    cleanup_all_mails(context)
-    context.last_mail = None
 
 
 @wait_for(timeout=10.0)
