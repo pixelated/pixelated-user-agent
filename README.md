@@ -3,6 +3,7 @@ Pixelated User Agent
 
 [![Build Status](https://snap-ci.com/pixelated/pixelated-user-agent/branch/master/build_image)](https://snap-ci.com/pixelated/pixelated-user-agent/branch/master) [
 ![Coverage Status](https://coveralls.io/repos/pixelated/pixelated-user-agent/badge.svg?branch=master)](https://coveralls.io/r/pixelated/pixelated-user-agent?branch=master)
+[![Stories in Dev](https://badge.waffle.io/pixelated/pixelated-user-agent.svg?label=2%20-%20Development&title=Developing)](http://waffle.io/pixelated/pixelated-user-agent)
 
 The Pixelated User Agent is the mail client of the Pixelated ecosystem. It is composed of two parts, a web interface written in JavaScript ([FlightJS](https://flightjs.github.io/)) and a Python API that interacts with a LEAP Provider, the e-mail platform that Pixelated is built on.
 
@@ -261,3 +262,5 @@ For people who want to run the user agent on docker container can use the Docker
 ## How to translate the user interface
 
 See: [Contributor's Guide](https://github.com/pixelated/pixelated-user-agent/blob/master/CONTRIBUTING.md#translating-ui)
+
+
