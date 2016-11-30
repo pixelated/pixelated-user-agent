@@ -26,7 +26,7 @@ from common import (
 
 @when(u'I open the login page')
 def login_page(context):
-    context.browser.get(context.multi_user_url + '/login')
+    context.browser.get(context.login_url)
 
 
 @when(u'I enter {username} and {password} as credentials')

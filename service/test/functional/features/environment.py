@@ -16,6 +16,7 @@
 import os
 import re
 import time
+from urlparse import urlparse
 
 from crochet import setup, wait_for
 from leap.common.events.server import ensure_server
@@ -45,8 +46,16 @@ def before_all(context):
     userdata = context.config.userdata
     context.host = userdata.get('host', 'http://localhost')
 
+    if not context.host.startswith('http'):
+        context.host = 'https://{}'.format(context.host)
+
+    hostname = urlparse(context.host).hostname
+    context.signup_url = 'https://{}/signup'.format(hostname)
+    context.login_url = 'https://mail.{}/login'.format(hostname)
+
     if 'localhost' in context.host:
         _mock_user_agent(context)
+        context.login_url = context.multi_user_url + '/login'
 
 
 def _mock_user_agent(context):
@@ -74,16 +83,19 @@ def _define_url(port):
 
 def after_all(context):
     context.browser.quit()
-    context.single_user_client.stop()
+    if 'localhost' in context.host:
+        context.single_user_client.stop()
 
 
 def before_feature(context, feature):
-    context.browser.get(context.single_user_url)
+    if 'localhost' in context.host:
+        context.browser.get(context.single_user_url)
 
 
 def after_feature(context, feature):
-    cleanup_all_mails(context)
-    context.last_mail = None
+    if 'localhost' in context.host:
+        cleanup_all_mails(context)
+        context.last_mail = None
 
 
 def after_step(context, step):
