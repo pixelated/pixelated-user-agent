@@ -66,15 +66,9 @@ def wait_until_elements_are_visible_by_locator(context, locator_tuple, timeout=T
     return context.browser.find_elements(locator_tuple[0], locator_tuple[1])
 
 
-def wait_until_elements_are_visible_by_xpath(context, locator_tuple, timeout=TIMEOUT_IN_S):
-    wait = WebDriverWait(context.browser, timeout)
-    wait.until(EC.presence_of_all_elements_located(locator_tuple))
-    return context.browser.find_elements(locator_tuple[0], locator_tuple[1])
-
-
 def wait_until_element_is_visible_by_locator(context, locator_tuple, timeout=TIMEOUT_IN_S):
     wait = WebDriverWait(context.browser, timeout)
-    wait.until(EC.visibility_of_element_located(locator_tuple))
+    wait.until(EC.presence_of_element_located(locator_tuple))
     return context.browser.find_element(locator_tuple[0], locator_tuple[1])
 
 
@@ -88,8 +82,8 @@ def fill_by_xpath(context, xpath, text):
     field.send_keys(text)
 
 
-def fill_by_css_selector(context, css_selector, text):
-    field = find_element_by_css_selector(context, css_selector)
+def fill_by_css_selector(context, css_selector, text, timeout=TIMEOUT_IN_S):
+    field = find_element_by_css_selector(context, css_selector, timeout=timeout)
     field.send_keys(text)
 
 
@@ -118,8 +112,8 @@ def find_element_by_id(context, id):
     return wait_until_element_is_visible_by_locator(context, (By.ID, id))
 
 
-def find_element_by_css_selector(context, css_selector):
-    return wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, css_selector))
+def find_element_by_css_selector(context, css_selector, timeout=TIMEOUT_IN_S):
+    return wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, css_selector), timeout=timeout)
 
 
 def find_element_by_class_name(context, class_name):
@@ -130,8 +124,8 @@ def find_elements_by_css_selector(context, css_selector, timeout=TIMEOUT_IN_S):
     return wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, css_selector), timeout=timeout)
 
 
-def find_elements_by_xpath(context, xpath):
-    return wait_until_elements_are_visible_by_xpath(context, (By.XPATH, xpath))
+def find_elements_by_xpath(context, xpath, timeout=TIMEOUT_IN_S):
+    return wait_until_elements_are_visible_by_locator(context, (By.XPATH, xpath), timeout=timeout)
 
 
 def find_element_containing_text(context, text, element_type='*'):

@@ -18,6 +18,7 @@ import uuid
 from behave import given, then, when
 
 from common import (
+    element_should_have_content,
     fill_by_css_selector,
     find_element_by_css_selector)
 
@@ -41,5 +42,4 @@ def step_impl(context):
 
 @then(u'I should see the user control panel')  # noqa
 def step_impl(context):
-    text = find_element_by_css_selector(context, 'h1').text
-    assert text == 'user control panel'
+    element_should_have_content(context, 'h1', 'user control panel')
