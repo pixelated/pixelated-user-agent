@@ -6,6 +6,7 @@ from mockito import mock, when, any as ANY
 
 import pixelated
 from pixelated.application import UserAgentMode
+from pixelated.resources import UnAuthorizedResource
 from pixelated.resources.features_resource import FeaturesResource
 from pixelated.resources.login_resource import LoginResource
 from test.unit.resources import DummySite
@@ -15,14 +16,54 @@ from twisted.trial import unittest
 from twisted.web.resource import IResource, getChildForRequest
 from twisted.web.static import File
 from twisted.web.test.requesthelper import DummyRequest
-from pixelated.resources.root_resource import InboxResource, PublicRootResource, RootResource, MODE_STARTUP, MODE_RUNNING
+from pixelated.resources.root_resource import InboxResource, RootResource, MODE_STARTUP, MODE_RUNNING
 
 
 class TestPublicRootResource(unittest.TestCase):
 
     def setUp(self):
-        self.public_root_resource = PublicRootResource(mock())
+        self.public_root_resource = RootResource(mock(), public=True)
         self.web = DummySite(self.public_root_resource)
+
+    def test_put_child_public_adds_resource(self):
+        self.public_root_resource.initialize(provider=mock(), authenticator=mock())
+        url_fragment, resource_mock = 'some-url-fragment', mock()
+        self.public_root_resource.putChildPublic(url_fragment, resource_mock)
+        request = DummyRequest([url_fragment])
+        request.addCookie = lambda key, value: 'stubbed'
+        child_resource = getChildForRequest(self.public_root_resource, request)
+        self.assertIs(child_resource, resource_mock)
+
+    def test_put_child_protected_adds_unauthorized(self):
+        self.public_root_resource.initialize(provider=mock(), authenticator=mock())
+        url_fragment, resource_mock = 'some-url-fragment', mock()
+        self.public_root_resource.putChildProtected(url_fragment, resource_mock)
+        request = DummyRequest([url_fragment])
+        request.addCookie = lambda key, value: 'stubbed'
+        child_resource = getChildForRequest(self.public_root_resource, request)
+        self.assertIsInstance(child_resource, UnAuthorizedResource)
+
+    def test_put_child_adds_unauthorized(self):
+        self.public_root_resource.initialize(provider=mock(), authenticator=mock())
+        url_fragment, resource_mock = 'some-url-fragment', mock()
+        self.public_root_resource.putChild(url_fragment, resource_mock)
+        request = DummyRequest([url_fragment])
+        request.addCookie = lambda key, value: 'stubbed'
+        child_resource = getChildForRequest(self.public_root_resource, request)
+        self.assertIsInstance(child_resource, UnAuthorizedResource)
+
+    def test_private_resource_returns_401(self):
+        self.public_root_resource.initialize(provider=mock(), authenticator=mock())
+        request = DummyRequest(['mails'])
+        request.addCookie = lambda key, value: 'stubbed'
+        d = self.web.get(request)
+
+        def assert_unauthorized(request):
+            self.assertEqual(401, request.responseCode)
+            self.assertEqual("Unauthorized!", request.written[0])
+
+        d.addCallback(assert_unauthorized)
+        return d
 
     def test_login_url_should_delegate_to_login_resource(self):
         self.public_root_resource.initialize(provider=mock(), authenticator=mock())
@@ -60,6 +101,24 @@ class TestRootResource(unittest.TestCase):
 
         self.root_resource = RootResource(self.services_factory)
         self.web = DummySite(self.root_resource)
+
+    def test_put_child_protected_adds_resource(self):
+        self.root_resource.initialize(provider=mock(), authenticator=mock())
+        url_fragment, resource_mock = 'some-url-fragment', mock()
+        self.root_resource.putChildProtected(url_fragment, resource_mock)
+        request = DummyRequest([url_fragment])
+        request.addCookie = lambda key, value: 'stubbed'
+        child_resource = getChildForRequest(self.root_resource, request)
+        self.assertIs(child_resource, resource_mock)
+
+    def test_put_child_adds_resource(self):
+        self.root_resource.initialize(provider=mock(), authenticator=mock())
+        url_fragment, resource_mock = 'some-url-fragment', mock()
+        self.root_resource.putChild(url_fragment, resource_mock)
+        request = DummyRequest([url_fragment])
+        request.addCookie = lambda key, value: 'stubbed'
+        child_resource = getChildForRequest(self.root_resource, request)
+        self.assertIs(child_resource, resource_mock)
 
     def test_root_url_should_delegate_to_inbox(self):
         request = DummyRequest([''])

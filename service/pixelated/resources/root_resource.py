@@ -42,26 +42,11 @@ from twisted.logger import Logger
 logger = Logger()
 
 
-class PublicRootResource(BaseResource):
+class RootResource(BaseResource):
 
-    def __init__(self, services_factory):
+    def __init__(self, services_factory, public=False):
         BaseResource.__init__(self, services_factory)
-        self._redirect_to_inbox_resource = Redirect('login')
-
-    def initialize(self, provider=None, disclaimer_banner=None, authenticator=None):
-        self.putChild(LoginResource.BASE_URL,
-                      LoginResource(self._services_factory, provider, disclaimer_banner=disclaimer_banner, authenticator=authenticator))
-
-    def getChildWithDefault(self, path, request):
-        if path == '':
-            return self._redirect_to_inbox_resource
-        return BaseResource.getChildWithDefault(self, path, request)
-
-
-class RootResource(PublicRootResource):
-
-    def __init__(self, services_factory):
-        PublicRootResource.__init__(self, services_factory)
+        self._public = public
         self._assets_folder = self._get_assets_folder()
         self._startup_assets_folder = self._get_startup_folder()
         self._static_folder = self._get_static_folder()
@@ -69,18 +54,19 @@ class RootResource(PublicRootResource):
         self._services_factory = services_factory
         with open(os.path.join(self._startup_assets_folder, 'Interstitial.html')) as f:
             self.interstitial = f.read()
+        self._redirect_to_login_resource = Redirect('login')
         self._inbox_resource = InboxResource(services_factory)
         self._startup_mode()
 
     def _startup_mode(self):
-        self.putChild('assets', File(self._assets_folder))
-        self.putChild('startup-assets', File(self._startup_assets_folder))
+        self.putChildProtected('assets', File(self._assets_folder))
+        self.putChildPublic('startup-assets', File(self._startup_assets_folder))
         self._mode = MODE_STARTUP
         logger.debug('Root in STARTUP mode. %s' % self)
 
     def getChildWithDefault(self, path, request):
         if path == '':
-            return self._inbox_resource
+            return self._redirect_to_login_resource if self._public else self._inbox_resource
         if self._mode == MODE_STARTUP:
             return UnavailableResource()
         if self._is_xsrf_valid(request):
@@ -104,20 +90,28 @@ class RootResource(PublicRootResource):
         csrf_input = request.args.get('csrftoken', [None])[0] or json.loads(request.content.read()).get('csrftoken', [None])[0]
         return csrf_input and csrf_input == xsrf_token
 
+    def putChildPublic(self, path, resource):
+        return BaseResource.putChild(self, path, resource)
+
+    def putChildProtected(self, path, resource):
+        return BaseResource.putChild(self, path, UnAuthorizedResource() if self._public else resource)
+    putChild = putChildProtected
+
     def initialize(self, provider=None, disclaimer_banner=None, authenticator=None):
-        PublicRootResource.initialize(self, provider, disclaimer_banner, authenticator)
-        self.putChild('sandbox', SandboxResource(self._static_folder))
-        self.putChild('keys', KeysResource(self._services_factory))
-        self.putChild(AttachmentsResource.BASE_URL, AttachmentsResource(self._services_factory))
-        self.putChild('contacts', ContactsResource(self._services_factory))
-        self.putChild('features', FeaturesResource(provider))
-        self.putChild('tags', TagsResource(self._services_factory))
-        self.putChild('mails', MailsResource(self._services_factory))
-        self.putChild('mail', MailResource(self._services_factory))
-        self.putChild('feedback', FeedbackResource(self._services_factory))
-        self.putChild('user-settings', UserSettingsResource(self._services_factory))
-        self.putChild('users', UsersResource(self._services_factory))
-        self.putChild(LogoutResource.BASE_URL, LogoutResource(self._services_factory))
+        self.putChildProtected('sandbox', SandboxResource(self._static_folder))
+        self.putChildProtected('keys', KeysResource(self._services_factory))
+        self.putChildProtected(AttachmentsResource.BASE_URL, AttachmentsResource(self._services_factory))
+        self.putChildProtected('contacts', ContactsResource(self._services_factory))
+        self.putChildProtected('features', FeaturesResource(provider))
+        self.putChildProtected('tags', TagsResource(self._services_factory))
+        self.putChildProtected('mails', MailsResource(self._services_factory))
+        self.putChildProtected('mail', MailResource(self._services_factory))
+        self.putChildProtected('feedback', FeedbackResource(self._services_factory))
+        self.putChildProtected('user-settings', UserSettingsResource(self._services_factory))
+        self.putChildProtected('users', UsersResource(self._services_factory))
+        self.putChildPublic(LoginResource.BASE_URL,
+                            LoginResource(self._services_factory, provider, disclaimer_banner=disclaimer_banner, authenticator=authenticator))
+        self.putChildProtected(LogoutResource.BASE_URL, LogoutResource(self._services_factory))
 
         self._inbox_resource.initialize()
         self._mode = MODE_RUNNING

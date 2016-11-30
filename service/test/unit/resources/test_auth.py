@@ -1,7 +1,7 @@
 from mockito import mock, when, any as ANY
 from pixelated.resources.auth import SessionChecker, PixelatedRealm, PixelatedAuthSessionWrapper
 from pixelated.resources.login_resource import LoginResource
-from pixelated.resources.root_resource import PublicRootResource, RootResource
+from pixelated.resources.root_resource import RootResource
 from test.unit.resources import DummySite
 from twisted.cred import error
 from twisted.cred.checkers import ANONYMOUS, AllowAnonymousAccess
@@ -41,7 +41,7 @@ class TestPixelatedAuthSessionWrapper(unittest.TestCase):
         self.portal = Portal(self.realm_mock, [session_checker, AllowAnonymousAccess()])
         self.user_uuid_mock = mock()
         self.root_resource = RootResource(services_factory)
-        self.anonymous_resource = PublicRootResource(services_factory)
+        self.anonymous_resource = RootResource(services_factory, public=True)
 
         self.session_wrapper = PixelatedAuthSessionWrapper(self.portal, self.root_resource, self.anonymous_resource)
         self.request = DummyRequest([])
@@ -55,7 +55,7 @@ class TestPixelatedAuthSessionWrapper(unittest.TestCase):
         d = deferred_resource.d
 
         def assert_public_root_resource(resource):
-            self.assertIsInstance(resource, PublicRootResource)
+            self.assertIs(resource, self.anonymous_resource)
 
         return d.addCallback(assert_public_root_resource)
 
