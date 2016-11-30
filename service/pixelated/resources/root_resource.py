@@ -95,7 +95,10 @@ class RootResource(BaseResource):
 
     def putChildProtected(self, path, resource):
         return BaseResource.putChild(self, path, UnAuthorizedResource() if self._public else resource)
-    putChild = putChildProtected
+
+    def putChild(self, path, resource):
+        logger.warn('Use either `putChildPublic` or `putChildProtected` on this resource')
+        return self.putChildProtected(path, resource)  # to be on the safe side
 
     def initialize(self, provider=None, disclaimer_banner=None, authenticator=None):
         self.putChildProtected('sandbox', SandboxResource(self._static_folder))
