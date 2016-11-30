@@ -31,6 +31,19 @@ class TestPublicRootResource(unittest.TestCase):
         child_resource = getChildForRequest(self.public_root_resource, request)
         self.assertIsInstance(child_resource, LoginResource)
 
+    def test_root_url_should_redirect_to_login_resource(self):
+        self.public_root_resource.initialize(provider=mock(), authenticator=mock())
+        request = DummyRequest([''])
+        request.addCookie = lambda key, value: 'stubbed'
+        d = self.web.get(request)
+
+        def assert_redirect(request):
+            self.assertEqual(302, request.responseCode)
+            self.assertEqual(["login"], request.responseHeaders.getRawHeaders('location', [None]))
+
+        d.addCallback(assert_redirect)
+        return d
+
 
 class TestRootResource(unittest.TestCase):
     MAIL_ADDRESS = 'test_user@pixelated-project.org'

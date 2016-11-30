@@ -35,6 +35,7 @@ from pixelated.resources.keys_resource import KeysResource
 from pixelated.resources.inbox_resource import InboxResource, MODE_STARTUP, MODE_RUNNING
 from twisted.web.resource import NoResource
 from twisted.web.static import File
+from twisted.web.util import Redirect
 
 from twisted.logger import Logger
 
@@ -45,10 +46,16 @@ class PublicRootResource(BaseResource):
 
     def __init__(self, services_factory):
         BaseResource.__init__(self, services_factory)
+        self._redirect_to_inbox_resource = Redirect('login')
 
     def initialize(self, provider=None, disclaimer_banner=None, authenticator=None):
         self.putChild(LoginResource.BASE_URL,
                       LoginResource(self._services_factory, provider, disclaimer_banner=disclaimer_banner, authenticator=authenticator))
+
+    def getChildWithDefault(self, path, request):
+        if path == '':
+            return self._redirect_to_inbox_resource
+        return BaseResource.getChildWithDefault(self, path, request)
 
 
 class RootResource(PublicRootResource):
