@@ -15,15 +15,14 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import time
 
-from behave import when, then
-from selenium.webdriver.common.by import By
+from behave import given, when, then
 
 from common import (
     fill_by_css_selector,
-    find_element_by_css_selector,
-    wait_until_element_is_visible_by_locator)
+    find_element_by_css_selector)
 
 
+@given(u'a user is accessing the login page')
 @when(u'I open the login page')
 def login_page(context):
     context.browser.get(context.login_url)
@@ -31,13 +30,13 @@ def login_page(context):
 
 @when(u'I enter {username} and {password} as credentials')
 def enter_credentials(context, username, password):
-    fill_by_css_selector(context, 'input#email', username)
+    fill_by_css_selector(context, 'input#email', context.username)
     fill_by_css_selector(context, 'input#password', password)
 
 
 @when(u'I click on the login button')
 def click_login(context):
-    login_button = wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, 'input[name="login"]'))
+    login_button = find_element_by_css_selector(context, 'input[name="login"]')
     login_button.click()
 
 
@@ -53,7 +52,7 @@ def _wait_for_interstitial_to_reload():
 
 @when(u'I logout')
 def click_logout(context):
-    logout_button = wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, 'ul#logout'))
+    logout_button = find_element_by_css_selector(context, 'ul#logout')
     logout_button.click()
 
 

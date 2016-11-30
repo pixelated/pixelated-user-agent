@@ -28,8 +28,7 @@ Feature: sign up, login and logout
 
   Scenario: Existing user logs into his account
     Given a user is accessing the login page
-    #And I have a mail for username in my inbox
-    And I enter username and password as credentials
+    When I enter username and password as credentials
     And I click on the login button
     Then I should see the fancy interstitial
     Then I have mails

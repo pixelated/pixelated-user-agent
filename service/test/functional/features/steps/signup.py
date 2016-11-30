@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import uuid
 from behave import given, then, when
 
 from common import (
@@ -30,7 +29,7 @@ def step_impl(context):
 
 @when(u'I enter username, password and password confirmation')  # noqa
 def step_impl(context):
-    fill_by_css_selector(context, '#srp_username', 'testuser_{}'.format(uuid.uuid4()))
+    fill_by_css_selector(context, '#srp_username', context.username)
     fill_by_css_selector(context, '#srp_password', 'password')
     fill_by_css_selector(context, '#srp_password_confirmation', 'password')
 

@@ -17,6 +17,7 @@ import os
 import re
 import time
 from urlparse import urlparse
+import uuid
 
 from crochet import setup, wait_for
 from leap.common.events.server import ensure_server
@@ -52,10 +53,12 @@ def before_all(context):
     hostname = urlparse(context.host).hostname
     context.signup_url = 'https://{}/signup'.format(hostname)
     context.login_url = 'https://mail.{}/login'.format(hostname)
+    context.username = 'testuser_{}'.format(uuid.uuid4())
 
     if 'localhost' in context.host:
         _mock_user_agent(context)
         context.login_url = context.multi_user_url + '/login'
+        context.username = 'username'
 
 
 def _mock_user_agent(context):
