@@ -24,6 +24,7 @@ from pixelated.config.services import ServicesFactory
 
 from pixelated.config.sessions import LeapSessionFactory
 import pixelated.config.services
+from pixelated.resources import IPixelatedSession
 from pixelated.resources.root_resource import RootResource
 from test.support.integration import AppTestClient
 from test.support.integration.app_test_client import AppTestAccount, StubSRPChecker
@@ -57,7 +58,7 @@ class MultiUserClient(AppTestClient):
         else:
             when(Authenticator)._bonafide_auth(username, password).thenRaise(SRPAuthError)
 
-    def login(self, username='username', password='password'):
+    def login(self, username='username', password='password', from_request=None):
         session = Authentication(username, 'some_user_token', 'some_user_uuid', 'session_id', {'is_admin': False})
         leap_session = self._test_account.leap_session
         leap_session.user_auth = session
@@ -76,7 +77,10 @@ class MultiUserClient(AppTestClient):
             when(leap_session).initial_sync().thenAnswer(lambda: defer.succeed(None))
         when(pixelated.config.services).Services(ANY()).thenReturn(self.services)
 
-        request = request_mock(path='/login', method="POST", body={'username': username, 'password': password})
+        session = from_request.getSession()
+        csrftoken = IPixelatedSession(session).get_csrf_token()
+        request = request_mock(path='/login', method="POST", body={'username': username, 'password': password, 'csrftoken': csrftoken}, ajax=False)
+        request.session = session
         return self._render(request, as_json=False)
 
     def get(self, path, get_args='', as_json=True, from_request=None):

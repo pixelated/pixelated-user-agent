@@ -53,7 +53,6 @@ class InboxResource(BaseResource):
 
     def render_GET(self, request):
         logger.debug('Inbox rendering GET. %s' % self)
-        self._add_csrf_cookie(request)
         if self._is_starting():
             logger.debug('Inbox rendering interstitial. %s' % self)
             return self.interstitial

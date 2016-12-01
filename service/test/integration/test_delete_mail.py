@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from twisted.internet import defer
 from test.support.integration import SoledadTestBase, MailBuilder
+from pixelated.resources import IPixelatedSession
 
 
 class DeleteMailTest(SoledadTestBase):
@@ -27,7 +28,9 @@ class DeleteMailTest(SoledadTestBase):
         inbox_mails = yield self.app_test_client.get_mails_by_tag('inbox')
         self.assertEquals(1, len(inbox_mails))
 
-        yield self.app_test_client.delete_mail(mail.mail_id)
+        response, first_request = yield self.app_test_client.get('/', as_json=False)
+        csrftoken = IPixelatedSession(first_request.getSession()).get_csrf_token()
+        yield self.app_test_client.delete_mail(mail.mail_id, csrf=csrftoken)
 
         inbox_mails = yield self.app_test_client.get_mails_by_tag('inbox')
         self.assertEquals(0, len(inbox_mails))

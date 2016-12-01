@@ -66,7 +66,7 @@ class BaseResource(Resource):
         self._services_factory = services_factory
 
     def _add_csrf_cookie(self, request):
-        csrf_token = hashlib.sha256(os.urandom(CSRF_TOKEN_LENGTH)).hexdigest()
+        csrf_token = IPixelatedSession(request.getSession()).get_csrf_token()
         request.addCookie('XSRF-TOKEN', csrf_token)
         log.debug('XSRF-TOKEN added: %s' % csrf_token)
 

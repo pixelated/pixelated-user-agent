@@ -44,29 +44,3 @@ class TestInboxResource(unittest.TestCase):
 
         d.addCallback(assert_response)
         return d
-
-    def _test_should_renew_xsrf_cookie(self):
-        request = DummyRequest([''])
-        request.addCookie = MagicMock()
-        generated_csrf_token = 'csrf_token'
-        mock_sha = MagicMock()
-        mock_sha.hexdigest = MagicMock(return_value=generated_csrf_token)
-
-        with patch('hashlib.sha256', return_value=mock_sha):
-            d = self.web.get(request)
-
-        def assert_csrf_cookie(_):
-            request.addCookie.assert_called_once_with('XSRF-TOKEN', generated_csrf_token)
-
-        d.addCallback(assert_csrf_cookie)
-        return d
-
-    # TODO should this be here or just in the root resource test?
-    def test_should_renew_xsrf_cookie_on_startup_mode(self):
-        self.inbox_resource._mode = MODE_STARTUP
-        self._test_should_renew_xsrf_cookie()
-
-    # TODO should this be here or just in the root resource test?
-    def test_should_renew_xsrf_cookie_on_running_mode(self):
-        self.inbox_resource._mode = MODE_RUNNING
-        self._test_should_renew_xsrf_cookie()
