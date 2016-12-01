@@ -25,7 +25,8 @@ class TestPublicRootResource(unittest.TestCase):
         self.public_root_resource = RootResource(mock(), public=True)
         self.web = DummySite(self.public_root_resource)
 
-    def test_put_child_public_adds_resource(self):
+    @patch('pixelated.resources.mails_resource.events.register')
+    def test_put_child_public_adds_resource(self, *mocks):
         self.public_root_resource.initialize(provider=mock(), authenticator=mock())
         url_fragment, resource_mock = 'some-url-fragment', mock()
         self.public_root_resource.putChildPublic(url_fragment, resource_mock)
@@ -34,7 +35,8 @@ class TestPublicRootResource(unittest.TestCase):
         child_resource = getChildForRequest(self.public_root_resource, request)
         self.assertIs(child_resource, resource_mock)
 
-    def test_put_child_protected_adds_unauthorized(self):
+    @patch('pixelated.resources.mails_resource.events.register')
+    def test_put_child_protected_adds_unauthorized(self, *mocks):
         self.public_root_resource.initialize(provider=mock(), authenticator=mock())
         url_fragment, resource_mock = 'some-url-fragment', mock()
         self.public_root_resource.putChildProtected(url_fragment, resource_mock)
@@ -43,7 +45,8 @@ class TestPublicRootResource(unittest.TestCase):
         child_resource = getChildForRequest(self.public_root_resource, request)
         self.assertIsInstance(child_resource, UnAuthorizedResource)
 
-    def test_put_child_adds_unauthorized(self):
+    @patch('pixelated.resources.mails_resource.events.register')
+    def test_put_child_adds_unauthorized(self, *mocks):
         self.public_root_resource.initialize(provider=mock(), authenticator=mock())
         url_fragment, resource_mock = 'some-url-fragment', mock()
         self.public_root_resource.putChild(url_fragment, resource_mock)
@@ -52,7 +55,8 @@ class TestPublicRootResource(unittest.TestCase):
         child_resource = getChildForRequest(self.public_root_resource, request)
         self.assertIsInstance(child_resource, UnAuthorizedResource)
 
-    def test_private_resource_returns_401(self):
+    @patch('pixelated.resources.mails_resource.events.register')
+    def test_private_resource_returns_401(self, *mocks):
         self.public_root_resource.initialize(provider=mock(), authenticator=mock())
         request = DummyRequest(['mails'])
         request.addCookie = MagicMock(return_value='stubbed')
@@ -65,14 +69,16 @@ class TestPublicRootResource(unittest.TestCase):
         d.addCallback(assert_unauthorized)
         return d
 
-    def test_login_url_should_delegate_to_login_resource(self):
+    @patch('pixelated.resources.mails_resource.events.register')
+    def test_login_url_should_delegate_to_login_resource(self, *mocks):
         self.public_root_resource.initialize(provider=mock(), authenticator=mock())
         request = DummyRequest(['login'])
         request.addCookie = MagicMock(return_value='stubbed')
         child_resource = getChildForRequest(self.public_root_resource, request)
         self.assertIsInstance(child_resource, LoginResource)
 
-    def test_root_url_should_redirect_to_login_resource(self):
+    @patch('pixelated.resources.mails_resource.events.register')
+    def test_root_url_should_redirect_to_login_resource(self, *mocks):
         self.public_root_resource.initialize(provider=mock(), authenticator=mock())
         request = DummyRequest([''])
         request.addCookie = MagicMock(return_value='stubbed')
@@ -102,7 +108,8 @@ class TestRootResource(unittest.TestCase):
         self.root_resource = RootResource(self.services_factory)
         self.web = DummySite(self.root_resource)
 
-    def test_put_child_protected_adds_resource(self):
+    @patch('pixelated.resources.mails_resource.events.register')
+    def test_put_child_protected_adds_resource(self, *mocks):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
         url_fragment, resource_mock = 'some-url-fragment', mock()
         self.root_resource.putChildProtected(url_fragment, resource_mock)
@@ -111,7 +118,8 @@ class TestRootResource(unittest.TestCase):
         child_resource = getChildForRequest(self.root_resource, request)
         self.assertIs(child_resource, resource_mock)
 
-    def test_put_child_adds_resource(self):
+    @patch('pixelated.resources.mails_resource.events.register')
+    def test_put_child_adds_resource(self, *mocks):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
         url_fragment, resource_mock = 'some-url-fragment', mock()
         self.root_resource.putChild(url_fragment, resource_mock)
