@@ -36,13 +36,12 @@ def enter_credentials(context, username, password):
 
 @when(u'I click on the login button')
 def click_login(context):
-    login_button = find_element_by_css_selector(context, 'input[name="login"]')
-    login_button.click()
+    find_element_by_css_selector(context, 'input[name="login"]').click()
 
 
 @then(u'I should see the fancy interstitial')
 def step_impl(context):
-    assert find_element_by_css_selector(context, 'section#hive-section')
+    find_element_by_css_selector(context, 'section#hive-section')
     _wait_for_interstitial_to_reload()
 
 
@@ -52,10 +51,9 @@ def _wait_for_interstitial_to_reload():
 
 @when(u'I logout')
 def click_logout(context):
-    logout_button = find_element_by_css_selector(context, 'ul#logout')
-    logout_button.click()
+    find_element_by_css_selector(context, '#logout-form div').click()
 
 
 @then(u'I should see the login page')
 def see_login_page(context):
-    assert find_element_by_css_selector(context, 'form#login_form')
+    find_element_by_css_selector(context, 'form#login_form')
