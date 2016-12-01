@@ -383,8 +383,9 @@ class AppTestClient(object):
         res, req = self.put('/mails', data, csrf=csrf, session=session)
         return res, req
 
-    def post_tags(self, mail_ident, tags_json):
-        res, req = self.post("/mail/%s/tags" % mail_ident, tags_json)
+    def post_tags(self, mail_ident, tags_json, session):
+        csrf = IPixelatedSession(session).get_csrf_token()
+        res, req = self.post("/mail/%s/tags" % mail_ident, tags_json, csrf=csrf, session=session)
         return res
 
     def get_tags(self, **kwargs):
