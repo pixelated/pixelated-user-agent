@@ -58,44 +58,41 @@ class MultiUserClient(AppTestClient):
         else:
             when(Authenticator)._bonafide_auth(username, password).thenRaise(SRPAuthError)
 
-    def login(self, username='username', password='password', from_request=None):
-        session = Authentication(username, 'some_user_token', 'some_user_uuid', 'session_id', {'is_admin': False})
+    def login(self, username='username', password='password', session=None):
+        auth_session = Authentication(username, 'some_user_token', 'some_user_uuid', 'session_id', {'is_admin': False})
         leap_session = self._test_account.leap_session
-        leap_session.user_auth = session
+        leap_session.user_auth = auth_session
         config = mock()
         config.leap_home = 'some_folder'
         leap_session.config = config
         leap_session.fresh_account = False
         self.leap_session = leap_session
         self.services = self._test_account.services
-        self.user_auth = session
+        self.user_auth = auth_session
 
         self._mock_bonafide_auth(username, password)
 
-        when(LeapSessionFactory).create(username, password, session).thenReturn(leap_session)
+        when(LeapSessionFactory).create(username, password, auth_session).thenReturn(leap_session)
         with patch('mockito.invocation.AnswerSelector', AnswerSelector):
             when(leap_session).initial_sync().thenAnswer(lambda: defer.succeed(None))
         when(pixelated.config.services).Services(ANY()).thenReturn(self.services)
 
-        session = from_request.getSession()
         csrftoken = IPixelatedSession(session).get_csrf_token()
         request = request_mock(path='/login', method="POST", body={'username': username, 'password': password, 'csrftoken': csrftoken}, ajax=False)
         request.session = session
         return self._render(request, as_json=False)
 
-    def get(self, path, get_args='', as_json=True, from_request=None):
+    def get(self, path, get_args='', as_json=True, session=None):
         request = request_mock(path)
         request.args = get_args
-        if from_request:
-            session = from_request.getSession()
+        if session:
             request.session = session
         return self._render(request, as_json)
 
-    def post(self, path, body='', headers=None, ajax=True, csrf='token', as_json=True, from_request=None):
+    def post(self, path, body='', headers=None, ajax=True, csrf='token', as_json=True, session=None):
         headers = headers or {'Content-Type': 'application/json'}
         request = request_mock(path=path, method="POST", body=body, headers=headers, ajax=ajax, csrf=csrf)
 
-        if from_request:
-            session = from_request.getSession()
+        if session:
             request.session = session
         return self._render(request, as_json)

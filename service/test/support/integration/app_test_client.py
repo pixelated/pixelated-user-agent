@@ -49,6 +49,7 @@ from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.services.mail_service import MailService
 from pixelated.resources.root_resource import RootResource
+from pixelated.resources.session import IPixelatedSession
 from test.support.integration.model import MailBuilder
 from test.support.test_helper import request_mock
 from test.support.integration.model import ResponseMail
@@ -278,17 +279,21 @@ class AppTestClient(object):
         request.args = get_args
         return self._render(request, as_json)
 
-    def post(self, path, body='', headers=None, ajax=True, csrf='token'):
+    def post(self, path, body='', headers=None, ajax=True, csrf='token', session=None):
         headers = headers or {'Content-Type': 'application/json'}
         request = request_mock(path=path, method="POST", body=body, headers=headers, ajax=ajax, csrf=csrf)
+        if session:
+            request.session = session
         return self._render(request)
 
     def put(self, path, body, ajax=True, csrf='token'):
         request = request_mock(path=path, method="PUT", body=body, headers={'Content-Type': ['application/json']}, ajax=ajax, csrf=csrf)
         return self._render(request)
 
-    def delete(self, path, body="", ajax=True, csrf='token'):
+    def delete(self, path, body="", ajax=True, csrf='token', session=None):
         request = request_mock(path=path, body=body, headers={'Content-Type': ['application/json']}, method="DELETE", ajax=ajax, csrf=csrf)
+        if session:
+            request.session = session
         return self._render(request)
 
     @defer.inlineCallbacks
@@ -387,12 +392,14 @@ class AppTestClient(object):
         return res
 
     # TODO: remove
-    def delete_mail(self, mail_ident, csrf='token'):
-        res, req = self.delete("/mail/%s" % mail_ident, csrf=csrf)
+    def delete_mail(self, mail_ident, session):
+        csrf = IPixelatedSession(session).get_csrf_token()
+        res, req = self.delete("/mail/%s" % mail_ident, csrf=csrf, session=session)
         return res
 
-    def delete_mails(self, idents):
-        res, req = self.post("/mails/delete", json.dumps({'idents': idents}))
+    def delete_mails(self, idents, session):
+        csrf = IPixelatedSession(session).get_csrf_token()
+        res, req = self.post("/mails/delete", json.dumps({'idents': idents}), csrf=csrf, session=session)
         return res
 
     def mark_many_as_unread(self, idents):
