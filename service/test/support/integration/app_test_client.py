@@ -286,8 +286,10 @@ class AppTestClient(object):
             request.session = session
         return self._render(request)
 
-    def put(self, path, body, ajax=True, csrf='token'):
+    def put(self, path, body, ajax=True, csrf='token', session=None):
         request = request_mock(path=path, method="PUT", body=body, headers={'Content-Type': ['application/json']}, ajax=ajax, csrf=csrf)
+        if session:
+            request.session = session
         return self._render(request)
 
     def delete(self, path, body="", ajax=True, csrf='token', session=None):
@@ -375,8 +377,9 @@ class AppTestClient(object):
         res = yield deferred_result
         defer.returnValue((res, req))
 
-    def put_mail(self, data):
-        res, req = self.put('/mails', data)
+    def put_mail(self, data, session):
+        csrf = IPixelatedSession(session).get_csrf_token()
+        res, req = self.put('/mails', data, csrf=csrf, session=session)
         return res, req
 
     def post_tags(self, mail_ident, tags_json):
