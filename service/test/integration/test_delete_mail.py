@@ -29,8 +29,7 @@ class DeleteMailTest(SoledadTestBase):
         self.assertEquals(1, len(inbox_mails))
 
         response, first_request = yield self.app_test_client.get('/', as_json=False)
-        csrftoken = IPixelatedSession(first_request.getSession()).get_csrf_token()
-        yield self.app_test_client.delete_mail(mail.mail_id, csrf=csrftoken)
+        yield self.app_test_client.delete_mail(mail.mail_id, session=first_request.getSession())
 
         inbox_mails = yield self.app_test_client.get_mails_by_tag('inbox')
         self.assertEquals(0, len(inbox_mails))
@@ -40,7 +39,8 @@ class DeleteMailTest(SoledadTestBase):
     @defer.inlineCallbacks
     def test_delete_mail_when_trashing_mail_from_trash_mailbox(self):
         mails = yield self.app_test_client.add_multiple_to_mailbox(1, 'trash')
-        yield self.app_test_client.delete_mails([mails[0].ident])
+        response, first_request = yield self.app_test_client.get('/', as_json=False)
+        yield self.app_test_client.delete_mails([mails[0].ident], session=first_request.getSession())
 
         trash_mails = yield self.app_test_client.get_mails_by_tag('trash')
 
@@ -52,7 +52,8 @@ class DeleteMailTest(SoledadTestBase):
         mails = yield self.app_test_client.add_multiple_to_mailbox(5, 'inbox')
         mail_idents = [m.ident for m in mails]
 
-        yield self.app_test_client.delete_mails(mail_idents)
+        response, first_request = yield self.app_test_client.get('/', as_json=False)
+        yield self.app_test_client.delete_mails(mail_idents, session=first_request.getSession())
 
         inbox = yield self.app_test_client.get_mails_by_tag('inbox')
         self.assertEquals(0, len(inbox))
@@ -62,7 +63,8 @@ class DeleteMailTest(SoledadTestBase):
         mails = yield self.app_test_client.add_multiple_to_mailbox(5, 'trash')
         mail_idents = [m.ident for m in mails]
 
-        yield self.app_test_client.delete_mails(mail_idents)
+        response, first_request = yield self.app_test_client.get('/', as_json=False)
+        yield self.app_test_client.delete_mails(mail_idents, session=first_request.getSession())
 
         trash = yield self.app_test_client.get_mails_by_tag('trash')
         self.assertEquals(0, len(trash))

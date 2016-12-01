@@ -30,7 +30,7 @@ class MultiUserLogoutTest(MultiUserSoledadTestBase):
     @defer.inlineCallbacks
     def test_logout_deletes_services_stop_background_reactor_tasks_and_closes_soledad(self):
         response, first_request = yield self.app_test_client.get('/login', as_json=False)
-        response, login_request = yield self.app_test_client.login(from_request=first_request)
+        response, login_request = yield self.app_test_client.login(session=first_request.getSession())
         yield response
 
         yield self.wait_for_session_user_id_to_finish()
@@ -39,7 +39,7 @@ class MultiUserLogoutTest(MultiUserSoledadTestBase):
             "/logout",
             json.dumps({'csrftoken': [login_request.getCookie('XSRF-TOKEN')]}),
             ajax=False,
-            from_request=login_request,
+            session=login_request.getSession(),
             as_json=False)
         yield response
 
