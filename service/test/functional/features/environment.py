@@ -30,6 +30,11 @@ from pixelated.resources.features_resource import FeaturesResource
 from test.support.integration import AppTestClient
 from steps.common import DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S
 
+
+class UnsuportedWebDriverError(Exception):
+    pass
+
+
 setup()
 
 
@@ -39,11 +44,7 @@ def start_app_test_client(client, mode):
 
 
 def before_all(context):
-    context.browser = webdriver.PhantomJS()
-    context.browser.set_window_size(1280, 1024)
-    context.browser.implicitly_wait(DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S)
-    context.browser.set_page_load_timeout(60)
-
+    _setup_webdriver(context)
     userdata = context.config.userdata
     context.host = userdata.get('host', 'http://localhost')
 
@@ -59,6 +60,24 @@ def before_all(context):
         _mock_user_agent(context)
         context.login_url = context.multi_user_url + '/login'
         context.username = 'username'
+
+
+def _setup_webdriver(context):
+    browser = context.config.userdata.get('webdriver', 'phantomjs')
+    supported_webdrivers = {
+        'phantomjs': webdriver.PhantomJS,
+        'firefox': webdriver.Firefox,
+        'chrome': webdriver.Chrome,
+    }
+
+    try:
+        context.browser = supported_webdrivers[browser]()
+    except KeyError:
+        raise UnsuportedWebDriverError('{} is not a supported webdriver'.format(browser))
+
+    context.browser.set_window_size(1280, 1024)
+    context.browser.implicitly_wait(DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S)
+    context.browser.set_page_load_timeout(60)
 
 
 def _mock_user_agent(context):
