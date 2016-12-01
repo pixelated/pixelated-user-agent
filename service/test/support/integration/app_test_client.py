@@ -405,12 +405,14 @@ class AppTestClient(object):
         res, req = self.post("/mails/delete", json.dumps({'idents': idents}), csrf=csrf, session=session)
         return res
 
-    def mark_many_as_unread(self, idents):
-        res, req = self.post('/mails/unread', json.dumps({'idents': idents}))
+    def mark_many_as_unread(self, idents, session):
+        csrf = IPixelatedSession(session).get_csrf_token()
+        res, req = self.post('/mails/unread', json.dumps({'idents': idents}), csrf=csrf, session=session)
         return res
 
-    def mark_many_as_read(self, idents):
-        res, req = self.post('/mails/read', json.dumps({'idents': idents}))
+    def mark_many_as_read(self, idents, session):
+        csrf = IPixelatedSession(session).get_csrf_token()
+        res, req = self.post('/mails/read', json.dumps({'idents': idents}), csrf=csrf, session=session)
         return res
 
     def get_contacts(self, query):
