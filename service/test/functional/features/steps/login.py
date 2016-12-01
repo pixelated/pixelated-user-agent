@@ -46,7 +46,7 @@ def step_impl(context):
 
 
 def _wait_for_interstitial_to_reload():
-    time.sleep(6)
+    time.sleep(10)
 
 
 @when(u'I logout')
