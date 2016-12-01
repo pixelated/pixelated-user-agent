@@ -6,7 +6,7 @@ from mockito import mock, when, any as ANY
 
 import pixelated
 from pixelated.application import UserAgentMode
-from pixelated.resources import UnAuthorizedResource
+from pixelated.resources import IPixelatedSession, UnAuthorizedResource
 from pixelated.resources.features_resource import FeaturesResource
 from pixelated.resources.login_resource import LoginResource
 from test.unit.resources import DummySite
@@ -30,7 +30,7 @@ class TestPublicRootResource(unittest.TestCase):
         url_fragment, resource_mock = 'some-url-fragment', mock()
         self.public_root_resource.putChildPublic(url_fragment, resource_mock)
         request = DummyRequest([url_fragment])
-        request.addCookie = lambda key, value: 'stubbed'
+        request.addCookie = MagicMock(return_value='stubbed')
         child_resource = getChildForRequest(self.public_root_resource, request)
         self.assertIs(child_resource, resource_mock)
 
@@ -39,7 +39,7 @@ class TestPublicRootResource(unittest.TestCase):
         url_fragment, resource_mock = 'some-url-fragment', mock()
         self.public_root_resource.putChildProtected(url_fragment, resource_mock)
         request = DummyRequest([url_fragment])
-        request.addCookie = lambda key, value: 'stubbed'
+        request.addCookie = MagicMock(return_value='stubbed')
         child_resource = getChildForRequest(self.public_root_resource, request)
         self.assertIsInstance(child_resource, UnAuthorizedResource)
 
@@ -48,14 +48,14 @@ class TestPublicRootResource(unittest.TestCase):
         url_fragment, resource_mock = 'some-url-fragment', mock()
         self.public_root_resource.putChild(url_fragment, resource_mock)
         request = DummyRequest([url_fragment])
-        request.addCookie = lambda key, value: 'stubbed'
+        request.addCookie = MagicMock(return_value='stubbed')
         child_resource = getChildForRequest(self.public_root_resource, request)
         self.assertIsInstance(child_resource, UnAuthorizedResource)
 
     def test_private_resource_returns_401(self):
         self.public_root_resource.initialize(provider=mock(), authenticator=mock())
         request = DummyRequest(['mails'])
-        request.addCookie = lambda key, value: 'stubbed'
+        request.addCookie = MagicMock(return_value='stubbed')
         d = self.web.get(request)
 
         def assert_unauthorized(request):
@@ -68,14 +68,14 @@ class TestPublicRootResource(unittest.TestCase):
     def test_login_url_should_delegate_to_login_resource(self):
         self.public_root_resource.initialize(provider=mock(), authenticator=mock())
         request = DummyRequest(['login'])
-        request.addCookie = lambda key, value: 'stubbed'
+        request.addCookie = MagicMock(return_value='stubbed')
         child_resource = getChildForRequest(self.public_root_resource, request)
         self.assertIsInstance(child_resource, LoginResource)
 
     def test_root_url_should_redirect_to_login_resource(self):
         self.public_root_resource.initialize(provider=mock(), authenticator=mock())
         request = DummyRequest([''])
-        request.addCookie = lambda key, value: 'stubbed'
+        request.addCookie = MagicMock(return_value='stubbed')
         d = self.web.get(request)
 
         def assert_redirect(request):
@@ -107,7 +107,7 @@ class TestRootResource(unittest.TestCase):
         url_fragment, resource_mock = 'some-url-fragment', mock()
         self.root_resource.putChildProtected(url_fragment, resource_mock)
         request = DummyRequest([url_fragment])
-        request.addCookie = lambda key, value: 'stubbed'
+        request.addCookie = MagicMock(return_value='stubbed')
         child_resource = getChildForRequest(self.root_resource, request)
         self.assertIs(child_resource, resource_mock)
 
@@ -116,13 +116,13 @@ class TestRootResource(unittest.TestCase):
         url_fragment, resource_mock = 'some-url-fragment', mock()
         self.root_resource.putChild(url_fragment, resource_mock)
         request = DummyRequest([url_fragment])
-        request.addCookie = lambda key, value: 'stubbed'
+        request.addCookie = MagicMock(return_value='stubbed')
         child_resource = getChildForRequest(self.root_resource, request)
         self.assertIs(child_resource, resource_mock)
 
     def test_root_url_should_delegate_to_inbox(self):
         request = DummyRequest([''])
-        request.addCookie = lambda key, value: 'stubbed'
+        request.addCookie = MagicMock(return_value='stubbed')
         child_resource = getChildForRequest(self.root_resource, request)
         self.assertIsInstance(child_resource, InboxResource)
 
@@ -130,13 +130,13 @@ class TestRootResource(unittest.TestCase):
     def test_login_url_should_delegate_to_login_resource(self, *mocks):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
         request = DummyRequest(['login'])
-        request.addCookie = lambda key, value: 'stubbed'
+        request.addCookie = MagicMock(return_value='stubbed')
         child_resource = getChildForRequest(self.root_resource, request)
         self.assertIsInstance(child_resource, LoginResource)
 
     def _test_should_renew_xsrf_cookie(self):
         request = DummyRequest([''])
-        request.addCookie = MagicMock()
+        request.addCookie = MagicMock(return_value='stubbed')
         generated_csrf_token = 'csrf_token'
         mock_sha = MagicMock()
         mock_sha.hexdigest = MagicMock(return_value=generated_csrf_token)
@@ -162,6 +162,7 @@ class TestRootResource(unittest.TestCase):
         self.root_resource._mode = MODE_STARTUP
 
         request = DummyRequest(['/child'])
+        request.addCookie = MagicMock(return_value='stubbed')
         request.getCookie = MagicMock(return_value='irrelevant -- stubbed')
 
         d = self.web.get(request)
@@ -182,6 +183,7 @@ class TestRootResource(unittest.TestCase):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
 
         request = DummyRequest(['/child'])
+        request.addCookie = MagicMock(return_value='stubbed')
         request.method = 'POST'
         self._mock_ajax_csrf(request, 'stubbed csrf token')
 
@@ -198,6 +200,7 @@ class TestRootResource(unittest.TestCase):
 
     def test_GET_should_return_503_for_uninitialized_resource(self):
         request = DummyRequest(['/sandbox/'])
+        request.addCookie = MagicMock(return_value='stubbed')
         request.method = 'GET'
 
         request.getCookie = MagicMock(return_value='stubbed csrf token')
@@ -215,6 +218,7 @@ class TestRootResource(unittest.TestCase):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
 
         request = DummyRequest(['non-existing-child'])
+        request.addCookie = MagicMock(return_value='stubbed')
         request.method = 'GET'
         request.getCookie = MagicMock(return_value='stubbed csrf token')
 
@@ -231,6 +235,7 @@ class TestRootResource(unittest.TestCase):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
 
         request = DummyRequest(['non-existing-child'])
+        request.addCookie = MagicMock(return_value='stubbed')
         request.method = 'POST'
         self._mock_ajax_csrf(request, 'stubbed csrf token')
         request.getCookie = MagicMock(return_value='stubbed csrf token')
@@ -246,6 +251,7 @@ class TestRootResource(unittest.TestCase):
 
     def test_should_authorize_child_resource_non_ajax_GET_requests(self):
         request = DummyRequest(['features'])
+        request.addCookie = MagicMock(return_value='stubbed')
 
         request.getCookie = MagicMock(return_value='irrelevant -- stubbed')
         self.root_resource.putChild('features', FeaturesResource())
@@ -270,6 +276,7 @@ class TestRootResource(unittest.TestCase):
         mock_content.read = MagicMock(return_value={})
         request.content = mock_content
 
+        request.addCookie = MagicMock(return_value='stubbed')
         request.getCookie = MagicMock(return_value='mismatched csrf token')
 
         d = self.web.get(request)
@@ -286,6 +293,7 @@ class TestRootResource(unittest.TestCase):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
 
         request = DummyRequest(['assets', 'dummy.json'])
+        request.addCookie = MagicMock(return_value='stubbed')
         d = self.web.get(request)
 
         def assert_response(_):
@@ -299,6 +307,7 @@ class TestRootResource(unittest.TestCase):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
 
         request = DummyRequest(['login'])
+        request.addCookie = MagicMock(return_value='stubbed')
         d = self.web.get(request)
 
         def assert_response(_):
@@ -309,6 +318,7 @@ class TestRootResource(unittest.TestCase):
 
     def test_root_should_be_handled_by_inbox_resource(self):
         request = DummyRequest([])
+        request.addCookie = MagicMock(return_value='stubbed')
         request.prepath = ['']
         request.path = '/'
         # TODO: setup mocked portal
@@ -318,9 +328,23 @@ class TestRootResource(unittest.TestCase):
 
     def test_inbox_should_not_be_public(self):
         request = DummyRequest([])
+        request.addCookie = MagicMock(return_value='stubbed')
         request.prepath = ['']
         request.path = '/'
         # TODO: setup mocked portal
 
         resource = self.root_resource.getChildWithDefault(request.prepath[-1], request)
         self.assertIsInstance(resource, InboxResource)
+
+    def test_every_url_should_get_csrftoken_header(self):
+        # self.root_resource.initialize(provider=mock(), authenticator=mock())
+        request = DummyRequest(['any'])
+        request.addCookie = MagicMock(return_value='stubbed')
+        d = self.web.get(request)
+
+        def assert_add_cookie_called_for_csrftoken(request):
+            csrftoken = IPixelatedSession(request.getSession()).get_csrf_token()
+            self.assertEqual([(('XSRF-TOKEN', csrftoken),)], request.addCookie.call_args_list)
+
+        d.addCallback(assert_add_cookie_called_for_csrftoken)
+        return d

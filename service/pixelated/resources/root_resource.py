@@ -65,6 +65,7 @@ class RootResource(BaseResource):
         logger.debug('Root in STARTUP mode. %s' % self)
 
     def getChildWithDefault(self, path, request):
+        self._add_csrf_cookie(request)
         if path == '':
             return self._redirect_to_login_resource if self._public else self._inbox_resource
         if self._mode == MODE_STARTUP:
@@ -81,7 +82,6 @@ class RootResource(BaseResource):
         xsrf_token = request.getCookie('XSRF-TOKEN')
         logger.debug('CSRF token: %s' % xsrf_token)
 
-        # TODO: how is comparing the cookie-csrf with the HTTP-header-csrf adding any csrf protection?
         ajax_request = (request.getHeader('x-requested-with') == 'XMLHttpRequest')
         if ajax_request:
             xsrf_header = request.getHeader('x-xsrf-token')
@@ -101,7 +101,7 @@ class RootResource(BaseResource):
         return self.putChildProtected(path, resource)  # to be on the safe side
 
     def initialize(self, provider=None, disclaimer_banner=None, authenticator=None):
-        self.putChildProtected('sandbox', SandboxResource(self._static_folder))
+        self.putChildPublic('sandbox', SandboxResource(self._static_folder))
         self.putChildProtected('keys', KeysResource(self._services_factory))
         self.putChildProtected(AttachmentsResource.BASE_URL, AttachmentsResource(self._services_factory))
         self.putChildProtected('contacts', ContactsResource(self._services_factory))
@@ -114,7 +114,7 @@ class RootResource(BaseResource):
         self.putChildProtected('users', UsersResource(self._services_factory))
         self.putChildPublic(LoginResource.BASE_URL,
                             LoginResource(self._services_factory, provider, disclaimer_banner=disclaimer_banner, authenticator=authenticator))
-        self.putChildProtected(LogoutResource.BASE_URL, LogoutResource(self._services_factory))
+        self.putChildPublic(LogoutResource.BASE_URL, LogoutResource(self._services_factory))
 
         self._inbox_resource.initialize()
         self._mode = MODE_RUNNING

@@ -387,8 +387,8 @@ class AppTestClient(object):
         return res
 
     # TODO: remove
-    def delete_mail(self, mail_ident):
-        res, req = self.delete("/mail/%s" % mail_ident)
+    def delete_mail(self, mail_ident, csrf='token'):
+        res, req = self.delete("/mail/%s" % mail_ident, csrf=csrf)
         return res
 
     def delete_mails(self, idents):
