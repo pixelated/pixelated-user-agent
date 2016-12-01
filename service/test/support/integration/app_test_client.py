@@ -372,8 +372,9 @@ class AppTestClient(object):
         defer.returnValue((res, req))
 
     @defer.inlineCallbacks
-    def post_attachment(self, data, headers):
-        deferred_result, req = self.post('/attachment', body=data, headers=headers)
+    def post_attachment(self, data, headers, session):
+        csrf = IPixelatedSession(session).get_csrf_token()
+        deferred_result, req = self.post('/attachment', body=data, headers=headers, csrf=csrf, session=session)
         res = yield deferred_result
         defer.returnValue((res, req))
 
