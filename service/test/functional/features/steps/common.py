@@ -91,11 +91,6 @@ def take_screenshot(context, filename):
     context.browser.save_screenshot(filename)
 
 
-def dump_source_to(context, filename):
-    with open(filename, 'w') as out:
-        out.write(context.browser.page_source.encode('utf8'))
-
-
 def page_has_css(context, css):
     try:
         find_element_by_css_selector(context, css)
