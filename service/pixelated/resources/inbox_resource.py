@@ -34,15 +34,19 @@ class InboxResource(BaseResource):
 
     def __init__(self, services_factory):
         BaseResource.__init__(self, services_factory)
+        self._not_quite_the_templates_folder = self._get_not_quite_the_templates_folder()
         self._templates_folder = self._get_templates_folder()
-        self._html_template = open(os.path.join(self._templates_folder, 'index.html')).read()
+        self._html_template = open(os.path.join(self._not_quite_the_templates_folder, 'index.html')).read()
         with open(os.path.join(self._templates_folder, 'Interstitial.html')) as f:
             self.interstitial = f.read()
         self._mode = MODE_STARTUP
 
     def initialize(self):
         self._mode = MODE_RUNNING
-        logger.debug('Inbox in RUNNING mode. %s' % self)
+
+    def _get_not_quite_the_templates_folder(self):
+        path = os.path.dirname(os.path.abspath(pixelated.__file__))
+        return os.path.join(path, '..', '..', 'web-ui', 'app')
 
     def _get_templates_folder(self):
         path = os.path.dirname(os.path.abspath(pixelated.__file__))
@@ -52,12 +56,9 @@ class InboxResource(BaseResource):
         return self._mode == MODE_STARTUP
 
     def render_GET(self, request):
-        logger.debug('Inbox rendering GET. %s' % self)
         if self._is_starting():
-            logger.debug('Inbox rendering interstitial. %s' % self)
             return self.interstitial
         else:
-            logger.debug('Inbox rendering from template. %s' % self)
             account_email = self.mail_service(request).account_email
             response = Template(self._html_template).safe_substitute(account_email=account_email)
             return str(response)
