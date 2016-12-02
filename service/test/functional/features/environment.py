@@ -127,8 +127,12 @@ def after_step(context, step):
 
 def _debug_on_error(context, step):
     if step.status == 'failed' and context.config.userdata.getbool("debug"):
-        import pdb
-        pdb.post_mortem(step.exc_traceback)
+        try:
+            import ipdb
+            ipdb.post_mortem(step.exc_traceback)
+        except ImportError:
+            import pdb
+            pdb.post_mortem(step.exc_traceback)
 
 
 def _save_screenshot(context, step):
