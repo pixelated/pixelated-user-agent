@@ -88,12 +88,22 @@ def _create_service_factory(args):
         return ServicesFactory(UserAgentMode(is_single_user=False))
 
 
+def get_templates_folder():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
+
+
+def get_static_folder():
+    # TODO: make sure sandbox keeps working
+    # TODO: make sure this works for packaging
+    return os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "web-ui", "public"))
+
+
 def initialize():
     log.info('Starting the Pixelated user agent')
     args = arguments.parse_user_agent_args()
     logger.init(debug=args.debug)
     services_factory = _create_service_factory(args)
-    resource = RootResource(services_factory)
+    resource = RootResource(services_factory, templates_folder=get_templates_folder(), static_folder=get_static_folder())
 
     def start():
         start_async = _start_mode(args, resource, services_factory)
@@ -154,7 +164,7 @@ def _setup_multi_user(args, root_resource, services_factory):
 def set_up_protected_resources(root_resource, provider, services_factory, banner=None, authenticator=None):
     session_checker = SessionChecker(services_factory)
 
-    anonymous_resource = RootResource(services_factory, public=True)
+    anonymous_resource = RootResource(services_factory, templates_folder=get_templates_folder(), static_folder=get_static_folder(), public=True)
     realm = PixelatedRealm(root_resource, anonymous_resource)
     _portal = portal.Portal(realm, [session_checker, AllowAnonymousAccess()])
 

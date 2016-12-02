@@ -46,7 +46,7 @@ class InboxResource(BaseResource):
 
     def _get_not_quite_the_templates_folder(self):
         path = os.path.dirname(os.path.abspath(pixelated.__file__))
-        return os.path.join(path, '..', '..', 'web-ui', 'app')
+        return os.path.join(path, '..', '..', 'web-ui', 'public')
 
     def _get_templates_folder(self):
         path = os.path.dirname(os.path.abspath(pixelated.__file__))

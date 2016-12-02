@@ -44,13 +44,13 @@ logger = Logger()
 
 class RootResource(BaseResource):
 
-    def __init__(self, services_factory, public=False):
+    def __init__(self, services_factory, templates_folder, static_folder, public=False):
         BaseResource.__init__(self, services_factory)
         self._public = public
         self._assets_folder = self._get_assets_folder()
         self._startup_assets_folder = self._get_startup_folder()
-        self._static_folder = self._get_static_folder()
-        self._html_template = open(os.path.join(self._static_folder, 'index.html')).read()
+        self._static_folder = static_folder
+        self._html_template = open(os.path.join(templates_folder, 'index.html')).read()
         self._services_factory = services_factory
         with open(os.path.join(self._startup_assets_folder, 'Interstitial.html')) as f:
             self.interstitial = f.read()
@@ -61,6 +61,7 @@ class RootResource(BaseResource):
     def _startup_mode(self):
         self.putChildProtected('assets', File(self._assets_folder))
         self.putChildPublic('startup-assets', File(self._startup_assets_folder))
+        self.putChildPublic('static', File(self._static_folder))
         self._mode = MODE_STARTUP
         logger.debug('Root in STARTUP mode. %s' % self)
 
@@ -128,13 +129,3 @@ class RootResource(BaseResource):
     def _get_startup_folder(self):
         path = os.path.dirname(os.path.abspath(__file__))
         return os.path.join(path, '..', 'assets')
-
-    def _get_static_folder(self):
-        static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))
-        # this is a workaround for packaging
-        if not os.path.exists(static_folder):
-            static_folder = os.path.abspath(
-                os.path.join(os.path.abspath(__file__), "..", "..", "..", "..", "web-ui", "app"))
-        if not os.path.exists(static_folder):
-            static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
-        return static_folder

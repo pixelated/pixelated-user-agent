@@ -17,14 +17,14 @@
 
 # Set this to the root of your project when deployed:
 
-target_dir = ENV['PIXELATED_BUILD'] == 'package' ? 'dist' : 'app'
+target_dir = ENV['PIXELATED_BUILD'] == 'package' ? 'dist' : 'public'
 
 
 http_path = "/"
 css_dir = "#{target_dir}/css"
-sass_dir = "app/scss"
-images_dir = "app/images"
-javascripts_dir = "app/js"
+sass_dir = "public/scss"
+images_dir = "public/images"
+javascripts_dir = "public/js"
 
 # You can select your preferred output style here (can be overridden via the command line):
 # output_style = :expanded or :nested or :compact or :compressed

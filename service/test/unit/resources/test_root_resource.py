@@ -5,7 +5,7 @@ from mock import MagicMock, patch
 from mockito import mock, when, any as ANY
 
 import pixelated
-from pixelated.application import UserAgentMode
+from pixelated.application import UserAgentMode, get_templates_folder, get_static_folder
 from pixelated.resources import IPixelatedSession, UnAuthorizedResource
 from pixelated.resources.features_resource import FeaturesResource
 from pixelated.resources.login_resource import LoginResource
@@ -22,7 +22,7 @@ from pixelated.resources.root_resource import InboxResource, RootResource, MODE_
 class TestPublicRootResource(unittest.TestCase):
 
     def setUp(self):
-        self.public_root_resource = RootResource(mock(), public=True)
+        self.public_root_resource = RootResource(mock(), get_templates_folder(), get_static_folder(), public=True)
         self.web = DummySite(self.public_root_resource)
 
     @patch('pixelated.resources.mails_resource.events.register')
@@ -105,7 +105,7 @@ class TestRootResource(unittest.TestCase):
         when(self.services_factory).services(ANY()).thenReturn(self.services)
         self.mail_service.account_email = self.MAIL_ADDRESS
 
-        self.root_resource = RootResource(self.services_factory)
+        self.root_resource = RootResource(self.services_factory, get_templates_folder(), get_static_folder())
         self.web = DummySite(self.root_resource)
 
     @patch('pixelated.resources.mails_resource.events.register')
