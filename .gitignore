@@ -4,7 +4,7 @@
 *.DS_Store
 *.egg-info
 /web-ui/node_modules
-/web-ui/app/bower_components
+/web-ui/public/bower_components
 /web-ui/lib/
 /web-ui/public/signup.js
 .tmp
@@ -13,8 +13,8 @@ dist/
 *archive.zip
 *.swp
 *.swo
-/web-ui/app/js/generated
-/web-ui/app/css
+/web-ui/public/js/generated
+/web-ui/public/css
 test-results.xml
 /control_tower.html
 /state.yml

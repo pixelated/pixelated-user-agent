@@ -34,7 +34,7 @@ mkdir -p dist
 
 
 # copy files
-cd app
+cd public
 cp --parents \
 404.html \
 fonts/* \
@@ -47,19 +47,19 @@ cd -
 
 # concat js files and minify for app.min.js
 cat \
-app/bower_components/modernizr/modernizr.js \
-app/bower_components/lodash/dist/lodash.js \
-app/bower_components/jquery/dist/jquery.js \
-app/bower_components/jquery-ui/jquery-ui.js \
-app/bower_components/jquery-file-upload/js/jquery.fileupload.js \
-app/js/lib/highlightRegex.js \
-app/bower_components/handlebars/handlebars.js \
-app/bower_components/typeahead.js/dist/typeahead.bundle.js \
-app/bower_components/foundation/js/foundation.js \
-app/bower_components/foundation/js/foundation/foundation.reveal.js \
-app/bower_components/foundation/js/foundation/foundation.offcanvas.js \
-app/js/foundation/initialize_foundation.js \
-app/bower_components/iframe-resizer/js/iframeResizer.js \
+public/bower_components/modernizr/modernizr.js \
+public/bower_components/lodash/dist/lodash.js \
+public/bower_components/jquery/dist/jquery.js \
+public/bower_components/jquery-ui/jquery-ui.js \
+public/bower_components/jquery-file-upload/js/jquery.fileupload.js \
+public/js/lib/highlightRegex.js \
+public/bower_components/handlebars/handlebars.js \
+public/bower_components/typeahead.js/dist/typeahead.bundle.js \
+public/bower_components/foundation/js/foundation.js \
+public/bower_components/foundation/js/foundation/foundation.reveal.js \
+public/bower_components/foundation/js/foundation/foundation.offcanvas.js \
+public/js/foundation/initialize_foundation.js \
+public/bower_components/iframe-resizer/js/iframeResizer.js \
 .tmp/app.concatenated.js > dist/app.js
 node_modules/.bin/minify dist/app.js > dist/app.min.js
 rm dist/app.js
@@ -72,7 +72,7 @@ fi
 
 # concat js files and minify for sandbox.min.js
 cat \
-app/js/sandbox.js \
-app/bower_components/iframe-resizer/js/iframeResizer.contentWindow.js > dist/sandbox.js
+public/js/sandbox.js \
+public/bower_components/iframe-resizer/js/iframeResizer.contentWindow.js > dist/sandbox.js
 node_modules/.bin/minify dist/sandbox.js > dist/sandbox.min.js
 rm dist/sandbox.js

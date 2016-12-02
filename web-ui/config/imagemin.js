@@ -17,7 +17,7 @@
 
 const imagemin = require('imagemin');
 
-imagemin(['app/images/*.{gif,jpg,png,svg}'],
+imagemin(['public/images/*.{gif,jpg,png,svg}'],
          'dist/images'
 ).then(files => {
   console.log('Images list:')
