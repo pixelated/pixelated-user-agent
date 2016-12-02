@@ -119,7 +119,7 @@ function runFunctionalTests {
         echo "Executing Functional Tests on headless PhantomJS."
         removeZmqCertificates
         echo "You should execute it on Debian box for more similar results with CI environment."
-        behave --tags ~@wip test/functional/features
+        behave --tags ~@wip --tags ~@smoke test/functional/features
         echo "Done."
 }
 

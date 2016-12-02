@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-@smoke @wip
+@smoke
 Feature: sign up, login and logout
   As a visitor of Pixelated
   I want to sign up
