@@ -300,7 +300,7 @@ class TestRootResource(unittest.TestCase):
     def test_assets_should_be_publicly_available(self, *mocks):
         self.root_resource.initialize(provider=mock(), authenticator=mock())
 
-        request = DummyRequest(['assets', 'dummy.json'])
+        request = DummyRequest(['static', 'dummy.json'])
         request.addCookie = MagicMock(return_value='stubbed')
         d = self.web.get(request)
 

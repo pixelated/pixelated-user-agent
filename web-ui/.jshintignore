@@ -2,3 +2,4 @@ public/node_modules
 public/bower_components
 public/js/lib
 public/js/generated
+public/signup.js

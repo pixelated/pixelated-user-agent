@@ -16,7 +16,7 @@
  */
 
 requirejs.config({
-  baseUrl: '../assets/',
+  baseUrl: '../static/',
   paths: {
     'mail_list': 'js/mail_list',
     'page': 'js/page',

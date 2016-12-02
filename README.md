@@ -10,7 +10,7 @@ Here's a [podcast](https://soundcloud.com/thoughtworks/pixelated-why-secure-comm
 
 **Pixelated is still in early development state!**
 
-![High level architecture User Agent](https://raw.githubusercontent.com/pixelated/website/master/assets/images/pixelated-user-agent.png)
+![High level architecture User Agent](https://raw.githubusercontent.com/pixelated/website/master/static/images/pixelated-user-agent.png)
 
 ## Try it!
 
