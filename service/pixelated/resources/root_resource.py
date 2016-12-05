@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import json
 import os
+import pkg_resources
 from pixelated.resources.users import UsersResource
 
 import pixelated
@@ -50,9 +51,8 @@ class RootResource(BaseResource):
         self._assets_folder = self._get_assets_folder()
         self._startup_assets_folder = self._get_startup_folder()
         self._static_folder = static_folder
-        self._html_template = open(os.path.join(templates_folder, 'index.html')).read()
         self._services_factory = services_factory
-        with open(os.path.join(self._startup_assets_folder, 'Interstitial.html')) as f:
+        with open(pkg_resources.resource_filename('templates', 'Interstitial.html')) as f:
             self.interstitial = f.read()
         self._redirect_to_login_resource = Redirect('login')
         self._inbox_resource = InboxResource(services_factory)
@@ -60,7 +60,7 @@ class RootResource(BaseResource):
 
     def _startup_mode(self):
         self.putChildProtected('assets', File(self._assets_folder))
-        self.putChildPublic('startup-assets', File(self._startup_assets_folder))
+        self.putChildPublic('startup-assets', File(pkg_resources.resource_filename('templates', '.')))
         self.putChildPublic('static', File(self._static_folder))
         self._mode = MODE_STARTUP
         logger.debug('Root in STARTUP mode. %s' % self)

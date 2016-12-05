@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 import hashlib
 import os
+import pkg_resources
 from string import Template
 
 import pixelated
@@ -35,9 +36,8 @@ class InboxResource(BaseResource):
     def __init__(self, services_factory):
         BaseResource.__init__(self, services_factory)
         self._not_quite_the_templates_folder = self._get_not_quite_the_templates_folder()
-        self._templates_folder = self._get_templates_folder()
         self._html_template = open(os.path.join(self._not_quite_the_templates_folder, 'index.html')).read()
-        with open(os.path.join(self._templates_folder, 'Interstitial.html')) as f:
+        with open(pkg_resources.resource_filename('templates', 'Interstitial.html')) as f:
             self.interstitial = f.read()
         self._mode = MODE_STARTUP
 
@@ -47,10 +47,6 @@ class InboxResource(BaseResource):
     def _get_not_quite_the_templates_folder(self):
         path = os.path.dirname(os.path.abspath(pixelated.__file__))
         return os.path.join(path, '..', '..', 'web-ui', 'public')
-
-    def _get_templates_folder(self):
-        path = os.path.dirname(os.path.abspath(pixelated.__file__))
-        return os.path.join(path, 'assets')
 
     def _is_starting(self):
         return self._mode == MODE_STARTUP

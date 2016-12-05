@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import pkg_resources
 from xml.sax import SAXParseException
 
 from pixelated.authentication import Authenticator
@@ -71,7 +72,7 @@ def parse_accept_language(all_headers):
 
 
 class DisclaimerElement(Element):
-    loader = XMLFile(FilePath(os.path.join(_get_startup_folder(), '_login_disclaimer_banner.html')))
+    loader = XMLFile(FilePath(pkg_resources.resource_filename('templates', '_login_disclaimer_banner.html')))
 
     def __init__(self, banner):
         super(DisclaimerElement, self).__init__()
@@ -94,7 +95,7 @@ class DisclaimerElement(Element):
 
 
 class LoginWebSite(Element):
-    loader = XMLFile(FilePath(os.path.join(_get_startup_folder(), 'login.html')))
+    loader = XMLFile(FilePath(pkg_resources.resource_filename('templates', 'login.html')))
 
     def __init__(self, error_msg=None, disclaimer_banner_file=None):
         super(LoginWebSite, self).__init__()
@@ -132,7 +133,7 @@ class LoginResource(BaseResource):
 
         self.putChild('startup-assets', File(self._startup_folder))
         self.putChild('public-assets', File(self._public_folder))
-        with open(os.path.join(self._startup_folder, 'Interstitial.html')) as f:
+        with open(pkg_resources.resource_filename('templates', 'Interstitial.html')) as f:
             self.interstitial = f.read()
 
     def getChild(self, path, request):
