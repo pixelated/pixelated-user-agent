@@ -42,6 +42,16 @@ from pixelated.resources.root_resource import RootResource
 log = Logger()
 
 
+def get_templates_folder():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "templates")
+
+
+def get_static_folder():
+    # TODO: make sure sandbox keeps working
+    # TODO: make sure this works for packaging
+    return os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "web-ui", "public"))
+
+
 class UserAgentMode(object):
     def __init__(self, is_single_user):
         self.is_single_user = is_single_user
@@ -86,16 +96,6 @@ def _create_service_factory(args):
         return SingleUserServicesFactory(UserAgentMode(is_single_user=True))
     else:
         return ServicesFactory(UserAgentMode(is_single_user=False))
-
-
-def get_templates_folder():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
-
-
-def get_static_folder():
-    # TODO: make sure sandbox keeps working
-    # TODO: make sure this works for packaging
-    return os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "web-ui", "public"))
 
 
 def initialize():
