@@ -16,7 +16,7 @@ class PixelatedComponent extends React.Component {
   }
 
   componentWillUnmount() {
-    this.unsubscribe()
+    this.unsubscribe();
   }
 }
 
@@ -26,7 +26,7 @@ class PixelatedForm extends PixelatedComponent {
     const immutableActionProperties = new Map(actionProperties);
     this.props.store.dispatch(immutableActionProperties.merge({status: 'STARTED'}).toJS());
     fetch(url).then((response) => {
-      return response.json()
+      return response.json();
     }).then((json) => {
       setTimeout(() => {
         this.props.store.dispatch(immutableActionProperties.merge({status: 'SUCCESS', json: json}).toJS());
@@ -93,7 +93,7 @@ class CreateAccountForm extends PixelatedForm {
   _handleClick(event) {
     event.stopPropagation();
     event.preventDefault();
-    this.props.store.dispatch({type: 'SUBMIT_CREATE_ACCOUNT', username: event.target['username'].value, password: event.target['password'].value});
+    this.props.store.dispatch({type: 'SUBMIT_CREATE_ACCOUNT', username: event.target.username.value, password: event.target.password.value});
   }
 }
 

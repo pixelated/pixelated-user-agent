@@ -1,9 +1,99 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="refresh" content="0;URL=/login">
-    </head>
-    <body bgcolor="#FFFFFF" text="#000000\">
-    <a href="/login">click here</a>
-    </body>
-</html>
+<head>
+<link rel="icon" type="image/png" href="static/images/Favicon.png">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>$account_email - Pixelated Mail</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+<link href="static/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="static/bower_components/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="static/css/style.css">
+</head>
 
+<body>
+<div class="off-canvas-wrap move-right menu" data-offcanvas>
+  <div class="inner-wrap">
+    <section id="left-pane" class="left-off-canvas-menu">
+      <a class="left-off-canvas-logo side-nav-toggle" href="#">
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="30.4 627.3 612 171.1" enable-background="new 30.4 627.3 612 171.1" xml:space="preserve">
+<g>
+  <path fill="#3E3B38" id="pix-logo" d="M30.4,669.9v85.8l75.5,42.7l75.5-42.7v-85.8l-75.5-42.7L30.4,669.9z M102.7,767.4l-44-24.3v-52.6l44,25
+    V767.4z M152.5,743l-43.4,24.3v-51.8l43.4-25.4V743z M152.5,683.1l-46.7,27.8l-47.2-27.8l47.2-25.4L152.5,683.1z"/>
+  <path fill="#3E3B38" d="M233.8,678.3h-24v71.2h16.2v-26.5h7.8c14,0,24.3-8,24.3-22.9C258.1,685.6,247.6,678.3,233.8,678.3z
+     M230.6,710.2h-4.6v-18.8h4.6c6.5,0,12.5,2.2,12.5,9.5C243,708.1,237.1,710.2,230.6,710.2z"/>
+  <rect x="263.5" y="678.3" fill="#3E3B38" width="16.2" height="71.2"/>
+  <polygon fill="#3E3B38" points="350.4,678.3 330.1,678.3 316.9,697.7 303.7,678.3 284.6,678.3 307,711.1 282.6,749.5 302.9,749.5
+    316.9,725.3 331,749.5 352.1,749.5 326.9,711.1   "/>
+  <polygon fill="#3E3B38" points="354.7,749.5 395.5,749.5 395.5,735.2 370.9,735.2 370.9,721 394.4,721 394.4,706.6 370.9,706.6
+    370.9,692.5 395.5,692.5 395.5,678.3 354.7,678.3   "/>
+  <path fill="#3E3B38" d="M456.1,678.3l-22.9,57h-15.9v-57h-16.2v71.2h26.5h14.3h3.2l5.4-14.3h27l5.4,14.3h17.5l-28.9-71.2H456.1z
+     M455.7,721l7.8-20.7h0.2l7.8,20.7H455.7z"/>
+  <polygon fill="#3E3B38" points="486.4,692.5 503.4,692.5 503.4,749.5 519.6,749.5 519.6,692.5 536.6,692.5 536.6,678.3
+    486.4,678.3   "/>
+  <polygon fill="#3E3B38" points="542,749.5 582.8,749.5 582.8,735.2 558.4,735.2 558.4,721 581.9,721 581.9,706.6 558.4,706.6
+    558.4,692.5 582.8,692.5 582.8,678.3 542,678.3   "/>
+  <path fill="#3E3B38" d="M606.5,678.3h-17.9v71.2h17.9c19.7,0,35.9-14.9,35.9-35.6C642.4,693.1,625.9,678.3,606.5,678.3z M607,735
+    h-2.4v-42.1h2.4c12.1,0,20.3,9.1,20.3,21.1C627.3,725.8,619.1,735,607,735z"/>
+    </g>
+    <polygon id="clock1" class="logo-part-animation-off" fill="#3E3B38" points="105.8,657.8 105.8,628 105.8,627.3 181.4,669.9 152.5,683.1 "/>
+    <polygon id="clock2" class="logo-part-animation-off" fill="#3E3B38" points="152.5,683.1 181.4,669.9 181.4,755.7 152.5,743 "/>
+    <polygon id="clock3" class="logo-part-animation-off" fill="#3E3B38" points="105.9,798.3 105.9,769 152.5,743 181.4,755.7 "/>
+    <polygon id="clock4" class="logo-part-animation-off" fill="#3E3B38" points="58.7,743.1 105.9,769 105.9,798.3 30.4,755.7 "/>
+    <polygon id="clock5" class="logo-part-animation-off" fill="#3E3B38" points="30.4,669.9 58.6,683.1 58.7,743.1 30.4,755.7 "/>
+    <polygon id="clock6" class="logo-part-animation-off" fill="#3E3B38" points="105.8,628 105.8,657.8 58.6,683.1 30.4,669.9 105.8,627.3 "/>
+    </svg>
+      </a>
+      <a class="side-nav-toggle side-nav-toggle-icon" href="#">
+        <i class="toggle fa fa-navicon"></i>
+      </a>
+      <nav id="tag-list"></nav>
+      <div class="side-nav-bottom">
+        <div class="version">0.3.1-beta</div>
+        <nav id="feedback"></nav>
+        <nav id="user-settings-icon"></nav>
+        <nav id="logout"></nav>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="off-canvas-wrap content" data-offcanvas>
+  <header class="message-panel-container" >
+    <div id="user-alerts" class="message-panel"></div>
+  </header>
+
+  <div class="inner-wrap">
+    <a class="left-off-canvas-toggle" href="#">
+    </a>
+    <article id='middle-pane-container' class="small-5 medium-5 large-5 columns no-padding">
+      <section id="top-pane" class="small-12 large-12 no-padding">
+        <div id="compose-search-trigger">
+          <div id="compose" class="column small-12 large-4 no-padding">
+            <div id="compose-trigger"></div>
+          </div>
+          <div id="search-trigger" class="small-12 large-8 columns no-padding">
+          </div>
+        </div>
+        <ul id="list-actions"></ul>
+      </section>
+
+      <section id="middle-pane" class="small-9 medium-12 large-12 columns no-padding">
+        <ul id="mail-list">
+        </ul>
+        <div id="user-settings-box"></div>
+      </section>
+    </article>
+
+    <section id="right-pane" class="small-7 medium-7 large-7 columns">
+    </section>
+  </div>
+</div>
+
+
+<script src="/static/app.min.js" type="text/javascript"></script>
+
+</body>
+</html>

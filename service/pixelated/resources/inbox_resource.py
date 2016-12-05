@@ -35,18 +35,14 @@ class InboxResource(BaseResource):
 
     def __init__(self, services_factory):
         BaseResource.__init__(self, services_factory)
-        self._not_quite_the_templates_folder = self._get_not_quite_the_templates_folder()
-        self._html_template = open(os.path.join(self._not_quite_the_templates_folder, 'index.html')).read()
+        with open(pkg_resources.resource_filename('templates', 'index.html')) as f:
+            self._html_template = f.read()
         with open(pkg_resources.resource_filename('templates', 'Interstitial.html')) as f:
             self.interstitial = f.read()
         self._mode = MODE_STARTUP
 
     def initialize(self):
         self._mode = MODE_RUNNING
-
-    def _get_not_quite_the_templates_folder(self):
-        path = os.path.dirname(os.path.abspath(pixelated.__file__))
-        return os.path.join(path, '..', '..', 'web-ui', 'public')
 
     def _is_starting(self):
         return self._mode == MODE_STARTUP
