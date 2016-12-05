@@ -80,7 +80,7 @@ class KeymanagerTest(TestCase):
 
     def test_keymanager_generate_openpgp_key_doesnt_regenerate_preexisting_key(self):
         mock_open_pgp_key = MagicMock()
-        mock_open_pgp_key.should_be_renewed = MagicMock(return_value=False)
+        mock_open_pgp_key.needs_renewal = MagicMock(return_value=False)
         when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
 
         self.keymanager._gen_key = MagicMock()
@@ -91,7 +91,7 @@ class KeymanagerTest(TestCase):
 
     def test_keymanager_generate_openpgp_key_doesnt_upload_preexisting_key(self):
         mock_open_pgp_key = MagicMock()
-        mock_open_pgp_key.should_be_renewed = MagicMock(return_value=False)
+        mock_open_pgp_key.needs_renewal = MagicMock(return_value=False)
         when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
 
         self.keymanager._send_key_to_leap = MagicMock()
@@ -115,7 +115,7 @@ class KeymanagerTest(TestCase):
     @defer.inlineCallbacks
     def test_keymanager_regenerate_key_pair_if_current_key_is_about_to_expire(self):
         mock_open_pgp_key = MagicMock()
-        mock_open_pgp_key.should_be_renewed.return_value(True)
+        mock_open_pgp_key.needs_renewal.return_value(True)
         when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
 
         yield self.keymanager.generate_openpgp_key()
@@ -126,7 +126,7 @@ class KeymanagerTest(TestCase):
     @defer.inlineCallbacks
     def test_key_regeneration_does_not_delete_key_when_upload_fails(self):
         mock_open_pgp_key = MagicMock()
-        mock_open_pgp_key.should_be_renewed.return_value(True)
+        mock_open_pgp_key.needs_renewal.return_value(True)
         self.leap_keymanager.get_key = MagicMock(return_value=defer.succeed(mock_open_pgp_key))
         self.leap_keymanager.send_key = MagicMock(side_effect=UploadKeyError('Could not upload key'))
 
