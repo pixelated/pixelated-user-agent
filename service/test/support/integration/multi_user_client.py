@@ -19,7 +19,7 @@ from mockito import mock, when, any as ANY
 from pixelated.authentication import Authenticator, Authentication
 from twisted.internet import defer
 
-from pixelated.application import UserAgentMode, set_up_protected_resources, get_static_folder, get_templates_folder
+from pixelated.application import UserAgentMode, set_up_protected_resources, get_static_folder
 from pixelated.config.services import ServicesFactory
 
 from pixelated.config.sessions import LeapSessionFactory
@@ -46,7 +46,7 @@ class MultiUserClient(AppTestClient):
 
         self.service_factory = ServicesFactory(UserAgentMode(is_single_user=False))
 
-        root_resource = RootResource(self.service_factory, get_templates_folder(), get_static_folder())
+        root_resource = RootResource(self.service_factory, get_static_folder())
         leap_provider = mock()
         self.credentials_checker = StubSRPChecker(leap_provider)
         self.resource = set_up_protected_resources(root_resource, leap_provider, self.service_factory)

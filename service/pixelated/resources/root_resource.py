@@ -45,7 +45,7 @@ logger = Logger()
 
 class RootResource(BaseResource):
 
-    def __init__(self, services_factory, templates_folder, static_folder, public=False):
+    def __init__(self, services_factory, static_folder, public=False):
         BaseResource.__init__(self, services_factory)
         self._public = public
         self._static_folder = static_folder

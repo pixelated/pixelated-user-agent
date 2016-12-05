@@ -38,7 +38,7 @@ from leap.soledad.client import Soledad
 from leap.bitmask.mail.adaptors.soledad import SoledadMailAdaptor
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
 from pixelated.adapter.services.feedback_service import FeedbackService
-from pixelated.application import UserAgentMode, set_up_protected_resources, get_static_folder, get_templates_folder
+from pixelated.application import UserAgentMode, set_up_protected_resources, get_static_folder
 from pixelated.config.sessions import LeapSession
 from pixelated.config.services import Services, ServicesFactory, SingleUserServicesFactory
 from pixelated.config.site import PixelatedSite
@@ -218,7 +218,7 @@ class AppTestClient(object):
             services = self._test_account.services
             self.service_factory.add_session('someuserid', services)
 
-            self.resource = RootResource(self.service_factory, get_templates_folder(), get_static_folder())
+            self.resource = RootResource(self.service_factory, get_static_folder())
             provider = mock()
             self.resource.initialize(provider)
         else:
