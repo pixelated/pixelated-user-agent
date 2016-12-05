@@ -48,8 +48,6 @@ class RootResource(BaseResource):
     def __init__(self, services_factory, templates_folder, static_folder, public=False):
         BaseResource.__init__(self, services_factory)
         self._public = public
-        self._assets_folder = self._get_assets_folder()
-        self._startup_assets_folder = self._get_startup_folder()
         self._static_folder = static_folder
         self._services_factory = services_factory
         with open(pkg_resources.resource_filename('templates', 'Interstitial.html')) as f:
@@ -59,8 +57,6 @@ class RootResource(BaseResource):
         self._startup_mode()
 
     def _startup_mode(self):
-        self.putChildProtected('assets', File(self._assets_folder))
-        self.putChildPublic('startup-assets', File(pkg_resources.resource_filename('templates', '.')))
         self.putChildPublic('static', File(self._static_folder))
         self._mode = MODE_STARTUP
         logger.debug('Root in STARTUP mode. %s' % self)
@@ -120,12 +116,3 @@ class RootResource(BaseResource):
         self._inbox_resource.initialize()
         self._mode = MODE_RUNNING
         logger.debug('Root in RUNNING mode. %s' % self)
-
-    def _get_assets_folder(self):
-        pixelated_path = os.path.dirname(os.path.abspath(pixelated.__file__))
-        return os.path.join(pixelated_path, '..', '..', 'web-ui', 'public')
-
-    # TODO: use the public folder for this
-    def _get_startup_folder(self):
-        path = os.path.dirname(os.path.abspath(__file__))
-        return os.path.join(path, '..', 'assets')

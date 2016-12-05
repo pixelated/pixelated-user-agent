@@ -35,22 +35,6 @@ from twisted.web.template import Element, XMLFile, renderElement, renderer
 log = Logger()
 
 
-def _get_startup_folder():
-    path = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(path, '..', 'assets')
-
-
-def _get_public_folder():
-    static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "public"))
-    # this is a workaround for packaging
-    if not os.path.exists(static_folder):
-        static_folder = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), "..", "..", "..", "..", "web-ui", "public"))
-    if not os.path.exists(static_folder):
-        static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
-    return static_folder
-
-
 def _get_static_folder():
     static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "public"))
     # this is a workaround for packaging
@@ -124,15 +108,11 @@ class LoginResource(BaseResource):
     def __init__(self, services_factory, provider=None, disclaimer_banner=None, authenticator=None):
         BaseResource.__init__(self, services_factory)
         self._static_folder = _get_static_folder()
-        self._public_folder = _get_public_folder()
-        self._startup_folder = _get_startup_folder()
         self._disclaimer_banner = disclaimer_banner
         self._provider = provider
         self._authenticator = authenticator or Authenticator(provider)
         self._bootstrap_user_services = BootstrapUserServices(services_factory, provider)
 
-        self.putChild('startup-assets', File(self._startup_folder))
-        self.putChild('public-assets', File(self._public_folder))
         with open(pkg_resources.resource_filename('templates', 'Interstitial.html')) as f:
             self.interstitial = f.read()
 
