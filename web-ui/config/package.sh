@@ -18,61 +18,11 @@
 
 set -e
 
-export PIXELATED_BUILD='package'
-
-mkdir -p dist
-
 # initial npm tasks
-./go clean
-./go compass
-./go handlebars
-./go imagemin
-./go minify_html
-./go minify_sandbox
-./go add_git_version
-./go buildmain
+./go build
 
-
-# copy files
-cd public
-cp --parents \
-404.html \
-fonts/* \
-locales/**/* \
-bower_components/font-awesome/css/font-awesome.min.css \
-bower_components/jquery-file-upload/css/jquery.fileupload.css \
-bower_components/font-awesome/fonts/* \
-../dist
-cd -
-
-# concat js files and minify for app.min.js
-cat \
-public/bower_components/modernizr/modernizr.js \
-public/bower_components/lodash/dist/lodash.js \
-public/bower_components/jquery/dist/jquery.js \
-public/bower_components/jquery-ui/jquery-ui.js \
-public/bower_components/jquery-file-upload/js/jquery.fileupload.js \
-public/js/lib/highlightRegex.js \
-public/bower_components/handlebars/handlebars.js \
-public/bower_components/typeahead.js/dist/typeahead.bundle.js \
-public/bower_components/foundation/js/foundation.js \
-public/bower_components/foundation/js/foundation/foundation.reveal.js \
-public/bower_components/foundation/js/foundation/foundation.offcanvas.js \
-public/js/foundation/initialize_foundation.js \
-public/bower_components/iframe-resizer/js/iframeResizer.js \
-.tmp/app.concatenated.js > dist/app.js
-node_modules/.bin/minify dist/app.js > dist/app.min.js
-rm dist/app.js
-
-if [ ! -s dist/app.min.js ]
+if [ ! -s public/app.min.js ]
 then
 echo "Minification failed!"
 exit 1;
 fi
-
-# concat js files and minify for sandbox.min.js
-cat \
-public/js/sandbox.js \
-public/bower_components/iframe-resizer/js/iframeResizer.contentWindow.js > dist/sandbox.js
-node_modules/.bin/minify dist/sandbox.js > dist/sandbox.min.js
-rm dist/sandbox.js

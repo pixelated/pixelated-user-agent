@@ -3,13 +3,14 @@
 *.log
 *.DS_Store
 *.egg-info
-/web-ui/node_modules
-/web-ui/public/bower_components
 /web-ui/lib/
+/web-ui/node_modules
+/web-ui/public/bower_components/
+/web-ui/public/images/
 /web-ui/public/signup.js
+/web-ui/public/*.min.js
 .tmp
 .sass-cache/
-dist/
 *archive.zip
 *.swp
 *.swo

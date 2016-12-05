@@ -17,13 +17,11 @@
 
 # Set this to the root of your project when deployed:
 
-target_dir = ENV['PIXELATED_BUILD'] == 'package' ? 'dist' : 'public'
-
-
 http_path = "/"
-css_dir = "#{target_dir}/css"
+css_dir = "public/css"
 sass_dir = "public/scss"
-images_dir = "public/images"
+images_dir = "src/images"
+generated_images_dir = "public/images"
 javascripts_dir = "public/js"
 
 # You can select your preferred output style here (can be overridden via the command line):
