@@ -1,6 +1,6 @@
 from mockito import mock, when, any as ANY
 
-from pixelated.application import get_templates_folder, get_static_folder
+from pixelated.application import get_static_folder
 from pixelated.resources.auth import SessionChecker, PixelatedRealm, PixelatedAuthSessionWrapper
 from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
@@ -42,8 +42,8 @@ class TestPixelatedAuthSessionWrapper(unittest.TestCase):
         session_checker = SessionChecker(services_factory)
         self.portal = Portal(self.realm_mock, [session_checker, AllowAnonymousAccess()])
         self.user_uuid_mock = mock()
-        self.root_resource = RootResource(services_factory, get_templates_folder(), get_static_folder())
-        self.anonymous_resource = RootResource(services_factory, get_templates_folder(), get_static_folder(), public=True)
+        self.root_resource = RootResource(services_factory, get_static_folder())
+        self.anonymous_resource = RootResource(services_factory, get_static_folder(), public=True)
 
         self.session_wrapper = PixelatedAuthSessionWrapper(self.portal, self.root_resource, self.anonymous_resource)
         self.request = DummyRequest([])
