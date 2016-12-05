@@ -13,7 +13,15 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from common import *
+from behave import when
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+
+from common import (
+    find_element_by_class_name,
+    find_element_by_id,
+    wait_for_user_alert_to_disapear,
+    wait_until_element_is_visible_by_locator)
 
 
 def click_first_element_with_class(context, classname):

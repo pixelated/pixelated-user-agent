@@ -13,16 +13,21 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from email.mime.application import MIMEApplication
-from time import sleep
-from leap.bitmask.mail.mail import Message
-from common import *
-from test.support.integration import MailBuilder
-from behave import given
-from crochet import wait_for
-from uuid import uuid4
 from email.MIMEMultipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
+from uuid import uuid4
+
+from behave import given, then, when
+from crochet import wait_for
+from selenium.webdriver.common.by import By
+
+from common import (
+    fill_by_css_selector,
+    find_element_by_css_selector,
+    find_elements_by_css_selector,
+    page_has_css,
+    wait_until_element_is_visible_by_locator)
 
 
 @given(u'I have a mail with an attachment in my inbox')
@@ -46,7 +51,7 @@ def build_mail_with_attachment(subject):
 
 @wait_for(timeout=10.0)
 def load_mail_into_soledad(context, mail):
-    return context.client.mail_store.add_mail('INBOX', mail.as_string())
+    return context.single_user_client.mail_store.add_mail('INBOX', mail.as_string())
 
 
 @then(u'I see the mail has an attachment')
@@ -107,6 +112,5 @@ def click_remove_icon(context):
 
 @then(u'I should not see it attached')
 def assert_attachment_removed(context):
-    attachments_list_ul = find_elements_by_css_selector(context, '#attachment-list-item')
     attachments_list_li = context.browser.find_elements(By.CSS_SELECTOR, '#attachment-list-item li a')
     assert len(attachments_list_li) == 0

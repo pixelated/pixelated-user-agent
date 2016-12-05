@@ -53,4 +53,4 @@ class MultiUserLoginTest(MultiUserSoledadTestBase):
         response, login_request = self.app_test_client.login('username', 'wrong_password', session=first_request.getSession())
         response_str = yield response
         self.assertEqual(401, login_request.responseCode)
-        self.assertIn('Invalid credentials', login_request.written)
+        self.assertIn('Invalid username or password', login_request.written)

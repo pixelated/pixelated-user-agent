@@ -16,7 +16,12 @@
 from time import sleep
 
 from behave import when
-from common import *
+from selenium.webdriver.common.by import By
+
+from common import (
+    fill_by_css_selector,
+    wait_until_element_is_visible_by_locator,
+    find_element_by_css_selector)
 
 
 @when('I compose a message with')

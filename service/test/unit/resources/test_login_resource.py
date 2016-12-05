@@ -219,7 +219,7 @@ class TestLoginPOST(unittest.TestCase):
             mock_authenticate.assert_called_once_with(self.username, self.password)
             self.assertEqual(401, self.request.responseCode)
             written_response = ''.join(self.request.written)
-            self.assertIn('Invalid credentials', written_response)
+            self.assertIn('Invalid username or password', written_response)
             self.assertFalse(mock_user_bootstrap_setup.called)
             self.assertFalse(self.resource.get_session(self.request).is_logged_in())
 

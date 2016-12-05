@@ -13,8 +13,18 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+
+from behave import then, when
 from selenium.webdriver.common.keys import Keys
-from common import *
+from selenium.webdriver.common.by import By
+
+from common import (
+    click_button,
+    find_element_by_css_selector,
+    find_elements_by_css_selector,
+    reply_subject,
+    wait_until_button_is_visible,
+    wait_until_element_is_visible_by_locator)
 
 
 @then('I see that the subject reads \'{subject}\'')

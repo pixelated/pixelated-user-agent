@@ -13,24 +13,21 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+
+import time
+
+from selenium.common.exceptions import (
+    StaleElementReferenceException,
+    TimeoutException)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
-import time
-from test.support.integration import MailBuilder
 
-LOADING = 'loading'
+from test.support.integration import MailBuilder
 
 TIMEOUT_IN_S = 20
 
 DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S = 10.0
-
-HOMEPAGE_URL = 'http://localhost:8889/'
-
-MULTI_USER_PORT = 4568
-
-MULTI_USER_URL = 'http://localhost:%d/' % MULTI_USER_PORT
 
 
 class ImplicitWait(object):
@@ -69,15 +66,9 @@ def wait_until_elements_are_visible_by_locator(context, locator_tuple, timeout=T
     return context.browser.find_elements(locator_tuple[0], locator_tuple[1])
 
 
-def wait_until_elements_are_visible_by_xpath(context, locator_tuple, timeout=TIMEOUT_IN_S):
-    wait = WebDriverWait(context.browser, timeout)
-    wait.until(EC.presence_of_all_elements_located(locator_tuple))
-    return context.browser.find_elements(locator_tuple[0], locator_tuple[1])
-
-
 def wait_until_element_is_visible_by_locator(context, locator_tuple, timeout=TIMEOUT_IN_S):
     wait = WebDriverWait(context.browser, timeout)
-    wait.until(EC.visibility_of_element_located(locator_tuple))
+    wait.until(EC.presence_of_element_located(locator_tuple))
     return context.browser.find_element(locator_tuple[0], locator_tuple[1])
 
 
@@ -91,18 +82,13 @@ def fill_by_xpath(context, xpath, text):
     field.send_keys(text)
 
 
-def fill_by_css_selector(context, css_selector, text):
-    field = find_element_by_css_selector(context, css_selector)
+def fill_by_css_selector(context, css_selector, text, timeout=TIMEOUT_IN_S):
+    field = find_element_by_css_selector(context, css_selector, timeout=timeout)
     field.send_keys(text)
 
 
 def take_screenshot(context, filename):
     context.browser.save_screenshot(filename)
-
-
-def dump_source_to(context, filename):
-    with open(filename, 'w') as out:
-        out.write(context.browser.page_source.encode('utf8'))
 
 
 def page_has_css(context, css):
@@ -121,8 +107,8 @@ def find_element_by_id(context, id):
     return wait_until_element_is_visible_by_locator(context, (By.ID, id))
 
 
-def find_element_by_css_selector(context, css_selector):
-    return wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, css_selector))
+def find_element_by_css_selector(context, css_selector, timeout=TIMEOUT_IN_S):
+    return wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, css_selector), timeout=timeout)
 
 
 def find_element_by_class_name(context, class_name):
@@ -133,8 +119,8 @@ def find_elements_by_css_selector(context, css_selector, timeout=TIMEOUT_IN_S):
     return wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, css_selector), timeout=timeout)
 
 
-def find_elements_by_xpath(context, xpath):
-    return wait_until_elements_are_visible_by_xpath(context, (By.XPATH, xpath))
+def find_elements_by_xpath(context, xpath, timeout=TIMEOUT_IN_S):
+    return wait_until_elements_are_visible_by_locator(context, (By.XPATH, xpath), timeout=timeout)
 
 
 def find_element_containing_text(context, text, element_type='*'):
@@ -186,9 +172,9 @@ def get_console_log(context):
     for entry in logs:
         msg = entry['message']
         if not (msg.startswith('x  off') or msg.startswith('<- on')):
-            print entry['message']
+            print(entry['message'])
 
 
 def create_email(context):
     input_mail = MailBuilder().build_input_mail()
-    context.client.add_mail_to_inbox(input_mail)
+    context.single_user_client.add_mail_to_inbox(input_mail)
