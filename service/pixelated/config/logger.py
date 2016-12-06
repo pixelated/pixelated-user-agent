@@ -38,6 +38,7 @@ def init(debug=False):
                         datefmt='%Y-%m-%d %H:%M:%S',
                         filemode='a')
 
+    logging.getLogger('gnupg').setLevel(logging.WARN)
     logging.getLogger('gnupg').addFilter(PrivateKeyFilter())
 
     def formatter(event):
