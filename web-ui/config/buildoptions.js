@@ -16,7 +16,7 @@
  */
 
 ({
-  baseUrl: '../public',  /* TODO: double check: src or public? */
+  baseUrl: '../public',
   wrap: true,
   almond: true,
   optimize: 'none',

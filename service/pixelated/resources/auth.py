@@ -103,7 +103,6 @@ class PixelatedAuthSessionWrapper(object):
     def _login(self, credentials, request):
         def loginSucceeded(args):
             interface, avatar, logout = args
-            # TODO: make sandbox public
             return avatar
 
         def loginFailed(result):
