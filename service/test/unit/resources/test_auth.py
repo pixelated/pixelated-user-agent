@@ -45,7 +45,7 @@ class TestPixelatedAuthSessionWrapper(unittest.TestCase):
         self.root_resource = RootResource(services_factory, get_static_folder())
         self.anonymous_resource = RootResource(services_factory, get_static_folder(), public=True)
 
-        self.session_wrapper = PixelatedAuthSessionWrapper(self.portal, self.root_resource, self.anonymous_resource)
+        self.session_wrapper = PixelatedAuthSessionWrapper(self.portal)
         self.request = DummyRequest([])
         self.request.prepath = ['']
         self.request.path = '/'
