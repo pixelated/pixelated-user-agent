@@ -83,11 +83,9 @@ class PixelatedAuthSessionWrapper(object):
 
     isLeaf = False
 
-    def __init__(self, portal, root_resource, anonymous_resource, credentialFactories=[]):
+    def __init__(self, portal, credentialFactories=[]):
         self._portal = portal
         self._credentialFactories = credentialFactories
-        self._root_resource = root_resource
-        self._anonymous_resource = anonymous_resource
 
     def render(self, request):
         raise UnsupportedMethod(())
