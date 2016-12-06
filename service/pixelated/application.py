@@ -43,9 +43,10 @@ log = Logger()
 
 
 def get_static_folder():
-    # TODO: make sure sandbox keeps working
-    # TODO: make sure this works for packaging
-    return os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "web-ui", "public"))
+    static_folder = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "web-ui", "public"))
+    if not os.path.exists(static_folder):
+        static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
+    return static_folder
 
 
 class UserAgentMode(object):

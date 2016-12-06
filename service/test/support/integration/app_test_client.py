@@ -222,7 +222,6 @@ class AppTestClient(object):
             provider = mock()
             self.resource.initialize(provider)
         else:
-            # TODO: write test for me (=
             self.service_factory = StubServicesFactory(self.accounts, mode)
             provider = mock()
             bonafide_checker = StubAuthenticator(provider)
@@ -307,7 +306,6 @@ class AppTestClient(object):
     def account_for(self, username):
         return self.accounts[username]
 
-    # TODO: remove
     def add_mail_to_user_inbox(self, input_mail, username):
         return self.account_for(username).mail_store.add_mail('INBOX', input_mail.raw)
 
@@ -336,10 +334,6 @@ class AppTestClient(object):
         mail_sender.sendmail.side_effect = lambda mail: succeed(mail)
         return mail_sender
 
-    # TODO: remove
-    def _generate_soledad_test_folder_name(self, soledad_test_folder='/tmp/soledad-test/test'):
-        return os.path.join(soledad_test_folder, str(uuid.uuid4()))
-
     def get_mails_by_tag(self, tag, page=1, window=100):
         tags = 'tag:%s' % tag
         return self.search(tags, page, window)
@@ -353,13 +347,6 @@ class AppTestClient(object):
         })
         res = yield res
         defer.returnValue([ResponseMail(m) for m in res['mails']])
-
-    # TODO: remove
-    @defer.inlineCallbacks
-    def get_mails_by_mailbox_name(self, mbox_name):
-        mail_ids = yield self.mail_store.get_mailbox_mail_ids(mbox_name)
-        mails = yield self.mail_store.get_mails(mail_ids)
-        defer.returnValue(mails)
 
     @defer.inlineCallbacks
     def get_attachment(self, ident, encoding, filename=None, content_type=None, ajax=True, csrf='token'):
@@ -397,7 +384,6 @@ class AppTestClient(object):
         res, req = self.get('/mail/%s' % mail_ident)
         return res
 
-    # TODO: remove
     def delete_mail(self, mail_ident, session):
         csrf = IPixelatedSession(session).get_csrf_token()
         res, req = self.delete("/mail/%s" % mail_ident, csrf=csrf, session=session)

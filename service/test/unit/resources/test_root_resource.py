@@ -329,7 +329,6 @@ class TestRootResource(unittest.TestCase):
         request.addCookie = MagicMock(return_value='stubbed')
         request.prepath = ['']
         request.path = '/'
-        # TODO: setup mocked portal
 
         resource = self.root_resource.getChildWithDefault(request.prepath[-1], request)
         self.assertIsInstance(resource, InboxResource)
@@ -339,7 +338,6 @@ class TestRootResource(unittest.TestCase):
         request.addCookie = MagicMock(return_value='stubbed')
         request.prepath = ['']
         request.path = '/'
-        # TODO: setup mocked portal
 
         resource = self.root_resource.getChildWithDefault(request.prepath[-1], request)
         self.assertIsInstance(resource, InboxResource)
