@@ -23,10 +23,10 @@ from common import (
     execute_ignoring_staleness,
     find_element_by_id,
     find_element_by_css_selector,
+    find_elements_by_css_selector,
     mail_list_with_subject_exists,
     wait_for_condition,
     wait_for_loading_to_finish,
-    wait_until_element_is_visible_by_locator,
     wait_until_elements_are_visible_by_locator)
 
 
@@ -91,7 +91,7 @@ def impl(context):
 @given('I have mails')
 @then(u'I have mails')
 def impl(context):
-    emails = wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '.mail-list-entry'))
+    emails = find_elements_by_css_selector(context, '.mail-list-entry')
     assert len(emails) > 0
 
 

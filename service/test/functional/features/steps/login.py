@@ -13,7 +13,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import time
 
 from behave import given, when, then
 
@@ -42,11 +41,6 @@ def click_login(context):
 @then(u'I should see the fancy interstitial')
 def step_impl(context):
     find_element_by_css_selector(context, 'section#hive-section')
-    _wait_for_interstitial_to_reload()
-
-
-def _wait_for_interstitial_to_reload():
-    time.sleep(10)
 
 
 @when(u'I logout')
