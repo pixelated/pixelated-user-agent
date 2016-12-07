@@ -86,7 +86,9 @@ class RetrieveAttachmentTest(SoledadTestBase):
         datagen, headers = multipart_encode([file])
         post_data = "".join(datagen)
 
-        _, req = yield self.app_test_client.post_attachment(post_data, headers)
+        response, first_request = yield self.app_test_client.get('/', as_json=False)
+        session = first_request.getSession()
+        _, req = yield self.app_test_client.post_attachment(post_data, headers, session)
 
         self.assertEqual(201, req.code)
         self.assertEqual('/attachment/B5B4ED80AC3B894523D72E375DACAA2FC6606C18EDF680FE95903086C8B5E14A', req.responseHeaders.getRawHeaders('location')[0])

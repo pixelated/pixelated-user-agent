@@ -1,5 +1,5 @@
-#!/bin/bash
-# Copyright (c) 2014 ThoughtWorks, Inc.
+#
+# Copyright (c) 2016 ThoughtWorks, Inc.
 #
 # Pixelated is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -14,15 +14,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-# prepare files for .deb package
 
-set -e
+from twisted.internet.defer import inlineCallbacks
+from test.support.integration import SoledadTestBase
 
-# initial npm tasks
-./go build
 
-if [ ! -s public/app.min.js ]
-then
-echo "Minification failed!"
-exit 1;
-fi
+class StaticFilesTest(SoledadTestBase):
+
+    @inlineCallbacks
+    def test_should_find_static_file(self):
+        _, request = yield self.app_test_client.get('/static/js/main.js', as_json=False, ajax=False)
+        self.assertEqual(200, request.responseCode)

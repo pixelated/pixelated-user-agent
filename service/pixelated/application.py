@@ -37,10 +37,16 @@ from pixelated.config.leap import initialize_leap_single_user, init_monkeypatche
 from pixelated.config.services import ServicesFactory, SingleUserServicesFactory
 from pixelated.config.site import PixelatedSite
 from pixelated.resources.auth import PixelatedRealm, PixelatedAuthSessionWrapper, SessionChecker
-from pixelated.resources.login_resource import LoginResource
 from pixelated.resources.root_resource import RootResource
 
 log = Logger()
+
+
+def get_static_folder():
+    static_folder = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "web-ui", "public"))
+    if not os.path.exists(static_folder):
+        static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
+    return static_folder
 
 
 class UserAgentMode(object):
@@ -94,7 +100,7 @@ def initialize():
     args = arguments.parse_user_agent_args()
     logger.init(debug=args.debug)
     services_factory = _create_service_factory(args)
-    resource = RootResource(services_factory)
+    resource = RootResource(services_factory, static_folder=get_static_folder())
 
     def start():
         start_async = _start_mode(args, resource, services_factory)
@@ -155,11 +161,12 @@ def _setup_multi_user(args, root_resource, services_factory):
 def set_up_protected_resources(root_resource, provider, services_factory, banner=None, authenticator=None):
     session_checker = SessionChecker(services_factory)
 
-    realm = PixelatedRealm()
+    anonymous_resource = RootResource(services_factory, static_folder=get_static_folder(), public=True)
+    realm = PixelatedRealm(root_resource, anonymous_resource)
     _portal = portal.Portal(realm, [session_checker, AllowAnonymousAccess()])
 
-    anonymous_resource = LoginResource(services_factory, provider, disclaimer_banner=banner, authenticator=authenticator)
-    protected_resource = PixelatedAuthSessionWrapper(_portal, root_resource, anonymous_resource, [])
+    protected_resource = PixelatedAuthSessionWrapper(_portal)
+    anonymous_resource.initialize(provider, disclaimer_banner=banner, authenticator=authenticator)
     root_resource.initialize(provider, disclaimer_banner=banner, authenticator=authenticator)
     return protected_resource
 

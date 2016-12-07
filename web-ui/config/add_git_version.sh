@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-TEMPLATE_FILE="app/js/generated/hbs/templates.js"
+TEMPLATE_FILE="public/js/generated/hbs/templates.js"
 
 COMMITISH=$(git rev-parse --short HEAD)
 COMMITDATE=$(git show -s --format=%cd)

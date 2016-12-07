@@ -38,7 +38,7 @@ from leap.soledad.client import Soledad
 from leap.bitmask.mail.adaptors.soledad import SoledadMailAdaptor
 from pixelated.adapter.mailstore.leap_attachment_store import LeapAttachmentStore
 from pixelated.adapter.services.feedback_service import FeedbackService
-from pixelated.application import UserAgentMode, set_up_protected_resources
+from pixelated.application import UserAgentMode, set_up_protected_resources, get_static_folder
 from pixelated.config.sessions import LeapSession
 from pixelated.config.services import Services, ServicesFactory, SingleUserServicesFactory
 from pixelated.config.site import PixelatedSite
@@ -49,6 +49,7 @@ from pixelated.adapter.search import SearchEngine
 from pixelated.adapter.services.draft_service import DraftService
 from pixelated.adapter.services.mail_service import MailService
 from pixelated.resources.root_resource import RootResource
+from pixelated.resources.session import IPixelatedSession
 from test.support.integration.model import MailBuilder
 from test.support.test_helper import request_mock
 from test.support.integration.model import ResponseMail
@@ -217,7 +218,7 @@ class AppTestClient(object):
             services = self._test_account.services
             self.service_factory.add_session('someuserid', services)
 
-            self.resource = RootResource(self.service_factory)
+            self.resource = RootResource(self.service_factory, get_static_folder())
             provider = mock()
             self.resource.initialize(provider)
         else:
@@ -226,7 +227,7 @@ class AppTestClient(object):
             bonafide_checker = StubAuthenticator(provider)
             bonafide_checker.add_user('username', 'password')
 
-            self.resource = set_up_protected_resources(RootResource(self.service_factory), provider, self.service_factory, authenticator=bonafide_checker)
+            self.resource = set_up_protected_resources(RootResource(self.service_factory, get_static_folder()), provider, self.service_factory, authenticator=bonafide_checker)
 
     @defer.inlineCallbacks
     def create_user(self, account_name):
@@ -278,17 +279,23 @@ class AppTestClient(object):
         request.args = get_args
         return self._render(request, as_json)
 
-    def post(self, path, body='', headers=None, ajax=True, csrf='token'):
+    def post(self, path, body='', headers=None, ajax=True, csrf='token', session=None):
         headers = headers or {'Content-Type': 'application/json'}
         request = request_mock(path=path, method="POST", body=body, headers=headers, ajax=ajax, csrf=csrf)
+        if session:
+            request.session = session
         return self._render(request)
 
-    def put(self, path, body, ajax=True, csrf='token'):
+    def put(self, path, body, ajax=True, csrf='token', session=None):
         request = request_mock(path=path, method="PUT", body=body, headers={'Content-Type': ['application/json']}, ajax=ajax, csrf=csrf)
+        if session:
+            request.session = session
         return self._render(request)
 
-    def delete(self, path, body="", ajax=True, csrf='token'):
+    def delete(self, path, body="", ajax=True, csrf='token', session=None):
         request = request_mock(path=path, body=body, headers={'Content-Type': ['application/json']}, method="DELETE", ajax=ajax, csrf=csrf)
+        if session:
+            request.session = session
         return self._render(request)
 
     @defer.inlineCallbacks
@@ -299,7 +306,6 @@ class AppTestClient(object):
     def account_for(self, username):
         return self.accounts[username]
 
-    # TODO: remove
     def add_mail_to_user_inbox(self, input_mail, username):
         return self.account_for(username).mail_store.add_mail('INBOX', input_mail.raw)
 
@@ -328,10 +334,6 @@ class AppTestClient(object):
         mail_sender.sendmail.side_effect = lambda mail: succeed(mail)
         return mail_sender
 
-    # TODO: remove
-    def _generate_soledad_test_folder_name(self, soledad_test_folder='/tmp/soledad-test/test'):
-        return os.path.join(soledad_test_folder, str(uuid.uuid4()))
-
     def get_mails_by_tag(self, tag, page=1, window=100):
         tags = 'tag:%s' % tag
         return self.search(tags, page, window)
@@ -346,13 +348,6 @@ class AppTestClient(object):
         res = yield res
         defer.returnValue([ResponseMail(m) for m in res['mails']])
 
-    # TODO: remove
-    @defer.inlineCallbacks
-    def get_mails_by_mailbox_name(self, mbox_name):
-        mail_ids = yield self.mail_store.get_mailbox_mail_ids(mbox_name)
-        mails = yield self.mail_store.get_mails(mail_ids)
-        defer.returnValue(mails)
-
     @defer.inlineCallbacks
     def get_attachment(self, ident, encoding, filename=None, content_type=None, ajax=True, csrf='token'):
         params = {'encoding': [encoding]}
@@ -365,17 +360,20 @@ class AppTestClient(object):
         defer.returnValue((res, req))
 
     @defer.inlineCallbacks
-    def post_attachment(self, data, headers):
-        deferred_result, req = self.post('/attachment', body=data, headers=headers)
+    def post_attachment(self, data, headers, session):
+        csrf = IPixelatedSession(session).get_csrf_token()
+        deferred_result, req = self.post('/attachment', body=data, headers=headers, csrf=csrf, session=session)
         res = yield deferred_result
         defer.returnValue((res, req))
 
-    def put_mail(self, data):
-        res, req = self.put('/mails', data)
+    def put_mail(self, data, session):
+        csrf = IPixelatedSession(session).get_csrf_token()
+        res, req = self.put('/mails', data, csrf=csrf, session=session)
         return res, req
 
-    def post_tags(self, mail_ident, tags_json):
-        res, req = self.post("/mail/%s/tags" % mail_ident, tags_json)
+    def post_tags(self, mail_ident, tags_json, session):
+        csrf = IPixelatedSession(session).get_csrf_token()
+        res, req = self.post("/mail/%s/tags" % mail_ident, tags_json, csrf=csrf, session=session)
         return res
 
     def get_tags(self, **kwargs):
@@ -386,21 +384,24 @@ class AppTestClient(object):
         res, req = self.get('/mail/%s' % mail_ident)
         return res
 
-    # TODO: remove
-    def delete_mail(self, mail_ident):
-        res, req = self.delete("/mail/%s" % mail_ident)
+    def delete_mail(self, mail_ident, session):
+        csrf = IPixelatedSession(session).get_csrf_token()
+        res, req = self.delete("/mail/%s" % mail_ident, csrf=csrf, session=session)
         return res
 
-    def delete_mails(self, idents):
-        res, req = self.post("/mails/delete", json.dumps({'idents': idents}))
+    def delete_mails(self, idents, session):
+        csrf = IPixelatedSession(session).get_csrf_token()
+        res, req = self.post("/mails/delete", json.dumps({'idents': idents}), csrf=csrf, session=session)
         return res
 
-    def mark_many_as_unread(self, idents):
-        res, req = self.post('/mails/unread', json.dumps({'idents': idents}))
+    def mark_many_as_unread(self, idents, session):
+        csrf = IPixelatedSession(session).get_csrf_token()
+        res, req = self.post('/mails/unread', json.dumps({'idents': idents}), csrf=csrf, session=session)
         return res
 
-    def mark_many_as_read(self, idents):
-        res, req = self.post('/mails/read', json.dumps({'idents': idents}))
+    def mark_many_as_read(self, idents, session):
+        csrf = IPixelatedSession(session).get_csrf_token()
+        res, req = self.post('/mails/read', json.dumps({'idents': idents}), csrf=csrf, session=session)
         return res
 
     def get_contacts(self, query):
