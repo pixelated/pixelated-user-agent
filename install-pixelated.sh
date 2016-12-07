@@ -57,6 +57,19 @@ function check_installed() {
         set -e
 }
 
+
+# The below is necessary to allow node to use enough memory
+# so that installing phantomjs won't fail
+mkdir -p /home/vagrant/bin
+cat > /home/vagrant/bin/node <<EOF
+#!/usr/bin/env bash
+
+/usr/bin/node --max_old_space_size=2000 "\$@"
+EOF
+chmod +x /home/vagrant/bin/node
+export PATH=/home/vagrant/bin:$PATH
+
+
 function install_node_modules_at_custom_location() {
   local LOCATION="$1"
   local WEBUI_DIR=$(pwd)
