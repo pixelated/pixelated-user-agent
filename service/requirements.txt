@@ -1,6 +1,6 @@
 --index-url https://pypi.python.org/simple/
 
-gnupg
+-e 'git+https://github.com/pixelated/python-gnupg.git@master#egg=gnupg'
 pyasn1==0.1.9
 requests==2.11.1
 srp==1.0.6
