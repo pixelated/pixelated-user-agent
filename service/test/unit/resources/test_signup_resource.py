@@ -20,19 +20,12 @@ from twisted.trial import unittest
 from twisted.web.resource import getChildForRequest
 from twisted.web.test.requesthelper import DummyRequest
 
-import leap.common.events
 from pixelated.application import get_static_folder
 from pixelated.resources.root_resource import RootResource
 from pixelated.resources.signup_resource import SignupResource
 
 
 class TestSignupResource(unittest.TestCase):
-
-    def setUp(self):
-        leap.common.events.register = MagicMock
-
-    def tearDown(self):
-        reload(leap.common.events)
 
     def test_get_resource_for_request(self):
         public_root_resource = RootResource(mock(), get_static_folder(), public=True)
