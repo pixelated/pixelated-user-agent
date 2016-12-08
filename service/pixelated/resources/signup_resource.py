@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import pkg_resources
+
 from twisted.logger import Logger
 
 from pixelated.resources import BaseResource
@@ -22,6 +22,4 @@ log = Logger()
 
 
 class SignupResource(BaseResource):
-
-    def render_GET(self, request):
-        return pkg_resources.resource_stream('templates', 'signup.html')
+    pass
