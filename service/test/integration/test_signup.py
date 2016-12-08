@@ -28,4 +28,3 @@ class SignupTest(MultiUserSoledadTestBase):
         yield response
 
         self.assertEqual(302, signup_request.responseCode)
-    test_signup.skip = 'WIP #801'
