@@ -4,6 +4,8 @@ from twisted.web.server import Site
 
 
 def resolve_result(request, result):
+    if isinstance(result, file):
+        result = result.read()
     if isinstance(result, str):
         request.write(result)
         request.finish()
