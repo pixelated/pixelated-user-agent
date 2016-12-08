@@ -1,8 +1,4 @@
-**/*.min.js
-**/*-min.js
-public/node_modules
-public/bower_components
-public/js/lib
-public/js/generated
-public/signup.js
-src/js/index.js
+app/node_modules
+app/bower_components
+app/js/lib
+app/js/generated

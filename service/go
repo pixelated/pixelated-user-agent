@@ -38,11 +38,11 @@ function setuppy {
         echo "Installing Pixelated User Agent."
         pip install --upgrade pip setuptools
         if [ `uname -s` = "Darwin" ]; then
-                CFLAGS="-DCRYPTOPP_DISABLE_ASM=1" pip install --exists-action w -r requirements.txt
+                CFLAGS="-DCRYPTOPP_DISABLE_ASM=1" pip install --exists-action s -r requirements.txt
         else
-                pip install --exists-action w -r requirements.txt
+                pip install --exists-action s -r requirements.txt
         fi
-        pip install --exists-action w -r test_requirements.txt
+        pip install --exists-action s -r test_requirements.txt
         echo "Done."
 }
 

@@ -13,14 +13,10 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import hashlib
-import os
 
 from zope.interface import Interface, Attribute, implements
 from twisted.python.components import registerAdapter
 from twisted.web.server import Session
-
-CSRF_TOKEN_LENGTH = 32
 
 
 class IPixelatedSession(Interface):
@@ -32,18 +28,12 @@ class PixelatedSession(object):
 
     def __init__(self, session):
         self.user_uuid = None
-        self._csrf_token = None
 
     def is_logged_in(self):
         return self.user_uuid is not None
 
     def expire(self):
         self.user_uuid = None
-
-    def get_csrf_token(self):
-        if self._csrf_token is None:
-            self._csrf_token = hashlib.sha256(os.urandom(CSRF_TOKEN_LENGTH)).hexdigest()
-        return self._csrf_token
 
 
 registerAdapter(PixelatedSession, Session, IPixelatedSession)

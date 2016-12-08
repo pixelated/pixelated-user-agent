@@ -41,11 +41,11 @@ setup(name='pixelated-user-agent',
           'pixelated.adapter.mailstore.maintenance',
           'pixelated.bitmask_libraries',
           'pixelated.config',
+          'pixelated.assets',
           'pixelated.certificates',
           'pixelated.support',
           'pixelated.resources',
-          'pixelated.extensions',
-          'templates'
+          'pixelated.extensions'
       ],
       install_requires=[],
       entry_points={

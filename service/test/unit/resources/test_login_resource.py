@@ -157,19 +157,6 @@ class TestLoginResource(unittest.TestCase):
         d.addCallback(assert_default_invalid_banner_disclaimer_rendered)
         return d
 
-    def test_form_should_contain_csrftoken_input(self):
-        request = DummyRequest([''])
-
-        d = self.web.get(request)
-
-        def assert_form_has_csrftoken_input(_):
-            input_username = 'name="csrftoken"'
-            written_response = ''.join(request.written)
-            self.assertIn(input_username, written_response)
-
-        d.addCallback(assert_form_has_csrftoken_input)
-        return d
-
 
 class TestLoginPOST(unittest.TestCase):
     def setUp(self):
@@ -235,7 +222,7 @@ class TestLoginPOST(unittest.TestCase):
 
         def assert_interstitial_in_response(_):
             mock_authenticate.assert_called_once_with(self.username, self.password)
-            interstitial_js_in_template = '<script src="static/Interstitial.js"></script>'
+            interstitial_js_in_template = '<script src="startup-assets/Interstitial.js"></script>'
             self.assertIn(interstitial_js_in_template, self.request.written[0])
 
         d.addCallback(assert_interstitial_in_response)

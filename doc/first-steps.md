@@ -55,7 +55,7 @@ After that take some minutes to familiarize yourself with the user interface.
 
 To get a better feeling for the code base, let's try some smaller changes. Let's assume that we'd like to change the way subjects are displayed in the mail list.
 First we want to find the location in the code that renders the subjects. 
-Start your favorite text editor and open pixelated-user-agent/web-ui/public/js/mail_list/ui/mail_items/mail_item.js. Find the method named render. This seems to be the right location. To verify our assumption, let's change the html content. 
+Start your favorite text editor and open pixelated-user-agent/web-ui/app/js/mail_list/ui/mail_items/mail_item.js. Find the method named render. This seems to be the right location. To verify our assumption, let's change the html content. 
 
 ```javascript
   this.render = function () {
@@ -139,7 +139,7 @@ cd web-ui
 Now refresh your browser again to see the changes in effect.
 
 Finally we would like to change the color of the highlighting. The pixleated user agent uses [SASS](http://sass-lang.com/) to make handling styles a little bit easier.
-You can find the style sheets in web-ui/public/scss/. The search-hightlight is defined in styles.scss:
+You can find the style sheets in web-ui/app/scss/. The search-hightlight is defined in styles.scss:
 
 ```scss
 .search-highlight {

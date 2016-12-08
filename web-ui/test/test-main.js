@@ -19,34 +19,34 @@ requirejs.config({
   baseUrl: '/base',
 
   paths: {
-    'page': 'public/js/page',
-    'js': 'public/js',
-    'lib': 'public/js/lib',
-    'hbs': 'public/js/generated/hbs',
-    'flight': 'public/bower_components/flight',
-    'DOMPurify': 'public/bower_components/DOMPurify/dist/purify.min',
-    'he': 'public/bower_components/he/he',
-    'views': 'public/js/views',
-    'helpers': 'public/js/helpers',
-    'feedback': 'public/js/feedback',
-    'tags': 'public/js/tags',
-    'mail_list': 'public/js/mail_list',
-    'mail_list_actions': 'public/js/mail_list_actions',
-    'user_alerts': 'public/js/user_alerts',
-    'mail_view': 'public/js/mail_view',
-    'dispatchers': 'public/js/dispatchers',
-    'mixins': 'public/js/mixins',
-    'services': 'public/js/services',
-    'search': 'public/js/search',
-    'monkey_patching': 'public/js/monkey_patching',
-    'i18next': 'public/bower_components/i18next/i18next',
-    'i18nextXHRBackend': 'public/bower_components/i18next-xhr-backend/i18nextXHRBackend',
-    'i18nextBrowserLanguageDetector': 'public/bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector',
-    'quoted-printable': 'public/bower_components/quoted-printable',
-    'utf8': 'public/bower_components/utf8',
+    'page': 'app/js/page',
+    'js': 'app/js',
+    'lib': 'app/js/lib',
+    'hbs': 'app/js/generated/hbs',
+    'flight': 'app/bower_components/flight',
+    'DOMPurify': 'app/bower_components/DOMPurify/dist/purify.min',
+    'he': 'app/bower_components/he/he',
+    'views': 'app/js/views',
+    'helpers': 'app/js/helpers',
+    'feedback': 'app/js/feedback',
+    'tags': 'app/js/tags',
+    'mail_list': 'app/js/mail_list',
+    'mail_list_actions': 'app/js/mail_list_actions',
+    'user_alerts': 'app/js/user_alerts',
+    'mail_view': 'app/js/mail_view',
+    'dispatchers': 'app/js/dispatchers',
+    'mixins': 'app/js/mixins',
+    'services': 'app/js/services',
+    'search': 'app/js/search',
+    'monkey_patching': 'app/js/monkey_patching',
+    'i18next': 'app/bower_components/i18next/i18next',
+    'i18nextXHRBackend': 'app/bower_components/i18next-xhr-backend/i18nextXHRBackend',
+    'i18nextBrowserLanguageDetector': 'app/bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector',
+    'quoted-printable': 'app/bower_components/quoted-printable',
+    'utf8': 'app/bower_components/utf8',
     'test': 'test',
     'features': 'test/features',
-    'user_settings': 'public/js/user_settings'
+    'user_settings': 'app/js/user_settings'
   },
 
   deps: tests,
@@ -73,7 +73,7 @@ requirejs.config({
       .init({
         lng: 'en_US',
         backend: {
-          loadPath: '/base/public/locales/en_US/translation.json'
+          loadPath: '/base/app/locales/en_US/translation.json'
         }
       });
       Handlebars.registerHelper('t', i18n.t);

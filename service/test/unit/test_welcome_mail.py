@@ -41,7 +41,8 @@ class TestWelcomeMail(unittest.TestCase):
         with open(os.path.join(current_path,
                                '..',
                                '..',
-                               'templates',
+                               'pixelated',
+                               'assets',
                                'welcome.mail.pt-BR')) as mail_template_file:
             mail_template = message_from_file(mail_template_file)
 

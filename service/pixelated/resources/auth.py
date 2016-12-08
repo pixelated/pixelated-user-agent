@@ -64,18 +64,10 @@ class SessionChecker(object):
 class PixelatedRealm(object):
     implements(portal.IRealm)
 
-    def __init__(self, authenticated_resource, public_resource):
-        self._authenticated_resource = authenticated_resource
-        self._public_resource = public_resource
-
     def requestAvatar(self, avatarId, mind, *interfaces):
-        if IResource not in interfaces:
-            raise NotImplementedError()
-        if avatarId == checkers.ANONYMOUS:
-            avatar = self._public_resource
-        else:
-            avatar = self._authenticated_resource
-        return IResource, avatar, lambda: None
+        if IResource in interfaces:
+            return IResource, avatarId, lambda: None
+        raise NotImplementedError()
 
 
 @implementer(IResource)
@@ -83,9 +75,11 @@ class PixelatedAuthSessionWrapper(object):
 
     isLeaf = False
 
-    def __init__(self, portal, credentialFactories=[]):
+    def __init__(self, portal, root_resource, anonymous_resource, credentialFactories):
         self._portal = portal
         self._credentialFactories = credentialFactories
+        self._root_resource = root_resource
+        self._anonymous_resource = anonymous_resource
 
     def render(self, request):
         raise UnsupportedMethod(())
@@ -99,17 +93,23 @@ class PixelatedAuthSessionWrapper(object):
         return util.DeferredResource(self._login(creds, request))
 
     def _login(self, credentials, request):
+        pattern = re.compile("^/sandbox/")
+
         def loginSucceeded(args):
             interface, avatar, logout = args
-            return avatar
+            if avatar == checkers.ANONYMOUS and not pattern.match(request.path):
+                return self._anonymous_resource
+            else:
+                return self._root_resource
 
         def loginFailed(result):
             if result.check(error.Unauthorized, error.LoginFailed):
                 return UnauthorizedResource(self._credentialFactories)
             else:
-                log.error(
-                    "PixelatedAuthSessionWrapper.getChildWithDefault encountered "
-                    "unexpected error: %s" % result)
+                log.err(
+                    result,
+                    "HTTPAuthSessionWrapper.getChildWithDefault encountered "
+                    "unexpected error")
                 return ErrorPage(500, None, None)
 
         d = self._portal.login(credentials, None, IResource)

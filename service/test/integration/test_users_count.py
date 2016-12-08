@@ -31,8 +31,7 @@ class UsersResourceTest(MultiUserSoledadTestBase):
     @defer.inlineCallbacks
     def test_online_users_count_uses_leap_auth_privileges(self):
 
-        response, first_request = yield self.app_test_client.get('/', as_json=False)
-        response, login_request = yield self.app_test_client.login(session=first_request.getSession())
+        response, login_request = yield self.app_test_client.login()
         yield response
 
         yield self.wait_for_session_user_id_to_finish()
@@ -41,7 +40,7 @@ class UsersResourceTest(MultiUserSoledadTestBase):
         response, request = self.app_test_client.get(
             "/users",
             json.dumps({'csrftoken': [login_request.getCookie('XSRF-TOKEN')]}),
-            session=login_request.getSession(),
+            from_request=login_request,
             as_json=False)
         yield response
 

@@ -15,7 +15,6 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from twisted.internet import defer
 from test.support.integration import SoledadTestBase, MailBuilder
-from pixelated.resources import IPixelatedSession
 
 
 class DeleteMailTest(SoledadTestBase):
@@ -28,8 +27,7 @@ class DeleteMailTest(SoledadTestBase):
         inbox_mails = yield self.app_test_client.get_mails_by_tag('inbox')
         self.assertEquals(1, len(inbox_mails))
 
-        response, first_request = yield self.app_test_client.get('/', as_json=False)
-        yield self.app_test_client.delete_mail(mail.mail_id, session=first_request.getSession())
+        yield self.app_test_client.delete_mail(mail.mail_id)
 
         inbox_mails = yield self.app_test_client.get_mails_by_tag('inbox')
         self.assertEquals(0, len(inbox_mails))
@@ -39,8 +37,7 @@ class DeleteMailTest(SoledadTestBase):
     @defer.inlineCallbacks
     def test_delete_mail_when_trashing_mail_from_trash_mailbox(self):
         mails = yield self.app_test_client.add_multiple_to_mailbox(1, 'trash')
-        response, first_request = yield self.app_test_client.get('/', as_json=False)
-        yield self.app_test_client.delete_mails([mails[0].ident], session=first_request.getSession())
+        yield self.app_test_client.delete_mails([mails[0].ident])
 
         trash_mails = yield self.app_test_client.get_mails_by_tag('trash')
 
@@ -52,8 +49,7 @@ class DeleteMailTest(SoledadTestBase):
         mails = yield self.app_test_client.add_multiple_to_mailbox(5, 'inbox')
         mail_idents = [m.ident for m in mails]
 
-        response, first_request = yield self.app_test_client.get('/', as_json=False)
-        yield self.app_test_client.delete_mails(mail_idents, session=first_request.getSession())
+        yield self.app_test_client.delete_mails(mail_idents)
 
         inbox = yield self.app_test_client.get_mails_by_tag('inbox')
         self.assertEquals(0, len(inbox))
@@ -63,8 +59,7 @@ class DeleteMailTest(SoledadTestBase):
         mails = yield self.app_test_client.add_multiple_to_mailbox(5, 'trash')
         mail_idents = [m.ident for m in mails]
 
-        response, first_request = yield self.app_test_client.get('/', as_json=False)
-        yield self.app_test_client.delete_mails(mail_idents, session=first_request.getSession())
+        yield self.app_test_client.delete_mails(mail_idents)
 
         trash = yield self.app_test_client.get_mails_by_tag('trash')
         self.assertEquals(0, len(trash))

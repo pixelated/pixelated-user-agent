@@ -193,7 +193,7 @@ class LeapProvider(object):
             fin.close()
 
     def setup_ca_bundle(self):
-        path = os.path.dirname(self.provider_api_cert)
+        path = os.path.join(leap_config.leap_home, 'providers', self.server_name, 'keys', 'client')
         if not os.path.isdir(path):
             os.makedirs(path, 0700)
         self._download_cert(self.provider_api_cert)

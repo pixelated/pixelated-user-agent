@@ -15,7 +15,6 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import pkg_resources
 from xml.sax import SAXParseException
 
 from pixelated.authentication import Authenticator
@@ -35,6 +34,22 @@ from twisted.web.template import Element, XMLFile, renderElement, renderer
 log = Logger()
 
 
+def _get_startup_folder():
+    path = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(path, '..', 'assets')
+
+
+def _get_static_folder():
+    static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "app"))
+    # this is a workaround for packaging
+    if not os.path.exists(static_folder):
+        static_folder = os.path.abspath(
+            os.path.join(os.path.abspath(__file__), "..", "..", "..", "..", "web-ui", "app"))
+    if not os.path.exists(static_folder):
+        static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
+    return static_folder
+
+
 def parse_accept_language(all_headers):
     accepted_languages = ['pt-BR', 'en-US']
     languages = all_headers.get('accept-language', '').split(';')[0]
@@ -45,7 +60,7 @@ def parse_accept_language(all_headers):
 
 
 class DisclaimerElement(Element):
-    loader = XMLFile(FilePath(pkg_resources.resource_filename('templates', '_login_disclaimer_banner.html')))
+    loader = XMLFile(FilePath(os.path.join(_get_startup_folder(), '_login_disclaimer_banner.html')))
 
     def __init__(self, banner):
         super(DisclaimerElement, self).__init__()
@@ -68,7 +83,7 @@ class DisclaimerElement(Element):
 
 
 class LoginWebSite(Element):
-    loader = XMLFile(FilePath(pkg_resources.resource_filename('templates', 'login.html')))
+    loader = XMLFile(FilePath(os.path.join(_get_startup_folder(), 'login.html')))
 
     def __init__(self, error_msg=None, disclaimer_banner_file=None):
         super(LoginWebSite, self).__init__()
@@ -82,11 +97,6 @@ class LoginWebSite(Element):
         return tag('')
 
     @renderer
-    def csrftoken(self, request, tag):
-        tag.fillSlots(csrftoken=IPixelatedSession(request.getSession()).get_csrf_token())
-        return tag
-
-    @renderer
     def disclaimer(self, request, tag):
         return DisclaimerElement(self.disclaimer_banner_file).render(request)
 
@@ -96,12 +106,15 @@ class LoginResource(BaseResource):
 
     def __init__(self, services_factory, provider=None, disclaimer_banner=None, authenticator=None):
         BaseResource.__init__(self, services_factory)
+        self._static_folder = _get_static_folder()
+        self._startup_folder = _get_startup_folder()
         self._disclaimer_banner = disclaimer_banner
         self._provider = provider
         self._authenticator = authenticator or Authenticator(provider)
         self._bootstrap_user_services = BootstrapUserServices(services_factory, provider)
 
-        with open(pkg_resources.resource_filename('templates', 'Interstitial.html')) as f:
+        self.putChild('startup-assets', File(self._startup_folder))
+        with open(os.path.join(self._startup_folder, 'Interstitial.html')) as f:
             self.interstitial = f.read()
 
     def getChild(self, path, request):
@@ -114,7 +127,6 @@ class LoginResource(BaseResource):
         return NoResource()
 
     def render_GET(self, request):
-        request.getSession()
         request.setResponseCode(OK)
         return self._render_template(request)
 

@@ -17,51 +17,51 @@ module.exports = function (config) {
     // list of files / patterns to load in the browser
     files: [
       // loaded without require
-      'public/bower_components/lodash/dist/lodash.js',
-      'public/bower_components/jquery/dist/jquery.js',
-      'public/bower_components/jquery-ui/jquery-ui.min.js',
-      'public/bower_components/jquery-file-upload/js/jquery.fileupload.js',
-      'public/bower_components/jasmine-jquery/lib/jasmine-jquery.js',
-      'public/bower_components/jasmine-flight/lib/jasmine-flight.js',
-      'public/bower_components/jasmine-jquery/lib/jasmine-jquery.js',
-      'public/bower_components/handlebars/handlebars.min.js',
-      'public/bower_components/modernizr/modernizr.js',
-      'public/bower_components/foundation/js/foundation.js',
-      'public/bower_components/foundation/js/foundation/foundation.reveal.js',
-      'public/bower_components/foundation/js/foundation/foundation.offcanvas.js',
-      'public/js/lib/highlightRegex.js',
+      'app/bower_components/lodash/dist/lodash.js',
+      'app/bower_components/jquery/dist/jquery.js',
+      'app/bower_components/jquery-ui/jquery-ui.min.js',
+      'app/bower_components/jquery-file-upload/js/jquery.fileupload.js',
+      'app/bower_components/jasmine-jquery/lib/jasmine-jquery.js',
+      'app/bower_components/jasmine-flight/lib/jasmine-flight.js',
+      'app/bower_components/jasmine-jquery/lib/jasmine-jquery.js',
+      'app/bower_components/handlebars/handlebars.min.js',
+      'app/bower_components/modernizr/modernizr.js',
+      'app/bower_components/foundation/js/foundation.js',
+      'app/bower_components/foundation/js/foundation/foundation.reveal.js',
+      'app/bower_components/foundation/js/foundation/foundation.offcanvas.js',
+      'app/js/lib/highlightRegex.js',
 
       // hack to load RequireJS after the shim libs
       'node_modules/requirejs/require.js',
       'node_modules/karma-requirejs/lib/adapter.js',
 
       // loaded with require
-      {pattern: 'public/bower_components/DOMPurify/dist/purify.min.js', included: false},
-      {pattern: 'public/bower_components/he/he.js', included: false},
-      {pattern: 'public/bower_components/flight/**/*.js', included: false},
-      {pattern: 'public/bower_components/i18next/**/*.js', included: false},
-      {pattern: 'public/bower_components/i18next-xhr-backend/**/*.js', included: false},
-      {pattern: 'public/bower_components/i18next-browser-languagedetector/**/*.js', included: false},
-      {pattern: 'public/bower_components/quoted-printable/*.js', included: false},
-      {pattern: 'public/bower_components/utf8/utf8.js', included: false},
-      {pattern: 'public/locales/**/*.json', included: false},
-      {pattern: 'public/js/**/*.js', included: false},
+      {pattern: 'app/bower_components/DOMPurify/dist/purify.min.js', included: false},
+      {pattern: 'app/bower_components/he/he.js', included: false},
+      {pattern: 'app/bower_components/flight/**/*.js', included: false},
+      {pattern: 'app/bower_components/i18next/**/*.js', included: false},
+      {pattern: 'app/bower_components/i18next-xhr-backend/**/*.js', included: false},
+      {pattern: 'app/bower_components/i18next-browser-languagedetector/**/*.js', included: false},
+      {pattern: 'app/bower_components/quoted-printable/*.js', included: false},
+      {pattern: 'app/bower_components/utf8/utf8.js', included: false},
+      {pattern: 'app/locales/**/*.json', included: false},
+      {pattern: 'app/js/**/*.js', included: false},
       {pattern: 'test/test_data.js', included: false},
       {pattern: 'test/custom_matchers.js', included: false},
       {pattern: 'test/features.js', included: false},
       {pattern: 'test/spec/**/*.spec.js', included: false},
-      {pattern: 'public/sandbox.html', included: true, served: true},
+      {pattern: 'app/sandbox.html', included: true, served: true},
 
       'test/test-main.js'
     ],
 
     proxies: {
-        '/sandbox/sandbox.html': '/base/public/sandbox.html',
+        '/sandbox/sandbox.html': '/base/app/sandbox.html',
     },
 
     // list of files to exclude
     exclude: [
-      'public/js/main.js'
+      'app/js/main.js'
     ],
 
     // test results reporter to use
@@ -69,7 +69,7 @@ module.exports = function (config) {
     reporters: ['dots', 'junit', 'coverage'],
 
     preprocessors: {
-        'public/js/!(lib)/**/*.js': ['coverage']
+        'app/js/!(lib)/**/*.js': ['coverage']
     },
 
     // enable / disable watching file and executing tests whenever any file changes

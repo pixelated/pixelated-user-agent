@@ -30,40 +30,32 @@ class MarkAsReadUnreadTest(SoledadTestBase):
         mails = yield self.app_test_client.get_mails_by_tag('inbox')
         self.assertNotIn('read', mails[0].status)
 
-        response, first_request = yield self.app_test_client.get('/', as_json=False)
-        session = first_request.getSession()
-        yield self.app_test_client.mark_many_as_read([mail.ident], session)
+        yield self.app_test_client.mark_many_as_read([mail.ident])
 
         mails = yield self.app_test_client.get_mails_by_tag('inbox')
         self.assertIn('read', mails[0].status)
 
     @defer.inlineCallbacks
     def test_mark_single_as_unread(self):
-        response, first_request = yield self.app_test_client.get('/', as_json=False)
-        session = first_request.getSession()
-
         input_mail = MailBuilder().build_input_mail()
         mail = yield self.app_test_client.add_mail_to_inbox(input_mail)
-        yield self.app_test_client.mark_many_as_read([mail.ident], session)
+        yield self.app_test_client.mark_many_as_read([mail.ident])
 
-        yield self.app_test_client.mark_many_as_unread([mail.ident], session)
+        yield self.app_test_client.mark_many_as_unread([mail.ident])
         result = (yield self.app_test_client.get_mails_by_tag('inbox'))[0]
 
         self.assertNotIn('read', result.status)
 
     @defer.inlineCallbacks
     def test_mark_many_mails_as_unread(self):
-        response, first_request = yield self.app_test_client.get('/', as_json=False)
-        session = first_request.getSession()
-
         input_mail = MailBuilder().with_status([Status.SEEN]).build_input_mail()
         input_mail2 = MailBuilder().with_status([Status.SEEN]).build_input_mail()
 
         mail1 = yield self.app_test_client.add_mail_to_inbox(input_mail)
         mail2 = yield self.app_test_client.add_mail_to_inbox(input_mail2)
-        yield self.app_test_client.mark_many_as_read([mail1.ident, mail2.ident], session)
+        yield self.app_test_client.mark_many_as_read([mail1.ident, mail2.ident])
 
-        yield self.app_test_client.mark_many_as_unread([mail1.ident, mail2.ident], session)
+        yield self.app_test_client.mark_many_as_unread([mail1.ident, mail2.ident])
 
         mails = yield self.app_test_client.get_mails_by_tag('inbox')
 
@@ -83,9 +75,7 @@ class MarkAsReadUnreadTest(SoledadTestBase):
         self.assertNotIn('read', mails[0].status)
         self.assertNotIn('read', mails[1].status)
 
-        response, first_request = yield self.app_test_client.get('/', as_json=False)
-        session = first_request.getSession()
-        yield self.app_test_client.mark_many_as_read([mails[0].ident, mails[1].ident], session)
+        yield self.app_test_client.mark_many_as_read([mails[0].ident, mails[1].ident])
 
         mails = yield self.app_test_client.get_mails_by_tag('inbox')
 
@@ -94,15 +84,12 @@ class MarkAsReadUnreadTest(SoledadTestBase):
 
     @defer.inlineCallbacks
     def test_mark_mixed_status_as_read(self):
-        response, first_request = yield self.app_test_client.get('/', as_json=False)
-        session = first_request.getSession()
-
         input_mail = MailBuilder().with_subject('first').build_input_mail()
         input_mail2 = MailBuilder().with_subject('second').build_input_mail()
 
         yield self.app_test_client.add_mail_to_inbox(input_mail)
         mail2 = yield self.app_test_client.add_mail_to_inbox(input_mail2)
-        yield self.app_test_client.mark_many_as_read([mail2.ident], session)
+        yield self.app_test_client.mark_many_as_read([mail2.ident])
 
         mails = yield self.app_test_client.get_mails_by_tag('inbox')
 
@@ -111,7 +98,7 @@ class MarkAsReadUnreadTest(SoledadTestBase):
         self.assertEquals(1, len(unread_mails))
         self.assertEquals(1, len(read_mails))
 
-        yield self.app_test_client.mark_many_as_read([mails[0].ident, mails[1].ident], session)
+        yield self.app_test_client.mark_many_as_read([mails[0].ident, mails[1].ident])
 
         mails = yield self.app_test_client.get_mails_by_tag('inbox')
 

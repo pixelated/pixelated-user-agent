@@ -16,6 +16,7 @@
 from test.support.integration import SoledadTestBase, MailBuilder
 from twisted.internet import defer
 import json
+import pkg_resources
 
 
 class ContactsTest(SoledadTestBase):

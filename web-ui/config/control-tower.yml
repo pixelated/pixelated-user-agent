@@ -1,3 +1,3 @@
 ---
-include_pattern: 'public/js/**/*.js'
+include_pattern: 'app/js/**/*.js'
 exclude_pattern: ''
