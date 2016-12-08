@@ -16,8 +16,6 @@
 import json
 import os
 import pkg_resources
-
-from pixelated.resources.signup_resource import SignupResource
 from pixelated.resources.users import UsersResource
 
 import pixelated
@@ -114,7 +112,6 @@ class RootResource(BaseResource):
         self.putChildPublic(LoginResource.BASE_URL,
                             LoginResource(self._services_factory, provider, disclaimer_banner=disclaimer_banner, authenticator=authenticator))
         self.putChildPublic(LogoutResource.BASE_URL, LogoutResource(self._services_factory))
-        self.putChildPublic('signup', SignupResource(self._services_factory))
 
         self._inbox_resource.initialize()
         self._mode = MODE_RUNNING
