@@ -23,8 +23,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from test.support.integration import MailBuilder
-
 TIMEOUT_IN_S = 20
 
 DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S = 10.0
@@ -157,24 +155,6 @@ def mail_list_with_subject_exists(context, subject):
     return find_element_by_xpath(context, "//*[@class='mail-list-entry__item-subject' and contains(.,'%s')]" % subject)
 
 
-def mail_subject(context):
-    e = find_element_by_css_selector(context, '#mail-view .subject')
-    return e.text
-
-
 def reply_subject(context):
     e = find_element_by_css_selector(context, '#reply-subject')
     return e.text
-
-
-def get_console_log(context):
-    logs = context.browser.get_log('browser')
-    for entry in logs:
-        msg = entry['message']
-        if not (msg.startswith('x  off') or msg.startswith('<- on')):
-            print(entry['message'])
-
-
-def create_email(context):
-    input_mail = MailBuilder().build_input_mail()
-    context.single_user_client.add_mail_to_inbox(input_mail)
