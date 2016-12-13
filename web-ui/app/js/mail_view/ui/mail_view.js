@@ -38,7 +38,6 @@ define(
         tags: '.mail-read-view__header-tags-tag',
         newTagInput: '#new-tag-input',
         newTagButton: '#new-tag-button',
-        addNew: '.mail-read-view__header-tags-new-button',
         trashButton: '#trash-button',
         archiveButton: '#archive-button',
         closeMailButton: '.close-mail-button'
@@ -198,13 +197,11 @@ define(
       this.addTagLoseFocus = function () {
         this.select('newTagInput').hide();
         this.select('newTagInput').typeahead('val', '');
-        this.select('addNew').show();
       };
 
       this.showNewTagInput = function () {
         this.select('newTagInput').show();
         this.select('newTagInput').focus();
-        this.select('addNew').hide();
       };
 
       this.removeTag = function (tag) {
