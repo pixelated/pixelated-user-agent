@@ -31,6 +31,7 @@ def add_mail_impl(context):
 
     context.last_subject = subject
 
+
 @given('I have a mail for {username} in my inbox')
 def add_mail_to_user_inbox(context, username):
     subject = 'Hi! This the subject %s' % uuid4()
@@ -42,6 +43,7 @@ def add_mail_to_user_inbox(context, username):
 
     context.last_subject = subject
 
+
 @given(u'Account for user {username} exists')
 def add_account(context, username):
     add_multi_user_account(context, username)
@@ -51,9 +53,11 @@ def add_account(context, username):
 def load_mail_into_soledad(context, mail):
     return context.single_user_client.mail_store.add_mail('INBOX', mail.raw)
 
+
 @wait_for(timeout=10.0)
 def load_mail_into_user_account(context, mail, username):
     return context.multi_user_client.add_mail_to_user_inbox(mail, username)
+
 
 @wait_for(timeout=10.0)
 def add_multi_user_account(context, username):
