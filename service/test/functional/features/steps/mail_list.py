@@ -91,7 +91,7 @@ def impl(context):
 @given('I have mails')
 @then(u'I have mails')
 def impl(context):
-    emails = find_elements_by_css_selector(context, '.mail-list-entry')
+    emails = find_elements_by_css_selector(context, '.mail-list-entry', timeout=40)
     assert len(emails) > 0
 
 
