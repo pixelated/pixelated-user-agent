@@ -16,7 +16,6 @@
 
 from behave import when, then, given
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.by import By
 
 from common import (
     ImplicitWait,
@@ -26,8 +25,7 @@ from common import (
     find_elements_by_css_selector,
     mail_list_with_subject_exists,
     wait_for_condition,
-    wait_for_loading_to_finish,
-    wait_until_elements_are_visible_by_locator)
+    wait_for_loading_to_finish)
 
 
 def find_current_mail(context):
@@ -45,7 +43,7 @@ def open_current_mail(context):
 
 
 def get_first_email(context):
-    return wait_until_elements_are_visible_by_locator(context, (By.CSS_SELECTOR, '.mail-list-entry__item'))[0]
+    return find_element_by_css_selector(context, '.mail-list-entry__item')
 
 
 @then('I see that mail under the \'{tag}\' tag')

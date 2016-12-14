@@ -16,15 +16,13 @@
 
 from behave import then, when
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
 
 from common import (
     click_button,
     find_element_by_css_selector,
     find_elements_by_css_selector,
     reply_subject,
-    wait_until_button_is_visible,
-    wait_until_element_is_visible_by_locator)
+    wait_until_button_is_visible)
 
 
 @then('I see that the subject reads \'{subject}\'')
@@ -44,7 +42,7 @@ def impl(context, expected_body):
 
 @then('that email has the \'{tag}\' tag')
 def impl(context, tag):
-    wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, '#mail-view .tagsArea .tag'))
+    find_element_by_css_selector(context, '#mail-view .tagsArea .tag')
     elements = find_elements_by_css_selector(context, '#mail-view .tagsArea .tag')
     tags = [e.text for e in elements]
     assert tag in tags
@@ -52,13 +50,13 @@ def impl(context, tag):
 
 @when('I add the tag \'{tag}\' to that mail')
 def impl(context, tag):
-    b = wait_until_element_is_visible_by_locator(context, (By.ID, 'new-tag-button'))
+    b = find_element_by_css_selector(context, '#new-tag-button')
     b.click()
 
-    e = wait_until_element_is_visible_by_locator(context, (By.ID, 'new-tag-input'))
+    e = find_element_by_css_selector(context, '#new-tag-input')
     e.send_keys(tag)
     e.send_keys(Keys.ENTER)
-    wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, 'li[data-tag=%s]' % tag))
+    find_element_by_css_selector(context, 'li[data-tag=%s]' % tag)
 
 
 @when('I reply to it')

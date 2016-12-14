@@ -20,14 +20,12 @@ from uuid import uuid4
 
 from behave import given, then, when
 from crochet import wait_for
-from selenium.webdriver.common.by import By
 
 from common import (
     fill_by_css_selector,
     find_element_by_css_selector,
     find_elements_by_css_selector,
-    page_has_css,
-    wait_until_element_is_visible_by_locator)
+    page_has_css)
 
 
 @given(u'I have a mail with an attachment in my inbox')
@@ -71,7 +69,7 @@ def upload_big_file(context):
     fname = "over_5mb.data"
     context.browser.execute_script("$('#fileupload').removeAttr('hidden');")
     fill_by_css_selector(context, '#fileupload', base_dir + fname)
-    wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, '#upload-error-message'))
+    find_element_by_css_selector(context, '#upload-error-message')
 
 
 @then(u'I see an upload error message')
@@ -100,17 +98,17 @@ def upload_attachment(context):
     base_dir = "test/functional/features/files/"
     fname = "5mb.data"
     fill_by_css_selector(context, '#fileupload', base_dir + fname)
-    attachment_list_item = wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, '#attachment-list-item li a'))
+    attachment_list_item = find_element_by_css_selector(context, '#attachment-list-item li a')
     assert attachment_list_item.text == "%s (5.00 Mb)" % fname
 
 
 @when(u'remove the file')
 def click_remove_icon(context):
-    remove_icon = wait_until_element_is_visible_by_locator(context, (By.CSS_SELECTOR, '#attachment-list-item i.remove-icon'))
+    remove_icon = find_element_by_css_selector(context, '#attachment-list-item i.remove-icon')
     remove_icon.click()
 
 
 @then(u'I should not see it attached')
 def assert_attachment_removed(context):
-    attachments_list_li = context.browser.find_elements(By.CSS_SELECTOR, '#attachment-list-item li a')
+    attachments_list_li = context.browser.find_elements_by_css_selector('#attachment-list-item li a')
     assert len(attachments_list_li) == 0
