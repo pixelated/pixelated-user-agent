@@ -1,4 +1,4 @@
-import unittest
+from twisted.trial import unittest
 import re
 
 from mock import MagicMock, patch
