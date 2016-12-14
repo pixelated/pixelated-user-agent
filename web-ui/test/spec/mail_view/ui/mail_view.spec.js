@@ -95,7 +95,7 @@ describeComponent('mail_view/ui/mail_view', function () {
     expect(newTagInputComponent.attr('style').trim()).not.toEqual('display: none;');
   });
 
-  it('hides new tag button when pressing esc key', function(){
+  it('hides new tag input when pressing esc key', function(){
     this.component.displayMail({}, testData);
     this.component.select('newTagButton').click();
 
