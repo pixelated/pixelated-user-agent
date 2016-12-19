@@ -151,12 +151,14 @@
         transition: all 0.1s linear;
         opacity: 0;
         font-weight: bold;
+        display: none;
     }
 
     label.showfloatlabel {
         color: $light_blue !important;
         top: -0.3rem;
         opacity: 1;
+        display: block;
     }
 
     input, textarea {
