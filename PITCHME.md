@@ -3,7 +3,7 @@ See https://github.com/gitpitch/ for details
 -->
 # PIXELATED
 
-#HSLIDE
+#HSLIDE?image=assets/pix_tex.png
 # PIXELATED
 
 Private emails through accessible encryption in your own email provider.
