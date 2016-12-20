@@ -1,13 +1,17 @@
 body {
   background-color: #178ca6;
+  background-repeat: repeat;
+  background-position: right top;
 }
 
-.reveal,
-  .reveal h1,
-  .reveal h2,
-  .reveal h3,
-  .reveal h4,
-  .reveal h5,
-  .reveal h6 {
-    color: #fff;
-  }
+.reveal {
+  color: #fff;
+}
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  color: #fff;
+}
