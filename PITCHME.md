@@ -17,7 +17,7 @@ Pixelated is maintained by ThoughWorkers in Brasil and Germany.
 # Features
 * Easy to use
 * No software to install
-* Encrypted user storage (maisl, search index, etc.)
+* Encrypted user storage (mail, search index, etc.)
 * Tagging
 * plus all the LEAP features like automatic key lookup, (semi-) transparent encryption etc.
 
