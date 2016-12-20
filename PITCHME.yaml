@@ -1,1 +1,3 @@
+background : assets/pix_tex.png
+background-size : cover
 theme-override : assets/css/PITCHME.css

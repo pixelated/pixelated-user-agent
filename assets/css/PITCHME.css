@@ -1,4 +1,6 @@
 body {
-  background-color: transparent;
-  background: https://github.com/pixelated/pixelated-user-agent/blob/gitpitch/assets/pix_tex.png;
+  background-color: #178ca6;
 }
+
+.reveal {
+  color: #fff; }
