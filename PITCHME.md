@@ -1,12 +1,11 @@
 <!--
 See https://github.com/gitpitch/ for details
 -->
-![Team](assets/Pix_logo_white.png)
+![Logo](assets/Pix_logo_white.png)
 
 #HSLIDE
-# PIXELATED
-
-Private emails through accessible encryption in your own email provider.
+## Private emails through accessible encryption in your own email provider.
+![icons](assets/icons_p.png)
 
 #HSLIDE
 
@@ -63,13 +62,8 @@ https://github.com/pixelated/pixelated-user-agent
 #### Thank you
 #### Obrigado
 
-###### pixelated-project.org
-
-###### github.com/pixelated
-
-###### @pixelatedteam
-
-###### pixelated@irc.freenode.net
-
-###### team@pixelated-project.org
-###### 504A 14EA 39DE 1800 B676 9619 FF0E A8AE D649 7991
+* pixelated-project.org
+* github.com/pixelated
+* @pixelatedteam
+* pixelated@irc.freenode.net
+* team@pixelated-project.org <br> 504A 14EA 39DE 1800 B676 9619 FF0E A8AE D649 7991
