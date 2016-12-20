@@ -1,15 +1,15 @@
 body {
   background: #3fadc5;
-  background: -moz-radial-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
-  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #83eaea), color-stop(100%, #3fadc5));
-  background: -webkit-radial-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
-  background: -o-radial-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
-  background: -ms-radial-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
-  background: radial-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
+  background: -moz-linear-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
+  background: -webkit-gradient(linear, center center, 0px, center center, 100%, color-stop(0%, #83eaea), color-stop(100%, #3fadc5));
+  background: -webkit-linear-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
+  background: -o-linear-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
+  background: -ms-linear-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
+  background: linear-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
   background-color: #3fadc5; }
 
 .reveal {
-  color: #fff;
+  color: #4a4a4a;
 }
 .reveal h1,
 .reveal h2,
@@ -17,7 +17,7 @@ body {
 .reveal h4,
 .reveal h5,
 .reveal h6 {
-  color: #fff;
+  color: #4a4a4a;
 }
 
 .reveal a {

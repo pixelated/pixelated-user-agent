@@ -1,9 +1,10 @@
 <!--
 See https://github.com/gitpitch/ for details
 -->
-![Team](assets/Pix_logo.png)
+#HSLIDE?image=assets/Background.png
+![Team](assets/Pix_logo_white.png)
 
-#HSLIDE?image=assets/pix_tex.png
+#HSLIDE
 # PIXELATED
 
 Private emails through accessible encryption in your own email provider.
