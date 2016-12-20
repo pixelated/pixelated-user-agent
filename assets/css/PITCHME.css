@@ -23,6 +23,18 @@ body {
   color: #fd7923;
 }
 
+.reveal section img {
+  border: 0;
+  box-shadow: none;
+}
+
+.reveal img,
+.reveal video,
+.reveal iframe {
+  max-width: 80%;
+  max-height: 80%; 
+}
+
 .reveal .controls .navigate-left,
 .reveal .controls .navigate-left.enabled {
   border-right-color: #ff9c00; }
