@@ -12,6 +12,7 @@ Private emails through accessible encryption in your own email provider.
 
 # Team
 Pixelated is maintained by ThoughWorkers in Brasil and Germany.
+![Team](assets/team.png)
 
 #HSLIDE
 # Features
