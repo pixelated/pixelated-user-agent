@@ -21,10 +21,12 @@ body {
 }
 
 .reveal a {
-  color: #ff9c00;}
+  color: #fff;
+  font-weight: bold;
+}
 
 .reveal a:hover {
-  color: #fd7923;
+  color: #fff;
 }
 
 .reveal img,
