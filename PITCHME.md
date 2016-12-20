@@ -30,8 +30,7 @@ Pixelated is maintained by ThoughWorkers in Brasil and Germany.
 ## Tech stack
 * Python  
 * Puppet
-* JavaScript
- * Flight.js
+* JavaScript (Flight.js)
 * LEAP mail
 
 
