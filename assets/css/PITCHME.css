@@ -1,8 +1,12 @@
 body {
-  background-color: #178ca6;
-  background-repeat: repeat;
-  background-position: top right;
-}
+  background: #3fadc5;
+  background: -moz-radial-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #83eaea), color-stop(100%, #3fadc5));
+  background: -webkit-radial-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
+  background: -o-radial-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
+  background: -ms-radial-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
+  background: radial-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
+  background-color: #3fadc5; }
 
 .reveal {
   color: #fff;

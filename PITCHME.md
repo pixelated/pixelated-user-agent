@@ -1,7 +1,7 @@
 <!--
 See https://github.com/gitpitch/ for details
 -->
-# PIXELATED
+![Team](assets/Pix_logo.png)
 
 #HSLIDE?image=assets/pix_tex.png
 # PIXELATED
@@ -61,14 +61,15 @@ https://github.com/pixelated/pixelated-user-agent
 
 ## Danke Schön
 #### Thank you
-pixelated-project.org
+#### Obrigado
 
-github.com/pixelated
+###### pixelated-project.org
 
-@pixelatedteam
+###### github.com/pixelated
 
-pixelated@irc.freenode.net
+###### @pixelatedteam
 
-team@pixelated-project.org
-<br>
-504A 14EA 39DE 1800 B676 9619 FF0E A8AE D649 7991
+###### pixelated@irc.freenode.net
+
+###### team@pixelated-project.org
+###### 504A 14EA 39DE 1800 B676 9619 FF0E A8AE D649 7991
