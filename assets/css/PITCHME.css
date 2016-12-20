@@ -23,16 +23,17 @@ body {
   color: #fd7923;
 }
 
-.reveal section img {
-  border: 0;
-  box-shadow: none;
-}
-
 .reveal img,
 .reveal video,
 .reveal iframe {
   max-width: 80%;
-  max-height: 80%; 
+  max-height: 80%;
+}
+
+.reveal section img {
+  background: none;
+  border: 0 none;
+  box-shadow: none;
 }
 
 .reveal .controls .navigate-left,
