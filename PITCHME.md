@@ -1,7 +1,7 @@
 <!--
 See https://github.com/gitpitch/ for details
 -->
-#HSLIDE?image=assets/Background.png
+#HSLIDE?image=assets/Background.jpg
 ![Team](assets/Pix_logo_white.png)
 
 #HSLIDE
