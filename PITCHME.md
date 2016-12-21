@@ -61,7 +61,7 @@ https://github.com/pixelated/pixelated-user-agent
 #### Thank you
 #### Obrigado
 
-<div style="font-size: 0.7em; line-height: 2em">
+<div style="font-size: 0.5em; line-height: 2em">
 pixelated-project.org<br>
 github.com/pixelated<br>
 @pixelatedteam<br>
