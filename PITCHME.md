@@ -10,8 +10,8 @@ See https://github.com/gitpitch/ for details
 #HSLIDE
 
 ## Team
-Pixelated is maintained by ThoughWorkers in Brasil and Germany.
-![Team](assets/team.png)
+Pixelated is maintained by ThoughWorkers in Brazil and Germany.
+![Team](assets/team.jpg)
 
 #HSLIDE
 ## Features
@@ -38,7 +38,7 @@ Pixelated is maintained by ThoughWorkers in Brasil and Germany.
 ## Where we are
 
 * Main challenge: Scalability
-* Architectal rewrite, replaced docker setup
+* Architectural rewrite, replaced docker setup
 * Close collaboration with LEAP
 * Looking for organisations to adopt soon
 

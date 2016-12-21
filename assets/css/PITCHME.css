@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
 body {
   background: #3fadc5;
   background: -moz-radial-gradient(center, circle cover, #83eaea 0%, #3fadc5 100%);
@@ -9,14 +11,18 @@ body {
   background-color: #3fadc5; }
 
 .reveal {
+  font-family: 'Open Sans', "sans-serif";
   color: #4a4a4a;
 }
+
 .reveal h1,
 .reveal h2,
 .reveal h3,
 .reveal h4,
 .reveal h5,
 .reveal h6 {
+  font-family: 'Open Sans', "sans-serif";
+  font-weight: 700;
   color: #4a4a4a;
 }
 
