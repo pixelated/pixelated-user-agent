@@ -4,23 +4,23 @@ See https://github.com/gitpitch/ for details
 ![Logo](assets/Pix_logo_white.png)
 
 #HSLIDE
-## Private emails through accessible encryption in your own email provider
+### A private email client with accessible encryption in your indie email provider
 ![icons](assets/icons_p.png)
+
+#HSLIDE
+## Private and easy to use
+* Web based email client
+* Encrypted user storage (mail, search index, etc.)
+* Semi-transparent encryption
+* Automatic PGP key management
+* Open Source project
+* Simple installation
 
 #HSLIDE
 
 ## Team
-Pixelated is maintained by ThoughWorkers in Brazil and Germany.<br>
+Pixelated is maintained by ThoughtWorkers in Brazil and Germany.<br>
 ![Team](assets/time.jpg)
-
-#HSLIDE
-## Features
-* Easy to use
-* No software to install
-* Encrypted user storage (mail, search index, etc.)
-* Tagging
-* plus all the LEAP features like automatic key lookup, (semi-) transparent encryption etc.
-
 
 #HSLIDE
 ## How it works
@@ -28,32 +28,27 @@ Pixelated is maintained by ThoughWorkers in Brazil and Germany.<br>
 
 #HSLIDE
 ## Tech stack
-* Python  
+* Python (Twisted)
 * Puppet
 * JavaScript (Flight.js)
-* LEAP mail
+* LEAP libraries
 
 
 #HSLIDE
 ## Where we are
 
-* Main challenge: Scalability
-* Architectural rewrite, replaced docker setup
+* Support big attachments
+* Account recovery
+* Major usability improvements
 * Close collaboration with LEAP
-* Looking for organisations to adopt soon
+* Testing with a civil rights organisation in Brazil
 
 
 #HSLIDE
 ## How to install
 
-* If you use a Mac: install homebrew
-
-* Virtual Box or libvirt
-
-* Vagrant ( version >= 1.5)
-
 * Go to the User-agent Getting started:
-https://github.com/pixelated/pixelated-user-agent
+https://github.com/pixelated/pixelated-user-agent#getting-started
 
 #HSLIDE
 
