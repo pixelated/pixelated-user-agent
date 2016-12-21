@@ -11,7 +11,7 @@ See https://github.com/gitpitch/ for details
 
 ## Team
 Pixelated is maintained by ThoughWorkers in Brazil and Germany.<br>
-![Team](assets/team.jpg)
+![Team](assets/time.jpg)
 
 #HSLIDE
 ## Features
