@@ -4,13 +4,13 @@ See https://github.com/gitpitch/ for details
 ![Logo](assets/Pix_logo_white.png)
 
 #HSLIDE
-## Private emails through accessible encryption in your own email provider.
+## Private emails through accessible encryption in your own email provider
 ![icons](assets/icons_p.png)
 
 #HSLIDE
 
 ## Team
-Pixelated is maintained by ThoughWorkers in Brazil and Germany.
+Pixelated is maintained by ThoughWorkers in Brazil and Germany.<br>
 ![Team](assets/team.jpg)
 
 #HSLIDE
