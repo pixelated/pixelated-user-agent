@@ -61,8 +61,10 @@ https://github.com/pixelated/pixelated-user-agent
 #### Thank you
 #### Obrigado
 
+<div style="font-size: 0.8em">
 * pixelated-project.org
 * github.com/pixelated
 * @pixelatedteam
 * pixelated@irc.freenode.net
 * team@pixelated-project.org <br> 504A 14EA 39DE 1800 B676 9619 FF0E A8AE D649 7991
+</div>
