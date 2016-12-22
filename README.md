@@ -63,7 +63,7 @@ Type your password:
 ******** (the one you created in previous step)
 ```
 
-**Note**: For more convenience during development, you can also create a config file with your credentials (see **Further Notes**).
+**Note**: For more convenience during development, you can also create a config file with your credentials (see [**Further Notes**](https://github.com/pixelated/pixelated-user-agent/blob/master/README.md#further-notes)).
 
 4b) If you don't have a `dev.pixelated-project.org` account or just want to connect to our `try.pixelated-project.org` environment, we have some sample configurations for you.
 
@@ -108,6 +108,14 @@ To run the functional tests:
 
 7) You're all set! We've prepared [a couple of issues labeled "Volunteer Task"](https://github.com/pixelated/pixelated-user-agent/labels/Volunteer%20task) that are a good place to dive into the project. Happy Hacking!
 
+## How do I see the result of my changes?
+
+For all **Python changes**, you will need to kill (Ctrl-C) the server and run `$ pixelated-user-agent --host 0.0.0.0` again.
+
+For most **JavaScript** or **HTML changes**, you will just need to reload the browser.
+
+For most **CSS or Handlebars templates changes**, you will also need to run: `$ cd /vagrant/web-ui && ./go build`
+
 ## Option 2: Pixelated User Agent + Leap Platform
 
 You can install the Pixelated User Agent and the Leap Platform at once, just by running the following command on your console (this may take a while, please be patient):
@@ -136,14 +144,6 @@ If you want to run the tests in your IDE on your host machine outside of vagrant
 To fix it, add the path to your GPG binary to your $PATH so that it is found before the symlink in `/usr/local/bin` (or similar).
 See also, installations on native OS [below](#developer-setup-on-native-os).
 
-
-## How do I see the result of my changes?
-
-For all **Python changes**, you will need to kill (Ctrl-C) the server and run `$ pixelated-user-agent --host 0.0.0.0` again.
-
-For most **JavaScript** or **HTML changes**, you will just need to reload the browser.
-
-For most **CSS or Handlebars templates changes**, you will also need to run: `$ cd /vagrant/web-ui && ./go build`
 
 ## I think I might be able to hack together a quick-and-dirty lo-fi solution for the issue I’m working with… what do I do?
 
@@ -218,7 +218,7 @@ $ cd pixelated-user-agent && source ~/.virtualenv/user-agent-venv/bin/activate
 
 Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenv/user-agent-venv/bin/activate` first.
 
-Running the user agent and the various tests are the same as in the vagrant setup in step 5) and 8) above.
+Running the user agent and the various tests are the same as in the vagrant setup in step 4) and 6) above.
 
 ### On Debian distributions
 
