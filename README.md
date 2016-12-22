@@ -231,7 +231,7 @@ $ cd pixelated-user-agent && source ~/.virtualenv/user-agent-venv/bin/activate
 
 Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenv/user-agent-venv/bin/activate` first.
 
-Running the user agent and the various tests are the same as in the vagrant setup in step 5) and 8) above.
+Running the user agent and the various tests are the same as in the vagrant setup in step 4) and 6) above.
 
 ## Debian package
 
