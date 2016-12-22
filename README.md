@@ -203,7 +203,7 @@ All commits to the pixelated user agent code trigger all tests to be run in [sna
 
 ## Developer Setup On Native OS
 
-Please ensure that you have an email user from your preferred leap provider ([How to](#registering-with-a-leap-provider)).
+Please ensure that you have an email user from your preferred leap provider (Step 3).
 Details for developer installations [on OSX](#on-osx) and [Debian distributions](#on-debian-distributions) are explained below.
 In case of any issues, please ping us on IRC ([#pixelated on irc.freenode.net](irc://irc.freenode.net/pixelated)), we will be available to help you from there.
 
