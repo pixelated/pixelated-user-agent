@@ -44,11 +44,11 @@ $ vagrant up
 $ vagrant ssh
 ```
 
-3) Register with a LEAP provider. You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/). Please contact us at team@pixelated-project.org for an invite code.
+3) Register with a LEAP provider. You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/) (Please contact us at team@pixelated-project.org for an invite code) or you can use sample configurations.
 
-4) Run the user agent:
+4) If you created a developer account follow the step 4a to run the user agent, otherwise go to step 4b:
 
-Please note: If you don't have an account on any provider, go directly to step 5b).
+4a) Connect to the provider using your credentials. If the user agent starts up successfully, you will not see any other output.
 
 ```
 $ pixelated-user-agent --host 0.0.0.0
@@ -63,11 +63,9 @@ Type your password:
 ******** (the one you created in previous step)
 ```
 
-5a) Connect to the provider using your credentials, as shown in step 4 above. If the user agent starts up successfully, you will not see any other output.
-
 **Note**: For more convenience during development, you can also create a config file with your credentials (see **Further Notes**).
 
-5b) If you don't have a `dev.pixelated-project.org` account or just want to connect to our `try.pixelated-project.org` environment, we have some sample configurations for you.
+4b) If you don't have a `dev.pixelated-project.org` account or just want to connect to our `try.pixelated-project.org` environment, we have some sample configurations for you.
 
 Please navigate to the project root in your vagrant box with: `$ cd /vagrant`
 
@@ -76,9 +74,9 @@ Then you can connect to `try.pixelated-project.org` ...
 * as Alice via: `$ pixelated-user-agent --host 0.0.0.0 -c try.alice.ini`
 * as Bob via: `$ pixelated-user-agent --host 0.0.0.0 -c try.bob.ini`
 
-6) Go to [localhost:3333](http://localhost:3333/). You should see a loading screen for a few seconds, then your inbox. If it sticks on the loading screen, check your terminal for errors, then [get help](https://pixelated-project.org/faq/#contact-the-project).
+5) Go to [localhost:3333](http://localhost:3333/). You should see a loading screen for a few seconds, then your inbox. If it sticks on the loading screen, check your terminal for errors, then [get help](https://pixelated-project.org/faq/#contact-the-project).
 
-7) If you like console output, you can also run the tests to see if everything went according to plan.
+6) If you like console output, you can also run the tests to see if everything went according to plan.
 
 ```bash
 (user-agent-venv)vagrant@jessie:~$ cd /vagrant
