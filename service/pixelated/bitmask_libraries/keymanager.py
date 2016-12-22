@@ -75,11 +75,6 @@ class Keymanager(object):
         except KeyNotFound:
             defer.returnValue(None)
 
-    def should_renew(self, key):
-        # feature envy -- should be in keymanager
-        till_expiry_date = (key.expiry_date - datetime.datetime.now())
-        return till_expiry_date.days < DEFAULT_EXTENSION_THRESHOLD
-
     @defer.inlineCallbacks
     def get_key(self, email, private=False, fetch_remote=True):
         key = yield self.keymanager.get_key(email, private=private, fetch_remote=fetch_remote)
