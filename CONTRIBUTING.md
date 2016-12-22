@@ -5,7 +5,7 @@ Here's the brief:
 * We welcome contributions of all kinds, including but not limited to features, bug fixes, quality assurance, documentation, security review or asking questions
 * Pull requests are based off, integrated into & rebased against master
 * Write automated tests, ideally using TDD. CI needs to be green in order to merge.
-* Tablero board for ready to play work
+* [Waffle](https://waffle.io/pixelated/pixelated-user-agent) board for ready to play work
 * Contact us for questions & suggestions:
   * IRC: #pixelated @ chat.freenode.org ([join via webchat](https://webchat.freenode.net/))
   * Email: [team@pixelated-project.org](mailto:team@pixelated-project.org)
