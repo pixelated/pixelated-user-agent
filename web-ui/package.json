@@ -5,7 +5,6 @@
   "repository": "https://github.com/pixelated-project/pixelated-user-agent",
   "private": true,
   "devDependencies": {
-    "almond": "^0.3.3",
     "bower": "1.7.9",
     "dompurify": "^0.8.4",
     "flight": "0.0.2",
