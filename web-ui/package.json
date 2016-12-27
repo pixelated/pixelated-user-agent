@@ -5,9 +5,13 @@
   "repository": "https://github.com/pixelated-project/pixelated-user-agent",
   "private": true,
   "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
     "bower": "1.7.9",
     "dompurify": "^0.8.4",
-    "flight": "0.0.2",
+    "flightjs": "^1.5.1",
     "font-awesome": "^4.7.0",
     "foundation": "^4.2.1-1",
     "handlebars": "^4.0.5",
@@ -40,7 +44,8 @@
     "requirejs": "2.2.0",
     "typeahead.js": "^0.11.1",
     "utf8": "^2.1.2",
-    "watch": "0.19.1"
+    "watch": "0.19.1",
+    "webpack": "^1.14.0"
   },
   "scripts": {
     "test": "npm run jshint --silent && npm run build --silent && karma start --single-run $GRUNT_OPTS",
@@ -51,7 +56,7 @@
     "handlebars-watch": "watch 'npm run handlebars' app/templates",
     "compass": "compass compile",
     "compass-watch": "compass watch",
-    "build": "npm run clean && npm run handlebars && npm run add_git_version && npm run compass",
+    "build": "npm run clean && npm run handlebars && webpack --colors --progress && npm run add_git_version && npm run compass",
     "jshint": "jshint --config=.jshintrc app test",
     "clean": "rm -rf .tmp/ 'dist/*' app/js/generated/hbs/* app/css/*",
     "buildmain": "node_modules/requirejs/bin/r.js -o config/buildoptions.js",
