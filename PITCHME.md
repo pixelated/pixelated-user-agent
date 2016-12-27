@@ -23,8 +23,8 @@ Pixelated is maintained by ThoughtWorkers in Brazil and Germany.<br>
 ![Team](assets/time.jpg)
 
 #HSLIDE
-## How it works
-### Let's try!
+## How it looks
+![UI](assets/ui.jpg)
 
 #HSLIDE
 ## Tech stack
