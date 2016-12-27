@@ -23,6 +23,7 @@ module.exports = {
       'features': path.join(__dirname, '/app/js/features/features'),
       'user_settings': path.join(__dirname, '/app/js/user_settings')
     },
+    extensions: ['', '.js'],
     moduleDirectories: ['app/js']
   }
 }
