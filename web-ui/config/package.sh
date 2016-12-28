@@ -38,9 +38,6 @@ app/bower_components/jquery-ui/jquery-ui.js \
 app/bower_components/jquery-file-upload/js/jquery.fileupload.js \
 app/bower_components/handlebars/handlebars.js \
 app/bower_components/typeahead.js/dist/typeahead.bundle.js \
-app/bower_components/foundation/js/foundation.js \
-app/bower_components/foundation/js/foundation/foundation.reveal.js \
-app/bower_components/foundation/js/foundation/foundation.offcanvas.js \
 app/bower_components/iframe-resizer/js/iframeResizer.js \
 app/js/1.bundle.js \
 app/js/bundle.js > dist/app.js

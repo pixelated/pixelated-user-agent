@@ -13,6 +13,7 @@
     "dompurify": "^0.8.4",
     "flightjs": "^1.5.1",
     "font-awesome": "^4.7.0",
+    "foundation-sites": "^6.3.0",
     "handlebars": "^4.0.5",
     "he": "^1.1.0",
     "html-minifier": "2.1.6",
