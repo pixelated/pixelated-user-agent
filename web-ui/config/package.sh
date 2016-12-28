@@ -23,27 +23,11 @@ export PIXELATED_BUILD='package'
 mkdir -p dist
 
 # initial npm tasks
-./go clean
-./go compass
-./go handlebars
+./go build
 ./go imagemin
 ./go minify_html
 ./go minify_sandbox
-./go add_git_version
-./go buildmain
 
-
-# copy files
-cd app
-cp --parents \
-404.html \
-fonts/* \
-locales/**/* \
-bower_components/font-awesome/css/font-awesome.min.css \
-bower_components/jquery-file-upload/css/jquery.fileupload.css \
-bower_components/font-awesome/fonts/* \
-../dist
-cd -
 
 # concat js files and minify for app.min.js
 cat \
@@ -58,7 +42,8 @@ app/bower_components/foundation/js/foundation.js \
 app/bower_components/foundation/js/foundation/foundation.reveal.js \
 app/bower_components/foundation/js/foundation/foundation.offcanvas.js \
 app/bower_components/iframe-resizer/js/iframeResizer.js \
-.tmp/app.concatenated.js > dist/app.js
+app/js/1.bundle.js \
+app/js/bundle.js > dist/app.js
 node_modules/.bin/minify dist/app.js > dist/app.min.js
 rm dist/app.js
 
