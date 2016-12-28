@@ -1,4 +1,5 @@
-var path = require('path')
+var path = require('path');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './app/js/index.js',
@@ -44,5 +45,23 @@ module.exports = {
         query: { presets: ['es2015']}
       }
     ]
-  }
+  },
+  plugins: [
+    new CopyWebpackPlugin([
+      { context: 'app/', from: '404.html', to: '../' },
+      { context: 'app/', from: 'fonts/*', to: '../' },
+      { context: 'app/', from: 'locales/**/*', to: '../' },
+      { context: 'app/', from: 'bower_components/font-awesome/fonts/*', to: '../' },
+      {
+        context: 'app/',
+        from: 'bower_components/font-awesome/css/font-awesome.min.css',
+        to: '../bower_components/font-awesome/css'
+      },
+      {
+        context: 'app/',
+        from: 'bower_components/jquery-file-upload/css/jquery.fileupload.css',
+        to: '../bower_components/jquery-file-upload/css'
+      }
+    ])
+  ]
 }
