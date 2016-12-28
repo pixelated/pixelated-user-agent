@@ -6,7 +6,7 @@ module.exports = {
   entry: './app/js/index.js',
   node: { fs: 'empty' },
   output: {
-    path: path.join(__dirname, '/app/'),
+    path: path.join(__dirname, '/dist/'),
     filename: 'app.min.js',
     publicPath: '/assets/js/'
   },
@@ -42,13 +42,14 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
         loader: 'babel',
         query: { presets: ['es2015']}
       }
     ]
   },
   plugins: [
+    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.optimize.DedupePlugin(),
     new CopyWebpackPlugin([
       { context: 'app/', from: '404.html' },
       { context: 'app/', from: 'index.html' },

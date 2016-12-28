@@ -23,32 +23,10 @@ export PIXELATED_BUILD='package'
 mkdir -p dist
 
 # initial npm tasks
-./go build
+./go build-prod
 ./go imagemin
-./go minify_html
 ./go minify_sandbox
 
-
-# concat js files and minify for app.min.js
-cat \
-app/bower_components/modernizr/modernizr.js \
-app/bower_components/lodash/dist/lodash.js \
-app/bower_components/jquery/dist/jquery.js \
-app/bower_components/jquery-ui/jquery-ui.js \
-app/bower_components/jquery-file-upload/js/jquery.fileupload.js \
-app/bower_components/handlebars/handlebars.js \
-app/bower_components/typeahead.js/dist/typeahead.bundle.js \
-app/bower_components/iframe-resizer/js/iframeResizer.js \
-app/js/1.bundle.js \
-app/js/bundle.js > dist/app.js
-node_modules/.bin/minify dist/app.js > dist/app.min.js
-rm dist/app.js
-
-if [ ! -s dist/app.min.js ]
-then
-echo "Minification failed!"
-exit 1;
-fi
 
 # concat js files and minify for sandbox.min.js
 cat \
