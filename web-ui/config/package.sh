@@ -52,13 +52,11 @@ app/bower_components/lodash/dist/lodash.js \
 app/bower_components/jquery/dist/jquery.js \
 app/bower_components/jquery-ui/jquery-ui.js \
 app/bower_components/jquery-file-upload/js/jquery.fileupload.js \
-app/js/lib/highlightRegex.js \
 app/bower_components/handlebars/handlebars.js \
 app/bower_components/typeahead.js/dist/typeahead.bundle.js \
 app/bower_components/foundation/js/foundation.js \
 app/bower_components/foundation/js/foundation/foundation.reveal.js \
 app/bower_components/foundation/js/foundation/foundation.offcanvas.js \
-app/js/foundation/initialize_foundation.js \
 app/bower_components/iframe-resizer/js/iframeResizer.js \
 .tmp/app.concatenated.js > dist/app.js
 node_modules/.bin/minify dist/app.js > dist/app.min.js

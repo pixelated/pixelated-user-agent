@@ -1,10 +1,12 @@
 var path = require('path');
+var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './app/js/index.js',
+  node: { fs: 'empty' },
   output: {
-    path: path.join(__dirname, '/dist/js/'),
+    path: path.join(__dirname, '/app/js/'),
     filename: 'bundle.js',
     publicPath: '/assets/js/'
   },
