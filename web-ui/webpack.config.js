@@ -6,8 +6,8 @@ module.exports = {
   entry: './app/js/index.js',
   node: { fs: 'empty' },
   output: {
-    path: path.join(__dirname, '/app/js/'),
-    filename: 'bundle.js',
+    path: path.join(__dirname, '/app/'),
+    filename: 'app.min.js',
     publicPath: '/assets/js/'
   },
   resolve: {
@@ -50,19 +50,59 @@ module.exports = {
   },
   plugins: [
     new CopyWebpackPlugin([
-      { context: 'app/', from: '404.html', to: '../' },
-      { context: 'app/', from: 'fonts/*', to: '../' },
-      { context: 'app/', from: 'locales/**/*', to: '../' },
-      { context: 'app/', from: 'bower_components/font-awesome/fonts/*', to: '../' },
+      { context: 'app/', from: '404.html' },
+      { context: 'app/', from: 'fonts/*' },
+      { context: 'app/', from: 'locales/**/*' },
+      { context: 'app/', from: 'bower_components/font-awesome/fonts/*' },
       {
         context: 'app/',
         from: 'bower_components/font-awesome/css/font-awesome.min.css',
-        to: '../bower_components/font-awesome/css'
+        to: 'bower_components/font-awesome/css'
       },
       {
         context: 'app/',
         from: 'bower_components/jquery-file-upload/css/jquery.fileupload.css',
-        to: '../bower_components/jquery-file-upload/css'
+        to: 'bower_components/jquery-file-upload/css'
+      },
+      {
+        context: 'app/',
+        from: 'bower_components/modernizr/modernizr.js',
+        to: 'bower_components/modernizr'
+      },
+      {
+        context: 'app/',
+        from: 'bower_components/lodash/dist/lodash.min.js',
+        to: 'bower_components/lodash/dist'
+      },
+      {
+        context: 'app/',
+        from: 'bower_components/jquery/dist/jquery.min.js',
+        to: 'bower_components/jquery/dist'
+      },
+      {
+        context: 'app/',
+        from: 'bower_components/jquery-ui/jquery-ui.min.js',
+        to: 'bower_components/jquery-ui'
+      },
+      {
+        context: 'app/',
+        from: 'bower_components/jquery-file-upload/js/jquery.fileupload.js',
+        to: 'bower_components/jquery-file-upload/js'
+      },
+      {
+        context: 'app/',
+        from: 'bower_components/handlebars/handlebars.min.js',
+        to: 'bower_components/handlebars'
+      },
+      {
+        context: 'app/',
+        from: 'bower_components/typeahead.js/dist/typeahead.bundle.min.js',
+        to: 'bower_components/typeahead.js/dist'
+      },
+      {
+        context: 'app/',
+        from: 'bower_components/iframe-resizer/js/iframeResizer.min.js',
+        to: 'bower_components/iframe-resizer/js'
       }
     ])
   ]
