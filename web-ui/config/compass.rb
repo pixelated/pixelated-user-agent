@@ -24,7 +24,7 @@ http_path = "/"
 css_dir = "#{target_dir}/css"
 sass_dir = "app/scss"
 images_dir = "app/images"
-javascripts_dir = "app/js"
+javascripts_dir = "dist/js"
 
 # You can select your preferred output style here (can be overridden via the command line):
 # output_style = :expanded or :nested or :compact or :compressed
