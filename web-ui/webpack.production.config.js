@@ -8,7 +8,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, '/dist/'),
     filename: 'app.min.js',
-    publicPath: '/assets/js/'
+    publicPath: '/assets/'
   },
   resolve: {
     alias: {
@@ -105,6 +105,26 @@ module.exports = {
         context: 'app/',
         from: 'bower_components/iframe-resizer/js/iframeResizer.min.js',
         to: 'bower_components/iframe-resizer/js'
+      },
+      {
+        context: 'app/',
+        from: 'bower_components/foundation/js/foundation.js',
+        to: 'bower_components/foundation/js'
+      },
+      {
+        context: 'app/',
+        from: 'bower_components/foundation/js/foundation/foundation.reveal.js',
+        to: 'bower_components/foundation/js'
+      },
+      {
+        context: 'app/',
+        from: 'bower_components/foundation/js/foundation/foundation.offcanvas.js',
+        to: 'bower_components/foundation/js'
+      },
+      {
+        context: 'app/',
+        from: 'js/foundation/initialize_foundation.js',
+        to: 'js/foundation'
       }
     ])
   ]

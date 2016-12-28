@@ -1,7 +1,3 @@
-import 'foundation-sites';
-import 'foundation-sites/js/foundation.reveal.js';
-import 'foundation-sites/js/foundation.offcanvas.js';
-import 'js/foundation/initialize_foundation';
 import 'js/lib/highlightRegex';
 import 'js/monkey_patching/all';
 
