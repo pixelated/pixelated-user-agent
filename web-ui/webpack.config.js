@@ -6,7 +6,7 @@ module.exports = {
   entry: './app/js/index.js',
   node: { fs: 'empty' },
   output: {
-    path: path.join(__dirname, '/app/'),
+    path: path.join(__dirname, 'dist'),
     filename: 'app.min.js',
     publicPath: '/assets/'
   },
