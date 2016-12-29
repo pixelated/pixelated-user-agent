@@ -60,7 +60,7 @@
     "build-js": "webpack --colors --progress",
     "jshint": "jshint --config=.jshintrc app test",
     "clean": "rm -rf dist/ app/js/generated/hbs/* app/css/*",
-    "package": "/bin/bash config/package.sh",
+    "package": "PIXELATED_BUILD='package' npm run build-prod && npm run imagemin",
     "imagemin": "node config/imagemin.js",
     "add_git_version": "/bin/bash config/add_git_version.sh"
   }
