@@ -10,6 +10,7 @@
     "i18next-xhr-backend": "~0.6.0",
     "i18next-browser-languagedetector": "~0.3.0",
     "font-awesome": "4.2.0",
+    "foundation": "~5.4.7",
     "quoted-printable": "0.2.1",
     "typeahead.js": "~0.10.5",
     "jasmine-flight": "~3.0.0",
