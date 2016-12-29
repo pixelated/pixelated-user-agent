@@ -115,12 +115,12 @@ module.exports = {
       {
         context: 'app/',
         from: 'bower_components/foundation/js/foundation/foundation.reveal.js',
-        to: 'bower_components/foundation/js'
+        to: 'bower_components/foundation/js/foundation'
       },
       {
         context: 'app/',
         from: 'bower_components/foundation/js/foundation/foundation.offcanvas.js',
-        to: 'bower_components/foundation/js'
+        to: 'bower_components/foundation/js/foundation'
       },
       {
         context: 'app/',
