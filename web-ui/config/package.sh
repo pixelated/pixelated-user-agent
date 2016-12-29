@@ -25,12 +25,3 @@ mkdir -p dist
 # initial npm tasks
 ./go build-prod
 ./go imagemin
-./go minify_sandbox
-
-
-# concat js files and minify for sandbox.min.js
-cat \
-app/js/sandbox.js \
-app/bower_components/iframe-resizer/js/iframeResizer.contentWindow.js > dist/sandbox.js
-node_modules/.bin/minify dist/sandbox.js > dist/sandbox.min.js
-rm dist/sandbox.js

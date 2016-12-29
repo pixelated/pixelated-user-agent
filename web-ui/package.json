@@ -59,10 +59,9 @@
     "build-prod": "npm run build-statics && webpack -p --config ./webpack.production.config.js",
     "build-js": "webpack --colors --progress",
     "jshint": "jshint --config=.jshintrc app test",
-    "clean": "rm -rf 'dist/*' app/js/generated/hbs/* app/css/*",
+    "clean": "rm -rf dist/ app/js/generated/hbs/* app/css/*",
     "package": "/bin/bash config/package.sh",
     "imagemin": "node config/imagemin.js",
-    "minify_sandbox": "html-minifier app/sandbox.html --collapse-whitespace | sed 's|<!--usemin_start-->.*<!--usemin_end-->|<script src=\"sandbox.min.js\" type=\"text/javascript\"></script>|' > dist/sandbox.html",
     "add_git_version": "/bin/bash config/add_git_version.sh"
   }
 }
