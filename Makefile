@@ -14,13 +14,13 @@ install: requirements install_py install_js
 .PHONY: requirements_py
 requirements_py: create_virtualenv
 	@echo "Upgrading pip and setuptools"
-	@source ~/.venvs/pixua/bin/activate;\
+	@source $(VIRTUALENV)/bin/activate;\
 	pip install --upgrade pip setuptools
 
 .PHONY: install_py
 install_py: service/requirements.txt service/test_requirements.txt
 	@echo "Installing python packages"
-	@source ~/.venvs/pixua/bin/activate;\
+	@source $(VIRTUALENV)/bin/activate;\
 	cd service;\
 	pip install --exists-action s -r requirements.txt -r test_requirements.txt
 
@@ -61,7 +61,7 @@ test_all: test functional_tests
 .PHONY: linters_py
 linters_py:
 	@echo "Running pep8"
-	@source ~/.venvs/pixua/bin/activate;\
+	@source $(VIRTUALENV)/bin/activate;\
 	cd service;\
 	pep8 --ignore=E501 pixelated test
 
@@ -73,11 +73,17 @@ linters_js:
 
 .PHONY: coverage
 coverage:
+	@source $(VIRTUALENV)/bin/activate;\
+	cd service;\
+	coverage run -p --source=pixelated `which trial` test.unit;\
+	coverage run -p --source=pixelated `which trial` test.integration;\
+	coverage combine;\
+	coverage html
 
 .PHONY: unit_tests_py
 unit_tests_py:
 	@echo "Running python unit tests"
-	-@source ~/.venvs/pixua/bin/activate;\
+	@source $(VIRTUALENV)/bin/activate;\
 	cd service;\
 	trial --reporter=text test.unit
 
@@ -90,14 +96,14 @@ unit_tests_js:
 .PHONY: integration_tests_py
 integration_tests:
 	@echo "Running integration tests"
-	@source ~/.venvs/pixua/bin/activate;\
+	@source $(VIRTUALENV)/bin/activate;\
 	cd service;\
 	trial -j`grep -c "^processor" /proc/cpuinfo || sysctl -n hw.logicalcpu` --reporter=text test.integration
 
 .PHONY: functional_tests
 functional_tests: ensure_phantomjs_installed
 	@echo "Running behave functional tests"
-	@source ~/.venvs/pixua/bin/activate;\
+	@source $(VIRTUALENV)/bin/activate;\
 	cd service;\
 	behave --tags ~@wip --tags ~@smoke test/functional/features
 
@@ -128,10 +134,13 @@ clean_all: clean remove_javascript_packages remove_virtualenv
 clean_py:
 	rm -rf service/_trial_temp
 	find . -name "*.pyc" -delete
+	@source $(VIRTUALENV)/bin/activate;\
+	rm -rf service/.coverage
 
 .PHONY: clean_js
 clean_js:
 	rm -rf web-ui/dist
+	rm -rf web-ui/.sass-cache
 
 .PHONY: clean_cache
 clean_cache:
