@@ -80,7 +80,6 @@ unit_tests_py:
 	-@source ~/.venvs/pixua/bin/activate;\
 	cd service;\
 	trial --reporter=text test.unit
-	@echo js unit tests pending
 
 .PHONY: unit_tests_js
 unit_tests_js:
@@ -138,6 +137,7 @@ clean_js:
 clean_cache:
 	rm -rf ~/.config/leap
 	rm -rf ~/.leap
+	rm -rf service/ghostdriver.log
 
 .PHONY: remove_virtualenv
 remove_virtualenv:
