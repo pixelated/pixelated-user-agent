@@ -28,8 +28,7 @@ install_py: service/requirements.txt service/test_requirements.txt
 requirements_js:
 	@echo "Installing javascript npm and bower dependencies"
 	@cd web-ui;\
-	npm install;\
-	node_modules/.bin/bower install
+	npm install
 
 .PHONY: install_js
 install_js:
@@ -43,7 +42,7 @@ create_virtualenv: ensure_virtualenv_installed
 		echo "Pixelated virtualenv doesn't exist, creating now";\
 		virtualenv --python=python2 $(VIRTUALENV);\
 	else\
-    echo "Pixelated virtualenv already exists, moving on";\
+		echo "Pixelated virtualenv already exists, moving on";\
 	fi
 
 .PHONY: test
@@ -91,7 +90,7 @@ unit_tests_py:
 unit_tests_js:
 	@echo "Running javascript unit tests"
 	@cd web-ui;\
-  npm run test
+	npm run test
 
 .PHONY: integration_tests_py
 integration_tests:
@@ -119,7 +118,7 @@ ensure_virtualenv_installed:
 	@if [ ! `which virtualenv` ]; then\
 		exit 1;\
 	else\
-	  echo "Virtualenv located at "`which virtualenv`;\
+		echo "Virtualenv located at "`which virtualenv`;\
 	fi
 
 .PHONY: clean
@@ -134,8 +133,8 @@ clean_all: clean remove_javascript_packages remove_virtualenv
 clean_py:
 	rm -rf service/_trial_temp
 	find . -name "*.pyc" -delete
-	@source $(VIRTUALENV)/bin/activate;\
 	rm -rf service/.coverage
+	rm -rf service/htmlcov
 
 .PHONY: clean_js
 clean_js:

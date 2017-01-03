@@ -27,4 +27,5 @@ elif [ "$1" == "functional" ]; then
         popd
 else
         echo "Command doesn't exist"
+        exit 1
 fi
