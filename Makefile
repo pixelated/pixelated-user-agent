@@ -1,34 +1,43 @@
 VIRTUALENV=~/.venvs/pixua
 
-.PHONY=setup requirements install requirements_py requirements_js\
-install_py install_js create_virtualenv \
-test test_all linters coverage unit_tests integration_tests functional_tests\
-clean ensure_virtualenv_installed ensure_phantomjs_installed
-
+.PHONY: setup
 setup: requirements install
 
+.PHONY: requirements
 requirements: requirements_py requirements_js
+	@echo "Installed requirements"
 
-install: install_py install_js
-	@echo "Installing dependencies"
+.PHONY: install
+install: requirements install_py install_js
+	@echo "Installed dependencies"
 
+.PHONY: requirements_py
 requirements_py: create_virtualenv
 	@echo "Upgrading pip and setuptools"
 	@source ~/.venvs/pixua/bin/activate;\
 	pip install --upgrade pip setuptools
 
-requirements_js:
-	@echo "Installing js requirements"
-
+.PHONY: install_py
 install_py: service/requirements.txt service/test_requirements.txt
 	@echo "Installing python packages"
 	@source ~/.venvs/pixua/bin/activate;\
 	cd service;\
 	pip install --exists-action s -r requirements.txt -r test_requirements.txt
 
-install_js:
-	@echo "Installing javascript packages"
+.PHONY: requirements_js
+requirements_js:
+	@echo "Installing javascript npm and bower dependencies"
+	@cd web-ui;\
+	npm install;\
+	node_modules/.bin/bower install
 
+.PHONY: install_js
+install_js:
+	@echo "Building front-end and static files"
+	@cd web-ui;\
+	npm run build
+
+.PHONY: create_virtualenv
 create_virtualenv: ensure_virtualenv_installed
 	@if [ ! -e $(VIRTUALENV)/bin/activate ]; then\
 		echo "Pixelated virtualenv doesn't exist, creating now";\
@@ -37,44 +46,70 @@ create_virtualenv: ensure_virtualenv_installed
     echo "Pixelated virtualenv already exists, moving on";\
 	fi
 
-test: clean requirements_py install_py linters coverage unit_tests integration_tests
+.PHONY: test
+test: test_py test_js coverage
 
+.PHONY: test_py
+test_py: clean requirements install coverage linters_py unit_tests_py integration_tests_py
+
+.PHONY: test_js
+test_js: clean requirements_js install_js linters_js unit_tests_js
+
+.PHONY: test_all
 test_all: test functional_tests
 
-linters:
-	@echo "Running pep8 and jshint"
+.PHONY: linters_py
+linters_py:
+	@echo "Running pep8"
 	@source ~/.venvs/pixua/bin/activate;\
 	cd service;\
 	pep8 --ignore=E501 pixelated test
-	@echo jshint pending
 
+.PHONY: linters_js
+linters_js:
+	@echo "Running jshint"
+	@cd web-ui;\
+	npm run jshint
+
+.PHONY: coverage
 coverage:
 
-unit_tests:
-	@echo "Running python and javascript unit tests"
+.PHONY: unit_tests_py
+unit_tests_py:
+	@echo "Running python unit tests"
 	-@source ~/.venvs/pixua/bin/activate;\
 	cd service;\
 	trial --reporter=text test.unit
 	@echo js unit tests pending
 
+.PHONY: unit_tests_js
+unit_tests_js:
+	@echo "Running javascript unit tests"
+	@cd web-ui;\
+  npm run test
+
+.PHONY: integration_tests_py
 integration_tests:
 	@echo "Running integration tests"
-	source ~/.venvs/pixua/bin/activate;\
+	@source ~/.venvs/pixua/bin/activate;\
 	cd service;\
 	trial -j`grep -c "^processor" /proc/cpuinfo || sysctl -n hw.logicalcpu` --reporter=text test.integration
 
+.PHONY: functional_tests
 functional_tests: ensure_phantomjs_installed
 	@echo "Running behave functional tests"
 	@source ~/.venvs/pixua/bin/activate;\
 	cd service;\
 	behave --tags ~@wip --tags ~@smoke test/functional/features
 
+.PHONY: ensure_phantomjs_installed
 ensure_phantomjs_installed:
 	@if [ ! `which phantomjs` ]; then\
 		echo "You need phantomJS to run these tests";\
 		exit 1;\
 	fi
 
+.PHONY: ensure_virtualenv_installed
 ensure_virtualenv_installed:
 	@if [ ! `which virtualenv` ]; then\
 		exit 1;\
@@ -82,9 +117,33 @@ ensure_virtualenv_installed:
 	  echo "Virtualenv located at "`which virtualenv`;\
 	fi
 
-clean:
-		@echo "Cleaning cache and temporary files"
-		rm -rf ~/.config/leap
-		rm -rf ~/.leap
-		rm -rf service/_trial_temp
-		find . -name "*.pyc" -delete
+.PHONY: clean
+clean: clean_py clean_js clean_cache
+	@echo "Cleaning temporary files and the caches"
+
+.PHONY: clean_all
+clean_all: clean remove_javascript_packages remove_virtualenv
+	@echo "Cleaning temporary files, the caches and the virtualenv"
+
+.PHONY: clean_py
+clean_py:
+	rm -rf service/_trial_temp
+	find . -name "*.pyc" -delete
+
+.PHONY: clean_js
+clean_js:
+	rm -rf web-ui/dist
+
+.PHONY: clean_cache
+clean_cache:
+	rm -rf ~/.config/leap
+	rm -rf ~/.leap
+
+.PHONY: remove_virtualenv
+remove_virtualenv:
+	rm -rf $(VIRTUALENV)
+
+.PHONY: remove_javascript_packages
+remove_javascript_packages:
+	rm -rf web-ui/node_modules
+	rm -rf web-ui/app/bower_components
