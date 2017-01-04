@@ -1,7 +1,7 @@
 VIRTUALENV=~/.venvs/pixua
 
 .PHONY: setup
-setup: requirements install
+setup: install
 
 .PHONY: requirements
 requirements: requirements_py requirements_js
