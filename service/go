@@ -1,31 +1,7 @@
 #!/bin/bash
 
-if [ "$1" == 'test' ]; then
-        set -e
-        pushd ..
-        make test_py
-        popd
-elif [ "$1" == 'pep8' ]; then
-        set -e
-        pushd ..
-        make linters_js
-        popd
-elif [ "$1" == 'setup' ]; then
-        set -e
-        pushd ..
-        make setup
-        popd
-elif [ "$1" == 'coverage_all' ]; then
-        set -e
-        pushd ..
-        make coverage
-        popd
-elif [ "$1" == "functional" ]; then
-        set -e
-        pushd ..
-        make test_functional
-        popd
-else
-        echo "Command doesn't exist"
-        exit 1
-fi
+type -t deactivate && deactivate
+set -e
+pushd ..
+make $*
+popd
