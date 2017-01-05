@@ -82,7 +82,8 @@ class LeapSessionFactory(object):
                                                   server_url=server_url,
                                                   cert_file=api_cert,
                                                   shared_db=None,
-                                                  auth_token=user_token)
+                                                  auth_token=user_token,
+                                                  defer_encryption=False)
             defer.returnValue(soledad)
         except (WrongMacError, UnknownMacMethodError), e:
             raise SoledadWrongPassphraseException(e)
