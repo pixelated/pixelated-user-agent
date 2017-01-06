@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-import datetime
+
 from twisted.internet import defer
 from twisted.logger import Logger
 
@@ -50,12 +50,17 @@ class Keymanager(object):
         if not current_key:
             yield self._generate_key_and_send_to_leap()
         elif current_key.needs_renewal(DEFAULT_EXTENSION_THRESHOLD):
-            yield self._regenerate_key()
-            yield self._send_key_to_leap()
+            yield self._regenerate_key_and_send_to_leap()
 
     @defer.inlineCallbacks
-    def _regenerate_key(self):
+    def _regenerate_key_and_send_to_leap(self):
+        logger.info("Regenerating keys - this could take a while...")
         yield self.keymanager.regenerate_key()
+        try:
+            yield self._send_key_to_leap()
+        except Exception as e:
+            # what to be done when upload key error
+            raise UploadKeyError(e.message)
 
     @defer.inlineCallbacks
     def _generate_key_and_send_to_leap(self):
