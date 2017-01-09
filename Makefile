@@ -22,6 +22,7 @@ install_py: service/requirements.txt service/test_requirements.txt
 	@echo "Installing python packages"
 	@source $(VIRTUALENV)/bin/activate;\
 	cd service;\
+	pip install pysqlcipher --upgrade --force-reinstall --install-option="--bundled";\
 	pip install --exists-action s -r requirements.txt -r test_requirements.txt
 
 .PHONY: requirements_js
