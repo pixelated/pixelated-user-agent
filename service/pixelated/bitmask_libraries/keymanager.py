@@ -48,16 +48,19 @@ class Keymanager(object):
     def generate_openpgp_key(self):
         current_key = yield self._key_exists(self._email)
         if not current_key:
-            yield self._generate_key_and_send_to_leap()
+            current_key = yield self._generate_key_and_send_to_leap()
         elif current_key.needs_renewal(DEFAULT_EXTENSION_THRESHOLD):
-            yield self._regenerate_key_and_send_to_leap()
+            current_key = yield self._regenerate_key_and_send_to_leap()
+
+        logger.info("Current key for {}: {}".format(self._email, current_key.fingerprint))
 
     @defer.inlineCallbacks
     def _regenerate_key_and_send_to_leap(self):
         logger.info("Regenerating keys - this could take a while...")
-        yield self.keymanager.regenerate_key()
+        key = yield self.keymanager.regenerate_key()
         try:
-            yield self._send_key_to_leap()
+            yield self.keymanager.send_key()
+            defer.returnValue(key)
         except Exception as e:
             # what to be done when upload key error
             raise UploadKeyError(e.message)
@@ -65,9 +68,10 @@ class Keymanager(object):
     @defer.inlineCallbacks
     def _generate_key_and_send_to_leap(self):
         logger.info("Generating keys - this could take a while...")
-        yield self._gen_key()
+        key = yield self.keymanager.gen_key()
         try:
-            yield self._send_key_to_leap()
+            yield self.keymanager.send_key()
+            defer.returnValue(key)
         except Exception as e:
             yield self.delete_key_pair()
             raise UploadKeyError(e.message)
@@ -84,15 +88,6 @@ class Keymanager(object):
     def get_key(self, email, private=False, fetch_remote=True):
         key = yield self.keymanager.get_key(email, private=private, fetch_remote=fetch_remote)
         defer.returnValue(key)
-
-    @defer.inlineCallbacks
-    def _gen_key(self):
-        key = yield self.keymanager.gen_key()
-        defer.returnValue(key)
-
-    @defer.inlineCallbacks
-    def _send_key_to_leap(self):
-        yield self.keymanager.send_key()
 
     @defer.inlineCallbacks
     def delete_key_pair(self):
