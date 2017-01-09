@@ -26,7 +26,7 @@ You are most welcome to contribute to the pixelated user agent code base. Please
 You like the idea and you want to run it locally, then before you have to install the following packages:
 
 * [Vagrant](https://www.vagrantup.com/downloads.html), Vagrant is a tool that automates the setup of a virtual machine with the development environment
-* A vagrant [compatible provider](https://www.vagrantup.com/docs/providers/), e.g. [Virtual   Box](https://www.virtualbox.org/wiki/Downloads).
+* A vagrant [compatible provider](https://www.vagrantup.com/docs/providers/), e.g. [Virtual Box](https://www.virtualbox.org/wiki/Downloads).
 
 ### Option 1: Pixelated User Agent without LEAP provider
 
@@ -79,31 +79,19 @@ Then you can connect to `try.pixelated-project.org` ...
 6) If you like console output, you can also run the tests to see if everything went according to plan.
 
 ```bash
-(user-agent-venv)vagrant@jessie:~$ cd /vagrant
+  vagrant@jessie:~ $ cd /vagrant
 ```
 
-To run the backend tests:
+To run the tests:
 
 ```bash
- (user-agent-venv)vagrant@jessie:/vagrant$ cd service
- (user-agent-venv)vagrant@jessie:/vagrant/service$ ./go test
- (user-agent-venv)vagrant@jessie:/vagrant/service$ cd ..
-```
-
-To run the frontend tests:
-
-```bash
- (user-agent-venv)vagrant@jessie:/vagrant$ cd web-ui
- (user-agent-venv)vagrant@jessie:/vagrant/web-ui$ ./go test
- (user-agent-venv)vagrant@jessie:/vagrant/web-ui$ cd ..
+  vagrant@jessie:/vagrant $ make test
 ```
 
 To run the functional tests:
 
 ```bash
- (user-agent-venv)vagrant@jessie:/vagrant$ cd service
- (user-agent-venv)vagrant@jessie:/vagrant/service$ ./go functional
- (user-agent-venv)vagrant@jessie:/vagrant/service$ cd ..
+  vagrant@jessie:/vagrant $ make functional_tests
 ```
 
 7) You're all set! We've prepared [a couple of issues labeled "Volunteer Task"](https://github.com/pixelated/pixelated-user-agent/labels/Volunteer%20task) that are a good place to dive into the project. Happy Hacking!
@@ -128,16 +116,14 @@ You can install the Pixelated User Agent and the Leap Platform at once, just by 
 
  NOTE: Be aware that you will not be able to send mails outside, but you can test sending mails internally from one user to another.
 
-## Running tests inside your local IDE
+## Running tests on your local machine
 
-If you want to run the tests in your IDE on your host machine outside of vagrant, set up your python virtualenv
+If you want to run the tests in your host machine outside of vagrant:
 
 ```
-$ pip install virtualenv setuptools
-$ cd ~
-$ virtualenv pixelated
-$ virtualenv -p [PATH/TO/YOUR/PYTHON/EXECUTABLE] pixelated
-$ source ~/.virtualenv/pixelated/bin/activate
+$ pip install virtualenv
+$ cd <root/of/pixelated-user-agent>
+$ make test
 ```
 
 If you want to run the tests in your IDE on your host machine outside of vagrant, there's a bug in a LEAP library that can't handle symlinks to your local GPG installation.
@@ -155,7 +141,7 @@ Do it the easy way first, and submit a pull request as a “work in progress” 
 
 To run the pixelated user agent multi user mode, please run the following:
 ```bash
- (user-agent-venv)vagrant@jessie:/vagrant$ pixelated-user-agent --host 0.0.0.0 --multi-user --provider=dev.pixelated-project.org
+ vagrant@jessie:/vagrant$ pixelated-user-agent --host 0.0.0.0 --multi-user --provider=dev.pixelated-project.org
 ```
 
 You will need to change `dev.pixelated-project.org` to the hostname of the leap provider that you will be using.
@@ -197,8 +183,7 @@ All commits to the pixelated user agent code trigger all tests to be run in [sna
 * For all backend changes, you will need to stop and restart the server again (Step 5 above).
 * For most frontend changes, you will just need to reload the browser. Some changes (in particular, those involving css or handlebars) you will need to run:
 ```bash
- (user-agent-venv)vagrant@jessie:/vagrant$ cd web-ui
- (user-agent-venv)vagrant@jessie:/vagrant/web-ui$ ./go build
+  vagrant@jessie:/vagrant$ make install_js
 ```
 
 ## Developer Setup On Native OS

@@ -57,6 +57,9 @@ test_js: clean requirements_js install_js linters_js unit_tests_js
 .PHONY: test_all
 test_all: test functional_tests
 
+.PHONY: linters
+linters: clean requirements install linters_py linters_js
+
 .PHONY: linters_py
 linters_py:
 	@echo "Running pep8"
@@ -100,7 +103,7 @@ integration_tests:
 	trial -j`grep -c "^processor" /proc/cpuinfo || sysctl -n hw.logicalcpu` --reporter=text test.integration
 
 .PHONY: functional_tests
-functional_tests: ensure_phantomjs_installed
+functional_tests: clean requirements install ensure_phantomjs_installed
 	@echo "Running behave functional tests"
 	@source $(VIRTUALENV)/bin/activate;\
 	cd service;\
