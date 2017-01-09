@@ -119,6 +119,7 @@ ensure_phantomjs_installed:
 .PHONY: ensure_virtualenv_installed
 ensure_virtualenv_installed:
 	@if [ ! `which virtualenv` ]; then\
+		echo "Virtualenv must be installed";\
 		exit 1;\
 	else\
 		echo "Virtualenv located at "`which virtualenv`;\
