@@ -68,6 +68,7 @@ class KeymanagerTest(TestCase):
             combined_ca_bundle='combined_ca_bundle')
 
     def test_keymanager_generate_openpgp_key_generates_key_correctly(self):
+        self.keymanager._synchronize_remote_key = MagicMock()
         when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(None)
 
         self.leap_keymanager.gen_key = MagicMock()
@@ -90,6 +91,7 @@ class KeymanagerTest(TestCase):
         self.leap_keymanager.gen_key.assert_not_called()
 
     def test_keymanager_generate_openpgp_key_doesnt_upload_preexisting_key(self):
+        self.keymanager._synchronize_remote_key = MagicMock()
         mock_open_pgp_key = MagicMock()
         mock_open_pgp_key.needs_renewal = MagicMock(return_value=False)
         when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
@@ -114,6 +116,7 @@ class KeymanagerTest(TestCase):
 
     @defer.inlineCallbacks
     def test_keymanager_regenerate_key_pair_if_current_key_is_about_to_expire(self):
+        self.keymanager._synchronize_remote_key = MagicMock()
         mock_open_pgp_key = MagicMock()
         mock_open_pgp_key.needs_renewal = MagicMock(return_value=True)
         when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
@@ -137,3 +140,45 @@ class KeymanagerTest(TestCase):
 
         self.leap_keymanager.regenerate_key.assert_called_once()
         self.keymanager.delete_key_pair.assert_not_called()
+
+    @defer.inlineCallbacks
+    def test_key_is_syncronized_with_server(self):
+        self.keymanager._is_key_synchronized_with_server = MagicMock(return_value=True)
+        mock_open_pgp_key = MagicMock()
+        mock_open_pgp_key.needs_renewal = MagicMock(return_value=False)
+        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
+
+        yield self.keymanager.generate_openpgp_key()
+        self.leap_keymanager.send_key.assert_not_called()
+
+    @defer.inlineCallbacks
+    def test_key_is_not_syncronized_with_server(self):
+        self.keymanager._is_key_synchronized_with_server = MagicMock(return_value=False)
+        mock_open_pgp_key = MagicMock()
+        mock_open_pgp_key.needs_renewal = MagicMock(return_value=False)
+        when(self.keymanager)._key_exists('test_user@some-server.test').thenReturn(mock_open_pgp_key)
+
+        yield self.keymanager.generate_openpgp_key()
+        self.leap_keymanager.send_key.assert_called_once()
+
+    @defer.inlineCallbacks
+    def test_local_and_remote_keys_are_the_same(self):
+        mock_current_key = MagicMock()
+        mock_current_key.fingerprint = 'ABC'
+        mock_remote_key = MagicMock()
+        mock_remote_key.fingerprint = 'ABC'
+
+        self.keymanager.get_key = MagicMock(return_value=mock_remote_key)
+        result = yield self.keymanager._is_key_synchronized_with_server(mock_current_key)
+        self.assertTrue(result)
+
+    @defer.inlineCallbacks
+    def test_local_and_remote_keys_are_not_the_same(self):
+        mock_current_key = MagicMock()
+        mock_current_key.fingerprint = 'ABC'
+        mock_remote_key = MagicMock()
+        mock_remote_key.fingerprint = '123'
+
+        self.keymanager.get_key = MagicMock(return_value=mock_remote_key)
+        result = yield self.keymanager._is_key_synchronized_with_server(mock_current_key)
+        self.assertFalse(result)

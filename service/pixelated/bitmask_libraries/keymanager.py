@@ -52,7 +52,21 @@ class Keymanager(object):
         elif current_key.needs_renewal(DEFAULT_EXTENSION_THRESHOLD):
             current_key = yield self._regenerate_key_and_send_to_leap()
 
+        self._synchronize_remote_key(current_key)
         logger.info("Current key for {}: {}".format(self._email, current_key.fingerprint))
+
+    @defer.inlineCallbacks
+    def _synchronize_remote_key(self, current_key):
+        if not self._is_key_synchronized_with_server(current_key):
+            try:
+                yield self.keymanager.send_key()
+            except Exception as e:
+                raise UploadKeyError(e.message)
+
+    @defer.inlineCallbacks
+    def _is_key_synchronized_with_server(self, current_key):
+        remote_key = yield self.get_key(self._email, private=False, fetch_remote=True)
+        defer.returnValue(remote_key.fingerprint == current_key.fingerprint)
 
     @defer.inlineCallbacks
     def _regenerate_key_and_send_to_leap(self):
@@ -62,7 +76,6 @@ class Keymanager(object):
             yield self.keymanager.send_key()
             defer.returnValue(key)
         except Exception as e:
-            # what to be done when upload key error
             raise UploadKeyError(e.message)
 
     @defer.inlineCallbacks
