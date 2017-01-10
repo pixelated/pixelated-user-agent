@@ -53,7 +53,7 @@ class Keymanager(object):
             current_key = yield self._regenerate_key_and_send_to_leap()
 
         self._synchronize_remote_key(current_key)
-        logger.info("Current key for {}: {}".format(self._email, current_key.fingerprint))
+        logger.debug("Current key for {}: {}".format(self._email, current_key.fingerprint))
 
     @defer.inlineCallbacks
     def _synchronize_remote_key(self, current_key):
