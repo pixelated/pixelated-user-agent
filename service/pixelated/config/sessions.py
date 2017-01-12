@@ -161,6 +161,7 @@ class LeapSession(object):
         except UploadKeyError as e:
             logger.warn('{0}: {1}. Closing session for user: {2}'.format(e.__class__.__name__, e, self.account_email()))
             self.close()
+            raise
 
         yield self._create_account(self.soledad, self.user_auth.uuid)
         self.incoming_mail_fetcher = yield self._create_incoming_mail_fetcher(
