@@ -113,14 +113,14 @@ node_modules/bower/bin/bower -V install --config.interactive=false --allow-root
 LC_ALL=en_US.UTF-8 ./go build
 
 # install service dependencies
-cd ../service
+cd ..
 rm -rf "$VIRTUALENV_PATH"
 virtualenv "$VIRTUALENV_PATH"
 source "$VIRTUALENV_PATH/bin/activate"
 # they can't be on the same command because it breaks pip upgrade
 pip install --upgrade pip
 pip install --upgrade setuptools
-./go setup --always-unzip
+make setup
 pip uninstall -y enum34 && pip install enum34
 pip uninstall -y pysqlcipher && pip install pysqlcipher # this is needed so pysqlcipher gets recompiled with the right version of glibc
 

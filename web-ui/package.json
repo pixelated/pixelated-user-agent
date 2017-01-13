@@ -62,7 +62,6 @@
     "clean": "rm -rf dist/ app/js/generated/hbs/* app/css/*",
     "package": "PIXELATED_BUILD='package' npm run build-prod && npm run imagemin",
     "imagemin": "node config/imagemin.js",
-    "add_git_version": "/bin/bash config/add_git_version.sh",
-    "postinstall" : "bower install"
+    "add_git_version": "/bin/bash config/add_git_version.sh"
   }
 }

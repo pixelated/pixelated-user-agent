@@ -29,7 +29,8 @@ install_py: service/requirements.txt service/test_requirements.txt
 requirements_js:
 	@echo "Installing javascript npm and bower dependencies"
 	@cd web-ui;\
-	npm install
+	npm install;\
+	node_modules/.bin/bower install
 
 .PHONY: install_js
 install_js:
