@@ -48,7 +48,7 @@
   "scripts": {
     "test": "npm run jshint --silent && npm run build --silent && karma start --single-run $GRUNT_OPTS",
     "debug": "npm run build && karma start --browsers Chrome $GRUNT_OPTS",
-    "watch": "npm run compass-watch & npm run handlebars-watch",
+    "watch": "npm run compass-watch & npm run handlebars-watch & npm run build-js-watch",
     "watch-test": "karma start",
     "handlebars": "mkdir -p app/js/generated/hbs/ && handlebars app/templates/**/*.hbs > app/js/generated/hbs/templates.js --namespace=window.Pixelated --root .",
     "handlebars-watch": "watch 'npm run handlebars' app/templates",
@@ -58,6 +58,7 @@
     "build-statics": "npm run clean && npm run handlebars && npm run add_git_version && npm run compass",
     "build-prod": "npm run build-statics && webpack -p --config ./webpack.production.config.js",
     "build-js": "webpack --colors --progress",
+    "build-js-watch": "webpack --colors --progress --watch",
     "jshint": "jshint --config=.jshintrc app test",
     "clean": "rm -rf dist/ app/js/generated/hbs/* app/css/*",
     "package": "PIXELATED_BUILD='package' npm run build-prod && npm run imagemin",
