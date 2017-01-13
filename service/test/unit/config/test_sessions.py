@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import os
 from mock import patch
 from mock import MagicMock
+from mockito import when
 from twisted.internet import defer
-from twisted.trial import unittest
 from pixelated.config.sessions import LeapSession, SessionCache
+from pixelated.bitmask_libraries.keymanager import UploadKeyError
 
 from test.unit.bitmask_libraries.test_abstract_leap import AbstractLeapTest
 from leap.common.events.catalog import KEYMANAGER_FINISHED_KEY_GENERATION
@@ -41,6 +41,17 @@ class SessionTest(AbstractLeapTest):
                 session = self._create_session()
                 yield session.first_required_sync()
                 mail_fetcher_mock.startService.assert_called_once()
+
+    @patch('pixelated.config.sessions.register')
+    @defer.inlineCallbacks
+    def test_upload_key_error_closes_the_session(self, _):
+        when(self.keymanager).generate_openpgp_key().thenRaise(UploadKeyError('Could not upload key'))
+        session = self._create_session()
+        session.close = MagicMock()
+
+        with self.assertRaises(UploadKeyError):
+            yield session.finish_bootstrap()
+            session.close.assert_called_once()
 
     @patch('pixelated.config.sessions.register')
     @patch('pixelated.config.sessions.unregister')

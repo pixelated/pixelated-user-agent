@@ -19,7 +19,7 @@ from leap.common.events import (
     catalog as events
 )
 
-from pixelated.bitmask_libraries.keymanager import Keymanager
+from pixelated.bitmask_libraries.keymanager import Keymanager, UploadKeyError
 from pixelated.adapter.mailstore import LeapMailStore
 from pixelated.config import leap_config
 from pixelated.bitmask_libraries.certs import LeapCertificate
@@ -156,7 +156,13 @@ class LeapSession(object):
 
     @defer.inlineCallbacks
     def finish_bootstrap(self):
-        yield self.keymanager.generate_openpgp_key()
+        try:
+            yield self.keymanager.generate_openpgp_key()
+        except UploadKeyError as e:
+            logger.warn('{0}: {1}. Closing session for user: {2}'.format(e.__class__.__name__, e, self.account_email()))
+            self.close()
+            raise
+
         yield self._create_account(self.soledad, self.user_auth.uuid)
         self.incoming_mail_fetcher = yield self._create_incoming_mail_fetcher(
             self.keymanager,
