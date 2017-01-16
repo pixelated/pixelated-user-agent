@@ -22,7 +22,6 @@ define(
     'page/events',
     'page/router/url_params',
     'mail_list_actions/ui/compose_trigger',
-    'mail_list_actions/ui/refresh_trigger',
     'mail_list/domain/refresher',
     'mail_list_actions/ui/toggle_check_all_trigger',
     'mail_list_actions/ui/pagination_trigger',
@@ -39,7 +38,6 @@ define(
     events,
     urlParams,
     composeTrigger,
-    refreshTrigger,
     refresher,
     toggleCheckAllMailTrigger,
     paginationTrigger,
@@ -55,7 +53,6 @@ define(
     function mailsActions() {
       this.render = function() {
         this.$node.html(this.getActionsBoxTemplate());
-        refreshTrigger.attachTo('#refresh-trigger');
         composeTrigger.attachTo('#compose-trigger');
         toggleCheckAllMailTrigger.attachTo('#toggle-check-all-emails');
         paginationTrigger.attachTo('#pagination-trigger');
