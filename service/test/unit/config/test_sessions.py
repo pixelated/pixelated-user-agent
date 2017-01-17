@@ -1,3 +1,4 @@
+# -*- encoding:utf-8 -*-
 #
 # Copyright (c) 2014 ThoughtWorks, Inc.
 #
@@ -18,9 +19,8 @@ from mock import patch
 from mock import MagicMock
 from mockito import when
 from twisted.internet import defer
-from pixelated.config.sessions import LeapSession, SessionCache
+from pixelated.config.sessions import LeapSession, SessionCache, LeapSessionFactory
 from pixelated.bitmask_libraries.keymanager import UploadKeyError
-
 from test.unit.bitmask_libraries.test_abstract_leap import AbstractLeapTest
 from leap.common.events.catalog import KEYMANAGER_FINISHED_KEY_GENERATION
 
@@ -165,6 +165,19 @@ class SessionTest(AbstractLeapTest):
         session._set_fresh_account(None, 'another_email@somedomain.tld')
 
         self.assertFalse(session.fresh_account)
+
+    def test_session_setup_soledad_with_utf8_characters(self):
+        api_cert = MagicMock()
+        leap_session_factory = LeapSessionFactory(self.provider)
+
+        with patch('pixelated.config.sessions.threads.deferToThread') as deferToThreadMock:
+            leap_session_factory.setup_soledad('self.token', u'self.uuid', 'Klünter', api_cert)
+            deferToThreadMock.assert_called_once()
+            args, kwargs = deferToThreadMock.call_args
+            uuid_arg = args[1]
+            pass_arg = kwargs['passphrase']
+            self.assertIs(type(uuid_arg), str, "expected uuid argument to be a string")
+            self.assertIs(type(pass_arg), unicode, "expected passphrase argument to be unicode")
 
     def _create_session(self):
         return LeapSession(self.provider, self.auth, self.mail_store, self.soledad_session, self.keymanager, self.smtp_mock)
