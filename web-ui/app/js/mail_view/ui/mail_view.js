@@ -103,7 +103,7 @@ define(
         if(_.isEmpty(mail.security_casing.locks)) {
           statusClass.push('--not-encrypted');
           statusLabel = 'not-encrypted';
-          tooltip = 'This message is not encrypted.';
+          tooltip = 'not-encrypted-label-tooltip';
         } else {
           statusClass.push('--encrypted');
 
@@ -113,11 +113,11 @@ define(
 
           if(hasAnyEncryptionInfo) {
             statusLabel = 'encrypted';
-            tooltip = 'This message was encrypted.';
+              tooltip = 'encrypted-label-tooltip';
           } else {
             statusClass.push('--with-error');
             statusLabel = 'encryption-error';
-            tooltip = 'This message had an encryption error.';
+            tooltip = 'encryption-error-label-tooltip';
           }
         }
 
@@ -140,28 +140,28 @@ define(
         if(_.isEmpty(mail.security_casing.imprints) || hasNoSignatureInformation) {
           statusClass.push('--not-signed');
           statusLabel.push('not-signed');
-          tooltip = 'The sender could not be verified.';
+          tooltip = 'not-signed-label-tooltip';
         } else {
           statusClass.push('--signed');
           statusLabel.push('signed');
-          tooltip = 'You are communicating with the real sender.';
+          tooltip = 'signed-label-tooltip';
 
           if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'from_revoked'; })) {
             statusClass.push('--revoked');
             statusLabel.push('signature-revoked');
-            tooltip = 'The sender could not be verified.';
+            tooltip = 'not-signed-label-tooltip';
           }
 
           if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'from_expired'; })) {
             statusClass.push('--expired');
             statusLabel.push('signature-expired');
-            tooltip = 'The sender could not be verified.';
+            tooltip = 'not-signed-label-tooltip';
           }
 
           if(this.isNotTrusted(mail)) {
             statusClass.push('--not-trusted');
             statusLabel.push('signature-not-trusted');
-            tooltip = 'The sender could not be verified.';
+            tooltip = 'not-signed-label-tooltip';
           }
         }
 

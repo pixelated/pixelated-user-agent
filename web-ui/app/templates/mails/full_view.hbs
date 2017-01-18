@@ -8,12 +8,12 @@
         <!-- TODO -->
         <div class="column large-12 no-padding security-status">
             {{#if signatureStatus}}
-            <span class="security-status__label {{ signatureStatus.cssClass }}" data-label="{{ signatureStatus.tooltipText }}">
+            <span class="security-status__label {{ signatureStatus.cssClass }}" data-label="{{t signatureStatus.tooltipText }}">
               {{t signatureStatus.label }}
             </span>
             {{/if}}
             {{#if encryptionStatus}}
-            <span class="security-status__label {{ encryptionStatus.cssClass }}" data-label="{{ encryptionStatus.tooltipText }}">
+            <span class="security-status__label {{ encryptionStatus.cssClass }}" data-label="{{t encryptionStatus.tooltipText }}">
               {{t encryptionStatus.label }}
             </span>
             {{/if}}
