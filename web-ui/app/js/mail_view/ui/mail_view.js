@@ -96,72 +96,79 @@ define(
       };
 
       this.checkEncrypted = function(mail) {
-        if(_.isEmpty(mail.security_casing.locks)) {
-          return {
-            cssClass: 'security-status__label--not-encrypted',
-            label: 'not-encrypted'
-          };
-        }
-
-        var statusClass = ['security-status__label--encrypted'];
+        var statusClass = ['security-status__label'];
         var statusLabel;
+        var tooltip;
 
-        var hasAnyEncryptionInfo = _.any(mail.security_casing.locks, function (lock) {
-          return lock.state === 'valid';
-        });
-
-        if(hasAnyEncryptionInfo) {
-          statusLabel = 'encrypted';
+        if(_.isEmpty(mail.security_casing.locks)) {
+          statusClass.push('--not-encrypted');
+          statusLabel = 'not-encrypted';
+          tooltip = 'This message is not encrypted.';
         } else {
-          statusClass.push('--with-error');
-          statusLabel = 'encryption-error';
+          statusClass.push('--encrypted');
+
+          var hasAnyEncryptionInfo = _.any(mail.security_casing.locks, function (lock) {
+            return lock.state === 'valid';
+          });
+
+          if(hasAnyEncryptionInfo) {
+            statusLabel = 'encrypted';
+            tooltip = 'This message was encrypted.';
+          } else {
+            statusClass.push('--with-error');
+            statusLabel = 'encryption-error';
+            tooltip = 'This message had an encryption error.';
+          }
         }
 
         return {
           cssClass: statusClass.join(''),
-          label: statusLabel
+          label: statusLabel,
+          tooltipText: tooltip
         };
       };
 
       this.checkSigned = function(mail) {
-        var statusNotSigned = {
-          cssClass: 'security-status__label--not-signed',
-          label: 'not-signed'
-        };
-
-        if(_.isEmpty(mail.security_casing.imprints)) {
-          return statusNotSigned;
-        }
+        var statusClass = ['security-status__label'];
+        var statusLabel = [];
+        var tooltip;
 
         var hasNoSignatureInformation = _.any(mail.security_casing.imprints, function (imprint) {
           return imprint.state === 'no_signature_information';
         });
 
-        if(hasNoSignatureInformation) {
-          return statusNotSigned;
-        }
+        if(_.isEmpty(mail.security_casing.imprints) || hasNoSignatureInformation) {
+          statusClass.push('--not-signed');
+          statusLabel.push('not-signed');
+          tooltip = 'The sender could not be verified.';
+        } else {
+          statusClass.push('--signed');
+          statusLabel.push('signed');
+          tooltip = 'You are communicating with the real sender.';
 
-        var statusClass = ['security-status__label--signed'];
-        var statusLabel = ['signed'];
+          if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'from_revoked'; })) {
+            statusClass.push('--revoked');
+            statusLabel.push('signature-revoked');
+            tooltip = 'The sender could not be verified.';
+          }
 
-        if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'from_revoked'; })) {
-          statusClass.push('--revoked');
-          statusLabel.push('signature-revoked');
-        }
+          if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'from_expired'; })) {
+            statusClass.push('--expired');
+            statusLabel.push('signature-expired');
+            tooltip = 'The sender could not be verified.';
+          }
 
-        if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'from_expired'; })) {
-          statusClass.push('--expired');
-          statusLabel.push('signature-expired');
-        }
-
-        if(this.isNotTrusted(mail)) {
-          statusClass.push('--not-trusted');
-          statusLabel.push('signature-not-trusted');
+          if(this.isNotTrusted(mail)) {
+            statusClass.push('--not-trusted');
+            statusLabel.push('signature-not-trusted');
+            tooltip = 'The sender could not be verified.';
+          }
         }
 
         return {
           cssClass: statusClass.join(''),
-          label: statusLabel.join(' ')
+          label: statusLabel.join(' '),
+          tooltipText: tooltip
         };
       };
 

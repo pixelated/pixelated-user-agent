@@ -8,9 +8,17 @@
     background: $success;
     color: $white;
     border-radius: 12px;
+    position: relative;
 
     &:before {
       font-family: FontAwesome;
+    }
+
+    &:hover:after {
+        content: attr(data-label);
+        font-size: 0.5rem;
+
+        @include tooltip(25px, 0px);
     }
 
     &--encrypted {
