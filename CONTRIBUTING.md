@@ -80,6 +80,8 @@ Anyone can contribute with Pixelated translating our user interface and making i
 
 We strongly recommend you read [Transifex User Guide](http://docs.transifex.com/) if it's the first time using this tool.
 
+More information see [Managing Translations page](https://github.com/pixelated/pixelated-user-agent/wiki/Managing-translations)
+
 ## ThoughtWorks' role
 
 ThoughtWorks seeds the community that builds pixelated. We seed the development, investing our own resources: We provide a team of 10+ software delivery experts to lay the foundation for the project. We use our network and contacts to approach customers and users.
