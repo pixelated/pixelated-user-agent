@@ -437,9 +437,7 @@ def initialize_soledad(tempdir, uuid):
         secret_path,
         local_db_path,
         server_url,
-        cert_file,
-        defer_encryption=False,
-        syncable=False)
+        cert_file)
 
     yield SoledadMailAdaptor().initialize_store(_soledad)
 
