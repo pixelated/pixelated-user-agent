@@ -75,8 +75,8 @@ class LeapSessionFactory(object):
         server_url = self._provider.discover_soledad_server(user_uuid)
         try:
             soledad = yield threads.deferToThread(Soledad,
-                                                  user_uuid,
-                                                  passphrase=unicode(password),
+                                                  user_uuid.encode('utf-8'),
+                                                  passphrase=unicode(password, 'utf-8'),
                                                   secrets_path=secrets,
                                                   local_db_path=local_db,
                                                   server_url=server_url,
