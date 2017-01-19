@@ -122,8 +122,8 @@ class TestUserBootstrap(unittest.TestCase):
         self.leap_session.mail_store = mail_store
         mock_create_leap_session.return_value = self.leap_session
         self._service_factory.has_session.return_value = False
-        some_language = 'en-US'
+        default_language = 'pt-BR'
 
-        self._user_bootstrap.setup(self.user_auth, self.password, '')
+        self._user_bootstrap.setup(self.user_auth, self.password)
 
-        mock_add_welcome_email.called_once_with(mail_store, some_language)
+        mock_add_welcome_email.assert_called_once_with(mail_store, default_language)
