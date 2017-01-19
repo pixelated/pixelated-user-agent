@@ -96,80 +96,94 @@ define(
       };
 
       this.checkEncrypted = function(mail) {
-        var statusClass = ['security-status__label'];
-        var statusLabel;
-        var tooltip;
+        var ENCRYPTED_FLAG = {
+          cssClass: 'security-status__label--encrypted',
+          label: 'encrypted',
+          tooltipText: 'encrypted-label-tooltip'
+        };
+
+        var ENCRYPTED_WITH_ERROR_FLAG = {
+          cssClass: 'security-status__label--encrypted--with-error',
+          label: 'encryption-error',
+          tooltipText: 'encryption-error-label-tooltip'
+        };
+
+        var NOT_ENCRYPTED_FLAG = {
+          cssClass: 'security-status__label--not-encrypted',
+          label: 'not-encrypted',
+          tooltipText: 'not-encrypted-label-tooltip'
+        };
 
         if(_.isEmpty(mail.security_casing.locks)) {
-          statusClass.push('--not-encrypted');
-          statusLabel = 'not-encrypted';
-          tooltip = 'not-encrypted-label-tooltip';
-        } else {
-          statusClass.push('--encrypted');
-
-          var hasAnyEncryptionInfo = _.any(mail.security_casing.locks, function (lock) {
-            return lock.state === 'valid';
-          });
-
-          if(hasAnyEncryptionInfo) {
-            statusLabel = 'encrypted';
-              tooltip = 'encrypted-label-tooltip';
-          } else {
-            statusClass.push('--with-error');
-            statusLabel = 'encryption-error';
-            tooltip = 'encryption-error-label-tooltip';
-          }
+          return NOT_ENCRYPTED_FLAG;
         }
 
-        return {
-          cssClass: statusClass.join(''),
-          label: statusLabel,
-          tooltipText: tooltip
-        };
+        if(this.hasAnyEncryptionInfo(mail)) {
+          return ENCRYPTED_FLAG;
+        }
+
+        return ENCRYPTED_WITH_ERROR_FLAG;
+      };
+
+      this.hasAnyEncryptionInfo = function(mail) {
+        return _.any(mail.security_casing.locks, function (lock) {
+          return lock.state === 'valid';
+        });
       };
 
       this.checkSigned = function(mail) {
-        var statusClass = ['security-status__label'];
-        var statusLabel = [];
-        var tooltip;
+
+        var SIGNED_FLAG = {
+          cssClass: 'security-status__label--signed',
+          label: 'signed',
+          tooltipText: 'signed-label-tooltip'
+        };
+
+        var SIGNED_REVOKED_FLAG = {
+          cssClass: 'security-status__label--signed--revoked',
+          label: 'signature-revoked',
+          tooltipText: 'not-signed-label-tooltip'
+        };
+
+        var SIGNED_EXPIRED_FLAG = {
+          cssClass: 'security-status__label--signed--expired',
+          label: 'signature-expired',
+          tooltipText: 'not-signed-label-tooltip'
+        };
+
+        var SIGNED_NOT_TRUSTED_FLAG = {
+          cssClass: 'security-status__label--signed--not-trusted',
+          label: 'signature-not-trusted',
+          tooltipText: 'not-signed-label-tooltip'
+        };
+
+        var NOT_SIGNED_FLAG = {
+          cssClass: 'security-status__label--not-signed',
+          label: 'not-signed',
+          tooltipText: 'not-signed-label-tooltip'
+        };
 
         var hasNoSignatureInformation = _.any(mail.security_casing.imprints, function (imprint) {
           return imprint.state === 'no_signature_information';
         });
 
         if(_.isEmpty(mail.security_casing.imprints) || hasNoSignatureInformation) {
-          statusClass.push('--not-signed');
-          statusLabel.push('not-signed');
-          tooltip = 'not-signed-label-tooltip';
-        } else {
-          statusClass.push('--signed');
-          statusLabel.push('signed');
-          tooltip = 'signed-label-tooltip';
-
-          if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'from_revoked'; })) {
-            statusClass.push('--revoked');
-            statusLabel.push('signature-revoked');
-            tooltip = 'not-signed-label-tooltip';
-          }
-
-          if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'from_expired'; })) {
-            statusClass.push('--expired');
-            statusLabel.push('signature-expired');
-            tooltip = 'not-signed-label-tooltip';
-          }
-
-          if(this.isNotTrusted(mail)) {
-            statusClass.push('--not-trusted');
-            statusLabel.push('signature-not-trusted');
-            tooltip = 'not-signed-label-tooltip';
-          }
+          return NOT_SIGNED_FLAG;
         }
 
-        return {
-          cssClass: statusClass.join(''),
-          label: statusLabel.join(' '),
-          tooltipText: tooltip
-        };
+        if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'from_revoked'; })) {
+          return SIGNED_REVOKED_FLAG;
+        }
+
+        if(_.any(mail.security_casing.imprints, function(imprint) { return imprint.state === 'from_expired'; })) {
+          return SIGNED_EXPIRED_FLAG;
+        }
+
+        if(this.isNotTrusted(mail)) {
+          return SIGNED_NOT_TRUSTED_FLAG;
+        }
+
+        return SIGNED_FLAG;
       };
 
       this.isNotTrusted = function(mail){
