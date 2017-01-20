@@ -2,7 +2,7 @@
 # and make sure venv is activated on login
 class pixelated::source::install_useragent {
 
-  $virtualenv_path = '/home/vagrant/user-agent-venv'
+  $virtualenv_path = '/home/vagrant/.venvs/pixua'
 
   exec { 'install-pixelated':
     # use of "user" parameter doesn't set env variables right,
@@ -24,8 +24,8 @@ class pixelated::source::install_useragent {
   }
 
   exec { 'add_custom_node_modules_to_bashrc':
-    command => "/bin/bash -c 'echo \"source /home/vagrant/user-agent-venv/bin/activate\" >> /home/vagrant/.bashrc'",
-    unless  => "/bin/grep \"source /home/vagrant/user-agent-venv/bin/activate\" /home/vagrant/.bashrc",
+    command => "/bin/bash -c 'echo \"source ${virtualenv_path}/bin/activate\" >> /home/vagrant/.bashrc'",
+    unless  => "/bin/grep \"source ${virtualenv_path}/bin/activate\" /home/vagrant/.bashrc",
     user    => 'vagrant',
     require => [Exec['install-pixelated'], File['/home/vagrant/activate_custom_node_modules.sh']]
   }
