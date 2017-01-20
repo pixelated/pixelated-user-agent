@@ -110,61 +110,81 @@ describeComponent('mail_view/ui/mail_view', function () {
   it('assumes that the mail is encrypted and valid if at least one of the locks are valid', function() {
     var email = testData;
     email.security_casing = {locks: [{state: 'valid'}, {state: 'failure'}]};
-    expect(this.component.checkEncrypted(email).cssClass).toEqual('security-status__label--encrypted');
+    var checkEncrypted = this.component.checkEncrypted(email);
+    expect(checkEncrypted.cssClass).toEqual('security-status__label--encrypted');
+    expect(checkEncrypted.tooltipText).toEqual('encrypted-label-tooltip');
   });
 
   it('assumes that the mail is encrypted and failure if all the locks are failed', function() {
     var email = testData;
     email.security_casing = {locks: [{state: 'failure'}, {state: 'failure'}]};
-    expect(this.component.checkEncrypted(email).cssClass).toEqual('security-status__label--encrypted--with-error');
+    var checkEncrypted = this.component.checkEncrypted(email);
+    expect(checkEncrypted.cssClass).toEqual('security-status__label--encrypted--with-error');
+    expect(checkEncrypted.tooltipText).toEqual('encryption-error-label-tooltip');
   });
 
   it('assumes that the mail is not encrypted if it doesn\'t have any locks', function() {
     var email = testData;
     email.security_casing = {locks: []};
-    expect(this.component.checkEncrypted(email).cssClass).toEqual('security-status__label--not-encrypted');
+    var checkEncrypted = this.component.checkEncrypted(email);
+    expect(checkEncrypted.cssClass).toEqual('security-status__label--not-encrypted');
+    expect(checkEncrypted.tooltipText).toEqual('not-encrypted-label-tooltip');
   });
 
   it('assumes that the mail is signed only if all imprints are valid', function() {
     var email = testData;
     email.security_casing = {imprints: [{state: 'valid', seal: {trust: 'marginal', validity: 'marginal'}}, {state: 'valid', seal: {trust: 'marginal', validity: 'marginal'}}]};
-    expect(this.component.checkSigned(email).cssClass).toEqual('security-status__label--signed');
+    var checkSigned = this.component.checkSigned(email);
+    expect(checkSigned.cssClass).toEqual('security-status__label--signed');
+    expect(checkSigned.tooltipText).toEqual('signed-label-tooltip');
   });
 
   it('assumes that the mail is signed with failures if there is a revoke or expire', function() {
     var email = testData;
     email.security_casing = {imprints: [{state: 'valid', seal: {trust: 'marginal', validity: 'marginal'}}, {state: 'from_revoked', seal: {trust: 'marginal', validity: 'marginal'}}]};
-    expect(this.component.checkSigned(email).cssClass).toEqual('security-status__label--signed--revoked');
+    var checkSigned = this.component.checkSigned(email);
+    expect(checkSigned.cssClass).toEqual('security-status__label--signed--revoked');
+    expect(checkSigned.tooltipText).toEqual('not-signed-label-tooltip');
   });
 
   it('assumes that mail is not trusted if its signature contains no_trust from the user', function() {
     var email = testData;
     email.security_casing = {imprints: [{seal: {trust: 'no_trust', validity: 'ultimate'}}]};
-    expect(this.component.checkSigned(email).cssClass).toEqual('security-status__label--signed--not-trusted');
+    var checkSigned = this.component.checkSigned(email);
+    expect(checkSigned.cssClass).toEqual('security-status__label--signed--not-trusted');
+    expect(checkSigned.tooltipText).toEqual('not-signed-label-tooltip');
   });
 
   it('uses validity when trust is not present', function() {
     var email = testData;
     email.security_casing = {imprints: [{seal: { validity: 'no_trust'}}]};
-    expect(this.component.checkSigned(email).cssClass).toEqual('security-status__label--signed--not-trusted');
+    var checkSigned = this.component.checkSigned(email);
+    expect(checkSigned.cssClass).toEqual('security-status__label--signed--not-trusted');
+    expect(checkSigned.tooltipText).toEqual('not-signed-label-tooltip');
   });
 
-  it('assumes not trusted when the signature is not found', function(){
+  it('assumes not trusted when the seal signature is not found', function(){
     var email = testData;
     email.security_casing = {imprints: [{seal: null}]};
-    expect(this.component.checkSigned(email).cssClass).toEqual('security-status__label--signed--not-trusted');
+    var checkSigned = this.component.checkSigned(email);
+    expect(checkSigned.cssClass).toEqual('security-status__label--signed--not-trusted');
+    expect(checkSigned.tooltipText).toEqual('not-signed-label-tooltip');
   });
 
   it('assumes that the mail is not signed if there are no imprints', function() {
     var email = testData;
     email.security_casing = {imprints: []};
-    expect(this.component.checkSigned(email).cssClass).toEqual('security-status__label--not-signed');
+    var checkSigned = this.component.checkSigned(email);
+    expect(checkSigned.cssClass).toEqual('security-status__label--not-signed');
+    expect(checkSigned.tooltipText).toEqual('not-signed-label-tooltip');
   });
 
   it('assumes that there is no signature info to show', function() {
     var email = testData;
     email.security_casing = {imprints: [{state: 'no_signature_information'}]};
-    expect(this.component.checkSigned(email).cssClass).toEqual('security-status__label--not-signed');
+    var checkSigned = this.component.checkSigned(email);
+    expect(checkSigned.cssClass).toEqual('security-status__label--not-signed');
+    expect(checkSigned.tooltipText).toEqual('not-signed-label-tooltip');
   });
 
   it('shows that mail is encrypted if it is', function() {
