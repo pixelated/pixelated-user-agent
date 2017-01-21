@@ -18,9 +18,7 @@ from __future__ import absolute_import
 
 import os
 import errno
-import traceback
 import requests
-import sys
 
 from twisted.internet import defer, threads, reactor
 from twisted.logger import Logger
@@ -35,10 +33,9 @@ from leap.common.events import (
     catalog as events
 )
 
-from pixelated.bitmask_libraries.keymanager import Keymanager, UploadKeyError
+from pixelated.bitmask_libraries.keymanager import Keymanager
 from pixelated.adapter.mailstore import LeapMailStore
 from pixelated.config import leap_config
-from pixelated.bitmask_libraries.certs import LeapCertificate
 from pixelated.bitmask_libraries.smtp import LeapSMTPConfig
 
 logger = Logger()
