@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from leap.soledad.common.errors import InvalidAuthTokenError
 from mock import MagicMock, patch, Mock
 from twisted.trial import unittest
 from twisted.internet import defer
@@ -170,7 +169,7 @@ class TestUserBootstrap(unittest.TestCase):
     @patch('pixelated.config.leap.create_leap_session')
     @patch('pixelated.config.leap.log.warn')
     @defer.inlineCallbacks
-    def test__setup__should_close_leap_sesson_on_error_from__setup_user_services(self, mock_logger_warn, mock_create_leap_session, mock_setup_user_services):
+    def test__setup__should_close_leap_session_on_error_from__setup_user_services(self, mock_logger_warn, mock_create_leap_session, mock_setup_user_services):
         leap_session = Mock()
         leap_session.close = Mock()
         mock_create_leap_session.return_value = leap_session
@@ -184,7 +183,7 @@ class TestUserBootstrap(unittest.TestCase):
     @patch('pixelated.config.leap.create_leap_session')
     @patch('pixelated.config.leap.log.warn')
     @defer.inlineCallbacks
-    def test__setup__should_close_leap_sesson_on_error_from__add_welcome_email(self, mock_logger_warn, mock_create_leap_session, _, mock_add_welcome_email):
+    def test__setup__should_close_leap_session_on_error_from__add_welcome_email(self, mock_logger_warn, mock_create_leap_session, _, mock_add_welcome_email):
         leap_session = Mock()
         leap_session.close = Mock()
         mock_create_leap_session.return_value = leap_session

@@ -99,7 +99,7 @@ class BootstrapUserServices(object):
             log.warn('{0}: {1}. Closing session for user: {2}'.format(e.__class__.__name__, e, user_auth.username))
             if leap_session:
                 leap_session.close()
-            raise e
+            raise
 
     @defer.inlineCallbacks
     def _setup_user_services(self, leap_session):
