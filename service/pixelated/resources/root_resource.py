@@ -20,7 +20,7 @@ from string import Template
 from pixelated.resources.users import UsersResource
 
 from pixelated.resources import BaseResource, UnAuthorizedResource, UnavailableResource
-from pixelated.resources import IPixelatedSession
+from pixelated.resources import get_startup_folder, get_static_folder
 from pixelated.resources.attachments_resource import AttachmentsResource
 from pixelated.resources.sandbox_resource import SandboxResource
 from pixelated.resources.contacts_resource import ContactsResource
@@ -50,8 +50,8 @@ MODE_RUNNING = 2
 class RootResource(BaseResource):
     def __init__(self, services_factory):
         BaseResource.__init__(self, services_factory)
-        self._startup_assets_folder = self._get_startup_folder()
-        self._static_folder = self._get_static_folder()
+        self._startup_assets_folder = get_startup_folder()
+        self._static_folder = get_static_folder()
         self._html_template = open(os.path.join(self._static_folder, 'index.html')).read()
         self._services_factory = services_factory
         self._child_resources = ChildResourcesMap()
@@ -105,16 +105,6 @@ class RootResource(BaseResource):
         self._child_resources.add(LogoutResource.BASE_URL, LogoutResource(self._services_factory))
 
         self._mode = MODE_RUNNING
-
-    def _get_startup_folder(self):
-        path = os.path.dirname(os.path.abspath(__file__))
-        return os.path.join(path, '..', 'assets')
-
-    def _get_static_folder(self):
-        static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "..", "web-ui", "dist"))
-        if not os.path.exists(static_folder):
-            static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
-        return static_folder
 
     def _is_starting(self):
         return self._mode == MODE_STARTUP

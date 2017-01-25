@@ -20,7 +20,7 @@ from xml.sax import SAXParseException
 from pixelated.authentication import Authenticator
 from pixelated.config.leap import BootstrapUserServices
 from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
-from pixelated.resources import handle_error_deferred
+from pixelated.resources import handle_error_deferred, get_startup_folder, get_static_folder
 from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer
 from twisted.logger import Logger
@@ -35,22 +35,6 @@ from twisted.web.template import Element, XMLFile, renderElement, renderer
 log = Logger()
 
 
-def _get_startup_folder():
-    path = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(path, '..', 'assets')
-
-
-def _get_static_folder():
-    static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "web-ui", "dist"))
-    # this is a workaround for packaging
-    if not os.path.exists(static_folder):
-        static_folder = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), "..", "..", "..", "..", "web-ui", "dist"))
-    if not os.path.exists(static_folder):
-        static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
-    return static_folder
-
-
 def parse_accept_language(all_headers):
     accepted_languages = ['pt-BR', 'en-US']
     languages = all_headers.get('accept-language', '').split(';')[0]
@@ -61,7 +45,7 @@ def parse_accept_language(all_headers):
 
 
 class DisclaimerElement(Element):
-    loader = XMLFile(FilePath(os.path.join(_get_startup_folder(), '_login_disclaimer_banner.html')))
+    loader = XMLFile(FilePath(os.path.join(get_startup_folder(), '_login_disclaimer_banner.html')))
 
     def __init__(self, banner):
         super(DisclaimerElement, self).__init__()
@@ -84,7 +68,7 @@ class DisclaimerElement(Element):
 
 
 class LoginWebSite(Element):
-    loader = XMLFile(FilePath(os.path.join(_get_startup_folder(), 'login.html')))
+    loader = XMLFile(FilePath(os.path.join(get_startup_folder(), 'login.html')))
 
     def __init__(self, error_msg=None, disclaimer_banner_file=None):
         super(LoginWebSite, self).__init__()
@@ -107,8 +91,8 @@ class LoginResource(BaseResource):
 
     def __init__(self, services_factory, provider=None, disclaimer_banner=None, authenticator=None):
         BaseResource.__init__(self, services_factory)
-        self._static_folder = _get_static_folder()
-        self._startup_folder = _get_startup_folder()
+        self._static_folder = get_static_folder()
+        self._startup_folder = get_startup_folder()
         self._disclaimer_banner = disclaimer_banner
         self._provider = provider
         self._authenticator = authenticator or Authenticator(provider)

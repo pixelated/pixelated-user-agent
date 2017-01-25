@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import json
+import os
 
 from twisted.web.http import UNAUTHORIZED
 from twisted.web.resource import Resource
@@ -54,6 +55,18 @@ def handle_error_deferred(e, request):
     request.setResponseCode(INTERNAL_SERVER_ERROR)
     request.write('Something went wrong!')
     request.finish()
+
+
+def get_startup_folder():
+    path = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(path, '..', 'assets')
+
+
+def get_static_folder():
+    static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "..", "web-ui", "dist"))
+    if not os.path.exists(static_folder):
+        static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')
+    return static_folder
 
 
 class BaseResource(Resource):
