@@ -20,7 +20,7 @@ from xml.sax import SAXParseException
 from pixelated.authentication import Authenticator
 from pixelated.config.leap import BootstrapUserServices
 from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
-from pixelated.resources import handle_error_deferred, get_startup_folder, get_static_folder
+from pixelated.resources import handle_error_deferred, get_startup_folder
 from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer
 from twisted.logger import Logger
@@ -91,7 +91,6 @@ class LoginResource(BaseResource):
 
     def __init__(self, services_factory, provider=None, disclaimer_banner=None, authenticator=None):
         BaseResource.__init__(self, services_factory)
-        self._static_folder = get_static_folder()
         self._startup_folder = get_startup_folder()
         self._disclaimer_banner = disclaimer_banner
         self._provider = provider
