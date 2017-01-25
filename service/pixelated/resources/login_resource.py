@@ -21,6 +21,7 @@ from pixelated.authentication import Authenticator
 from pixelated.config.leap import BootstrapUserServices
 from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
 from pixelated.resources import handle_error_deferred
+from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer
 from twisted.logger import Logger
 from twisted.python.filepath import FilePath
@@ -145,8 +146,11 @@ class LoginResource(BaseResource):
             self._complete_bootstrap(user_auth, request)
 
         def render_error(error):
-            log.info('Login error for %s' % request.args['username'][0])
-            log.info('%s' % error)
+            if error.type is UnauthorizedLogin:
+                log.info('Unauthorized login for %s. User typed wrong username/password combination.' % request.args['username'][0])
+            else:
+                log.error('Authentication error for %s' % request.args['username'][0])
+                log.error('%s' % error)
             request.setResponseCode(UNAUTHORIZED)
             return self._render_template(request, 'Invalid username or password')
 
