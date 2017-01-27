@@ -2,4 +2,6 @@
 
 export PATH=/bin:/usr/bin:/sbin:/usr/sbin
 
-systemctl restart pixelated-server
+if [ -d /run/systemd/system  ]; then
+  systemctl -q is-active pixelated-server.service && systemctl restart pixelated-server.service
+fi
