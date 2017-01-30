@@ -90,4 +90,3 @@ describeComponent('page/pix_logo', function () {
     });
   });
 });
-

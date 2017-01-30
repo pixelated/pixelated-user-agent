@@ -94,4 +94,32 @@ describeComponent('dispatchers/right_pane_dispatcher', function () {
     });
   });
 
+  describe('on message selected', function () {
+    beforeEach(function () {
+      this.setupComponent();
+    });
+
+    it('addSpinner renders the spinner to the page', function () {
+      var spinner = require('mail_view/ui/spinner');
+      spyOn(spinner, 'attachTo');
+      var stage = {stage: 'mail-view'};
+      this.component.addSpinner(stage);
+
+      expect(spinner.attachTo).toHaveBeenCalledWith(stage);
+    });
+
+    it('should show the spinner when opening a mail message', function () {
+      spyOn(this.component, 'addSpinner');
+      this.component.trigger(document, Pixelated.events.ui.mail.open, { ident: '1' });
+
+      expect(this.component.addSpinner).toHaveBeenCalled();
+    });
+
+    it('should show the spinner when opening a draft message', function () {
+      spyOn(this.component, 'addSpinner');
+      this.component.trigger(document, Pixelated.events.dispatchers.rightPane.openDraft, { ident: '1' });
+
+      expect(this.component.addSpinner).toHaveBeenCalled();
+    });
+  });
 });
