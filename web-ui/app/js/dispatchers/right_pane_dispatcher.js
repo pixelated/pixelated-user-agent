@@ -24,10 +24,11 @@ define(
     'mail_view/ui/draft_box',
     'mail_view/ui/no_message_selected_pane',
     'mail_view/ui/feedback_box',
+    'mail_view/ui/spinner',
     'page/events'
   ],
 
-  function(defineComponent, ComposeBox, MailView, ReplySection, DraftBox, NoMessageSelectedPane, FeedbackBox, events) {
+  function(defineComponent, ComposeBox, MailView, ReplySection, DraftBox, NoMessageSelectedPane, FeedbackBox, Spinner, events) {
     'use strict';
 
     return defineComponent(rightPaneDispatcher);
@@ -67,8 +68,13 @@ define(
         FeedbackBox.attachTo(stage);
       };
 
+      this.addSpinner = function(stage) {
+        Spinner.attachTo(stage);
+      };
+
       this.openMail = function(ev, data) {
         var stage = this.reset(this.attr.mailView);
+        this.addSpinner(stage);
         MailView.attachTo(stage, data);
 
         var replySectionContainer = this.createAndAttach(this.attr.replySection);
@@ -89,6 +95,7 @@ define(
 
       this.openDraft = function (ev, data) {
         var stage = this.reset(this.attr.draftBox);
+        this.addSpinner(stage);
         DraftBox.attachTo(stage, { mailIdent: data.ident, currentTag: this.attr.currentTag });
       };
 

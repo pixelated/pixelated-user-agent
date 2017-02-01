@@ -55,7 +55,7 @@ define(
         this.on(document, events.ui.mail.open, this.triggerSpinLogo);
         this.on(document, events.dispatchers.rightPane.openDraft, this.triggerSpinLogo);
         this.on(document, events.search.perform, this.triggerSpinLogo);
-        this.on(document, events.mail.want, this.triggerStopSpinningLogo);
+        this.on(document, events.mail.display, this.triggerStopSpinningLogo);
       });
     }
   }

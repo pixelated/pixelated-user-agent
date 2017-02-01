@@ -69,7 +69,7 @@ describeComponent('page/pix_logo', function () {
     it('should stop spinning after mail message is loaded', function (done) {
       this.setupComponent('<polygon id="clock1" class="logo-part-animation-on"></polygon>');
       var eventSpy = spyOnEvent(document, Pixelated.events.ui.page.stopSpinningLogo);
-      $(document).trigger(Pixelated.events.mail.want);
+      $(document).trigger(Pixelated.events.mail.display);
 
       var component = this.component;
 
@@ -90,4 +90,3 @@ describeComponent('page/pix_logo', function () {
     });
   });
 });
-
