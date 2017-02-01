@@ -1,7 +1,8 @@
 import React from 'react'
 import { render } from 'react-dom'
+import Page from 'js/account_recovery/page'
 
 render(
-  <h1>Hello, world!</h1>,
+  <Page/>,
   document.getElementById('root')
 );

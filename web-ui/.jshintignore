@@ -2,3 +2,6 @@ app/node_modules
 app/bower_components
 app/js/lib
 app/js/generated
+app/js/account_recovery.js
+app/js/account_recovery
+test/spec/account_recovery
