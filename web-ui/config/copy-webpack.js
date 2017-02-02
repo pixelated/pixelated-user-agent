@@ -8,6 +8,7 @@ module.exports = new CopyWebpackPlugin([
   { context: 'app/', from: 'css/*' },
   { context: 'app/', from: 'fonts/*' },
   { context: 'app/', from: 'locales/**/*' },
+  { context: 'app/', from: 'images/**/*' },
   { context: 'app/', from: 'bower_components/font-awesome/fonts/*' },
   {
     context: 'app/',

@@ -1,11 +1,31 @@
 @import "../vendor/reset";
 @import "../base/colors";
+@import "../base/fonts";
 @import "../base/scaffolding";
 
 body {
+  font-family: "Open Sans", "Microsoft YaHei", "Hiragino Sans GB", "Hiragino Sans GB W3", "微软雅黑", "Helvetica Neue", Arial, sans-serif;
   background: $dark_blue; /* For browsers that do not support gradients */
   background: -webkit-linear-gradient(left top, $dark_blue, $middle_blue); /* For Safari 5.1 to 6.0 */
   background: -o-linear-gradient(bottom right, $dark_blue, $middle_blue); /* For Opera 11.1 to 12.0 */
   background: -moz-linear-gradient(bottom right, $dark_blue, $middle_blue); /* For Firefox 3.6 to 15 */
   background: linear-gradient(to bottom right, $dark_blue, $middle_blue); /* Standard syntax */
+}
+
+h1 {
+  font-size: 4em;
+  color: $dark_slate_gray;
+}
+
+.container {
+  background: $white;
+  width: 90%;
+  margin: 2% auto;
+  padding: 3%;
+
+  img {
+    display: block;
+    width: 50%;
+    margin: 0 auto;
+  }
 }
