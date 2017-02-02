@@ -17,11 +17,10 @@
 import os
 from xml.sax import SAXParseException
 
-from pixelated.resources import BaseResource, UnAuthorizedResource
+from pixelated.resources import BaseResource
 from twisted.python.filepath import FilePath
 from pixelated.resources import get_static_folder
 from twisted.web.http import OK
-from twisted.web.resource import NoResource
 from twisted.web.template import Element, XMLFile, renderElement
 
 
@@ -33,17 +32,10 @@ class AccountRecoveryPage(Element):
 
 
 class AccountRecoveryResource(BaseResource):
-    BASE_URL = 'recovery'
+    isLeaf = True
 
     def __init__(self, services_factory):
         BaseResource.__init__(self, services_factory)
-
-    def getChild(self, path, request):
-        if path == BASE_URL:
-            return self
-        if not self.is_logged_in(request):
-            return UnAuthorizedResource()
-        return NoResource()
 
     def render_GET(self, request):
         request.setResponseCode(OK)
