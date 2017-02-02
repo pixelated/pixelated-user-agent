@@ -6,6 +6,7 @@ var aliases = require('./config/alias-webpack');
 module.exports = {
   entry: {
     app: './app/js/index.js',
+    account_recovery: './app/js/account_recovery.js',
     sandbox: './app/js/sandbox.js'
   },
   node: { fs: 'empty' },
@@ -24,7 +25,7 @@ module.exports = {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         loader: 'babel',
-        query: { presets: ['es2015']}
+        query: { presets: ['es2015', 'react']}
       }
     ]
   },
