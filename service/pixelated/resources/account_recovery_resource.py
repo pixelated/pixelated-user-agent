@@ -25,17 +25,6 @@ from twisted.web.resource import NoResource
 from twisted.web.template import Element, XMLFile, renderElement
 
 
-
-def parse_accept_language(all_headers):
-    accepted_languages = ['pt-BR', 'en-US']
-    languages = all_headers.get('accept-language', '').split(';')[0]
-    for language in accepted_languages:
-        if language in languages:
-            return language
-    return 'pt-BR'
-
-
-
 class AccountRecoveryPage(Element):
     loader = XMLFile(FilePath(os.path.join(get_static_folder(), 'account_recovery.html')))
 
@@ -48,7 +37,6 @@ class AccountRecoveryResource(BaseResource):
 
     def __init__(self, services_factory):
         BaseResource.__init__(self, services_factory)
-
 
     def getChild(self, path, request):
         if path == BASE_URL:
