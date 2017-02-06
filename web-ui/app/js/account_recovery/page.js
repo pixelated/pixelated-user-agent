@@ -14,6 +14,12 @@ const Page = () => (
         <label className="animated-label" htmlFor="email">Digite seu e-mail de recuperação</label>
       </div>
       <button>Adicionar e-mail</button>
+      <div>
+        <a href="/">
+          <i className="fa fa-angle-left" aria-hidden="true"></i>
+          <span>Voltar</span>
+        </a>
+      </div>
     </form>
   </div>
 );

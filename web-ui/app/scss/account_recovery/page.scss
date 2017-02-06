@@ -29,6 +29,20 @@ p {
   margin-after: 0.5em;
 }
 
+a {
+  text-decoration: none;
+  color: $dark_blue;
+  font-style: italic;
+
+  .fa {
+    font-size: 1.6em;
+    position: relative;
+    top: 3px;
+    margin-right: 0.3em;
+  }
+
+}
+
 .field-group {
   position:relative;
   margin: 1.5em 0;
@@ -83,6 +97,7 @@ button {
   border-radius: 2px;
   font-weight: 300;
   width: 100%;
+  margin-bottom: 1em;
 }
 
 .container {
@@ -110,10 +125,17 @@ img {
     font-size: 1.3em;
   }
 
-  .field-group, button {
-    width: 70%;
-    -webkit-align-self: center;
-    align-self: center;
+  form {
+    display: flex;
+    -webkit-display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+
+    .field-group, button, div {
+      width: 70%;
+      -webkit-align-self: center;
+      align-self: center;
+    }
   }
 }
 
@@ -130,21 +152,21 @@ img {
 
   form {
     margin-left: 2.5em;
+
+    .field-group, button, div {
+      width: 300px;
+      -webkit-align-self: flex-start;
+      align-self: flex-start;
+    }
+
+    .field-group {
+      margin-top: 3em;
+      font-size: 1em;
+    }
   }
 
   img {
     width: 300px;
-  }
-
-  .field-group, button {
-    width: 300px;
-    -webkit-align-self: center;
-    align-self: center;
-  }
-
-  .field-group {
-    margin-top: 3em;
-    font-size: 1em;
   }
 
   button {
