@@ -25,6 +25,10 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel',
         query: { presets: ['es2015', 'react']}
+      },
+      {
+        test: /\.scss|css$/,
+        loader: "style-loader!css-loader!sass-loader"
       }
     ]
   },

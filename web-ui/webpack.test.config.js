@@ -4,20 +4,14 @@ var copyWebpack = require('./config/copy-webpack');
 var aliases = require('./config/alias-webpack');
 
 module.exports = {
-  entry: {
-    app: './app/js/index.js',
-    account_recovery: './app/js/account_recovery.js',
-    sandbox: './app/js/sandbox.js'
-  },
-  node: { fs: 'empty' },
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: '[name].js',
-    publicPath: '/assets/'
-  },
   resolve: {
     alias: aliases,
     extensions: ['', '.js']
+  },
+  externals: {
+    'react/lib/ExecutionEnvironment': true,
+    'react/addons': true,
+    'react/lib/ReactContext': 'window'
   },
   module: {
     loaders: [
@@ -29,9 +23,12 @@ module.exports = {
       },
       {
         test: /\.scss|css$/,
-        loader: "style-loader!css-loader!sass-loader"
+        loader: "css-loader!sass-loader"
+      },
+      {
+        test: /\.json$/,
+        loader: "json-loader"
       }
     ]
-  },
-  plugins: [copyWebpack]
+  }
 }

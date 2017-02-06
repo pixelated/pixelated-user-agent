@@ -7,6 +7,7 @@ module.exports = {
   'flight': path.join(__dirname, '../app/bower_components/flight'),
   'found': path.join(__dirname, '../app/bower_components/foundation'),
   'js': path.join(__dirname, '../app/js'),
+  'scss': path.join(__dirname, '../app/scss'),
   'mail_list': path.join(__dirname, '../app/js/mail_list'),
   'page': path.join(__dirname, '../app/js/page'),
   'feedback': path.join(__dirname, '../app/js/feedback'),
