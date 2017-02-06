@@ -20,7 +20,6 @@ body {
 h1 {
   font-size: 1.3em;
   font-weight: 600;
-  width: 100%;
 }
 
 p {
@@ -32,46 +31,48 @@ p {
 
 .field-group {
   position:relative;
-  margin: 1em 0;
-  width: 96%;
-}
-
-label {
-  font-size: 0.9em;
-  margin-bottom: 10px;
-  display: inline-block;
-}
-
-input {
-  display: block;
-  border: none;
-  border-bottom: solid 1px #4da3b6;
+  margin: 1.5em 0;
   width: 100%;
-  height: auto;
-  padding: 6px 0px;
+
+  label {
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+
+  input {
+    display: block;
+    border: none;
+    border-bottom: solid 1px #4da3b6;
+    width: 100%;
+    height: auto;
+    padding: 0.3em 0px;
+  }
+
+  input:focus {
+    outline:none;
+    border-width: 2px;
+  }
+
+  input:focus ~ .animated-label, input:valid ~ .animated-label {
+    top:-12px;
+    left: 0;
+    font-size:0.7em;
+    color:#4da3b6;
+  }
+
+  .animated-label {
+    color:#999;
+    position:absolute;
+    pointer-events:none;
+    left: 6px;
+    top:10px;
+    transition:0.2s ease all;
+    -moz-transition:0.2s ease all;
+    -webkit-transition:0.2s ease all;
+  }
 }
 
-input:focus {
-  outline:none;
-}
-
-input:focus ~ .animated-label, input:valid ~ .animated-label {
-  top:-12px;
-  left: 0;
-  font-size:0.7em;
-  color:#4da3b6;
-}
-
-.animated-label {
-  color:#999;
-  position:absolute;
-  pointer-events:none;
-  left: 6px;
-  top:10px;
-  transition:0.2s ease all;
-  -moz-transition:0.2s ease all;
-  -webkit-transition:0.2s ease all;
-}
 
 button {
   background: $dark_blue;
@@ -81,7 +82,7 @@ button {
   border: none;
   border-radius: 2px;
   font-weight: 300;
-  width: 96%;
+  width: 100%;
 }
 
 .container {
@@ -89,17 +90,65 @@ button {
   width: 84%;
   margin: 3% auto;
   padding: 6% 5%;
-}
 
-form {
   -webkit-display: flex;
   display: flex;
-  -webkit-align-items: center;
-  align-items: center;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
   -webkit-flex-direction: column;
   flex-direction: column;
+}
+
+img {
+  width: 50%;
+  -webkit-align-self: center;
+  align-self: center;
+}
+
+@media only screen and (min-width : 500px) {
+  body {
+    font-size: 1.3em;
+  }
+
+  .field-group, button {
+    width: 70%;
+    -webkit-align-self: center;
+    align-self: center;
+  }
+}
+
+@media only screen and (min-width : 960px) {
+  .container{
+    width: 60%;
+    padding: 3%;
+    -webkit-align-items: flex-start;
+    align-items: flex-start;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    max-width: 700px;
+  }
+
+  form {
+    margin-left: 2.5em;
+  }
 
   img {
-    width: 50%;
+    width: 300px;
+  }
+
+  .field-group, button {
+    width: 300px;
+    -webkit-align-self: center;
+    align-self: center;
+  }
+
+  .field-group {
+    margin-top: 3em;
+    font-size: 1em;
+  }
+
+  button {
+    font-size: 0.8em;
+    margin-bottom: 1em;
   }
 }
