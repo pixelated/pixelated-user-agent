@@ -27,6 +27,7 @@ requirements_js:
 
 install_js:
 	@cd web-ui;\
+	npm rebuild node-sass;\
 	npm run build
 
 create_virtualenv: ensure_virtualenv_installed
