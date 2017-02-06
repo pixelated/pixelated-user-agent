@@ -49,6 +49,7 @@
     "node-sass": "^4.5.0",
     "quoted-printable": "^1.0.1",
     "react": "^15.4.2",
+    "react-a11y": "^0.3.3",
     "react-addons-test-utils": "^15.4.2",
     "react-dom": "^15.4.2",
     "requirejs": "2.2.0",

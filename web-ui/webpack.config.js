@@ -33,5 +33,9 @@ module.exports = {
       }
     ]
   },
-  plugins: [copyWebpack]
+  plugins: [copyWebpack, new webpack.DefinePlugin({
+    'process.env': {
+      'NODE_ENV': '"development"'
+    }
+  })]
 }
