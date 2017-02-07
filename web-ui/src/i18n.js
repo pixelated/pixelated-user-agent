@@ -16,15 +16,15 @@
  */
 import i18n from 'i18next'
 import i18nBackend from 'i18nextXHRBackend'
-import i18nDetector from 'i18nextBrowserLanguageDetector'
+import I18nDetector from 'i18nextBrowserLanguageDetector'
 
-const detector = new i18nDetector();
-const detect = detector.detect.bind(detector);
+const detector = new I18nDetector()
+const detect = detector.detect.bind(detector)
 
-detector.detect = function(detectionOrder)  {
-  let result = detect(detectionOrder);
-  return result.replace('-', '_');
-};
+detector.detect = (detectionOrder) => {
+  const result = detect(detectionOrder)
+  return result.replace('-', '_')
+}
 
 i18n
   .use(i18nBackend)
@@ -34,6 +34,6 @@ i18n
     backend: {
       loadPath: 'assets/locales/{{lng}}/{{ns}}.json'
     }
-  });
+  })
 
-export default i18n;
+export default i18n

@@ -23,4 +23,8 @@ const SubmitButton = ({ buttonText }) => (
   <input type='submit' className='submit-button' value={buttonText} />
 )
 
+SubmitButton.propTypes = {
+  buttonText: React.PropTypes.string.isRequired
+}
+
 export default SubmitButton

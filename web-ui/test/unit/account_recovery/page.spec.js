@@ -4,11 +4,12 @@ import React from 'react'
 import { Page } from 'src/account_recovery/page'
 
 describe('Page', () => {
-  let mockT, page
+  let mockT
+  let page
 
   beforeEach(() => {
-    mockT = (key) => (key)
-    page = shallow(<Page t={mockT}/>)
+    mockT = key => key
+    page = shallow(<Page t={mockT} />)
   })
 
   it('renders backup email page title', () => {

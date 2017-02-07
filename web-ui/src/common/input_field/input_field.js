@@ -26,4 +26,9 @@ const InputField = ({ label, name }) => (
   </div>
 )
 
+InputField.propTypes = {
+  label: React.PropTypes.string.isRequired,
+  name: React.PropTypes.string.isRequired
+}
+
 export default InputField
