@@ -45,8 +45,8 @@ def init(debug=False):
         try:
             event['log_time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(event['log_time']))
             event['log_level'] = event['log_level'].name.upper()
-            event['log_format'] = event.get('log_format') or ''
-            logstring = u'{log_time} [{log_namespace}] {log_level} ' + event['log_format'] + '\n'
+            event['log_format'] = str(event['log_format']) + '\n' if event.get('log_format') else ''
+            logstring = u'{log_time} [{log_namespace}] {log_level} ' + event['log_format']
             return logstring.format(**event)
         except Exception as e:
             return "Error while formatting log event: {!r}\nOriginal event: {!r}\n".format(e, event)
