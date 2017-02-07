@@ -31,8 +31,6 @@ i18n
   .use(detector)
   .init({
     fallbackLng: 'en_US',
-    ns: ['translation'],
-    defaultNS: 'translation',
     backend: {
       loadPath: 'assets/locales/{{lng}}/{{ns}}.json'
     }

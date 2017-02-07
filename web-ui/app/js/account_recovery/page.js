@@ -3,22 +3,22 @@ import { translate } from 'react-i18next'
 
 import 'scss/account_recovery/page.scss'
 
-const Page = (props) => (
+export const Page = ({ t }) => (
   <div className='container'>
-    <img src='assets/images/forgot-my-password.svg' alt="Esqueci minha senha!"/>
+    <img src='assets/images/forgot-my-password.svg' alt={t('backup-account.image-description')}/>
     <form>
-      <h1>E se você esquecer sua senha?</h1>
-      <p>Informe outro e-mail que você usa regularmente. Esse será o seu e-mail de recuperação.</p>
-      <p>Instruções para recuperar sua senha serão enviadas para esse e-mail, guarde com carinho.</p>
+      <h1>{t('backup-account.title')}</h1>
+      <p>{t('backup-account.paragraph1')}</p>
+      <p>{t('backup-account.paragraph2')}</p>
       <div className="field-group">
         <input type="text" name="email" className="email" required/>
-        <label className="animated-label" htmlFor="email">Digite seu e-mail de recuperação</label>
+        <label className="animated-label" htmlFor="email">{t('backup-account.input-label')}</label>
       </div>
-      <button>Adicionar e-mail</button>
+      <button>{t('backup-account.button')}</button>
       <div>
         <a href="/">
           <i className="fa fa-angle-left" aria-hidden="true"></i>
-          <span>Voltar</span>
+          <span>{t('back-to-inbox')}</span>
         </a>
       </div>
     </form>
