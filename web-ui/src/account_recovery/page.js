@@ -1,7 +1,7 @@
 import React from 'react'
 import { translate } from 'react-i18next'
 
-import 'scss/account_recovery/page.scss'
+import './page.scss'
 
 export const Page = ({ t }) => (
   <div className='container'>

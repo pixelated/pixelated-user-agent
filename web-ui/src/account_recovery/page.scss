@@ -1,6 +1,6 @@
-@import "../vendor/reset";
-@import "../base/colors";
-@import "../base/fonts";
+@import "~scss/vendor/reset";
+@import "~scss/base/colors";
+@import "~scss/base/fonts";
 
 html {
   min-height: 100%;
@@ -103,7 +103,7 @@ button {
 .container {
   background: $white;
   width: 84%;
-  margin: 3% auto;
+  // margin: 3% auto;
   padding: 6% 5%;
 
   -webkit-display: flex;
@@ -132,7 +132,7 @@ img {
     flex-direction: column;
 
     .field-group, button, div {
-      width: 70%;
+      flex-basis: 70%;
       -webkit-align-self: center;
       align-self: center;
     }
