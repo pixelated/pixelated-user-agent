@@ -17,21 +17,22 @@
 
 import React from 'react'
 import { translate } from 'react-i18next'
+import SubmitButton from 'src/common/submit_button'
 
 import './page.scss'
 
 export const Page = ({ t }) => (
   <div className='container'>
-    <img src='assets/images/forgot-my-password.svg' alt={t('backup-account.image-description')}/>
+    <img src='assets/images/forgot-my-password.svg' alt={t('backup-account.image-description')} />
     <form>
       <h1>{t('backup-account.title')}</h1>
       <p>{t('backup-account.paragraph1')}</p>
       <p>{t('backup-account.paragraph2')}</p>
       <div className="field-group">
-        <input type="text" name="email" className="email" required/>
+        <input type="text" name="email" className="email" required />
         <label className="animated-label" htmlFor="email">{t('backup-account.input-label')}</label>
       </div>
-      <button>{t('backup-account.button')}</button>
+      <SubmitButton buttonText={t('backup-account.button')} />
       <div>
         <a href="/">
           <i className="fa fa-angle-left" aria-hidden="true"></i>
