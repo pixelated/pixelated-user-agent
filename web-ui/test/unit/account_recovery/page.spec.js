@@ -4,9 +4,22 @@ import React from 'react'
 import { Page } from 'src/account_recovery/page'
 
 describe('Page', () => {
+  let mockT, page
+
+  beforeEach(() => {
+    mockT = (key) => (key)
+    page = shallow(<Page t={mockT}/>)
+  })
+
   it('renders backup email page title', () => {
-    const mockT = key => key;
-    const page = shallow(<Page t={mockT}/>);
-    expect(page.find('h1').text()).toEqual('backup-account.title');
-  });
-});
+    expect(page.find('h1').text()).toEqual('backup-account.title')
+  })
+
+  it('renders backup account email input field', () => {
+    expect(page.find('InputField').props().name).toEqual('email')
+  })
+
+  it('renders backup account submit button', () => {
+    expect(page.find('SubmitButton').props().buttonText).toEqual('backup-account.button')
+  })
+})

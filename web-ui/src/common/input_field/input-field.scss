@@ -1,0 +1,77 @@
+/*
+ * Copyright (c) 2017 ThoughtWorks, Inc.
+ *
+ * Pixelated is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Pixelated is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import "~scss/base/colors";
+
+.input-field-group {
+  position:relative;
+  margin: 1.5em 0;
+  width: 100%;
+}
+
+.input-field-label {
+  font-size: 0.9em;
+  margin-bottom: 10px;
+  display: inline-block;
+  color:#999;
+  position:absolute;
+  pointer-events:none;
+  left: 6px;
+  top:10px;
+  transition:0.2s ease all;
+  -moz-transition:0.2s ease all;
+  -webkit-transition:0.2s ease all;
+}
+
+.input-field {
+  display: block;
+  border: none;
+  border-bottom: solid 1px $dark_blue;
+  width: 100%;
+  height: auto;
+  padding: 0.3em 0px;
+
+  &:focus {
+    outline:none;
+    border-width: 2px;
+  }
+}
+
+.input-field:focus ~ .input-field-label, .input-field:valid ~ .input-field-label {
+  top:-12px;
+  left: 0;
+  font-size:0.7em;
+  color: $dark_blue;
+}
+
+@media only screen and (min-width : 500px) {
+  .input-field-group {
+    flex-basis: 70%;
+    -webkit-align-self: center;
+    align-self: center;
+  }
+}
+
+@media only screen and (min-width : 960px) {
+  .input-field-group {
+    width: 300px;
+    -webkit-align-self: flex-start;
+    align-self: flex-start;
+    margin-top: 3em;
+    font-size: 1em;
+  }
+}

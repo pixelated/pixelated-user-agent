@@ -17,7 +17,8 @@
 
 import React from 'react'
 import { translate } from 'react-i18next'
-import SubmitButton from 'src/common/submit_button'
+import SubmitButton from 'src/common/submit_button/submit_button'
+import InputField from 'src/common/input_field/input_field'
 
 import './page.scss'
 
@@ -28,10 +29,7 @@ export const Page = ({ t }) => (
       <h1>{t('backup-account.title')}</h1>
       <p>{t('backup-account.paragraph1')}</p>
       <p>{t('backup-account.paragraph2')}</p>
-      <div className="field-group">
-        <input type="text" name="email" className="email" required />
-        <label className="animated-label" htmlFor="email">{t('backup-account.input-label')}</label>
-      </div>
+      <InputField name='email' label={t('backup-account.input-label')} />
       <SubmitButton buttonText={t('backup-account.button')} />
       <div>
         <a href="/">
