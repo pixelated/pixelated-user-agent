@@ -1,8 +1,9 @@
 import React from 'react'
+import { translate } from 'react-i18next'
 
 import 'scss/account_recovery/page.scss'
 
-const Page = () => (
+const Page = (props) => (
   <div className='container'>
     <img src='assets/images/forgot-my-password.svg' alt="Esqueci minha senha!"/>
     <form>
@@ -22,6 +23,6 @@ const Page = () => (
       </div>
     </form>
   </div>
-);
+)
 
-export default Page
+export default translate('', { wait: true })(Page)
