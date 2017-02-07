@@ -1,7 +1,10 @@
 @import "../vendor/reset";
 @import "../base/colors";
 @import "../base/fonts";
-@import "../base/scaffolding";
+
+html {
+  min-height: 100%;
+}
 
 body {
   font-family: "Open Sans", "Microsoft YaHei", "Hiragino Sans GB", "Hiragino Sans GB W3", "微软雅黑", "Helvetica Neue", Arial, sans-serif;
@@ -10,22 +13,164 @@ body {
   background: -o-linear-gradient(bottom right, $dark_blue, $middle_blue); /* For Opera 11.1 to 12.0 */
   background: -moz-linear-gradient(bottom right, $dark_blue, $middle_blue); /* For Firefox 3.6 to 15 */
   background: linear-gradient(to bottom right, $dark_blue, $middle_blue); /* Standard syntax */
+  color: $dark_grey_text;
+  min-height: 100%;
 }
 
 h1 {
-  font-size: 4em;
-  color: $dark_slate_gray;
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+p {
+  -webkit-margin-before: 0.5em;
+  -webkit-margin-after: 0.5em;
+  margin-before: 0.5em;
+  margin-after: 0.5em;
+}
+
+a {
+  text-decoration: none;
+  color: $dark_blue;
+  font-style: italic;
+
+  .fa {
+    font-size: 1.6em;
+    position: relative;
+    top: 3px;
+    margin-right: 0.3em;
+  }
+
+}
+
+.field-group {
+  position:relative;
+  margin: 1.5em 0;
+  width: 100%;
+
+  label {
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+
+  input {
+    display: block;
+    border: none;
+    border-bottom: solid 1px #4da3b6;
+    width: 100%;
+    height: auto;
+    padding: 0.3em 0px;
+  }
+
+  input:focus {
+    outline:none;
+    border-width: 2px;
+  }
+
+  input:focus ~ .animated-label, input:valid ~ .animated-label {
+    top:-12px;
+    left: 0;
+    font-size:0.7em;
+    color:#4da3b6;
+  }
+
+  .animated-label {
+    color:#999;
+    position:absolute;
+    pointer-events:none;
+    left: 6px;
+    top:10px;
+    transition:0.2s ease all;
+    -moz-transition:0.2s ease all;
+    -webkit-transition:0.2s ease all;
+  }
+}
+
+
+button {
+  background: $dark_blue;
+  padding: 0.8em;
+  color: $white;
+  text-align: center;
+  border: none;
+  border-radius: 2px;
+  font-weight: 300;
+  width: 100%;
+  margin-bottom: 1em;
 }
 
 .container {
   background: $white;
-  width: 90%;
-  margin: 2% auto;
-  padding: 3%;
+  width: 84%;
+  margin: 3% auto;
+  padding: 6% 5%;
+
+  -webkit-display: flex;
+  display: flex;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}
+
+img {
+  width: 50%;
+  -webkit-align-self: center;
+  align-self: center;
+}
+
+@media only screen and (min-width : 500px) {
+  body {
+    font-size: 1.3em;
+  }
+
+  form {
+    display: flex;
+    -webkit-display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+
+    .field-group, button, div {
+      width: 70%;
+      -webkit-align-self: center;
+      align-self: center;
+    }
+  }
+}
+
+@media only screen and (min-width : 960px) {
+  .container{
+    width: 60%;
+    padding: 3%;
+    -webkit-align-items: flex-start;
+    align-items: flex-start;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    max-width: 700px;
+  }
+
+  form {
+    margin-left: 2.5em;
+
+    .field-group, button, div {
+      width: 300px;
+      -webkit-align-self: flex-start;
+      align-self: flex-start;
+    }
+
+    .field-group {
+      margin-top: 3em;
+      font-size: 1em;
+    }
+  }
 
   img {
-    display: block;
-    width: 50%;
-    margin: 0 auto;
+    width: 300px;
+  }
+
+  button {
+    font-size: 0.8em;
+    margin-bottom: 1em;
   }
 }
