@@ -1,5 +1,5 @@
 #!/bin/sh
-
+set -xv
 export PATH=/bin:/usr/bin:/sbin:/usr/sbin
 
 if [ -d /run/systemd/system  ]; then
