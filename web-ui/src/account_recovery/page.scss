@@ -50,10 +50,8 @@ h1 {
 }
 
 p {
-  -webkit-margin-before: 0.5em;
-  -webkit-margin-after: 0.5em;
-  margin-before: 0.5em;
-  margin-after: 0.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 a {
@@ -105,7 +103,7 @@ a {
 @media only screen and (min-width : 960px) {
   .container{
     width: 60%;
-    padding: 3%;
+    padding: 3em;
     align-items: flex-start;
     flex-direction: row;
     max-width: 700px;
