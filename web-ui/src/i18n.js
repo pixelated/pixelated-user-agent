@@ -14,17 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-import i18n from 'i18next'
-import i18nBackend from 'i18nextXHRBackend'
-import I18nDetector from 'i18nextBrowserLanguageDetector'
+import i18n from 'i18next';
+import i18nBackend from 'i18nextXHRBackend';
+import I18nDetector from 'i18nextBrowserLanguageDetector';
 
-const detector = new I18nDetector()
-const detect = detector.detect.bind(detector)
+const detector = new I18nDetector();
+const detect = detector.detect.bind(detector);
 
 detector.detect = (detectionOrder) => {
-  const result = detect(detectionOrder)
-  return result.replace('-', '_')
-}
+  const result = detect(detectionOrder);
+  return result.replace('-', '_');
+};
 
 i18n
   .use(i18nBackend)
@@ -34,6 +34,6 @@ i18n
     backend: {
       loadPath: 'assets/locales/{{lng}}/{{ns}}.json'
     }
-  })
+  });
 
-export default i18n
+export default i18n;

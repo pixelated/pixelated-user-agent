@@ -15,12 +15,12 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
-import { translate } from 'react-i18next'
-import SubmitButton from 'src/common/submit_button/submit_button'
-import InputField from 'src/common/input_field/input_field'
+import React from 'react';
+import { translate } from 'react-i18next';
+import SubmitButton from 'src/common/submit_button/submit_button';
+import InputField from 'src/common/input_field/input_field';
 
-import './page.scss'
+import './page.scss';
 
 export const Page = ({ t }) => (
   <div className='container'>
@@ -39,10 +39,10 @@ export const Page = ({ t }) => (
       </div>
     </form>
   </div>
-)
+);
 
 Page.propTypes = {
   t: React.PropTypes.func.isRequired
-}
+};
 
-export default translate('', { wait: true })(Page)
+export default translate('', { wait: true })(Page);

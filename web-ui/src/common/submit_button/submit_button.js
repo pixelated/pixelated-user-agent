@@ -15,16 +15,16 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
+import React from 'react';
 
-import './submit-button.scss'
+import './submit-button.scss';
 
 const SubmitButton = ({ buttonText }) => (
   <input type='submit' className='submit-button' value={buttonText} />
-)
+);
 
 SubmitButton.propTypes = {
   buttonText: React.PropTypes.string.isRequired
-}
+};
 
-export default SubmitButton
+export default SubmitButton;

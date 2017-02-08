@@ -1,26 +1,26 @@
-import { shallow } from 'enzyme'
-import expect from 'expect'
-import React from 'react'
-import { Page } from 'src/account_recovery/page'
+import { shallow } from 'enzyme';
+import expect from 'expect';
+import React from 'react';
+import { Page } from 'src/account_recovery/page';
 
 describe('Page', () => {
-  let mockT
-  let page
+  let mockT;
+  let page;
 
   beforeEach(() => {
-    mockT = key => key
-    page = shallow(<Page t={mockT} />)
-  })
+    mockT = key => key;
+    page = shallow(<Page t={mockT} />);
+  });
 
   it('renders backup email page title', () => {
-    expect(page.find('h1').text()).toEqual('backup-account.title')
-  })
+    expect(page.find('h1').text()).toEqual('backup-account.title');
+  });
 
   it('renders backup account email input field', () => {
-    expect(page.find('InputField').props().name).toEqual('email')
-  })
+    expect(page.find('InputField').props().name).toEqual('email');
+  });
 
   it('renders backup account submit button', () => {
-    expect(page.find('SubmitButton').props().buttonText).toEqual('backup-account.button')
-  })
-})
+    expect(page.find('SubmitButton').props().buttonText).toEqual('backup-account.button');
+  });
+});

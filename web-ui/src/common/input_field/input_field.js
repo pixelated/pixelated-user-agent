@@ -15,20 +15,20 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react'
+import React from 'react';
 
-import './input-field.scss'
+import './input-field.scss';
 
 const InputField = ({ label, name }) => (
   <div className='input-field-group'>
     <input type='text' name={name} className='input-field' required />
     <label className='input-field-label' htmlFor={name}>{label}</label>
   </div>
-)
+);
 
 InputField.propTypes = {
   label: React.PropTypes.string.isRequired,
   name: React.PropTypes.string.isRequired
-}
+};
 
-export default InputField
+export default InputField;
