@@ -9,6 +9,7 @@
     "babel-cli": "^6.22.2",
     "babel-core": "^6.21.0",
     "babel-loader": "^6.2.10",
+    "babel-plugin-istanbul": "^3.1.2",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.22.0",
     "bower": "1.7.9",
@@ -53,6 +54,7 @@
     "mocha-webpack": "^0.7.0",
     "modernizr": "^3.3.1",
     "node-sass": "^4.5.0",
+    "nyc": "^10.1.2",
     "quoted-printable": "^1.0.1",
     "react": "^15.4.2",
     "react-a11y": "^0.3.3",
@@ -69,28 +71,39 @@
     "webpack": "^1.14.0"
   },
   "scripts": {
-    "test": "npm run lint --silent && npm run build-statics --silent && npm run mocha-test && npm run karma-test",
-    "mocha-test": "mocha-webpack --webpack-config webpack.test.config.js \"test/unit/**/*.spec.js\"",
-    "mocha-watch": "mocha-webpack --watch --webpack-config webpack.test.config.js \"test/unit/**/*.spec.js\"",
-    "karma-test": "karma start --single-run $GRUNT_OPTS",
-    "debug": "npm run build && karma start --browsers Chrome $GRUNT_OPTS",
-    "watch": "npm run compass-watch & npm run handlebars-watch & npm run build-js-watch",
-    "watch-test": "karma start",
-    "handlebars": "mkdir -p app/js/generated/hbs/ && handlebars app/templates/**/*.hbs > app/js/generated/hbs/templates.js --namespace=window.Pixelated --root .",
-    "handlebars-watch": "watch 'npm run handlebars' app/templates",
-    "compass": "compass compile",
-    "compass-watch": "compass watch",
-    "build": "npm run build-statics && npm run build-js",
-    "build-statics": "npm run clean && npm run handlebars && npm run add_git_version && npm run compass",
-    "build-prod": "npm run build-statics && webpack -p --config ./webpack.production.config.js",
-    "build-js": "webpack --colors --progress",
-    "build-js-watch": "webpack --colors --progress --watch",
-    "lint": "npm run jshint && npm run eslint",
-    "jshint": "jshint --config=.jshintrc app test",
-    "eslint": "eslint src test/unit",
+    "test": "npm run lint --silent && npm run build:statics --silent && npm run test:unit",
+    "test:unit": "npm run test:coverage && npm run test:karma",
+    "test:coverage": "NODE_ENV=test nyc --check-coverage npm run test:mocha",
+    "test:mocha": "mocha-webpack --webpack-config webpack.test.config.js \"test/unit/**/*.spec.js\"",
+    "test:karma": "karma start --single-run $GRUNT_OPTS",
+    "test:watch:mocha": "npm run test:mocha -- --watch",
+    "test:watch:karma": "karma start",
+
+    "lint": "npm run lint:jshint && npm run lint:eslint",
+    "lint:jshint": "jshint --config=.jshintrc app test",
+    "lint:eslint": "eslint src test/unit",
+
+    "build": "npm run build:statics && npm run build:js",
+    "build:debug": "npm run build && karma start --browsers Chrome $GRUNT_OPTS",
+    "build:statics": "npm run clean && npm run build:handlebars && npm run add_git_version && npm run build:compass",
+    "build:prod": "npm run build:statics && webpack -p --config ./webpack.production.config.js",
+    "build:js": "webpack --colors --progress",
+    "build:compass": "compass compile",
+    "build:handlebars": "mkdir -p app/js/generated/hbs/ && handlebars app/templates/**/*.hbs > app/js/generated/hbs/templates.js --namespace=window.Pixelated --root .",
+
+    "watch": "npm run watch:compass & npm run watch:handlebars & npm run watch:js",
+    "watch:handlebars": "watch 'npm run build:handlebars' app/templates",
+    "watch:compass": "compass watch",
+    "watch:js": "webpack --colors --progress --watch",
+
     "clean": "rm -rf dist/ app/js/generated/hbs/* app/css/*",
-    "package": "PIXELATED_BUILD='package' npm run build-prod && npm run imagemin",
     "imagemin": "node config/imagemin.js",
+    "package": "PIXELATED_BUILD='package' npm run build:prod && npm run imagemin",
     "add_git_version": "/bin/bash config/add_git_version.sh"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.js"
+    ]
   }
 }
