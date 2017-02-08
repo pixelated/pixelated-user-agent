@@ -40,7 +40,7 @@ test: clean install test_py test_js coverage
 test_py: linters_py unit_tests_py integration_tests_py
 test_js: linters_js unit_tests_js
 test_all: test functional_tests
-linters: linters_py linters_js
+linters: clean install linters_py linters_js
 
 linters_py:
 	@. $(VIRTUALENV)/bin/activate;\
