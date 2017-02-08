@@ -65,7 +65,8 @@
   },
   "scripts": {
     "test": "npm run jshint --silent && npm run build-statics --silent && npm run mocha-test && npm run karma-test",
-    "mocha-test": "mocha-webpack --webpack-config webpack.test.config.js \"test/spec/account_recovery/**/*.spec.js\"",
+    "mocha-test": "mocha-webpack --webpack-config webpack.test.config.js \"test/unit/**/*.spec.js\"",
+    "mocha-watch": "mocha-webpack --watch --webpack-config webpack.test.config.js \"test/unit/**/*.spec.js\"",
     "karma-test": "karma start --single-run $GRUNT_OPTS",
     "debug": "npm run build && karma start --browsers Chrome $GRUNT_OPTS",
     "watch": "npm run compass-watch & npm run handlebars-watch & npm run build-js-watch",

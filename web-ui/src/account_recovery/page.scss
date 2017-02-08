@@ -1,6 +1,23 @@
-@import "../vendor/reset";
-@import "../base/colors";
-@import "../base/fonts";
+/*
+ * Copyright (c) 2017 ThoughtWorks, Inc.
+ *
+ * Pixelated is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Pixelated is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import "~scss/vendor/reset";
+@import "~scss/base/colors";
+@import "~scss/base/fonts";
 
 html {
   min-height: 100%;
@@ -43,63 +60,6 @@ a {
 
 }
 
-.field-group {
-  position:relative;
-  margin: 1.5em 0;
-  width: 100%;
-
-  label {
-    font-size: 0.9em;
-    margin-bottom: 10px;
-    display: inline-block;
-  }
-
-  input {
-    display: block;
-    border: none;
-    border-bottom: solid 1px #4da3b6;
-    width: 100%;
-    height: auto;
-    padding: 0.3em 0px;
-  }
-
-  input:focus {
-    outline:none;
-    border-width: 2px;
-  }
-
-  input:focus ~ .animated-label, input:valid ~ .animated-label {
-    top:-12px;
-    left: 0;
-    font-size:0.7em;
-    color:#4da3b6;
-  }
-
-  .animated-label {
-    color:#999;
-    position:absolute;
-    pointer-events:none;
-    left: 6px;
-    top:10px;
-    transition:0.2s ease all;
-    -moz-transition:0.2s ease all;
-    -webkit-transition:0.2s ease all;
-  }
-}
-
-
-button {
-  background: $dark_blue;
-  padding: 0.8em;
-  color: $white;
-  text-align: center;
-  border: none;
-  border-radius: 2px;
-  font-weight: 300;
-  width: 100%;
-  margin-bottom: 1em;
-}
-
 .container {
   background: $white;
   width: 84%;
@@ -131,7 +91,7 @@ img {
     -webkit-flex-direction: column;
     flex-direction: column;
 
-    .field-group, button, div {
+    div {
       width: 70%;
       -webkit-align-self: center;
       align-self: center;
@@ -153,24 +113,14 @@ img {
   form {
     margin-left: 2.5em;
 
-    .field-group, button, div {
+    div {
       width: 300px;
       -webkit-align-self: flex-start;
       align-self: flex-start;
-    }
-
-    .field-group {
-      margin-top: 3em;
-      font-size: 1em;
     }
   }
 
   img {
     width: 300px;
-  }
-
-  button {
-    font-size: 0.8em;
-    margin-bottom: 1em;
   }
 }
