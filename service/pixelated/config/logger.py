@@ -42,11 +42,14 @@ def init(debug=False):
     logging.getLogger('gnupg').addFilter(PrivateKeyFilter())
 
     def formatter(event):
-        event['log_time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(event['log_time']))
-        event['log_level'] = event['log_level'].name.upper()
-        logstring = u'{log_time} [{log_namespace}] {log_level} ' + event['log_format'] + '\n'
-        return logstring.format(**event)
+        try:
+            event['log_time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(event['log_time']))
+            event['log_level'] = event['log_level'].name.upper()
+            event['log_format'] = str(event['log_format']) + '\n' if event.get('log_format') else ''
+            logstring = u'{log_time} [{log_namespace}] {log_level} ' + event['log_format']
+            return logstring.format(**event)
+        except Exception as e:
+            return "Error while formatting log event: {!r}\nOriginal event: {!r}\n".format(e, event)
 
     observers = [FileLogObserver(sys.stdout, formatter)]
-
     globalLogBeginner.beginLoggingTo(observers)
