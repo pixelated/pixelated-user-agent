@@ -16,6 +16,7 @@ module.exports = {
     filename: '[name].js',
     publicPath: '/assets/'
   },
+  devtool: 'source-map',
   resolve: {
     alias: aliases,
     extensions: ['', '.js']

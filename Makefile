@@ -49,7 +49,7 @@ linters_py:
 
 linters_js:
 	@cd web-ui;\
-	npm run jshint
+	npm run lint
 
 coverage:
 	@. $(VIRTUALENV)/bin/activate;\

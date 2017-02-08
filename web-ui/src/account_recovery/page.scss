@@ -65,18 +65,13 @@ a {
   width: 84%;
   margin: 3% auto;
   padding: 6% 5%;
-
-  -webkit-display: flex;
   display: flex;
-  -webkit-align-items: flex-start;
   align-items: flex-start;
-  -webkit-flex-direction: column;
   flex-direction: column;
 }
 
 img {
   width: 50%;
-  -webkit-align-self: center;
   align-self: center;
 }
 
@@ -87,13 +82,10 @@ img {
 
   form {
     display: flex;
-    -webkit-display: flex;
-    -webkit-flex-direction: column;
     flex-direction: column;
 
     div {
       width: 70%;
-      -webkit-align-self: center;
       align-self: center;
     }
   }
@@ -103,9 +95,7 @@ img {
   .container{
     width: 60%;
     padding: 3%;
-    -webkit-align-items: flex-start;
     align-items: flex-start;
-    -webkit-flex-direction: row;
     flex-direction: row;
     max-width: 700px;
   }
@@ -115,7 +105,6 @@ img {
 
     div {
       width: 300px;
-      -webkit-align-self: flex-start;
       align-self: flex-start;
     }
   }

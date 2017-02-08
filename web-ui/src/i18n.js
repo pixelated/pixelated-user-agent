@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-import i18n from 'i18next'
-import i18nBackend from 'i18nextXHRBackend'
-import i18nDetector from 'i18nextBrowserLanguageDetector'
+import i18n from 'i18next';
+import i18nBackend from 'i18nextXHRBackend';
+import I18nDetector from 'i18nextBrowserLanguageDetector';
 
-const detector = new i18nDetector();
+const detector = new I18nDetector();
 const detect = detector.detect.bind(detector);
 
-detector.detect = function(detectionOrder)  {
-  let result = detect(detectionOrder);
+detector.detect = (detectionOrder) => {
+  const result = detect(detectionOrder);
   return result.replace('-', '_');
 };
 
