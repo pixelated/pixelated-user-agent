@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2017 ThoughtWorks, Inc.
+ *
+ * Pixelated is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Pixelated is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+ */
+@import "~scss/base/colors";
+
+.header-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: $white;
+  box-shadow: 0 2px 3px 0 $shadow;
+  padding: 5px 0;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  width: 120px;
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+
+  position: absolute;
+  right: 6%;
+
+  .fa {
+    font-size: 1.3em;
+    color: $medium_light_grey;
+  }
+}
+
+
+@media only screen and (min-width : 500px) {
+
+}

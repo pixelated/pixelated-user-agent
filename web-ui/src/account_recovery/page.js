@@ -20,11 +20,13 @@ import { translate } from 'react-i18next';
 import SubmitButton from 'src/common/submit_button/submit_button';
 import InputField from 'src/common/input_field/input_field';
 import Footer from 'src/common/footer/footer';
+import Header from 'src/common/header/header';
 
 import './page.scss';
 
 export const Page = ({ t }) => (
   <div className='page'>
+    <Header />
     <section>
       <div className='container'>
         <img className='backup-account-image' src='assets/images/forgot-my-password.svg' alt={t('backup-account.image-description')} />
