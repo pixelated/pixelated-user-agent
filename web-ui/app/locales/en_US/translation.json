@@ -82,5 +82,6 @@
       "input-label": "Type your backup account",
       "button": "Add Account"
     },
-    "back-to-inbox": "Back to my inbox"
+    "back-to-inbox": "Back to my inbox",
+    "footer-text": "Product in development. Feedback and issues to"
 }
