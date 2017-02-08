@@ -7,7 +7,7 @@ module.exports = [
     },
     {
       test: /\.scss|css$/,
-      loader: "style-loader!css-loader!sass-loader"
+      loader: "style-loader!css-loader!postcss-loader!sass-loader"
     },
     {
       test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,

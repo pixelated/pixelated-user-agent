@@ -32,7 +32,6 @@
 @media only screen and (min-width : 500px) {
   .submit-button {
     width: 70%;
-    -webkit-align-self: center;
     align-self: center;
   }
 }
@@ -40,7 +39,6 @@
 @media only screen and (min-width : 960px) {
   .submit-button {
     width: 300px;
-    -webkit-align-self: flex-start;
     align-self: flex-start;
     font-size: 0.8em;
     margin-bottom: 1em;
