@@ -75,6 +75,7 @@
         "tags": "Etiquetas"
     },
     "backup-account": {
+      "page-title": "Pixelated E-mail de Recuperação",
       "image-description": "Esqueci minha senha!",
       "title": "E se você esquecer sua senha?",
       "paragraph1": "Informe outro e-mail que você usa regularmente. Esse será o seu e-mail de recuperação.",
