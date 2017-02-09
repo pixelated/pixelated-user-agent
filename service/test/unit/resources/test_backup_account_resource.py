@@ -20,18 +20,18 @@ from mock import MagicMock, patch
 from twisted.trial import unittest
 from twisted.web.test.requesthelper import DummyRequest
 
-from pixelated.resources.account_recovery_resource import AccountRecoveryResource
+from pixelated.resources.backup_account_resource import BackupAccountResource
 from test.unit.resources import DummySite
 
 
-class TestAccountRecoveryResource(unittest.TestCase):
+class TestBackupAccountResource(unittest.TestCase):
     def setUp(self):
         self.services_factory = MagicMock()
-        self.resource = AccountRecoveryResource(self.services_factory)
+        self.resource = BackupAccountResource(self.services_factory)
         self.web = DummySite(self.resource)
 
     def test_get(self):
-        request = DummyRequest(['/recovery'])
+        request = DummyRequest(['/backup-account'])
         request.method = 'GET'
         d = self.web.get(request)
 

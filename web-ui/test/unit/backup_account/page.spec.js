@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import React from 'react';
-import { Page } from 'src/account_recovery/page';
+import { Page } from 'src/backup_account/page';
 
 describe('Page', () => {
   let page;
