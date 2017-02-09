@@ -23,7 +23,7 @@
 
   background: $white;
   box-shadow: 0 2px 3px 0 $shadow;
-  padding: 5px 0;
+  padding: 7px 0;
 }
 
 .header-content {
@@ -42,13 +42,45 @@
   position: absolute;
   right: 6%;
 
+  span {
+    display: none;
+  }
+
   .fa {
     font-size: 1.3em;
+    margin-left: 0.4em;
     color: $medium_light_grey;
   }
 }
 
 
-@media only screen and (min-width : 500px) {
+@media only screen and (min-width : 960px) {
+  .header-content {
+    flex-basis: 64%;
+    max-width: 820px;
+    justify-content: space-between;
+  }
 
+  .header-icons {
+    position: relative;
+    right: 0;
+
+    a {
+      display: flex;
+      align-items: center;
+    }
+
+    span {
+      display: inline;
+      color: $medium_light_grey;
+      font-style: normal;
+      font-size: 0.7em;
+      padding-bottom: 0.1em;
+    }
+
+    .fa {
+      font-size: 1em;
+      margin-right: 0;
+    }
+  }
 }

@@ -29,7 +29,11 @@ export const Page = ({ t }) => (
     <Header />
     <section>
       <div className='container'>
-        <img className='backup-account-image' src='assets/images/forgot-my-password.svg' alt={t('backup-account.image-description')} />
+        <img
+          className='backup-account-image'
+          src='assets/images/forgot-my-password.svg'
+          alt={t('backup-account.image-description')}
+        />
         <form>
           <h1>{t('backup-account.title')}</h1>
           <p>{t('backup-account.paragraph1')}</p>
@@ -37,7 +41,7 @@ export const Page = ({ t }) => (
           <InputField name='email' label={t('backup-account.input-label')} />
           <SubmitButton buttonText={t('backup-account.button')} />
           <div>
-            <a href='/'>
+            <a href='/' className='link'>
               <i className='fa fa-angle-left' aria-hidden='true' />
               <span>{t('back-to-inbox')}</span>
             </a>

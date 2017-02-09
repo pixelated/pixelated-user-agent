@@ -22,10 +22,17 @@ import './header.scss';
 export const Header = ({ t }) => (
   <header className='header-wrapper'>
     <div className='header-content'>
-      <img className='header-logo' src='/startup-assets/pixelated-logo-orange.svg' alt='Pixelated' />
-    </div>
-    <div className='header-icons'>
-      <a href='/'><i className='fa fa-sign-out' aria-hidden='true'></i></a>
+      <img
+        className='header-logo'
+        src='/startup-assets/pixelated-logo-orange.svg'
+        alt='Pixelated'
+      />
+      <div className='header-icons'>
+        <a href='/'>
+          <span>{t('logout')}</span>
+          <i className='fa fa-sign-out' aria-hidden='true' />
+        </a>
+      </div>
     </div>
   </header>
 );

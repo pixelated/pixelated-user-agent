@@ -27,6 +27,10 @@ body, #root {
   min-height: 100%;
 }
 
+a {
+  text-decoration: none;
+}
+
 .page {
   font-family: "Open Sans", "Microsoft YaHei", "Hiragino Sans GB", "Hiragino Sans GB W3", "微软雅黑", "Helvetica Neue", Arial, sans-serif;
   background: $dark_blue; /* For browsers that do not support gradients */
@@ -54,8 +58,7 @@ p {
   margin-bottom: 0.5em;
 }
 
-a {
-  text-decoration: none;
+.link {
   color: $dark_blue;
   font-style: italic;
 
