@@ -20,7 +20,7 @@ from xml.sax import SAXParseException
 from pixelated.authentication import Authenticator
 from pixelated.config.leap import BootstrapUserServices
 from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
-from pixelated.resources import handle_error_deferred, get_startup_folder
+from pixelated.resources import get_startup_folder
 from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer
 from twisted.logger import Logger
@@ -139,8 +139,6 @@ class LoginResource(BaseResource):
 
         d = self._handle_login(request)
         d.addCallbacks(render_response, render_error)
-        d.addErrback(handle_error_deferred, request)
-
         return NOT_DONE_YET
 
     @defer.inlineCallbacks
@@ -151,7 +149,7 @@ class LoginResource(BaseResource):
         defer.returnValue(user_auth)
 
     def _complete_bootstrap(self, user_auth, request):
-        def log_error(error):
+        def login_error(error):
             log.error('Login error during %s services setup: %s \n %s' % (user_auth.username, error.getErrorMessage(), error.getTraceback()))
 
         def set_session_cookies(_):
@@ -162,4 +160,4 @@ class LoginResource(BaseResource):
         password = request.args['password'][0]
         d = self._bootstrap_user_services.setup(user_auth, password, language)
         d.addCallback(set_session_cookies)
-        d.addErrback(log_error)
+        d.addErrback(login_error)
