@@ -48,6 +48,10 @@ section {
   flex: 1 0 auto;
 }
 
+form {
+  width: 100%;
+}
+
 h1 {
   font-size: 1.3em;
   font-weight: 600;
@@ -84,6 +88,7 @@ p {
 
 .backup-account-image {
   width: 50%;
+  height: 100%;
   align-self: center;
 }
 
