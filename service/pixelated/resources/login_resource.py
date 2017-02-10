@@ -154,8 +154,7 @@ class LoginResource(BaseResource):
             session.login_error()
 
         def set_session_cookies(_, session):
-            session.user_uuid = user_auth.uuid
-            session.login_completed()
+            session.login_completed(user_auth.uuid)
 
         language = parse_accept_language(request.getAllHeaders())
         password = request.args['password'][0]
