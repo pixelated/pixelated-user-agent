@@ -149,15 +149,19 @@ class LoginResource(BaseResource):
         defer.returnValue(user_auth)
 
     def _complete_bootstrap(self, user_auth, request):
-        def login_error(error):
+        def login_error(error, session):
             log.error('Login error during %s services setup: %s \n %s' % (user_auth.username, error.getErrorMessage(), error.getTraceback()))
+            session.login_error()
 
-        def set_session_cookies(_):
-            session = IPixelatedSession(request.getSession())
+        def set_session_cookies(_, session):
             session.user_uuid = user_auth.uuid
+            session.login_completed()
 
         language = parse_accept_language(request.getAllHeaders())
         password = request.args['password'][0]
+        session = IPixelatedSession(request.getSession())
+        session.login_started()
+
         d = self._bootstrap_user_services.setup(user_auth, password, language)
-        d.addCallback(set_session_cookies)
-        d.addErrback(login_error)
+        d.addCallback(set_session_cookies, session)
+        d.addErrback(login_error, session)

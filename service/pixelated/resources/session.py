@@ -21,6 +21,7 @@ from twisted.web.server import Session
 
 class IPixelatedSession(Interface):
     user_uuid = Attribute('The uuid of the currently logged in user')
+    login_status = Attribute('The status during user login')
 
 
 class PixelatedSession(object):
@@ -28,12 +29,26 @@ class PixelatedSession(object):
 
     def __init__(self, session):
         self.user_uuid = None
+        self.login_status = None
 
     def is_logged_in(self):
         return self.user_uuid is not None
 
     def expire(self):
         self.user_uuid = None
+        self.login_status = None
+
+    def login_started(self):
+        self.login_status = 'started'
+
+    def login_completed(self):
+        self.login_status = 'completed'
+
+    def login_error(self):
+        self.login_status = 'error'
+
+    def check_login_status(self):
+        return self.login_status
 
 
 registerAdapter(PixelatedSession, Session, IPixelatedSession)
