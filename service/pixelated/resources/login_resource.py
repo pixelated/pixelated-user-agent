@@ -106,6 +106,8 @@ class LoginResource(BaseResource):
             return self
         if path == 'login':
             return self
+        if path == 'status':
+            return LoginStatusResource(self._services_factory)
         if not self.is_logged_in(request):
             return UnAuthorizedResource()
         return NoResource()
@@ -164,3 +166,14 @@ class LoginResource(BaseResource):
         d = self._bootstrap_user_services.setup(user_auth, password, language)
         d.addCallback(set_session_cookies, session)
         d.addErrback(login_error, session)
+
+
+class LoginStatusResource(BaseResource):
+    isLeaf = True
+
+    def __init__(self, services_factory):
+        BaseResource.__init__(self, services_factory)
+
+    def render_GET(self, request):
+        session = IPixelatedSession(request.getSession())
+        return format(session.check_login_status())
