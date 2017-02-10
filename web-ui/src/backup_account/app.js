@@ -16,14 +16,23 @@
  */
 
 import React from 'react';
-import { render } from 'react-dom';
-import a11y from 'react-a11y';
+import { I18nextProvider } from 'react-i18next';
 
-import App from './app';
+import PageWrapper from './page';
+import internationalization from '../i18n';
 
-if (process.env.NODE_ENV === 'development') a11y(React);
-
-render(
-  <App />,
-  document.getElementById('root')
+const App = ({ i18n = internationalization }) => (
+  <I18nextProvider i18n={i18n}>
+    <PageWrapper />
+  </I18nextProvider>
 );
+
+App.propTypes = {
+  i18n: React.PropTypes.object // eslint-disable-line react/forbid-prop-types
+};
+
+App.defaultProps = {
+  i18n: internationalization
+};
+
+export default App;

@@ -38,6 +38,7 @@
     "jquery": "^3.1.1",
     "jquery-file-upload": "^4.0.5",
     "jquery-ui": "^1.12.1",
+    "jsdom": "^9.10.0",
     "jshint": "2.9.2",
     "json-loader": "^0.5.4",
     "karma": "0.13.19",
@@ -75,6 +76,7 @@
   "scripts": {
     "test": "npm run lint --silent && npm run build:statics --silent && npm run test:unit",
     "test:unit": "npm run test:coverage && npm run test:karma",
+    "test:integration": "mocha-webpack --webpack-config webpack.test.config.js --require test/integration/setup.js \"test/integration/**/*.spec.js\"",
     "test:coverage": "NODE_ENV=test nyc --check-coverage npm run test:mocha",
     "test:mocha": "mocha-webpack --webpack-config webpack.test.config.js \"test/unit/**/*.spec.js\"",
     "test:karma": "karma start --single-run $GRUNT_OPTS",

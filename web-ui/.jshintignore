@@ -4,3 +4,4 @@ app/js/lib
 app/js/generated
 src/
 test/unit
+test/integration

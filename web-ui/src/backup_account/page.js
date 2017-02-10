@@ -23,6 +23,7 @@ import InputField from 'src/common/input_field/input_field';
 import Footer from 'src/common/footer/footer';
 import Header from 'src/common/header/header';
 
+import 'font-awesome/scss/font-awesome.scss';
 import './page.scss';
 
 export const Page = ({ t }) => (
