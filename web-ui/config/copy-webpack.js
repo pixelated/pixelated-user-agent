@@ -4,7 +4,7 @@ module.exports = new CopyWebpackPlugin([
   { context: 'app/', from: '404.html' },
   { context: 'app/', from: 'index.html' },
   { context: 'app/', from: 'sandbox.html' },
-  { context: 'src/account_recovery/', from: 'account_recovery.html' },
+  { context: 'src/backup_account/', from: 'backup_account.html' },
   { context: 'app/', from: 'css/*' },
   { context: 'app/', from: 'fonts/*' },
   { context: 'app/', from: 'locales/**/*' },

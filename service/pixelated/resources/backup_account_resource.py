@@ -24,14 +24,14 @@ from twisted.web.http import OK
 from twisted.web.template import Element, XMLFile, renderElement
 
 
-class AccountRecoveryPage(Element):
-    loader = XMLFile(FilePath(os.path.join(get_static_folder(), 'account_recovery.html')))
+class BackupAccountPage(Element):
+    loader = XMLFile(FilePath(os.path.join(get_static_folder(), 'backup_account.html')))
 
     def __init__(self):
-        super(AccountRecoveryPage, self).__init__()
+        super(BackupAccountPage, self).__init__()
 
 
-class AccountRecoveryResource(BaseResource):
+class BackupAccountResource(BaseResource):
     isLeaf = True
 
     def __init__(self, services_factory):
@@ -42,5 +42,5 @@ class AccountRecoveryResource(BaseResource):
         return self._render_template(request)
 
     def _render_template(self, request):
-        site = AccountRecoveryPage()
+        site = BackupAccountPage()
         return renderElement(request, site)

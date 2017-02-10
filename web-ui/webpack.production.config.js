@@ -7,7 +7,7 @@ var aliases = require('./config/alias-webpack');
 module.exports = {
   entry: {
     app: './app/js/index.js',
-    account_recovery: './src/account_recovery/index.js',
+    backup_account: './src/backup_account/backup_account.js',
     sandbox: './app/js/sandbox.js'
   },
   node: { fs: 'empty' },

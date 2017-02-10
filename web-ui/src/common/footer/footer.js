@@ -17,32 +17,24 @@
 
 import React from 'react';
 import { translate } from 'react-i18next';
-import SubmitButton from 'src/common/submit_button/submit_button';
-import InputField from 'src/common/input_field/input_field';
+import './footer.scss';
 
-import './page.scss';
-
-export const Page = ({ t }) => (
-  <div className='container'>
-    <img src='assets/images/forgot-my-password.svg' alt={t('backup-account.image-description')} />
-    <form>
-      <h1>{t('backup-account.title')}</h1>
-      <p>{t('backup-account.paragraph1')}</p>
-      <p>{t('backup-account.paragraph2')}</p>
-      <InputField name='email' label={t('backup-account.input-label')} />
-      <SubmitButton buttonText={t('backup-account.button')} />
+export const Footer = ({ t }) => (
+  <footer className='footer-wrapper'>
+    <div className='footer-content'>
+      <img className='footer-image' src='/assets/images/lab.svg' alt='' />
       <div>
-        <a href='/'>
-          <i className='fa fa-angle-left' aria-hidden='true' />
-          <span>{t('back-to-inbox')}</span>
+        {t('footer-text')}
+        <a className='footer-link' href='mailto:team@pixelated-project.org'>
+          {' team@pixelated-project.org'}
         </a>
       </div>
-    </form>
-  </div>
+    </div>
+  </footer>
 );
 
-Page.propTypes = {
+Footer.propTypes = {
   t: React.PropTypes.func.isRequired
 };
 
-export default translate('', { wait: true })(Page);
+export default translate('', { wait: true })(Footer);

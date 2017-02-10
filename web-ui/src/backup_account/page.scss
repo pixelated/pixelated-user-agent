@@ -19,11 +19,19 @@
 @import "~scss/base/colors";
 @import "~scss/base/fonts";
 
-html {
+html, body, #root {
+  height: 100%;
+}
+
+body, #root {
   min-height: 100%;
 }
 
-body {
+a {
+  text-decoration: none;
+}
+
+.page {
   font-family: "Open Sans", "Microsoft YaHei", "Hiragino Sans GB", "Hiragino Sans GB W3", "微软雅黑", "Helvetica Neue", Arial, sans-serif;
   background: $dark_blue; /* For browsers that do not support gradients */
   background: -webkit-linear-gradient(left top, $dark_blue, $middle_blue); /* For Safari 5.1 to 6.0 */
@@ -32,6 +40,16 @@ body {
   background: linear-gradient(to bottom right, $dark_blue, $middle_blue); /* Standard syntax */
   color: $dark_grey_text;
   min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+section {
+  flex: 1 0 auto;
+}
+
+form {
+  width: 100%;
 }
 
 h1 {
@@ -40,14 +58,11 @@ h1 {
 }
 
 p {
-  -webkit-margin-before: 0.5em;
-  -webkit-margin-after: 0.5em;
-  margin-before: 0.5em;
-  margin-after: 0.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
-a {
-  text-decoration: none;
+.link {
   color: $dark_blue;
   font-style: italic;
 
@@ -68,10 +83,12 @@ a {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  box-shadow: 0 2px 3px 0 $shadow;
 }
 
-img {
+.backup-account-image {
   width: 50%;
+  height: 100%;
   align-self: center;
 }
 
@@ -94,7 +111,7 @@ img {
 @media only screen and (min-width : 960px) {
   .container{
     width: 60%;
-    padding: 3%;
+    padding: 3em;
     align-items: flex-start;
     flex-direction: row;
     max-width: 700px;
@@ -109,7 +126,7 @@ img {
     }
   }
 
-  img {
+  .backup-account-image {
     width: 300px;
   }
 }

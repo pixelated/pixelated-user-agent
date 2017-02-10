@@ -1,15 +1,14 @@
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import React from 'react';
-import { Page } from 'src/account_recovery/page';
+import { Page } from 'src/backup_account/page';
 
 describe('Page', () => {
-  let mockT;
   let page;
 
   beforeEach(() => {
-    mockT = key => key;
-    page = shallow(<Page t={mockT} />);
+    const mockTranslations = key => key;
+    page = shallow(<Page t={mockTranslations} />);
   });
 
   it('renders backup email page title', () => {
