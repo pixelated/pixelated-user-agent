@@ -20,7 +20,7 @@ from string import Template
 from pixelated.resources.users import UsersResource
 
 from pixelated.resources import BaseResource, UnAuthorizedResource, UnavailableResource
-from pixelated.resources import get_startup_folder, get_static_folder
+from pixelated.resources import get_static_folder
 from pixelated.resources.attachments_resource import AttachmentsResource
 from pixelated.resources.sandbox_resource import SandboxResource
 from pixelated.resources.backup_account_resource import BackupAccountResource
@@ -51,7 +51,7 @@ MODE_RUNNING = 2
 class RootResource(BaseResource):
     def __init__(self, services_factory):
         BaseResource.__init__(self, services_factory)
-        self._startup_assets_folder = get_startup_folder()
+        self._startup_assets_folder = get_static_folder()
         self._static_folder = get_static_folder()
         self._html_template = open(os.path.join(self._static_folder, 'index.html')).read()
         self._services_factory = services_factory

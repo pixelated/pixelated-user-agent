@@ -8,6 +8,7 @@ module.exports = {
   entry: {
     app: './app/js/index.js',
     backup_account: './src/backup_account/backup_account.js',
+    login: './src/login/login.js',
     sandbox: './app/js/sandbox.js'
   },
   node: { fs: 'empty' },

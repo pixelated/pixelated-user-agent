@@ -87,23 +87,15 @@ class TestLoginResource(unittest.TestCase):
 
         d = self.web.get(request)
 
-        def assert_form_rendered(_):
+        def assert_login_page_rendered(_):
             self.assertEqual(200, request.responseCode)
-            form_action = 'action="/login"'
-            form_method = 'method="post"'
-            input_username = 'name="username"'
-            input_password = 'name="password"'
-            input_submit = 'name="login"'
+            title = 'Pixelated - Login'
             default_disclaimer = 'Some disclaimer'
             written_response = ''.join(request.written)
-            self.assertIn(form_action, written_response)
-            self.assertIn(form_method, written_response)
-            self.assertIn(input_password, written_response)
-            self.assertIn(input_submit, written_response)
-            self.assertIn(input_username, written_response)
+            self.assertIn(title, written_response)
             self.assertIn(default_disclaimer, written_response)
 
-        d.addCallback(assert_form_rendered)
+        d.addCallback(assert_login_page_rendered)
         return d
 
     def _write(self, filename, content):
@@ -238,7 +230,7 @@ class TestLoginPOST(unittest.TestCase):
 
         def assert_interstitial_in_response(_):
             mock_authenticate.assert_called_once_with(self.username, self.password)
-            interstitial_js_in_template = '<script src="startup-assets/Interstitial.js"></script>'
+            interstitial_js_in_template = '<script src="/assets/interstitial.js"></script>'
             self.assertIn(interstitial_js_in_template, self.request.written[0])
 
         d.addCallback(assert_interstitial_in_response)
