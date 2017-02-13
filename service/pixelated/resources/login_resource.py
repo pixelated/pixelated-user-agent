@@ -20,7 +20,7 @@ from xml.sax import SAXParseException
 from pixelated.authentication import Authenticator
 from pixelated.config.leap import BootstrapUserServices
 from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
-from pixelated.resources import handle_error_deferred, get_startup_folder
+from pixelated.resources import get_startup_folder, respond_json
 from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer
 from twisted.logger import Logger
@@ -106,6 +106,8 @@ class LoginResource(BaseResource):
             return self
         if path == 'login':
             return self
+        if path == 'status':
+            return LoginStatusResource(self._services_factory)
         if not self.is_logged_in(request):
             return UnAuthorizedResource()
         return NoResource()
@@ -139,8 +141,6 @@ class LoginResource(BaseResource):
 
         d = self._handle_login(request)
         d.addCallbacks(render_response, render_error)
-        d.addErrback(handle_error_deferred, request)
-
         return NOT_DONE_YET
 
     @defer.inlineCallbacks
@@ -151,15 +151,30 @@ class LoginResource(BaseResource):
         defer.returnValue(user_auth)
 
     def _complete_bootstrap(self, user_auth, request):
-        def log_error(error):
+        def login_error(error, session):
             log.error('Login error during %s services setup: %s \n %s' % (user_auth.username, error.getErrorMessage(), error.getTraceback()))
+            session.login_error()
 
-        def set_session_cookies(_):
-            session = IPixelatedSession(request.getSession())
-            session.user_uuid = user_auth.uuid
+        def login_successful(_, session):
+            session.login_successful(user_auth.uuid)
 
         language = parse_accept_language(request.getAllHeaders())
         password = request.args['password'][0]
+        session = IPixelatedSession(request.getSession())
+        session.login_started()
+
         d = self._bootstrap_user_services.setup(user_auth, password, language)
-        d.addCallback(set_session_cookies)
-        d.addErrback(log_error)
+        d.addCallback(login_successful, session)
+        d.addErrback(login_error, session)
+
+
+class LoginStatusResource(BaseResource):
+    isLeaf = True
+
+    def __init__(self, services_factory):
+        BaseResource.__init__(self, services_factory)
+
+    def render_GET(self, request):
+        session = IPixelatedSession(request.getSession())
+        response = {'status': str(session.check_login_status())}
+        return respond_json(response, request)

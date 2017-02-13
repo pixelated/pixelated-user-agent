@@ -259,7 +259,7 @@ class TestLoginPOST(unittest.TestCase):
 
     @patch('pixelated.config.leap.BootstrapUserServices.setup')
     @patch('pixelated.authentication.Authenticator.authenticate')
-    def test_successful_adds_cookies_to_indicat_logged_in_status_when_services_are_loaded(self, mock_authenticate, mock_user_bootstrap_setup):
+    def test_successful_adds_cookies_to_indicate_logged_in_status_when_services_are_loaded(self, mock_authenticate, mock_user_bootstrap_setup):
         mock_authenticate.return_value = self.user_auth
         irrelevant = None
         mock_user_bootstrap_setup.return_value = defer.succeed(irrelevant)
@@ -270,4 +270,47 @@ class TestLoginPOST(unittest.TestCase):
             self.assertTrue(self.resource.get_session(self.request).is_logged_in())
 
         d.addCallback(assert_login_setup_service_for_user)
+        return d
+
+    @patch('pixelated.resources.session.PixelatedSession.login_started')
+    @patch('pixelated.authentication.Authenticator.authenticate')
+    def test_session_adds_login_started_status_after_authentication(self, mock_authenticate, mock_login_started):
+        mock_authenticate.return_value = self.user_auth
+
+        d = self.web.get(self.request)
+
+        def assert_login_started_called(_):
+            mock_login_started.assert_called_once()
+
+        d.addCallback(assert_login_started_called)
+        return d
+
+    @patch('pixelated.resources.session.PixelatedSession.login_successful')
+    @patch('pixelated.config.leap.BootstrapUserServices.setup')
+    @patch('pixelated.authentication.Authenticator.authenticate')
+    def test_session_adds_login_successful_status_when_services_setup_finishes(self, mock_authenticate, mock_user_bootstrap_setup, mock_login_successful):
+        mock_authenticate.return_value = self.user_auth
+        mock_user_bootstrap_setup.return_value = defer.succeed(None)
+
+        d = self.web.get(self.request)
+
+        def assert_login_successful_called(_):
+            mock_login_successful.assert_called_once()
+
+        d.addCallback(assert_login_successful_called)
+        return d
+
+    @patch('pixelated.resources.session.PixelatedSession.login_error')
+    @patch('pixelated.config.leap.BootstrapUserServices.setup')
+    @patch('pixelated.authentication.Authenticator.authenticate')
+    def test_session_adds_login_error_status_when_services_setup_gets_error(self, mock_authenticate, mock_user_bootstrap_setup, mock_login_error):
+        mock_authenticate.return_value = self.user_auth
+        mock_user_bootstrap_setup.return_value = defer.fail(Exception('Could not setup user services'))
+
+        d = self.web.get(self.request)
+
+        def assert_login_error_called(_):
+            mock_login_error.assert_called_once()
+
+        d.addCallback(assert_login_error_called)
         return d
