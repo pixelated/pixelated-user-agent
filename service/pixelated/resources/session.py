@@ -41,7 +41,7 @@ class PixelatedSession(object):
     def login_started(self):
         self.login_status = 'started'
 
-    def login_completed(self, user_uuid):
+    def login_successful(self, user_uuid):
         self.user_uuid = user_uuid
         self.login_status = 'completed'
 

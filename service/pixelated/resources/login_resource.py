@@ -155,8 +155,8 @@ class LoginResource(BaseResource):
             log.error('Login error during %s services setup: %s \n %s' % (user_auth.username, error.getErrorMessage(), error.getTraceback()))
             session.login_error()
 
-        def set_session_cookies(_, session):
-            session.login_completed(user_auth.uuid)
+        def login_successful(_, session):
+            session.login_successful(user_auth.uuid)
 
         language = parse_accept_language(request.getAllHeaders())
         password = request.args['password'][0]
@@ -164,7 +164,7 @@ class LoginResource(BaseResource):
         session.login_started()
 
         d = self._bootstrap_user_services.setup(user_auth, password, language)
-        d.addCallback(set_session_cookies, session)
+        d.addCallback(login_successful, session)
         d.addErrback(login_error, session)
 
 

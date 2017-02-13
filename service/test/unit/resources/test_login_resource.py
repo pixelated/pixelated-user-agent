@@ -285,19 +285,19 @@ class TestLoginPOST(unittest.TestCase):
         d.addCallback(assert_login_started_called)
         return d
 
-    @patch('pixelated.resources.session.PixelatedSession.login_completed')
+    @patch('pixelated.resources.session.PixelatedSession.login_successful')
     @patch('pixelated.config.leap.BootstrapUserServices.setup')
     @patch('pixelated.authentication.Authenticator.authenticate')
-    def test_session_adds_login_completed_status_when_services_setup_finishes(self, mock_authenticate, mock_user_bootstrap_setup, mock_login_completed):
+    def test_session_adds_login_successful_status_when_services_setup_finishes(self, mock_authenticate, mock_user_bootstrap_setup, mock_login_successful):
         mock_authenticate.return_value = self.user_auth
         mock_user_bootstrap_setup.return_value = defer.succeed(None)
 
         d = self.web.get(self.request)
 
-        def assert_login_completed_called(_):
-            mock_login_completed.assert_called_once()
+        def assert_login_successful_called(_):
+            mock_login_successful.assert_called_once()
 
-        d.addCallback(assert_login_completed_called)
+        d.addCallback(assert_login_successful_called)
         return d
 
     @patch('pixelated.resources.session.PixelatedSession.login_error')
