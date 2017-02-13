@@ -44,7 +44,7 @@ $(function () {
       method: 'GET',
       url: '/login/status'
     }).success(function (data) {
-      if (data === 'completed' || data === 'error') {
+      if (data.status === 'completed' || data.status === 'error') {
         window.location="/";
       }
     });

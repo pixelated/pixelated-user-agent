@@ -20,7 +20,7 @@ from xml.sax import SAXParseException
 from pixelated.authentication import Authenticator
 from pixelated.config.leap import BootstrapUserServices
 from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
-from pixelated.resources import get_startup_folder
+from pixelated.resources import get_startup_folder, respond_json
 from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer
 from twisted.logger import Logger
@@ -176,4 +176,5 @@ class LoginStatusResource(BaseResource):
 
     def render_GET(self, request):
         session = IPixelatedSession(request.getSession())
-        return format(session.check_login_status())
+        response = {'status': str(session.check_login_status())}
+        return respond_json(response, request)
