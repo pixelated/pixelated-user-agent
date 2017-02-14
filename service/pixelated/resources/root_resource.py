@@ -51,17 +51,16 @@ MODE_RUNNING = 2
 class RootResource(BaseResource):
     def __init__(self, services_factory):
         BaseResource.__init__(self, services_factory)
-        self._startup_assets_folder = get_static_folder()
         self._static_folder = get_static_folder()
         self._html_template = open(os.path.join(self._static_folder, 'index.html')).read()
         self._services_factory = services_factory
         self._child_resources = ChildResourcesMap()
-        with open(os.path.join(self._startup_assets_folder, 'Interstitial.html')) as f:
+        with open(os.path.join(self._static_folder, 'interstitial.html')) as f:
             self.interstitial = f.read()
         self._startup_mode()
 
     def _startup_mode(self):
-        self.putChild('startup-assets', File(self._startup_assets_folder))
+        self.putChild('assets', File(self._static_folder))
         self._mode = MODE_STARTUP
 
     def getChild(self, path, request):
