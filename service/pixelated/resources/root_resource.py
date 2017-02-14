@@ -90,7 +90,6 @@ class RootResource(BaseResource):
     def initialize(self, provider=None, disclaimer_banner=None, authenticator=None):
         self._child_resources.add('backup-account', BackupAccountResource(self._services_factory))
         self._child_resources.add('sandbox', SandboxResource(self._static_folder))
-        self._child_resources.add('assets', File(self._static_folder))
         self._child_resources.add('keys', KeysResource(self._services_factory))
         self._child_resources.add(AttachmentsResource.BASE_URL, AttachmentsResource(self._services_factory))
         self._child_resources.add('contacts', ContactsResource(self._services_factory))
