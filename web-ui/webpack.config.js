@@ -26,7 +26,7 @@ module.exports = {
   },
   plugins: [copyWebpack, new webpack.DefinePlugin({
     'process.env': {
-      'NODE_ENV': '"development"'
+      NODE_ENV: JSON.stringify('development')
     }
   })],
   postcss: {}
