@@ -84,5 +84,10 @@
       "button": "Adicionar e-mail"
     },
     "back-to-inbox": "Voltar",
-    "footer-text": "Produto em desenvolvimento. Reporte problemas através do"
+    "footer-text": "Produto em desenvolvimento. Reporte problemas através do",
+    "login": {
+      "email": "Seu e-mail",
+      "password": "Sua senha",
+      "submit": "Entrar"
+    }
 }

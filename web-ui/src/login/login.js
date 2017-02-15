@@ -20,14 +20,14 @@ import { render } from 'react-dom';
 import a11y from 'react-a11y';
 import { I18nextProvider } from 'react-i18next';
 
-import App from './app';
+import AppWrapper from './app';
 import i18n from '../i18n';
 
 if (process.env.NODE_ENV === 'development') a11y(React);
 
 render(
   <I18nextProvider i18n={i18n}>
-    <App />
+    <AppWrapper />
   </I18nextProvider>,
   document.getElementById('root')
 );

@@ -18,18 +18,22 @@
 import React from 'react';
 import { translate } from 'react-i18next';
 
-const App = () => (
+export const App = ({ t }) => (
   <form className='standard' id='login_form' action='/login' method='post'>
     <input
       type='text' name='username' id='email' className='text-field'
-      placeholder='username' autoFocus=''
+      placeholder={t('login.email')} autoFocus=''
     />
     <input
       type='password' name='password' id='password' className='text-field'
-      placeholder='password' autoComplete='off'
+      placeholder={t('login.password')} autoComplete='off'
     />
-    <input type='submit' name='login' value='Login' className='button' />
+    <input type='submit' name='login' value={t('login.submit')} className='button' />
   </form>
 );
+
+App.propTypes = {
+  t: React.PropTypes.func.isRequired
+};
 
 export default translate('', { wait: true })(App);

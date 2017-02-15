@@ -84,5 +84,10 @@
       "button": "Add Account"
     },
     "back-to-inbox": "Back to my inbox",
-    "footer-text": "Product in development. Feedback and issues to"
+    "footer-text": "Product in development. Feedback and issues to",
+    "login": {
+      "email": "Your email",
+      "password": "Your password",
+      "submit": "Login"
+    }
 }
