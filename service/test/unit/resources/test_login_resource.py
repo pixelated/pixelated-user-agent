@@ -23,7 +23,7 @@ from twisted.internet import defer
 from twisted.trial import unittest
 from twisted.web.test.requesthelper import DummyRequest
 
-from pixelated.resources.login_resource import LoginResource
+from pixelated.resources.login_resource import LoginResource, LoginStatusResource
 from pixelated.resources.login_resource import parse_accept_language
 from test.unit.resources import DummySite
 
@@ -305,4 +305,37 @@ class TestLoginPOST(unittest.TestCase):
             mock_login_error.assert_called_once()
 
         d.addCallback(assert_login_error_called)
+        return d
+
+
+class TestLoginStatus(unittest.TestCase):
+    def setUp(self):
+        self.services_factory = mock()
+        self.resource = LoginStatusResource(self.services_factory)
+        self.web = DummySite(self.resource)
+
+        self.request = DummyRequest(['/status'])
+
+    def test_login_status_completed_when_single_user(self):
+        self.services_factory.mode = mock()
+        self.services_factory.mode.is_single_user = True
+        d = self.web.get(self.request)
+
+        def assert_login_completed(_):
+            self.assertIn('completed', self.request.written[0])
+
+        d.addCallback(assert_login_completed)
+        return d
+
+    @patch('pixelated.resources.session.PixelatedSession.check_login_status')
+    def test_login_status_when_multi_user_returns_check_login_status(self, mock_login_status):
+        self.services_factory.mode = mock()
+        self.services_factory.mode.is_single_user = False
+        mock_login_status.return_value = 'started'
+        d = self.web.get(self.request)
+
+        def assert_login_completed(_):
+            self.assertIn('started', self.request.written[0])
+
+        d.addCallback(assert_login_completed)
         return d

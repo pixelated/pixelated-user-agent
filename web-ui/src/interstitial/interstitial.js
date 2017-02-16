@@ -42,7 +42,7 @@ $(function () {
   var handler = setInterval(function () {
     $.ajax({
       method: 'GET',
-      url: '/login/status'
+      url: '/status'
     }).success(function (data) {
       if (data.status === 'completed' || data.status === 'error') {
         window.location="/";

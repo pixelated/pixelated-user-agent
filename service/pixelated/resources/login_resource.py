@@ -176,5 +176,7 @@ class LoginStatusResource(BaseResource):
 
     def render_GET(self, request):
         session = IPixelatedSession(request.getSession())
-        response = {'status': str(session.check_login_status())}
+        status = 'completed' if self._services_factory.mode.is_single_user else str(session.check_login_status())
+
+        response = {'status': status}
         return respond_json(response, request)

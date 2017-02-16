@@ -27,7 +27,7 @@ from pixelated.resources.backup_account_resource import BackupAccountResource
 from pixelated.resources.contacts_resource import ContactsResource
 from pixelated.resources.features_resource import FeaturesResource
 from pixelated.resources.feedback_resource import FeedbackResource
-from pixelated.resources.login_resource import LoginResource
+from pixelated.resources.login_resource import LoginResource, LoginStatusResource
 from pixelated.resources.logout_resource import LogoutResource
 from pixelated.resources.user_settings_resource import UserSettingsResource
 from pixelated.resources.mail_resource import MailResource
@@ -61,6 +61,7 @@ class RootResource(BaseResource):
 
     def _startup_mode(self):
         self.putChild('assets', File(self._static_folder))
+        self.putChild('status', LoginStatusResource(self._services_factory))
         self._mode = MODE_STARTUP
 
     def getChild(self, path, request):
