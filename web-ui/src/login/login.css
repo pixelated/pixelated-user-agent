@@ -21,7 +21,7 @@ body {
     height: 100vh;
     color: #3E3A37;
 
-    background-image: url("/assets/images/hive-bg.png");
+    background-image: url("/public/images/hive-bg.png");
     background-repeat: repeat;
 }
 

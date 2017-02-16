@@ -25,7 +25,7 @@ export const Header = ({ t }) => (
       <a href='/'>
         <img
           className='header-logo'
-          src='/startup-assets/pixelated-logo-orange.svg'
+          src='/public/images/logo-orange.svg'
           alt='Pixelated'
         />
       </a>

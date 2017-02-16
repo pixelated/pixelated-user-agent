@@ -230,7 +230,7 @@ class TestLoginPOST(unittest.TestCase):
 
         def assert_interstitial_in_response(_):
             mock_authenticate.assert_called_once_with(self.username, self.password)
-            interstitial_js_in_template = '<script src="/assets/interstitial.js"></script>'
+            interstitial_js_in_template = '<script src="/public/interstitial.js"></script>'
             self.assertIn(interstitial_js_in_template, self.request.written[0])
 
         d.addCallback(assert_interstitial_in_response)
