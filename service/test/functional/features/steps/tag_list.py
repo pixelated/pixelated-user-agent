@@ -37,7 +37,7 @@ def expand_side_nav(context):
     if is_side_nav_expanded(context):
         return
 
-    toggle = find_element_by_class_name(context, 'side-nav-toggle')
+    toggle = find_element_by_css_selector(context, '.side-nav-toggle-icon i')
     toggle.click()
 
 
