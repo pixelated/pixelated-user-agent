@@ -14,11 +14,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from behave import when
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 
 from common import (
     find_element_by_class_name,
-    find_element_by_id,
     find_element_by_css_selector,
     wait_for_user_alert_to_disapear)
 
@@ -37,12 +36,11 @@ def expand_side_nav(context):
     if is_side_nav_expanded(context):
         return
 
-    toggle = find_element_by_css_selector(context, '.side-nav-toggle-icon i')
-    toggle.click()
+    find_element_by_css_selector(context, '.side-nav-toggle-icon i').click()
 
 
 @when('I select the tag \'{tag}\'')
-def impl(context, tag):
+def select_tag(context, tag):
     wait_for_user_alert_to_disapear(context)
     expand_side_nav(context)
 
@@ -51,14 +49,10 @@ def impl(context, tag):
     success = False
     while (not success) and (try_again > 0):
         try:
-            find_element_by_css_selector(context, '#tag-%s' % tag)
-
-            e = find_element_by_id(context, 'tag-%s' % tag)
-            e.click()
-
+            find_element_by_css_selector(context, '#tag-%s' % tag).click()
             find_element_by_css_selector(context, ".mail-list-entry__item[href*='%s']" % tag)
             success = True
-        except TimeoutException:
+        except (TimeoutException, StaleElementReferenceException):
             pass
         finally:
             try_again -= 1
@@ -67,9 +61,8 @@ def impl(context, tag):
 
 
 @when('I am in  \'{tag}\'')
-def impl(context, tag):
+def assert_in_tag(context, tag):
     expand_side_nav(context)
 
-    find_element_by_css_selector(context, '#tag-%s' % tag)
-    e = find_element_by_id(context, 'tag-%s' % tag)
+    e = find_element_by_css_selector(context, '#tag-%s' % tag)
     assert "selected" in e.get_attribute("class")
