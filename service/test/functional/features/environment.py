@@ -63,7 +63,7 @@ def before_all(context):
 
 
 def _setup_webdriver(context):
-    browser = context.config.userdata.get('webdriver', 'phantomjs')
+    browser = context.config.userdata.get('webdriver', 'chrome')
     supported_webdrivers = {
         'phantomjs': webdriver.PhantomJS,
         'firefox': webdriver.Firefox,
