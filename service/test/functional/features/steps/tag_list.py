@@ -51,7 +51,7 @@ def select_tag(context, tag):
         try:
             find_element_by_css_selector(context, '#tag-%s' % tag)
 
-            e = find_element_by_css_selector(context, '#tag-%s' % tag)
+            e = find_element_by_css_selector(context, '#tag-%s .tag-label' % tag)
             e.click()
 
             find_element_by_css_selector(context, ".mail-list-entry__item[href*='%s']" % tag)
