@@ -15,28 +15,16 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+#login_form {
+  padding: 20px 0;
 
-import './input-field.scss';
+  .input-field-group {
+    width: 100%;
+  }
+}
 
-const InputField = ({ label, name, type = 'text' }) => (
-  <div className='input-field-group'>
-    <input
-      type={type} name={name} className='input-field'
-      autoFocus='' required
-    />
-    <label className='input-field-label' htmlFor={name}>{label}</label>
-  </div>
-);
-
-InputField.propTypes = {
-  label: React.PropTypes.string.isRequired,
-  name: React.PropTypes.string.isRequired,
-  type: React.PropTypes.string
-};
-
-InputField.defaultProps = {
-  type: 'text'
-};
-
-export default InputField;
+@media only screen and (min-width : 500px) {
+  #login_form .input-field-group {
+    margin-top: 1em;
+  }
+}

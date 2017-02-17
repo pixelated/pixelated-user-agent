@@ -17,18 +17,16 @@
 
 import React from 'react';
 import { translate } from 'react-i18next';
+import InputField from 'src/common/input_field/input_field';
+import SubmitButton from 'src/common/submit_button/submit_button';
+
+import './app.scss';
 
 export const App = ({ t }) => (
   <form className='standard' id='login_form' action='/login' method='post'>
-    <input
-      type='text' name='username' id='email' className='text-field'
-      placeholder={t('login.email')} autoFocus=''
-    />
-    <input
-      type='password' name='password' id='password' className='text-field'
-      placeholder={t('login.password')} autoComplete='off'
-    />
-    <input type='submit' name='login' value={t('login.submit')} className='button' />
+    <InputField name='username' label={t('login.email')} />
+    <InputField type='password' name='password' label={t('login.password')} />
+    <SubmitButton buttonText={t('login.submit')} />
   </form>
 );
 
