@@ -49,7 +49,11 @@ def select_tag(context, tag):
     success = False
     while (not success) and (try_again > 0):
         try:
-            find_element_by_css_selector(context, '#tag-%s' % tag).click()
+            find_element_by_css_selector(context, '#tag-%s' % tag)
+
+            e = find_element_by_css_selector(context, '#tag-%s' % tag)
+            e.click()
+
             find_element_by_css_selector(context, ".mail-list-entry__item[href*='%s']" % tag)
             success = True
         except (TimeoutException, StaleElementReferenceException):
@@ -58,11 +62,3 @@ def select_tag(context, tag):
             try_again -= 1
 
     assert success
-
-
-@when('I am in  \'{tag}\'')
-def assert_in_tag(context, tag):
-    expand_side_nav(context)
-
-    e = find_element_by_css_selector(context, '#tag-%s' % tag)
-    assert "selected" in e.get_attribute("class")
