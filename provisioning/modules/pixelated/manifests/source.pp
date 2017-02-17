@@ -13,7 +13,10 @@ class pixelated::source {
     'libsqlcipher-dev',
     'libfontconfig1',
     'build-essential',
-    'ruby-compass']:
+    'ruby-compass',
+    'xvfb',
+    'xauth',
+    'chromedriver']:
       ensure => latest
   }
 

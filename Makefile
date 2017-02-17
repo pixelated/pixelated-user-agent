@@ -75,6 +75,7 @@ integration_tests:
 
 functional_tests: clean requirements install
 	@. $(VIRTUALENV)/bin/activate;\
+	export PATH=$(PATH):/usr/lib/chromium/;\
 	cd service;\
 	xvfb-run --server-args="-screen 0 1280x1024x24" behave --tags ~@wip --tags ~@smoke test/functional/features
 
