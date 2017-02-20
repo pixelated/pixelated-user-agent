@@ -70,16 +70,9 @@ class DisclaimerElement(Element):
 class LoginWebSite(Element):
     loader = XMLFile(FilePath(os.path.join(get_public_static_folder(), 'login.html')))
 
-    def __init__(self, error_msg=None, disclaimer_banner_file=None):
+    def __init__(self, disclaimer_banner_file=None):
         super(LoginWebSite, self).__init__()
-        self._error_msg = error_msg
         self.disclaimer_banner_file = disclaimer_banner_file
-
-    @renderer
-    def error_msg(self, request, tag):
-        if self._error_msg is not None:
-            return tag(self._error_msg)
-        return tag('')
 
     @renderer
     def disclaimer(self, request, tag):
@@ -116,8 +109,8 @@ class LoginResource(BaseResource):
         request.setResponseCode(OK)
         return self._render_template(request)
 
-    def _render_template(self, request, error_msg=None):
-        site = LoginWebSite(error_msg=error_msg, disclaimer_banner_file=self._disclaimer_banner)
+    def _render_template(self, request):
+        site = LoginWebSite(disclaimer_banner_file=self._disclaimer_banner)
         return renderElement(request, site)
 
     def render_POST(self, request):
@@ -137,7 +130,9 @@ class LoginResource(BaseResource):
                 log.error('Authentication error for %s' % request.args['username'][0])
                 log.error('%s' % error)
             request.setResponseCode(UNAUTHORIZED)
-            return self._render_template(request, 'Invalid username or password')
+            content = util.redirectTo("/login?auth", request)
+            request.write(content)
+            request.finish()
 
         d = self._handle_login(request)
         d.addCallbacks(render_response, render_error)

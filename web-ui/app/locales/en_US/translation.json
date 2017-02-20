@@ -64,7 +64,8 @@
     "error": {
         "timeout": "A timeout occurred",
         "general": "Problems talking to server",
-        "parse": "Got invalid response from server"
+        "parse": "Got invalid response from server",
+        "auth": "Invalid email or password"
     },
     "tags": {
         "inbox": "Inbox",

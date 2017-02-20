@@ -22,16 +22,26 @@ import SubmitButton from 'src/common/submit_button/submit_button';
 
 import './app.scss';
 
-export const App = ({ t }) => (
-  <form className='standard' id='login_form' action='/login' method='post'>
-    <InputField name='username' label={t('login.email')} />
-    <InputField type='password' name='password' label={t('login.password')} />
-    <SubmitButton buttonText={t('login.submit')} />
-  </form>
+const errorMessage = (t, authError) => {
+  if (authError) return <p className='error'>{t('error.auth')}</p>;
+  return <div />;
+};
+
+export const App = ({ t, authError }) => (
+  <div className='login'>
+    <img className='logo' src='/public/images/logo-orange.svg' alt='Pixelated logo' />
+    {errorMessage(t, authError)}
+    <form className='standard' id='login_form' action='/login' method='post'>
+      <InputField name='username' label={t('login.email')} />
+      <InputField type='password' name='password' label={t('login.password')} />
+      <SubmitButton buttonText={t('login.submit')} />
+    </form>
+  </div>
 );
 
 App.propTypes = {
-  t: React.PropTypes.func.isRequired
+  t: React.PropTypes.func.isRequired,
+  authError: React.PropTypes.bool
 };
 
 export default translate('', { wait: true })(App);

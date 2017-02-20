@@ -13,7 +13,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from mock import patch
 
 from twisted.internet import defer
 
@@ -47,8 +46,8 @@ class MultiUserLoginTest(MultiUserSoledadTestBase):
             self.assertEquals(val, response[key])
 
     @defer.inlineCallbacks
-    def test_wrong_credentials_cannot_access_resources(self):
+    def test_wrong_credentials_is_redirected_to_login(self):
         response, login_request = self.app_test_client.login('username', 'wrong_password')
-        response_str = yield response
-        self.assertEqual(401, login_request.responseCode)
-        self.assertIn('Invalid username or password', login_request.written)
+        yield response
+        self.assertEqual(302, login_request.responseCode)
+        self.assertIn('/login?auth-error', login_request.uri)

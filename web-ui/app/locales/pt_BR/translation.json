@@ -64,7 +64,8 @@
     "error": {
         "timeout": "A operação excedeu o limite de tempo",
         "general": "Problemas ao se comunicar com o servidor",
-        "parse": "Obteve uma resposta inválida do servidor"
+        "parse": "Obteve uma resposta inválida do servidor",
+        "auth": "E-mail ou senha inválidos"
     },
     "tags": {
         "inbox": "Caixa de Entrada",

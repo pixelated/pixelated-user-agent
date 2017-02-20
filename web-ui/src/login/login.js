@@ -22,12 +22,13 @@ import { I18nextProvider } from 'react-i18next';
 
 import AppWrapper from './app';
 import i18n from '../i18n';
+import { hasQueryParameter } from '../util';
 
 if (process.env.NODE_ENV === 'development') a11y(React);
 
 render(
   <I18nextProvider i18n={i18n}>
-    <AppWrapper />
+    <AppWrapper authError={hasQueryParameter('auth')} />
   </I18nextProvider>,
   document.getElementById('root')
 );
