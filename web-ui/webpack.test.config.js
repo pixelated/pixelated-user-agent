@@ -1,6 +1,5 @@
 var path = require('path');
 var webpack = require('webpack');
-var copyWebpack = require('./config/copy-webpack');
 var aliases = require('./config/alias-webpack');
 
 module.exports = {

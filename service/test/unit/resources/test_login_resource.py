@@ -23,7 +23,7 @@ from twisted.internet import defer
 from twisted.trial import unittest
 from twisted.web.test.requesthelper import DummyRequest
 
-from pixelated.resources.login_resource import LoginResource
+from pixelated.resources.login_resource import LoginResource, LoginStatusResource
 from pixelated.resources.login_resource import parse_accept_language
 from test.unit.resources import DummySite
 
@@ -87,23 +87,15 @@ class TestLoginResource(unittest.TestCase):
 
         d = self.web.get(request)
 
-        def assert_form_rendered(_):
+        def assert_login_page_rendered(_):
             self.assertEqual(200, request.responseCode)
-            form_action = 'action="/login"'
-            form_method = 'method="post"'
-            input_username = 'name="username"'
-            input_password = 'name="password"'
-            input_submit = 'name="login"'
+            title = 'Pixelated - Login'
             default_disclaimer = 'Some disclaimer'
             written_response = ''.join(request.written)
-            self.assertIn(form_action, written_response)
-            self.assertIn(form_method, written_response)
-            self.assertIn(input_password, written_response)
-            self.assertIn(input_submit, written_response)
-            self.assertIn(input_username, written_response)
+            self.assertIn(title, written_response)
             self.assertIn(default_disclaimer, written_response)
 
-        d.addCallback(assert_form_rendered)
+        d.addCallback(assert_login_page_rendered)
         return d
 
     def _write(self, filename, content):
@@ -238,7 +230,7 @@ class TestLoginPOST(unittest.TestCase):
 
         def assert_interstitial_in_response(_):
             mock_authenticate.assert_called_once_with(self.username, self.password)
-            interstitial_js_in_template = '<script src="startup-assets/Interstitial.js"></script>'
+            interstitial_js_in_template = '<script src="/public/interstitial.js"></script>'
             self.assertIn(interstitial_js_in_template, self.request.written[0])
 
         d.addCallback(assert_interstitial_in_response)
@@ -313,4 +305,37 @@ class TestLoginPOST(unittest.TestCase):
             mock_login_error.assert_called_once()
 
         d.addCallback(assert_login_error_called)
+        return d
+
+
+class TestLoginStatus(unittest.TestCase):
+    def setUp(self):
+        self.services_factory = mock()
+        self.resource = LoginStatusResource(self.services_factory)
+        self.web = DummySite(self.resource)
+
+        self.request = DummyRequest(['/status'])
+
+    def test_login_status_completed_when_single_user(self):
+        self.services_factory.mode = mock()
+        self.services_factory.mode.is_single_user = True
+        d = self.web.get(self.request)
+
+        def assert_login_completed(_):
+            self.assertIn('completed', self.request.written[0])
+
+        d.addCallback(assert_login_completed)
+        return d
+
+    @patch('pixelated.resources.session.PixelatedSession.check_login_status')
+    def test_login_status_when_multi_user_returns_check_login_status(self, mock_login_status):
+        self.services_factory.mode = mock()
+        self.services_factory.mode.is_single_user = False
+        mock_login_status.return_value = 'started'
+        d = self.web.get(self.request)
+
+        def assert_login_completed(_):
+            self.assertIn('started', self.request.written[0])
+
+        d.addCallback(assert_login_completed)
         return d

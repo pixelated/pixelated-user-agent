@@ -32,7 +32,7 @@ i18n
   .init({
     fallbackLng: 'en_US',
     backend: {
-      loadPath: 'assets/locales/{{lng}}/{{ns}}.json'
+      loadPath: 'public/locales/{{lng}}/{{ns}}.json'
     }
   });
 

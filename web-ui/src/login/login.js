@@ -16,31 +16,18 @@
  */
 
 import React from 'react';
-import { translate } from 'react-i18next';
-import './header.scss';
+import { render } from 'react-dom';
+import a11y from 'react-a11y';
+import { I18nextProvider } from 'react-i18next';
 
-export const Header = ({ t }) => (
-  <header className='header-wrapper'>
-    <div className='header-content'>
-      <a href='/'>
-        <img
-          className='header-logo'
-          src='/public/images/logo-orange.svg'
-          alt='Pixelated'
-        />
-      </a>
-      <div className='header-icons'>
-        <a href='/'>
-          <span>{t('logout')}</span>
-          <i className='fa fa-sign-out' aria-hidden='true' />
-        </a>
-      </div>
-    </div>
-  </header>
+import App from './app';
+import i18n from '../i18n';
+
+if (process.env.NODE_ENV === 'development') a11y(React);
+
+render(
+  <I18nextProvider i18n={i18n}>
+    <App />
+  </I18nextProvider>,
+  document.getElementById('root')
 );
-
-Header.propTypes = {
-  t: React.PropTypes.func.isRequired
-};
-
-export default translate('', { wait: true })(Header);

@@ -34,7 +34,7 @@ export const Page = ({ t }) => (
         <div className='container'>
           <img
             className='backup-account-image'
-            src='assets/images/forgot-my-password.svg'
+            src='/public/images/forgot-my-password.svg'
             alt={t('backup-account.image-description')}
           />
           <form>

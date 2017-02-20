@@ -61,7 +61,7 @@ def _wait_until_elements_are_visible_by_locator(context, locator_tuple, timeout=
 
 def _wait_until_element_is_visible_by_locator(context, locator_tuple, timeout=TIMEOUT_IN_S):
     wait = WebDriverWait(context.browser, timeout)
-    wait.until(EC.presence_of_element_located(locator_tuple))
+    wait.until(EC.visibility_of_element_located(locator_tuple))
     return context.browser.find_element(locator_tuple[0], locator_tuple[1])
 
 

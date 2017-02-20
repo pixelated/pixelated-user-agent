@@ -19,13 +19,13 @@ from xml.sax import SAXParseException
 
 from pixelated.resources import BaseResource
 from twisted.python.filepath import FilePath
-from pixelated.resources import get_static_folder
+from pixelated.resources import get_protected_static_folder
 from twisted.web.http import OK
 from twisted.web.template import Element, XMLFile, renderElement
 
 
 class BackupAccountPage(Element):
-    loader = XMLFile(FilePath(os.path.join(get_static_folder(), 'backup_account.html')))
+    loader = XMLFile(FilePath(os.path.join(get_protected_static_folder(), 'backup_account.html')))
 
     def __init__(self):
         super(BackupAccountPage, self).__init__()

@@ -22,7 +22,7 @@ import './footer.scss';
 export const Footer = ({ t }) => (
   <footer className='footer-wrapper'>
     <div className='footer-content'>
-      <img className='footer-image' src='/assets/images/lab.svg' alt='' />
+      <img className='footer-image' src='/public/images/lab.svg' alt='' />
       <div>
         {t('footer-text')}
         <a className='footer-link' href='mailto:team@pixelated-project.org'>

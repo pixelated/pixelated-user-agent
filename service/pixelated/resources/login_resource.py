@@ -20,7 +20,7 @@ from xml.sax import SAXParseException
 from pixelated.authentication import Authenticator
 from pixelated.config.leap import BootstrapUserServices
 from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
-from pixelated.resources import get_startup_folder, respond_json
+from pixelated.resources import get_public_static_folder, respond_json
 from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer
 from twisted.logger import Logger
@@ -45,7 +45,7 @@ def parse_accept_language(all_headers):
 
 
 class DisclaimerElement(Element):
-    loader = XMLFile(FilePath(os.path.join(get_startup_folder(), '_login_disclaimer_banner.html')))
+    loader = XMLFile(FilePath(os.path.join(get_public_static_folder(), '_login_disclaimer_banner.html')))
 
     def __init__(self, banner):
         super(DisclaimerElement, self).__init__()
@@ -68,7 +68,7 @@ class DisclaimerElement(Element):
 
 
 class LoginWebSite(Element):
-    loader = XMLFile(FilePath(os.path.join(get_startup_folder(), 'login.html')))
+    loader = XMLFile(FilePath(os.path.join(get_public_static_folder(), 'login.html')))
 
     def __init__(self, error_msg=None, disclaimer_banner_file=None):
         super(LoginWebSite, self).__init__()
@@ -91,14 +91,14 @@ class LoginResource(BaseResource):
 
     def __init__(self, services_factory, provider=None, disclaimer_banner=None, authenticator=None):
         BaseResource.__init__(self, services_factory)
-        self._startup_folder = get_startup_folder()
         self._disclaimer_banner = disclaimer_banner
         self._provider = provider
         self._authenticator = authenticator or Authenticator(provider)
         self._bootstrap_user_services = BootstrapUserServices(services_factory, provider)
 
-        self.putChild('startup-assets', File(self._startup_folder))
-        with open(os.path.join(self._startup_folder, 'Interstitial.html')) as f:
+        static_folder = get_public_static_folder()
+        self.putChild('public', File(static_folder))
+        with open(os.path.join(static_folder, 'interstitial.html')) as f:
             self.interstitial = f.read()
 
     def getChild(self, path, request):
@@ -176,5 +176,7 @@ class LoginStatusResource(BaseResource):
 
     def render_GET(self, request):
         session = IPixelatedSession(request.getSession())
-        response = {'status': str(session.check_login_status())}
+        status = 'completed' if self._services_factory.mode.is_single_user else str(session.check_login_status())
+
+        response = {'status': status}
         return respond_json(response, request)
