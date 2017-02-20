@@ -130,7 +130,7 @@ class LoginResource(BaseResource):
                 log.error('Authentication error for %s' % request.args['username'][0])
                 log.error('%s' % error)
             request.setResponseCode(UNAUTHORIZED)
-            content = util.redirectTo("/login?auth", request)
+            content = util.redirectTo("/login?auth-error", request)
             request.write(content)
             request.finish()
 

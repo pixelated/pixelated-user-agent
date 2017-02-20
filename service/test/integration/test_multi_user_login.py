@@ -50,4 +50,4 @@ class MultiUserLoginTest(MultiUserSoledadTestBase):
         response, login_request = self.app_test_client.login('username', 'wrong_password')
         yield response
         self.assertEqual(302, login_request.responseCode)
-        self.assertIn('/login?auth-error', login_request.uri)
+        self.assertIn('/login?auth-error', login_request.responseHeaders.getRawHeaders('location'))
