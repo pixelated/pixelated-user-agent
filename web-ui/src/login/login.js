@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === 'development') a11y(React);
 
 render(
   <I18nextProvider i18n={i18n}>
-    <AppWrapper authError={hasQueryParameter('auth-error')} />
+    <AppWrapper authError={hasQueryParameter('auth-error')} error={hasQueryParameter('error')} />
   </I18nextProvider>,
   document.getElementById('root')
 );

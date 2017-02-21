@@ -15,56 +15,17 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "~scss/base/colors";
+import React from 'react';
+import { translate } from 'react-i18next';
 
-.error {
-  color: $error;
-  margin: 10px 0 0 0;
-}
+import './auth-error.scss';
 
-.login {
-  display: block;
-  width: 90%;
-  margin: auto;
-  max-width: 400px;
-  padding: 2em 0;
-  margin-top: 3%;
-  margin-bottom: 3%;
-  background-color: $white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+export const AuthError = ({ t }) => (
+  <p className='auth-error'>{t('error.auth')}</p>
+);
 
-#login_form {
-  width: 70%;
+AuthError.propTypes = {
+  t: React.PropTypes.func.isRequired
+};
 
-  .input-field-group {
-    width: 100%;
-  }
-
-  .submit-button {
-    width: 100%;
-  }
-}
-
-.logo {
-  width: 70%;
-  margin-bottom: 1em;
-}
-
-@media only screen and (min-width : 500px) {
-  #login_form .input-field-group {
-    margin-top: 1em;
-  }
-
-  .login {
-    width: 60%;
-  }
-}
-
-@media only screen and (min-width : 960px) {
-  .login {
-    width: 40%;
-  }
-}
+export default translate('', { wait: true })(AuthError);
