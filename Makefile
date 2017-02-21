@@ -71,7 +71,7 @@ unit_tests_js:
 integration_tests_py:
 	@. $(VIRTUALENV)/bin/activate;\
 	cd service;\
-	trial -j`grep -c "^processor" /proc/cpuinfo || sysctl -n hw.logicalcpu` --reporter=text test.integration
+	trial --reporter=text test.integration
 
 functional_tests: clean requirements install
 	@. $(VIRTUALENV)/bin/activate;\
