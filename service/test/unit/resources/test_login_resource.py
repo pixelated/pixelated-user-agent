@@ -203,22 +203,23 @@ class TestLoginPOST(unittest.TestCase):
         return d
 
     @patch('pixelated.config.leap.BootstrapUserServices.setup')
+    @patch('twisted.web.util.redirectTo')
     @patch('pixelated.authentication.Authenticator.authenticate')
-    def test_should_return_form_back_with_error_message_when_login_fails(self, mock_authenticate,
-                                                                         mock_user_bootstrap_setup):
+    def test_should_redirect_to_login_with_error_flag_when_login_fails(self, mock_authenticate,
+                                                                       mock_redirect,
+                                                                       mock_user_bootstrap_setup):
         mock_authenticate.side_effect = UnauthorizedLogin()
+        mock_redirect.return_value = "mocked redirection"
 
         d = self.web.get(self.request)
 
-        def assert_error_response_and_user_services_not_setup(_):
+        def assert_redirected_to_login(_):
             mock_authenticate.assert_called_once_with(self.username, self.password)
-            self.assertEqual(401, self.request.responseCode)
-            written_response = ''.join(self.request.written)
-            self.assertIn('Invalid username or password', written_response)
+            mock_redirect.assert_called_once_with('/login?auth-error', self.request)
             self.assertFalse(mock_user_bootstrap_setup.called)
             self.assertFalse(self.resource.get_session(self.request).is_logged_in())
 
-        d.addCallback(assert_error_response_and_user_services_not_setup)
+        d.addCallback(assert_redirected_to_login)
         return d
 
     @patch('pixelated.config.leap.BootstrapUserServices.setup')

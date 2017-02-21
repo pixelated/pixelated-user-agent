@@ -19,16 +19,24 @@ import React from 'react';
 
 import './input-field.scss';
 
-const InputField = ({ label, name }) => (
+const InputField = ({ label, name, type = 'text' }) => (
   <div className='input-field-group'>
-    <input type='text' name={name} className='input-field' required />
+    <input
+      type={type} name={name} className='input-field'
+      autoFocus='' required
+    />
     <label className='input-field-label' htmlFor={name}>{label}</label>
   </div>
 );
 
 InputField.propTypes = {
   label: React.PropTypes.string.isRequired,
-  name: React.PropTypes.string.isRequired
+  name: React.PropTypes.string.isRequired,
+  type: React.PropTypes.string
+};
+
+InputField.defaultProps = {
+  type: 'text'
 };
 
 export default InputField;
