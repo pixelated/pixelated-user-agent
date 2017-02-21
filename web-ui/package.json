@@ -98,7 +98,7 @@
     "watch:js": "webpack --colors --progress --watch",
     "clean": "rm -rf dist/ app/js/generated/hbs/* app/css/*",
     "imagemin": "node config/imagemin.js",
-    "package": "PIXELATED_BUILD='package' npm run build:prod && npm run imagemin",
+    "package": "npm run build:prod && npm run imagemin",
     "add_git_version": "/bin/bash config/add_git_version.sh"
   },
   "nyc": {
