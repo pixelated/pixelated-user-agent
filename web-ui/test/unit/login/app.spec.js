@@ -50,5 +50,4 @@ describe('App', () => {
     app = shallow(<App t={mockTranslations} />);
     expect(app.find('.logo').props().className).toEqual('logo');
   });
-
 });
