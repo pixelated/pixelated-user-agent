@@ -37,7 +37,11 @@ const rightPanel = (t, error) => {
 
 export const App = ({ t, authError, error }) => (
   <div className='login'>
-    <img className='logo' src='/public/images/logo-orange.svg' alt='Pixelated logo' />
+    <img
+      className={error ? 'logo small-logo' : 'logo'}
+      src='/public/images/logo-orange.svg'
+      alt='Pixelated logo'
+    />
     {rightPanel(t, error)}
     <form className='standard' id='login_form' action='/login' method='post'>
       {errorMessage(t, authError)}

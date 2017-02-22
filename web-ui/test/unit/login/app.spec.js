@@ -40,4 +40,15 @@ describe('App', () => {
     expect(app.find(AuthError).length).toEqual(0);
     expect(app.find(GenericError).length).toEqual(0);
   });
+
+  it('adds small logo class when error', () => {
+    app = shallow(<App t={mockTranslations} error />);
+    expect(app.find('.logo').props().className).toEqual('logo small-logo');
+  });
+
+  it('does not add small logo class when no error', () => {
+    app = shallow(<App t={mockTranslations} />);
+    expect(app.find('.logo').props().className).toEqual('logo');
+  });
+
 });
