@@ -84,8 +84,11 @@
       content: '';
       height: 22em;
       position: absolute;
-      box-shadow: 0px 0px 0px 0.3px $medium_light_grey;
+      margin-top: inherit;
+      top: 2.5em;
       left: 50%;
+      border: 1px solid $lighter_gray;
+      transform: scaleX(0.5);
     }
   }
 
