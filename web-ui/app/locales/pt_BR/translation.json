@@ -93,6 +93,8 @@
     "login": {
       "email": "Seu e-mail",
       "password": "Sua senha",
-      "submit": "Entrar"
+      "submit": "Entrar",
+      "welcome-image-alt": "Imagem de boas vindas",
+      "welcome-message": "Pixelated é um e-mail que respeita a privacidade da sua informação."
     }
 }
