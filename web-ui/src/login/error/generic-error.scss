@@ -36,3 +36,19 @@
   margin-top: 1.7em;
   align-self: flex-start;
 }
+
+@media only screen and (min-width : 960px) {
+  .generic-error {
+    flex-direction: column;
+    align-self: flex-end;
+    width: 34%;
+    margin-right: 8%;
+    margin-top: -9em;
+    padding: 0;
+  }
+
+  .dead-mail {
+    order: 1;
+    width: 30%;
+  }
+}

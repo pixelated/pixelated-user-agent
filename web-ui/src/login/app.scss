@@ -17,11 +17,6 @@
 
 @import "~scss/base/colors";
 
-.error {
-  color: $error;
-  margin: 10px 0 0 0;
-}
-
 .login {
   display: block;
   width: 90%;
@@ -38,6 +33,9 @@
 
 #login_form {
   width: 70%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 
   .input-field-group {
     width: 100%;
@@ -64,7 +62,38 @@
 }
 
 @media only screen and (min-width : 960px) {
+  .content {
+    font-size: 0.9em;
+  }
+
   .login {
-    width: 40%;
+    display: flex;
+    align-items: flex-start;
+    width: 70%;
+    max-width: 700px;
+    padding: 2.5em 0;
+    height: 22em;
+
+    &:after {
+      content: '';
+      height: 22em;
+      position: absolute;
+      box-shadow: 0px 0px 0px 0.3px $medium_light_grey;
+      left: 50%;
+    }
+  }
+
+  .logo {
+    height: 6em;
+    margin-top: 1.5em;
+  }
+
+  .logo, #login_form {
+    width: 34%;
+    margin-left: 8%;
+  }
+
+  #login_form {
+    margin-top: -11em;
   }
 }

@@ -15,15 +15,22 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "~scss/base/colors";
+import React from 'react';
+import { translate } from 'react-i18next';
 
-.auth-error {
-  color: $error;
-  margin: 0;
-}
+import './pixelated-welcome.scss';
 
-@media only screen and (min-width : 960px) {
-  .auth-error {
-    margin: -1em 0 0 0;
-  }
-}
+export const PixelatedWelcome = ({ t }) => (
+  <div className='pixelated-welcome'>
+    <img className='welcome-logo' src='/public/images/welcome.svg' alt={t('login.welcome-image-alt')} />
+    <div>
+      <h3>{t('login.welcome-message')}</h3>
+    </div>
+  </div>
+);
+
+PixelatedWelcome.propTypes = {
+  t: React.PropTypes.func.isRequired
+};
+
+export default translate('', { wait: true })(PixelatedWelcome);

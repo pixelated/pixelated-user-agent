@@ -17,13 +17,34 @@
 
 @import "~scss/base/colors";
 
-.auth-error {
-  color: $error;
-  margin: 0;
+.pixelated-welcome {
+  display: none;
 }
 
 @media only screen and (min-width : 960px) {
-  .auth-error {
-    margin: -1em 0 0 0;
+  .pixelated-welcome {
+    font-size: 0.9em;
+    color: $medium_grey;
+    display: flex;
+    font-weight: 300;
+    flex-direction: column;
+    align-self: flex-end;
+    float: right;
+    width: 34%;
+    margin-right: 8%;
+    margin-top: -7.8em;
+    padding: 0;
+
+    h3 {
+      font-weight: normal;
+      font-size: 1.2em;
+      margin-top: 0;
+    }
+  }
+
+  .welcome-logo {
+    order: 1;
+    width: 90%;
+    height: 15em;
   }
 }

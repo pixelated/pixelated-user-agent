@@ -46,17 +46,24 @@ body {
 }
 
 @media only screen and (min-width : 500px) {
-  body {
-    font-size: 1.2em;
-  }
-
   .disclaimer {
     width: 60%;
   }
 }
 
 @media only screen and (min-width : 960px) {
+  body {
+    font-size: 1.2em;
+  }
+
   .disclaimer {
-    width: 40%;
+    width: 70%;
+    max-width: 700px;
+    padding: 0;
+    font-size: 1em;
+  }
+
+  .disclaimer-content {
+    font-size: 0.7em;
   }
 }
