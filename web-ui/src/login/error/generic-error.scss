@@ -41,10 +41,15 @@
   .generic-error {
     flex-direction: column;
     align-self: flex-end;
+    order: 2;
     width: 34%;
     margin-right: 8%;
-    margin-top: -9em;
+    margin-top: -19.5em;
     padding: 0;
+
+    h2 {
+      margin: 0;
+    }
   }
 
   .dead-mail {

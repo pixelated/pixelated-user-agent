@@ -39,6 +39,7 @@
 
   .input-field-group {
     width: 100%;
+    margin: 0 0 1.5em 0;
   }
 
   .submit-button {
@@ -48,11 +49,11 @@
 
 .logo {
   width: 70%;
-  margin-bottom: 1em;
+  margin-bottom: 2em;
 }
 
 @media only screen and (min-width : 500px) {
-  #login_form .input-field-group {
+  #login_form {
     margin-top: 1em;
   }
 
@@ -85,15 +86,12 @@
 
   .logo {
     height: 6em;
+    margin-bottom: 1em;
     margin-top: 1.5em;
   }
 
   .logo, #login_form {
     width: 34%;
     margin-left: 8%;
-  }
-
-  #login_form {
-    margin-top: -11em;
   }
 }
