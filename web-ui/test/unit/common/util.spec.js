@@ -1,5 +1,5 @@
 import expect from 'expect';
-import Util from 'src/util';
+import Util from 'src/common/util';
 
 describe('Utils', () => {
   describe('.hasQueryParameter', () => {
