@@ -23,7 +23,7 @@ import AuthError from 'src/login/error/auth_error';
 import GenericError from 'src/login/error/generic_error';
 import PixelatedWelcome from 'src/login/about/pixelated_welcome';
 
-import './app.scss';
+import './page.scss';
 
 const errorMessage = (t, authError) => {
   if (authError) return <AuthError />;
@@ -35,7 +35,7 @@ const rightPanel = (t, error) => {
   return <PixelatedWelcome />;
 };
 
-export const App = ({ t, authError, error }) => (
+export const Page = ({ t, authError, error }) => (
   <div className='login'>
     <img
       className={error ? 'logo small-logo' : 'logo'}
@@ -52,10 +52,10 @@ export const App = ({ t, authError, error }) => (
   </div>
 );
 
-App.propTypes = {
+Page.propTypes = {
   t: React.PropTypes.func.isRequired,
   authError: React.PropTypes.bool,
   error: React.PropTypes.bool
 };
 
-export default translate('', { wait: true })(App);
+export default translate('', { wait: true })(Page);

@@ -33,6 +33,8 @@
     "i18next-xhr-backend": "^1.2.1",
     "iframe-resizer": "^3.5.7",
     "imagemin": "5.2.1",
+    "imagemin-pngquant": "^5.0.0",
+    "imagemin-svgo": "^5.2.0",
     "jasmine-flight": "^4.0.0",
     "jasmine-jquery": "^2.1.1",
     "jquery": "^3.1.1",

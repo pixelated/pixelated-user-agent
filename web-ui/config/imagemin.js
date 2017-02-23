@@ -16,10 +16,19 @@
  */
 
 const imagemin = require('imagemin');
+const imageminSvgo = require('imagemin-svgo');
+const imageminPngquant = require('imagemin-pngquant');
 
-imagemin(['app/images/*.{gif,jpg,png,svg}'],
-         'dist/images'
-).then(files => {
+imagemin(['app/images/*.{gif,jpg,png,svg}'], 'dist/public/images', {
+  use: [
+    imageminSvgo({
+      plugins: [
+        {removeViewBox: false}
+      ]
+    }),
+    imageminPngquant()
+  ]
+}).then(files => {
   console.log('Images list:')
   files.map(function(file) { console.log(file.path); });
 });

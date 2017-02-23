@@ -18,17 +18,17 @@
 import React from 'react';
 import { I18nextProvider } from 'react-i18next';
 
-import PageWrapper from './page';
 import internationalization from '../i18n';
 
-const App = ({ i18n = internationalization }) => (
+const App = ({ i18n = internationalization, child }) => (
   <I18nextProvider i18n={i18n}>
-    <PageWrapper />
+    {child}
   </I18nextProvider>
 );
 
 App.propTypes = {
-  i18n: React.PropTypes.object // eslint-disable-line react/forbid-prop-types
+  i18n: React.PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  child: React.PropTypes.element.isRequired
 };
 
 App.defaultProps = {

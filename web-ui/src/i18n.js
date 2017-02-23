@@ -31,6 +31,7 @@ i18n
   .use(detector)
   .init({
     fallbackLng: 'en_US',
+    parseMissingKeyHandler: key => (`"${key} untranslated"`),
     backend: {
       loadPath: 'public/locales/{{lng}}/{{ns}}.json'
     }
