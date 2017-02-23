@@ -19,19 +19,32 @@ import React from 'react';
 import { translate } from 'react-i18next';
 import InputField from 'src/common/input_field/input_field';
 import SubmitButton from 'src/common/submit_button/submit_button';
+import AuthError from 'src/login/error/auth_error';
+import GenericError from 'src/login/error/generic_error';
+import PixelatedWelcome from 'src/login/about/pixelated_welcome';
 
 import './app.scss';
 
 const errorMessage = (t, authError) => {
-  if (authError) return <p className='error'>{t('error.auth')}</p>;
+  if (authError) return <AuthError />;
   return <div />;
 };
 
-export const App = ({ t, authError }) => (
+const rightPanel = (t, error) => {
+  if (error) return <GenericError />;
+  return <PixelatedWelcome />;
+};
+
+export const App = ({ t, authError, error }) => (
   <div className='login'>
-    <img className='logo' src='/public/images/logo-orange.svg' alt='Pixelated logo' />
-    {errorMessage(t, authError)}
-    <form className='standard' id='login_form' action='/login' method='post'>
+    <img
+      className={error ? 'logo small-logo' : 'logo'}
+      src='/public/images/logo-orange.svg'
+      alt='Pixelated logo'
+    />
+    {rightPanel(t, error)}
+    <form className='standard' id='login_form' action='/login' method='post' noValidate >
+      {errorMessage(t, authError)}
       <InputField name='username' label={t('login.email')} />
       <InputField type='password' name='password' label={t('login.password')} />
       <SubmitButton buttonText={t('login.submit')} />
@@ -41,7 +54,8 @@ export const App = ({ t, authError }) => (
 
 App.propTypes = {
   t: React.PropTypes.func.isRequired,
-  authError: React.PropTypes.bool
+  authError: React.PropTypes.bool,
+  error: React.PropTypes.bool
 };
 
 export default translate('', { wait: true })(App);

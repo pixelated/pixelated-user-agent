@@ -16,19 +16,21 @@
  */
 
 import React from 'react';
-import { render } from 'react-dom';
-import a11y from 'react-a11y';
-import { I18nextProvider } from 'react-i18next';
+import { translate } from 'react-i18next';
 
-import AppWrapper from './app';
-import i18n from '../i18n';
-import { hasQueryParameter } from '../util';
+import './pixelated-welcome.scss';
 
-if (process.env.NODE_ENV === 'development') a11y(React);
-
-render(
-  <I18nextProvider i18n={i18n}>
-    <AppWrapper authError={hasQueryParameter('auth-error')} error={hasQueryParameter('error')} />
-  </I18nextProvider>,
-  document.getElementById('root')
+export const PixelatedWelcome = ({ t }) => (
+  <div className='pixelated-welcome'>
+    <img className='welcome-logo' src='/public/images/welcome.svg' alt={t('login.welcome-image-alt')} />
+    <div>
+      <h3>{t('login.welcome-message')}</h3>
+    </div>
+  </div>
 );
+
+PixelatedWelcome.propTypes = {
+  t: React.PropTypes.func.isRequired
+};
+
+export default translate('', { wait: true })(PixelatedWelcome);

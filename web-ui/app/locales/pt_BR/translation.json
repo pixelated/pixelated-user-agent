@@ -65,7 +65,11 @@
         "timeout": "A operação excedeu o limite de tempo",
         "general": "Problemas ao se comunicar com o servidor",
         "parse": "Obteve uma resposta inválida do servidor",
-        "auth": "E-mail ou senha inválidos"
+        "auth": "E-mail ou senha inválidos",
+        "login": {
+            "title": "Ops, algo deu errado :(",
+            "message": "Tente entrar novamente em alguns minutos. Se o problema persistir, contate o administrador da sua conta."
+        }
     },
     "tags": {
         "inbox": "Caixa de Entrada",
@@ -89,6 +93,8 @@
     "login": {
       "email": "Seu e-mail",
       "password": "Sua senha",
-      "submit": "Entrar"
+      "submit": "Entrar",
+      "welcome-image-alt": "Imagem de boas vindas",
+      "welcome-message": "Pixelated é um e-mail que respeita a privacidade da sua informação."
     }
 }

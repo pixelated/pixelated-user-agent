@@ -65,7 +65,11 @@
         "timeout": "A timeout occurred",
         "general": "Problems talking to server",
         "parse": "Got invalid response from server",
-        "auth": "Invalid email or password"
+        "auth": "Invalid email or password",
+        "login": {
+            "title": "Oh, something went wrong :(",
+            "message": "Try to login again in a few minutes. If the problem persists, contact your account administrator."
+        }
     },
     "tags": {
         "inbox": "Inbox",
@@ -89,6 +93,8 @@
     "login": {
       "email": "Your email",
       "password": "Your password",
-      "submit": "Login"
+      "submit": "Login",
+      "welcome-image-alt": "Welcome image",
+      "welcome-message": "Pixelated is an email that respects the privacy of your information."
     }
 }

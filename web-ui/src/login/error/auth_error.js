@@ -16,19 +16,16 @@
  */
 
 import React from 'react';
-import { render } from 'react-dom';
-import a11y from 'react-a11y';
-import { I18nextProvider } from 'react-i18next';
+import { translate } from 'react-i18next';
 
-import AppWrapper from './app';
-import i18n from '../i18n';
-import { hasQueryParameter } from '../util';
+import './auth-error.scss';
 
-if (process.env.NODE_ENV === 'development') a11y(React);
-
-render(
-  <I18nextProvider i18n={i18n}>
-    <AppWrapper authError={hasQueryParameter('auth-error')} error={hasQueryParameter('error')} />
-  </I18nextProvider>,
-  document.getElementById('root')
+export const AuthError = ({ t }) => (
+  <p className='auth-error'>{t('error.auth')}</p>
 );
+
+AuthError.propTypes = {
+  t: React.PropTypes.func.isRequired
+};
+
+export default translate('', { wait: true })(AuthError);
