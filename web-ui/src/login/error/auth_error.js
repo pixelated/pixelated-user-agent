@@ -18,7 +18,7 @@
 import React from 'react';
 import { translate } from 'react-i18next';
 
-import './auth-error.scss';
+import './auth_error.scss';
 
 export const AuthError = ({ t }) => (
   <p className='auth-error'>{t('error.auth')}</p>

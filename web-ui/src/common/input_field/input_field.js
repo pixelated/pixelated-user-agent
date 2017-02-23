@@ -17,7 +17,7 @@
 
 import React from 'react';
 
-import './input-field.scss';
+import './input_field.scss';
 
 const InputField = ({ label, name, type = 'text' }) => (
   <div className='input-field-group'>

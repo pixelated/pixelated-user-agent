@@ -18,7 +18,7 @@
 import React from 'react';
 import { translate } from 'react-i18next';
 
-import './pixelated-welcome.scss';
+import './pixelated_welcome.scss';
 
 export const PixelatedWelcome = ({ t }) => (
   <div className='pixelated-welcome'>
