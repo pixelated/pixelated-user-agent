@@ -19,11 +19,12 @@ import React from 'react';
 import { render } from 'react-dom';
 import a11y from 'react-a11y';
 
-import App from './app';
+import App from 'src/common/app';
+import PageWrapper from './page';
 
 if (process.env.NODE_ENV === 'development') a11y(React);
 
 render(
-  <App />,
+  <App child={<PageWrapper />} />,
   document.getElementById('root')
 );
