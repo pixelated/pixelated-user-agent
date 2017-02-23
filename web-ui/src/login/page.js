@@ -21,7 +21,7 @@ import InputField from 'src/common/input_field/input_field';
 import SubmitButton from 'src/common/submit_button/submit_button';
 import AuthError from 'src/login/error/auth_error';
 import GenericError from 'src/login/error/generic_error';
-import PixelatedWelcome from 'src/login/about/pixelated_welcome';
+import Welcome from 'src/login/about/welcome';
 
 import './page.scss';
 
@@ -32,7 +32,7 @@ const errorMessage = (t, authError) => {
 
 const rightPanel = (t, error) => {
   if (error) return <GenericError />;
-  return <PixelatedWelcome />;
+  return <Welcome />;
 };
 
 export const Page = ({ t, authError, error }) => (
