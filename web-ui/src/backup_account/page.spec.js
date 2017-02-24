@@ -3,7 +3,7 @@ import expect from 'expect';
 import React from 'react';
 import { Page } from 'src/backup_account/page';
 
-describe('Page', () => {
+describe('BackupAccount', () => {
   let page;
 
   beforeEach(() => {

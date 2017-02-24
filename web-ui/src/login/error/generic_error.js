@@ -18,7 +18,7 @@
 import React from 'react';
 import { translate } from 'react-i18next';
 
-import './generic-error.scss';
+import './generic_error.scss';
 
 export const GenericError = ({ t }) => (
   <div className='generic-error'>

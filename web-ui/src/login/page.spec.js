@@ -4,9 +4,9 @@ import React from 'react';
 import { Page } from 'src/login/page';
 import AuthError from 'src/login/error/auth_error';
 import GenericError from 'src/login/error/generic_error';
-import PixelatedWelcome from 'src/login/about/pixelated_welcome';
+import Welcome from 'src/login/about/welcome';
 
-describe('Page', () => {
+describe('Login', () => {
   let page;
   const mockTranslations = key => key;
 
@@ -17,7 +17,7 @@ describe('Page', () => {
 
   it('renders welcome message when no error', () => {
     page = shallow(<Page t={mockTranslations} />);
-    expect(page.find(PixelatedWelcome).length).toEqual(1);
+    expect(page.find(Welcome).length).toEqual(1);
   });
 
   it('renders auth error message', () => {
@@ -32,7 +32,7 @@ describe('Page', () => {
 
   it('does not render welcome message when error', () => {
     page = shallow(<Page t={mockTranslations} error />);
-    expect(page.find(PixelatedWelcome).length).toEqual(0);
+    expect(page.find(Welcome).length).toEqual(0);
   });
 
   it('does not render error message', () => {

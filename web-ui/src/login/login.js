@@ -19,9 +19,9 @@ import React from 'react';
 import { render } from 'react-dom';
 import a11y from 'react-a11y';
 
+import { hasQueryParameter } from 'src/common/util';
 import App from 'src/common/app';
 import PageWrapper from './page';
-import { hasQueryParameter } from '../util';
 
 if (process.env.NODE_ENV === 'development') a11y(React);
 

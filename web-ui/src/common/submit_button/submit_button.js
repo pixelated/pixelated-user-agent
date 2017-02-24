@@ -17,7 +17,7 @@
 
 import React from 'react';
 
-import './submit-button.scss';
+import './submit_button.scss';
 
 const SubmitButton = ({ buttonText }) => (
   <input type='submit' className='submit-button' value={buttonText} />

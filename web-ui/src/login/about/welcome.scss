@@ -17,12 +17,12 @@
 
 @import "~scss/base/colors";
 
-.pixelated-welcome {
+.welcome {
   display: none;
 }
 
 @media only screen and (min-width : 960px) {
-  .pixelated-welcome {
+  .welcome {
     font-size: 0.9em;
     color: $medium_grey;
     display: flex;

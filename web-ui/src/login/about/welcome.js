@@ -18,10 +18,10 @@
 import React from 'react';
 import { translate } from 'react-i18next';
 
-import './pixelated-welcome.scss';
+import './welcome.scss';
 
-export const PixelatedWelcome = ({ t }) => (
-  <div className='pixelated-welcome'>
+export const Welcome = ({ t }) => (
+  <div className='welcome'>
     <img className='welcome-logo' src='/public/images/welcome.svg' alt={t('login.welcome-image-alt')} />
     <div>
       <h3>{t('login.welcome-message')}</h3>
@@ -29,8 +29,8 @@ export const PixelatedWelcome = ({ t }) => (
   </div>
 );
 
-PixelatedWelcome.propTypes = {
+Welcome.propTypes = {
   t: React.PropTypes.func.isRequired
 };
 
-export default translate('', { wait: true })(PixelatedWelcome);
+export default translate('', { wait: true })(Welcome);

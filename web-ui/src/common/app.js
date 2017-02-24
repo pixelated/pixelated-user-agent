@@ -18,7 +18,7 @@
 import React from 'react';
 import { I18nextProvider } from 'react-i18next';
 
-import internationalization from '../i18n';
+import internationalization from 'src/common/i18n';
 
 const App = ({ i18n = internationalization, child }) => (
   <I18nextProvider i18n={i18n}>

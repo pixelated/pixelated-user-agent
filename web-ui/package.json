@@ -80,7 +80,7 @@
     "test:unit": "npm run test:coverage && npm run test:karma",
     "test:integration": "mocha-webpack --webpack-config webpack.test.config.js --require test/integration/setup.js \"test/integration/**/*.spec.js\"",
     "test:coverage": "NODE_ENV=test nyc --check-coverage npm run test:mocha",
-    "test:mocha": "mocha-webpack --webpack-config webpack.test.config.js \"test/unit/**/*.spec.js\"",
+    "test:mocha": "mocha-webpack --webpack-config webpack.test.config.js \"src/**/*.spec.js\"",
     "test:karma": "karma start --single-run $GRUNT_OPTS",
     "test:watch:mocha": "npm run test:mocha -- --watch",
     "test:watch:karma": "karma start",
