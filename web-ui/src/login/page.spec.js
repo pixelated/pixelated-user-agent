@@ -6,7 +6,7 @@ import AuthError from 'src/login/error/auth_error';
 import GenericError from 'src/login/error/generic_error';
 import Welcome from 'src/login/about/welcome';
 
-describe('Page', () => {
+describe('Login', () => {
   let page;
   const mockTranslations = key => key;
 
