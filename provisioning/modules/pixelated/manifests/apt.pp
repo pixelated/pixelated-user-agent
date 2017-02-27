@@ -15,15 +15,9 @@ class pixelated::apt {
     notify  => Exec['apt_get_update'],
   }
 
-  file { '/tmp/0x287A1542472DC0E3_packages@pixelated-project.org.asc':
-    source => 'puppet:///modules/pixelated/0x287A1542472DC0E3_packages@pixelated-project.org.asc',
-    notify => Exec['add_pixelated_key']
-  }
-
   exec{'add_pixelated_key':
-    command     => '/usr/bin/apt-key add /tmp/0x287A1542472DC0E3_packages@pixelated-project.org.asc',
+    command     => '/usr/bin/apt-key adv --keyserver pool.sks-keyservers.net --recv-keys F4C220FCD74F4DF45DD78FC0287A1542472DC0E3'
     refreshonly => true,
-    require     => File['/tmp/0x287A1542472DC0E3_packages@pixelated-project.org.asc'],
     notify      => Exec['apt_get_update'],
   }
 
