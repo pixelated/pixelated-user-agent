@@ -11,7 +11,7 @@ X-Python-Version: >= 2.7
 
 Package: pixelated-user-agent
 Architecture: all
-Depends: python (>= 2.7), python (<< 2.8), libffi6
+Depends: libffi6, libsqlcipher0, libssl-dev, python (>= 2.7), python (<< 2.8)
 Description: API to serve the pixelated front-end requests
  Pixelated User Agent Service
  ============================
