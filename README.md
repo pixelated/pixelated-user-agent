@@ -42,6 +42,7 @@ $ vagrant up
 
 ```
 $ vagrant ssh
+$ cd /vagrant
 ```
 
 3) Register with a LEAP provider. You can create a developer account at our [Dev Provider](https://dev.pixelated-project.org/) (Please contact us at team@pixelated-project.org for an invite code) or you can use sample configurations.
