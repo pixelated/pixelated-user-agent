@@ -19,11 +19,11 @@ import React from 'react';
 
 import './input_field.scss';
 
-const InputField = ({ label, name, type = 'text' }) => (
+const InputField = ({ label, name, type = 'text', ...other }) => (
   <div className='input-field-group'>
     <input
       type={type} name={name} className='input-field'
-      autoFocus='' required
+      required {...other}
     />
     <label className='input-field-label' htmlFor={name}>{label}</label>
   </div>

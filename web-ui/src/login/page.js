@@ -45,7 +45,7 @@ export const Page = ({ t, authError, error }) => (
     {rightPanel(t, error)}
     <form className='standard' id='login_form' action='/login' method='post' noValidate >
       {errorMessage(t, authError)}
-      <InputField name='username' label={t('login.email')} />
+      <InputField name='username' label={t('login.email')} autoFocus />
       <InputField type='password' name='password' label={t('login.password')} />
       <SubmitButton buttonText={t('login.submit')} />
     </form>
