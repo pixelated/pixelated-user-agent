@@ -22,40 +22,61 @@ import SubmitButton from 'src/common/submit_button/submit_button';
 import InputField from 'src/common/input_field/input_field';
 import Footer from 'src/common/footer/footer';
 import Header from 'src/common/header/header';
+import validator from 'validator';
 
 import 'font-awesome/scss/font-awesome.scss';
 import './page.scss';
 
-export const Page = ({ t }) => (
-  <DocumentTitle title={t('backup-account.page-title')}>
-    <div className='page'>
-      <Header />
-      <section>
-        <div className='container'>
-          <img
-            className='backup-account-image'
-            src='/public/images/forgot-my-password.svg'
-            alt={t('backup-account.image-description')}
-          />
-          <form>
-            <h1>{t('backup-account.title')}</h1>
-            <p>{t('backup-account.paragraph1')}</p>
-            <p>{t('backup-account.paragraph2')}</p>
-            <InputField name='email' label={t('backup-account.input-label')} />
-            <SubmitButton buttonText={t('backup-account.button')} />
-            <div>
-              <a href='/' className='link'>
-                <i className='fa fa-angle-left' aria-hidden='true' />
-                <span>{t('back-to-inbox')}</span>
-              </a>
+
+export class Page extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { error: '' };
+    this.validateEmail = this.validateEmail.bind(this);
+  }
+
+  validateEmail(event) {
+    this.setState({
+      error: validator.isEmail(event.target.value) ? '' : 'Your email is invalid'
+    });
+  }
+
+  render() {
+    const t = this.props.t;
+    return (
+      <DocumentTitle title={t('backup-account.page-title')}>
+        <div className='page'>
+          <Header />
+          <section>
+            <div className='container'>
+              <img
+                className='backup-account-image'
+                src='/public/images/forgot-my-password.svg'
+                alt={t('backup-account.image-description')}
+              />
+              <form>
+                <h1>{t('backup-account.title')}</h1>
+                <p>{t('backup-account.paragraph1')}</p>
+                <p>{t('backup-account.paragraph2')}</p>
+                <InputField name='email' label={t('backup-account.input-label')} errorText={this.state.error} onChange={this.validateEmail} />
+                <SubmitButton buttonText={t('backup-account.button')} />
+                <div>
+                  <a href='/' className='link'>
+                    <i className='fa fa-angle-left' aria-hidden='true' />
+                    <span>{t('back-to-inbox')}</span>
+                  </a>
+                </div>
+              </form>
             </div>
-          </form>
+          </section>
+          <Footer />
         </div>
-      </section>
-      <Footer />
-    </div>
-  </DocumentTitle>
-);
+      </DocumentTitle>
+    );
+  }
+}
+
 
 Page.propTypes = {
   t: React.PropTypes.func.isRequired

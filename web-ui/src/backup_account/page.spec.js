@@ -22,4 +22,18 @@ describe('BackupAccount', () => {
   it('renders backup account submit button', () => {
     expect(page.find('SubmitButton').props().buttonText).toEqual('backup-account.button');
   });
+
+  describe('Email validation', () => {
+    it('should set error in state when email is invalid', () => {
+      var pageInstance = page.instance();
+      pageInstance.validateEmail({target: {value: 'test'}});
+      expect(pageInstance.state.error).toEqual('Your email is invalid');
+    });
+
+    it('should not set error in state when email is valid', () => {
+      var pageInstance = page.instance();
+      pageInstance.validateEmail({target: {value: 'test@test.com'}});
+      expect(pageInstance.state.error).toEqual('');
+    });
+  });
 });
