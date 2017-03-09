@@ -24,16 +24,29 @@ describe('BackupAccount', () => {
   });
 
   describe('Email validation', () => {
+    let pageInstance;
+
+    beforeEach(() => {
+      pageInstance = page.instance();
+    });
+
     it('should set error in state when email is invalid', () => {
-      var pageInstance = page.instance();
-      pageInstance.validateEmail({target: {value: 'test'}});
+      pageInstance.validateEmail({ target: { value: 'test' } });
       expect(pageInstance.state.error).toEqual('Your email is invalid');
     });
 
     it('should not set error in state when email is valid', () => {
-      var pageInstance = page.instance();
-      pageInstance.validateEmail({target: {value: 'test@test.com'}});
+      pageInstance.validateEmail({ target: { value: 'test@test.com' } });
       expect(pageInstance.state.error).toEqual('');
+    });
+
+    it('submit button should be disabled when email field is empty', () => {
+      expect(page.find('SubmitButton').props().disabled).toEqual(true);
+    });
+
+    it('submit button should be enabled when email field is valid', () => {
+      pageInstance.setState({ validEmail: true });
+      expect(page.find('SubmitButton').props().disabled).toEqual(false);
     });
   });
 });

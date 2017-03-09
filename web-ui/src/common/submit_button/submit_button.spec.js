@@ -11,6 +11,6 @@ describe('SubmitButton', () => {
   });
 
   it('renders an input of type submit for add email', () => {
-    expect(submitButton.find('input[type="submit"]').props().value).toEqual('Add Email');
+    expect(submitButton.find('RaisedButton').props().label).toEqual('Add Email');
   });
 });

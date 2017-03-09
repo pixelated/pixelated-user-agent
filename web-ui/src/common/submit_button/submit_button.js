@@ -16,15 +16,23 @@
  */
 
 import React from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import './submit_button.scss';
 
-const SubmitButton = ({ buttonText }) => (
-  <input type='submit' className='submit-button' value={buttonText} />
+const SubmitButton = ({ buttonText, disabled }) => (
+  <div className='submit-button'>
+    <RaisedButton primary label={buttonText} disabled={disabled} fullWidth labelStyle={{ textTransform: 'none' }} />
+  </div>
 );
 
 SubmitButton.propTypes = {
-  buttonText: React.PropTypes.string.isRequired
+  buttonText: React.PropTypes.string.isRequired,
+  disabled: React.PropTypes.boolean
+};
+
+SubmitButton.defaultProps = {
+  disabled: true
 };
 
 export default SubmitButton;
