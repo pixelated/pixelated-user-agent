@@ -40,7 +40,7 @@ export class Page extends React.Component {
     const validEmail = validator.isEmail(event.target.value);
     const emptyEmail = validator.isEmpty(event.target.value);
     this.setState({
-      error: !emptyEmail && !validEmail  ? 'Your email is invalid' : '',
+      error: !emptyEmail && !validEmail ? 'Your email is invalid' : '',
       submitButtonDisabled: !validEmail || emptyEmail
     });
   }
