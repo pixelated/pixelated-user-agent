@@ -14,22 +14,46 @@ describe('Backup account email validation', () => {
       backupAccountPage = app.find('Page');
     });
 
-    it('shows no error and enables submit button when a valid email is entered', () => {
-      backupAccountPage.find('input').simulate('change', {target: {value: 'test@test.com'}});
-      expect(backupAccountPage.find('InputField').props().errorText).toEqual('');
-      expect(backupAccountPage.find('SubmitButton').props().disabled).toEqual(false);
+    context('with valid email', () => {
+      beforeEach(() => {
+        backupAccountPage.find('input').simulate('change', {target: {value: 'test@test.com'}});
+      });
+
+      it('shows no validation error', () => {
+        expect(backupAccountPage.find('InputField').props().errorText).toEqual('');
+      });
+
+      it('submit button is enabled', () => {
+        expect(backupAccountPage.find('SubmitButton').props().disabled).toEqual(false);
+      });
     });
 
-    it('shows error and disables submit button on invalid email', () => {
-      backupAccountPage.find('input').simulate('change', {target: {value: 'test'}});
-      expect(backupAccountPage.find('InputField').props().errorText).toEqual('Please enter a valid email address');
-      expect(backupAccountPage.find('SubmitButton').props().disabled).toEqual(true);
+    context('with invalid email', () => {
+      beforeEach(() => {
+        backupAccountPage.find('input').simulate('change', {target: {value: 'test'}});
+      });
+
+      it('shows validation error', () => {
+        expect(backupAccountPage.find('InputField').props().errorText).toEqual('Please enter a valid email address');
+      });
+
+      it('disables submit button', () => {
+        expect(backupAccountPage.find('SubmitButton').props().disabled).toEqual(true);
+      });
     });
 
-    it('shows no error and disables submit button when email is empty', () => {
-      backupAccountPage.find('input').simulate('change', {target: {value: ''}});
-      expect(backupAccountPage.find('InputField').props().errorText).toEqual('');
-      expect(backupAccountPage.find('SubmitButton').props().disabled).toEqual(true);
+    context('with empty email', () => {
+      beforeEach(() => {
+        backupAccountPage.find('input').simulate('change', {target: {value: ''}});
+      });
+
+      it('shows no validation error', () => {
+        expect(backupAccountPage.find('InputField').props().errorText).toEqual('');
+      });
+
+      it('disables submit button', () => {
+        expect(backupAccountPage.find('SubmitButton').props().disabled).toEqual(true);
+      });
     });
   });
 });

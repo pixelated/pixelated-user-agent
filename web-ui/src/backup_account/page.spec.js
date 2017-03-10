@@ -35,22 +35,46 @@ describe('BackupAccount', () => {
       expect(page.find('SubmitButton').props().disabled).toEqual(true);
     });
 
-    it('should set error in state and disabled submit button when email is invalid', () => {
-      pageInstance.validateEmail({ target: { value: 'test' } });
-      expect(pageInstance.state.error).toEqual('backup-account.error.invalid-email');
-      expect(page.find('SubmitButton').props().disabled).toEqual(true);
+    context('with invalid email', () => {
+      beforeEach(() => {
+        pageInstance.validateEmail({ target: { value: 'test' } });
+      });
+
+      it('sets error in state', () => {
+        expect(pageInstance.state.error).toEqual('backup-account.error.invalid-email');
+      });
+
+      it('disables submit button', () => {
+        expect(page.find('SubmitButton').props().disabled).toEqual(true);
+      });
     });
 
-    it('should not set error in state and submit button is enabled when email is valid', () => {
-      pageInstance.validateEmail({ target: { value: 'test@test.com' } });
-      expect(pageInstance.state.error).toEqual('');
-      expect(page.find('SubmitButton').props().disabled).toEqual(false);
+    context('with valid email', () => {
+      beforeEach(() => {
+        pageInstance.validateEmail({ target: { value: 'test@test.com' } });
+      });
+
+      it('does not set error in state', () => {
+        expect(pageInstance.state.error).toEqual('');
+      });
+
+      it('submit button is enabled', () => {
+        expect(page.find('SubmitButton').props().disabled).toEqual(false);
+      });
     });
 
-    it('should not set error in state and disable submit button when email is empty', () => {
-      pageInstance.validateEmail({ target: { value: '' } });
-      expect(pageInstance.state.error).toEqual('');
-      expect(page.find('SubmitButton').props().disabled).toEqual(true);
+    context('with empty email', () => {
+      beforeEach(() => {
+        pageInstance.validateEmail({ target: { value: '' } });
+      });
+
+      it('not set error in state', () => {
+        expect(pageInstance.state.error).toEqual('');
+      });
+
+      it('disables submit button', () => {
+        expect(page.find('SubmitButton').props().disabled).toEqual(true);
+      });
     });
   });
 });
