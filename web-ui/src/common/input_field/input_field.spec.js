@@ -11,10 +11,10 @@ describe('InputField', () => {
   });
 
   it('renders an input of type text for email', () => {
-    expect(inputField.find('input[type="text"]').props().name).toEqual('email');
+    expect(inputField.find('TextField').props().name).toEqual('email');
   });
 
   it('renders a label for the email', () => {
-    expect(inputField.find('label').text()).toEqual('Email');
+    expect(inputField.find('TextField').props().floatingLabelText).toEqual('Email');
   });
 });

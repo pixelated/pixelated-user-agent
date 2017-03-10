@@ -23,37 +23,8 @@
   width: 100%;
 }
 
-.input-field-label {
-  font-size: 0.9em;
-  margin-bottom: 10px;
-  display: inline-block;
-  color:#999;
-  position:absolute;
-  pointer-events:none;
-  left: 6px;
-  top:10px;
-  transition:0.2s ease all;
-}
-
-.input-field {
-  display: block;
-  border: none;
-  border-bottom: solid 1px $dark_blue;
-  width: 100%;
-  height: auto;
-  padding: 0.3em 0px;
-
-  &:focus {
-    outline:none;
-    border-width: 2px;
-  }
-}
-
-.input-field:focus ~ .input-field-label, .input-field:valid ~ .input-field-label {
-  top:-12px;
-  left: 0;
-  font-size:0.7em;
-  color: $dark_blue;
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
 }
 
 @media only screen and (min-width : 500px) {
@@ -67,7 +38,6 @@
   .input-field-group {
     width: 300px;
     align-self: flex-start;
-    margin-top: 3em;
     font-size: 1em;
   }
 }

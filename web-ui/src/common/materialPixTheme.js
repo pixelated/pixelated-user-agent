@@ -14,33 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-import React from 'react';
-import TextField from 'material-ui/TextField';
+const mediumLightGrey = '#999999';
+const darkBlue = '#178ca6';
 
-import './input_field.scss';
+const materialPixTheme = getMuiTheme({
+  fontFamily: 'Open Sans, sans-serif',
+  palette: {
+    disabledColor: mediumLightGrey,
+    primary1Color: darkBlue,
+    borderColor: darkBlue
+  }
+});
 
-const InputField = ({ label, name, type = 'text', ...other }) => (
-  <div className='input-field-group'>
-    <TextField
-      hintText={label}
-      floatingLabelText={label}
-      name={name}
-      type={type}
-      fullWidth
-      {...other}
-    />
-  </div>
-);
-
-InputField.propTypes = {
-  label: React.PropTypes.string.isRequired,
-  name: React.PropTypes.string.isRequired,
-  type: React.PropTypes.string
-};
-
-InputField.defaultProps = {
-  type: 'text'
-};
-
-export default InputField;
+export default materialPixTheme;

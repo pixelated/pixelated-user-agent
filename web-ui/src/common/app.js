@@ -19,11 +19,18 @@ import React from 'react';
 import { I18nextProvider } from 'react-i18next';
 
 import internationalization from 'src/common/i18n';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import materialPixTheme from 'src/common/materialPixTheme';
+
+injectTapEventPlugin();
 
 const App = ({ i18n = internationalization, child }) => (
-  <I18nextProvider i18n={i18n}>
-    {child}
-  </I18nextProvider>
+  <MuiThemeProvider muiTheme={materialPixTheme}>
+    <I18nextProvider i18n={i18n}>
+      {child}
+    </I18nextProvider>
+  </MuiThemeProvider>
 );
 
 App.propTypes = {
