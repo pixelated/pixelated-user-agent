@@ -63,7 +63,7 @@ export class Page extends React.Component {
                 <p>{t('backup-account.paragraph2')}</p>
                 <InputField name='email' label={t('backup-account.input-label')} errorText={this.state.error} onChange={this.validateEmail} />
                 <SubmitButton buttonText={t('backup-account.button')} disabled={!this.state.validEmail} />
-                <div>
+                <div className='link-content'>
                   <a href='/' className='link'>
                     <i className='fa fa-angle-left' aria-hidden='true' />
                     <span>{t('back-to-inbox')}</span>
