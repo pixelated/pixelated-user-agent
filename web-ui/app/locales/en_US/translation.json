@@ -86,7 +86,10 @@
       "paragraph1": "You will need a backup account. Choose an alternative email address you use regularly.",
       "paragraph2": "Instructions to recover your password will be sent to this email address, save it.",
       "input-label": "Type your backup account",
-      "button": "Add Account"
+      "button": "Add Account",
+      "error": {
+        "invalid-email": "Please enter a valid email address"
+      }
     },
     "back-to-inbox": "Back to my inbox",
     "footer-text": "Product in development. Feedback and issues to",

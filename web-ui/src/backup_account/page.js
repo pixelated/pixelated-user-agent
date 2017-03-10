@@ -39,8 +39,9 @@ export class Page extends React.Component {
   validateEmail(event) {
     const validEmail = validator.isEmail(event.target.value);
     const emptyEmail = validator.isEmpty(event.target.value);
+    const t = this.props.t;
     this.setState({
-      error: !emptyEmail && !validEmail ? 'Your email is invalid' : '',
+      error: !emptyEmail && !validEmail ? t('backup-account.error.invalid-email') : '',
       submitButtonDisabled: !validEmail || emptyEmail
     });
   }

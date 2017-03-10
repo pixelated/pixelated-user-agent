@@ -37,7 +37,7 @@ describe('BackupAccount', () => {
 
     it('should set error in state and disabled submit button when email is invalid', () => {
       pageInstance.validateEmail({ target: { value: 'test' } });
-      expect(pageInstance.state.error).toEqual('Your email is invalid');
+      expect(pageInstance.state.error).toEqual('backup-account.error.invalid-email');
       expect(page.find('SubmitButton').props().disabled).toEqual(true);
     });
 

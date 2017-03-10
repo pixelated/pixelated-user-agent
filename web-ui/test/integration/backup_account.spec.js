@@ -22,7 +22,7 @@ describe('Backup account email validation', () => {
 
     it('shows error and disables submit button on invalid email', () => {
       backupAccountPage.find('input').simulate('change', {target: {value: 'test'}});
-      expect(backupAccountPage.find('InputField').props().errorText).toEqual('Your email is invalid');
+      expect(backupAccountPage.find('InputField').props().errorText).toEqual('Please enter a valid email address');
       expect(backupAccountPage.find('SubmitButton').props().disabled).toEqual(true);
     });
 
