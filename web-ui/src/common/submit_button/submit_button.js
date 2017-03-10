@@ -30,9 +30,10 @@ const buttonStyle = {
   height: '48px'
 };
 
-const SubmitButton = ({ buttonText, disabled=false }) => (
+const SubmitButton = ({ buttonText, disabled = false }) => (
   <div className='submit-button'>
-    <RaisedButton type='submit'
+    <RaisedButton
+      type='submit'
       label={buttonText}
       disabled={disabled}
       labelStyle={labelStyle}

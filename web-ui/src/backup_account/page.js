@@ -32,15 +32,16 @@ export class Page extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { error: '', validEmail: false };
+    this.state = { error: '', submitButtonDisabled: true };
     this.validateEmail = this.validateEmail.bind(this);
   }
 
   validateEmail(event) {
     const validEmail = validator.isEmail(event.target.value);
+    const emptyEmail = validator.isEmpty(event.target.value);
     this.setState({
-      error: validEmail ? '' : 'Your email is invalid',
-      validEmail
+      error: !emptyEmail && !validEmail  ? 'Your email is invalid' : '',
+      submitButtonDisabled: !validEmail || emptyEmail
     });
   }
 
@@ -62,7 +63,7 @@ export class Page extends React.Component {
                 <p>{t('backup-account.paragraph1')}</p>
                 <p>{t('backup-account.paragraph2')}</p>
                 <InputField name='email' label={t('backup-account.input-label')} errorText={this.state.error} onChange={this.validateEmail} />
-                <SubmitButton buttonText={t('backup-account.button')} disabled={!this.state.validEmail} />
+                <SubmitButton buttonText={t('backup-account.button')} disabled={this.state.submitButtonDisabled} />
                 <div className='link-content'>
                   <a href='/' className='link'>
                     <i className='fa fa-angle-left' aria-hidden='true' />

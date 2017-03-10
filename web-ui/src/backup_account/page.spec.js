@@ -30,23 +30,27 @@ describe('BackupAccount', () => {
       pageInstance = page.instance();
     });
 
-    it('should set error in state when email is invalid', () => {
-      pageInstance.validateEmail({ target: { value: 'test' } });
-      expect(pageInstance.state.error).toEqual('Your email is invalid');
-    });
-
-    it('should not set error in state when email is valid', () => {
-      pageInstance.validateEmail({ target: { value: 'test@test.com' } });
+    it('verify initial state', () => {
       expect(pageInstance.state.error).toEqual('');
-    });
-
-    it('submit button should be disabled when email field is empty', () => {
       expect(page.find('SubmitButton').props().disabled).toEqual(true);
     });
 
-    it('submit button should be enabled when email field is valid', () => {
-      pageInstance.setState({ validEmail: true });
+    it('should set error in state and disabled submit button when email is invalid', () => {
+      pageInstance.validateEmail({ target: { value: 'test' } });
+      expect(pageInstance.state.error).toEqual('Your email is invalid');
+      expect(page.find('SubmitButton').props().disabled).toEqual(true);
+    });
+
+    it('should not set error in state and submit button is enabled when email is valid', () => {
+      pageInstance.validateEmail({ target: { value: 'test@test.com' } });
+      expect(pageInstance.state.error).toEqual('');
       expect(page.find('SubmitButton').props().disabled).toEqual(false);
+    });
+
+    it('should not set error in state and disable submit button when email is empty', () => {
+      pageInstance.validateEmail({ target: { value: '' } });
+      expect(pageInstance.state.error).toEqual('');
+      expect(page.find('SubmitButton').props().disabled).toEqual(true);
     });
   });
 });
