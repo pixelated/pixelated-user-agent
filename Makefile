@@ -36,11 +36,11 @@ create_virtualenv: ensure_virtualenv_installed
 		virtualenv --python=python2 $(VIRTUALENV);\
 	fi
 
-test: test_py test_js coverage
-test_py: clean requirements install coverage linters_py unit_tests_py integration_tests_py
-test_js: clean requirements_js install_js linters_js unit_tests_js
+test: clean install test_py test_js coverage
+test_py: linters_py unit_tests_py integration_tests_py
+test_js: linters_js unit_tests_js
 test_all: test functional_tests
-linters: clean requirements install linters_py linters_js
+linters: clean install linters_py linters_js
 
 linters_py:
 	@. $(VIRTUALENV)/bin/activate;\

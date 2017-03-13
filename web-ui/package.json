@@ -102,7 +102,7 @@
     "watch:handlebars": "watch 'npm run build:handlebars' app/templates",
     "watch:compass": "compass watch",
     "watch:js": "webpack --colors --progress --watch",
-    "clean": "rm -rf dist/ app/js/generated/hbs/* app/css/*",
+    "clean": "rm -rf app/js/generated/hbs/* app/css/*",
     "imagemin": "node config/imagemin.js",
     "package": "npm run build:prod && npm run imagemin",
     "add_git_version": "/bin/bash config/add_git_version.sh"
