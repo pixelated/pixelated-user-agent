@@ -101,7 +101,7 @@ p {
     display: flex;
     flex-direction: column;
 
-    div {
+    .input-field-group, .submit-button, .link-content {
       width: 70%;
       align-self: center;
     }
@@ -119,8 +119,9 @@ p {
 
   form {
     margin-left: 2.5em;
+    min-height: 492px;
 
-    div {
+    .input-field-group, .submit-button, .link-content {
       width: 300px;
       align-self: flex-start;
     }

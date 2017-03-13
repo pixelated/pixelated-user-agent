@@ -28,6 +28,7 @@ const InputField = ({ label, name, type = 'text', ...other }) => (
       name={name}
       type={type}
       fullWidth
+      floatingLabelFocusStyle={{ color: '#178ca6' }}
       {...other}
     />
   </div>

@@ -75,6 +75,7 @@
     "typeahead.js": "^0.11.1",
     "url-loader": "^0.5.7",
     "utf8": "^2.1.2",
+    "validator": "^7.0.0",
     "watch": "0.19.1",
     "webpack": "^1.14.0"
   },

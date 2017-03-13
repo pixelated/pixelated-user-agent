@@ -86,7 +86,10 @@
       "paragraph1": "Informe outro e-mail que você usa regularmente. Esse será o seu e-mail de recuperação.",
       "paragraph2": "Instruções para recuperar sua senha serão enviadas para esse e-mail, guarde com carinho.",
       "input-label": "Digite seu e-mail de recuperação",
-      "button": "Adicionar e-mail"
+      "button": "Adicionar e-mail",
+      "error": {
+        "invalid-email": "Por favor informe um e-mail válido"
+      }
     },
     "back-to-inbox": "Voltar",
     "footer-text": "Produto em desenvolvimento. Reporte problemas através do",

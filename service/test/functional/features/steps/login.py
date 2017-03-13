@@ -35,7 +35,7 @@ def enter_credentials(context, username, password):
 
 @when(u'I click on the login button')
 def click_login(context):
-    find_element_by_css_selector(context, 'input[type="submit"]').click()
+    find_element_by_css_selector(context, 'button[type="submit"]').click()
 
 
 @then(u'I should see the fancy interstitial')
