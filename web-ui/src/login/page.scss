@@ -1,0 +1,100 @@
+/*
+ * Copyright (c) 2017 ThoughtWorks, Inc.
+ *
+ * Pixelated is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Pixelated is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import "~scss/base/colors";
+
+.login {
+  display: block;
+  width: 90%;
+  margin: auto;
+  max-width: 400px;
+  padding: 2em 0;
+  background-color: $white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#login_form {
+  width: 70%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  .input-field-group {
+    width: 100%;
+    margin: 0;
+  }
+
+  .submit-button {
+    margin-top: 1.5em;
+    width: 100%;
+  }
+}
+
+.logo {
+  width: 70%;
+  margin-bottom: 2em;
+}
+
+.small-logo {
+  width: 50%;
+  margin-bottom: 1em;
+}
+
+@media only screen and (min-width : 500px) {
+  .login {
+    width: 60%;
+  }
+}
+
+@media only screen and (min-width : 960px) {
+  .content {
+    font-size: 0.9em;
+  }
+
+  .login {
+    display: flex;
+    align-items: flex-start;
+    width: 70%;
+    max-width: 700px;
+    padding: 2.5em 0;
+    height: 22em;
+
+    &:after {
+      content: '';
+      height: 22em;
+      position: absolute;
+      margin-top: 3%;
+      top: 2.5em;
+      left: 50%;
+      border: 1px solid $lighter_gray;
+      transform: scaleX(0.5);
+    }
+  }
+
+  .logo {
+    height: 6em;
+    margin-bottom: 1em;
+    margin-top: 0.5em;
+  }
+
+  .logo, #login_form {
+    width: 34%;
+    margin-left: 8%;
+  }
+}

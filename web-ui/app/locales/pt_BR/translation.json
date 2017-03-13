@@ -64,7 +64,12 @@
     "error": {
         "timeout": "A operação excedeu o limite de tempo",
         "general": "Problemas ao se comunicar com o servidor",
-        "parse": "Obteve uma resposta inválida do servidor"
+        "parse": "Obteve uma resposta inválida do servidor",
+        "auth": "E-mail ou senha inválidos",
+        "login": {
+            "title": "Ops, algo deu errado :(",
+            "message": "Tente entrar novamente em alguns minutos. Se o problema persistir, contate o administrador da sua conta."
+        }
     },
     "tags": {
         "inbox": "Caixa de Entrada",
@@ -73,5 +78,26 @@
         "trash": "Lixeira",
         "all": "Todas",
         "tags": "Etiquetas"
+    },
+    "backup-account": {
+      "page-title": "Pixelated E-mail de Recuperação",
+      "image-description": "Esqueci minha senha!",
+      "title": "E se você esquecer sua senha?",
+      "paragraph1": "Informe outro e-mail que você usa regularmente. Esse será o seu e-mail de recuperação.",
+      "paragraph2": "Instruções para recuperar sua senha serão enviadas para esse e-mail, guarde com carinho.",
+      "input-label": "Digite seu e-mail de recuperação",
+      "button": "Adicionar e-mail",
+      "error": {
+        "invalid-email": "Por favor informe um e-mail válido"
+      }
+    },
+    "back-to-inbox": "Voltar",
+    "footer-text": "Produto em desenvolvimento. Reporte problemas através do",
+    "login": {
+      "email": "Seu e-mail",
+      "password": "Sua senha",
+      "submit": "Entrar",
+      "welcome-image-alt": "Imagem de boas vindas",
+      "welcome-message": "Pixelated é um e-mail que respeita a privacidade da sua informação."
     }
 }

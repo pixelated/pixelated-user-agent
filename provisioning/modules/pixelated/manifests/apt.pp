@@ -7,13 +7,6 @@ class pixelated::apt {
     ensure => installed
   }
 
-  # jessie backports
-  file { '/etc/apt/sources.list.d/jessie-backports.list':
-    source => 'puppet:///modules/pixelated/apt/jessie-backports.list',
-    owner  => 'root',
-    notify => Exec['apt_get_update'],
-  }
-
   # pixelated repo
   file { '/etc/apt/sources.list.d/pixelated.list':
     source  => 'puppet:///modules/pixelated/apt/pixelated.list',
@@ -22,39 +15,10 @@ class pixelated::apt {
     notify  => Exec['apt_get_update'],
   }
 
-  file { '/tmp/0x287A1542472DC0E3_packages@pixelated-project.org.asc':
-    source => 'puppet:///modules/pixelated/0x287A1542472DC0E3_packages@pixelated-project.org.asc',
-    notify => Exec['add_pixelated_key']
-  }
-
   exec{'add_pixelated_key':
-    command     => '/usr/bin/apt-key add /tmp/0x287A1542472DC0E3_packages@pixelated-project.org.asc',
-    refreshonly => true,
-    require     => File['/tmp/0x287A1542472DC0E3_packages@pixelated-project.org.asc'],
-    notify      => Exec['apt_get_update'],
-  }
-
-  # leap repo
-  file { '/etc/apt/sources.list.d/leap.list':
-    content => 'deb http://deb.leap.se/0.9 jessie main',
-    owner   => 'root',
-    require => Exec['add_leap_key'],
+    command => '/usr/bin/apt-key adv --keyserver pool.sks-keyservers.net --recv-keys F4C220FCD74F4DF45DD78FC0287A1542472DC0E3',
+    unless  => '/usr/bin/apt-key finger 2>&1 | grep -q "F4C2 20FC D74F 4DF4 5DD7  8FC0 287A 1542 472D C0E3"',
     notify  => Exec['apt_get_update'],
-  }
-  file { '/tmp/0x1E34A1828E20790_leap_archive_key':
-    source => 'puppet:///modules/pixelated/0x1E34A1828E20790_leap_archive_key',
-    notify => Exec['add_leap_key']
-  }
-  exec{'add_leap_key':
-    command     => '/usr/bin/apt-key add /tmp/0x1E34A1828E20790_leap_archive_key',
-    refreshonly => true,
-    require     => File['/tmp/0x1E34A1828E20790_leap_archive_key'],
-    notify      => Exec['apt_get_update'],
-  }
-
-  package { 'leap-keyring':
-    ensure  => latest,
-    require => Exec['apt_get_update']
   }
 
   # nodejs latest repo
@@ -66,7 +30,8 @@ class pixelated::apt {
   }
   exec{'add_nodesource_key':
     command => '/usr/bin/curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -',
-    notify => Exec['apt_get_update']
+    unless  => '/usr/bin/apt-key finger 2>&1 | grep -q "9FD3 B784 BC1C 6FC3 1A8A  0A1C 1655 A0AB 6857 6280"',
+    notify  => Exec['apt_get_update']
   }
   file { '/etc/apt/preferences.d/nodejs':
     content =>

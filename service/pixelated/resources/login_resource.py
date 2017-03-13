@@ -20,7 +20,7 @@ from xml.sax import SAXParseException
 from pixelated.authentication import Authenticator
 from pixelated.config.leap import BootstrapUserServices
 from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
-from pixelated.resources import handle_error_deferred, get_startup_folder
+from pixelated.resources import get_public_static_folder, respond_json
 from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer
 from twisted.logger import Logger
@@ -45,7 +45,7 @@ def parse_accept_language(all_headers):
 
 
 class DisclaimerElement(Element):
-    loader = XMLFile(FilePath(os.path.join(get_startup_folder(), '_login_disclaimer_banner.html')))
+    loader = XMLFile(FilePath(os.path.join(get_public_static_folder(), '_login_disclaimer_banner.html')))
 
     def __init__(self, banner):
         super(DisclaimerElement, self).__init__()
@@ -68,18 +68,11 @@ class DisclaimerElement(Element):
 
 
 class LoginWebSite(Element):
-    loader = XMLFile(FilePath(os.path.join(get_startup_folder(), 'login.html')))
+    loader = XMLFile(FilePath(os.path.join(get_public_static_folder(), 'login.html')))
 
-    def __init__(self, error_msg=None, disclaimer_banner_file=None):
+    def __init__(self, disclaimer_banner_file=None):
         super(LoginWebSite, self).__init__()
-        self._error_msg = error_msg
         self.disclaimer_banner_file = disclaimer_banner_file
-
-    @renderer
-    def error_msg(self, request, tag):
-        if self._error_msg is not None:
-            return tag(self._error_msg)
-        return tag('')
 
     @renderer
     def disclaimer(self, request, tag):
@@ -91,14 +84,14 @@ class LoginResource(BaseResource):
 
     def __init__(self, services_factory, provider=None, disclaimer_banner=None, authenticator=None):
         BaseResource.__init__(self, services_factory)
-        self._startup_folder = get_startup_folder()
         self._disclaimer_banner = disclaimer_banner
         self._provider = provider
         self._authenticator = authenticator or Authenticator(provider)
         self._bootstrap_user_services = BootstrapUserServices(services_factory, provider)
 
-        self.putChild('startup-assets', File(self._startup_folder))
-        with open(os.path.join(self._startup_folder, 'Interstitial.html')) as f:
+        static_folder = get_public_static_folder()
+        self.putChild('public', File(static_folder))
+        with open(os.path.join(static_folder, 'interstitial.html')) as f:
             self.interstitial = f.read()
 
     def getChild(self, path, request):
@@ -106,6 +99,8 @@ class LoginResource(BaseResource):
             return self
         if path == 'login':
             return self
+        if path == 'status':
+            return LoginStatusResource(self._services_factory)
         if not self.is_logged_in(request):
             return UnAuthorizedResource()
         return NoResource()
@@ -114,8 +109,8 @@ class LoginResource(BaseResource):
         request.setResponseCode(OK)
         return self._render_template(request)
 
-    def _render_template(self, request, error_msg=None):
-        site = LoginWebSite(error_msg=error_msg, disclaimer_banner_file=self._disclaimer_banner)
+    def _render_template(self, request):
+        site = LoginWebSite(disclaimer_banner_file=self._disclaimer_banner)
         return renderElement(request, site)
 
     def render_POST(self, request):
@@ -135,12 +130,12 @@ class LoginResource(BaseResource):
                 log.error('Authentication error for %s' % request.args['username'][0])
                 log.error('%s' % error)
             request.setResponseCode(UNAUTHORIZED)
-            return self._render_template(request, 'Invalid username or password')
+            content = util.redirectTo("/login?auth-error", request)
+            request.write(content)
+            request.finish()
 
         d = self._handle_login(request)
         d.addCallbacks(render_response, render_error)
-        d.addErrback(handle_error_deferred, request)
-
         return NOT_DONE_YET
 
     @defer.inlineCallbacks
@@ -151,15 +146,32 @@ class LoginResource(BaseResource):
         defer.returnValue(user_auth)
 
     def _complete_bootstrap(self, user_auth, request):
-        def log_error(error):
+        def login_error(error, session):
             log.error('Login error during %s services setup: %s \n %s' % (user_auth.username, error.getErrorMessage(), error.getTraceback()))
+            session.login_error()
 
-        def set_session_cookies(_):
-            session = IPixelatedSession(request.getSession())
-            session.user_uuid = user_auth.uuid
+        def login_successful(_, session):
+            session.login_successful(user_auth.uuid)
 
         language = parse_accept_language(request.getAllHeaders())
         password = request.args['password'][0]
+        session = IPixelatedSession(request.getSession())
+        session.login_started()
+
         d = self._bootstrap_user_services.setup(user_auth, password, language)
-        d.addCallback(set_session_cookies)
-        d.addErrback(log_error)
+        d.addCallback(login_successful, session)
+        d.addErrback(login_error, session)
+
+
+class LoginStatusResource(BaseResource):
+    isLeaf = True
+
+    def __init__(self, services_factory):
+        BaseResource.__init__(self, services_factory)
+
+    def render_GET(self, request):
+        session = IPixelatedSession(request.getSession())
+        status = 'completed' if self._services_factory.mode.is_single_user else str(session.check_login_status())
+
+        response = {'status': status}
+        return respond_json(response, request)

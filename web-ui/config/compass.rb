@@ -17,7 +17,7 @@
 
 # Set this to the root of your project when deployed:
 
-target_dir = ENV['PIXELATED_BUILD'] == 'package' ? 'dist' : 'app'
+target_dir = 'app'
 
 
 http_path = "/"

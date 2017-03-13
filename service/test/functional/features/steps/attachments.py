@@ -13,6 +13,8 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+import os
+
 from email.MIMEMultipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
@@ -67,8 +69,10 @@ def find_icon(context):
 def upload_big_file(context):
     base_dir = "test/functional/features/files/"
     fname = "over_5mb.data"
+    path = os.path.abspath(os.path.join(base_dir, fname))
+
     context.browser.execute_script("$('#fileupload').removeAttr('hidden');")
-    fill_by_css_selector(context, '#fileupload', base_dir + fname)
+    fill_by_css_selector(context, '#fileupload', path)
     find_element_by_css_selector(context, '#upload-error-message')
 
 
@@ -97,7 +101,9 @@ def should_not_show_upload_error_message(context):
 def upload_attachment(context):
     base_dir = "test/functional/features/files/"
     fname = "5mb.data"
-    fill_by_css_selector(context, '#fileupload', base_dir + fname)
+    path = os.path.abspath(os.path.join(base_dir, fname))
+
+    fill_by_css_selector(context, '#fileupload', path)
     attachment_list_item = find_element_by_css_selector(context, '#attachment-list-item li a')
     assert attachment_list_item.text == "%s (5.00 Mb)" % fname
 

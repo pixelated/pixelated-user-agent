@@ -2,7 +2,7 @@ VIRTUALENV=~/.venvs/pixua
 
 .PHONY: setup requirements install requirements_py install_py requirements_js install_js create_virtualenv
 .PHONY: test test_py test_js test_all linters linters_py linters_js coverage unit_tests_py unit_tests_js
-.PHONY: integration_tests_py functional_tests ensure_phantomjs_installed ensure_virtualenv_installed clean
+.PHONY: integration_tests_py functional_tests functional_tests_ci ensure_virtualenv_installed clean
 .PHONY: clean_all clean_py clean_js clean_cache remove_virtualenv remove_javascript_packages
 setup: install
 
@@ -49,7 +49,7 @@ linters_py:
 
 linters_js:
 	@cd web-ui;\
-	npm run jshint
+	npm run lint
 
 coverage:
 	@. $(VIRTUALENV)/bin/activate;\
@@ -71,18 +71,18 @@ unit_tests_js:
 integration_tests_py:
 	@. $(VIRTUALENV)/bin/activate;\
 	cd service;\
-	trial -j`grep -c "^processor" /proc/cpuinfo || sysctl -n hw.logicalcpu` --reporter=text test.integration
+	trial --reporter=text test.integration
 
-functional_tests: clean requirements install ensure_phantomjs_installed
+functional_tests: clean requirements install
+	@. $(VIRTUALENV)/bin/activate;\
+	export PATH=$(PATH):/usr/lib/chromium/;\
+	cd service;\
+	xvfb-run --server-args="-screen 0 1280x1024x24" behave --tags ~@wip --tags ~@smoke test/functional/features
+
+functional_tests_ci: clean requirements install
 	@. $(VIRTUALENV)/bin/activate;\
 	cd service;\
 	behave --tags ~@wip --tags ~@smoke test/functional/features
-
-ensure_phantomjs_installed:
-	@if [ ! `which phantomjs` ]; then\
-		echo "You need phantomJS to run these tests";\
-		exit 1;\
-	fi
 
 ensure_virtualenv_installed:
 	@if [ ! `which virtualenv` ]; then\

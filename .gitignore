@@ -36,3 +36,5 @@ pixelated.cfg
 service/_trial_temp/
 _trial_temp
 web-ui/coverage
+.nyc_output
+web-ui/npm-debug.log.*

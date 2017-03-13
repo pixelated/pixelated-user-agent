@@ -20,14 +20,14 @@ from string import Template
 from pixelated.resources.users import UsersResource
 
 from pixelated.resources import BaseResource, UnAuthorizedResource, UnavailableResource
-from pixelated.resources import get_startup_folder, get_static_folder
+from pixelated.resources import get_public_static_folder, get_protected_static_folder
 from pixelated.resources.attachments_resource import AttachmentsResource
 from pixelated.resources.sandbox_resource import SandboxResource
-from pixelated.resources.account_recovery_resource import AccountRecoveryResource
+from pixelated.resources.backup_account_resource import BackupAccountResource
 from pixelated.resources.contacts_resource import ContactsResource
 from pixelated.resources.features_resource import FeaturesResource
 from pixelated.resources.feedback_resource import FeedbackResource
-from pixelated.resources.login_resource import LoginResource
+from pixelated.resources.login_resource import LoginResource, LoginStatusResource
 from pixelated.resources.logout_resource import LogoutResource
 from pixelated.resources.user_settings_resource import UserSettingsResource
 from pixelated.resources.mail_resource import MailResource
@@ -51,17 +51,18 @@ MODE_RUNNING = 2
 class RootResource(BaseResource):
     def __init__(self, services_factory):
         BaseResource.__init__(self, services_factory)
-        self._startup_assets_folder = get_startup_folder()
-        self._static_folder = get_static_folder()
-        self._html_template = open(os.path.join(self._static_folder, 'index.html')).read()
+        self._public_static_folder = get_public_static_folder()
+        self._protected_static_folder = get_protected_static_folder()
+        self._html_template = open(os.path.join(self._protected_static_folder, 'index.html')).read()
         self._services_factory = services_factory
         self._child_resources = ChildResourcesMap()
-        with open(os.path.join(self._startup_assets_folder, 'Interstitial.html')) as f:
+        with open(os.path.join(self._public_static_folder, 'interstitial.html')) as f:
             self.interstitial = f.read()
         self._startup_mode()
 
     def _startup_mode(self):
-        self.putChild('startup-assets', File(self._startup_assets_folder))
+        self.putChild('public', File(self._public_static_folder))
+        self.putChild('status', LoginStatusResource(self._services_factory))
         self._mode = MODE_STARTUP
 
     def getChild(self, path, request):
@@ -89,9 +90,9 @@ class RootResource(BaseResource):
         return csrf_input and csrf_input == xsrf_token
 
     def initialize(self, provider=None, disclaimer_banner=None, authenticator=None):
-        self._child_resources.add('recovery', AccountRecoveryResource(self._services_factory))
-        self._child_resources.add('sandbox', SandboxResource(self._static_folder))
-        self._child_resources.add('assets', File(self._static_folder))
+        self._child_resources.add('assets', File(self._protected_static_folder))
+        self._child_resources.add('backup-account', BackupAccountResource(self._services_factory))
+        self._child_resources.add('sandbox', SandboxResource(self._protected_static_folder))
         self._child_resources.add('keys', KeysResource(self._services_factory))
         self._child_resources.add(AttachmentsResource.BASE_URL, AttachmentsResource(self._services_factory))
         self._child_resources.add('contacts', ContactsResource(self._services_factory))

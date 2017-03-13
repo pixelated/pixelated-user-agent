@@ -57,12 +57,15 @@ def handle_error_deferred(e, request):
     request.finish()
 
 
-def get_startup_folder():
-    path = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(path, '..', 'assets')
+def get_protected_static_folder():
+    return os.path.join(_get_static_folder(), 'protected')
 
 
-def get_static_folder():
+def get_public_static_folder():
+    return os.path.join(_get_static_folder(), 'public')
+
+
+def _get_static_folder():
     static_folder = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "..", "..", "web-ui", "dist"))
     if not os.path.exists(static_folder):
         static_folder = os.path.join('/', 'usr', 'share', 'pixelated-user-agent')

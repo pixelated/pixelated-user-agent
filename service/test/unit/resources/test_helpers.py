@@ -18,6 +18,7 @@ from twisted.trial import unittest
 import re
 
 from pixelated.resources import respond_json, respond_json_deferred
+from pixelated.resources import get_public_static_folder, get_protected_static_folder
 from test.unit.resources import DummySite
 from twisted.web.test.requesthelper import DummyRequest
 
@@ -44,3 +45,9 @@ class TestHelpers(unittest.TestCase):
         self.assertEqual(b"{\"test\": \"yep\"}", request.written[0])
         self.assertEqual([b"application/json"],
                          request.responseHeaders.getRawHeaders("Content-Type"))
+
+    def test_getting_public_folder_returns_path(self):
+        self.assertIn('web-ui/dist/public', get_public_static_folder())
+
+    def test_getting_protected_folder_returns_path(self):
+        self.assertIn('web-ui/dist/protected', get_protected_static_folder())

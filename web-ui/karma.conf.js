@@ -68,7 +68,7 @@ module.exports = function (config) {
     reporters: ['dots', 'junit', 'coverage'],
 
     preprocessors: {
-        'app/js/!(lib|account_recovery)/**/*.js': ['coverage']
+        'app/js/!(lib)/**/*.js': ['coverage']
     },
 
     // enable / disable watching file and executing tests whenever any file changes

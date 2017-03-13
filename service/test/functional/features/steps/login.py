@@ -29,13 +29,13 @@ def login_page(context):
 
 @when(u'I enter {username} and {password} as credentials')
 def enter_credentials(context, username, password):
-    fill_by_css_selector(context, 'input#email', context.username)
-    fill_by_css_selector(context, 'input#password', password)
+    fill_by_css_selector(context, 'input[name="username"]', context.username)
+    fill_by_css_selector(context, 'input[name="password"]', password)
 
 
 @when(u'I click on the login button')
 def click_login(context):
-    find_element_by_css_selector(context, 'input[name="login"]').click()
+    find_element_by_css_selector(context, 'button[type="submit"]').click()
 
 
 @then(u'I should see the fancy interstitial')

@@ -19,7 +19,9 @@ from behave import when
 
 from common import (
     fill_by_css_selector,
-    find_element_by_css_selector)
+    find_element_by_css_selector,
+    find_element_by_id
+)
 
 
 @when('I compose a message with')
@@ -52,7 +54,7 @@ def send_impl(context):
 
 @when(u'I toggle the cc and bcc fields')
 def collapse_cc_bcc_fields(context):
-    cc_and_bcc_chevron = find_element_by_css_selector(context, '#cc-bcc-collapse')
+    cc_and_bcc_chevron = find_element_by_id(context, 'cc-bcc-collapse')
     cc_and_bcc_chevron.click()
 
 

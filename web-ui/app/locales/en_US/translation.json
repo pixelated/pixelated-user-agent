@@ -64,7 +64,12 @@
     "error": {
         "timeout": "A timeout occurred",
         "general": "Problems talking to server",
-        "parse": "Got invalid response from server"
+        "parse": "Got invalid response from server",
+        "auth": "Invalid email or password",
+        "login": {
+            "title": "Oh, something went wrong :(",
+            "message": "Try to login again in a few minutes. If the problem persists, contact your account administrator."
+        }
     },
     "tags": {
         "inbox": "Inbox",
@@ -73,5 +78,26 @@
         "trash": "Trash",
         "all": "All",
         "tags": "Tags"
+    },
+    "backup-account": {
+      "page-title": "Pixelated Backup Account",
+      "image-description": "Forgot my password!",
+      "title": "What if you forget your password?",
+      "paragraph1": "You will need a backup account. Choose an alternative email address you use regularly.",
+      "paragraph2": "Instructions to recover your password will be sent to this email address, save it.",
+      "input-label": "Type your backup account",
+      "button": "Add Account",
+      "error": {
+        "invalid-email": "Please enter a valid email address"
+      }
+    },
+    "back-to-inbox": "Back to my inbox",
+    "footer-text": "Product in development. Feedback and issues to",
+    "login": {
+      "email": "Your email",
+      "password": "Your password",
+      "submit": "Login",
+      "welcome-image-alt": "Welcome image",
+      "welcome-message": "Pixelated is an email that respects the privacy of your information."
     }
 }

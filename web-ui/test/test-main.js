@@ -1,7 +1,7 @@
 
 var tests = Object.keys(window.__karma__.files).filter(function (file) {
   'use strict';
-  return !(/account_recovery/.test(file)) && (/\.spec\.js$/.test(file));
+  return (/\.spec\.js$/.test(file));
 });
 
 beforeEach(function() {

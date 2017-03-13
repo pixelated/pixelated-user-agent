@@ -96,7 +96,7 @@ define(
 
     'use strict';
     function initialize(path) {
-      viewI18n.init(path + '/assets/');
+      viewI18n.init(path + '/public/');
       viewI18n.loaded(function() {
         paneContractExpand.attachTo(document);
 

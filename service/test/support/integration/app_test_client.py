@@ -429,8 +429,6 @@ def initialize_soledad(tempdir, uuid):
         def __call__(self):
             return self
 
-    Soledad._shared_db = MockSharedDB()
-
     _soledad = Soledad(
         uuid,
         passphrase,
@@ -438,8 +436,8 @@ def initialize_soledad(tempdir, uuid):
         local_db_path,
         server_url,
         cert_file,
-        defer_encryption=False,
-        syncable=False)
+        shared_db=MockSharedDB()
+    )
 
     yield SoledadMailAdaptor().initialize_store(_soledad)
 
