@@ -18,11 +18,9 @@
 import React from 'react';
 import { translate } from 'react-i18next';
 import DocumentTitle from 'react-document-title';
-import SubmitButton from 'src/common/submit_button/submit_button';
-import InputField from 'src/common/input_field/input_field';
 import Footer from 'src/common/footer/footer';
 import Header from 'src/common/header/header';
-import validator from 'validator';
+import BackupEmail from 'src/backup_account/backup_email/backup_email';
 
 import 'font-awesome/scss/font-awesome.scss';
 import './page.scss';
@@ -32,18 +30,7 @@ export class Page extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { error: '', submitButtonDisabled: true };
-    this.validateEmail = this.validateEmail.bind(this);
-  }
-
-  validateEmail(event) {
-    const validEmail = validator.isEmail(event.target.value);
-    const emptyEmail = validator.isEmpty(event.target.value);
-    const t = this.props.t;
-    this.setState({
-      error: !emptyEmail && !validEmail ? t('backup-account.error.invalid-email') : '',
-      submitButtonDisabled: !validEmail || emptyEmail
-    });
+    this.state = { status: '' };
   }
 
   render() {
@@ -53,26 +40,7 @@ export class Page extends React.Component {
         <div className='page'>
           <Header />
           <section>
-            <div className='container'>
-              <img
-                className='backup-account-image'
-                src='/public/images/forgot-my-password.svg'
-                alt={t('backup-account.image-description')}
-              />
-              <form>
-                <h1>{t('backup-account.title')}</h1>
-                <p>{t('backup-account.paragraph1')}</p>
-                <p>{t('backup-account.paragraph2')}</p>
-                <InputField name='email' label={t('backup-account.input-label')} errorText={this.state.error} onChange={this.validateEmail} />
-                <SubmitButton buttonText={t('backup-account.button')} disabled={this.state.submitButtonDisabled} />
-                <div className='link-content'>
-                  <a href='/' className='link'>
-                    <i className='fa fa-angle-left' aria-hidden='true' />
-                    <span>{t('back-to-inbox')}</span>
-                  </a>
-                </div>
-              </form>
-            </div>
+            <BackupEmail />
           </section>
           <Footer />
         </div>
