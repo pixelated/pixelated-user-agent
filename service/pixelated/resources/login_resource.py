@@ -86,7 +86,7 @@ class LoginResource(BaseResource):
         BaseResource.__init__(self, services_factory)
         self._disclaimer_banner = disclaimer_banner
         self._provider = provider
-        self._authenticator = authenticator or Authenticator(provider)
+        self._authenticator = authenticator
         self._bootstrap_user_services = BootstrapUserServices(services_factory, provider)
 
         static_folder = get_public_static_folder()

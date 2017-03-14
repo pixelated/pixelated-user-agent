@@ -19,6 +19,7 @@ from twisted.trial import unittest
 from leap.common.events import catalog as events
 from mock import patch, MagicMock, ANY
 import pixelated
+from pixelated.authentication import Authenticator
 
 
 class ApplicationTest(unittest.TestCase):
@@ -97,22 +98,23 @@ class ApplicationTest(unittest.TestCase):
     @patch('leap.common.events.client')
     @patch('pixelated.application.reactor')
     @patch('pixelated.application.services.Services')
-    def test_should_log_user_out_if_invalid_soledad_token(self, services_mock, reactor_mock, events_mock):
+    def test_that_start_user_agent_binds_to_ssl_if_ssl_options(self, services_mock, reactor_mock, _):
+        # FIXME patch something closer, instead of leap.common
         app_mock = MagicMock()
         services_factory_mock = MagicMock()
-
-        mock_service_log_user_out = MagicMock(return_value=None)
-        services_factory_mock.destroy_session = mock_service_log_user_out
-
         leap_session = MagicMock()
         leap_session.fresh_account = False
-        register_mock = events_mock.register
-        register_mock.register.return_value = None
+        pixelated.application._ssl_options = lambda x, y: 'options'
 
-        config = ApplicationTest.MockConfig(12345, '127.0.0.1')
+        config = ApplicationTest.MockConfig(12345, '127.0.0.1', sslkey="sslkey", sslcert="sslcert")
+
         d = pixelated.application.start_user_agent_in_single_user_mode(app_mock, services_factory_mock, config.home, leap_session)
 
-        pixelated.application.add_top_level_system_callbacks(d, services_factory_mock)
+        def _assert(_):
+            services_mock.assert_called_once_with(leap_session)
+
+        d.addCallback(_assert)
+        return d
 
         def _assert_user_logged_out_using_uuid(_):
             used_arguments = register_mock.call_args[0]
@@ -132,6 +134,27 @@ class ApplicationTest(unittest.TestCase):
 
         d.addCallback(_assert_user_logged_out_using_uuid)
         d.addCallback(_assert_user_logged_out_using_email_id)
+        return d
+
+    @patch('pixelated.application.reactor')
+    @patch('pixelated.application.services.Services')
+    def test_initialize_authenticator_in_single_user_mode(self, mock_services, _):
+        root_resources_mock = MagicMock()
+        services_factory_mock = MagicMock()
+        leap_session = MagicMock()
+        leap_session.fresh_account = False
+
+        d = pixelated.application.start_user_agent_in_single_user_mode(
+            root_resources_mock,
+            services_factory_mock,
+            "",
+            leap_session)
+
+        def assert_root_resource_initialize_called_with_authenticator(_):
+            authenticator = root_resources_mock.initialize.call_args[1]['authenticator']
+            self.assertIsInstance(authenticator, Authenticator)
+
+        d.addCallback(assert_root_resource_initialize_called_with_authenticator)
         return d
 
     @patch('pixelated.application.reactor')
@@ -170,3 +193,11 @@ class ApplicationTest(unittest.TestCase):
 
         d.addErrback(_assert_the_same_error_is_relayed_in_the_deferred)
         return d
+
+    def test_set_up_protected_resources_initializes_authenticator(self):
+        mock_root_resource = MagicMock()
+        mock_provider = MagicMock()
+        pixelated.application.set_up_protected_resources(mock_root_resource, mock_provider, MagicMock())
+
+        authenticator = mock_root_resource.initialize.call_args[1]['authenticator']
+        self.assertIsInstance(authenticator, Authenticator)

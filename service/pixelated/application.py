@@ -30,6 +30,7 @@ from twisted.internet import reactor
 from twisted.internet import ssl
 
 from pixelated.adapter.welcome_mail import add_welcome_mail
+from pixelated.authentication import Authenticator
 from pixelated.config import arguments
 from pixelated.config import logger
 from pixelated.config import services
@@ -60,7 +61,8 @@ def start_user_agent_in_single_user_mode(root_resource, services_factory, leap_h
 
     services_factory.add_session(leap_session.user_auth.uuid, _services)
 
-    root_resource.initialize(provider=leap_session.provider)
+    authenticator = Authenticator(leap_session.provider)
+    root_resource.initialize(provider=leap_session.provider, authenticator=authenticator)
 
     # soledad needs lots of threads
     reactor.getThreadPool().adjustPoolsize(5, 15)
@@ -153,14 +155,15 @@ def _setup_multi_user(args, root_resource, services_factory):
 
 
 def set_up_protected_resources(root_resource, provider, services_factory, banner=None, authenticator=None):
+    auth = authenticator or Authenticator(provider)
     session_checker = SessionChecker(services_factory)
 
     realm = PixelatedRealm()
     _portal = portal.Portal(realm, [session_checker, AllowAnonymousAccess()])
 
-    anonymous_resource = LoginResource(services_factory, provider, disclaimer_banner=banner, authenticator=authenticator)
+    anonymous_resource = LoginResource(services_factory, provider, disclaimer_banner=banner, authenticator=auth)
     protected_resource = PixelatedAuthSessionWrapper(_portal, root_resource, anonymous_resource, [])
-    root_resource.initialize(provider, disclaimer_banner=banner, authenticator=authenticator)
+    root_resource.initialize(provider, disclaimer_banner=banner, authenticator=auth)
     return protected_resource
 
 
