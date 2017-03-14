@@ -8,9 +8,7 @@
     ],
     "parser": "babel-eslint",
     "rules": {
-      "strict": 0
-    },
-    "rules": {
+      "strict": 0,
       "import/no-extraneous-dependencies": ["off"],
       "import/extensions": ["off"],
       "import/no-unresolved": ["off"],
