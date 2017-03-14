@@ -81,14 +81,16 @@
     },
     "backup-account": {
       "page-title": "Pixelated Backup Account",
-      "image-description": "Forgot my password!",
-      "title": "What if you forget your password?",
-      "paragraph1": "You will need a backup account. Choose an alternative email address you use regularly.",
-      "paragraph2": "Instructions to recover your password will be sent to this email address, save it.",
-      "input-label": "Type your backup account",
-      "button": "Add Account",
-      "error": {
-        "invalid-email": "Please enter a valid email address"
+      "backup-email": {
+        "image-description": "Forgot my password!",
+        "title": "What if you forget your password?",
+        "paragraph1": "You will need a backup account. Choose an alternative email address you use regularly.",
+        "paragraph2": "Instructions to recover your password will be sent to this email address, save it.",
+        "input-label": "Type your backup account",
+        "button": "Add Account",
+        "error": {
+          "invalid-email": "Please enter a valid email address"
+        }
       }
     },
     "back-to-inbox": "Back to my inbox",

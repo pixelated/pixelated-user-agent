@@ -6,6 +6,10 @@
         "jsx-a11y",
         "import"
     ],
+    "parser": "babel-eslint",
+    "rules": {
+      "strict": 0
+    },
     "rules": {
       "import/no-extraneous-dependencies": ["off"],
       "import/extensions": ["off"],
