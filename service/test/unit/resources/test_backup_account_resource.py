@@ -53,7 +53,7 @@ class TestBackupAccountResource(unittest.TestCase):
         d = self.web.get(request)
 
         def assert_update_recovery_code_called(_):
-            mock_account_recovery_init.assert_called_with(self.resource._authenticator.bonafide_sesssion)
+            mock_account_recovery_init.assert_called_with(self.resource._authenticator.bonafide_session)
             mock_account_recovery.update_recovery_code.assert_called()
 
         d.addCallback(assert_update_recovery_code_called)

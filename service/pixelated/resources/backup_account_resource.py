@@ -49,7 +49,7 @@ class BackupAccountResource(BaseResource):
         return renderElement(request, site)
 
     def render_POST(self, request):
-        account_recovery = AccountRecovery(self._authenticator.bonafide_sesssion)
+        account_recovery = AccountRecovery(self._authenticator.bonafide_session)
 
         def update_response(response):
             request.setResponseCode(NO_CONTENT)
