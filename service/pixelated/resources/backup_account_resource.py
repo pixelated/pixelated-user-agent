@@ -60,6 +60,5 @@ class BackupAccountResource(BaseResource):
             request.finish()
 
         d = account_recovery.update_recovery_code("123")
-        d.addCallbacks(update_response)
-        d.addErrback(error_response)
+        d.addCallbacks(update_response, error_response)
         return NOT_DONE_YET
