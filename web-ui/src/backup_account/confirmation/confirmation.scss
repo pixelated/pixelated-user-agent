@@ -32,7 +32,6 @@
 }
 
  .submit-button {
-   width: 65%;
    align-self: center;
  }
 
@@ -40,6 +39,10 @@
   .confirmation-container {
     width: 50%;
     padding: 1em 2em;
+  }
+
+  .submit-button {
+    width: 70%;
   }
 }
 
@@ -49,5 +52,9 @@
     padding: 1em 2em;
     display: flex;
     flex-direction: column;
+  }
+
+  .submit-button {
+    width: 65%;
   }
 }
