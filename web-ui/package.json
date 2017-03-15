@@ -19,12 +19,14 @@
     "css-loader": "^0.26.1",
     "dompurify": "^0.8.4",
     "enzyme": "^2.7.1",
+    "es6-promise": "^4.1.0",
     "eslint": "^3.17.1",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.9.0",
     "expect": "^1.20.2",
+    "fetch-mock": "^5.9.4",
     "file-loader": "^0.10.0",
     "font-awesome": "^4.7.0",
     "handlebars": "^4.0.5",
@@ -37,6 +39,7 @@
     "imagemin": "5.2.1",
     "imagemin-pngquant": "^5.0.0",
     "imagemin-svgo": "^5.2.0",
+    "isomorphic-fetch": "^2.2.1",
     "jasmine-flight": "^4.0.0",
     "jasmine-jquery": "^2.1.1",
     "jquery": "^3.1.1",
@@ -78,7 +81,8 @@
     "utf8": "^2.1.2",
     "validator": "^7.0.0",
     "watch": "0.19.1",
-    "webpack": "^1.14.0"
+    "webpack": "^1.14.0",
+    "webpack-node-externals": "^1.5.4"
   },
   "scripts": {
     "test": "npm run lint --silent && npm run build:statics --silent && npm run test:unit && npm run test:integration",

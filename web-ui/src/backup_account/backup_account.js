@@ -22,6 +22,8 @@ import a11y from 'react-a11y';
 import App from 'src/common/app';
 import PageWrapper from './page';
 
+require('es6-promise').polyfill();
+
 if (process.env.NODE_ENV === 'development') a11y(React);
 
 render(
