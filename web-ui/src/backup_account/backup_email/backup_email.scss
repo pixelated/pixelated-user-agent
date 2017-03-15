@@ -56,15 +56,15 @@ form {
     padding: 3em;
     align-items: flex-start;
     flex-direction: row;
-  }
 
-  form {
-    margin-left: 2.5em;
-    min-height: 492px;
+    form {
+      margin-left: 2.5em;
+      min-height: 492px;
 
-    .input-field-group, .submit-button, .link-content {
-      width: 300px;
-      align-self: flex-start;
+      .input-field-group, .submit-button, .link-content {
+        width: 300px;
+        align-self: flex-start;
+      }
     }
   }
 

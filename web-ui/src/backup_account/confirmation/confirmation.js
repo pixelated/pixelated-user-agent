@@ -26,7 +26,9 @@ export const Confirmation = ({ t }) => (
     <h1>{t('backup-account.confirmation.title1')} <br /> {t('backup-account.confirmation.title2')}</h1>
     <p>{t('backup-account.confirmation.paragraph')}</p>
     <img src='/public/images/sent-mail.svg' alt='Sent mail' />
-    <SubmitButton buttonText={t('backup-account.confirmation.button')} />
+    <form action='/'>
+      <SubmitButton buttonText={t('backup-account.confirmation.button')} type='submit' />
+    </form>
     <div className='link-content'>
       <a href='/backup-account' className='link'>
         <i className='fa fa-angle-left' aria-hidden='true' />
