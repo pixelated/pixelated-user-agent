@@ -39,6 +39,13 @@ export class BackupEmail extends React.Component {
     });
   }
 
+  submitHandler = (event) => {
+    event.preventDefault();
+    if (typeof this.props.onSubmit === 'function') {
+      this.props.onSubmit();
+    }
+  }
+
   render() {
     const t = this.props.t;
     return (
@@ -48,7 +55,7 @@ export class BackupEmail extends React.Component {
           src='/public/images/forgot-my-password.svg'
           alt={t('backup-account.backup-email.image-description')}
         />
-        <form>
+        <form onSubmit={this.submitHandler}>
           <h1>{t('backup-account.backup-email.title')}</h1>
           <p>{t('backup-account.backup-email.paragraph1')}</p>
           <p>{t('backup-account.backup-email.paragraph2')}</p>
@@ -68,7 +75,8 @@ export class BackupEmail extends React.Component {
 
 
 BackupEmail.propTypes = {
-  t: React.PropTypes.func.isRequired
+  t: React.PropTypes.func.isRequired,
+  onSubmit: React.PropTypes.func.isRequired
 };
 
 export default translate('', { wait: true })(BackupEmail);

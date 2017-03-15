@@ -14,4 +14,21 @@ describe('BackupAccount', () => {
   it('renders backup account page title', () => {
     expect(page.props().title).toEqual('backup-account.page-title');
   });
+
+  describe('save backup email', () => {
+    let pageInstance;
+
+    beforeEach(() => {
+      pageInstance = page.instance();
+    });
+
+    it('verify initial state', () => {
+      expect(pageInstance.state.status).toEqual('');
+    });
+
+    it('changes state', () => {
+      pageInstance.saveBackupEmail();
+      expect(pageInstance.state.status).toEqual('success');
+    });
+  });
 });

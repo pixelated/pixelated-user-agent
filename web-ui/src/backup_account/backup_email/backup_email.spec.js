@@ -1,13 +1,15 @@
 import { shallow } from 'enzyme';
 import expect from 'expect';
+import sinon from 'sinon';
 import React from 'react';
 import { BackupEmail } from 'src/backup_account/backup_email/backup_email';
 
 describe('BackupEmail', () => {
   let page;
+  let mockTranslations;
 
   beforeEach(() => {
-    const mockTranslations = key => key;
+    mockTranslations = key => key;
     page = shallow(<BackupEmail t={mockTranslations} />);
   });
 
@@ -21,6 +23,15 @@ describe('BackupEmail', () => {
 
   it('renders backup account submit button', () => {
     expect(page.find('SubmitButton').props().buttonText).toEqual('backup-account.backup-email.button');
+  });
+
+  it('form submit should call parameter custom submit', () => {
+    const mockOnSubmit = sinon.spy();
+    const event = { preventDefault() {} };
+    page = shallow(<BackupEmail t={mockTranslations} onSubmit={mockOnSubmit} />);
+
+    page.instance().submitHandler(event);
+    sinon.assert.calledOnce(mockOnSubmit);
   });
 
   describe('Email validation', () => {
