@@ -54,9 +54,7 @@ export class BackupEmail extends React.Component {
       body: JSON.stringify({
         csrftoken: [browser.getCookie('XSRF-TOKEN')]
       })
-    });
-
-    this.props.onSubmit();
+    }).then(() => this.props.onSubmit('success'));
   }
 
   render() {

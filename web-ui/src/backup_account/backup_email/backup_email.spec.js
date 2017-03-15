@@ -8,10 +8,12 @@ import browser from 'helpers/browser';
 describe('BackupEmail', () => {
   let backupEmail;
   let mockOnSubmit;
+  let mockTranslations;
 
   beforeEach(() => {
     mockOnSubmit = expect.createSpy();
-    const mockTranslations = key => key;
+
+    mockTranslations = key => key;
     backupEmail = shallow(<BackupEmail t={mockTranslations} onSubmit={mockOnSubmit} />);
   });
 
@@ -85,9 +87,12 @@ describe('BackupEmail', () => {
   describe('Submit', () => {
     let preventDefaultSpy;
 
-    beforeEach(() => {
+    beforeEach((done) => {
+      mockOnSubmit = expect.createSpy().andCall(() => done());
       preventDefaultSpy = expect.createSpy();
       expect.spyOn(browser, 'getCookie').andReturn('abc123');
+
+      backupEmail = shallow(<BackupEmail t={mockTranslations} onSubmit={mockOnSubmit} />);
 
       fetchMock.post('/backup-account', 204);
       backupEmail.find('form').simulate('submit', { preventDefault: preventDefaultSpy });
@@ -113,8 +118,8 @@ describe('BackupEmail', () => {
       expect(preventDefaultSpy).toHaveBeenCalled();
     });
 
-    it('calls onSubmit from props', () => {
-      expect(mockOnSubmit).toHaveBeenCalled();
+    it('calls onSubmit from props when success', () => {
+      expect(mockOnSubmit).toHaveBeenCalledWith('success');
     });
   });
 });
