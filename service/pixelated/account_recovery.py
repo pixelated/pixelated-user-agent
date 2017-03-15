@@ -14,7 +14,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 from twisted.internet.defer import inlineCallbacks, returnValue
-import traceback
+from twisted.logger import Logger
+
+log = Logger()
 
 
 class AccountRecovery(object):
@@ -27,5 +29,5 @@ class AccountRecovery(object):
             response = yield self._session.update_recovery_code(recovery_code)
             returnValue(response)
         except Exception as e:
-            traceback.print_exc(e)
+            log.warn('Something went wrong when trying to save the recovery code')
             raise
