@@ -24,6 +24,11 @@ from twisted.internet import reactor, defer
 from pixelated.support.functional import flatten
 from twisted.mail.smtp import User
 
+from twisted.logger import Logger
+
+
+logger = Logger()
+
 
 class SMTPDownException(Exception):
     def __init__(self):
@@ -68,8 +73,10 @@ class MailSender(object):
         deferreds = []
 
         for recipient in recipients:
+            logger.info('_send_mail_to_all_recipients: Sending mail to recipient %s' % recipient)
             self._define_bcc_field(mail, recipient, bccs)
             smtp_recipient = self._create_twisted_smtp_recipient(recipient)
+            logger.info('_send_mail_to_all_recipients: Sending mail to smtp_recipient %s' % smtp_recipient)
             deferreds.append(outgoing_mail.send_message(mail.to_smtp_format(), smtp_recipient))
 
         return defer.DeferredList(deferreds, fireOnOneErrback=False, consumeErrors=True)
