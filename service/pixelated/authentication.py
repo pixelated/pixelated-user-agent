@@ -30,6 +30,7 @@ class Authenticator(object):
     def __init__(self, leap_provider):
         self._leap_provider = leap_provider
         self.domain = leap_provider.server_name
+        self.bonafide_session = None
 
     @inlineCallbacks
     def authenticate(self, username, password):
@@ -49,9 +50,13 @@ class Authenticator(object):
     def _bonafide_auth(self, user, password):
         srp_provider = Api(self._leap_provider.api_uri)
         credentials = Credentials(user, password)
-        srp_auth = Session(credentials, srp_provider, self._leap_provider.local_ca_crt)
-        yield srp_auth.authenticate()
-        returnValue(Authentication(user, srp_auth.token, srp_auth.uuid, 'session_id', {'is_admin': False}))
+        self.bonafide_session = Session(credentials, srp_provider, self._leap_provider.local_ca_crt)
+        yield self.bonafide_session.authenticate()
+        returnValue(Authentication(user,
+                                   self.bonafide_session.token,
+                                   self.bonafide_session.uuid,
+                                   'session_id',
+                                   {'is_admin': False}))
 
     def clean_username(self, username):
         if '@' not in username:

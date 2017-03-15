@@ -20,7 +20,9 @@ from xml.sax import SAXParseException
 from pixelated.resources import BaseResource
 from twisted.python.filepath import FilePath
 from pixelated.resources import get_protected_static_folder
-from twisted.web.http import OK
+from pixelated.account_recovery import AccountRecovery
+from twisted.web.http import OK, NO_CONTENT, INTERNAL_SERVER_ERROR
+from twisted.web.server import NOT_DONE_YET
 from twisted.web.template import Element, XMLFile, renderElement
 
 
@@ -34,8 +36,9 @@ class BackupAccountPage(Element):
 class BackupAccountResource(BaseResource):
     isLeaf = True
 
-    def __init__(self, services_factory):
+    def __init__(self, services_factory, authenticator):
         BaseResource.__init__(self, services_factory)
+        self._authenticator = authenticator
 
     def render_GET(self, request):
         request.setResponseCode(OK)
@@ -44,3 +47,18 @@ class BackupAccountResource(BaseResource):
     def _render_template(self, request):
         site = BackupAccountPage()
         return renderElement(request, site)
+
+    def render_POST(self, request):
+        account_recovery = AccountRecovery(self._authenticator.bonafide_session)
+
+        def update_response(response):
+            request.setResponseCode(NO_CONTENT)
+            request.finish()
+
+        def error_response(response):
+            request.setResponseCode(INTERNAL_SERVER_ERROR)
+            request.finish()
+
+        d = account_recovery.update_recovery_code("123")
+        d.addCallbacks(update_response, error_response)
+        return NOT_DONE_YET

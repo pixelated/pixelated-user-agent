@@ -16,7 +16,7 @@
 
 import os
 
-from mock import patch
+from mock import patch, MagicMock
 from mockito import mock, when, any as ANY
 from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer
@@ -52,7 +52,7 @@ class TestLoginResource(unittest.TestCase):
     def setUp(self):
         self.services_factory = mock()
         self.portal = mock()
-        self.resource = LoginResource(self.services_factory, self.portal)
+        self.resource = LoginResource(self.services_factory, self.portal, authenticator=mock())
         self.web = DummySite(self.resource)
 
     def test_children_resources_are_unauthorized_when_not_logged_in(self):
@@ -170,7 +170,8 @@ class TestLoginPOST(unittest.TestCase):
     def setUp(self):
         self.services_factory = mock()
         self.provider = mock()
-        self.resource = LoginResource(self.services_factory, self.provider)
+        self.authenticator = MagicMock()
+        self.resource = LoginResource(self.services_factory, self.provider, authenticator=self.authenticator)
         self.web = DummySite(self.resource)
 
         self.request = DummyRequest([''])
@@ -185,10 +186,9 @@ class TestLoginPOST(unittest.TestCase):
         user_auth.uuid = 'some_user_uuid'
         self.user_auth = user_auth
 
-    @patch('pixelated.authentication.Authenticator.authenticate')
     @patch('twisted.web.util.redirectTo')
     @patch('pixelated.resources.session.PixelatedSession.is_logged_in')
-    def test_should_redirect_to_home_if_user_if_already_logged_in(self, mock_logged_in, mock_redirect, mock_authenticate):
+    def test_should_redirect_to_home_if_user_if_already_logged_in(self, mock_logged_in, mock_redirect):
         mock_logged_in.return_value = True
         when(self.services_factory).has_session(ANY()).thenReturn(True)
         mock_redirect.return_value = "mocked redirection"
@@ -197,24 +197,23 @@ class TestLoginPOST(unittest.TestCase):
 
         def assert_redirected_to_home(_):
             mock_redirect.assert_called_once_with('/', self.request)
-            self.assertFalse(mock_authenticate.called)
+            self.assertFalse(self.authenticator.authenticate.called)
 
         d.addCallback(assert_redirected_to_home)
         return d
 
     @patch('pixelated.config.leap.BootstrapUserServices.setup')
     @patch('twisted.web.util.redirectTo')
-    @patch('pixelated.authentication.Authenticator.authenticate')
-    def test_should_redirect_to_login_with_error_flag_when_login_fails(self, mock_authenticate,
+    def test_should_redirect_to_login_with_error_flag_when_login_fails(self,
                                                                        mock_redirect,
                                                                        mock_user_bootstrap_setup):
-        mock_authenticate.side_effect = UnauthorizedLogin()
+        self.authenticator.authenticate.side_effect = UnauthorizedLogin()
         mock_redirect.return_value = "mocked redirection"
 
         d = self.web.get(self.request)
 
         def assert_redirected_to_login(_):
-            mock_authenticate.assert_called_once_with(self.username, self.password)
+            self.authenticator.authenticate.assert_called_once_with(self.username, self.password)
             mock_redirect.assert_called_once_with('/login?auth-error', self.request)
             self.assertFalse(mock_user_bootstrap_setup.called)
             self.assertFalse(self.resource.get_session(self.request).is_logged_in())
@@ -223,14 +222,13 @@ class TestLoginPOST(unittest.TestCase):
         return d
 
     @patch('pixelated.config.leap.BootstrapUserServices.setup')
-    @patch('pixelated.authentication.Authenticator.authenticate')
-    def test_successful_login_responds_interstitial(self, mock_authenticate, mock_user_bootstrap_setup):
-        mock_authenticate.return_value = self.user_auth
+    def test_successful_login_responds_interstitial(self, mock_user_bootstrap_setup):
+        self.authenticator.authenticate.return_value = self.user_auth
 
         d = self.web.get(self.request)
 
         def assert_interstitial_in_response(_):
-            mock_authenticate.assert_called_once_with(self.username, self.password)
+            self.authenticator.authenticate.assert_called_once_with(self.username, self.password)
             interstitial_js_in_template = '<script src="/public/interstitial.js"></script>'
             self.assertIn(interstitial_js_in_template, self.request.written[0])
 
@@ -238,9 +236,8 @@ class TestLoginPOST(unittest.TestCase):
         return d
 
     @patch('pixelated.config.leap.BootstrapUserServices.setup')
-    @patch('pixelated.authentication.Authenticator.authenticate')
-    def test_successful_login_runs_user_services_bootstrap_when_interstitial_loaded(self, mock_authenticate, mock_user_bootstrap_setup):
-        mock_authenticate.return_value = self.user_auth
+    def test_successful_login_runs_user_services_bootstrap_when_interstitial_loaded(self, mock_user_bootstrap_setup):
+        self.authenticator.authenticate.return_value = self.user_auth
 
         d = self.web.get(self.request)
 
@@ -251,9 +248,8 @@ class TestLoginPOST(unittest.TestCase):
         return d
 
     @patch('pixelated.config.leap.BootstrapUserServices.setup')
-    @patch('pixelated.authentication.Authenticator.authenticate')
-    def test_successful_adds_cookies_to_indicate_logged_in_status_when_services_are_loaded(self, mock_authenticate, mock_user_bootstrap_setup):
-        mock_authenticate.return_value = self.user_auth
+    def test_successful_adds_cookies_to_indicate_logged_in_status_when_services_are_loaded(self, mock_user_bootstrap_setup):
+        self.authenticator.authenticate.return_value = self.user_auth
         irrelevant = None
         mock_user_bootstrap_setup.return_value = defer.succeed(irrelevant)
 
@@ -266,9 +262,8 @@ class TestLoginPOST(unittest.TestCase):
         return d
 
     @patch('pixelated.resources.session.PixelatedSession.login_started')
-    @patch('pixelated.authentication.Authenticator.authenticate')
-    def test_session_adds_login_started_status_after_authentication(self, mock_authenticate, mock_login_started):
-        mock_authenticate.return_value = self.user_auth
+    def test_session_adds_login_started_status_after_authentication(self, mock_login_started):
+        self.authenticator.authenticate.return_value = self.user_auth
 
         d = self.web.get(self.request)
 
@@ -280,9 +275,8 @@ class TestLoginPOST(unittest.TestCase):
 
     @patch('pixelated.resources.session.PixelatedSession.login_successful')
     @patch('pixelated.config.leap.BootstrapUserServices.setup')
-    @patch('pixelated.authentication.Authenticator.authenticate')
-    def test_session_adds_login_successful_status_when_services_setup_finishes(self, mock_authenticate, mock_user_bootstrap_setup, mock_login_successful):
-        mock_authenticate.return_value = self.user_auth
+    def test_session_adds_login_successful_status_when_services_setup_finishes(self, mock_user_bootstrap_setup, mock_login_successful):
+        self.authenticator.authenticate.return_value = self.user_auth
         mock_user_bootstrap_setup.return_value = defer.succeed(None)
 
         d = self.web.get(self.request)
@@ -295,9 +289,8 @@ class TestLoginPOST(unittest.TestCase):
 
     @patch('pixelated.resources.session.PixelatedSession.login_error')
     @patch('pixelated.config.leap.BootstrapUserServices.setup')
-    @patch('pixelated.authentication.Authenticator.authenticate')
-    def test_session_adds_login_error_status_when_services_setup_gets_error(self, mock_authenticate, mock_user_bootstrap_setup, mock_login_error):
-        mock_authenticate.return_value = self.user_auth
+    def test_session_adds_login_error_status_when_services_setup_gets_error(self, mock_user_bootstrap_setup, mock_login_error):
+        self.authenticator.authenticate.return_value = self.user_auth
         mock_user_bootstrap_setup.return_value = defer.fail(Exception('Could not setup user services'))
 
         d = self.web.get(self.request)

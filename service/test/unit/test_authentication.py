@@ -77,6 +77,7 @@ class AuthenticatorTest(unittest.TestCase):
             self.assertEquals('username', resulting_auth.username)
             self.assertEquals('some_token', resulting_auth.token)
             self.assertEquals('some_uuid', resulting_auth.uuid)
+            self.assertEquals(mock_srp_auth, auth.bonafide_session)
 
     def test_username_without_domain_is_not_changed(self):
         username_without_domain = 'username'

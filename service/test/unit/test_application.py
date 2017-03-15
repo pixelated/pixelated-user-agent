@@ -19,6 +19,7 @@ from twisted.trial import unittest
 from leap.common.events import catalog as events
 from mock import patch, MagicMock, ANY
 import pixelated
+from pixelated.authentication import Authenticator
 
 
 class ApplicationTest(unittest.TestCase):
@@ -135,6 +136,27 @@ class ApplicationTest(unittest.TestCase):
         return d
 
     @patch('pixelated.application.reactor')
+    @patch('pixelated.application.services.Services')
+    def test_initialize_authenticator_in_single_user_mode(self, mock_services, _):
+        root_resources_mock = MagicMock()
+        services_factory_mock = MagicMock()
+        leap_session = MagicMock()
+        leap_session.fresh_account = False
+
+        d = pixelated.application.start_user_agent_in_single_user_mode(
+            root_resources_mock,
+            services_factory_mock,
+            "",
+            leap_session)
+
+        def assert_root_resource_initialize_called_with_authenticator(_):
+            authenticator = root_resources_mock.initialize.call_args[1]['authenticator']
+            self.assertIsInstance(authenticator, Authenticator)
+
+        d.addCallback(assert_root_resource_initialize_called_with_authenticator)
+        return d
+
+    @patch('pixelated.application.reactor')
     @patch('pixelated.application._setup_multi_user')
     def test_should_defer_fail_errors_during_multi_user_start_site(self, mock_multi_user_bootstrap, reactor_mock):
         args_mock = MagicMock()
@@ -170,3 +192,11 @@ class ApplicationTest(unittest.TestCase):
 
         d.addErrback(_assert_the_same_error_is_relayed_in_the_deferred)
         return d
+
+    def test_set_up_protected_resources_initializes_authenticator(self):
+        mock_root_resource = MagicMock()
+        mock_provider = MagicMock()
+        pixelated.application.set_up_protected_resources(mock_root_resource, mock_provider, MagicMock())
+
+        authenticator = mock_root_resource.initialize.call_args[1]['authenticator']
+        self.assertIsInstance(authenticator, Authenticator)
