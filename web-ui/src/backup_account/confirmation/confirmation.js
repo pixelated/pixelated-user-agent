@@ -22,7 +22,7 @@ import SubmitButton from 'src/common/submit_button/submit_button';
 import './confirmation.scss';
 
 export const Confirmation = ({ t }) => (
-  <div className='confirmation'>
+  <div className='container confirmation-container'>
     <h1>{t('backup-account.confirmation.title1')} <br /> {t('backup-account.confirmation.title2')}</h1>
     <p>{t('backup-account.confirmation.paragraph')}</p>
     <img src='/public/images/sent-mail.svg' alt='Sent mail' />

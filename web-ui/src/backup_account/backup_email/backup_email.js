@@ -21,6 +21,7 @@ import SubmitButton from 'src/common/submit_button/submit_button';
 import InputField from 'src/common/input_field/input_field';
 import validator from 'validator';
 
+import './backup_email.scss';
 
 export class BackupEmail extends React.Component {
 
@@ -49,7 +50,7 @@ export class BackupEmail extends React.Component {
   render() {
     const t = this.props.t;
     return (
-      <div className='container'>
+      <div className='container backup-email-container'>
         <img
           className='backup-account-image'
           src='/public/images/forgot-my-password.svg'

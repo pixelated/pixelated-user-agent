@@ -19,35 +19,56 @@
 @import "~scss/base/colors";
 @import "~scss/base/fonts";
 
-.confirmation-container {
+
+form {
+  width: 100%;
+}
+
+.backup-email-container {
   width: 84%;
   padding: 6% 5%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: column;
-
-  img {
-    padding: 2em 3.2em 2em 0;
-  }
 }
 
- .submit-button {
-   width: 65%;
-   align-self: center;
- }
+.backup-account-image {
+  width: 50%;
+  height: 100%;
+  align-self: center;
+}
 
 @media only screen and (min-width : 500px) {
-  .confirmation-container {
-    width: 50%;
-    padding: 1em 2em;
+  form {
+    display: flex;
+    flex-direction: column;
+
+    .input-field-group, .submit-button, .link-content {
+      width: 70%;
+      align-self: center;
+    }
   }
 }
 
 @media only screen and (min-width : 960px) {
-  .confirmation-container {
-    width: 30%;
-    padding: 1em 2em;
-    display: flex;
-    flex-direction: column;
+  .backup-email-container{
+    width: 60%;
+    padding: 3em;
+    align-items: flex-start;
+    flex-direction: row;
+  }
+
+  form {
+    margin-left: 2.5em;
+    min-height: 492px;
+
+    .input-field-group, .submit-button, .link-content {
+      width: 300px;
+      align-self: flex-start;
+    }
+  }
+
+  .backup-account-image {
+    width: 300px;
   }
 }

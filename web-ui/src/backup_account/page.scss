@@ -31,6 +31,12 @@ a {
   text-decoration: none;
 }
 
+.container {
+  background: $white;
+  margin: 3% auto;
+  box-shadow: 0 2px 3px 0 $shadow;
+}
+
 .page {
   font-family: "Open Sans", "Microsoft YaHei", "Hiragino Sans GB", "Hiragino Sans GB W3", "微软雅黑", "Helvetica Neue", Arial, sans-serif;
   background: $dark_blue; /* For browsers that do not support gradients */
@@ -48,10 +54,6 @@ section {
   flex: 1 0 auto;
 }
 
-form {
-  width: 100%;
-}
-
 h1 {
   font-size: 1.3em;
   font-weight: 600;
@@ -65,6 +67,7 @@ p {
 .link {
   color: $dark_blue;
   font-style: italic;
+  font-size: 0.8em;
 
   .fa {
     font-size: 1.6em;
@@ -75,59 +78,8 @@ p {
 
 }
 
-.container {
-  background: $white;
-  width: 84%;
-  margin: 3% auto;
-  padding: 6% 5%;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  box-shadow: 0 2px 3px 0 $shadow;
-}
-
-.backup-account-image {
-  width: 50%;
-  height: 100%;
-  align-self: center;
-}
-
 @media only screen and (min-width : 500px) {
   body {
     font-size: 1.3em;
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-
-    .input-field-group, .submit-button, .link-content {
-      width: 70%;
-      align-self: center;
-    }
-  }
-}
-
-@media only screen and (min-width : 960px) {
-  .container{
-    width: 60%;
-    padding: 3em;
-    align-items: flex-start;
-    flex-direction: row;
-    max-width: 700px;
-  }
-
-  form {
-    margin-left: 2.5em;
-    min-height: 492px;
-
-    .input-field-group, .submit-button, .link-content {
-      width: 300px;
-      align-self: flex-start;
-    }
-  }
-
-  .backup-account-image {
-    width: 300px;
   }
 }
