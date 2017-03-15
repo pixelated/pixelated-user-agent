@@ -98,23 +98,22 @@ class ApplicationTest(unittest.TestCase):
     @patch('leap.common.events.client')
     @patch('pixelated.application.reactor')
     @patch('pixelated.application.services.Services')
-    def test_that_start_user_agent_binds_to_ssl_if_ssl_options(self, services_mock, reactor_mock, _):
-        # FIXME patch something closer, instead of leap.common
+    def test_should_log_user_out_if_invalid_soledad_token(self, services_mock, reactor_mock, events_mock):
         app_mock = MagicMock()
         services_factory_mock = MagicMock()
+
+        mock_service_log_user_out = MagicMock(return_value=None)
+        services_factory_mock.destroy_session = mock_service_log_user_out
+
         leap_session = MagicMock()
         leap_session.fresh_account = False
-        pixelated.application._ssl_options = lambda x, y: 'options'
+        register_mock = events_mock.register
+        register_mock.register.return_value = None
 
-        config = ApplicationTest.MockConfig(12345, '127.0.0.1', sslkey="sslkey", sslcert="sslcert")
-
+        config = ApplicationTest.MockConfig(12345, '127.0.0.1')
         d = pixelated.application.start_user_agent_in_single_user_mode(app_mock, services_factory_mock, config.home, leap_session)
 
-        def _assert(_):
-            services_mock.assert_called_once_with(leap_session)
-
-        d.addCallback(_assert)
-        return d
+        pixelated.application.add_top_level_system_callbacks(d, services_factory_mock)
 
         def _assert_user_logged_out_using_uuid(_):
             used_arguments = register_mock.call_args[0]
