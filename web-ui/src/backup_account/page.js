@@ -52,7 +52,7 @@ export class Page extends React.Component {
         <div className='page'>
           <Header />
           <section>
-            {this.mainContent(t)}
+            {this.mainContent()}
           </section>
           <Footer />
         </div>

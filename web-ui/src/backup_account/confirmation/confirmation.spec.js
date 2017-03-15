@@ -23,7 +23,7 @@ describe('Confirmation', () => {
     expect(page.find('a').text()).toEqual('backup-account.confirmation.retry-button');
   });
 
-  it('retry button redirects to backup account', () => {
+  it('retries button redirects to backup account', () => {
     expect(page.find('a').props().href).toEqual('/backup-account');
   });
 });
