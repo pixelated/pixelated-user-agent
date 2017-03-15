@@ -72,7 +72,6 @@
     "react-tap-event-plugin": "^2.0.1",
     "requirejs": "2.2.0",
     "sass-loader": "^4.1.1",
-    "sinon": "^2.0.0",
     "style-loader": "^0.13.1",
     "typeahead.js": "^0.11.1",
     "url-loader": "^0.5.7",

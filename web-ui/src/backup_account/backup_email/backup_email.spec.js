@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import expect from 'expect';
-import sinon from 'sinon';
 import React from 'react';
 import { BackupEmail } from 'src/backup_account/backup_email/backup_email';
 
@@ -26,12 +25,12 @@ describe('BackupEmail', () => {
   });
 
   it('form submit should call parameter custom submit', () => {
-    const mockOnSubmit = sinon.spy();
+    const mockOnSubmit = expect.createSpy();
     const event = { preventDefault() {} };
     page = shallow(<BackupEmail t={mockTranslations} onSubmit={mockOnSubmit} />);
 
     page.instance().submitHandler(event);
-    sinon.assert.calledOnce(mockOnSubmit);
+    expect(mockOnSubmit).toHaveBeenCalled();
   });
 
   describe('Email validation', () => {
