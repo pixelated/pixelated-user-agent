@@ -1,17 +1,17 @@
 var path = require('path');
 var webpack = require('webpack');
 var aliases = require('./config/alias-webpack');
+var nodeExternals = require('webpack-node-externals');
 
 module.exports = {
+  target: 'node',
   resolve: {
     alias: aliases,
     extensions: ['', '.js']
   },
-  externals: {
-    'react/lib/ExecutionEnvironment': true,
-    'react/addons': true,
-    'react/lib/ReactContext': 'window'
-  },
+  externals: [nodeExternals({
+    whitelist: [/\.(?!(?:jsx?|json)$).{1,5}$/i]
+  })],
   module: {
     loaders: [
       {

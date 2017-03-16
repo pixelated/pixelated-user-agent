@@ -1,90 +1,125 @@
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import React from 'react';
+import fetchMock from 'fetch-mock';
 import { BackupEmail } from 'src/backup_account/backup_email/backup_email';
+import browser from 'helpers/browser';
 
 describe('BackupEmail', () => {
-  let page;
+  let backupEmail;
+  let mockOnSubmit;
   let mockTranslations;
 
   beforeEach(() => {
+    mockOnSubmit = expect.createSpy();
+
     mockTranslations = key => key;
-    page = shallow(<BackupEmail t={mockTranslations} />);
+    backupEmail = shallow(<BackupEmail t={mockTranslations} onSubmit={mockOnSubmit} />);
   });
 
   it('renders backup email title', () => {
-    expect(page.find('h1').text()).toEqual('backup-account.backup-email.title');
+    expect(backupEmail.find('h1').text()).toEqual('backup-account.backup-email.title');
   });
 
   it('renders backup account email input field', () => {
-    expect(page.find('InputField').props().name).toEqual('email');
+    expect(backupEmail.find('InputField').props().name).toEqual('email');
   });
 
   it('renders backup account submit button', () => {
-    expect(page.find('SubmitButton').props().buttonText).toEqual('backup-account.backup-email.button');
-  });
-
-  it('form submit should call parameter custom submit', () => {
-    const mockOnSubmit = expect.createSpy();
-    const event = { preventDefault() {} };
-    page = shallow(<BackupEmail t={mockTranslations} onSubmit={mockOnSubmit} />);
-
-    page.instance().submitHandler(event);
-    expect(mockOnSubmit).toHaveBeenCalled();
+    expect(backupEmail.find('SubmitButton').props().buttonText).toEqual('backup-account.backup-email.button');
   });
 
   describe('Email validation', () => {
-    let pageInstance;
+    let backupEmailInstance;
 
     beforeEach(() => {
-      pageInstance = page.instance();
+      backupEmailInstance = backupEmail.instance();
     });
 
     it('verify initial state', () => {
-      expect(pageInstance.state.error).toEqual('');
-      expect(page.find('SubmitButton').props().disabled).toEqual(true);
+      expect(backupEmailInstance.state.error).toEqual('');
+      expect(backupEmail.find('SubmitButton').props().disabled).toBe(true);
     });
 
     context('with invalid email', () => {
       beforeEach(() => {
-        pageInstance.validateEmail({ target: { value: 'test' } });
+        backupEmailInstance.validateEmail({ target: { value: 'test' } });
       });
 
       it('sets error in state', () => {
-        expect(pageInstance.state.error).toEqual('backup-account.backup-email.error.invalid-email');
+        expect(backupEmailInstance.state.error).toEqual('backup-account.backup-email.error.invalid-email');
       });
 
       it('disables submit button', () => {
-        expect(page.find('SubmitButton').props().disabled).toEqual(true);
+        expect(backupEmail.find('SubmitButton').props().disabled).toBe(true);
       });
     });
 
     context('with valid email', () => {
       beforeEach(() => {
-        pageInstance.validateEmail({ target: { value: 'test@test.com' } });
+        backupEmailInstance.validateEmail({ target: { value: 'test@test.com' } });
       });
 
       it('does not set error in state', () => {
-        expect(pageInstance.state.error).toEqual('');
+        expect(backupEmailInstance.state.error).toEqual('');
       });
 
       it('submit button is enabled', () => {
-        expect(page.find('SubmitButton').props().disabled).toEqual(false);
+        expect(backupEmail.find('SubmitButton').props().disabled).toBe(false);
       });
     });
 
     context('with empty email', () => {
       beforeEach(() => {
-        pageInstance.validateEmail({ target: { value: '' } });
+        backupEmailInstance.validateEmail({ target: { value: '' } });
       });
 
       it('not set error in state', () => {
-        expect(pageInstance.state.error).toEqual('');
+        expect(backupEmailInstance.state.error).toEqual('');
       });
 
       it('disables submit button', () => {
-        expect(page.find('SubmitButton').props().disabled).toEqual(true);
+        expect(backupEmail.find('SubmitButton').props().disabled).toBe(true);
       });
+    });
+  });
+
+  describe('Submit', () => {
+    let preventDefaultSpy;
+
+    beforeEach((done) => {
+      mockOnSubmit = expect.createSpy().andCall(() => done());
+      preventDefaultSpy = expect.createSpy();
+      expect.spyOn(browser, 'getCookie').andReturn('abc123');
+
+      backupEmail = shallow(<BackupEmail t={mockTranslations} onSubmit={mockOnSubmit} />);
+
+      fetchMock.post('/backup-account', 204);
+      backupEmail.find('form').simulate('submit', { preventDefault: preventDefaultSpy });
+    });
+
+    it('posts backup email', () => {
+      expect(fetchMock.called('/backup-account')).toBe(true, 'Backup account POST was not called');
+    });
+
+    it('sends csrftoken as content', () => {
+      expect(fetchMock.lastOptions('/backup-account').body).toContain('"csrftoken":["abc123"]');
+    });
+
+    it('sends content-type header', () => {
+      expect(fetchMock.lastOptions('/backup-account').headers['Content-Type']).toEqual('application/json');
+    });
+
+    it('sends same origin headers', () => {
+      expect(fetchMock.lastOptions('/backup-account').credentials).toEqual('same-origin');
+    });
+
+    it('prevents default call to refresh page', () => {
+      expect(preventDefaultSpy).toHaveBeenCalled();
+    });
+
+    it('calls onSubmit from props when success', () => {
+      expect(mockOnSubmit).toHaveBeenCalledWith('success');
     });
   });
 });

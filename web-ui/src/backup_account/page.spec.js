@@ -29,7 +29,7 @@ describe('BackupAccount', () => {
     });
 
     it('changes state', () => {
-      pageInstance.saveBackupEmail();
+      pageInstance.saveBackupEmail('success');
       expect(pageInstance.state.status).toEqual('success');
     });
 
@@ -38,7 +38,7 @@ describe('BackupAccount', () => {
     });
 
     it('renders confirmation component', () => {
-      pageInstance.saveBackupEmail();
+      pageInstance.saveBackupEmail('success');
       expect(page.find(Confirmation).length).toEqual(1);
     });
   });

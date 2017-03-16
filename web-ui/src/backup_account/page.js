@@ -34,10 +34,8 @@ export class Page extends React.Component {
     this.state = { status: '' };
   }
 
-  saveBackupEmail = () => {
-    this.setState({
-      status: 'success'
-    });
+  saveBackupEmail = (status) => {
+    this.setState({ status });
   }
 
   mainContent = () => {
