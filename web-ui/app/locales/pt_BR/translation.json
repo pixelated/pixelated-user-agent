@@ -91,6 +91,13 @@
         "error": {
           "invalid-email": "Por favor informe um e-mail válido"
         }
+      },
+      "confirmation": {
+        "title1": "Sucesso!",
+        "title2": "Uma mensagem foi enviada para seu e-mail de recuperação",
+        "paragraph": "Salve esse e-mail, ele é bem importante.",
+        "button": "Recebi! Pronto!",
+        "retry-button": "Ei, eu não recebi"
       }
     },
     "back-to-inbox": "Voltar",

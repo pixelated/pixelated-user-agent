@@ -91,6 +91,13 @@
         "error": {
           "invalid-email": "Please enter a valid email address"
         }
+      },
+      "confirmation": {
+        "title1": "Success!",
+        "title2": "A message was sent to your backup account",
+        "paragraph": "Save this message, it is really important.",
+        "button": "Got it! I'm ready!",
+        "retry-button": "Hey, I didn't received it"
       }
     },
     "back-to-inbox": "Back to my inbox",

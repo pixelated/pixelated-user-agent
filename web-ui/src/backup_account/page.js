@@ -21,6 +21,7 @@ import DocumentTitle from 'react-document-title';
 import Footer from 'src/common/footer/footer';
 import Header from 'src/common/header/header';
 import BackupEmail from 'src/backup_account/backup_email/backup_email';
+import Confirmation from 'src/backup_account/confirmation/confirmation';
 
 import 'font-awesome/scss/font-awesome.scss';
 import './page.scss';
@@ -33,6 +34,17 @@ export class Page extends React.Component {
     this.state = { status: '' };
   }
 
+  saveBackupEmail = () => {
+    this.setState({
+      status: 'success'
+    });
+  }
+
+  mainContent = () => {
+    if (this.state.status === 'success') return <Confirmation />;
+    return <BackupEmail onSubmit={this.saveBackupEmail} />;
+  };
+
   render() {
     const t = this.props.t;
     return (
@@ -40,7 +52,7 @@ export class Page extends React.Component {
         <div className='page'>
           <Header />
           <section>
-            <BackupEmail />
+            {this.mainContent()}
           </section>
           <Footer />
         </div>

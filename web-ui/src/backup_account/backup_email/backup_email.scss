@@ -1,0 +1,75 @@
+/*
+ * Copyright (c) 2017 ThoughtWorks, Inc.
+ *
+ * Pixelated is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Pixelated is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import "~scss/vendor/reset";
+@import "~scss/base/colors";
+@import "~scss/base/fonts";
+
+
+form {
+  width: 100%;
+}
+
+.backup-email-container {
+  width: 84%;
+  padding: 6% 5%;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.backup-account-image {
+  width: 50%;
+  height: 100%;
+  align-self: center;
+}
+
+@media only screen and (min-width : 500px) {
+  form {
+    display: flex;
+    flex-direction: column;
+
+    .input-field-group, .submit-button, .link-content {
+      width: 70%;
+      align-self: center;
+    }
+  }
+}
+
+@media only screen and (min-width : 960px) {
+  .backup-email-container{
+    width: 60%;
+    max-width: 700px;
+    padding: 3em;
+    align-items: flex-start;
+    flex-direction: row;
+
+    form {
+      margin-left: 2.5em;
+      min-height: 492px;
+
+      .input-field-group, .submit-button, .link-content {
+        width: 300px;
+        align-self: flex-start;
+      }
+    }
+  }
+
+  .backup-account-image {
+    width: 300px;
+  }
+}

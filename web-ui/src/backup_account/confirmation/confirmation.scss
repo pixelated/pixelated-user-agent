@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2017 ThoughtWorks, Inc.
+ *
+ * Pixelated is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Pixelated is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import "~scss/vendor/reset";
+@import "~scss/base/colors";
+@import "~scss/base/fonts";
+
+.confirmation-container {
+  width: 84%;
+  padding: 6% 5%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  img {
+    padding: 2em 3.2em 2em 0;
+  }
+}
+
+ .submit-button {
+   align-self: center;
+ }
+
+@media only screen and (min-width : 500px) {
+  .confirmation-container {
+    width: 50%;
+    padding: 1em 2em;
+  }
+
+  .submit-button {
+    width: 70%;
+  }
+}
+
+@media only screen and (min-width : 960px) {
+  .confirmation-container {
+    width: 30%;
+    padding: 1em 2em;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .submit-button {
+    width: 65%;
+  }
+}
