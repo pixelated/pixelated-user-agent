@@ -53,6 +53,7 @@ form {
 @media only screen and (min-width : 960px) {
   .backup-email-container{
     width: 60%;
+    max-width: 700px;
     padding: 3em;
     align-items: flex-start;
     flex-direction: row;
