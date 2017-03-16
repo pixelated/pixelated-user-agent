@@ -24,9 +24,9 @@ class AccountRecovery(object):
         self._session = session
 
     @inlineCallbacks
-    def update_recovery_code(self, recovery_code):
+    def update_recovery_code(self):
         try:
-            response = yield self._session.update_recovery_code(recovery_code)
+            response = yield self._session.update_recovery_code('123')
             returnValue(response)
         except Exception as e:
             log.warn('Something went wrong when trying to save the recovery code')

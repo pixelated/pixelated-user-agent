@@ -29,5 +29,5 @@ class AccountRecoveryTest(unittest.TestCase):
         mock_session = Mock()
         account_recovery = AccountRecovery(mock_session)
 
-        yield account_recovery.update_recovery_code('ABC')
-        mock_session.update_recovery_code.assert_called_once_with('ABC')
+        yield account_recovery.update_recovery_code()
+        mock_session.update_recovery_code.assert_called_once_with('123')
