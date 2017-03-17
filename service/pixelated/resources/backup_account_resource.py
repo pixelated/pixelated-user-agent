@@ -51,7 +51,7 @@ class BackupAccountResource(BaseResource):
     def render_POST(self, request):
         account_recovery = AccountRecovery(
             self._authenticator.bonafide_session,
-            self._services(request)._leap_session.soledad)
+            self.soledad(request))
 
         def update_response(response):
             request.setResponseCode(NO_CONTENT)

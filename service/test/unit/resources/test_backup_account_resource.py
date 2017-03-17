@@ -16,8 +16,7 @@
 
 import os
 
-from mock import MagicMock, patch, ANY
-
+from mock import MagicMock, patch
 from twisted.trial import unittest
 from twisted.web.test.requesthelper import DummyRequest
 from twisted.internet import defer
@@ -49,14 +48,14 @@ class TestBackupAccountResource(unittest.TestCase):
         mock_account_recovery = MagicMock()
         mock_account_recovery_init.return_value = mock_account_recovery
         mock_account_recovery.update_recovery_code.return_value = defer.succeed("Success")
-
         request = DummyRequest(['/backup-account'])
         request.method = 'POST'
         d = self.web.get(request)
 
         def assert_update_recovery_code_called(_):
             mock_account_recovery_init.assert_called_with(
-                self.resource._authenticator.bonafide_session, ANY)
+                self.resource._authenticator.bonafide_session,
+                self.services_factory.services()._leap_session.soledad)
             mock_account_recovery.update_recovery_code.assert_called()
 
         d.addCallback(assert_update_recovery_code_called)
