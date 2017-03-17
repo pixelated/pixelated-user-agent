@@ -26,8 +26,11 @@ class AccountRecoveryTest(unittest.TestCase):
 
     @inlineCallbacks
     def test_update_recovery_code(self):
-        mock_session = Mock()
-        account_recovery = AccountRecovery(mock_session)
+        generated_code = '4645a2f8997e5d0d'
+        mock_bonafide_session = Mock()
+        mock_soledad = Mock()
+        mock_soledad.create_recovery_code.return_value = generated_code
+        account_recovery = AccountRecovery(mock_bonafide_session, mock_soledad)
 
         yield account_recovery.update_recovery_code()
-        mock_session.update_recovery_code.assert_called_once_with('123')
+        mock_bonafide_session.update_recovery_code.assert_called_once_with(generated_code)

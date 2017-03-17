@@ -20,13 +20,15 @@ log = Logger()
 
 
 class AccountRecovery(object):
-    def __init__(self, session):
-        self._session = session
+    def __init__(self, session, soledad):
+        self._bonafide_session = session
+        self._soledad = soledad
 
     @inlineCallbacks
     def update_recovery_code(self):
         try:
-            response = yield self._session.update_recovery_code('123')
+            code = self._soledad.create_recovery_code()
+            response = yield self._bonafide_session.update_recovery_code(code)
             returnValue(response)
         except Exception as e:
             log.warn('Something went wrong when trying to save the recovery code')
