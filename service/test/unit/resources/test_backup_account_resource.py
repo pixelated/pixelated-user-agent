@@ -55,7 +55,7 @@ class TestBackupAccountResource(unittest.TestCase):
         def assert_update_recovery_code_called(_):
             mock_account_recovery_init.assert_called_with(
                 self.resource._authenticator.bonafide_session,
-                self.services_factory.services()._leap_session.soledad)
+                self.resource.soledad(request))
             mock_account_recovery.update_recovery_code.assert_called()
 
         d.addCallback(assert_update_recovery_code_called)

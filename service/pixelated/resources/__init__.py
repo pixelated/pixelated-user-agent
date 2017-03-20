@@ -120,7 +120,7 @@ class BaseResource(Resource):
         return self._service(request, 'feedback_service')
 
     def soledad(self, request):
-        return self._services(request)._leap_session.soledad
+        return self._service(request, '_leap_session').soledad
 
 
 class UnAuthorizedResource(Resource):
