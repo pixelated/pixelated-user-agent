@@ -13,23 +13,15 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
-from twisted.internet.defer import inlineCallbacks, returnValue
-from twisted.logger import Logger
 
-log = Logger()
+from mock import MagicMock
+from twisted.trial import unittest
+from pixelated.resources import BaseResource
 
 
-class AccountRecovery(object):
-    def __init__(self, session, soledad):
-        self._bonafide_session = session
-        self._soledad = soledad
+class TestBaseResource(unittest.TestCase):
+    def test_get_soledad_service(self):
+        mock_services_factory = MagicMock()
+        base_resource = BaseResource(mock_services_factory)
 
-    @inlineCallbacks
-    def update_recovery_code(self):
-        try:
-            code = self._soledad.create_recovery_code()
-            response = yield self._bonafide_session.update_recovery_code(code)
-            returnValue(response)
-        except Exception as e:
-            log.warn('Something went wrong when trying to save the recovery code')
-            raise
+        self.assertEqual(base_resource.soledad('request'), mock_services_factory.services()._leap_session.soledad)

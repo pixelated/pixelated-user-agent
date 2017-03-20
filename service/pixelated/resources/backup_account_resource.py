@@ -49,7 +49,9 @@ class BackupAccountResource(BaseResource):
         return renderElement(request, site)
 
     def render_POST(self, request):
-        account_recovery = AccountRecovery(self._authenticator.bonafide_session)
+        account_recovery = AccountRecovery(
+            self._authenticator.bonafide_session,
+            self.soledad(request))
 
         def update_response(response):
             request.setResponseCode(NO_CONTENT)
@@ -59,6 +61,6 @@ class BackupAccountResource(BaseResource):
             request.setResponseCode(INTERNAL_SERVER_ERROR)
             request.finish()
 
-        d = account_recovery.update_recovery_code("123")
+        d = account_recovery.update_recovery_code()
         d.addCallbacks(update_response, error_response)
         return NOT_DONE_YET
