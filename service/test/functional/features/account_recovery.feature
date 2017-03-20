@@ -14,24 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from behave import given, when, then
+Feature: Account Recovery
+  As a user of Pixelated
+  I want to recover my account
+  So that I can see my emails if I lose my password
 
-from common import (
-    fill_by_css_selector,
-    find_element_by_css_selector)
-
-
-@given(u'I am on the backup account page')
-def backup_account_page(context):
-    context.browser.get(context.backup_account_url)
-
-
-@when(u'I submit my email')
-def submit_backup_email(context):
-    fill_by_css_selector(context, 'input[name="email"]', 'test@test.com')
-    find_element_by_css_selector(context, 'button[type="submit"]').click()
-
-
-@then(u'I see the confirmation page')
-def confirmation_page(context):
-    find_element_by_css_selector(context, '.confirmation-container')
+  Scenario: User sets up a backup account
+    Given I am on the backup account page
+    When I submit my email
+    Then I see the confirmation page
