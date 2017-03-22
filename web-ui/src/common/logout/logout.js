@@ -34,7 +34,7 @@ export class Logout extends React.Component {
       <div className='logout-container'>
         <form id='logout-form' method='POST' action='logout'>
           <input type='hidden' name='csrftoken' value={this.state.csrf_token} />
-          <SubmitFlatButton buttonText={t('logout')} fontIconClass='fa fa-sign-out' />
+          <SubmitFlatButton name="logout" buttonText={t('logout')} fontIconClass='fa fa-sign-out' />
         </form>
       </div>
     );

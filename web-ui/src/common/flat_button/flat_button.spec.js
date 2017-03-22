@@ -7,7 +7,11 @@ describe('FlatButton', () => {
   let flatButton;
 
   beforeEach(() => {
-    flatButton = shallow(<FlatButton buttonText='Logout' fontIconClass='fa fa-sign-out' />);
+    flatButton = shallow(<FlatButton name='logout' buttonText='Logout' fontIconClass='fa fa-sign-out' />);
+  });
+
+  it('renders a FlatButton of type submit with name logout', () => {
+    expect(flatButton.find('FlatButton').props().name).toEqual('logout');
   });
 
   it('renders a FlatButton of type submit with text logout', () => {

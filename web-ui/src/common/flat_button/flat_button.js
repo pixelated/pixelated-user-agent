@@ -34,10 +34,12 @@ const flatButtonStyle = {
   verticalAlign: 'top'
 };
 
-const SubmitFlatButton = ({ buttonText, fontIconClass }) => (
+const SubmitFlatButton = ({ name, buttonText, fontIconClass }) => (
   <FlatButton
+    name={name}
     type='submit'
     target='_blank'
+    hoverColor='transparent'
     containerElement='label'
     style={flatButtonStyle}
     labelPosition='before'
@@ -48,6 +50,7 @@ const SubmitFlatButton = ({ buttonText, fontIconClass }) => (
 );
 
 SubmitFlatButton.propTypes = {
+  name: React.PropTypes.string.isRequired,
   buttonText: React.PropTypes.string.isRequired,
   fontIconClass: React.PropTypes.string.isRequired
 };
