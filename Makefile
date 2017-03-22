@@ -114,3 +114,9 @@ remove_virtualenv:
 remove_javascript_packages:
 	rm -rf web-ui/node_modules
 	rm -rf web-ui/app/bower_components
+
+diagrams:
+	@. $(VIRTUALENV)/bin/activate;\
+	pip install plantuml;\
+	cd service/diagrams/png;\
+	python -m plantuml *.txt

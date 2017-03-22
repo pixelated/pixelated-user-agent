@@ -1,0 +1,37 @@
+title Backup Account Flow
+
+actor User
+
+User -> PixUA : backup email
+note left
+  existing user adds backup email
+end note
+
+PixUA -> SoledadClient
+note right
+  generate recovery code
+  encrypt secret
+  save to secrets doc
+end note
+
+SoledadClient -> PixUA: recovery code
+
+PixUA -> BonafideClient : recovery code
+note right
+  generate salt and verifier
+end note
+
+BonafideClient -> LeapWebapp : recovery code
+
+LeapWebapp -> BonafideClient
+BonafideClient -> PixUA
+
+alt successful case
+  PixUA -> SoledadClient
+  note right: delete old recovery code
+  PixUA -> User : email with recovery code
+else bonafide failure
+  PixUA -> SoledadClient
+  note right: delete new recovery code
+  PixUA -> User : error message
+end
