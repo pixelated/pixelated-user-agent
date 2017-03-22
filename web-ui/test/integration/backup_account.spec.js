@@ -16,7 +16,7 @@ describe('Backup account email validation', () => {
 
     context('with valid email', () => {
       beforeEach(() => {
-        backupAccountPage.find('input').simulate('change', {target: {value: 'test@test.com'}});
+        backupAccountPage.find('input[name="email"]').simulate('change', {target: {value: 'test@test.com'}});
       });
 
       it('shows no validation error', () => {
@@ -30,7 +30,7 @@ describe('Backup account email validation', () => {
 
     context('with invalid email', () => {
       beforeEach(() => {
-        backupAccountPage.find('input').simulate('change', {target: {value: 'test'}});
+        backupAccountPage.find('input[name="email"]').simulate('change', {target: {value: 'test'}});
       });
 
       it('shows validation error', () => {
@@ -44,7 +44,7 @@ describe('Backup account email validation', () => {
 
     context('with empty email', () => {
       beforeEach(() => {
-        backupAccountPage.find('input').simulate('change', {target: {value: ''}});
+        backupAccountPage.find('input[name="email"]').simulate('change', {target: {value: ''}});
       });
 
       it('shows no validation error', () => {

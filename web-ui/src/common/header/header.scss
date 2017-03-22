@@ -28,7 +28,6 @@
 
 .header-content {
   display: flex;
-  align-items: center;
 }
 
 .header-logo {
@@ -41,7 +40,7 @@
 
   position: absolute;
   right: 6%;
-  top: 13px;
+  line-height: 0;
 
   span {
     display: none;
@@ -51,6 +50,7 @@
     font-size: 1.3em;
     margin-left: 0.4em;
     color: $medium_light_grey;
+    overflow: visible;
   }
 }
 
@@ -78,6 +78,7 @@
       font-style: normal;
       font-size: 0.7em;
       padding-bottom: 0.1em;
+      line-height: 36px;
     }
 
     .fa {

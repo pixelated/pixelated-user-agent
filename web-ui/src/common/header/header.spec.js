@@ -12,6 +12,6 @@ describe('Header', () => {
   });
 
   it('renders the header content', () => {
-    expect(header.find('header').text()).toContain('logout');
+    expect(header.find('header').text()).toContain('Logout');
   });
 });

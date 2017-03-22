@@ -17,28 +17,32 @@
 
 import React from 'react';
 import { translate } from 'react-i18next';
-import Logout from 'src/common/logout/logout';
-import './header.scss';
+import browser from 'helpers/browser';
 
-export const Header = ({ t }) => (
-  <header className='header-wrapper'>
-    <div className='header-content'>
-      <a href='/'>
-        <img
-          className='header-logo'
-          src='/public/images/logo-orange.svg'
-          alt={t('Pixelated')}
-        />
-      </a>
-      <div className='header-icons'>
-        <Logout />
+import SubmitFlatButton from 'src/common/flat_button/flat_button';
+
+export class Logout extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { csrf_token: browser.getCookie('XSRF-TOKEN') };
+  }
+
+  render() {
+    const t = this.props.t;
+    return (
+      <div className='logout-container'>
+        <form id='logout-form' method='POST' action='logout'>
+          <input type='hidden' name='csrftoken' value={this.state.csrf_token} />
+          <SubmitFlatButton buttonText={t('logout')} fontIconClass='fa fa-sign-out' />
+        </form>
       </div>
-    </div>
-  </header>
-);
+    );
+  }
+}
 
-Header.propTypes = {
+Logout.propTypes = {
   t: React.PropTypes.func.isRequired
 };
 
-export default translate('', { wait: true })(Header);
+export default translate('', { wait: true })(Logout);
