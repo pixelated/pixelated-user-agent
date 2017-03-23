@@ -38,9 +38,7 @@ const SubmitFlatButton = ({ name, buttonText, fontIconClass }) => (
   <FlatButton
     name={name}
     type='submit'
-    target='_blank'
     hoverColor='transparent'
-    containerElement='label'
     style={flatButtonStyle}
     labelPosition='before'
     label={buttonText}
