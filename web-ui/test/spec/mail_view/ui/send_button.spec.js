@@ -101,7 +101,7 @@ describeComponent('mail_view/ui/send_button', function () {
         this.$node.click();
 
         expect(displayMessageEvent).toHaveBeenTriggeredOnAndWith(document,
-          { message: 'Sending...', class: 'success' });
+          { message: 'Sending...', class: 'success', dismissTimeout: 60000 });
       });
 
       it('enables again if sending errors out', function() {
