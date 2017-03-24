@@ -27,7 +27,7 @@ export const Header = ({ t }) => (
         <img
           className='header-logo'
           src='/public/images/logo-orange.svg'
-          alt={t('Pixelated')}
+          alt='Pixelated'
         />
       </a>
       <div className='header-icons'>
