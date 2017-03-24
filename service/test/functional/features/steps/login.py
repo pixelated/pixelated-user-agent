@@ -48,6 +48,11 @@ def click_logout(context):
     find_element_by_css_selector(context, '#logout-form div').click()
 
 
+@when(u'I logout from the header')
+def click_logout(context):
+    find_element_by_css_selector(context, 'button[name="logout"]').click()
+
+
 @then(u'I should see the login page')
 def see_login_page(context):
     find_element_by_css_selector(context, 'form#login_form')

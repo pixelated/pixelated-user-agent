@@ -16,10 +16,10 @@
  */
 
 import React from 'react';
-import { translate } from 'react-i18next';
+import Logout from 'src/common/logout/logout';
 import './header.scss';
 
-export const Header = ({ t }) => (
+export const Header = () => (
   <header className='header-wrapper'>
     <div className='header-content'>
       <a href='/'>
@@ -30,17 +30,10 @@ export const Header = ({ t }) => (
         />
       </a>
       <div className='header-icons'>
-        <a href='/'>
-          <span>{t('logout')}</span>
-          <i className='fa fa-sign-out' aria-hidden='true' />
-        </a>
+        <Logout />
       </div>
     </div>
   </header>
 );
 
-Header.propTypes = {
-  t: React.PropTypes.func.isRequired
-};
-
-export default translate('', { wait: true })(Header);
+export default Header;
