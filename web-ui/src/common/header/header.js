@@ -16,11 +16,10 @@
  */
 
 import React from 'react';
-import { translate } from 'react-i18next';
 import Logout from 'src/common/logout/logout';
 import './header.scss';
 
-export const Header = ({ t }) => (
+export const Header = () => (
   <header className='header-wrapper'>
     <div className='header-content'>
       <a href='/'>
@@ -37,8 +36,4 @@ export const Header = ({ t }) => (
   </header>
 );
 
-Header.propTypes = {
-  t: React.PropTypes.func.isRequired
-};
-
-export default translate('', { wait: true })(Header);
+export default Header;

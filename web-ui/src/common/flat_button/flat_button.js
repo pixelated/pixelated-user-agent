@@ -43,6 +43,8 @@ const SubmitFlatButton = ({ name, buttonText, fontIconClass }) => (
     labelPosition='before'
     label={buttonText}
     labelStyle={labelStyle}
+    aria-label={buttonText}
+    title={buttonText}
     icon={<FontIcon className={fontIconClass} color={grey500} style={iconStyle} />}
   />
 );
