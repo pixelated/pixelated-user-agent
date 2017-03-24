@@ -91,6 +91,8 @@ define([
         this.disableButton();
         this.$node.text(viewHelper.i18n.t('sending-mail'));
 
+        this.trigger(document, events.ui.userAlerts.displayMessage, {message: viewHelper.i18n.t('sending-mail'), class: 'success'});
+
         this.attr.sendingInProgress = true;
 
         this.trigger(document, events.ui.recipients.doCompleteInput);
