@@ -34,3 +34,12 @@ Feature: sign up, login and logout
     Then I have mails
     When I logout
     Then I should see the login page
+
+  Scenario: Existing user logs in and logs out from the header
+    Given a user is accessing the login page
+    When I enter username and password as credentials
+    And I click on the login button
+    Then I should see the fancy interstitial
+    Given I am on the backup account page
+    When I logout from the header
+    Then I should see the login page
