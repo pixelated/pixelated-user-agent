@@ -29,21 +29,22 @@ define(
 
     function userAlerts() {
       this.defaultAttrs({
-        dismissTimeout: 3000
+        dismissTimeout: 4000
       });
 
       this.render = function(message) {
+        clearTimeout(this.attr.timeout);
         this.$node.html(templates.userAlerts.message(message));
         this.show();
-        setTimeout(this.hide.bind(this), this.attr.dismissTimeout);
+        this.attr.timeout = setTimeout(this.hide.bind(this), message.dismissTimeout || this.attr.dismissTimeout);
       };
-
 
       this.displayMessage = function(ev, data) {
         this.render({
           message: {
             content: data.message,
-            class: 'message-panel__growl--' + (data.class || 'success')
+            class: 'message-panel__growl--' + (data.class || 'success'),
+            dismissTimeout: data.dismissTimeout
           }
         });
       };
@@ -54,4 +55,3 @@ define(
     }
   }
 );
-

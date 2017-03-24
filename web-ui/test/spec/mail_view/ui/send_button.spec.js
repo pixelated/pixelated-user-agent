@@ -95,6 +95,15 @@ describeComponent('mail_view/ui/send_button', function () {
         expect(this.$node.prop('disabled')).toBeTruthy();
       });
 
+      it('displays sending message', function () {
+        var displayMessageEvent = spyOnEvent(document, Pixelated.events.ui.userAlerts.displayMessage);
+
+        this.$node.click();
+
+        expect(displayMessageEvent).toHaveBeenTriggeredOnAndWith(document,
+          { message: 'Sending...', class: 'success', dismissTimeout: 60000 });
+      });
+
       it('enables again if sending errors out', function() {
         expect(this.$node.text()).toBe(i18n.t('send'));
 

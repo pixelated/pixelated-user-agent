@@ -18,10 +18,11 @@ define(
   [
     'flight/lib/component',
     'views/templates',
-    'page/events'
+    'page/events',
+    'views/i18n'
   ],
 
-  function(defineComponent, templates, events) {
+  function(defineComponent, templates, events, i18n) {
     'use strict';
 
     return defineComponent(composeTrigger);
@@ -39,11 +40,11 @@ define(
       };
 
       this.showEmailSuccess = function () {
-        this.trigger(document, events.ui.userAlerts.displayMessage, {message: 'Your message was sent!', class: 'success'});
+        this.trigger(document, events.ui.userAlerts.displayMessage, {message: i18n.t('mail-sent'), class: 'success'});
       };
 
       this.showEmailError = function (ev, data) {
-        this.trigger(document, events.ui.userAlerts.displayMessage, {message: 'Error,  message not sent: ' + data.responseJSON.message, class: 'error'});
+        this.trigger(document, events.ui.userAlerts.displayMessage, {message: i18n.t('mail-not-sent') + ' ' + data.responseJSON.message, class: 'error'});
       };
 
       this.after('initialize', function () {

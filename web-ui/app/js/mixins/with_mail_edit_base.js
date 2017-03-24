@@ -209,7 +209,7 @@ define(
             };
 
             this.mailSent = function () {
-                this.trigger(document, events.ui.userAlerts.displayMessage, {message: 'Your message was sent!'});
+                this.trigger(document, events.ui.userAlerts.displayMessage, {message: i18n.t('mail-sent')});
             };
 
             this.enableFloatlabel = function (element) {
