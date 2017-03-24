@@ -44,6 +44,8 @@
     "not-signed-label-tooltip": "O remetente não pode ser verificado.",
     "signed-label-tooltip": "Você está se comunicando com o remetente real.",
     "sending-mail": "Enviando...",
+    "mail-sent": "Sua mensagem foi enviada!",
+    "mail-not-sent": "Erro, sua mensagem não foi enviada:",
     "trash-button": "Deletar",
     "search-placeholder" : "Pesquisar...",
     "search-results-for": "Resultado da pesquisa por",

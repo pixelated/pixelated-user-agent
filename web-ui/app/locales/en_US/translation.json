@@ -44,6 +44,8 @@
     "not-signed-label-tooltip": "The sender could not be verified.",
     "signed-label-tooltip": "You are communicating with the real sender.",
     "sending-mail": "Sending...",
+    "mail-sent": "Your message was sent!",
+    "mail-not-sent": "Error,  message not sent:",
     "trash-button": "Delete it",
     "search-placeholder" : "Search...",
     "search-results-for": "Search results for",
