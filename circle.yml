@@ -1,0 +1,21 @@
+machine:
+  python:
+    version:
+      2.7.11
+  node:
+    version:
+      6.1.0
+  environment:
+    LC_ALL: 'en_US.UTF-8'
+
+dependencies:
+  override:
+    - make clean_all
+    - pip install -U --force-reinstall --no-cache-dir virtualenv
+    - gem install compass && rbenv rehash
+
+test:
+  override:
+    - make linters
+    - make test
+    - make functional_tests_ci
