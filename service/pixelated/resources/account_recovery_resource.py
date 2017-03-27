@@ -15,7 +15,6 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from xml.sax import SAXParseException
 
 from pixelated.resources import BaseResource
 from twisted.python.filepath import FilePath

@@ -16,7 +16,7 @@
 
 import os
 
-from mock import MagicMock, patch
+from mock import MagicMock
 from twisted.trial import unittest
 from twisted.web.test.requesthelper import DummyRequest
 from twisted.internet import defer
