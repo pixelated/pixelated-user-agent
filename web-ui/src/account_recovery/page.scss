@@ -1,0 +1,85 @@
+/*
+ * Copyright (c) 2017 ThoughtWorks, Inc.
+ *
+ * Pixelated is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Pixelated is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import "~scss/vendor/reset";
+@import "~scss/base/colors";
+@import "~scss/base/fonts";
+
+html, body, #root {
+  height: 100%;
+}
+
+body, #root {
+  min-height: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+.container {
+  background: $white;
+  margin: 3% auto;
+  box-shadow: 0 2px 3px 0 $shadow;
+}
+
+.page {
+  font-family: "Open Sans", "Microsoft YaHei", "Hiragino Sans GB", "Hiragino Sans GB W3", "微软雅黑", "Helvetica Neue", Arial, sans-serif;
+  background: $dark_blue; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(left top, $dark_blue, $middle_blue); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(bottom right, $dark_blue, $middle_blue); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(bottom right, $dark_blue, $middle_blue); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to bottom right, $dark_blue, $middle_blue); /* Standard syntax */
+  color: $dark_grey_text;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+section {
+  flex: 1 0 auto;
+}
+
+h1 {
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.link {
+  color: $dark_blue;
+  font-style: italic;
+  font-size: 0.8em;
+
+  .fa {
+    font-size: 1.6em;
+    position: relative;
+    top: 3px;
+    margin-right: 0.3em;
+  }
+
+}
+
+@media only screen and (min-width : 500px) {
+  body {
+    font-size: 1.3em;
+  }
+}

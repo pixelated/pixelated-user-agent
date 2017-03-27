@@ -23,6 +23,7 @@ from pixelated.resources import BaseResource, UnAuthorizedResource, UnavailableR
 from pixelated.resources import get_public_static_folder, get_protected_static_folder
 from pixelated.resources.attachments_resource import AttachmentsResource
 from pixelated.resources.sandbox_resource import SandboxResource
+from pixelated.resources.account_recovery_resource import AccountRecoveryResource
 from pixelated.resources.backup_account_resource import BackupAccountResource
 from pixelated.resources.contacts_resource import ContactsResource
 from pixelated.resources.features_resource import FeaturesResource
@@ -91,6 +92,7 @@ class RootResource(BaseResource):
 
     def initialize(self, provider=None, disclaimer_banner=None, authenticator=None):
         self._child_resources.add('assets', File(self._protected_static_folder))
+        self._child_resources.add('account-recovery', AccountRecoveryResource(self._services_factory))
         self._child_resources.add('backup-account', BackupAccountResource(self._services_factory, authenticator))
         self._child_resources.add('sandbox', SandboxResource(self._protected_static_folder))
         self._child_resources.add('keys', KeysResource(self._services_factory))
