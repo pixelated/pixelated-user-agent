@@ -17,31 +17,28 @@
 
 import React from 'react';
 import { translate } from 'react-i18next';
-import DocumentTitle from 'react-document-title';
-import Header from 'src/common/header/header';
-import AdminRecoveryCodeForm from 'src/account_recovery/forms/admin_recovery_code_form';
-import Footer from 'src/common/footer/footer';
 
-import 'font-awesome/scss/font-awesome.scss';
-import './page.scss';
+import InputField from 'src/common/input_field/input_field';
+import SubmitButton from 'src/common/submit_button/submit_button';
+
+import './admin_recovery_code_form.scss';
 
 
-export const Page = ({ t }) => (
-  <DocumentTitle title={t('account-recovery.page-title')}>
-    <div className='page'>
-      <Header />
-      <section>
-        <div className='container'>
-          <AdminRecoveryCodeForm />
-        </div>
-      </section>
-      <Footer />
-    </div>
-  </DocumentTitle>
+export const AdminRecoveryCodeForm = ({ t }) => (
+  <div>
+    <h1>{t('account-recovery.admin-form.title')}</h1>
+    <ul>
+      <li>{t('account-recovery.admin-form.tip1')}</li>
+      <li>{t('account-recovery.admin-form.tip2')}</li>
+      <li>{t('account-recovery.admin-form.tip3')}</li>
+    </ul>
+    <InputField name='admin-code' label={t('account-recovery.admin-form.input-label')} />
+    <SubmitButton buttonText={t('account-recovery.admin-form.button')} />
+  </div>
 );
 
-Page.propTypes = {
+AdminRecoveryCodeForm.propTypes = {
   t: React.PropTypes.func.isRequired
 };
 
-export default translate('', { wait: true })(Page);
+export default translate('', { wait: true })(AdminRecoveryCodeForm);
