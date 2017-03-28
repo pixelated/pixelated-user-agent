@@ -5,10 +5,14 @@ import { AdminRecoveryCodeForm } from 'src/account_recovery/forms/admin_recovery
 
 describe('AdminRecoveryCodeForm', () => {
   let adminRecoveryCodeForm;
+  let mockNext;
 
   beforeEach(() => {
     const mockTranslations = key => key;
-    adminRecoveryCodeForm = shallow(<AdminRecoveryCodeForm t={mockTranslations} />);
+    mockNext = expect.createSpy();
+    adminRecoveryCodeForm = shallow(
+      <AdminRecoveryCodeForm t={mockTranslations} next={mockNext} />
+    );
   });
 
   it('renders title for admin recovery code', () => {
@@ -25,5 +29,10 @@ describe('AdminRecoveryCodeForm', () => {
 
   it('renders button for next step', () => {
     expect(adminRecoveryCodeForm.find('SubmitButton').props().buttonText).toEqual('account-recovery.admin-form.button');
+  });
+
+  it('submits form to next step', () => {
+    adminRecoveryCodeForm.find('form').simulate('submit');
+    expect(mockNext).toHaveBeenCalled();
   });
 });

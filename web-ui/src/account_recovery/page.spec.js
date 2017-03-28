@@ -5,6 +5,7 @@ import React from 'react';
 import { Page } from 'src/account_recovery/page';
 import Header from 'src/common/header/header';
 import AdminRecoveryCodeForm from 'src/account_recovery/forms/admin_recovery_code_form';
+import UserRecoveryCodeForm from 'src/account_recovery/forms/user_recovery_code_form';
 import Footer from 'src/common/footer/footer';
 
 describe('Account Recovery Page', () => {
@@ -23,11 +24,26 @@ describe('Account Recovery Page', () => {
     expect(page.find(Header).length).toEqual(1);
   });
 
-  it('renders admin recovery code form', () => {
-    expect(page.find(AdminRecoveryCodeForm).length).toEqual(1);
-  });
-
   it('renders footer', () => {
     expect(page.find(Footer).length).toEqual(1);
+  });
+
+  context('main content', () => {
+    let pageInstance;
+
+    beforeEach(() => {
+      pageInstance = page.instance();
+    });
+
+    it('renders admin recovery code form as default form', () => {
+      expect(page.find(AdminRecoveryCodeForm).length).toEqual(1);
+    });
+
+    it('renders user recovery code form when admin code submitted', () => {
+      pageInstance.nextStep({ preventDefault: () => {} });
+
+      expect(page.find(AdminRecoveryCodeForm).length).toEqual(0);
+      expect(page.find(UserRecoveryCodeForm).length).toEqual(1);
+    });
   });
 });

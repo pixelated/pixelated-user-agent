@@ -24,8 +24,8 @@ import SubmitButton from 'src/common/submit_button/submit_button';
 import './admin_recovery_code_form.scss';
 
 
-export const AdminRecoveryCodeForm = ({ t }) => (
-  <div>
+export const AdminRecoveryCodeForm = ({ t, next }) => (
+  <form onSubmit={next}>
     <h1>{t('account-recovery.admin-form.title')}</h1>
     <ul>
       <li>{t('account-recovery.admin-form.tip1')}</li>
@@ -34,11 +34,12 @@ export const AdminRecoveryCodeForm = ({ t }) => (
     </ul>
     <InputField name='admin-code' label={t('account-recovery.admin-form.input-label')} />
     <SubmitButton buttonText={t('account-recovery.admin-form.button')} />
-  </div>
+  </form>
 );
 
 AdminRecoveryCodeForm.propTypes = {
-  t: React.PropTypes.func.isRequired
+  t: React.PropTypes.func.isRequired,
+  next: React.PropTypes.func.isRequired
 };
 
 export default translate('', { wait: true })(AdminRecoveryCodeForm);
