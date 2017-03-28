@@ -32,12 +32,14 @@ export const UserRecoveryCodeForm = ({ t, previous, next }) => (
       alt={t('account-recovery.user-form.image-description')}
     />
     <h1>{t('account-recovery.user-form.title')}</h1>
-    <img
-      className='user-codes-image'
-      src='/public/images/account-recovery/codes.svg'
-      alt=''
-    />
-    <p>{t('account-recovery.user-form.description')}</p>
+    <div className='user-code-form-content'>
+      <img
+        className='user-codes-image'
+        src='/public/images/account-recovery/codes.svg'
+        alt=''
+      />
+      <p>{t('account-recovery.user-form.description')}</p>
+    </div>
     <InputField name='admin-code' label={t('account-recovery.user-form.input-label')} />
     <SubmitButton buttonText={t('account-recovery.user-form.button')} />
     <BackLink
