@@ -18,3 +18,23 @@
 .account-recovery-progress {
   width: 100%;
 }
+
+.account-recovery-form {
+  display: flex;
+  flex-direction: column;
+
+  img {
+    margin: 7px 0;
+    align-self: center;
+  }
+
+  .input-field-group {
+    margin-top: 0;
+  }
+}
+
+.new-password {
+  .input-field-group:first-of-type {
+    margin-bottom: 0;
+  }
+}

@@ -25,13 +25,17 @@ import BackLink from 'src/common/back_link/back_link';
 import './forms.scss';
 
 export const UserRecoveryCodeForm = ({ t, previous, next }) => (
-  <form className='user-code-form' onSubmit={next}>
+  <form className='account-recovery-form user-code' onSubmit={next}>
     <img
       className='account-recovery-progress'
       src='/public/images/account-recovery/step_2.svg'
       alt={t('account-recovery.user-form.image-description')}
     />
     <h1>{t('account-recovery.user-form.title')}</h1>
+    <img
+      src='/public/images/account-recovery/codes.svg'
+      alt=''
+    />
     <p>{t('account-recovery.user-form.description')}</p>
     <InputField name='admin-code' label={t('account-recovery.user-form.input-label')} />
     <SubmitButton buttonText={t('account-recovery.user-form.button')} />

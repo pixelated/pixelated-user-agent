@@ -23,7 +23,7 @@ import SubmitButton from 'src/common/submit_button/submit_button';
 import BackLink from 'src/common/back_link/back_link';
 
 export const NewPasswordForm = ({ t, previous }) => (
-  <form>
+  <form className='account-recovery-form new-password'>
     <img
       className='account-recovery-progress'
       src='/public/images/account-recovery/step_3.svg'
