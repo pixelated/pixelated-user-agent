@@ -103,6 +103,9 @@
         "paragraph": "Save this message, it is really important.",
         "button": "Got it! I'm ready!",
         "retry-button": "Hey, I didn't received it"
+      },
+      "error": {
+        "submit-error": "There was an error. Please try again later."
       }
     },
     "back-to-inbox": "Back to my inbox",

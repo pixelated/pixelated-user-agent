@@ -103,6 +103,9 @@
         "paragraph": "Salve esse e-mail, ele é bem importante.",
         "button": "Recebi! Pronto!",
         "retry-button": "Ei, eu não recebi"
+      },
+      "error": {
+        "submit-error": "Ocorreu um erro. Por favor tente novamente mais tarde."
       }
     },
     "back-to-inbox": "Voltar",

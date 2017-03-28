@@ -22,6 +22,7 @@ import Footer from 'src/common/footer/footer';
 import Header from 'src/common/header/header';
 import BackupEmail from 'src/backup_account/backup_email/backup_email';
 import Confirmation from 'src/backup_account/confirmation/confirmation';
+import SnackbarNotification from 'src/common/snackbar_notification/snackbar_notification';
 
 import 'font-awesome/scss/font-awesome.scss';
 import './page.scss';
@@ -36,11 +37,18 @@ export class Page extends React.Component {
 
   saveBackupEmail = (status) => {
     this.setState({ status });
-  }
+  };
 
   mainContent = () => {
     if (this.state.status === 'success') return <Confirmation />;
     return <BackupEmail onSubmit={this.saveBackupEmail} />;
+  };
+
+  showSnackbarOnError = (t) => {
+    if (this.state.status === 'error') {
+      return <SnackbarNotification message={t('backup-account.error.submit-error')} isError />;
+    }
+    return undefined;
   };
 
   render() {
@@ -52,6 +60,7 @@ export class Page extends React.Component {
           <section>
             {this.mainContent()}
           </section>
+          {this.showSnackbarOnError(t)}
           <Footer />
         </div>
       </DocumentTitle>

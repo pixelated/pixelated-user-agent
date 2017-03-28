@@ -84,7 +84,7 @@ describe('BackupEmail', () => {
     });
   });
 
-  describe('Submit', () => {
+  describe('Submit on success', () => {
     let preventDefaultSpy;
 
     beforeEach((done) => {
@@ -118,8 +118,31 @@ describe('BackupEmail', () => {
       expect(preventDefaultSpy).toHaveBeenCalled();
     });
 
-    it('calls onSubmit from props when success', () => {
+    it('calls onSubmit from props with success', () => {
       expect(mockOnSubmit).toHaveBeenCalledWith('success');
     });
+  });
+
+  describe('Submit on error', () => {
+    let preventDefaultSpy;
+
+    beforeEach((done) => {
+      mockOnSubmit = expect.createSpy().andCall(() => done());
+      preventDefaultSpy = expect.createSpy();
+      expect.spyOn(browser, 'getCookie').andReturn('abc123');
+
+      backupEmail = shallow(<BackupEmail t={mockTranslations} onSubmit={mockOnSubmit} />);
+
+      fetchMock.post('/backup-account', 500);
+      backupEmail.find('form').simulate('submit', { preventDefault: preventDefaultSpy });
+    });
+
+    it('calls onSubmit from props with error', () => {
+      expect(mockOnSubmit).toHaveBeenCalledWith('error');
+    });
+  });
+
+  afterEach(() => {
+    fetchMock.restore();
   });
 });
