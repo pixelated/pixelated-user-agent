@@ -18,9 +18,15 @@
 import React from 'react';
 import { translate } from 'react-i18next';
 
+import InputField from 'src/common/input_field/input_field';
+import SubmitButton from 'src/common/submit_button/submit_button';
+
 export const UserRecoveryCodeForm = ({ t }) => (
   <form>
     <h1>{t('account-recovery.user-form.title')}</h1>
+    <p>{t('account-recovery.user-form.description')}</p>
+    <InputField name='admin-code' label={t('account-recovery.user-form.input-label')} />
+    <SubmitButton buttonText={t('account-recovery.user-form.button')} />
   </form>
 );
 
