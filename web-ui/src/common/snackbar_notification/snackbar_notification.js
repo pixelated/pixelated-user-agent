@@ -19,10 +19,13 @@ import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
 import { red500, blue500 } from 'material-ui/styles/colors';
 
+import './snackbar_notification.scss';
+
 const notificationStyle = () => ({
   top: 0,
+  left: 'auto',
   bottom: 'auto',
-  left: (window.innerWidth - 288) / 2,
+  alignSelf: 'center',
   transform: 'translate3d(0, 0px, 0)'
 });
 
@@ -31,14 +34,14 @@ const contentStyle = {
 };
 
 const getStyleByType = (isError) => {
-  if (isError) {
-    return { backgroundColor: red500 };
-  }
-  return { backgroundColor: blue500 };
+  const style = { height: 'auto' };
+  style.backgroundColor = isError ? red500 : blue500;
+  return style;
 };
 
 const SnackbarNotification = ({ message, isError = false, autoHideDuration = 5000 }) => (
   <Snackbar
+    id='snackbar'
     open
     bodyStyle={getStyleByType(isError)}
     message={message}

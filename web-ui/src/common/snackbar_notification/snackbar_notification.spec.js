@@ -22,7 +22,7 @@ describe('SnackbarNotification', () => {
 
   it('renders snackbar with error body style', () => {
     expect(snackbarNotification.find(Snackbar).props().bodyStyle)
-      .toEqual({ backgroundColor: red500 });
+      .toEqual({ height: 'auto', backgroundColor: red500 });
   });
 
   it('renders snackbar with default auto-hide duration', () => {
