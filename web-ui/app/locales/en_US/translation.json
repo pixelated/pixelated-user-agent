@@ -82,7 +82,18 @@
         "tags": "Tags"
     },
     "account-recovery": {
-      "page-title": "Pixelated Account Recovery"
+      "page-title": "Pixelated Account Recovery",
+      "admin-form": {
+        "title": "Contact your account administrator and ask for their part of the recovery code",
+        "tip1": "The safest way to do this is in person.",
+        "tip2": "You can call or text if you need to.",
+        "tip3": "Don't ever ask for it via email.",
+        "input-label": "type here admin's backup code",
+        "button": "Next"
+      },
+      "user-form": {
+        "title": "Remember your backup account?"
+      }
     },
     "backup-account": {
       "page-title": "Pixelated Backup Account",

@@ -18,22 +18,51 @@
 import React from 'react';
 import { translate } from 'react-i18next';
 import DocumentTitle from 'react-document-title';
-import Footer from 'src/common/footer/footer';
 import Header from 'src/common/header/header';
+import AdminRecoveryCodeForm from 'src/account_recovery/forms/admin_recovery_code_form';
+import UserRecoveryCodeForm from 'src/account_recovery/forms/user_recovery_code_form';
+import Footer from 'src/common/footer/footer';
 
 import 'font-awesome/scss/font-awesome.scss';
 import './page.scss';
 
 
-export const Page = ({ t }) => (
-  <DocumentTitle title={t('account-recovery.page-title')}>
-    <div className='page'>
-      <Header />
-      <section />
-      <Footer />
-    </div>
-  </DocumentTitle>
-);
+export class Page extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { step: 0 };
+  }
+
+  nextStep = (event) => {
+    event.preventDefault();
+    this.setState({ step: this.state.step + 1 });
+  }
+
+  steps = {
+    0: <AdminRecoveryCodeForm next={this.nextStep} />,
+    1: <UserRecoveryCodeForm />
+  }
+
+  mainContent = () => this.steps[this.state.step];
+
+  render() {
+    const t = this.props.t;
+    return (
+      <DocumentTitle title={t('account-recovery.page-title')}>
+        <div className='page'>
+          <Header />
+          <section>
+            <div className='container'>
+              {this.mainContent()}
+            </div>
+          </section>
+          <Footer />
+        </div>
+      </DocumentTitle>
+    );
+  }
+}
 
 Page.propTypes = {
   t: React.PropTypes.func.isRequired

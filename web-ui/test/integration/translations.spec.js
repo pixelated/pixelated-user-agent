@@ -9,8 +9,15 @@ import testI18n from './i18n';
 
 describe('Translations', () => {
   context('Account Recovery Page', () => {
-    it('translates all key', () => {
+    it('translates all keys on first step', () => {
       const app = mount(<App i18n={testI18n} child={<AccountRecoveryPage />} />);
+      expect(app.text()).toNotContain('untranslated', 'Unstranslated message found in the text: ' + app.text());
+    });
+
+    it('translates all keys on second step', () => {
+      const app = mount(<App i18n={testI18n} child={<AccountRecoveryPage />} />);
+      app.find('form.admin-code-form').simulate('submit');
+
       expect(app.text()).toNotContain('untranslated', 'Unstranslated message found in the text: ' + app.text());
     });
   });
