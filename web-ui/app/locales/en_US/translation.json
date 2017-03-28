@@ -81,6 +81,9 @@
         "all": "All",
         "tags": "Tags"
     },
+    "account-recovery": {
+      "page-title": "Pixelated Account Recovery"
+    },
     "backup-account": {
       "page-title": "Pixelated Backup Account",
       "backup-email": {

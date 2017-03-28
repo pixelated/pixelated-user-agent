@@ -2,11 +2,19 @@ import { mount } from 'enzyme';
 import expect from 'expect';
 import React from 'react';
 import App from 'src/common/app';
+import AccountRecoveryPage from 'src/account_recovery/page';
 import BackupAccountPage from 'src/backup_account/page';
 import LoginPage from 'src/login/page';
 import testI18n from './i18n';
 
 describe('Translations', () => {
+  context('Account Recovery Page', () => {
+    it('translates all key', () => {
+      const app = mount(<App i18n={testI18n} child={<AccountRecoveryPage />} />);
+      expect(app.text()).toNotContain('untranslated', 'Unstranslated message found in the text: ' + app.text());
+    });
+  });
+
   context('Backup Account Page', () => {
     it('translates all key', () => {
       const app = mount(<App i18n={testI18n} child={<BackupAccountPage />} />);

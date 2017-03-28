@@ -5,6 +5,7 @@ module.exports = new CopyWebpackPlugin([
   { context: 'app/', from: 'index.html' },
   { context: 'app/', from: 'sandbox.html' },
   { context: 'app/', from: 'css/*' },
+  { context: 'src/account_recovery/', from: 'account_recovery.html' },
   { context: 'src/backup_account/', from: 'backup_account.html' },
   { context: 'app/bower_components/font-awesome/', from: 'fonts/*' },
   { context: 'app/bower_components/font-awesome/', from: 'css/font-awesome.min.css', to: 'css' },
