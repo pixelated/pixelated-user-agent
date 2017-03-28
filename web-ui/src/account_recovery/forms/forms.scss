@@ -19,6 +19,14 @@
   width: 100%;
 }
 
+.admin-codes-image {
+  height: 2.7em;
+}
+
+.user-codes-image {
+  height: 4em;
+}
+
 .account-recovery-form {
   display: flex;
   flex-direction: column;
@@ -36,5 +44,15 @@
 .new-password {
   .input-field-group:first-of-type {
     margin-bottom: 0;
+  }
+}
+
+@media only screen and (min-width : 500px) {
+  .account-recovery-form {
+    align-items: center;
+
+    p {
+      width: 70%;
+    }
   }
 }

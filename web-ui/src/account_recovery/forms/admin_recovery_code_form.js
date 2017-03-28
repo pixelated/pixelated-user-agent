@@ -32,6 +32,7 @@ export const AdminRecoveryCodeForm = ({ t, next }) => (
     />
     <h1>{t('account-recovery.admin-form.title')}</h1>
     <img
+      className='admin-codes-image'
       src='/public/images/account-recovery/admins_contact.svg'
       alt=''
     />

@@ -33,6 +33,7 @@ export const UserRecoveryCodeForm = ({ t, previous, next }) => (
     />
     <h1>{t('account-recovery.user-form.title')}</h1>
     <img
+      className='user-codes-image'
       src='/public/images/account-recovery/codes.svg'
       alt=''
     />
