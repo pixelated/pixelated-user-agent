@@ -30,8 +30,14 @@ export const NewPasswordForm = ({ t, previous }) => (
       alt={t('account-recovery.new-password.image-description')}
     />
     <h1>{t('account-recovery.new-password-form.title')}</h1>
-    <InputField name='new-password' label={t('account-recovery.new-password-form.input-label1')} />
-    <InputField name='confirm-password' label={t('account-recovery.new-password-form.input-label2')} />
+    <InputField
+      type='password' name='new-password'
+      label={t('account-recovery.new-password-form.input-label1')}
+    />
+    <InputField
+      type='password' name='confirm-password'
+      label={t('account-recovery.new-password-form.input-label2')}
+    />
     <SubmitButton buttonText={t('account-recovery.new-password-form.button')} />
     <BackLink
       text={t('account-recovery.back')}

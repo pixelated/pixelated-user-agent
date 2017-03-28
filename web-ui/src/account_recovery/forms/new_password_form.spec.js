@@ -20,10 +20,12 @@ describe('NewPasswordForm', () => {
   });
 
   it('renders input for new password', () => {
+    expect(newPasswordForm.find('InputField').at(0).props().type).toEqual('password');
     expect(newPasswordForm.find('InputField').at(0).props().label).toEqual('account-recovery.new-password-form.input-label1');
   });
 
   it('renders input to confirm new password', () => {
+    expect(newPasswordForm.find('InputField').at(1).props().type).toEqual('password');
     expect(newPasswordForm.find('InputField').at(1).props().label).toEqual('account-recovery.new-password-form.input-label2');
   });
 
