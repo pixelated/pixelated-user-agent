@@ -21,11 +21,15 @@ import { translate } from 'react-i18next';
 import InputField from 'src/common/input_field/input_field';
 import SubmitButton from 'src/common/submit_button/submit_button';
 
-import './admin_recovery_code_form.scss';
-
+import './forms.scss';
 
 export const AdminRecoveryCodeForm = ({ t, next }) => (
   <form className='admin-code-form' onSubmit={next}>
+    <img
+      className='account-recovery-progress'
+      src='/public/images/account-recovery/step_1.svg'
+      alt={t('account-recovery.admin-form.image-description')}
+    />
     <h1>{t('account-recovery.admin-form.title')}</h1>
     <ul>
       <li>{t('account-recovery.admin-form.tip1')}</li>
