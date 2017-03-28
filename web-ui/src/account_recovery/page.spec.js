@@ -4,10 +4,11 @@ import React from 'react';
 
 import { Page } from 'src/account_recovery/page';
 import Header from 'src/common/header/header';
-import AdminRecoveryCodeForm from 'src/account_recovery/forms/admin_recovery_code_form';
-import UserRecoveryCodeForm from 'src/account_recovery/forms/user_recovery_code_form';
-import NewPasswordForm from 'src/account_recovery/forms/new_password_form';
 import Footer from 'src/common/footer/footer';
+
+import AdminRecoveryCodeFormWrapper from './admin_recovery_code_form/admin_recovery_code_form';
+import UserRecoveryCodeFormWrapper from './user_recovery_code_form/user_recovery_code_form';
+import NewPasswordFormWrapper from './new_password_form/new_password_form';
 
 describe('Account Recovery Page', () => {
   let page;
@@ -37,29 +38,29 @@ describe('Account Recovery Page', () => {
     });
 
     it('renders admin recovery code form as default form', () => {
-      expect(page.find(AdminRecoveryCodeForm).length).toEqual(1);
-      expect(page.find(UserRecoveryCodeForm).length).toEqual(0);
-      expect(page.find(NewPasswordForm).length).toEqual(0);
+      expect(page.find(AdminRecoveryCodeFormWrapper).length).toEqual(1);
+      expect(page.find(UserRecoveryCodeFormWrapper).length).toEqual(0);
+      expect(page.find(NewPasswordFormWrapper).length).toEqual(0);
     });
 
     it('renders user recovery code form when admin code submitted', () => {
       pageInstance.nextStep({ preventDefault: () => {} });
 
-      expect(page.find(UserRecoveryCodeForm).length).toEqual(1);
+      expect(page.find(UserRecoveryCodeFormWrapper).length).toEqual(1);
     });
 
     it('returns to admin code form on user code form back link', () => {
       pageInstance.nextStep({ preventDefault: () => {} });
       pageInstance.previousStep();
 
-      expect(page.find(AdminRecoveryCodeForm).length).toEqual(1);
+      expect(page.find(AdminRecoveryCodeFormWrapper).length).toEqual(1);
     });
 
     it('renders new password form when user code submitted', () => {
       pageInstance.nextStep({ preventDefault: () => {} });
       pageInstance.nextStep({ preventDefault: () => {} });
 
-      expect(page.find(NewPasswordForm).length).toEqual(1);
+      expect(page.find(NewPasswordFormWrapper).length).toEqual(1);
     });
 
     it('returns to user code form on new password form back link', () => {
@@ -67,7 +68,7 @@ describe('Account Recovery Page', () => {
       pageInstance.nextStep({ preventDefault: () => {} });
       pageInstance.previousStep();
 
-      expect(page.find(UserRecoveryCodeForm).length).toEqual(1);
+      expect(page.find(UserRecoveryCodeFormWrapper).length).toEqual(1);
     });
   });
 });

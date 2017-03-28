@@ -20,35 +20,40 @@ import { translate } from 'react-i18next';
 
 import InputField from 'src/common/input_field/input_field';
 import SubmitButton from 'src/common/submit_button/submit_button';
+import BackLink from 'src/common/back_link/back_link';
 
-import './forms.scss';
+import './user_recovery_code_form.scss';
 
-export const AdminRecoveryCodeForm = ({ t, next }) => (
-  <form className='account-recovery-form admin-code' onSubmit={next}>
+export const UserRecoveryCodeForm = ({ t, previous, next }) => (
+  <form className='account-recovery-form user-code' onSubmit={next}>
     <img
       className='account-recovery-progress'
-      src='/public/images/account-recovery/step_1.svg'
-      alt={t('account-recovery.admin-form.image-description')}
+      src='/public/images/account-recovery/step_2.svg'
+      alt={t('account-recovery.user-form.image-description')}
     />
-    <h1>{t('account-recovery.admin-form.title')}</h1>
-    <img
-      className='admin-codes-image'
-      src='/public/images/account-recovery/admins_contact.svg'
-      alt=''
+    <h1>{t('account-recovery.user-form.title')}</h1>
+    <div className='user-code-form-content'>
+      <img
+        className='user-code-image'
+        src='/public/images/account-recovery/codes.svg'
+        alt=''
+      />
+      <p>{t('account-recovery.user-form.description')}</p>
+    </div>
+    <InputField name='admin-code' label={t('account-recovery.user-form.input-label')} />
+    <SubmitButton buttonText={t('account-recovery.user-form.button')} />
+    <BackLink
+      text={t('account-recovery.back')}
+      onClick={previous} onKeyDown={previous}
+      role='button'
     />
-    <ul>
-      <li>{t('account-recovery.admin-form.tip1')}</li>
-      <li>{t('account-recovery.admin-form.tip2')}</li>
-      <li>{t('account-recovery.admin-form.tip3')}</li>
-    </ul>
-    <InputField name='admin-code' label={t('account-recovery.admin-form.input-label')} />
-    <SubmitButton buttonText={t('account-recovery.admin-form.button')} />
   </form>
 );
 
-AdminRecoveryCodeForm.propTypes = {
+UserRecoveryCodeForm.propTypes = {
   t: React.PropTypes.func.isRequired,
+  previous: React.PropTypes.func.isRequired,
   next: React.PropTypes.func.isRequired
 };
 
-export default translate('', { wait: true })(AdminRecoveryCodeForm);
+export default translate('', { wait: true })(UserRecoveryCodeForm);

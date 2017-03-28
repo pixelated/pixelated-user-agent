@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import React from 'react';
-import { AdminRecoveryCodeForm } from 'src/account_recovery/forms/admin_recovery_code_form';
+import { AdminRecoveryCodeForm } from './admin_recovery_code_form';
 
 describe('AdminRecoveryCodeForm', () => {
   let adminRecoveryCodeForm;

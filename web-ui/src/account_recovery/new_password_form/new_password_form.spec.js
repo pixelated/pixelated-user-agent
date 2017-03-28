@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import React from 'react';
-import { NewPasswordForm } from 'src/account_recovery/forms/new_password_form';
+import { NewPasswordForm } from './new_password_form';
 
 describe('NewPasswordForm', () => {
   let newPasswordForm;
