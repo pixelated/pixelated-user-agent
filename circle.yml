@@ -12,6 +12,7 @@ dependencies:
   override:
     - make clean_all
     - pip install -U --force-reinstall --no-cache-dir virtualenv
+    - pip install coveralls
     - gem install compass && rbenv rehash
 
 test:
@@ -19,3 +20,4 @@ test:
     - make linters
     - make test
     - make functional_tests_ci
+    - cd service && coveralls || true
