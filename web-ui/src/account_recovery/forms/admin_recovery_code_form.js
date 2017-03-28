@@ -25,7 +25,7 @@ import './admin_recovery_code_form.scss';
 
 
 export const AdminRecoveryCodeForm = ({ t, next }) => (
-  <form onSubmit={next}>
+  <form className='admin-code-form' onSubmit={next}>
     <h1>{t('account-recovery.admin-form.title')}</h1>
     <ul>
       <li>{t('account-recovery.admin-form.tip1')}</li>

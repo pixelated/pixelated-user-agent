@@ -90,6 +90,9 @@
         "tip3": "Don't ever ask for it via email.",
         "input-label": "type here admin's backup code",
         "button": "Next"
+      },
+      "user-form": {
+        "title": "Remember your backup account?"
       }
     },
     "backup-account": {
