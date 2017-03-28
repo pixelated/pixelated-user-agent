@@ -66,20 +66,6 @@ p {
   margin-bottom: 0.5em;
 }
 
-.link {
-  color: $dark_blue;
-  font-style: italic;
-  font-size: 0.8em;
-
-  .fa {
-    font-size: 1.6em;
-    position: relative;
-    top: 3px;
-    margin-right: 0.3em;
-  }
-
-}
-
 @media only screen and (min-width : 500px) {
   body {
     font-size: 1.3em;

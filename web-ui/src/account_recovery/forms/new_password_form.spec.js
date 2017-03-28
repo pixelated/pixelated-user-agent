@@ -5,11 +5,13 @@ import { NewPasswordForm } from 'src/account_recovery/forms/new_password_form';
 
 describe('NewPasswordForm', () => {
   let newPasswordForm;
+  let mockPrevious;
 
   beforeEach(() => {
     const mockTranslations = key => key;
+    mockPrevious = expect.createSpy();
     newPasswordForm = shallow(
-      <NewPasswordForm t={mockTranslations} />
+      <NewPasswordForm t={mockTranslations} previous={mockPrevious} />
     );
   });
 
@@ -27,5 +29,15 @@ describe('NewPasswordForm', () => {
 
   it('renders submit button', () => {
     expect(newPasswordForm.find('SubmitButton').props().buttonText).toEqual('account-recovery.new-password-form.button');
+  });
+
+  it('returns to previous step on link click', () => {
+    newPasswordForm.find('BackLink').simulate('click');
+    expect(mockPrevious).toHaveBeenCalled();
+  });
+
+  it('returns to previous step on key down', () => {
+    newPasswordForm.find('BackLink').simulate('keyDown');
+    expect(mockPrevious).toHaveBeenCalled();
   });
 });
