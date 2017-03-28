@@ -5,11 +5,13 @@ import { UserRecoveryCodeForm } from 'src/account_recovery/forms/user_recovery_c
 
 describe('UserRecoveryCodeForm', () => {
   let userRecoveryCodeForm;
+  let mockNext;
 
   beforeEach(() => {
     const mockTranslations = key => key;
+    mockNext = expect.createSpy();
     userRecoveryCodeForm = shallow(
-      <UserRecoveryCodeForm t={mockTranslations} />
+      <UserRecoveryCodeForm t={mockTranslations} next={mockNext} />
     );
   });
 
@@ -27,5 +29,10 @@ describe('UserRecoveryCodeForm', () => {
 
   it('renders submit button', () => {
     expect(userRecoveryCodeForm.find('SubmitButton').props().buttonText).toEqual('account-recovery.user-form.button');
+  });
+
+  it('submits form to next step', () => {
+    userRecoveryCodeForm.find('form').simulate('submit');
+    expect(mockNext).toHaveBeenCalled();
   });
 });
