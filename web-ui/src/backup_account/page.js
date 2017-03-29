@@ -48,7 +48,7 @@ export class Page extends React.Component {
     if (this.state.status === 'error') {
       return <SnackbarNotification message={t('backup-account.error.submit-error')} isError />;
     }
-    return undefined;
+    return undefined; // To satisfy eslint error - consistent-return
   };
 
   render() {
