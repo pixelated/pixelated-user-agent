@@ -71,7 +71,6 @@ p {
   flex-direction: column;
 
   .account-recovery-progress {
-    margin: 1em 0;
     align-self: center;
     width: 100%;
   }
@@ -89,7 +88,12 @@ p {
   .account-recovery-form {
     align-items: center;
 
-    .account-recovery-progress, h1 {
+    .account-recovery-progress {
+      margin-bottom: 1.4em;
+      width: 80%;
+    }
+
+    h1 {
       width: 80%;
     }
   }
@@ -100,11 +104,6 @@ p {
     width: 60%;
     max-width: 700px;
     padding: 3em;
-  }
-
-  .account-recovery-progress {
-    width: 80%;
-    margin-top: 0;
   }
 
   .account-recovery-form {
