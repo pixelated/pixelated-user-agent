@@ -19,7 +19,7 @@ import React from 'react';
 import Logout from 'src/common/logout/logout';
 import './header.scss';
 
-export const Header = () => (
+export const Header = ({ renderLogout }) => (
   <header className='header-wrapper'>
     <div className='header-content'>
       <a href='/'>
@@ -30,10 +30,18 @@ export const Header = () => (
         />
       </a>
       <div className='header-icons'>
-        <Logout />
+        { renderLogout ? <Logout /> : <div /> }
       </div>
     </div>
   </header>
 );
+
+Header.propTypes = {
+  renderLogout: React.PropTypes.bool
+};
+
+Header.defaultProps = {
+  renderLogout: false
+};
 
 export default Header;

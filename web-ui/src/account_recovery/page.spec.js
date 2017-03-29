@@ -22,8 +22,8 @@ describe('Account Recovery Page', () => {
     expect(page.props().title).toEqual('account-recovery.page-title');
   });
 
-  it('renders header', () => {
-    expect(page.find(Header).length).toEqual(1);
+  it('renders header without logout button', () => {
+    expect(page.find(Header).props().renderLogout).toEqual(false);
   });
 
   it('renders footer', () => {

@@ -5,6 +5,7 @@ import { Page } from 'src/backup_account/page';
 import BackupEmail from 'src/backup_account/backup_email/backup_email';
 import Confirmation from 'src/backup_account/confirmation/confirmation';
 import SnackbarNotification from 'src/common/snackbar_notification/snackbar_notification';
+import Header from 'src/common/header/header';
 
 describe('BackupAccount', () => {
   let page;
@@ -16,6 +17,10 @@ describe('BackupAccount', () => {
 
   it('renders backup account page title', () => {
     expect(page.props().title).toEqual('backup-account.page-title');
+  });
+
+  it('renders header with logout button', () => {
+    expect(page.find(Header).props().renderLogout).toEqual(true);
   });
 
   describe('save backup email', () => {

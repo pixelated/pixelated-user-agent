@@ -11,11 +11,16 @@ describe('Header', () => {
     header = shallow(<Header />);
   });
 
-  it('renders the header containing the logout button', () => {
-    expect(header.find('header').find(Logout)).toExist();
-  });
-
   it('renders the header pixelated logo', () => {
     expect(header.find('header').find('img').props().alt).toEqual('Pixelated');
+  });
+
+  it('renders the header containing the logout button when renderLogout is true', () => {
+    header = shallow(<Header renderLogout />);
+    expect(header.find('header').find(Logout).length).toEqual(1);
+  });
+
+  it('hides logout button when renderLogout is false', () => {
+    expect(header.find('header').find(Logout).length).toEqual(0);
   });
 });
