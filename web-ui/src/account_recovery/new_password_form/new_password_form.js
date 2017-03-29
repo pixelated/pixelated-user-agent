@@ -29,7 +29,7 @@ export const NewPasswordForm = ({ t, previous }) => (
     <img
       className='account-recovery-progress'
       src='/public/images/account-recovery/step_3.svg'
-      alt={t('account-recovery.new-password.image-description')}
+      alt={t('account-recovery.new-password-form.image-description')}
     />
     <h1>{t('account-recovery.new-password-form.title')}</h1>
     <InputField
