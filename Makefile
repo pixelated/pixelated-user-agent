@@ -54,6 +54,7 @@ linters_js:
 coverage:
 	@. $(VIRTUALENV)/bin/activate;\
 	cd service;\
+	export PYTHONPATH=$(PYTHONPATH):`pwd`;\
 	coverage run -p --source=pixelated `which trial` test.unit;\
 	coverage run -p --source=pixelated `which trial` test.integration;\
 	coverage combine;\
@@ -62,6 +63,7 @@ coverage:
 unit_tests_py:
 	@. $(VIRTUALENV)/bin/activate;\
 	cd service;\
+	export PYTHONPATH=$(PYTHONPATH):`pwd`;\
 	trial --reporter=text test.unit
 
 unit_tests_js:
@@ -71,6 +73,7 @@ unit_tests_js:
 integration_tests_py:
 	@. $(VIRTUALENV)/bin/activate;\
 	cd service;\
+	export PYTHONPATH=$(PYTHONPATH):`pwd`;\
 	trial --reporter=text test.integration
 
 functional_tests: clean requirements install
