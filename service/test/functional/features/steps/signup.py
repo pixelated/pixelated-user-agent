@@ -36,7 +36,7 @@ def step_impl(context):
 
 @when(u'I click on the signup button')  # noqa
 def step_impl(context):
-    find_element_by_css_selector(context, 'button[type=submit]').click()
+    find_element_by_css_selector(context, 'input[type=submit]').click()
 
 
 @then(u'I should see the user control panel')  # noqa
