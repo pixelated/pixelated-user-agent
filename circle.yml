@@ -8,6 +8,10 @@ machine:
   environment:
     LC_ALL: 'en_US.UTF-8'
 
+general:
+  artifacts:
+    - "service/screenshots"
+
 dependencies:
   override:
     - make clean_all
