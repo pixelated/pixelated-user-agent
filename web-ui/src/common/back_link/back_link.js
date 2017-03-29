@@ -19,12 +19,19 @@ import React from 'react';
 
 import './back_link.scss';
 
+const icon = <i className='fa fa-angle-left' aria-hidden='true' />;
+
+const button = (text, options) => (
+  <button className='link' {...options}>{icon}<span>{text}</span></button>
+);
+
+const link = (text, options) => (
+  <a className='link' {...options}>{icon}<span>{text}</span></a>
+);
+
 const BackLink = ({ text, ...other }) => (
   <div className='link-content'>
-    <a className='link' tabIndex='0' {...other}>
-      <i className='fa fa-angle-left' aria-hidden='true' />
-      <span>{text}</span>
-    </a>
+    { other.href ? link(text, other) : button(text, other) }
   </div>
 );
 

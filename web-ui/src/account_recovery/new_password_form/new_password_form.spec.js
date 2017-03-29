@@ -37,9 +37,4 @@ describe('NewPasswordForm', () => {
     newPasswordForm.find('BackLink').simulate('click');
     expect(mockPrevious).toHaveBeenCalled();
   });
-
-  it('returns to previous step on key down', () => {
-    newPasswordForm.find('BackLink').simulate('keyDown');
-    expect(mockPrevious).toHaveBeenCalled();
-  });
 });

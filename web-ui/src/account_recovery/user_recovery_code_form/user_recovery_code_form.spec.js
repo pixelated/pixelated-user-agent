@@ -44,9 +44,4 @@ describe('UserRecoveryCodeForm', () => {
     userRecoveryCodeForm.find('BackLink').simulate('click');
     expect(mockPrevious).toHaveBeenCalled();
   });
-
-  it('returns to previous step on key down', () => {
-    userRecoveryCodeForm.find('BackLink').simulate('keyDown');
-    expect(mockPrevious).toHaveBeenCalled();
-  });
 });

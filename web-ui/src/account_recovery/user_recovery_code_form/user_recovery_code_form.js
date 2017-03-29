@@ -42,11 +42,7 @@ export const UserRecoveryCodeForm = ({ t, previous, next }) => (
     </div>
     <InputField name='admin-code' label={t('account-recovery.user-form.input-label')} />
     <SubmitButton buttonText={t('account-recovery.user-form.button')} />
-    <BackLink
-      text={t('account-recovery.back')}
-      onClick={previous} onKeyDown={previous}
-      role='button'
-    />
+    <BackLink text={t('account-recovery.back')} onClick={previous} />
   </form>
 );
 

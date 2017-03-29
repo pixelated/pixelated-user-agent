@@ -18,6 +18,7 @@
 import React from 'react';
 import { translate } from 'react-i18next';
 import SubmitButton from 'src/common/submit_button/submit_button';
+import BackLink from 'src/common/back_link/back_link';
 
 import './confirmation.scss';
 
@@ -29,12 +30,10 @@ export const Confirmation = ({ t }) => (
     <form action='/'>
       <SubmitButton buttonText={t('backup-account.confirmation.button')} type='submit' />
     </form>
-    <div className='link-content'>
-      <a href='/backup-account' className='link'>
-        <i className='fa fa-angle-left' aria-hidden='true' />
-        <span>{t('backup-account.confirmation.retry-button')}</span>
-      </a>
-    </div>
+    <BackLink
+      href='/backup-account'
+      text={t('backup-account.confirmation.retry-button')}
+    />
   </div>
 );
 

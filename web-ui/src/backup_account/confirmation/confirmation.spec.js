@@ -20,10 +20,10 @@ describe('Confirmation', () => {
   });
 
   it('renders confirmation retry button', () => {
-    expect(page.find('a').text()).toEqual('backup-account.confirmation.retry-button');
+    expect(page.find('BackLink').props().text).toEqual('backup-account.confirmation.retry-button');
   });
 
   it('retries button redirects to backup account', () => {
-    expect(page.find('a').props().href).toEqual('/backup-account');
+    expect(page.find('BackLink').props().href).toEqual('/backup-account');
   });
 });

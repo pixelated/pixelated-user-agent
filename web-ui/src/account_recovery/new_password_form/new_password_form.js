@@ -41,11 +41,7 @@ export const NewPasswordForm = ({ t, previous }) => (
       label={t('account-recovery.new-password-form.input-label2')}
     />
     <SubmitButton buttonText={t('account-recovery.new-password-form.button')} />
-    <BackLink
-      text={t('account-recovery.back')}
-      onClick={previous} onKeyDown={previous}
-      role='button'
-    />
+    <BackLink text={t('account-recovery.back')} onClick={previous} />
   </form>
 );
 
