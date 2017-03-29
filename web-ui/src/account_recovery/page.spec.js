@@ -45,18 +45,29 @@ describe('Account Recovery Page', () => {
     it('renders user recovery code form when admin code submitted', () => {
       pageInstance.nextStep({ preventDefault: () => {} });
 
-      expect(page.find(AdminRecoveryCodeForm).length).toEqual(0);
       expect(page.find(UserRecoveryCodeForm).length).toEqual(1);
-      expect(page.find(NewPasswordForm).length).toEqual(0);
+    });
+
+    it('returns to admin code form on user code form back link', () => {
+      pageInstance.nextStep({ preventDefault: () => {} });
+      pageInstance.previousStep();
+
+      expect(page.find(AdminRecoveryCodeForm).length).toEqual(1);
     });
 
     it('renders new password form when user code submitted', () => {
       pageInstance.nextStep({ preventDefault: () => {} });
       pageInstance.nextStep({ preventDefault: () => {} });
 
-      expect(page.find(AdminRecoveryCodeForm).length).toEqual(0);
-      expect(page.find(UserRecoveryCodeForm).length).toEqual(0);
       expect(page.find(NewPasswordForm).length).toEqual(1);
+    });
+
+    it('returns to user code form on new password form back link', () => {
+      pageInstance.nextStep({ preventDefault: () => {} });
+      pageInstance.nextStep({ preventDefault: () => {} });
+      pageInstance.previousStep();
+
+      expect(page.find(UserRecoveryCodeForm).length).toEqual(1);
     });
   });
 });

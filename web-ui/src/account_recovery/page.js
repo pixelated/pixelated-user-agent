@@ -40,10 +40,14 @@ export class Page extends React.Component {
     this.setState({ step: this.state.step + 1 });
   }
 
+  previousStep = () => {
+    this.setState({ step: this.state.step - 1 });
+  }
+
   steps = {
     0: <AdminRecoveryCodeForm next={this.nextStep} />,
-    1: <UserRecoveryCodeForm next={this.nextStep} />,
-    2: <NewPasswordForm />
+    1: <UserRecoveryCodeForm previous={this.previousStep} next={this.nextStep} />,
+    2: <NewPasswordForm previous={this.previousStep} />
   }
 
   mainContent = () => this.steps[this.state.step];

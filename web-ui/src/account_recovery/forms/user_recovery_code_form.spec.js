@@ -6,12 +6,16 @@ import { UserRecoveryCodeForm } from 'src/account_recovery/forms/user_recovery_c
 describe('UserRecoveryCodeForm', () => {
   let userRecoveryCodeForm;
   let mockNext;
+  let mockPrevious;
 
   beforeEach(() => {
     const mockTranslations = key => key;
     mockNext = expect.createSpy();
+    mockPrevious = expect.createSpy();
     userRecoveryCodeForm = shallow(
-      <UserRecoveryCodeForm t={mockTranslations} next={mockNext} />
+      <UserRecoveryCodeForm
+        t={mockTranslations} next={mockNext} previous={mockPrevious}
+      />
     );
   });
 
@@ -34,5 +38,15 @@ describe('UserRecoveryCodeForm', () => {
   it('submits form to next step', () => {
     userRecoveryCodeForm.find('form').simulate('submit');
     expect(mockNext).toHaveBeenCalled();
+  });
+
+  it('returns to previous step on link click', () => {
+    userRecoveryCodeForm.find('BackLink').simulate('click');
+    expect(mockPrevious).toHaveBeenCalled();
+  });
+
+  it('returns to previous step on key down', () => {
+    userRecoveryCodeForm.find('BackLink').simulate('keyDown');
+    expect(mockPrevious).toHaveBeenCalled();
   });
 });

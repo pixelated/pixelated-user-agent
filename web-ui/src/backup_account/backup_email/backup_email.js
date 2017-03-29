@@ -18,10 +18,12 @@
 import 'isomorphic-fetch';
 import React from 'react';
 import { translate } from 'react-i18next';
-import SubmitButton from 'src/common/submit_button/submit_button';
-import InputField from 'src/common/input_field/input_field';
 import validator from 'validator';
 import browser from 'helpers/browser';
+
+import SubmitButton from 'src/common/submit_button/submit_button';
+import InputField from 'src/common/input_field/input_field';
+import BackLink from 'src/common/back_link/back_link';
 
 import './backup_email.scss';
 
@@ -78,12 +80,10 @@ export class BackupEmail extends React.Component {
           <p>{t('backup-account.backup-email.paragraph2')}</p>
           <InputField name='email' label={t('backup-account.backup-email.input-label')} errorText={this.state.error} onChange={this.validateEmail} />
           <SubmitButton buttonText={t('backup-account.backup-email.button')} disabled={this.state.submitButtonDisabled} />
-          <div className='link-content'>
-            <a href='/' className='link'>
-              <i className='fa fa-angle-left' aria-hidden='true' />
-              <span>{t('back-to-inbox')}</span>
-            </a>
-          </div>
+          <BackLink
+            href='/'
+            text={t('back-to-inbox')}
+          />
         </form>
       </div>
     );

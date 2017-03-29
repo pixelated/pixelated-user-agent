@@ -20,23 +20,36 @@ import { translate } from 'react-i18next';
 
 import InputField from 'src/common/input_field/input_field';
 import SubmitButton from 'src/common/submit_button/submit_button';
+import BackLink from 'src/common/back_link/back_link';
 
-export const NewPasswordForm = ({ t }) => (
-  <form>
+export const NewPasswordForm = ({ t, previous }) => (
+  <form className='account-recovery-form new-password'>
     <img
       className='account-recovery-progress'
       src='/public/images/account-recovery/step_3.svg'
       alt={t('account-recovery.new-password.image-description')}
     />
     <h1>{t('account-recovery.new-password-form.title')}</h1>
-    <InputField name='new-password' label={t('account-recovery.new-password-form.input-label1')} />
-    <InputField name='confirm-password' label={t('account-recovery.new-password-form.input-label2')} />
+    <InputField
+      type='password' name='new-password'
+      label={t('account-recovery.new-password-form.input-label1')}
+    />
+    <InputField
+      type='password' name='confirm-password'
+      label={t('account-recovery.new-password-form.input-label2')}
+    />
     <SubmitButton buttonText={t('account-recovery.new-password-form.button')} />
+    <BackLink
+      text={t('account-recovery.back')}
+      onClick={previous} onKeyDown={previous}
+      role='button'
+    />
   </form>
 );
 
 NewPasswordForm.propTypes = {
-  t: React.PropTypes.func.isRequired
+  t: React.PropTypes.func.isRequired,
+  previous: React.PropTypes.func.isRequired
 };
 
 export default translate('', { wait: true })(NewPasswordForm);
