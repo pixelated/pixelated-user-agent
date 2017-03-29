@@ -20,6 +20,7 @@ from xml.sax import SAXParseException
 from pixelated.authentication import Authenticator
 from pixelated.config.leap import BootstrapUserServices
 from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
+from pixelated.resources.account_recovery_resource import AccountRecoveryResource
 from pixelated.resources import get_public_static_folder, respond_json
 from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer
@@ -101,6 +102,8 @@ class LoginResource(BaseResource):
             return self
         if path == 'status':
             return LoginStatusResource(self._services_factory)
+        if path == AccountRecoveryResource.BASE_URL:
+            return AccountRecoveryResource(self._services_factory)
         if not self.is_logged_in(request):
             return UnAuthorizedResource()
         return NoResource()

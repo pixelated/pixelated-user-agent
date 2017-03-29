@@ -31,11 +31,12 @@ var commonPlugins = [
 var publicAssets = Object.assign({}, commonConfiguration, {
   entry: {
     'login': './src/login/login.js',
+    'account_recovery': './src/account_recovery/account_recovery.js'
   },
   output: {
     path: path.join(__dirname, 'dist/public'),
     filename: '[name].js',
-    publicPath: '/assets/'
+    publicPath: '/public/'
   },
   plugins: commonPlugins.concat([ publicAssetsWebpack ])
 });
@@ -43,7 +44,6 @@ var publicAssets = Object.assign({}, commonConfiguration, {
 var protectedAssets = Object.assign({}, commonConfiguration, {
   entry: {
     'app': './app/js/index.js',
-    'account_recovery': './src/account_recovery/account_recovery.js',
     'backup_account': './src/backup_account/backup_account.js',
     'sandbox': './app/js/sandbox.js'
   },

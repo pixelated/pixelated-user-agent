@@ -67,6 +67,16 @@ class TestLoginResource(unittest.TestCase):
         d.addCallback(assert_unauthorized_resources)
         return d
 
+    def test_account_recovery_resource_does_not_require_login(self):
+        request = DummyRequest(['account-recovery'])
+        d = self.web.get(request)
+
+        def assert_successful(_):
+            self.assertEqual(200, request.responseCode)
+
+        d.addCallback(assert_successful)
+        return d
+
     @patch('pixelated.resources.session.PixelatedSession.is_logged_in')
     def test_there_are_no_grand_children_resources_when_logged_in(self, mock_is_logged_in):
         request = DummyRequest(['/login/grand_children'])

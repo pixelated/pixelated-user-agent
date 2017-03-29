@@ -18,19 +18,20 @@ import os
 
 from pixelated.resources import BaseResource
 from twisted.python.filepath import FilePath
-from pixelated.resources import get_protected_static_folder
+from pixelated.resources import get_public_static_folder
 from twisted.web.http import OK
 from twisted.web.template import Element, XMLFile, renderElement
 
 
 class AccountRecoveryPage(Element):
-    loader = XMLFile(FilePath(os.path.join(get_protected_static_folder(), 'account_recovery.html')))
+    loader = XMLFile(FilePath(os.path.join(get_public_static_folder(), 'account_recovery.html')))
 
     def __init__(self):
         super(AccountRecoveryPage, self).__init__()
 
 
 class AccountRecoveryResource(BaseResource):
+    BASE_URL = 'account-recovery'
     isLeaf = True
 
     def __init__(self, services_factory):
