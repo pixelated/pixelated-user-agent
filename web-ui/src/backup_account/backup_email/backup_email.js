@@ -40,7 +40,7 @@ export class BackupEmail extends React.Component {
       error: !emptyEmail && !validEmail ? t('backup-account.backup-email.error.invalid-email') : '',
       submitButtonDisabled: !validEmail || emptyEmail
     });
-  }
+  };
 
   submitHandler = (event) => {
     event.preventDefault();
@@ -54,8 +54,14 @@ export class BackupEmail extends React.Component {
       body: JSON.stringify({
         csrftoken: [browser.getCookie('XSRF-TOKEN')]
       })
-    }).then(() => this.props.onSubmit('success'));
-  }
+    }).then((response) => {
+      if (response.ok) {
+        this.props.onSubmit('success');
+      } else {
+        this.props.onSubmit('error');
+      }
+    });
+  };
 
   render() {
     const t = this.props.t;

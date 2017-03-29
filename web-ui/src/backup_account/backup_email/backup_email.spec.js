@@ -87,39 +87,61 @@ describe('BackupEmail', () => {
   describe('Submit', () => {
     let preventDefaultSpy;
 
-    beforeEach((done) => {
-      mockOnSubmit = expect.createSpy().andCall(() => done());
+    beforeEach(() => {
       preventDefaultSpy = expect.createSpy();
-      expect.spyOn(browser, 'getCookie').andReturn('abc123');
-
-      backupEmail = shallow(<BackupEmail t={mockTranslations} onSubmit={mockOnSubmit} />);
-
-      fetchMock.post('/backup-account', 204);
-      backupEmail.find('form').simulate('submit', { preventDefault: preventDefaultSpy });
     });
 
-    it('posts backup email', () => {
-      expect(fetchMock.called('/backup-account')).toBe(true, 'Backup account POST was not called');
+    context('on success', () => {
+      beforeEach((done) => {
+        mockOnSubmit = expect.createSpy().andCall(() => done());
+        expect.spyOn(browser, 'getCookie').andReturn('abc123');
+
+        fetchMock.post('/backup-account', 204);
+        backupEmail = shallow(<BackupEmail t={mockTranslations} onSubmit={mockOnSubmit} />);
+        backupEmail.find('form').simulate('submit', { preventDefault: preventDefaultSpy });
+      });
+
+      it('posts backup email', () => {
+        expect(fetchMock.called('/backup-account')).toBe(true, 'Backup account POST was not called');
+      });
+
+      it('sends csrftoken as content', () => {
+        expect(fetchMock.lastOptions('/backup-account').body).toContain('"csrftoken":["abc123"]');
+      });
+
+      it('sends content-type header', () => {
+        expect(fetchMock.lastOptions('/backup-account').headers['Content-Type']).toEqual('application/json');
+      });
+
+      it('sends same origin headers', () => {
+        expect(fetchMock.lastOptions('/backup-account').credentials).toEqual('same-origin');
+      });
+
+      it('prevents default call to refresh page', () => {
+        expect(preventDefaultSpy).toHaveBeenCalled();
+      });
+
+      it('calls onSubmit from props with success', () => {
+        expect(mockOnSubmit).toHaveBeenCalledWith('success');
+      });
     });
 
-    it('sends csrftoken as content', () => {
-      expect(fetchMock.lastOptions('/backup-account').body).toContain('"csrftoken":["abc123"]');
-    });
+    context('on error', () => {
+      beforeEach((done) => {
+        mockOnSubmit = expect.createSpy().andCall(() => done());
 
-    it('sends content-type header', () => {
-      expect(fetchMock.lastOptions('/backup-account').headers['Content-Type']).toEqual('application/json');
-    });
+        fetchMock.post('/backup-account', 500);
+        backupEmail = shallow(<BackupEmail t={mockTranslations} onSubmit={mockOnSubmit} />);
+        backupEmail.find('form').simulate('submit', { preventDefault: preventDefaultSpy });
+      });
 
-    it('sends same origin headers', () => {
-      expect(fetchMock.lastOptions('/backup-account').credentials).toEqual('same-origin');
+      it('calls onSubmit from props with error', () => {
+        expect(mockOnSubmit).toHaveBeenCalledWith('error');
+      });
     });
+  });
 
-    it('prevents default call to refresh page', () => {
-      expect(preventDefaultSpy).toHaveBeenCalled();
-    });
-
-    it('calls onSubmit from props when success', () => {
-      expect(mockOnSubmit).toHaveBeenCalledWith('success');
-    });
+  afterEach(() => {
+    fetchMock.restore();
   });
 });
