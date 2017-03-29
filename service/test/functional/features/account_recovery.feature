@@ -14,12 +14,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+@smoke
 Feature: Account Recovery
   As a user of Pixelated
   I want to recover my account
   So that I can see my emails if I lose my password
 
-  Scenario: User sets up a backup account
-    Given I am on the backup account page
-    When I submit my email
-    Then I see the confirmation page
+  Scenario: Sending recovery code
+    Given I am logged in Pixelated
+    When I go to the backup account page
+    And I submit my backup account
+    Then I see the confirmation of this submission
+    And I logout from the header
+    And I should see the login page

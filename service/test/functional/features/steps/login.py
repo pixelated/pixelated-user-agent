@@ -21,10 +21,23 @@ from common import (
     find_element_by_css_selector)
 
 
+@given('I am logged in Pixelated')
+def login_user(context):
+    login_page(context)
+    enter_credentials(context, 'username', 'password')
+    click_login(context)
+    see_interstitial(context)
+    _see_inbox(context)
+
+
 @given(u'a user is accessing the login page')
 @when(u'I open the login page')
 def login_page(context):
     context.browser.get(context.login_url)
+
+
+def _see_inbox(context):
+    find_element_by_css_selector(context, '#compose', timeout=40)
 
 
 @when(u'I enter {username} and {password} as credentials')
@@ -39,7 +52,7 @@ def click_login(context):
 
 
 @then(u'I should see the fancy interstitial')
-def step_impl(context):
+def see_interstitial(context):
     find_element_by_css_selector(context, 'section#hive-section')
 
 
@@ -48,11 +61,13 @@ def click_logout(context):
     find_element_by_css_selector(context, '#logout-form div').click()
 
 
+@then(u'I logout from the header')
 @when(u'I logout from the header')
 def click_logout(context):
     find_element_by_css_selector(context, 'button[name="logout"]').click()
 
 
+@when(u'I should see the login page')
 @then(u'I should see the login page')
 def see_login_page(context):
     find_element_by_css_selector(context, 'form#login_form')

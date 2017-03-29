@@ -24,32 +24,32 @@ from common import (
     find_element_by_css_selector)
 
 
-@given(u'a user is accessing the signup page')  # noqa
 def access_signup_page(context):
     context.browser.get(context.signup_url)
 
 
-@given(u'I am an existent Pixelated user')
-def setup_user(context):
+def create_user(context):
+    context.browser.get(context.login_url)
     access_signup_page(context)
     enter_user_information(context)
     click_signup_button(context)
     see_user_control_panel(context)
+    log_out(context)
 
 
-@when(u'I enter username, password and password confirmation')  # noqa
+def log_out(context):
+    find_element_by_css_selector(context, 'a[href="/logout"]').click()
+
+
 def enter_user_information(context):
-    username = 'testuser_{}'.format(uuid.uuid4())
-    fill_by_css_selector(context, '#srp_username', username)
+    fill_by_css_selector(context, '#srp_username', context.username)
     fill_by_css_selector(context, '#srp_password', 'password')
     fill_by_css_selector(context, '#srp_password_confirmation', 'password')
 
 
-@when(u'I click on the signup button')  # noqa
 def click_signup_button(context):
     find_element_by_css_selector(context, 'input[type=submit]').click()
 
 
-@then(u'I should see the user control panel')  # noqa
 def see_user_control_panel(context):
     element_should_have_content(context, 'h1', 'user control panel')

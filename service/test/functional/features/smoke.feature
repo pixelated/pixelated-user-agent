@@ -40,6 +40,6 @@ Feature: sign up, login and logout
     When I enter username and password as credentials
     And I click on the login button
     Then I should see the fancy interstitial
-    Given I am on the backup account page
+    Given I go to the backup account page
     When I logout from the header
     Then I should see the login page
