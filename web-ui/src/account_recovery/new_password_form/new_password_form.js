@@ -20,35 +20,34 @@ import { translate } from 'react-i18next';
 
 import InputField from 'src/common/input_field/input_field';
 import SubmitButton from 'src/common/submit_button/submit_button';
+import BackLink from 'src/common/back_link/back_link';
 
-import './forms.scss';
+import './new_password_form.scss';
 
-export const AdminRecoveryCodeForm = ({ t, next }) => (
-  <form className='account-recovery-form admin-code' onSubmit={next}>
+export const NewPasswordForm = ({ t, previous }) => (
+  <form className='account-recovery-form new-password'>
     <img
       className='account-recovery-progress'
-      src='/public/images/account-recovery/step_1.svg'
-      alt={t('account-recovery.admin-form.image-description')}
+      src='/public/images/account-recovery/step_3.svg'
+      alt={t('account-recovery.new-password-form.image-description')}
     />
-    <h1>{t('account-recovery.admin-form.title')}</h1>
-    <img
-      className='admin-codes-image'
-      src='/public/images/account-recovery/admins_contact.svg'
-      alt=''
+    <h1>{t('account-recovery.new-password-form.title')}</h1>
+    <InputField
+      type='password' name='new-password'
+      label={t('account-recovery.new-password-form.input-label1')}
     />
-    <ul>
-      <li>{t('account-recovery.admin-form.tip1')}</li>
-      <li>{t('account-recovery.admin-form.tip2')}</li>
-      <li>{t('account-recovery.admin-form.tip3')}</li>
-    </ul>
-    <InputField name='admin-code' label={t('account-recovery.admin-form.input-label')} />
-    <SubmitButton buttonText={t('account-recovery.admin-form.button')} />
+    <InputField
+      type='password' name='confirm-password'
+      label={t('account-recovery.new-password-form.input-label2')}
+    />
+    <SubmitButton buttonText={t('account-recovery.button-next')} />
+    <BackLink text={t('account-recovery.back')} onClick={previous} />
   </form>
 );
 
-AdminRecoveryCodeForm.propTypes = {
+NewPasswordForm.propTypes = {
   t: React.PropTypes.func.isRequired,
-  next: React.PropTypes.func.isRequired
+  previous: React.PropTypes.func.isRequired
 };
 
-export default translate('', { wait: true })(AdminRecoveryCodeForm);
+export default translate('', { wait: true })(NewPasswordForm);

@@ -56,7 +56,7 @@ export class Page extends React.Component {
     return (
       <DocumentTitle title={t('backup-account.page-title')}>
         <div className='page'>
-          <Header />
+          <Header renderLogout />
           <section>
             {this.mainContent()}
           </section>

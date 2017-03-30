@@ -66,9 +66,36 @@ p {
   margin-bottom: 0.5em;
 }
 
+.account-recovery-form {
+  display: flex;
+  flex-direction: column;
+
+  .account-recovery-progress {
+    align-self: center;
+    width: 100%;
+  }
+
+  .input-field-group {
+    margin-top: 0;
+  }
+}
+
 @media only screen and (min-width : 500px) {
   body {
     font-size: 1.3em;
+  }
+
+  .account-recovery-form {
+    align-items: center;
+
+    .account-recovery-progress {
+      margin-bottom: 1.4em;
+      width: 80%;
+    }
+
+    h1 {
+      width: 80%;
+    }
   }
 }
 
@@ -77,5 +104,17 @@ p {
     width: 60%;
     max-width: 700px;
     padding: 3em;
+  }
+
+  .account-recovery-form {
+    h1 {
+      max-width: 80%;
+      width: auto;
+    }
+
+    .input-field-group, .submit-button {
+      width: 60%;
+      align-self: center;
+    }
   }
 }

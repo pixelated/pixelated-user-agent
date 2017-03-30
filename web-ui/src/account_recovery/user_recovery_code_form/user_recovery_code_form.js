@@ -22,7 +22,7 @@ import InputField from 'src/common/input_field/input_field';
 import SubmitButton from 'src/common/submit_button/submit_button';
 import BackLink from 'src/common/back_link/back_link';
 
-import './forms.scss';
+import './user_recovery_code_form.scss';
 
 export const UserRecoveryCodeForm = ({ t, previous, next }) => (
   <form className='account-recovery-form user-code' onSubmit={next}>
@@ -34,19 +34,15 @@ export const UserRecoveryCodeForm = ({ t, previous, next }) => (
     <h1>{t('account-recovery.user-form.title')}</h1>
     <div className='user-code-form-content'>
       <img
-        className='user-codes-image'
+        className='user-code-image'
         src='/public/images/account-recovery/codes.svg'
         alt=''
       />
       <p>{t('account-recovery.user-form.description')}</p>
     </div>
     <InputField name='admin-code' label={t('account-recovery.user-form.input-label')} />
-    <SubmitButton buttonText={t('account-recovery.user-form.button')} />
-    <BackLink
-      text={t('account-recovery.back')}
-      onClick={previous} onKeyDown={previous}
-      role='button'
-    />
+    <SubmitButton buttonText={t('account-recovery.button-next')} />
+    <BackLink text={t('account-recovery.back')} onClick={previous} />
   </form>
 );
 

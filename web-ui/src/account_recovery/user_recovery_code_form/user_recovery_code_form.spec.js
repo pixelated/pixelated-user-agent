@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import React from 'react';
-import { UserRecoveryCodeForm } from 'src/account_recovery/forms/user_recovery_code_form';
+import { UserRecoveryCodeForm } from './user_recovery_code_form';
 
 describe('UserRecoveryCodeForm', () => {
   let userRecoveryCodeForm;
@@ -32,7 +32,7 @@ describe('UserRecoveryCodeForm', () => {
   });
 
   it('renders submit button', () => {
-    expect(userRecoveryCodeForm.find('SubmitButton').props().buttonText).toEqual('account-recovery.user-form.button');
+    expect(userRecoveryCodeForm.find('SubmitButton').props().buttonText).toEqual('account-recovery.button-next');
   });
 
   it('submits form to next step', () => {
@@ -42,11 +42,6 @@ describe('UserRecoveryCodeForm', () => {
 
   it('returns to previous step on link click', () => {
     userRecoveryCodeForm.find('BackLink').simulate('click');
-    expect(mockPrevious).toHaveBeenCalled();
-  });
-
-  it('returns to previous step on key down', () => {
-    userRecoveryCodeForm.find('BackLink').simulate('keyDown');
     expect(mockPrevious).toHaveBeenCalled();
   });
 });

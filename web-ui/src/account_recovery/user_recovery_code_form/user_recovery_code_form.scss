@@ -15,33 +15,25 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
-import Logout from 'src/common/logout/logout';
-import './header.scss';
+.user-code-form-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-export const Header = ({ renderLogout }) => (
-  <header className='header-wrapper'>
-    <div className='header-content'>
-      <a href='/'>
-        <img
-          className='header-logo'
-          src='/public/images/logo-orange.svg'
-          alt='Pixelated'
-        />
-      </a>
-      <div className='header-icons'>
-        { renderLogout ? <Logout /> : <div /> }
-      </div>
-    </div>
-  </header>
-);
+.user-code-image {
+  margin: 1em 0;
+  align-self: center;
+  height: 4em;
+}
 
-Header.propTypes = {
-  renderLogout: React.PropTypes.bool
-};
+@media only screen and (min-width : 500px) {
+  .user-code-form-content {
+    flex-direction: row;
+    width: 80%;
+  }
 
-Header.defaultProps = {
-  renderLogout: false
-};
-
-export default Header;
+  .user-code-image {
+    margin-right: 1.6em;
+  }
+}

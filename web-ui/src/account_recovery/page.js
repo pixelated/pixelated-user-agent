@@ -19,9 +19,9 @@ import React from 'react';
 import { translate } from 'react-i18next';
 import DocumentTitle from 'react-document-title';
 import Header from 'src/common/header/header';
-import AdminRecoveryCodeForm from 'src/account_recovery/forms/admin_recovery_code_form';
-import UserRecoveryCodeForm from 'src/account_recovery/forms/user_recovery_code_form';
-import NewPasswordForm from 'src/account_recovery/forms/new_password_form';
+import AdminRecoveryCodeForm from 'src/account_recovery/admin_recovery_code_form/admin_recovery_code_form';
+import UserRecoveryCodeForm from 'src/account_recovery/user_recovery_code_form/user_recovery_code_form';
+import NewPasswordForm from 'src/account_recovery/new_password_form/new_password_form';
 import Footer from 'src/common/footer/footer';
 
 import 'font-awesome/scss/font-awesome.scss';

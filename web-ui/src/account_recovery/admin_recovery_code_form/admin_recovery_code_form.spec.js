@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import React from 'react';
-import { AdminRecoveryCodeForm } from 'src/account_recovery/forms/admin_recovery_code_form';
+import { AdminRecoveryCodeForm } from './admin_recovery_code_form';
 
 describe('AdminRecoveryCodeForm', () => {
   let adminRecoveryCodeForm;
@@ -28,7 +28,7 @@ describe('AdminRecoveryCodeForm', () => {
   });
 
   it('renders button for next step', () => {
-    expect(adminRecoveryCodeForm.find('SubmitButton').props().buttonText).toEqual('account-recovery.admin-form.button');
+    expect(adminRecoveryCodeForm.find('SubmitButton').props().buttonText).toEqual('account-recovery.button-next');
   });
 
   it('submits form to next step', () => {
