@@ -3,7 +3,6 @@ import expect from 'expect';
 import React from 'react';
 import fetchMock from 'fetch-mock';
 import { BackupEmail } from 'src/backup_account/backup_email/backup_email';
-import browser from 'helpers/browser';
 
 describe('BackupEmail', () => {
   let backupEmail;
@@ -104,7 +103,6 @@ describe('BackupEmail', () => {
     context('on success', () => {
       beforeEach((done) => {
         mockOnSubmit = expect.createSpy().andCall(() => done());
-        expect.spyOn(browser, 'getCookie').andReturn('abc123');
 
         fetchMock.post('/backup-account', 204);
         backupEmail = shallow(<BackupEmail t={mockTranslations} onSubmit={mockOnSubmit} />);
@@ -117,24 +115,8 @@ describe('BackupEmail', () => {
         expect(fetchMock.called('/backup-account')).toBe(true, 'Backup account POST was not called');
       });
 
-      it('sends csrftoken as content', () => {
-        expect(fetchMock.lastOptions('/backup-account').body).toContain('"csrftoken":["abc123"]');
-      });
-
       it('sends user email as content', () => {
         expect(fetchMock.lastOptions('/backup-account').body).toContain('"backupEmail":"test@test.com"');
-      });
-
-      it('sends content-type header', () => {
-        expect(fetchMock.lastOptions('/backup-account').headers['Content-Type']).toEqual('application/json');
-      });
-
-      it('sends same origin headers', () => {
-        expect(fetchMock.lastOptions('/backup-account').credentials).toEqual('same-origin');
-      });
-
-      it('prevents default call to refresh page', () => {
-        expect(preventDefaultSpy).toHaveBeenCalled();
       });
 
       it('calls onSubmit from props with success', () => {

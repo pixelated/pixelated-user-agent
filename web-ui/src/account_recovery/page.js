@@ -32,7 +32,7 @@ export class Page extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { step: 0 };
+    this.state = { step: 0, userCode: '' };
   }
 
   nextStep = (event) => {
@@ -44,13 +44,19 @@ export class Page extends React.Component {
     this.setState({ step: this.state.step - 1 });
   }
 
-  steps = {
-    0: <AdminRecoveryCodeForm next={this.nextStep} />,
-    1: <UserRecoveryCodeForm previous={this.previousStep} next={this.nextStep} />,
-    2: <NewPasswordForm previous={this.previousStep} />
+  saveUserCode = (event) => {
+    this.setState({ userCode: event.target.value });
   }
 
-  mainContent = () => this.steps[this.state.step];
+  steps = () => ({
+    0: <AdminRecoveryCodeForm next={this.nextStep} />,
+    1: (<UserRecoveryCodeForm
+      previous={this.previousStep} next={this.nextStep} saveCode={this.saveUserCode}
+    />),
+    2: <NewPasswordForm previous={this.previousStep} userCode={this.state.userCode} />
+  })
+
+  mainContent = () => this.steps()[this.state.step];
 
   render() {
     const t = this.props.t;

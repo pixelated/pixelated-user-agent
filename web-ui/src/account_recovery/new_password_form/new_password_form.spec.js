@@ -1,6 +1,7 @@
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import React from 'react';
+import fetchMock from 'fetch-mock';
 import { NewPasswordForm } from './new_password_form';
 
 describe('NewPasswordForm', () => {
@@ -11,7 +12,7 @@ describe('NewPasswordForm', () => {
     const mockTranslations = key => key;
     mockPrevious = expect.createSpy();
     newPasswordForm = shallow(
-      <NewPasswordForm t={mockTranslations} previous={mockPrevious} />
+      <NewPasswordForm t={mockTranslations} previous={mockPrevious} userCode='def234' />
     );
   });
 
@@ -36,5 +37,20 @@ describe('NewPasswordForm', () => {
   it('returns to previous step on link click', () => {
     newPasswordForm.find('BackLink').simulate('click');
     expect(mockPrevious).toHaveBeenCalled();
+  });
+
+  describe('Submit', () => {
+    beforeEach(() => {
+      fetchMock.post('/account-recovery', 200);
+      newPasswordForm.find('form').simulate('submit', { preventDefault: expect.createSpy() });
+    });
+
+    it('posts to account recovery', () => {
+      expect(fetchMock.called('/account-recovery')).toBe(true, 'POST was not called');
+    });
+
+    it('sends user code as content', () => {
+      expect(fetchMock.lastOptions('/account-recovery').body).toContain('"userCode":"def234"');
+    });
   });
 });

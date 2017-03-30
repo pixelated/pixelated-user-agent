@@ -7,14 +7,17 @@ describe('UserRecoveryCodeForm', () => {
   let userRecoveryCodeForm;
   let mockNext;
   let mockPrevious;
+  let mockSaveCode;
 
   beforeEach(() => {
     const mockTranslations = key => key;
     mockNext = expect.createSpy();
     mockPrevious = expect.createSpy();
+    mockSaveCode = expect.createSpy();
     userRecoveryCodeForm = shallow(
       <UserRecoveryCodeForm
-        t={mockTranslations} next={mockNext} previous={mockPrevious}
+        t={mockTranslations} next={mockNext}
+        previous={mockPrevious} saveCode={mockSaveCode}
       />
     );
   });
@@ -43,5 +46,10 @@ describe('UserRecoveryCodeForm', () => {
   it('returns to previous step on link click', () => {
     userRecoveryCodeForm.find('BackLink').simulate('click');
     expect(mockPrevious).toHaveBeenCalled();
+  });
+
+  it('saves code on input change', () => {
+    userRecoveryCodeForm.find('InputField').simulate('change', '123');
+    expect(mockSaveCode).toHaveBeenCalledWith('123');
   });
 });

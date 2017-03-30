@@ -19,8 +19,8 @@ import 'isomorphic-fetch';
 import React from 'react';
 import { translate } from 'react-i18next';
 import validator from 'validator';
-import browser from 'helpers/browser';
 
+import { submitForm } from 'src/common/util';
 import SubmitButton from 'src/common/submit_button/submit_button';
 import InputField from 'src/common/input_field/input_field';
 import BackLink from 'src/common/back_link/back_link';
@@ -45,24 +45,11 @@ export class BackupEmail extends React.Component {
   };
 
   submitHandler = (event) => {
-    event.preventDefault();
-
-    fetch('/backup-account', {
-      credentials: 'same-origin',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        csrftoken: [browser.getCookie('XSRF-TOKEN')],
-        backupEmail: this.state.backupEmail
-      })
+    submitForm(event, '/backup-account', {
+      backupEmail: this.state.backupEmail
     }).then((response) => {
-      if (response.ok) {
-        this.props.onSubmit('success');
-      } else {
-        this.props.onSubmit('error');
-      }
+      if (response.ok) this.props.onSubmit('success');
+      else this.props.onSubmit('error');
     });
   };
 

@@ -15,17 +15,23 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'isomorphic-fetch';
 import React from 'react';
 import { translate } from 'react-i18next';
 
+import { submitForm } from 'src/common/util';
 import InputField from 'src/common/input_field/input_field';
 import SubmitButton from 'src/common/submit_button/submit_button';
 import BackLink from 'src/common/back_link/back_link';
 
 import './new_password_form.scss';
 
-export const NewPasswordForm = ({ t, previous }) => (
-  <form className='account-recovery-form new-password'>
+const submitHandler = code => event => (
+  submitForm(event, '/account-recovery', { userCode: code })
+);
+
+export const NewPasswordForm = ({ t, previous, userCode }) => (
+  <form className='account-recovery-form new-password' onSubmit={submitHandler(userCode)}>
     <img
       className='account-recovery-progress'
       src='/public/images/account-recovery/step_3.svg'
@@ -47,7 +53,8 @@ export const NewPasswordForm = ({ t, previous }) => (
 
 NewPasswordForm.propTypes = {
   t: React.PropTypes.func.isRequired,
-  previous: React.PropTypes.func.isRequired
+  previous: React.PropTypes.func.isRequired,
+  userCode: React.PropTypes.string.isRequired
 };
 
 export default translate('', { wait: true })(NewPasswordForm);
