@@ -32,7 +32,7 @@ describe('UserRecoveryCodeForm', () => {
   });
 
   it('renders submit button', () => {
-    expect(userRecoveryCodeForm.find('SubmitButton').props().buttonText).toEqual('account-recovery.user-form.button');
+    expect(userRecoveryCodeForm.find('SubmitButton').props().buttonText).toEqual('account-recovery.button-next');
   });
 
   it('submits form to next step', () => {

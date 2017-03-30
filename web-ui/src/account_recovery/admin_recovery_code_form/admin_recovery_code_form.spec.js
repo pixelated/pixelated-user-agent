@@ -28,7 +28,7 @@ describe('AdminRecoveryCodeForm', () => {
   });
 
   it('renders button for next step', () => {
-    expect(adminRecoveryCodeForm.find('SubmitButton').props().buttonText).toEqual('account-recovery.admin-form.button');
+    expect(adminRecoveryCodeForm.find('SubmitButton').props().buttonText).toEqual('account-recovery.button-next');
   });
 
   it('submits form to next step', () => {

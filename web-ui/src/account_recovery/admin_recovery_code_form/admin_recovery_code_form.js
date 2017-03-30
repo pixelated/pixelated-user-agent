@@ -42,7 +42,7 @@ export const AdminRecoveryCodeForm = ({ t, next }) => (
       <li>{t('account-recovery.admin-form.tip3')}</li>
     </ul>
     <InputField name='admin-code' label={t('account-recovery.admin-form.input-label')} />
-    <SubmitButton buttonText={t('account-recovery.admin-form.button')} />
+    <SubmitButton buttonText={t('account-recovery.button-next')} />
   </form>
 );
 

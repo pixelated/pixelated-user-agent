@@ -88,24 +88,22 @@
         "title": "Contate o administrador da sua conta e peça seu código",
         "tip1": "A maneira mais segura é fazer isso pessoalmente.",
         "tip2": "Você pode ligar ou mandar mensagem de texto se precisar.",
-        "tip3": "Nunca peça por email.",
-        "input-label": "digite aqui o código",
-        "button": "Próximo"
+        "tip3": "Nunca peça por e-mail.",
+        "input-label": "digite aqui o código"
       },
       "user-form": {
         "image-description": "Código de Recuperação do Usuário - Passo 2 de 4",
         "title": "Lembra do seu e-mail de recuperação?",
         "description": "Quando você criou uma conta você recebeu uma mensagem do team@pixelated-project.org. Você precisará do código que está neste e-mail.",
-        "input-label": "digite aqui o código",
-        "button": "Próximo"
+        "input-label": "digite aqui o código"
       },
       "new-password-form": {
         "image-description": "Nova Senha - Passo 3 de 4",
         "title": "Agora, crie uma nova senha",
         "input-label1": "digite a nova senha",
-        "input-label2": "confirme a nova senha",
-        "button": "Próximo"
+        "input-label2": "confirme a nova senha"
       },
+      "button-next": "Próximo",
       "back": "Voltar ao passo anterior"
     },
     "backup-account": {

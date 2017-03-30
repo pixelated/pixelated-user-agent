@@ -30,7 +30,7 @@ describe('NewPasswordForm', () => {
   });
 
   it('renders submit button', () => {
-    expect(newPasswordForm.find('SubmitButton').props().buttonText).toEqual('account-recovery.new-password-form.button');
+    expect(newPasswordForm.find('SubmitButton').props().buttonText).toEqual('account-recovery.button-next');
   });
 
   it('returns to previous step on link click', () => {
