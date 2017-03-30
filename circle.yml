@@ -1,0 +1,32 @@
+machine:
+  python:
+    version:
+      2.7.11
+  node:
+    version:
+      6.1.0
+  environment:
+    LC_ALL: 'en_US.UTF-8'
+
+general:
+  artifacts:
+    - "service/screenshots"
+
+dependencies:
+  override:
+    - make clean_all
+    - pip install coveralls
+    - gem install compass && rbenv rehash
+
+test:
+  override:
+    - make linters
+    - make test
+    - make functional_tests_ci
+    - cd service && coveralls || true
+
+deployment:
+  packaging:
+    branch: master
+    commands:
+      - "curl -X POST --insecure -H 'Confirm: true' --fail --data \"materials[pixelated-user-agent]=$CIRCLE_SHA1\" https://$USERPASS@go.pixelated-project.org/go/api/pipelines/jessie-pixelated-user-agent-packaging/schedule"
