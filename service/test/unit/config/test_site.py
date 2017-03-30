@@ -17,7 +17,7 @@
 from twisted.trial import unittest
 from mock import MagicMock
 from pixelated.config.site import PixelatedSite
-from twisted.protocols.basic import LineReceiver
+from twisted.web.test.requesthelper import DummyChannel
 
 
 class TestPixelatedSite(unittest.TestCase):
@@ -52,7 +52,7 @@ class TestPixelatedSite(unittest.TestCase):
         self.assertFalse(request.responseHeaders.hasHeader('Strict-Transport-Security'.lower()))
 
     def create_request(self):
-        channel = LineReceiver()
+        channel = DummyChannel()
         channel.site = PixelatedSite(MagicMock())
         request = PixelatedSite.requestFactory(channel=channel, queued=True)
         request.method = "GET"
