@@ -31,7 +31,7 @@ export class BackupEmail extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { error: '', submitButtonDisabled: true };
+    this.state = { error: '', submitButtonDisabled: true, backupEmail: '' };
   }
 
   validateEmail = (event) => {
@@ -54,7 +54,8 @@ export class BackupEmail extends React.Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        csrftoken: [browser.getCookie('XSRF-TOKEN')]
+        csrftoken: [browser.getCookie('XSRF-TOKEN')],
+        backupEmail: this.state.backupEmail
       })
     }).then((response) => {
       if (response.ok) {
@@ -64,6 +65,11 @@ export class BackupEmail extends React.Component {
       }
     });
   };
+
+  handleChange = (event) => {
+    this.setState({ backupEmail: event.target.value });
+    this.validateEmail(event);
+  }
 
   render() {
     const t = this.props.t;
@@ -78,7 +84,7 @@ export class BackupEmail extends React.Component {
           <h1>{t('backup-account.backup-email.title')}</h1>
           <p>{t('backup-account.backup-email.paragraph1')}</p>
           <p>{t('backup-account.backup-email.paragraph2')}</p>
-          <InputField name='email' label={t('backup-account.backup-email.input-label')} errorText={this.state.error} onChange={this.validateEmail} />
+          <InputField name='email' value={this.state.backupEmail} label={t('backup-account.backup-email.input-label')} errorText={this.state.error} onChange={this.handleChange} />
           <SubmitButton buttonText={t('backup-account.backup-email.button')} disabled={this.state.submitButtonDisabled} />
           <BackLink
             href='/'

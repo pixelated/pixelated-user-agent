@@ -50,12 +50,16 @@ class TestBackupAccountResource(unittest.TestCase):
         mock_account_recovery.update_recovery_code.return_value = defer.succeed("Success")
         request = DummyRequest(['/backup-account'])
         request.method = 'POST'
+        request.content = MagicMock()
+        request.content.getvalue.return_value = '{"email": "test@test.com"}'
         d = self.web.get(request)
 
         def assert_update_recovery_code_called(_):
             mock_account_recovery_init.assert_called_with(
                 self.resource._authenticator.bonafide_session,
-                self.resource.soledad(request))
+                self.resource.soledad(request),
+                self.resource._service(request, '_leap_session').smtp_config,
+                self.resource._get_backup_email(request))
             mock_account_recovery.update_recovery_code.assert_called()
 
         d.addCallback(assert_update_recovery_code_called)
@@ -66,6 +70,8 @@ class TestBackupAccountResource(unittest.TestCase):
         mock_update_recovery_code.return_value = defer.succeed("Success")
         request = DummyRequest(['/backup-account'])
         request.method = 'POST'
+        request.content = MagicMock()
+        request.content.getvalue.return_value = '{"email": "test@test.com"}'
         d = self.web.get(request)
 
         def assert_successful_response(_):
@@ -79,6 +85,8 @@ class TestBackupAccountResource(unittest.TestCase):
         mock_update_recovery_code.return_value = defer.fail(Exception)
         request = DummyRequest(['/backup-account'])
         request.method = 'POST'
+        request.content = MagicMock()
+        request.content.getvalue.return_value = '{"email": "test@test.com"}'
         d = self.web.get(request)
 
         def assert_successful_response(_):
@@ -86,3 +94,9 @@ class TestBackupAccountResource(unittest.TestCase):
 
         d.addCallback(assert_successful_response)
         return d
+
+    def test_get_backup_email_from_request(self):
+        request = MagicMock()
+        request.content.getvalue.return_value = '{"backupEmail": "test@test.com"}'
+
+        self.assertEqual(self.resource._get_backup_email(request), 'test@test.com')

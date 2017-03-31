@@ -15,6 +15,8 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import json
+
 from xml.sax import SAXParseException
 
 from pixelated.resources import BaseResource
@@ -51,7 +53,9 @@ class BackupAccountResource(BaseResource):
     def render_POST(self, request):
         account_recovery = AccountRecovery(
             self._authenticator.bonafide_session,
-            self.soledad(request))
+            self.soledad(request),
+            self._service(request, '_leap_session').smtp_config,
+            self._get_backup_email(request))
 
         def update_response(response):
             request.setResponseCode(NO_CONTENT)
@@ -64,3 +68,6 @@ class BackupAccountResource(BaseResource):
         d = account_recovery.update_recovery_code()
         d.addCallbacks(update_response, error_response)
         return NOT_DONE_YET
+
+    def _get_backup_email(self, request):
+        return json.loads(request.content.getvalue()).get('backupEmail')

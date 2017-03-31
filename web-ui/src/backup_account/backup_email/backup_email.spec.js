@@ -9,6 +9,7 @@ describe('BackupEmail', () => {
   let backupEmail;
   let mockOnSubmit;
   let mockTranslations;
+  let backupEmailInstance;
 
   beforeEach(() => {
     mockOnSubmit = expect.createSpy();
@@ -30,8 +31,6 @@ describe('BackupEmail', () => {
   });
 
   describe('Email validation', () => {
-    let backupEmailInstance;
-
     beforeEach(() => {
       backupEmailInstance = backupEmail.instance();
     });
@@ -84,6 +83,17 @@ describe('BackupEmail', () => {
     });
   });
 
+  describe('Email changing handler', () => {
+    beforeEach(() => {
+      backupEmailInstance = backupEmail.instance();
+    });
+
+    it('sets user backup email in the state', () => {
+      backupEmailInstance.handleChange({ target: { value: 'test@test.com' } });
+      expect(backupEmailInstance.state.backupEmail).toEqual('test@test.com');
+    });
+  });
+
   describe('Submit', () => {
     let preventDefaultSpy;
 
@@ -98,6 +108,8 @@ describe('BackupEmail', () => {
 
         fetchMock.post('/backup-account', 204);
         backupEmail = shallow(<BackupEmail t={mockTranslations} onSubmit={mockOnSubmit} />);
+
+        backupEmail.find('InputField').simulate('change', { target: { value: 'test@test.com' } });
         backupEmail.find('form').simulate('submit', { preventDefault: preventDefaultSpy });
       });
 
@@ -107,6 +119,10 @@ describe('BackupEmail', () => {
 
       it('sends csrftoken as content', () => {
         expect(fetchMock.lastOptions('/backup-account').body).toContain('"csrftoken":["abc123"]');
+      });
+
+      it('sends user email as content', () => {
+        expect(fetchMock.lastOptions('/backup-account').body).toContain('"backupEmail":"test@test.com"');
       });
 
       it('sends content-type header', () => {
