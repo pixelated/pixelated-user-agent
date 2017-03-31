@@ -42,6 +42,8 @@ describe('NewPasswordForm', () => {
   describe('Submit', () => {
     beforeEach(() => {
       fetchMock.post('/account-recovery', 200);
+      newPasswordForm.find('InputField[name="new-password"]').simulate('change', { target: { value: '123' } });
+      newPasswordForm.find('InputField[name="confirm-password"]').simulate('change', { target: { value: '456' } });
       newPasswordForm.find('form').simulate('submit', { preventDefault: expect.createSpy() });
     });
 
@@ -51,6 +53,14 @@ describe('NewPasswordForm', () => {
 
     it('sends user code as content', () => {
       expect(fetchMock.lastOptions('/account-recovery').body).toContain('"userCode":"def234"');
+    });
+
+    it('sends password as content', () => {
+      expect(fetchMock.lastOptions('/account-recovery').body).toContain('"password":"123"');
+    });
+
+    it('sends password confirmation as content', () => {
+      expect(fetchMock.lastOptions('/account-recovery').body).toContain('"confirmation":"456"');
     });
   });
 });

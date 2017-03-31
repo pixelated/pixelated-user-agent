@@ -26,30 +26,49 @@ import BackLink from 'src/common/back_link/back_link';
 
 import './new_password_form.scss';
 
-const submitHandler = code => event => (
-  submitForm(event, '/account-recovery', { userCode: code })
-);
+export class NewPasswordForm extends React.Component {
+  submitHandler = (event) => {
+    submitForm(event, '/account-recovery', {
+      userCode: this.props.userCode,
+      password: this.state.password,
+      confirmation: this.state.confirmation
+    });
+  }
 
-export const NewPasswordForm = ({ t, previous, userCode }) => (
-  <form className='account-recovery-form new-password' onSubmit={submitHandler(userCode)}>
-    <img
-      className='account-recovery-progress'
-      src='/public/images/account-recovery/step_3.svg'
-      alt={t('account-recovery.new-password-form.image-description')}
-    />
-    <h1>{t('account-recovery.new-password-form.title')}</h1>
-    <InputField
-      type='password' name='new-password'
-      label={t('account-recovery.new-password-form.input-label1')}
-    />
-    <InputField
-      type='password' name='confirm-password'
-      label={t('account-recovery.new-password-form.input-label2')}
-    />
-    <SubmitButton buttonText={t('account-recovery.button-next')} />
-    <BackLink text={t('account-recovery.back')} onClick={previous} />
-  </form>
-);
+  handlePasswordChange = (event) => {
+    this.setState({ password: event.target.value });
+  }
+
+  handlePasswordConfirmationChange = (event) => {
+    this.setState({ confirmation: event.target.value });
+  }
+
+  render() {
+    const { t, previous } = this.props;
+    return (
+      <form className='account-recovery-form new-password' onSubmit={this.submitHandler}>
+        <img
+          className='account-recovery-progress'
+          src='/public/images/account-recovery/step_3.svg'
+          alt={t('account-recovery.new-password-form.image-description')}
+        />
+        <h1>{t('account-recovery.new-password-form.title')}</h1>
+        <InputField
+          type='password' name='new-password'
+          label={t('account-recovery.new-password-form.input-label1')}
+          onChange={this.handlePasswordChange}
+        />
+        <InputField
+          type='password' name='confirm-password'
+          label={t('account-recovery.new-password-form.input-label2')}
+          onChange={this.handlePasswordConfirmationChange}
+        />
+        <SubmitButton buttonText={t('account-recovery.button-next')} />
+        <BackLink text={t('account-recovery.back')} onClick={previous} />
+      </form>
+    );
+  }
+}
 
 NewPasswordForm.propTypes = {
   t: React.PropTypes.func.isRequired,
