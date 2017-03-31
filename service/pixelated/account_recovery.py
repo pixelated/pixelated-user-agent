@@ -41,8 +41,9 @@ class AccountRecovery(object):
             returnValue(response)
 
         except Exception as e:
-            log.warn('Something went wrong when trying to save the recovery code')
-            raise
+            log.error('Something went wrong when trying to save the recovery code')
+            log.error(e)
+            raise e
 
     @inlineCallbacks
     def _send_mail(self, code, backup_email):
@@ -59,5 +60,5 @@ class AccountRecovery(object):
                 msg.as_string())
             returnValue(send_mail_result)
         except Exception as e:
-            log.warn('Failed trying to send the email with the recovery code')
-            raise
+            log.error('Failed trying to send the email with the recovery code')
+            raise e

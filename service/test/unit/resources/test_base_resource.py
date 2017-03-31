@@ -25,11 +25,3 @@ class TestBaseResource(unittest.TestCase):
         base_resource = BaseResource(mock_services_factory)
 
         self.assertEqual(base_resource.soledad('request'), mock_services_factory.services()._leap_session.soledad)
-
-    def test_get_backup_email_from_request(self):
-        mock_services_factory = MagicMock()
-        request = MagicMock()
-        request.content.getvalue.return_value = '{"backupEmail": "test@test.com"}'
-        base_resource = BaseResource(mock_services_factory)
-
-        self.assertEqual(base_resource.get_backup_email(request), 'test@test.com')

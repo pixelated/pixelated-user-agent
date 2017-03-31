@@ -59,7 +59,7 @@ class TestBackupAccountResource(unittest.TestCase):
                 self.resource._authenticator.bonafide_session,
                 self.resource.soledad(request),
                 self.resource._service(request, '_leap_session').smtp_config,
-                self.resource.get_backup_email(request))
+                self.resource._get_backup_email(request))
             mock_account_recovery.update_recovery_code.assert_called()
 
         d.addCallback(assert_update_recovery_code_called)
@@ -94,3 +94,9 @@ class TestBackupAccountResource(unittest.TestCase):
 
         d.addCallback(assert_successful_response)
         return d
+
+    def test_get_backup_email_from_request(self):
+        request = MagicMock()
+        request.content.getvalue.return_value = '{"backupEmail": "test@test.com"}'
+
+        self.assertEqual(self.resource._get_backup_email(request), 'test@test.com')
