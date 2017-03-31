@@ -122,6 +122,9 @@ class BaseResource(Resource):
     def soledad(self, request):
         return self._service(request, '_leap_session').soledad
 
+    def get_backup_email(self, request):
+        return json.loads(request.content.getvalue()).get('backupEmail')
+
 
 class UnAuthorizedResource(Resource):
 
