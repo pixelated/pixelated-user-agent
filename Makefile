@@ -87,6 +87,12 @@ functional_tests_ci: clean requirements install
 	cd service;\
 	behave --tags ~@wip --tags ~@smoke test/functional/features
 
+functional_tests_wip:
+	@. $(VIRTUALENV)/bin/activate;\
+	export PATH=$(PATH):/usr/lib/chromium/;\
+	cd service;\
+	xvfb-run --server-args="-screen 0 1280x1024x24" behave --tags @wip test/functional/features
+
 ensure_virtualenv_installed:
 	@if [ ! `which virtualenv` ]; then\
 		echo "Virtualenv must be installed";\

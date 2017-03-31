@@ -14,9 +14,25 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from behave import given
+from behave import given, when, then
+
+from common import (
+    fill_by_css_selector,
+    find_element_by_css_selector)
 
 
-@given(u'I am on the backup account page')
+@when(u'I go to the backup account page')
+@given(u'I go to the backup account page')
 def backup_account_page(context):
     context.browser.get(context.backup_account_url)
+
+
+@when(u'I submit my backup account')
+def submit_backup_email(context):
+    fill_by_css_selector(context, 'input[name="email"]', 'test@test.com')
+    find_element_by_css_selector(context, '.submit-button button[type="submit"]').click()
+
+
+@then(u'I see the confirmation of this submission')
+def confirmation_page(context):
+    find_element_by_css_selector(context, '.confirmation-container', timeout=50)

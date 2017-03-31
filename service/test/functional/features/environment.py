@@ -29,6 +29,7 @@ from pixelated.config.site import PixelatedSite
 from pixelated.resources.features_resource import FeaturesResource
 from test.support.integration import AppTestClient
 from steps.common import DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S
+from steps import utils
 
 
 class UnsuportedWebDriverError(Exception):
@@ -62,6 +63,11 @@ def before_all(context):
         context.login_url = context.multi_user_url + '/login'
         context.backup_account_url = context.single_user_url + '/backup-account'
         context.username = 'username'
+
+
+def before_tag(context, tag):
+    if tag == "smoke":
+        utils.create_user(context)
 
 
 def _setup_webdriver(context):
