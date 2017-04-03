@@ -19,7 +19,7 @@ import os
 from pixelated.resources import BaseResource
 from twisted.python.filepath import FilePath
 from pixelated.resources import get_public_static_folder
-from twisted.web.http import OK
+from twisted.web.http import OK, INTERNAL_SERVER_ERROR
 from twisted.web.template import Element, XMLFile, renderElement
 from twisted.web.server import NOT_DONE_YET
 from twisted.internet import defer

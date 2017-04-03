@@ -101,7 +101,11 @@
         "image-description": "New Password - Step 3 of 4",
         "title": "Now, create a new password",
         "input-label1": "create new password",
-        "input-label2": "confirm your new password"
+        "input-label2": "confirm your new password",
+        "error": {
+          "invalid-password": "A better password has at least 8 characters",
+          "invalid-confirm-password": "Password and confirmation don't match"
+        }
       },
       "backup-account-step": {
         "image-description": "Backup Account - Step 4 of 4",
