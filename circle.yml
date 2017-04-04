@@ -20,7 +20,7 @@ dependencies:
 
 test:
   override:
-    - make linters
+    - make clean_all && make linters
     - make test
     - make functional_tests_ci
     - cd service && coveralls || true
