@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-import React from "react";
-import {translate} from "react-i18next";
+import React from 'react';
+import { translate } from 'react-i18next';
 import SubmitButton from 'src/common/submit_button/submit_button';
 
 export const BackupAccountStep = ({ t }) => (

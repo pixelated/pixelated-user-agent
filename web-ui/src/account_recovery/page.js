@@ -53,10 +53,18 @@ export class Page extends React.Component {
 
   steps = () => ({
     0: <AdminRecoveryCodeForm next={this.nextStep} />,
-    1: (<UserRecoveryCodeForm
-      previous={this.previousStep} next={this.nextStep} saveCode={this.saveUserCode}
-    />),
-    2: <NewPasswordForm previous={this.previousStep} userCode={this.state.userCode} next={this.nextStep} />,
+    1:
+      (<UserRecoveryCodeForm
+        previous={this.previousStep}
+        next={this.nextStep}
+        saveCode={this.saveUserCode}
+      />),
+    2:
+      (<NewPasswordForm
+        previous={this.previousStep}
+        userCode={this.state.userCode}
+        next={this.nextStep}
+      />),
     3: <BackupAccountStep />
   })
 
