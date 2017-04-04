@@ -47,7 +47,7 @@ def enter_user_information(context):
 
 @when(u'I click on the signup button')  # noqa
 def click_signup_button(context):
-    find_element_by_css_selector(context, 'input[type=submit]').click()
+    find_element_by_css_selector(context, 'button[type=submit]').click()
 
 
 @then(u'I should see the user control panel')  # noqa
