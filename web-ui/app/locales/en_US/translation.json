@@ -105,7 +105,8 @@
       },
       "backup-account-step": {
         "image-description": "Backup Account - Step 4 of 4",
-        "title": "Wait! What if you forget your password again?"
+        "title": "Wait! What if you forget your password again?",
+        "buttonText": "Set-up Backup Account"
       },
       "button-next": "Next",
       "back": "Back to previous step"

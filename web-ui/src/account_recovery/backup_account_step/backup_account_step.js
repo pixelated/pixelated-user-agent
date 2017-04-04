@@ -16,6 +16,7 @@
  */
 import React from "react";
 import {translate} from "react-i18next";
+import SubmitButton from 'src/common/submit_button/submit_button';
 
 export const BackupAccountStep = ({ t }) => (
   <div className='account-recovery-form backup-account'>
@@ -25,6 +26,11 @@ export const BackupAccountStep = ({ t }) => (
       alt={t('account-recovery.backup-account-step.image-description')}
     />
     <h1>{t('account-recovery.backup-account-step.title')}</h1>
+    <SubmitButton
+      buttonText={t('account-recovery.backup-account-step.buttonText')}
+      containerElement='a'
+      href='/backup-account'
+    />
   </div>
 );
 

@@ -30,7 +30,7 @@ const buttonStyle = {
   height: '48px'
 };
 
-const SubmitButton = ({ buttonText, disabled = false }) => (
+const SubmitButton = ({ buttonText, disabled = false, ...other }) => (
   <div className='submit-button'>
     <RaisedButton
       type='submit'
@@ -41,6 +41,7 @@ const SubmitButton = ({ buttonText, disabled = false }) => (
       overlayStyle={buttonStyle}
       fullWidth
       primary
+      {...other}
     />
   </div>
 );
