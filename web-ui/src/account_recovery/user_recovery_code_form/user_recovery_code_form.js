@@ -24,7 +24,7 @@ import BackLink from 'src/common/back_link/back_link';
 
 import './user_recovery_code_form.scss';
 
-export const UserRecoveryCodeForm = ({ t, previous, next }) => (
+export const UserRecoveryCodeForm = ({ t, previous, next, saveCode }) => (
   <form className='account-recovery-form user-code' onSubmit={next}>
     <img
       className='account-recovery-progress'
@@ -40,7 +40,10 @@ export const UserRecoveryCodeForm = ({ t, previous, next }) => (
       />
       <p>{t('account-recovery.user-form.description')}</p>
     </div>
-    <InputField name='admin-code' label={t('account-recovery.user-form.input-label')} />
+    <InputField
+      name='user-code' label={t('account-recovery.user-form.input-label')}
+      onChange={saveCode}
+    />
     <SubmitButton buttonText={t('account-recovery.button-next')} />
     <BackLink text={t('account-recovery.back')} onClick={previous} />
   </form>
@@ -49,7 +52,8 @@ export const UserRecoveryCodeForm = ({ t, previous, next }) => (
 UserRecoveryCodeForm.propTypes = {
   t: React.PropTypes.func.isRequired,
   previous: React.PropTypes.func.isRequired,
-  next: React.PropTypes.func.isRequired
+  next: React.PropTypes.func.isRequired,
+  saveCode: React.PropTypes.func.isRequired
 };
 
 export default translate('', { wait: true })(UserRecoveryCodeForm);

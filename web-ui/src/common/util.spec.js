@@ -1,4 +1,7 @@
 import expect from 'expect';
+import fetchMock from 'fetch-mock';
+
+import browser from 'helpers/browser';
 import Util from 'src/common/util';
 
 describe('Utils', () => {
@@ -15,6 +18,38 @@ describe('Utils', () => {
 
     it('checks if param not included in query parameters', () => {
       expect(Util.hasQueryParameter('error')).toBe(false);
+    });
+  });
+
+  describe('submitForm', () => {
+    const event = {};
+
+    beforeEach(() => {
+      event.preventDefault = expect.createSpy();
+      expect.spyOn(browser, 'getCookie').andReturn('abc123');
+
+      fetchMock.post('/some-url', 200);
+      Util.submitForm(event, '/some-url', { userCode: '123' });
+    });
+
+    it('sends csrftoken as content', () => {
+      expect(fetchMock.lastOptions('/some-url').body).toContain('"csrftoken":["abc123"]');
+    });
+
+    it('sends body as content', () => {
+      expect(fetchMock.lastOptions('/some-url').body).toContain('"userCode":"123"');
+    });
+
+    it('sends content-type header', () => {
+      expect(fetchMock.lastOptions('/some-url').headers['Content-Type']).toEqual('application/json');
+    });
+
+    it('sends same origin headers', () => {
+      expect(fetchMock.lastOptions('/some-url').credentials).toEqual('same-origin');
+    });
+
+    it('prevents default call to refresh page', () => {
+      expect(event.preventDefault).toHaveBeenCalled();
     });
   });
 });

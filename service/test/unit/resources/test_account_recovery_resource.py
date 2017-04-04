@@ -42,3 +42,14 @@ class TestAccountRecoveryResource(unittest.TestCase):
 
         d.addCallback(assert_200_when_user_logged_in)
         return d
+
+    def test_post_returns_successfully(self):
+        request = DummyRequest(['/account-recovery'])
+        request.method = 'POST'
+        d = self.web.get(request)
+
+        def assert_successful_response(_):
+            self.assertEqual(200, request.responseCode)
+
+        d.addCallback(assert_successful_response)
+        return d

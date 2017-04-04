@@ -12,10 +12,12 @@ import NewPasswordFormWrapper from './new_password_form/new_password_form';
 
 describe('Account Recovery Page', () => {
   let page;
+  let pageInstance;
 
   beforeEach(() => {
     const mockTranslations = key => key;
     page = shallow(<Page t={mockTranslations} />);
+    pageInstance = page.instance();
   });
 
   it('renders account recovery page title', () => {
@@ -30,13 +32,12 @@ describe('Account Recovery Page', () => {
     expect(page.find(Footer).length).toEqual(1);
   });
 
+  it('saves user code', () => {
+    pageInstance.saveUserCode({ target: { value: '123' } });
+    expect(pageInstance.state.userCode).toEqual('123');
+  });
+
   context('main content', () => {
-    let pageInstance;
-
-    beforeEach(() => {
-      pageInstance = page.instance();
-    });
-
     it('renders admin recovery code form as default form', () => {
       expect(page.find(AdminRecoveryCodeFormWrapper).length).toEqual(1);
       expect(page.find(UserRecoveryCodeFormWrapper).length).toEqual(0);

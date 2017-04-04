@@ -21,6 +21,8 @@ from twisted.python.filepath import FilePath
 from pixelated.resources import get_public_static_folder
 from twisted.web.http import OK
 from twisted.web.template import Element, XMLFile, renderElement
+from twisted.web.server import NOT_DONE_YET
+from twisted.internet import defer
 
 
 class AccountRecoveryPage(Element):
@@ -44,3 +46,16 @@ class AccountRecoveryResource(BaseResource):
     def _render_template(self, request):
         site = AccountRecoveryPage()
         return renderElement(request, site)
+
+    def render_POST(self, request):
+        def success_response(response):
+            request.setResponseCode(OK)
+            request.finish()
+
+        def error_response(response):
+            request.setResponseCode(INTERNAL_SERVER_ERROR)
+            request.finish()
+
+        d = defer.succeed('Done!')
+        d.addCallbacks(success_response, error_response)
+        return NOT_DONE_YET
