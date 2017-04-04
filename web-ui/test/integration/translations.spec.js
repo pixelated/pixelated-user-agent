@@ -9,22 +9,33 @@ import testI18n from './i18n';
 
 describe('Translations', () => {
   context('Account Recovery Page', () => {
-    it('translates all keys on first step', () => {
+    it('translates all keys on admin recovery code step', () => {
       const app = mount(<App i18n={testI18n} child={<AccountRecoveryPage />} />);
       expect(app.text()).toNotContain('untranslated', 'Unstranslated message found in the text: ' + app.text());
     });
 
-    it('translates all keys on second step', () => {
+    it('translates all keys on user recovery code step', () => {
       const app = mount(<App i18n={testI18n} child={<AccountRecoveryPage />} />);
       app.find('form.admin-code').simulate('submit');
 
       expect(app.text()).toNotContain('untranslated', 'Unstranslated message found in the text: ' + app.text());
     });
 
-    it('translates all keys on third step', () => {
+    it('translates all keys on new password step', () => {
       const app = mount(<App i18n={testI18n} child={<AccountRecoveryPage />} />);
       app.find('form.admin-code').simulate('submit');
       app.find('form.user-code').simulate('submit');
+
+      expect(app.text()).toNotContain('untranslated', 'Unstranslated message found in the text: ' + app.text());
+    });
+
+    it('translates all keys on backup account step', () => {
+      const app = mount(<App i18n={testI18n} child={<AccountRecoveryPage />} />);
+      app.find('form.admin-code').simulate('submit');
+      app.find('form.user-code').simulate('submit');
+      app.find('input[name="new-password"]').simulate('change', {target: {value: '11'}});
+      app.find('input[name="confirm-password"]').simulate('change', {target: {value: '11'}});
+      app.find('form.new-password').simulate('submit');
 
       expect(app.text()).toNotContain('untranslated', 'Unstranslated message found in the text: ' + app.text());
     });
