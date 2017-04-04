@@ -21,7 +21,7 @@ dependencies:
 test:
   override:
     - make linters
-    - npm rebuild && make test
+    - make test
     - make functional_tests_ci
     - cd service && coveralls || true
 
