@@ -22,6 +22,7 @@ import Header from 'src/common/header/header';
 import AdminRecoveryCodeForm from 'src/account_recovery/admin_recovery_code_form/admin_recovery_code_form';
 import UserRecoveryCodeForm from 'src/account_recovery/user_recovery_code_form/user_recovery_code_form';
 import NewPasswordForm from 'src/account_recovery/new_password_form/new_password_form';
+import BackupAccountStep from 'src/account_recovery/backup_account_step/backup_account_step';
 import Footer from 'src/common/footer/footer';
 
 import 'font-awesome/scss/font-awesome.scss';
@@ -36,7 +37,9 @@ export class Page extends React.Component {
   }
 
   nextStep = (event) => {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
     this.setState({ step: this.state.step + 1 });
   }
 
@@ -53,7 +56,8 @@ export class Page extends React.Component {
     1: (<UserRecoveryCodeForm
       previous={this.previousStep} next={this.nextStep} saveCode={this.saveUserCode}
     />),
-    2: <NewPasswordForm previous={this.previousStep} userCode={this.state.userCode} />
+    2: <NewPasswordForm previous={this.previousStep} userCode={this.state.userCode} next={this.nextStep} />,
+    3: <BackupAccountStep />
   })
 
   mainContent = () => this.steps()[this.state.step];

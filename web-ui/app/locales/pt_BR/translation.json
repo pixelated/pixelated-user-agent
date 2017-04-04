@@ -103,6 +103,10 @@
         "input-label1": "digite a nova senha",
         "input-label2": "confirme a nova senha"
       },
+      "backup-account-step": {
+        "image-description": "E-mail de Recuperação - Passo 4 de 4",
+        "title": "Opa! E se você esquecer sua senha de novo?"
+      },
       "button-next": "Próximo",
       "back": "Voltar ao passo anterior"
     },

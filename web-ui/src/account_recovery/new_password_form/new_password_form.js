@@ -28,11 +28,12 @@ import './new_password_form.scss';
 
 export class NewPasswordForm extends React.Component {
   submitHandler = (event) => {
+    event.preventDefault();
     submitForm(event, '/account-recovery', {
       userCode: this.props.userCode,
       password: this.state.password,
       confirmation: this.state.confirmation
-    });
+    }).then(() => this.props.next());
   }
 
   handlePasswordChange = (event) => {
@@ -72,6 +73,7 @@ export class NewPasswordForm extends React.Component {
 
 NewPasswordForm.propTypes = {
   t: React.PropTypes.func.isRequired,
+  next: React.PropTypes.func.isRequired,
   previous: React.PropTypes.func.isRequired,
   userCode: React.PropTypes.string.isRequired
 };
