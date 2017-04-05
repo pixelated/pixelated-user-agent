@@ -14,45 +14,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
+import { translate } from 'react-i18next';
+import LinkButton from 'src/common/link_button/link_button';
 
-import './submit_button.scss';
-
-const labelStyle = {
-  textTransform: 'none',
-  fontSize: '1em',
-  lineHeight: '48px'
-};
-
-const buttonStyle = {
-  height: '48px'
-};
-
-const SubmitButton = ({ buttonText, disabled = false, ...other }) => (
-  <div className='submit-button'>
-    <RaisedButton
-      type='submit'
-      label={buttonText}
-      disabled={disabled}
-      labelStyle={labelStyle}
-      buttonStyle={buttonStyle}
-      overlayStyle={buttonStyle}
-      fullWidth
-      primary
-      {...other}
+export const BackupAccountStep = ({ t }) => (
+  <div className='account-recovery-form backup-account'>
+    <img
+      className='account-recovery-progress'
+      src='/public/images/account-recovery/step_4.svg'
+      alt={t('account-recovery.backup-account-step.image-description')}
+    />
+    <h1>{t('account-recovery.backup-account-step.title')}</h1>
+    <LinkButton
+      buttonText={t('account-recovery.backup-account-step.buttonText')}
+      href='/backup-account'
     />
   </div>
 );
 
-SubmitButton.propTypes = {
-  buttonText: React.PropTypes.string.isRequired,
-  disabled: React.PropTypes.bool
+BackupAccountStep.propTypes = {
+  t: React.PropTypes.func.isRequired
 };
 
-SubmitButton.defaultProps = {
-  disabled: false
-};
-
-export default SubmitButton;
+export default translate('', { wait: true })(BackupAccountStep);

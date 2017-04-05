@@ -9,6 +9,7 @@ import Footer from 'src/common/footer/footer';
 import AdminRecoveryCodeFormWrapper from './admin_recovery_code_form/admin_recovery_code_form';
 import UserRecoveryCodeFormWrapper from './user_recovery_code_form/user_recovery_code_form';
 import NewPasswordFormWrapper from './new_password_form/new_password_form';
+import BackupAccountStepWrapper from './backup_account_step/backup_account_step';
 
 describe('Account Recovery Page', () => {
   let page;
@@ -37,6 +38,13 @@ describe('Account Recovery Page', () => {
     expect(pageInstance.state.userCode).toEqual('123');
   });
 
+  it('prevents default event before next', () => {
+    const eventSpy = expect.createSpy();
+    pageInstance.nextStep({ preventDefault: eventSpy });
+
+    expect(eventSpy).toHaveBeenCalled();
+  });
+
   context('main content', () => {
     it('renders admin recovery code form as default form', () => {
       expect(page.find(AdminRecoveryCodeFormWrapper).length).toEqual(1);
@@ -45,31 +53,39 @@ describe('Account Recovery Page', () => {
     });
 
     it('renders user recovery code form when admin code submitted', () => {
-      pageInstance.nextStep({ preventDefault: () => {} });
+      pageInstance.nextStep();
 
       expect(page.find(UserRecoveryCodeFormWrapper).length).toEqual(1);
     });
 
     it('returns to admin code form on user code form back link', () => {
-      pageInstance.nextStep({ preventDefault: () => {} });
+      pageInstance.nextStep();
       pageInstance.previousStep();
 
       expect(page.find(AdminRecoveryCodeFormWrapper).length).toEqual(1);
     });
 
     it('renders new password form when user code submitted', () => {
-      pageInstance.nextStep({ preventDefault: () => {} });
-      pageInstance.nextStep({ preventDefault: () => {} });
+      pageInstance.nextStep();
+      pageInstance.nextStep();
 
       expect(page.find(NewPasswordFormWrapper).length).toEqual(1);
     });
 
     it('returns to user code form on new password form back link', () => {
-      pageInstance.nextStep({ preventDefault: () => {} });
-      pageInstance.nextStep({ preventDefault: () => {} });
+      pageInstance.nextStep();
+      pageInstance.nextStep();
       pageInstance.previousStep();
 
       expect(page.find(UserRecoveryCodeFormWrapper).length).toEqual(1);
+    });
+
+    it('renders backup account form after submitting new password', () => {
+      pageInstance.nextStep();
+      pageInstance.nextStep();
+      pageInstance.nextStep();
+
+      expect(page.find(BackupAccountStepWrapper).length).toEqual(1);
     });
   });
 });

@@ -7,9 +7,11 @@ import { NewPasswordForm } from './new_password_form';
 describe('NewPasswordForm', () => {
   let newPasswordForm;
   let mockPrevious;
+  let mockNext;
+  let mockTranslations;
 
   beforeEach(() => {
-    const mockTranslations = key => key;
+    mockTranslations = key => key;
     mockPrevious = expect.createSpy();
     newPasswordForm = shallow(
       <NewPasswordForm t={mockTranslations} previous={mockPrevious} userCode='def234' />
@@ -40,7 +42,11 @@ describe('NewPasswordForm', () => {
   });
 
   describe('Submit', () => {
-    beforeEach(() => {
+    beforeEach((done) => {
+      mockNext = expect.createSpy().andCall(() => done());
+      newPasswordForm = shallow(
+        <NewPasswordForm t={mockTranslations} previous={mockPrevious} userCode='def234' next={mockNext} />
+      );
       fetchMock.post('/account-recovery', 200);
       newPasswordForm.find('InputField[name="new-password"]').simulate('change', { target: { value: '123' } });
       newPasswordForm.find('InputField[name="confirm-password"]').simulate('change', { target: { value: '456' } });
@@ -61,6 +67,10 @@ describe('NewPasswordForm', () => {
 
     it('sends password confirmation as content', () => {
       expect(fetchMock.lastOptions('/account-recovery').body).toContain('"confirmation":"456"');
+    });
+
+    it('calls next handler on success', () => {
+      expect(mockNext).toHaveBeenCalled();
     });
   });
 });

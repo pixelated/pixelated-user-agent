@@ -18,41 +18,38 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import './submit_button.scss';
+import '../submit_button/submit_button.scss';
+import './link_button.scss';
 
 const labelStyle = {
   textTransform: 'none',
   fontSize: '1em',
-  lineHeight: '48px'
+  lineHeight: '48px',
+  color: '#ff9c00'
 };
 
 const buttonStyle = {
-  height: '48px'
+  height: '48px',
+  backgroundColor: '#fff'
 };
 
-const SubmitButton = ({ buttonText, disabled = false, ...other }) => (
-  <div className='submit-button'>
+const LinkButton = ({ buttonText, href }) => (
+  <div className='submit-button link-button'>
     <RaisedButton
-      type='submit'
+      href={href}
+      containerElement='a'
       label={buttonText}
-      disabled={disabled}
       labelStyle={labelStyle}
       buttonStyle={buttonStyle}
       overlayStyle={buttonStyle}
       fullWidth
-      primary
-      {...other}
     />
   </div>
 );
 
-SubmitButton.propTypes = {
+LinkButton.propTypes = {
   buttonText: React.PropTypes.string.isRequired,
-  disabled: React.PropTypes.bool
+  href: React.PropTypes.string.isRequired
 };
 
-SubmitButton.defaultProps = {
-  disabled: false
-};
-
-export default SubmitButton;
+export default LinkButton;
