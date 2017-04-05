@@ -101,7 +101,11 @@
         "image-description": "Nova Senha - Passo 3 de 4",
         "title": "Agora, crie uma nova senha",
         "input-label1": "digite a nova senha",
-        "input-label2": "confirme a nova senha"
+        "input-label2": "confirme a nova senha",
+        "error": {
+          "invalid-password": "Uma senha boa tem pelo menos 8 caracteres",
+          "invalid-confirm-password": "Senha e confirmação não são iguais"
+        }
       },
       "backup-account-step": {
         "image-description": "E-mail de Recuperação - Passo 4 de 4",

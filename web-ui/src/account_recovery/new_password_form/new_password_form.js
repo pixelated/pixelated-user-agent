@@ -18,6 +18,7 @@
 import 'isomorphic-fetch';
 import React from 'react';
 import { translate } from 'react-i18next';
+import validator from 'validator';
 
 import { submitForm } from 'src/common/util';
 import InputField from 'src/common/input_field/input_field';
@@ -27,22 +28,51 @@ import BackLink from 'src/common/back_link/back_link';
 import './new_password_form.scss';
 
 export class NewPasswordForm extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      submitButtonDisabled: true,
+      password: '',
+      errorPassword: '',
+      confirmPassword: '',
+      errorConfirmPassword: ''
+    };
+  }
+
   submitHandler = (event) => {
     event.preventDefault();
     submitForm(event, '/account-recovery', {
       userCode: this.props.userCode,
       password: this.state.password,
-      confirmation: this.state.confirmation
+      confirmPassword: this.state.confirmPassword
     }).then(() => this.props.next());
   }
 
-  handlePasswordChange = (event) => {
+  handleChangePassword = (event) => {
     this.setState({ password: event.target.value });
-  }
+    this.validatePassword(event.target.value, this.state.confirmPassword);
+  };
 
-  handlePasswordConfirmationChange = (event) => {
-    this.setState({ confirmation: event.target.value });
-  }
+  handleChangeConfirmPassword = (event) => {
+    this.setState({ confirmPassword: event.target.value });
+    this.validatePassword(this.state.password, event.target.value);
+  };
+
+  validatePassword = (password, confirmPassword) => {
+    const emptyPassword = validator.isEmpty(password);
+    const validPassword = validator.isLength(password, { min: 8, max: 9999 });
+    const emptyConfirmPassword = validator.isEmpty(confirmPassword);
+    const validConfirmPassword = confirmPassword === password;
+
+    const t = this.props.t;
+
+    this.setState({
+      errorPassword: !emptyPassword && !validPassword ? t('account-recovery.new-password-form.error.invalid-password') : '',
+      errorConfirmPassword: !emptyConfirmPassword && !validConfirmPassword ? t('account-recovery.new-password-form.error.invalid-confirm-password') : '',
+      submitButtonDisabled: !validPassword || !validConfirmPassword
+    });
+  };
 
   render() {
     const { t, previous } = this.props;
@@ -55,16 +85,16 @@ export class NewPasswordForm extends React.Component {
         />
         <h1>{t('account-recovery.new-password-form.title')}</h1>
         <InputField
-          type='password' name='new-password'
+          type='password' name='new-password' value={this.state.password}
           label={t('account-recovery.new-password-form.input-label1')}
-          onChange={this.handlePasswordChange}
+          errorText={this.state.errorPassword} onChange={this.handleChangePassword}
         />
         <InputField
-          type='password' name='confirm-password'
+          type='password' name='confirm-password' value={this.state.confirmPassword}
           label={t('account-recovery.new-password-form.input-label2')}
-          onChange={this.handlePasswordConfirmationChange}
+          errorText={this.state.errorConfirmPassword} onChange={this.handleChangeConfirmPassword}
         />
-        <SubmitButton buttonText={t('account-recovery.button-next')} />
+        <SubmitButton buttonText={t('account-recovery.button-next')} disabled={this.state.submitButtonDisabled} />
         <BackLink text={t('account-recovery.back')} onClick={previous} />
       </form>
     );
