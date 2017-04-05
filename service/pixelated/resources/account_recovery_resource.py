@@ -15,14 +15,23 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import json
 
-from pixelated.resources import BaseResource
 from twisted.python.filepath import FilePath
-from pixelated.resources import get_public_static_folder
 from twisted.web.http import OK, INTERNAL_SERVER_ERROR
 from twisted.web.template import Element, XMLFile, renderElement
 from twisted.web.server import NOT_DONE_YET
 from twisted.internet import defer
+from twisted.logger import Logger
+
+from pixelated.resources import BaseResource
+from pixelated.resources import get_public_static_folder
+
+log = Logger()
+
+
+class InvalidPasswordError(Exception):
+    pass
 
 
 class AccountRecoveryPage(Element):
@@ -52,10 +61,24 @@ class AccountRecoveryResource(BaseResource):
             request.setResponseCode(OK)
             request.finish()
 
-        def error_response(response):
+        def error_response(failure):
+            log.warn(failure)
             request.setResponseCode(INTERNAL_SERVER_ERROR)
             request.finish()
 
-        d = defer.succeed('Done!')
+        d = self._validate_password(request)
         d.addCallbacks(success_response, error_response)
         return NOT_DONE_YET
+
+    def _get_post_form(self, request):
+        return json.loads(request.content.getvalue())
+
+    def _validate_password(self, request):
+        form = self._get_post_form(request)
+        password = form.get('password')
+        confirmPassword = form.get('confirmPassword')
+
+        if password == confirmPassword and len(password) >= 8 and len(password) <= 9999:
+            return defer.succeed('Done!')
+
+        return defer.fail(InvalidPasswordError('The user entered an invalid password or confirmation'))
