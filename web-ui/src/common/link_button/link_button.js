@@ -23,12 +23,18 @@ import './link_button.scss';
 const labelStyle = {
   textTransform: 'none',
   color: 'inherit',
-  fontSize: 'inherit'
+  fontSize: 'inherit',
+  width: '100%',
+  padding: '0'
 };
 
 const linkButtonStyle = {
   color: 'inherit',
-  borderRadius: '0'
+  borderRadius: '0',
+  minHeight: '36px',
+  height: 'auto',
+  lineHeight: '20px',
+  padding: '12px 0'
 };
 
 const LinkButton = ({ buttonText, href }) => (
