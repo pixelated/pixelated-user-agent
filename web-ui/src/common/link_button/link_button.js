@@ -33,6 +33,14 @@ const buttonStyle = {
   backgroundColor: '#fff'
 };
 
+const overlayStyle = {
+  height: '48px'
+};
+
+const style = {
+  boxShadow: 'none'
+};
+
 const LinkButton = ({ buttonText, href }) => (
   <div className='submit-button link-button'>
     <RaisedButton
@@ -41,7 +49,8 @@ const LinkButton = ({ buttonText, href }) => (
       label={buttonText}
       labelStyle={labelStyle}
       buttonStyle={buttonStyle}
-      overlayStyle={buttonStyle}
+      overlayStyle={overlayStyle}
+      style={style}
       fullWidth
     />
   </div>
