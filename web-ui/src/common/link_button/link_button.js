@@ -14,27 +14,42 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
-import React from 'react';
-import { translate } from 'react-i18next';
-import LinkButton from 'src/common/link_button/link_button';
 
-export const BackupAccountStep = ({ t }) => (
-  <div className='account-recovery-form backup-account'>
-    <img
-      className='account-recovery-progress'
-      src='/public/images/account-recovery/step_4.svg'
-      alt={t('account-recovery.backup-account-step.image-description')}
-    />
-    <h1>{t('account-recovery.backup-account-step.title')}</h1>
-    <LinkButton
-      buttonText={t('account-recovery.backup-account-step.buttonText')}
-      href='/backup-account'
+import React from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
+
+import '../submit_button/submit_button.scss';
+import './link_button.scss';
+
+const labelStyle = {
+  textTransform: 'none',
+  fontSize: '1em',
+  lineHeight: '48px',
+  color: '#ff9c00'
+};
+
+const buttonStyle = {
+  height: '48px',
+  backgroundColor: '#fff'
+};
+
+const LinkButton = ({ buttonText, href }) => (
+  <div className='submit-button link-button'>
+    <RaisedButton
+      href={href}
+      containerElement='a'
+      label={buttonText}
+      labelStyle={labelStyle}
+      buttonStyle={buttonStyle}
+      overlayStyle={buttonStyle}
+      fullWidth
     />
   </div>
 );
 
-BackupAccountStep.propTypes = {
-  t: React.PropTypes.func.isRequired
+LinkButton.propTypes = {
+  buttonText: React.PropTypes.string.isRequired,
+  href: React.PropTypes.string.isRequired
 };
 
-export default translate('', { wait: true })(BackupAccountStep);
+export default LinkButton;

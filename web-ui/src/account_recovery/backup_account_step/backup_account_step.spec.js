@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import React from 'react';
-import SubmitButton from 'src/common/submit_button/submit_button';
+import LinkButton from 'src/common/link_button/link_button';
 import { BackupAccountStep } from './backup_account_step';
 
 describe('BackupAccountStep', () => {
@@ -17,15 +17,11 @@ describe('BackupAccountStep', () => {
   });
 
   it('renders submit button with given href', () => {
-    expect(backupAccountStep.find(SubmitButton).props().href).toEqual('/backup-account');
-  });
-
-  it('renders submit button with given container element', () => {
-    expect(backupAccountStep.find(SubmitButton).props().containerElement).toEqual('a');
+    expect(backupAccountStep.find(LinkButton).props().href).toEqual('/backup-account');
   });
 
   it('renders submit button with given button text', () => {
-    expect(backupAccountStep.find(SubmitButton).props().buttonText)
+    expect(backupAccountStep.find(LinkButton).props().buttonText)
       .toEqual('account-recovery.backup-account-step.buttonText');
   });
 });
