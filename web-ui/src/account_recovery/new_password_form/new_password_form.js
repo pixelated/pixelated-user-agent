@@ -61,7 +61,7 @@ export class NewPasswordForm extends React.Component {
 
   validatePassword = (password, confirmPassword) => {
     const emptyPassword = validator.isEmpty(password);
-    const validPassword = validator.isLength(password, { min: 8, max: undefined });
+    const validPassword = validator.isLength(password, { min: 8, max: 9999 });
     const emptyConfirmPassword = validator.isEmpty(confirmPassword);
     const validConfirmPassword = confirmPassword === password;
 
