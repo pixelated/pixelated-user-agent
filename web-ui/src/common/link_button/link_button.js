@@ -16,42 +16,30 @@
  */
 
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 
-import '../submit_button/submit_button.scss';
 import './link_button.scss';
 
 const labelStyle = {
   textTransform: 'none',
-  fontSize: '1em',
-  lineHeight: '48px',
-  color: '#ff9c00'
+  color: 'inherit',
+  fontSize: 'inherit'
 };
 
-const buttonStyle = {
-  height: '48px',
-  backgroundColor: '#fff'
-};
-
-const overlayStyle = {
-  height: '48px'
-};
-
-const style = {
-  boxShadow: 'none'
+const linkButtonStyle = {
+  color: 'inherit',
+  borderRadius: '0'
 };
 
 const LinkButton = ({ buttonText, href }) => (
-  <div className='submit-button link-button'>
-    <RaisedButton
+  <div className='link-button'>
+    <FlatButton
       href={href}
       containerElement='a'
       label={buttonText}
       labelStyle={labelStyle}
-      buttonStyle={buttonStyle}
-      overlayStyle={overlayStyle}
-      style={style}
-      fullWidth
+      hoverColor={'#ff9c00'}
+      style={linkButtonStyle}
     />
   </div>
 );

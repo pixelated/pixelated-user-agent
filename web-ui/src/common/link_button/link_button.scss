@@ -15,7 +15,35 @@
  * along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.link-button > div {
+@import "~scss/base/colors";
+
+.link-button > a {
+  width: 100%;
+}
+
+.link-button {
+  width: 100%;
   margin-top: 2em;
-  border: 2px solid #ff9c00;
+  border: 2px solid $light_orange;
+  border-radius: 2px;
+  font-size: 1em;
+  color: $light_orange;
+  &:hover {
+   color: $white;
+  }
+}
+
+@media only screen and (min-width : 500px) {
+  .link-button {
+    width: 70%;
+    align-self: center;
+  }
+}
+
+@media only screen and (min-width : 960px) {
+  .link-button {
+    width: 300px;
+    margin-bottom: 1em;
+    font-size: 0.8em;
+  }
 }

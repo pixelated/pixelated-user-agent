@@ -11,10 +11,10 @@ describe('LinkButton', () => {
   });
 
   it('renders link button with given button text', () => {
-    expect(linkButton.find('RaisedButton').props().label).toEqual('Go To Link');
+    expect(linkButton.find('FlatButton').props().label).toEqual('Go To Link');
   });
 
   it('renders link button with given href', () => {
-    expect(linkButton.find('RaisedButton').props().href).toEqual('/some-link');
+    expect(linkButton.find('FlatButton').props().href).toEqual('/some-link');
   });
 });
