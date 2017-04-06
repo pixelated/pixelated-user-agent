@@ -16,35 +16,34 @@
 
 from behave import given, when, then
 
-from common import (
-    fill_by_css_selector,
-    find_element_by_css_selector)
+from ..page_objects import AccountRecoveryPage
 
 
 @given(u'I am on the account recovery page')
 def account_recovery_page(context):
-    context.browser.get(context.account_recovery_url)
+    AccountRecoveryPage(context).visit()
 
 
 @when(u'I submit admin recovery code')
 def submit_admin_recovery_code(context):
-    fill_by_css_selector(context, 'input[name="admin-code"]', '1234')
-    find_element_by_css_selector(context, '.submit-button button[type="submit"]').click()
+    AccountRecoveryPage(context).submit_admin_recovery_code('1234')
 
 
 @when(u'I submit user recovery code')
 def submit_user_recovery_code(context):
-    fill_by_css_selector(context, 'input[name="user-code"]', '5678')
-    find_element_by_css_selector(context, '.submit-button button[type="submit"]').click()
+    AccountRecoveryPage(context).submit_user_recovery_code('5678')
 
 
 @when(u'I submit new password')
 def submit_new_password(context):
-    fill_by_css_selector(context, 'input[name="new-password"]', 'new test password')
-    fill_by_css_selector(context, 'input[name="confirm-password"]', 'new test password')
-    find_element_by_css_selector(context, '.submit-button button[type="submit"]').click()
+    AccountRecoveryPage(context).submit_new_password('new test password', 'new test password')
 
 
-@then(u'I see the backup account step')
-def backup_account_step(context):
-    find_element_by_css_selector(context, 'a[href="/backup-account"]', timeout=50)
+@when(u'I click on the backup account link')
+def go_to_backup_account(context):
+    AccountRecoveryPage(context).go_to_backup_account()
+
+
+@then(u'I see the backup account page')
+def verify_backup_account_page(context):
+    assert('/backup-account' in context.browser.current_url)

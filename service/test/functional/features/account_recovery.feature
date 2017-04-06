@@ -33,4 +33,5 @@ Feature: Account Recovery
     When I submit admin recovery code
     And I submit user recovery code
     And I submit new password
-    Then I see the backup account step
+    And I click on the backup account link
+    Then I see the backup account page
