@@ -13,3 +13,23 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
+
+from steps.common import (
+    fill_by_css_selector,
+    find_element_by_css_selector)
+
+
+class BasePage(object):
+    def __init__(self, context, base_url):
+        self.context = context
+        self.timeout = 30
+        self.base_url = base_url
+
+    def find_element_by_css_selector(self, loc):
+        return find_element_by_css_selector(self.context, loc)
+
+    def fill_by_css_selector(self, loc, text):
+        fill_by_css_selector(self.context, loc, text)
+
+    def visit(self):
+        self.context.browser.get(self.base_url)

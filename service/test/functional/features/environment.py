@@ -56,12 +56,14 @@ def before_all(context):
     context.signup_url = 'https://{}/signup'.format(hostname)
     context.login_url = 'https://mail.{}/login'.format(hostname)
     context.backup_account_url = 'https://mail.{}/backup-account'.format(hostname)
+    context.account_recovery_url = 'https://mail.{}/account-recovery'.format(hostname)
     context.username = 'testuser_{}'.format(uuid.uuid4())
 
     if 'localhost' in context.host:
         _mock_user_agent(context)
         context.login_url = context.multi_user_url + '/login'
         context.backup_account_url = context.single_user_url + '/backup-account'
+        context.account_recovery_url = context.single_user_url + '/account-recovery'
         context.username = 'username'
 
 

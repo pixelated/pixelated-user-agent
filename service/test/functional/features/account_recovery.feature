@@ -27,3 +27,11 @@ Feature: Account Recovery
     Then I see the confirmation of this submission
     And I logout from the header
     And I should see the login page
+
+  Scenario: Recovering an account
+    Given I am on the account recovery page
+    When I submit admin recovery code
+    And I submit user recovery code
+    And I submit new password
+    And I click on the backup account link
+    Then I see the backup account page
