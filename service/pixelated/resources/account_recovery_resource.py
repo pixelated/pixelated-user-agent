@@ -66,19 +66,22 @@ class AccountRecoveryResource(BaseResource):
             request.setResponseCode(INTERNAL_SERVER_ERROR)
             request.finish()
 
-        d = self._validate_password(request)
+        d = self._handle_post(request)
         d.addCallbacks(success_response, error_response)
         return NOT_DONE_YET
 
     def _get_post_form(self, request):
         return json.loads(request.content.getvalue())
 
-    def _validate_password(self, request):
+    def _validate_password(self, password, confirm_password):
+        return password == confirm_password and len(password) >= 8 and len(password) <= 9999
+
+    def _handle_post(self, request):
         form = self._get_post_form(request)
         password = form.get('password')
-        confirmPassword = form.get('confirmPassword')
+        confirm_password = form.get('confirmPassword')
 
-        if password == confirmPassword and len(password) >= 8 and len(password) <= 9999:
-            return defer.succeed('Done!')
+        if not self._validate_password(password, confirm_password):
+            return defer.fail(InvalidPasswordError('The user entered an invalid password or confirmation'))
 
-        return defer.fail(InvalidPasswordError('The user entered an invalid password or confirmation'))
+        return defer.succeed('Done!')

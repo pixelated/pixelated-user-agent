@@ -44,8 +44,8 @@ class TestAccountRecoveryResource(unittest.TestCase):
     def test_post_returns_successfully(self):
         request = DummyRequest(['/account-recovery'])
         request.method = 'POST'
-        request.content = MagicMock()
-        request.content.getvalue.return_value = '{"password": "12345678", "confirmPassword": "12345678"}'
+        self.resource._handle_post = MagicMock(return_value=defer.succeed(None))
+
         d = self.web.get(request)
 
         def assert_successful_response(_):
@@ -53,6 +53,41 @@ class TestAccountRecoveryResource(unittest.TestCase):
 
         d.addCallback(assert_successful_response)
         return d
+
+    def test_post_returns_failure(self):
+        request = DummyRequest(['/account-recovery'])
+        request.method = 'POST'
+        self.resource._handle_post = MagicMock(return_value=defer.fail(InvalidPasswordError))
+
+        d = self.web.get(request)
+
+        def assert_error_response(_):
+            self.assertEqual(500, request.responseCode)
+
+        d.addCallback(assert_error_response)
+        return d
+
+    def test_handle_post_successfully(self):
+        request = MagicMock()
+        self.resource._get_post_form = MagicMock()
+        self.resource._validate_password = MagicMock(return_value=True)
+
+        d = self.resource._handle_post(request)
+
+        def assert_successful(success):
+            self.assertEqual(success, 'Done!')
+
+        d.addCallback(assert_successful)
+        return d
+
+    @defer.inlineCallbacks
+    def test_handle_post_failed(self):
+        request = MagicMock()
+        self.resource._get_post_form = MagicMock()
+        self.resource._validate_password = MagicMock(return_value=False)
+
+        with self.assertRaises(InvalidPasswordError):
+            yield self.resource._handle_post(request)
 
     def test_get_post_form(self):
         request = MagicMock()
@@ -64,29 +99,10 @@ class TestAccountRecoveryResource(unittest.TestCase):
         self.assertEqual(form.get('confirmPassword'), '456')
 
     def test_validate_password_successfully(self):
-        request = MagicMock()
-        request.content.getvalue.return_value = '{"password": "12345678", "confirmPassword": "12345678"}'
+        self.assertTrue(self.resource._validate_password('12345678', '12345678'))
 
-        d = self.resource._validate_password(request)
-
-        def assert_successful(success):
-            self.assertEqual(success, 'Done!')
-
-        d.addCallback(assert_successful)
-        return d
-
-    @defer.inlineCallbacks
     def test_validate_password_failed_by_confirmation(self):
-        request = MagicMock()
-        request.content.getvalue.return_value = '{"password": "12345678", "confirmPassword": "1234"}'
+        self.assertFalse(self.resource._validate_password('12345678', '1234'))
 
-        with self.assertRaises(InvalidPasswordError):
-            yield self.resource._validate_password(request)
-
-    @defer.inlineCallbacks
     def test_validate_password_failed_by_length(self):
-        request = MagicMock()
-        request.content.getvalue.return_value = '{"password": "1234", "confirmPassword": "1234"}'
-
-        with self.assertRaises(InvalidPasswordError):
-            yield self.resource._validate_password(request)
+        self.assertFalse(self.resource._validate_password('1234', '1234'))
