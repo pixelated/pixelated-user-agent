@@ -1,6 +1,6 @@
 --index-url https://pypi.python.org/simple/
 
--e 'git+https://github.com/pixelated/python-gnupg.git@key_extension_and_sign#egg=gnupg'
+-e 'git+https://github.com/pixelated/python-gnupg.git@develop#egg=gnupg'
 pyasn1==0.1.9
 requests==2.11.1
 srp==1.0.6
