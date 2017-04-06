@@ -43,6 +43,7 @@ export class NewPasswordForm extends React.Component {
   submitHandler = (event) => {
     event.preventDefault();
     submitForm(event, '/account-recovery', {
+      username: this.props.username,
       userCode: this.props.userCode,
       password: this.state.password,
       confirmPassword: this.state.confirmPassword
@@ -105,6 +106,7 @@ NewPasswordForm.propTypes = {
   t: React.PropTypes.func.isRequired,
   next: React.PropTypes.func.isRequired,
   previous: React.PropTypes.func.isRequired,
+  username: React.PropTypes.string.isRequired,
   userCode: React.PropTypes.string.isRequired
 };
 

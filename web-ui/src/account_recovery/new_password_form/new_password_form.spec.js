@@ -14,7 +14,7 @@ describe('NewPasswordForm', () => {
     mockTranslations = key => key;
     mockPrevious = expect.createSpy();
     newPasswordForm = shallow(
-      <NewPasswordForm t={mockTranslations} previous={mockPrevious} userCode='def234' />
+      <NewPasswordForm t={mockTranslations} previous={mockPrevious} userCode='def234' username='alice' />
     );
   });
 
@@ -45,7 +45,7 @@ describe('NewPasswordForm', () => {
     beforeEach((done) => {
       mockNext = expect.createSpy().andCall(() => done());
       newPasswordForm = shallow(
-        <NewPasswordForm t={mockTranslations} previous={mockPrevious} userCode='def234' next={mockNext} />
+        <NewPasswordForm t={mockTranslations} previous={mockPrevious} userCode='def234' next={mockNext} username='alice' />
       );
       fetchMock.post('/account-recovery', 200);
       newPasswordForm.find('InputField[name="new-password"]').simulate('change', { target: { value: '123' } });
@@ -55,6 +55,10 @@ describe('NewPasswordForm', () => {
 
     it('posts to account recovery', () => {
       expect(fetchMock.called('/account-recovery')).toBe(true, 'POST was not called');
+    });
+
+    it('sends username as content', () => {
+      expect(fetchMock.lastOptions('/account-recovery').body).toContain('"username":"alice"');
     });
 
     it('sends user code as content', () => {

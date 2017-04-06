@@ -18,7 +18,7 @@ import os
 import json
 
 from twisted.python.filepath import FilePath
-from twisted.web.http import OK, INTERNAL_SERVER_ERROR
+from twisted.web.http import OK, INTERNAL_SERVER_ERROR, BAD_REQUEST
 from twisted.web.template import Element, XMLFile, renderElement
 from twisted.web.server import NOT_DONE_YET
 from twisted.internet import defer
@@ -31,6 +31,10 @@ log = Logger()
 
 
 class InvalidPasswordError(Exception):
+    pass
+
+
+class EmptyFieldsError(Exception):
     pass
 
 
@@ -63,7 +67,10 @@ class AccountRecoveryResource(BaseResource):
 
         def error_response(failure):
             log.warn(failure)
-            request.setResponseCode(INTERNAL_SERVER_ERROR)
+            if failure.type is InvalidPasswordError or failure.type is EmptyFieldsError:
+                request.setResponseCode(BAD_REQUEST)
+            else:
+                request.setResponseCode(INTERNAL_SERVER_ERROR)
             request.finish()
 
         d = self._handle_post(request)
@@ -83,5 +90,10 @@ class AccountRecoveryResource(BaseResource):
 
         if not self._validate_password(password, confirm_password):
             return defer.fail(InvalidPasswordError('The user entered an invalid password or confirmation'))
+
+        username = form.get('username')
+        user_code = form.get('userCode')
+        if not username or not user_code:
+            return defer.fail(EmptyFieldsError('The user entered an empty username or empty usercode'))
 
         return defer.succeed('Done!')

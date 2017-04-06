@@ -14,11 +14,24 @@ import BackupAccountStepWrapper from './backup_account_step/backup_account_step'
 describe('Account Recovery Page', () => {
   let page;
   let pageInstance;
+  const mockTranslations = key => key;
 
   beforeEach(() => {
-    const mockTranslations = key => key;
+    global.window = { location: { search: '?username=alice' } };
     page = shallow(<Page t={mockTranslations} />);
     pageInstance = page.instance();
+  });
+
+  it('gets username from url', () => {
+    expect(pageInstance.state.username).toEqual('alice');
+  });
+
+  it('gets username from url as empty string', () => {
+    global.window = { location: { search: '' } };
+    page = shallow(<Page t={mockTranslations} />);
+    pageInstance = page.instance();
+
+    expect(pageInstance.state.username).toEqual('');
   });
 
   it('renders account recovery page title', () => {

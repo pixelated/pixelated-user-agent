@@ -24,6 +24,7 @@ import UserRecoveryCodeForm from 'src/account_recovery/user_recovery_code_form/u
 import NewPasswordForm from 'src/account_recovery/new_password_form/new_password_form';
 import BackupAccountStep from 'src/account_recovery/backup_account_step/backup_account_step';
 import Footer from 'src/common/footer/footer';
+import Util from 'src/common/util';
 
 import 'font-awesome/scss/font-awesome.scss';
 import './page.scss';
@@ -33,8 +34,10 @@ export class Page extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { step: 0, userCode: '' };
+    this.state = { step: 0, userCode: '', username: this.setUsername() };
   }
+
+  setUsername = () => (Util.getQueryParameter('username') || '');
 
   nextStep = (event) => {
     if (event) {
@@ -64,6 +67,7 @@ export class Page extends React.Component {
         previous={this.previousStep}
         userCode={this.state.userCode}
         next={this.nextStep}
+        username={this.state.username}
       />),
     3: <BackupAccountStep />
   })

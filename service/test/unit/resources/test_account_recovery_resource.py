@@ -44,7 +44,7 @@ class TestAccountRecoveryResource(unittest.TestCase):
         request = DummyRequest(['/account-recovery'])
         request.method = 'POST'
         request.content = MagicMock()
-        request.content.getvalue.return_value = '{"password": "12345678", "confirmPassword": "12345678"}'
+        request.content.getvalue.return_value = '{"username": "alice", "userCode": "abc123", "password": "12345678", "confirmPassword": "12345678"}'
 
         d = self.web.get(request)
 
@@ -54,16 +54,30 @@ class TestAccountRecoveryResource(unittest.TestCase):
         d.addCallback(assert_successful_response)
         return d
 
-    def test_post_returns_failure_by_password_length(self):
+    def test_post_returns_failure_by_empty_usercode(self):
         request = DummyRequest(['/account-recovery'])
         request.method = 'POST'
         request.content = MagicMock()
-        request.content.getvalue.return_value = '{"password": "1234", "confirmPassword": "1234"}'
+        request.content.getvalue.return_value = '{"username": "alice", "userCode": "", "password": "1234", "confirmPassword": "1234"}'
 
         d = self.web.get(request)
 
         def assert_error_response(_):
-            self.assertEqual(500, request.responseCode)
+            self.assertEqual(400, request.responseCode)
+
+        d.addCallback(assert_error_response)
+        return d
+
+    def test_post_returns_failure_by_password_length(self):
+        request = DummyRequest(['/account-recovery'])
+        request.method = 'POST'
+        request.content = MagicMock()
+        request.content.getvalue.return_value = '{"username": "alice", "userCode": "abc123", "password": "1234", "confirmPassword": "1234"}'
+
+        d = self.web.get(request)
+
+        def assert_error_response(_):
+            self.assertEqual(400, request.responseCode)
 
         d.addCallback(assert_error_response)
         return d
@@ -72,12 +86,12 @@ class TestAccountRecoveryResource(unittest.TestCase):
         request = DummyRequest(['/account-recovery'])
         request.method = 'POST'
         request.content = MagicMock()
-        request.content.getvalue.return_value = '{"password": "12345678", "confirmPassword": "1234"}'
+        request.content.getvalue.return_value = '{"username": "alice", "userCode": "abc123", "password": "12345678", "confirmPassword": "1234"}'
 
         d = self.web.get(request)
 
         def assert_error_response(_):
-            self.assertEqual(500, request.responseCode)
+            self.assertEqual(400, request.responseCode)
 
         d.addCallback(assert_error_response)
         return d
