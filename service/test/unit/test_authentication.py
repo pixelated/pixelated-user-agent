@@ -22,7 +22,7 @@ from leap.bitmask.bonafide._srp import SRPAuthError
 
 from mock import patch, Mock
 
-from pixelated.authentication import Authenticator
+from pixelated.authentication import Authenticator, Credentials
 from pixelated.bitmask_libraries.provider import LeapProvider
 from pixelated.authentication import Authentication
 
@@ -58,10 +58,11 @@ class AuthenticatorTest(unittest.TestCase):
     def test_domain_name_is_stripped_before_making_bonafide_srp_auth(self):
         username_without_domain = 'username'
         username_with_domain = '%s@%s' % (username_without_domain, self._domain)
+        credentials = Credentials(username_without_domain, 'password')
         auth = Authenticator(self._leap_provider)
         with patch.object(Authenticator, '_bonafide_auth') as mock_leap_authenticate:
             yield auth.authenticate(username_with_domain, 'password')
-            mock_leap_authenticate.assert_called_once_with(username_without_domain, 'password')
+            mock_leap_authenticate.assert_called_once_with(credentials)
 
     @inlineCallbacks
     def test_successful_bonafide_auth_should_return_the_user_authentication_object(self):
