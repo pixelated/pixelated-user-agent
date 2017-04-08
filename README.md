@@ -1,8 +1,8 @@
 Pixelated User Agent
 ====================
 
-[![Build Status](https://snap-ci.com/pixelated/pixelated-user-agent/branch/master/build_image)](https://snap-ci.com/pixelated/pixelated-user-agent/branch/master) [
-![Coverage Status](https://coveralls.io/repos/pixelated/pixelated-user-agent/badge.svg?branch=master)](https://coveralls.io/r/pixelated/pixelated-user-agent?branch=master)
+[![CircleCI](https://circleci.com/gh/pixelated/pixelated-user-agent.svg?style=svg)](https://circleci.com/gh/pixelated/pixelated-user-agent)
+[![Coverage Status](https://coveralls.io/repos/pixelated/pixelated-user-agent/badge.svg?branch=master)](https://coveralls.io/r/pixelated/pixelated-user-agent?branch=master)
 [![Stories in Doing](https://badge.waffle.io/pixelated/pixelated-user-agent.svg?label=doing&title=Doing)](http://waffle.io/pixelated/pixelated-user-agent)
 
 The Pixelated User Agent is the mail client of the Pixelated ecosystem. It is composed of two parts, a web interface written in JavaScript ([FlightJS](https://flightjs.github.io/)) and a Python API that interacts with a LEAP Provider, the e-mail platform that Pixelated is built on.
