@@ -23,6 +23,10 @@ You are most welcome to contribute to the pixelated user agent code base. Please
 
 ## Installing Pixelated
 
+To run your own instance of Pixelated, follow these instructions: https://github.com/pixelated/puppet-pixelated#manual-installation
+
+## Development
+
 You like the idea and you want to run it locally, then before you have to install the following packages:
 
 * [Vagrant](https://www.vagrantup.com/downloads.html), Vagrant is a tool that automates the setup of a virtual machine with the development environment
