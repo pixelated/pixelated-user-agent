@@ -28,7 +28,10 @@ from test.unit.resources import DummySite
 class TestBackupAccountResource(unittest.TestCase):
     def setUp(self):
         self.services_factory = MagicMock()
-        self.resource = BackupAccountResource(self.services_factory, MagicMock())
+        self.authenticator = MagicMock()
+        self.leap_provider = MagicMock()
+        self.leap_provider.server_name = 'test.com'
+        self.resource = BackupAccountResource(self.services_factory, self.authenticator, self.leap_provider)
         self.web = DummySite(self.resource)
 
     def test_get(self):
@@ -59,7 +62,8 @@ class TestBackupAccountResource(unittest.TestCase):
                 self.resource._authenticator.bonafide_session,
                 self.resource.soledad(request),
                 self.resource._service(request, '_leap_session').smtp_config,
-                self.resource._get_backup_email(request))
+                self.resource._get_backup_email(request),
+                self.leap_provider.server_name)
             mock_account_recovery.update_recovery_code.assert_called()
 
         d.addCallback(assert_update_recovery_code_called)

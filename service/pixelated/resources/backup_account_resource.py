@@ -38,9 +38,10 @@ class BackupAccountPage(Element):
 class BackupAccountResource(BaseResource):
     isLeaf = True
 
-    def __init__(self, services_factory, authenticator):
+    def __init__(self, services_factory, authenticator, leap_provider):
         BaseResource.__init__(self, services_factory)
         self._authenticator = authenticator
+        self._leap_provider = leap_provider
 
     def render_GET(self, request):
         request.setResponseCode(OK)
@@ -55,7 +56,8 @@ class BackupAccountResource(BaseResource):
             self._authenticator.bonafide_session,
             self.soledad(request),
             self._service(request, '_leap_session').smtp_config,
-            self._get_backup_email(request))
+            self._get_backup_email(request),
+            self._leap_provider.server_name)
 
         def update_response(response):
             request.setResponseCode(NO_CONTENT)

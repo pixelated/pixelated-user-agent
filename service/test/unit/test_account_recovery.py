@@ -32,14 +32,16 @@ class AccountRecoveryTest(unittest.TestCase):
         self.mock_soledad = Mock()
         self.mock_smtp_config = Mock()
         self.keymanager = Mock()
-        self.mock_smtp_config.remote_smtp_host = 'test.com'
+        self.mock_smtp_config.remote_smtp_host = 'localhost'
         self.mock_soledad.create_recovery_code.return_value = self.generated_code
         self.backup_email = 'test@test.com'
+        self.domain = 'test.com'
         self.account_recovery = AccountRecovery(
             self.mock_bonafide_session,
             self.mock_soledad,
             self.mock_smtp_config,
-            self.backup_email)
+            self.backup_email,
+            self.domain)
         self.mock_smtp = Mock()
 
     @defer.inlineCallbacks
@@ -50,9 +52,10 @@ class AccountRecoveryTest(unittest.TestCase):
 
     @defer.inlineCallbacks
     def test_send_recovery_code_by_email(self):
+        sender = 'team@{}'.format(self.domain)
         msg = MIMEText('Your code %s' % self.generated_code)
         msg['Subject'] = 'Recovery Code'
-        msg['From'] = 'team@pixelated-project.org'
+        msg['From'] = sender
         msg['To'] = self.backup_email
 
         result = MagicMock()
@@ -60,8 +63,8 @@ class AccountRecoveryTest(unittest.TestCase):
         with patch.object(smtp, 'sendmail', return_value=deferred_sendmail) as mock_sendmail:
             response = yield self.account_recovery._send_mail(self.generated_code, self.backup_email)
 
-        mock_sendmail.assert_called_with(
-            'test.com',
-            'team@pixelated-project.org',
-            [self.backup_email],
-            msg.as_string())
+            mock_sendmail.assert_called_with(
+                self.mock_smtp_config.remote_smtp_host,
+                sender,
+                [self.backup_email],
+                msg.as_string())
