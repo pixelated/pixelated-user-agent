@@ -47,7 +47,7 @@ class AccountRecoveryTest(unittest.TestCase):
     @defer.inlineCallbacks
     def test_update_recovery_code(self):
         when(self.account_recovery)._send_mail(ANY).thenReturn(defer.succeed(None))
-        response = yield self.account_recovery.update_recovery_code()
+        yield self.account_recovery.update_recovery_code()
         self.mock_bonafide_session.update_recovery_code.assert_called_once_with(self.generated_code)
 
     @defer.inlineCallbacks
@@ -58,10 +58,8 @@ class AccountRecoveryTest(unittest.TestCase):
         msg['From'] = sender
         msg['To'] = self.backup_email
 
-        result = MagicMock()
-        deferred_sendmail = defer.succeed(result)
-        with patch.object(smtp, 'sendmail', return_value=deferred_sendmail) as mock_sendmail:
-            response = yield self.account_recovery._send_mail(self.generated_code, self.backup_email)
+        with patch.object(smtp, 'sendmail', return_value=defer.succeed(None)) as mock_sendmail:
+            yield self.account_recovery._send_mail(self.generated_code, self.backup_email)
 
             mock_sendmail.assert_called_with(
                 self.mock_smtp_config.remote_smtp_host,
