@@ -17,7 +17,6 @@
 import os
 from xml.sax import SAXParseException
 
-from pixelated.authentication import Authenticator
 from pixelated.config.leap import BootstrapUserServices
 from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
 from pixelated.resources.account_recovery_resource import AccountRecoveryResource
@@ -103,7 +102,7 @@ class LoginResource(BaseResource):
         if path == 'status':
             return LoginStatusResource(self._services_factory)
         if path == AccountRecoveryResource.BASE_URL:
-            return AccountRecoveryResource(self._services_factory)
+            return AccountRecoveryResource(self._services_factory, self._provider)
         if not self.is_logged_in(request):
             return UnAuthorizedResource()
         return NoResource()

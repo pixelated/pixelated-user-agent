@@ -18,14 +18,16 @@ import os
 import json
 
 from twisted.python.filepath import FilePath
-from twisted.web.http import OK, INTERNAL_SERVER_ERROR, BAD_REQUEST
+from twisted.web.http import OK, INTERNAL_SERVER_ERROR, BAD_REQUEST, UNAUTHORIZED
 from twisted.web.template import Element, XMLFile, renderElement
 from twisted.web.server import NOT_DONE_YET
 from twisted.internet import defer
 from twisted.logger import Logger
+from twisted.cred.error import UnauthorizedLogin
 
 from pixelated.resources import BaseResource
 from pixelated.resources import get_public_static_folder
+from pixelated.account_recovery_authenticator import AccountRecoveryAuthenticator
 
 log = Logger()
 
@@ -49,8 +51,9 @@ class AccountRecoveryResource(BaseResource):
     BASE_URL = 'account-recovery'
     isLeaf = True
 
-    def __init__(self, services_factory):
+    def __init__(self, services_factory, provider):
         BaseResource.__init__(self, services_factory)
+        self._authenticator = AccountRecoveryAuthenticator(provider)
 
     def render_GET(self, request):
         request.setResponseCode(OK)
@@ -69,6 +72,8 @@ class AccountRecoveryResource(BaseResource):
             log.warn(failure)
             if failure.type is InvalidPasswordError or failure.type is EmptyFieldsError:
                 request.setResponseCode(BAD_REQUEST)
+            elif failure.type is UnauthorizedLogin:
+                request.setResponseCode(UNAUTHORIZED)
             else:
                 request.setResponseCode(INTERNAL_SERVER_ERROR)
             request.finish()
@@ -80,20 +85,24 @@ class AccountRecoveryResource(BaseResource):
     def _get_post_form(self, request):
         return json.loads(request.content.getvalue())
 
-    def _validate_password(self, password, confirm_password):
-        return password == confirm_password and len(password) >= 8 and len(password) <= 9999
+    def _validate_empty_fields(self, username, user_code):
+        if not username or not user_code:
+            raise EmptyFieldsError('The user entered an empty username or empty usercode')
 
+    def _validate_password(self, password, confirm_password):
+        if password != confirm_password or len(password) < 8 or len(password) > 9999:
+            raise InvalidPasswordError('The user entered an invalid password or confirmation')
+
+    @defer.inlineCallbacks
     def _handle_post(self, request):
         form = self._get_post_form(request)
+        username = form.get('username')
+        user_code = form.get('userCode')
         password = form.get('password')
         confirm_password = form.get('confirmPassword')
 
-        if not self._validate_password(password, confirm_password):
-            return defer.fail(InvalidPasswordError('The user entered an invalid password or confirmation'))
+        self._validate_empty_fields(username, user_code)
+        self._validate_password(password, confirm_password)
 
-        username = form.get('username')
-        user_code = form.get('userCode')
-        if not username or not user_code:
-            return defer.fail(EmptyFieldsError('The user entered an empty username or empty usercode'))
-
-        return defer.succeed('Done!')
+        user_auth = yield self._authenticator.authenticate(username, user_code)
+        defer.returnValue(user_auth)

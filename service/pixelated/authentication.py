@@ -44,7 +44,7 @@ class Authenticator(object):
         try:
             auth = yield self._bonafide_auth(credentials)
         except SRPAuthError:
-            raise UnauthorizedLogin("User typed wrong password/username combination.")
+            self._auth_error()
         returnValue(auth)
 
     @inlineCallbacks
@@ -57,6 +57,9 @@ class Authenticator(object):
                                    self.bonafide_session.uuid,
                                    'session_id',
                                    {'is_admin': False}))
+
+    def _auth_error(self):
+        raise UnauthorizedLogin("User typed wrong password/username combination.")
 
     def clean_username(self, username):
         if '@' not in username:
