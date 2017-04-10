@@ -19,8 +19,8 @@ from twisted.internet import defer
 from twisted.trial import unittest
 from twisted.mail import smtp
 
-from mock import patch, Mock, MagicMock
-from mockito import mock, when, any as ANY
+from mock import patch, Mock
+from mockito import when, any as ANY
 
 from pixelated.account_recovery import AccountRecovery
 

@@ -17,15 +17,14 @@
 import os
 import json
 
-from xml.sax import SAXParseException
-
-from pixelated.resources import BaseResource
 from twisted.python.filepath import FilePath
-from pixelated.resources import get_protected_static_folder
-from pixelated.account_recovery import AccountRecovery
 from twisted.web.http import OK, NO_CONTENT, INTERNAL_SERVER_ERROR
 from twisted.web.server import NOT_DONE_YET
 from twisted.web.template import Element, XMLFile, renderElement
+
+from pixelated.resources import BaseResource
+from pixelated.resources import get_protected_static_folder
+from pixelated.account_recovery import AccountRecovery
 
 
 class BackupAccountPage(Element):
