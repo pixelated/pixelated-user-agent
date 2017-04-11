@@ -19,11 +19,7 @@ from base_page import BasePage
 
 class AccountRecoveryPage(BasePage):
     def __init__(self, context):
-        BasePage.__init__(
-            self,
-            context,
-            context.account_recovery_url
-        )
+        super(AccountRecoveryPage, self).__init__(context, context.account_recovery_url)
 
         self._locators = {
             'admin_code': 'input[name="admin-code"]',
