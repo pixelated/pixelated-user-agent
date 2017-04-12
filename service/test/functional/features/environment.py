@@ -70,7 +70,7 @@ def before_all(context):
 
 
 def before_tag(context, tag):
-    if tag == "smoke":
+    if tag == "require_user":
         context.username = 'testuser_{}'.format(uuid.uuid4())
         context.user_email = '{}@{}'.format(context.username, context.hostname)
         utils.create_user(context)

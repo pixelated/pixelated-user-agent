@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-@smoke
+@smoke @require_user
 Feature: Account Recovery
   As a user of Pixelated
   I want to recover my account
