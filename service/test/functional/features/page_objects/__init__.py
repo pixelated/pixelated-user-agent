@@ -14,5 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-from base_page import BasePage
 from account_recovery_page import AccountRecoveryPage
+from base_page import BasePage
+from inbox_page import InboxPage

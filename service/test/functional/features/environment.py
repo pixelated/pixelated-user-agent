@@ -52,12 +52,14 @@ def before_all(context):
     if not context.host.startswith('http'):
         context.host = 'https://{}'.format(context.host)
 
-    hostname = urlparse(context.host).hostname
-    context.signup_url = 'https://{}/signup'.format(hostname)
-    context.login_url = 'https://mail.{}/login'.format(hostname)
-    context.backup_account_url = 'https://mail.{}/backup-account'.format(hostname)
-    context.account_recovery_url = 'https://mail.{}/account-recovery'.format(hostname)
+    context.hostname = urlparse(context.host).hostname
+    context.signup_url = 'https://{}/signup'.format(context.hostname)
+    context.inbox_url = 'https://mail.{}'.format(context.hostname)
+    context.login_url = 'https://mail.{}/login'.format(context.hostname)
+    context.backup_account_url = 'https://mail.{}/backup-account'.format(context.hostname)
+    context.account_recovery_url = 'https://mail.{}/account-recovery'.format(context.hostname)
     context.username = 'testuser_{}'.format(uuid.uuid4())
+    context.user_email = '{}@{}'.format(context.username, context.hostname)
 
     if 'localhost' in context.host:
         _mock_user_agent(context)
@@ -70,6 +72,7 @@ def before_all(context):
 def before_tag(context, tag):
     if tag == "smoke":
         context.username = 'testuser_{}'.format(uuid.uuid4())
+        context.user_email = '{}@{}'.format(context.username, context.hostname)
         utils.create_user(context)
 
 

@@ -28,6 +28,12 @@ Feature: Account Recovery
     And I logout from the header
     And I should see the login page
 
+  Scenario: Confirming I received the recovery code at my backup email
+    Given I am logged in Pixelated
+    When I open the mail with the recovery code
+    Then I see the mail has the recovery code
+    Then I logout
+
   Scenario: Recovering an account
     Given I am on the account recovery page
     When I submit admin recovery code

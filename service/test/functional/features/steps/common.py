@@ -146,10 +146,6 @@ def click_button(context, title, element='button'):
     button.click()
 
 
-def mail_list_with_subject_exists(context, subject):
-    return find_element_by_xpath(context, "//*[@class='mail-list-entry__item-subject' and contains(.,'%s')]" % subject)
-
-
 def reply_subject(context):
     e = find_element_by_css_selector(context, '#reply-subject')
     return e.text

@@ -56,6 +56,7 @@ def see_interstitial(context):
     find_element_by_css_selector(context, 'section#hive-section')
 
 
+@then(u'I logout')
 @when(u'I logout')
 def click_logout(context):
     find_element_by_css_selector(context, '#logout-form div').click()
