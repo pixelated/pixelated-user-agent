@@ -14,10 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-import uuid
-
-from behave import given, then, when
-
 from common import (
     element_should_have_content,
     fill_by_css_selector,
