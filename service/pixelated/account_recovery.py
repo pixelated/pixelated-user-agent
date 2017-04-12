@@ -34,6 +34,8 @@ class AccountRecovery(object):
 
     @inlineCallbacks
     def update_recovery_code(self):
+        log.info('Updating user\'s recovery code')
+
         try:
             code = self._soledad.create_recovery_code()
             response = yield self._bonafide_session.update_recovery_code(code)
@@ -48,6 +50,8 @@ class AccountRecovery(object):
 
     @inlineCallbacks
     def _send_mail(self, code, backup_email):
+        log.info('Sending mail containing the user\'s recovery code')
+
         sender = 'team@{}'.format(self._domain)
         msg = MIMEText('Your code %s' % code)
         msg['Subject'] = 'Recovery Code'
