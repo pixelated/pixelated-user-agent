@@ -26,10 +26,10 @@ from common import (
     wait_until_button_is_visible)
 
 
-@then('I see that the subject reads \'{subject}\'')
-def impl(context, subject):
-    e = find_element_by_css_selector(context, '#mail-view .mail-read-view__header-subject')
-    assert e.text == subject
+@then('I see that the subject reads \'{expected_subject}\'')
+def impl(context, expected_subject):
+    actual_subject = find_element_by_css_selector(context, '#mail-view .mail-read-view__header-subject').text
+    assert expected_subject == actual_subject
 
 
 @then('I see that the body reads \'{expected_body}\'')
