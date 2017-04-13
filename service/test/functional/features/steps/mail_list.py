@@ -138,9 +138,3 @@ def impl(context):
 @then('I should not see any email')
 def impl(context):
     _wait_for_mail_list_to_be_empty(context)
-
-
-@then(u'I see the mail has the recovery code')
-def step_impl(context):
-    expected_body = 'Your code'
-    context.execute_steps(u"Then I see that the body has '%s'" % expected_body)

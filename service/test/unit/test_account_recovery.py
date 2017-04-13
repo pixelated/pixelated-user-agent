@@ -24,6 +24,28 @@ from mockito import when, any as ANY
 
 from pixelated.account_recovery import AccountRecovery
 
+RECOVERY_CODE_EMAIL = '''Hello,
+
+You are receiving this email because you registered at a Pixelated provider, on test.com.
+In case you ever forget your password, you can access this link test.com/account-recovery and put the following recovery code:
+
+4645a2f8997e5d0d
+
+This code is they only way to recover access to your account in case you lose your password.
+Be careful and keep it safe!!!
+
+Why is this so important?
+
+Pixelated is an email client that respects your privacy and uses PGP Encryption to do so.
+Your password also gives you access to your keys, so if you forget it you will lose access to your account and the ability to decrypt your messages.
+We understand that forgetting passwords is a common thing, so we developed a more secure way to recover access to your account, therefore, a little bit more annoying ;)
+This code is half of a big code to recover your account, the other half is with the account administrator. In case you forget your password, use this code and your administrator code to recover access to your account. It\'s like those locks with two keys :)
+You will only succeed if you have both codes, so, never hurts to ask again: SAVE THIS CODE!
+
+
+PS: If you didn\'t create an account at test.com, please ignore this email.
+'''
+
 
 class AccountRecoveryTest(unittest.TestCase):
     def setUp(self):
@@ -53,7 +75,7 @@ class AccountRecoveryTest(unittest.TestCase):
     @defer.inlineCallbacks
     def test_send_recovery_code_by_email(self):
         sender = 'team@{}'.format(self.domain)
-        msg = MIMEText('Your code %s' % self.generated_code)
+        msg = MIMEText(RECOVERY_CODE_EMAIL)
         msg['Subject'] = 'Recovery Code'
         msg['From'] = sender
         msg['To'] = self.backup_email

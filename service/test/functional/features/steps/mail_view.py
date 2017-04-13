@@ -109,3 +109,9 @@ def impl(context):
 
     assert cc is not None
     assert bcc is not None
+
+
+@then(u'I see the mail has the recovery code')
+def step_impl(context):
+    expected_body = 'This code is they only way to recover access to your account in case you lose your password.'
+    context.execute_steps(u"Then I see that the body has '%s'" % expected_body)
