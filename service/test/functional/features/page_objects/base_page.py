@@ -16,7 +16,8 @@
 
 from steps.common import (
     fill_by_css_selector,
-    find_element_by_css_selector)
+    find_element_by_css_selector,
+    find_element_by_xpath)
 
 
 class BasePage(object):
@@ -30,6 +31,9 @@ class BasePage(object):
 
     def fill_by_css_selector(self, loc, text):
         fill_by_css_selector(self.context, loc, text)
+
+    def find_element_by_xpath(self, xpath):
+        return find_element_by_xpath(self.context, xpath)
 
     def visit(self):
         self.context.browser.get(self.base_url)

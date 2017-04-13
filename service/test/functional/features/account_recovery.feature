@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
-@smoke
+@smoke @require_user
 Feature: Account Recovery
   As a user of Pixelated
   I want to recover my account
@@ -27,6 +27,12 @@ Feature: Account Recovery
     Then I see the confirmation of this submission
     And I logout from the header
     And I should see the login page
+
+  Scenario: Confirming I received the recovery code at my backup email
+    Given I am logged in Pixelated
+    When I open the mail with the recovery code
+    Then I see the mail has the recovery code
+    Then I logout
 
   Scenario: Recovering an account
     Given I am on the account recovery page

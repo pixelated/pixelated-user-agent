@@ -24,7 +24,7 @@ from common import (
 @given('I am logged in Pixelated')
 def login_user(context):
     login_page(context)
-    enter_credentials(context, 'username', 'password')
+    enter_credentials(context)
     click_login(context)
     see_interstitial(context)
     _see_inbox(context)
@@ -40,10 +40,10 @@ def _see_inbox(context):
     find_element_by_css_selector(context, '#compose', timeout=40)
 
 
-@when(u'I enter {username} and {password} as credentials')
-def enter_credentials(context, username, password):
+@when(u'I enter username and password as credentials')
+def enter_credentials(context):
     fill_by_css_selector(context, 'input[name="username"]', context.username)
-    fill_by_css_selector(context, 'input[name="password"]', password)
+    fill_by_css_selector(context, 'input[name="password"]', 'password')
 
 
 @when(u'I click on the login button')
@@ -56,12 +56,13 @@ def see_interstitial(context):
     find_element_by_css_selector(context, 'section#hive-section')
 
 
+@then(u'I logout')
 @when(u'I logout')
 def click_logout(context):
     find_element_by_css_selector(context, '#logout-form div').click()
 
 
-@then(u'I logout from the header')
+@then(u'I logout from the header')  # noqa
 @when(u'I logout from the header')
 def click_logout(context):
     find_element_by_css_selector(context, 'button[name="logout"]').click()

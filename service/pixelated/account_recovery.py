@@ -25,14 +25,17 @@ log = Logger()
 
 
 class AccountRecovery(object):
-    def __init__(self, session, soledad, smtp_config, backup_email):
+    def __init__(self, session, soledad, smtp_config, backup_email, domain):
         self._bonafide_session = session
         self._soledad = soledad
         self._smtp_config = smtp_config
         self._backup_email = backup_email
+        self._domain = domain
 
     @inlineCallbacks
     def update_recovery_code(self):
+        log.info('Updating user\'s recovery code')
+
         try:
             code = self._soledad.create_recovery_code()
             response = yield self._bonafide_session.update_recovery_code(code)
@@ -47,15 +50,18 @@ class AccountRecovery(object):
 
     @inlineCallbacks
     def _send_mail(self, code, backup_email):
+        log.info('Sending mail containing the user\'s recovery code')
+
+        sender = 'team@{}'.format(self._domain)
         msg = MIMEText('Your code %s' % code)
         msg['Subject'] = 'Recovery Code'
-        msg['From'] = 'team@pixelated-project.org'
+        msg['From'] = sender
         msg['To'] = backup_email
 
         try:
             send_mail_result = yield smtp.sendmail(
                 str(self._smtp_config.remote_smtp_host),
-                'team@pixelated-project.org',
+                sender,
                 [backup_email],
                 msg.as_string())
             returnValue(send_mail_result)

@@ -17,6 +17,7 @@
 from behave import then, when
 from selenium.webdriver.common.keys import Keys
 
+from ..page_objects import InboxPage
 from common import (
     click_button,
     find_element_by_css_selector,
@@ -25,19 +26,17 @@ from common import (
     wait_until_button_is_visible)
 
 
-@then('I see that the subject reads \'{subject}\'')
-def impl(context, subject):
-    e = find_element_by_css_selector(context, '#mail-view .mail-read-view__header-subject')
-    assert e.text == subject
+@then('I see that the subject reads \'{expected_subject}\'')
+def impl(context, expected_subject):
+    actual_subject = find_element_by_css_selector(context, '#mail-view .mail-read-view__header-subject').text
+    assert expected_subject == actual_subject
 
 
 @then('I see that the body reads \'{expected_body}\'')
+@then('I see that the body has \'{expected_body}\'')
 def impl(context, expected_body):
-    find_element_by_css_selector(context, '#read-sandbox')
-    context.browser.switch_to_frame('read-sandbox')
-    e = find_element_by_css_selector(context, 'body')
-    assert e.text == expected_body
-    context.browser.switch_to_default_content()
+    actual_body = InboxPage(context).get_body_message()
+    assert expected_body in actual_body
 
 
 @then('that email has the \'{tag}\' tag')

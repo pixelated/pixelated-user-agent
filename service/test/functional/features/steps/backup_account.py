@@ -29,7 +29,7 @@ def backup_account_page(context):
 
 @when(u'I submit my backup account')
 def submit_backup_email(context):
-    fill_by_css_selector(context, 'input[name="email"]', 'test@test.com')
+    fill_by_css_selector(context, 'input[name="email"]', context.user_email)
     find_element_by_css_selector(context, '.submit-button button[type="submit"]').click()
 
 

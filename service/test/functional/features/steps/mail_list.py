@@ -17,13 +17,12 @@
 from behave import when, then, given
 from selenium.common.exceptions import TimeoutException
 
+from ..page_objects import InboxPage
 from common import (
     ImplicitWait,
-    execute_ignoring_staleness,
     find_element_by_id,
     find_element_by_css_selector,
     find_elements_by_css_selector,
-    mail_list_with_subject_exists,
     wait_for_condition,
     wait_for_loading_to_finish)
 
@@ -42,10 +41,6 @@ def open_current_mail(context):
     e.click()
 
 
-def get_first_email(context):
-    return find_element_by_css_selector(context, '.mail-list-entry__item')
-
-
 @then('I see that mail under the \'{tag}\' tag')
 def impl(context, tag):
     context.execute_steps("when I select the tag '%s'" % tag)
@@ -59,9 +54,12 @@ def impl(context):
 
 @when('I open the first mail in the mail list')
 def impl(context):
-    # it seems page is often still loading so staleness exceptions happen often
-    context.current_mail_id = 'mail-' + execute_ignoring_staleness(lambda: get_first_email(context).get_attribute('href').split('/')[-1])
-    execute_ignoring_staleness(lambda: get_first_email(context).click())
+    InboxPage(context).open_first_mail_in_the_mail_list()
+
+
+@when('I open the mail with the recovery code')
+def impl(context):
+    InboxPage(context).open_mail_with_the_recovery_code()
 
 
 @when('I open the first mail in the \'{tag}\'')
@@ -83,7 +81,7 @@ def impl(context):
 
 @then('the deleted mail is there')
 def impl(context):
-    mail_list_with_subject_exists(context, context.last_subject)
+    InboxPage(context).get_mail_with_subject(context.last_subject)
 
 
 @given('I have mails')
@@ -140,3 +138,9 @@ def impl(context):
 @then('I should not see any email')
 def impl(context):
     _wait_for_mail_list_to_be_empty(context)
+
+
+@then(u'I see the mail has the recovery code')
+def step_impl(context):
+    expected_body = 'Your code'
+    context.execute_steps(u"Then I see that the body has '%s'" % expected_body)
