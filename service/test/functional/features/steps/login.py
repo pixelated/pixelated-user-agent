@@ -56,6 +56,11 @@ def see_interstitial(context):
     find_element_by_css_selector(context, 'section#hive-section')
 
 
+@then(u'I should see the inbox')
+def see_interstitial(context):
+    find_element_by_css_selector(context, 'ul#mail-list')
+
+
 @then(u'I logout')
 @when(u'I logout')
 def click_logout(context):

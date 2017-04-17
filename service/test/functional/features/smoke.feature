@@ -31,7 +31,8 @@ Feature: sign up, login and logout
     When I enter username and password as credentials
     And I click on the login button
     Then I should see the fancy interstitial
-    Then I have mails
+    And I should see the inbox
+    And I have mails
     When I logout
     Then I should see the login page
 
@@ -40,6 +41,7 @@ Feature: sign up, login and logout
     When I enter username and password as credentials
     And I click on the login button
     Then I should see the fancy interstitial
+    And I should see the inbox
     Given I go to the backup account page
     When I logout from the header
     Then I should see the login page
