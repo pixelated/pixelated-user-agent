@@ -30,6 +30,7 @@ from pixelated.resources.features_resource import FeaturesResource
 from test.support.integration import AppTestClient
 from steps.common import DEFAULT_IMPLICIT_WAIT_TIMEOUT_IN_S
 from steps import utils
+from ..page_objects import BackupAccountPage
 
 
 class UnsuportedWebDriverError(Exception):
@@ -135,12 +136,21 @@ def after_feature(context, feature):
 
 
 def after_step(context, step):
-    _debug_on_error(context, step)
-    _save_screenshot(context, step)
+    if step.status == 'failed':
+        _debug_on_error(context, step)
+        _save_screenshot(context, step)
+        _logout(context, step)
+
+
+def _logout(context, step):
+    if context.browser.current_url == context.inbox_url:
+        utils.log_out()
+    elif context.browser.current_url == context.backup_account_url:
+        BackupAccountPage().logout()
 
 
 def _debug_on_error(context, step):
-    if step.status == 'failed' and context.config.userdata.getbool("debug"):
+    if context.config.userdata.getbool("debug"):
         try:
             import ipdb
             ipdb.post_mortem(step.exc_traceback)
@@ -150,8 +160,7 @@ def _debug_on_error(context, step):
 
 
 def _save_screenshot(context, step):
-    if (step.status == 'failed' and
-            context.config.userdata.getbool("screenshots", True)):
+    if context.config.userdata.getbool("screenshots", True):
         timestamp = time.strftime("%Y-%m-%d-%H-%M-%S")
         filename = _slugify('{} failed {}'.format(timestamp, str(step.name)))
         filepath = os.path.join('screenshots', filename + '.png')

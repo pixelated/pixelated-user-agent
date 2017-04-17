@@ -15,7 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 from base_page import BasePage
-from common import execute_ignoring_staleness
+from steps.common import execute_ignoring_staleness
 
 
 class InboxPage(BasePage):

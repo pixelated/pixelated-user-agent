@@ -17,3 +17,4 @@
 from account_recovery_page import AccountRecoveryPage
 from base_page import BasePage
 from inbox_page import InboxPage
+from backup_account_page import BackupAccountPage

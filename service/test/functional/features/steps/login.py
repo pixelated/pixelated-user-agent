@@ -57,8 +57,8 @@ def see_interstitial(context):
 
 
 @then(u'I should see the inbox')
-def see_interstitial(context):
-    find_element_by_css_selector(context, 'ul#mail-list')
+def see_inbox(context):
+    _see_inbox(context)
 
 
 @then(u'I logout')
