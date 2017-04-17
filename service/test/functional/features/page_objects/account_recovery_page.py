@@ -22,8 +22,11 @@ class AccountRecoveryPage(BasePage):
         super(AccountRecoveryPage, self).__init__(context, context.account_recovery_url)
 
         self._locators = {
+            'admin_form': '.account-recovery-form.admin-code',
             'admin_code': 'input[name="admin-code"]',
+            'user_form': '.account-recovery-form.user-code',
             'user_code': 'input[name="user-code"]',
+            'new_password_form': '.account-recovery-form.new-password',
             'new_password': 'input[name="new-password"]',
             'confirm_password': 'input[name="confirm-password"]',
             'submit_button': '.submit-button button[type="submit"]',
@@ -31,17 +34,24 @@ class AccountRecoveryPage(BasePage):
         }
 
     def submit_admin_recovery_code(self, admin_code):
+        self.find_element_by_css_selector(self._locators['admin_form'])
         self.fill_by_css_selector(self._locators['admin_code'], admin_code)
-        self.find_element_by_css_selector(self._locators['submit_button']).click()
+        self.click_submit()
 
     def submit_user_recovery_code(self, user_code):
+        self.find_element_by_css_selector(self._locators['user_form'])
         self.fill_by_css_selector(self._locators['user_code'], user_code)
-        self.find_element_by_css_selector(self._locators['submit_button']).click()
+        self.click_submit()
 
     def submit_new_password(self, new_password, confirm_password):
+        self.find_element_by_css_selector(self._locators['new_password_form'])
         self.fill_by_css_selector(self._locators['new_password'], new_password)
         self.fill_by_css_selector(self._locators['confirm_password'], confirm_password)
-        self.find_element_by_css_selector(self._locators['submit_button']).click()
+        self.click_submit()
 
     def go_to_backup_account(self):
         self.find_element_by_css_selector(self._locators['backup_account_link']).click()
+
+    def click_submit(self):
+        submit_button = self.find_element_by_css_selector(self._locators['submit_button'])
+        submit_button.click()
