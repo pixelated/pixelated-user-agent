@@ -1,0 +1,20 @@
+Olá,
+
+Você está recebendo este email porque você se registrou em um provedor do Pixelated, no {domain}.
+Se algum dia esquecer sua senha, você pode acessar esse link {account_recovery_url} e usar o código abaixo:
+
+{recovery_code}
+
+Esse código é a única forma de recuperar o acesso a sua conta se perder a senha.
+Guarde-o com carinho!!!
+
+Por quê isso é importante?
+
+Pixelated é um cliente de email que respeita sua privacidade e usa criptografia PGP para isso.
+Sua senha também te da acesso as suas chaves, então se você esquecê-la você perderá acesso a sua conta e a habilidade de descriptografar suas mensagens.
+Nós entedemos que esquecer a senha é algo comum, por isso desenvolvemos uma forma mais segura de recuperar sua conta e, consequentemente, um pouco mais chata ;)
+
+Esse código é uma metade do código necesário para recuperar a conta. A outra metade está com o administrador da conta. Se você esquecer a senha, use esse código e o do administrador para recuperar acesso a conta. É como se fosse um cadeado com duas chaves :)
+Você só terá sucesso se tiver ambos os códigos, então, nunca machuca pedir novamente: GUARDE ESSE CÓDIGO!
+
+PS: Se você não criou uma conta no site {domain}, por favor ignore esse email.

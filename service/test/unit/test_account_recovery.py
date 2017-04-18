@@ -50,6 +50,41 @@ class AccountRecoveryTest(unittest.TestCase):
         yield self.account_recovery.update_recovery_code()
         self.mock_bonafide_session.update_recovery_code.assert_called_once_with(self.generated_code)
 
+    @defer.inlineCallbacks
+    def test_creates_recovery_code(self):
+        when(self.account_recovery)._send_mail(ANY).thenReturn(defer.succeed(None))
+        yield self.account_recovery.update_recovery_code()
+        self.mock_soledad.create_recovery_code.assert_called_once()
+
+    @patch('pixelated.account_recovery.smtp.sendmail')
+    @patch('pixelated.account_recovery.pkg_resources.resource_filename')
+    @defer.inlineCallbacks
+    def test_default_email_template(self, mock_resource, mock_sendmail):
+        mock_sendmail.return_value = defer.succeed(None)
+
+        with patch('pixelated.account_recovery.open', mock_open(read_data=''), create=True):
+            yield self.account_recovery.update_recovery_code()
+            mock_resource.assert_called_once_with('pixelated.assets',
+                                                  'recovery.mail.en-US')
+
+    @patch('pixelated.account_recovery.smtp.sendmail')
+    @patch('pixelated.account_recovery.pkg_resources.resource_filename')
+    @defer.inlineCallbacks
+    def test_portuguese_email_template(self, mock_resource, mock_sendmail):
+        self.account_recovery = AccountRecovery(
+            self.mock_bonafide_session,
+            self.mock_soledad,
+            self.mock_smtp_config,
+            self.backup_email,
+            self.domain,
+            language='pt-BR')
+        mock_sendmail.return_value = defer.succeed(None)
+
+        with patch('pixelated.account_recovery.open', mock_open(read_data=''), create=True):
+            yield self.account_recovery.update_recovery_code()
+            mock_resource.assert_called_once_with('pixelated.assets',
+                                                  'recovery.mail.pt-BR')
+
     @patch('pixelated.account_recovery.smtp.sendmail')
     @patch('pixelated.account_recovery.pkg_resources.resource_filename')
     @defer.inlineCallbacks

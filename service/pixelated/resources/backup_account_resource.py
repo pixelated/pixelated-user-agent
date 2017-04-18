@@ -25,6 +25,7 @@ from twisted.web.template import Element, XMLFile, renderElement
 from pixelated.resources import BaseResource
 from pixelated.resources import get_protected_static_folder
 from pixelated.account_recovery import AccountRecovery
+from pixelated.support.language import parse_accept_language
 
 
 class BackupAccountPage(Element):
@@ -56,7 +57,8 @@ class BackupAccountResource(BaseResource):
             self.soledad(request),
             self._service(request, '_leap_session').smtp_config,
             self._get_backup_email(request),
-            self._leap_provider.server_name)
+            self._leap_provider.server_name,
+            language=self._get_language(request))
 
         def update_response(response):
             request.setResponseCode(NO_CONTENT)
@@ -72,3 +74,6 @@ class BackupAccountResource(BaseResource):
 
     def _get_backup_email(self, request):
         return json.loads(request.content.getvalue()).get('backupEmail')
+
+    def _get_language(self, request):
+        return parse_accept_language(request.getAllHeaders())

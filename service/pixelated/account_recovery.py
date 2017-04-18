@@ -15,6 +15,7 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 import pkg_resources
+import binascii
 
 from twisted.internet.defer import inlineCallbacks, returnValue
 from twisted.logger import Logger
@@ -28,12 +29,13 @@ log = Logger()
 
 
 class AccountRecovery(object):
-    def __init__(self, session, soledad, smtp_config, backup_email, domain):
+    def __init__(self, session, soledad, smtp_config, backup_email, domain, language='en-US'):
         self._bonafide_session = session
         self._soledad = soledad
         self._smtp_config = smtp_config
         self._backup_email = backup_email
         self._domain = domain
+        self._language = language
 
     @inlineCallbacks
     def update_recovery_code(self):
@@ -72,15 +74,15 @@ class AccountRecovery(object):
             log.error('Failed trying to send the email with the recovery code')
             raise e
 
-    def _get_recovery_mail(self, code, language='en-US'):
+    def _get_recovery_mail(self, code):
         recovery_mail = pkg_resources.resource_filename(
             'pixelated.assets',
-            'recovery.mail.%s' % (language))
+            'recovery.mail.%s' % (self._language))
 
         account_recovery_url = '{}/{}'.format(self._domain, AccountRecoveryResource.BASE_URL)
 
         with open(recovery_mail) as mail_template_file:
             return mail_template_file.read().format(
                 domain=self._domain,
-                recovery_code=code,
+                recovery_code=binascii.hexlify(code),
                 account_recovery_url=account_recovery_url)
