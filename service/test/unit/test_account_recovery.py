@@ -19,32 +19,10 @@ from twisted.internet import defer
 from twisted.trial import unittest
 from twisted.mail import smtp
 
-from mock import patch, Mock
+from mock import patch, Mock, mock_open
 from mockito import when, any as ANY
 
 from pixelated.account_recovery import AccountRecovery
-
-RECOVERY_CODE_EMAIL = '''Hello,
-
-You are receiving this email because you registered at a Pixelated provider, on test.com.
-In case you ever forget your password, you can access this link test.com/account-recovery and put the following recovery code:
-
-4645a2f8997e5d0d
-
-This code is the only way to recover access to your account in case you lose your password.
-Be careful and keep it safe!!!
-
-Why is this so important?
-
-Pixelated is an email client that respects your privacy and uses PGP Encryption to do so.
-Your password also gives you access to your keys, so if you forget it you will lose access to your account and the ability to decrypt your messages.
-We understand that forgetting passwords is a common thing, so we developed a more secure way to recover access to your account, therefore, a little bit more annoying ;)
-This code is half of a big code to recover your account, the other half is with the account administrator. In case you forget your password, use this code and your administrator code to recover access to your account. It\'s like those locks with two keys :)
-You will only succeed if you have both codes, so, never hurts to ask again: SAVE THIS CODE!
-
-
-PS: If you didn\'t create an account at test.com, please ignore this email.
-'''
 
 
 class AccountRecoveryTest(unittest.TestCase):
@@ -72,15 +50,21 @@ class AccountRecoveryTest(unittest.TestCase):
         yield self.account_recovery.update_recovery_code()
         self.mock_bonafide_session.update_recovery_code.assert_called_once_with(self.generated_code)
 
+    @patch('pixelated.account_recovery.smtp.sendmail')
+    @patch('pixelated.account_recovery.pkg_resources.resource_filename')
     @defer.inlineCallbacks
-    def test_send_recovery_code_by_email(self):
+    def test_send_recovery_code_by_email(self, mock_resource, mock_sendmail):
+        mock_sendmail.return_value = defer.succeed(None)
+
         sender = 'team@{}'.format(self.domain)
-        msg = MIMEText(RECOVERY_CODE_EMAIL)
+        mock_file_content = '{domain}, {recovery_code}, {account_recovery_url}'
+        recovery_code_email = 'test.com, 4645a2f8997e5d0d, test.com/account-recovery'
+        msg = MIMEText(recovery_code_email)
         msg['Subject'] = 'Recovery Code'
         msg['From'] = sender
         msg['To'] = self.backup_email
 
-        with patch.object(smtp, 'sendmail', return_value=defer.succeed(None)) as mock_sendmail:
+        with patch('pixelated.account_recovery.open', mock_open(read_data=mock_file_content), create=True):
             yield self.account_recovery._send_mail(self.generated_code, self.backup_email)
 
             mock_sendmail.assert_called_with(
