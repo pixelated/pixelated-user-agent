@@ -31,7 +31,7 @@ In case you ever forget your password, you can access this link test.com/account
 
 4645a2f8997e5d0d
 
-This code is they only way to recover access to your account in case you lose your password.
+This code is the only way to recover access to your account in case you lose your password.
 Be careful and keep it safe!!!
 
 Why is this so important?
