@@ -68,17 +68,24 @@ class AuthenticatorTest(unittest.TestCase):
     def test_successful_bonafide_auth_should_return_the_user_authentication_object(self):
         auth = Authenticator(self._leap_provider)
         mock_bonafide_session = Mock()
-        mock_srp_auth = Mock()
-        mock_srp_auth.token = 'some_token'
-        mock_srp_auth.uuid = 'some_uuid'
-        mock_bonafide_session.authenticate = Mock(return_value=mock_srp_auth)
-        with patch('pixelated.authentication.Session', return_value=mock_srp_auth):
+        mock_bonafide_session.token = 'some_token'
+        mock_bonafide_session.uuid = 'some_uuid'
+
+        with patch('pixelated.authentication.Session', return_value=mock_bonafide_session):
             resulting_auth = yield auth.authenticate('username@domain.org', 'password')
             self.assertIsInstance(resulting_auth, Authentication)
             self.assertEquals('username', resulting_auth.username)
             self.assertEquals('some_token', resulting_auth.token)
             self.assertEquals('some_uuid', resulting_auth.uuid)
-            self.assertEquals(mock_srp_auth, auth.bonafide_session)
+            self.assertEquals(mock_bonafide_session, auth.bonafide_session)
+
+    def test_bonafide_auth_called_with_recovery_as_false(self):
+        auth = Authenticator(self._leap_provider)
+        mock_bonafide_session = Mock()
+
+        with patch('pixelated.authentication.Session', return_value=mock_bonafide_session):
+            auth.authenticate('username', 'password')
+            mock_bonafide_session.authenticate.assert_called_with(recovery=False)
 
     def test_username_without_domain_is_not_changed(self):
         username_without_domain = 'username'

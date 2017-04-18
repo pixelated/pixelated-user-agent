@@ -52,3 +52,11 @@ class AccountRecoveryAuthenticatorTest(unittest.TestCase):
                 except UnauthorizedLogin as e:
                     self.assertEqual("User typed wrong recovery-code/username combination.", e.message)
                     raise
+
+    def test_bonafide_auth_called_with_recovery_as_true(self):
+        auth = AccountRecoveryAuthenticator(self._leap_provider)
+        mock_bonafide_session = MagicMock()
+
+        with patch('pixelated.authentication.Session', return_value=mock_bonafide_session):
+            auth.authenticate('username', 'password')
+            mock_bonafide_session.authenticate.assert_called_with(recovery=True)
