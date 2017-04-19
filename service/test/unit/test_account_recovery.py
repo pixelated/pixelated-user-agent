@@ -94,8 +94,8 @@ class AccountRecoveryTest(unittest.TestCase):
         mock_formatdate.return_value = 'Sat, 21 Mar 2015 19:30:09 -0300'
 
         sender = 'team@{}'.format(self.domain)
-        mock_file_content = '{backup_email}, {sender}, {date}, {domain}, {recovery_code}, {account_recovery_url}'
-        recovery_code_email = '\ntest@test.com, team@test.com, Sat, 21 Mar 2015 19:30:09 -0300, test.com, 34363435613266383939376535643064, test.com/account-recovery'
+        mock_file_content = '{backup_email}, {sender}, {date}, {domain}, {recovery_code}'
+        recovery_code_email = '\ntest@test.com, team@test.com, Sat, 21 Mar 2015 19:30:09 -0300, test.com, 34363435613266383939376535643064'
 
         with patch('pixelated.account_recovery.open', mock_open(read_data=mock_file_content), create=True):
             yield self.account_recovery._send_mail(self.generated_code, self.backup_email)

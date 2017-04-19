@@ -1,13 +1,13 @@
 From: {sender}
 Date: {date}
-Subject: Codigo de Recuperacao
+Subject: Codigo de Recuperacao de {domain}
 To: {backup_email}
 Content-Type: text/plain; charset=UTF-8
 
 Olá,
 
-Você está recebendo este email porque você se registrou em um provedor do Pixelated, no {domain}.
-Se algum dia esquecer sua senha, você pode acessar esse link {account_recovery_url} e usar o código abaixo:
+Você está recebendo este email porque você se registrou em um provedor do Pixelated, no https://{domain}.
+Se algum dia esquecer sua senha use o código abaixo:
 
 {recovery_code}
 
@@ -23,4 +23,4 @@ Nós entedemos que esquecer a senha é algo comum, por isso desenvolvemos uma fo
 Esse código é uma metade do código necesário para recuperar a conta. A outra metade está com o administrador da conta. Se você esquecer a senha, use esse código e o do administrador para recuperar acesso a conta. É como se fosse um cadeado com duas chaves :)
 Você só terá sucesso se tiver ambos os códigos, então, nunca machuca pedir novamente: GUARDE ESSE CÓDIGO!
 
-PS: Se você não criou uma conta no site {domain}, por favor ignore esse email.
+PS: Se você não criou uma conta no site https://{domain}, por favor ignore esse email.

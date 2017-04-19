@@ -24,8 +24,6 @@ from twisted.mail import smtp
 from email import message_from_string
 from email.utils import formatdate
 
-from pixelated.resources.account_recovery_resource import AccountRecoveryResource
-
 log = Logger()
 
 
@@ -77,13 +75,10 @@ class AccountRecovery(object):
             'pixelated.assets',
             'recovery.mail.%s' % (self._language))
 
-        account_recovery_url = '{}/{}'.format(self._domain, AccountRecoveryResource.BASE_URL)
-
         with open(recovery_mail) as mail_template_file:
             return message_from_string(mail_template_file.read().format(
                 domain=self._domain,
                 recovery_code=binascii.hexlify(code),
-                account_recovery_url=account_recovery_url,
                 backup_email=backup_email,
                 sender=sender,
                 date=formatdate(localtime=True)))

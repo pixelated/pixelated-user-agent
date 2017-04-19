@@ -1,13 +1,13 @@
 From: {sender}
 Date: {date}
-Subject: Recovery Code
+Subject: Recovery Code for {domain}
 To: {backup_email}
 Content-Type: text/plain; charset=UTF-8
 
 Hello,
 
-You are receiving this email because you registered at a Pixelated provider, on {domain}.
-In case you ever forget your password, you can access this link {account_recovery_url} and put the following recovery code:
+You are receiving this email because you registered at a Pixelated provider, on https://{domain}.
+In case you ever forget your password use the following recovery code:
 
 {recovery_code}
 
@@ -23,4 +23,4 @@ This code is half of a big code to recover your account, the other half is with 
 You will only succeed if you have both codes, so, never hurts to ask again: SAVE THIS CODE!
 
 
-PS: If you didn't create an account at {domain}, please ignore this email.
+PS: If you didn't create an account at https://{domain}, please ignore this email.
