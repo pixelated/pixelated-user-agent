@@ -60,7 +60,7 @@ class Authenticator(object):
                                    {'is_admin': False}))
 
     def _auth_error(self):
-        raise UnauthorizedLogin("User typed wrong password/username combination.")
+        raise UnauthorizedLogin("User typed wrong username/password combination.")
 
     def clean_username(self, username):
         if '@' not in username:

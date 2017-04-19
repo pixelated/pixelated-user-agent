@@ -50,7 +50,7 @@ class AccountRecoveryAuthenticatorTest(unittest.TestCase):
                 try:
                     yield account_recovery_authenticator.authenticate('username', 'recovery_code')
                 except UnauthorizedLogin as e:
-                    self.assertEqual("User typed wrong recovery-code/username combination.", e.message)
+                    self.assertEqual("User typed wrong username/recovery-code combination.", e.message)
                     raise
 
     def test_bonafide_auth_called_with_recovery_as_true(self):

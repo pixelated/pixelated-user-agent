@@ -51,7 +51,7 @@ class AuthenticatorTest(unittest.TestCase):
                 try:
                     yield auth.authenticate('username', 'password')
                 except UnauthorizedLogin as e:
-                    self.assertEqual("User typed wrong password/username combination.", e.message)
+                    self.assertEqual("User typed wrong username/password combination.", e.message)
                     raise
 
     @inlineCallbacks
