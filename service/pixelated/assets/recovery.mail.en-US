@@ -6,21 +6,23 @@ Content-Type: text/plain; charset=UTF-8
 
 Hello,
 
-You are receiving this email because you registered at a Pixelated provider, on https://{domain}.
-In case you ever forget your password use the following recovery code:
+You are receiving this message because you registered an email account at https://{domain}.
+If you ever forget your password, you'll need the code below to recover it. Save it! It is the only way to access to your account again.
 
 {recovery_code}
 
-This code is the only way to recover access to your account in case you lose your password.
-Be careful and keep it safe!!!
+Save this message or write this code in a safe place.
 
+--
 Why is this so important?
 
-Pixelated is an email client that respects your privacy and uses PGP Encryption to do so.
-Your password also gives you access to your keys, so if you forget it you will lose access to your account and the ability to decrypt your messages.
-We understand that forgetting passwords is a common thing, so we developed a more secure way to recover access to your account, therefore, a little bit more annoying ;)
-This code is half of a big code to recover your account, the other half is with the account administrator. In case you forget your password, use this code and your administrator code to recover access to your account. It's like those locks with two keys :)
-You will only succeed if you have both codes, so, never hurts to ask again: SAVE THIS CODE!
+Pixelated is an email client that respects your privacy and uses PGP Encryption to do so. Your password also gives you access to your keys, so if you forget it you will lose access to your account and the ability to read your messages.
+Forgetting passwords is a common thing, so we developed a more secure way to recover access to your account.
+
+1) This code is half of a big code to recover your account.
+2) The other half is with the account administrator.
+3) In case you forget your password, use this code and your administrator code to recover access to your account. It's like those locks with two keys :)
+
 
 
 PS: If you didn't create an account at https://{domain}, please ignore this email.
