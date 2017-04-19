@@ -22,6 +22,7 @@ from twisted.logger import Logger
 from twisted.mail import smtp
 
 from email import message_from_string
+from email.utils import formatdate
 
 from pixelated.resources.account_recovery_resource import AccountRecoveryResource
 
@@ -85,4 +86,4 @@ class AccountRecovery(object):
                 account_recovery_url=account_recovery_url,
                 backup_email=backup_email,
                 sender=sender,
-                date='Sat, 21 Mar 2015 19:30:09 -0300'))
+                date=formatdate(localtime=True)))
