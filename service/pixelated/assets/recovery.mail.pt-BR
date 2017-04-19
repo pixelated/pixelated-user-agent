@@ -1,3 +1,9 @@
+From: {sender}
+Date: {date}
+Subject: Código de Recuperação
+To: {backup_email}
+Content-Type: text/plain; charset=UTF-8
+
 Olá,
 
 Você está recebendo este email porque você se registrou em um provedor do Pixelated, no {domain}.

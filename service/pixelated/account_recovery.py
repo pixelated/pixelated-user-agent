@@ -21,7 +21,7 @@ from twisted.internet.defer import inlineCallbacks, returnValue
 from twisted.logger import Logger
 from twisted.mail import smtp
 
-from email.mime.text import MIMEText
+from email import message_from_string
 
 from pixelated.resources.account_recovery_resource import AccountRecoveryResource
 
@@ -58,10 +58,7 @@ class AccountRecovery(object):
         log.info('Sending mail containing the user\'s recovery code')
 
         sender = 'team@{}'.format(self._domain)
-        msg = MIMEText(self._get_recovery_mail(code))
-        msg['Subject'] = 'Recovery Code'
-        msg['From'] = sender
-        msg['To'] = backup_email
+        msg = self._get_recovery_mail(code, sender, backup_email)
 
         try:
             send_mail_result = yield smtp.sendmail(
@@ -74,7 +71,7 @@ class AccountRecovery(object):
             log.error('Failed trying to send the email with the recovery code')
             raise e
 
-    def _get_recovery_mail(self, code):
+    def _get_recovery_mail(self, code, sender, backup_email):
         recovery_mail = pkg_resources.resource_filename(
             'pixelated.assets',
             'recovery.mail.%s' % (self._language))
@@ -82,7 +79,10 @@ class AccountRecovery(object):
         account_recovery_url = '{}/{}'.format(self._domain, AccountRecoveryResource.BASE_URL)
 
         with open(recovery_mail) as mail_template_file:
-            return mail_template_file.read().format(
+            return message_from_string(mail_template_file.read().format(
                 domain=self._domain,
                 recovery_code=binascii.hexlify(code),
-                account_recovery_url=account_recovery_url)
+                account_recovery_url=account_recovery_url,
+                backup_email=backup_email,
+                sender=sender,
+                date='Sat, 21 Mar 2015 19:30:09 -0300'))

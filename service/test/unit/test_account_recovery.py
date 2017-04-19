@@ -92,12 +92,8 @@ class AccountRecoveryTest(unittest.TestCase):
         mock_sendmail.return_value = defer.succeed(None)
 
         sender = 'team@{}'.format(self.domain)
-        mock_file_content = '{domain}, {recovery_code}, {account_recovery_url}'
-        recovery_code_email = 'test.com, 4645a2f8997e5d0d, test.com/account-recovery'
-        msg = MIMEText(recovery_code_email)
-        msg['Subject'] = 'Recovery Code'
-        msg['From'] = sender
-        msg['To'] = self.backup_email
+        mock_file_content = '{backup_email}, {sender}, {date}, {domain}, {recovery_code}, {account_recovery_url}'
+        recovery_code_email = '\ntest@test.com, team@test.com, Sat, 21 Mar 2015 19:30:09 -0300, test.com, 34363435613266383939376535643064, test.com/account-recovery'
 
         with patch('pixelated.account_recovery.open', mock_open(read_data=mock_file_content), create=True):
             yield self.account_recovery._send_mail(self.generated_code, self.backup_email)
@@ -106,4 +102,4 @@ class AccountRecoveryTest(unittest.TestCase):
                 self.mock_smtp_config.remote_smtp_host,
                 sender,
                 [self.backup_email],
-                msg.as_string())
+                recovery_code_email)
