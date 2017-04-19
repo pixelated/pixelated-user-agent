@@ -14,12 +14,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
+import pkg_resources
+
 from twisted.internet.defer import inlineCallbacks, returnValue
 from twisted.logger import Logger
 from twisted.mail import smtp
 
 from email.mime.text import MIMEText
 
+from pixelated.resources.account_recovery_resource import AccountRecoveryResource
 
 log = Logger()
 
@@ -53,7 +56,7 @@ class AccountRecovery(object):
         log.info('Sending mail containing the user\'s recovery code')
 
         sender = 'team@{}'.format(self._domain)
-        msg = MIMEText('Your code %s' % code)
+        msg = MIMEText(self._get_recovery_mail(code))
         msg['Subject'] = 'Recovery Code'
         msg['From'] = sender
         msg['To'] = backup_email
@@ -68,3 +71,16 @@ class AccountRecovery(object):
         except Exception as e:
             log.error('Failed trying to send the email with the recovery code')
             raise e
+
+    def _get_recovery_mail(self, code, language='en-US'):
+        recovery_mail = pkg_resources.resource_filename(
+            'pixelated.assets',
+            'recovery.mail.%s' % (language))
+
+        account_recovery_url = '{}/{}'.format(self._domain, AccountRecoveryResource.BASE_URL)
+
+        with open(recovery_mail) as mail_template_file:
+            return mail_template_file.read().format(
+                domain=self._domain,
+                recovery_code=code,
+                account_recovery_url=account_recovery_url)

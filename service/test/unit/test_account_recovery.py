@@ -19,7 +19,7 @@ from twisted.internet import defer
 from twisted.trial import unittest
 from twisted.mail import smtp
 
-from mock import patch, Mock
+from mock import patch, Mock, mock_open
 from mockito import when, any as ANY
 
 from pixelated.account_recovery import AccountRecovery
@@ -50,15 +50,21 @@ class AccountRecoveryTest(unittest.TestCase):
         yield self.account_recovery.update_recovery_code()
         self.mock_bonafide_session.update_recovery_code.assert_called_once_with(self.generated_code)
 
+    @patch('pixelated.account_recovery.smtp.sendmail')
+    @patch('pixelated.account_recovery.pkg_resources.resource_filename')
     @defer.inlineCallbacks
-    def test_send_recovery_code_by_email(self):
+    def test_send_recovery_code_by_email(self, mock_resource, mock_sendmail):
+        mock_sendmail.return_value = defer.succeed(None)
+
         sender = 'team@{}'.format(self.domain)
-        msg = MIMEText('Your code %s' % self.generated_code)
+        mock_file_content = '{domain}, {recovery_code}, {account_recovery_url}'
+        recovery_code_email = 'test.com, 4645a2f8997e5d0d, test.com/account-recovery'
+        msg = MIMEText(recovery_code_email)
         msg['Subject'] = 'Recovery Code'
         msg['From'] = sender
         msg['To'] = self.backup_email
 
-        with patch.object(smtp, 'sendmail', return_value=defer.succeed(None)) as mock_sendmail:
+        with patch('pixelated.account_recovery.open', mock_open(read_data=mock_file_content), create=True):
             yield self.account_recovery._send_mail(self.generated_code, self.backup_email)
 
             mock_sendmail.assert_called_with(
