@@ -21,4 +21,4 @@ def parse_accept_language(all_headers):
     for language in accepted_languages:
         if language in languages:
             return language
-    return 'pt-BR'
+    return 'en-US'

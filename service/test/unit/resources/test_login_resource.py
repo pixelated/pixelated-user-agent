@@ -231,7 +231,7 @@ class TestLoginPOST(unittest.TestCase):
         d = self.web.get(self.request)
 
         def assert_login_setup_service_for_user(_):
-            mock_user_bootstrap_setup.assert_called_once_with(self.user_auth, self.password, 'pt-BR')
+            mock_user_bootstrap_setup.assert_called_once_with(self.user_auth, self.password, 'en-US')
 
         d.addCallback(assert_login_setup_service_for_user)
         return d

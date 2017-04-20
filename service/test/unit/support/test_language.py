@@ -33,8 +33,8 @@ class TestParseAcceptLanguage(unittest.TestCase):
         parsed_language = parse_accept_language(all_headers)
         self.assertEqual('en-US', parsed_language)
 
-    def test_parse_pt_br_as_default(self):
+    def test_parse_en_us_as_default(self):
         all_headers = {
             'accept-language': 'de-DE,de;q=0.8,en-US;q=0.5,en;q=0.3'}
         parsed_language = parse_accept_language(all_headers)
-        self.assertEqual('pt-BR', parsed_language)
+        self.assertEqual('en-US', parsed_language)
