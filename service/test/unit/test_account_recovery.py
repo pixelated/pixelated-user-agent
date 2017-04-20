@@ -98,7 +98,7 @@ class AccountRecoveryTest(unittest.TestCase):
         recovery_code_email = '\ntest@test.com, team@test.com, Sat, 21 Mar 2015 19:30:09 -0300, test.com, 34363435613266383939376535643064'
 
         with patch('pixelated.account_recovery.open', mock_open(read_data=mock_file_content), create=True):
-            yield self.account_recovery._send_mail(self.generated_code, self.backup_email)
+            yield self.account_recovery.update_recovery_code()
 
             mock_sendmail.assert_called_with(
                 self.mock_smtp_config.remote_smtp_host,
