@@ -50,25 +50,58 @@ class AccountRecoveryTest(unittest.TestCase):
         yield self.account_recovery.update_recovery_code()
         self.mock_bonafide_session.update_recovery_code.assert_called_once_with(self.generated_code)
 
+    @defer.inlineCallbacks
+    def test_creates_recovery_code(self):
+        when(self.account_recovery)._send_mail(ANY).thenReturn(defer.succeed(None))
+        yield self.account_recovery.update_recovery_code()
+        self.mock_soledad.create_recovery_code.assert_called_once()
+
     @patch('pixelated.account_recovery.smtp.sendmail')
     @patch('pixelated.account_recovery.pkg_resources.resource_filename')
     @defer.inlineCallbacks
-    def test_send_recovery_code_by_email(self, mock_resource, mock_sendmail):
+    def test_default_email_template(self, mock_resource, mock_sendmail):
         mock_sendmail.return_value = defer.succeed(None)
 
+        with patch('pixelated.account_recovery.open', mock_open(read_data=''), create=True):
+            yield self.account_recovery.update_recovery_code()
+            mock_resource.assert_called_once_with('pixelated.assets',
+                                                  'recovery.mail.en-US')
+
+    @patch('pixelated.account_recovery.smtp.sendmail')
+    @patch('pixelated.account_recovery.pkg_resources.resource_filename')
+    @defer.inlineCallbacks
+    def test_portuguese_email_template(self, mock_resource, mock_sendmail):
+        self.account_recovery = AccountRecovery(
+            self.mock_bonafide_session,
+            self.mock_soledad,
+            self.mock_smtp_config,
+            self.backup_email,
+            self.domain,
+            language='pt-BR')
+        mock_sendmail.return_value = defer.succeed(None)
+
+        with patch('pixelated.account_recovery.open', mock_open(read_data=''), create=True):
+            yield self.account_recovery.update_recovery_code()
+            mock_resource.assert_called_once_with('pixelated.assets',
+                                                  'recovery.mail.pt-BR')
+
+    @patch('pixelated.account_recovery.formatdate')
+    @patch('pixelated.account_recovery.smtp.sendmail')
+    @patch('pixelated.account_recovery.pkg_resources.resource_filename')
+    @defer.inlineCallbacks
+    def test_send_recovery_code_by_email(self, mock_resource, mock_sendmail, mock_formatdate):
+        mock_sendmail.return_value = defer.succeed(None)
+        mock_formatdate.return_value = 'Sat, 21 Mar 2015 19:30:09 -0300'
+
         sender = 'team@{}'.format(self.domain)
-        mock_file_content = '{domain}, {recovery_code}, {account_recovery_url}'
-        recovery_code_email = 'test.com, 4645a2f8997e5d0d, test.com/account-recovery'
-        msg = MIMEText(recovery_code_email)
-        msg['Subject'] = 'Recovery Code'
-        msg['From'] = sender
-        msg['To'] = self.backup_email
+        mock_file_content = '{backup_email}, {sender}, {date}, {domain}, {recovery_code}'
+        recovery_code_email = '\ntest@test.com, team@test.com, Sat, 21 Mar 2015 19:30:09 -0300, test.com, 34363435613266383939376535643064'
 
         with patch('pixelated.account_recovery.open', mock_open(read_data=mock_file_content), create=True):
-            yield self.account_recovery._send_mail(self.generated_code, self.backup_email)
+            yield self.account_recovery.update_recovery_code()
 
             mock_sendmail.assert_called_with(
                 self.mock_smtp_config.remote_smtp_host,
                 sender,
                 [self.backup_email],
-                msg.as_string())
+                recovery_code_email)

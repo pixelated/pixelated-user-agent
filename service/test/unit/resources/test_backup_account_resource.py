@@ -44,8 +44,10 @@ class TestBackupAccountResource(unittest.TestCase):
         d.addCallback(assert_200_when_user_logged_in)
         return d
 
+    @patch('pixelated.resources.backup_account_resource.parse_accept_language')
     @patch('pixelated.resources.backup_account_resource.AccountRecovery')
-    def test_post_updates_recovery_code(self, mock_account_recovery_init):
+    def test_post_updates_recovery_code(self, mock_account_recovery_init, mock_language):
+        mock_language.return_value = 'pt-BR'
         mock_account_recovery = MagicMock()
         mock_account_recovery_init.return_value = mock_account_recovery
         mock_account_recovery.update_recovery_code.return_value = defer.succeed("Success")
@@ -61,7 +63,8 @@ class TestBackupAccountResource(unittest.TestCase):
                 self.resource.soledad(request),
                 self.resource._service(request, '_leap_session').smtp_config,
                 self.resource._get_backup_email(request),
-                self.leap_provider.server_name)
+                self.leap_provider.server_name,
+                language='pt-BR')
             mock_account_recovery.update_recovery_code.assert_called()
 
         d.addCallback(assert_update_recovery_code_called)

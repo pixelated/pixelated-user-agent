@@ -22,6 +22,8 @@ from pixelated.config.leap import BootstrapUserServices
 from pixelated.resources import BaseResource, UnAuthorizedResource, IPixelatedSession
 from pixelated.resources.account_recovery_resource import AccountRecoveryResource
 from pixelated.resources import get_public_static_folder, respond_json
+from pixelated.support.language import parse_accept_language
+
 from twisted.cred.error import UnauthorizedLogin
 from twisted.internet import defer
 from twisted.logger import Logger
@@ -34,15 +36,6 @@ from twisted.web.static import File
 from twisted.web.template import Element, XMLFile, renderElement, renderer
 
 log = Logger()
-
-
-def parse_accept_language(all_headers):
-    accepted_languages = ['pt-BR', 'en-US']
-    languages = all_headers.get('accept-language', '').split(';')[0]
-    for language in accepted_languages:
-        if language in languages:
-            return language
-    return 'pt-BR'
 
 
 class DisclaimerElement(Element):
