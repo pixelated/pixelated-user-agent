@@ -85,13 +85,13 @@ class AccountRecoveryTest(unittest.TestCase):
             mock_resource.assert_called_once_with('pixelated.assets',
                                                   'recovery.mail.pt-BR')
 
-    @patch('pixelated.account_recovery.formatdate')
+    @patch('pixelated.account_recovery.date.mail_date_now')
     @patch('pixelated.account_recovery.smtp.sendmail')
     @patch('pixelated.account_recovery.pkg_resources.resource_filename')
     @defer.inlineCallbacks
-    def test_send_recovery_code_by_email(self, mock_resource, mock_sendmail, mock_formatdate):
+    def test_send_recovery_code_by_email(self, mock_resource, mock_sendmail, mock_date):
         mock_sendmail.return_value = defer.succeed(None)
-        mock_formatdate.return_value = 'Sat, 21 Mar 2015 19:30:09 -0300'
+        mock_date.return_value = 'Sat, 21 Mar 2015 19:30:09 -0300'
 
         sender = 'team@{}'.format(self.domain)
         mock_file_content = '{backup_email}, {sender}, {date}, {domain}, {recovery_code}'

@@ -16,13 +16,13 @@
 
 import pkg_resources
 import binascii
+from email import message_from_string
 
 from twisted.internet.defer import inlineCallbacks, returnValue
 from twisted.logger import Logger
 from twisted.mail import smtp
 
-from email import message_from_string
-from email.utils import formatdate
+from pixelated.support import date
 
 log = Logger()
 
@@ -71,6 +71,7 @@ class AccountRecovery(object):
             raise e
 
     def _get_recovery_mail(self, code, sender, backup_email):
+        email_date = date.mail_date_now()
         recovery_mail = pkg_resources.resource_filename(
             'pixelated.assets',
             'recovery.mail.%s' % (self._language))
@@ -81,4 +82,4 @@ class AccountRecovery(object):
                 recovery_code=binascii.hexlify(code),
                 backup_email=backup_email,
                 sender=sender,
-                date=formatdate(localtime=True)))
+                date=email_date))
