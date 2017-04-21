@@ -61,7 +61,7 @@ class AccountRecoveryResource(BaseResource):
             request.finish()
 
         def error_response(failure):
-            log.warn(failure)
+            self._log_error(failure)
             response_code = get_error_response_code(failure.type)
             request.setResponseCode(response_code)
             request.finish()
@@ -69,6 +69,12 @@ class AccountRecoveryResource(BaseResource):
         d = self._handle_post(request)
         d.addCallbacks(success_response, error_response)
         return NOT_DONE_YET
+
+    def _log_error(self, error):
+        if error.type in [InvalidPasswordError, EmptyFieldsError, UnauthorizedLogin]:
+            log.info('{}'.format(error.getErrorMessage()))
+        else:
+            log.error('{}\n{}'.format(error.getErrorMessage(), error.getTraceback()))
 
     def _get_post_form(self, request):
         return json.loads(request.content.getvalue())
