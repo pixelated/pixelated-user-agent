@@ -27,11 +27,11 @@ Credentials = namedtuple('Credentials', 'username, password')
 
 
 class Authenticator(object):
-    def __init__(self, leap_provider, recovery=False):
+    def __init__(self, leap_provider, recovery_session=False):
         self._leap_provider = leap_provider
         self.domain = leap_provider.server_name
         self.bonafide_session = None
-        self.recovery = recovery
+        self.recovery_session = recovery_session
 
     @inlineCallbacks
     def authenticate(self, username, password):
@@ -52,7 +52,7 @@ class Authenticator(object):
     def _bonafide_auth(self, credentials):
         srp_provider = Api(self._leap_provider.api_uri)
         self.bonafide_session = Session(credentials, srp_provider, self._leap_provider.local_ca_crt)
-        yield self.bonafide_session.authenticate(recovery=self.recovery)
+        yield self.bonafide_session.authenticate(recovery=self.recovery_session)
         returnValue(Authentication(credentials.username,
                                    self.bonafide_session.token,
                                    self.bonafide_session.uuid,

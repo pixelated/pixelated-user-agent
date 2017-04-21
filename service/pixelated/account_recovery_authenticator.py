@@ -21,7 +21,7 @@ from authentication import Authenticator
 
 class AccountRecoveryAuthenticator(Authenticator):
     def __init__(self, leap_provider):
-        super(AccountRecoveryAuthenticator, self).__init__(leap_provider, recovery=True)
+        super(AccountRecoveryAuthenticator, self).__init__(leap_provider, recovery_session=True)
 
     def _auth_error(self):
         raise UnauthorizedLogin("User typed wrong username/recovery-code combination.")
