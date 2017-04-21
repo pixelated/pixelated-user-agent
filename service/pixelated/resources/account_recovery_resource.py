@@ -87,7 +87,7 @@ class AccountRecoveryResource(BaseResource):
 
     def _validate_empty_fields(self, username, user_code):
         if not username or not user_code:
-            raise EmptyFieldsError('The user entered an empty username or empty usercode')
+            raise EmptyFieldsError('The user entered an empty username or empty user recovery code')
 
     def _validate_password(self, password, confirm_password):
         if password != confirm_password or len(password) < 8 or len(password) > 9999:
