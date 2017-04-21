@@ -16,12 +16,16 @@
 # along with Pixelated. If not, see <http://www.gnu.org/licenses/>.
 
 from setuptools import setup
+from pip.req import parse_requirements
 import os
 
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+requirements = parse_requirements(
+    os.path.join('requirements.txt'), session=False)
+requirements = [str(req.req) for req in requirements][:-1]
 
 setup(name='pixelated-user-agent',
       version='0.1',
@@ -47,7 +51,13 @@ setup(name='pixelated-user-agent',
           'pixelated.resources',
           'pixelated.extensions'
       ],
-      install_requires=[],
+      install_requires=requirements,
+      dependency_link=[
+        'https://0xacab.org/leap/leap_pycommon.git@master#egg=leap.common',
+        'https://0xacab.org/pixelated/bitmask-dev.git@development#egg=leap.bitmask',
+        'https://0xacab.org/pixelated/soledad.git@development#egg=leap.soledad.common&subdirectory=common/',
+        'https://0xacab.org/pixelated/soledad.git@development#egg=leap.soledad.client&subdirectory=client/'
+      ],
       entry_points={
           'console_scripts': [
               'pixelated-user-agent = pixelated.application:initialize',
