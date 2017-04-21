@@ -26,7 +26,7 @@ from twisted.internet import defer
 from twisted.logger import Logger
 from twisted.python.filepath import FilePath
 from twisted.web import util
-from twisted.web.http import UNAUTHORIZED, OK
+from twisted.web.http import OK
 from twisted.web.resource import NoResource
 from twisted.web.server import NOT_DONE_YET
 from twisted.web.static import File
@@ -127,12 +127,12 @@ class LoginResource(BaseResource):
 
         def render_error(error):
             if error.type is UnauthorizedLogin:
-                log.info('Unauthorized login for %s. User typed wrong username/password combination.' % request.args['username'][0])
+                log.info('Unauthorized login for %s. %s' % (request.args['username'][0], error.getErrorMessage()))
+                content = util.redirectTo("/login?auth-error", request)
             else:
-                log.error('Authentication error for %s' % request.args['username'][0])
-                log.error('%s' % error)
-            request.setResponseCode(UNAUTHORIZED)
-            content = util.redirectTo("/login?auth-error", request)
+                log.error('Authentication error for %s: %s \n %s' % (request.args['username'][0], error.getErrorMessage(), error.getTraceback()))
+                content = util.redirectTo("/login?error", request)
+
             request.write(content)
             request.finish()
 

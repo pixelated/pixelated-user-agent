@@ -18,26 +18,18 @@ import os
 import json
 
 from twisted.python.filepath import FilePath
-from twisted.web.http import OK, INTERNAL_SERVER_ERROR, BAD_REQUEST, UNAUTHORIZED
+from twisted.web.http import OK
 from twisted.web.template import Element, XMLFile, renderElement
 from twisted.web.server import NOT_DONE_YET
 from twisted.internet import defer
 from twisted.logger import Logger
 from twisted.cred.error import UnauthorizedLogin
 
-from pixelated.resources import BaseResource
-from pixelated.resources import get_public_static_folder
+from pixelated.resources import BaseResource, InvalidPasswordError, EmptyFieldsError
+from pixelated.resources import get_public_static_folder, get_error_response_code
 from pixelated.account_recovery_authenticator import AccountRecoveryAuthenticator
 
 log = Logger()
-
-
-class InvalidPasswordError(Exception):
-    pass
-
-
-class EmptyFieldsError(Exception):
-    pass
 
 
 class AccountRecoveryPage(Element):
@@ -70,12 +62,8 @@ class AccountRecoveryResource(BaseResource):
 
         def error_response(failure):
             log.warn(failure)
-            if failure.type is InvalidPasswordError or failure.type is EmptyFieldsError:
-                request.setResponseCode(BAD_REQUEST)
-            elif failure.type is UnauthorizedLogin:
-                request.setResponseCode(UNAUTHORIZED)
-            else:
-                request.setResponseCode(INTERNAL_SERVER_ERROR)
+            response_code = get_error_response_code(failure.type)
+            request.setResponseCode(response_code)
             request.finish()
 
         d = self._handle_post(request)
