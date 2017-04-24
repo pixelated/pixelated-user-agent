@@ -64,6 +64,7 @@ def see_inbox(context):
 @then(u'I logout')
 @when(u'I logout')
 def click_logout(context):
+    context.browser.refresh()
     find_element_by_css_selector(context, '#logout-form div').click()
 
 
