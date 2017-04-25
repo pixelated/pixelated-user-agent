@@ -135,18 +135,20 @@ def after_feature(context, feature):
         context.last_mail = None
 
 
+def after_scenario(context, scenario):
+    _logout(context)
+    context.browser.refresh()
+
+
 def after_step(context, step):
     if step.status == 'failed':
         _debug_on_error(context, step)
         _save_screenshot(context, step)
-        _logout(context, step)
+        _logout(context)
 
 
-def _logout(context, step):
-    if context.browser.current_url == context.inbox_url:
-        utils.log_out()
-    elif context.browser.current_url == context.backup_account_url:
-        BackupAccountPage().logout()
+def _logout(context):
+    context.browser.delete_all_cookies()
 
 
 def _debug_on_error(context, step):
