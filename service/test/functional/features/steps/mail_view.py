@@ -113,5 +113,5 @@ def impl(context):
 
 @then(u'I see the mail has the recovery code')
 def step_impl(context):
-    expected_body = 'This code is they only way to recover access to your account in case you lose your password.'
+    expected_body = 'You are receiving this message because you registered an email account at'
     context.execute_steps(u"Then I see that the body has '%s'" % expected_body)
