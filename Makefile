@@ -82,6 +82,12 @@ functional_tests: clean requirements install
 	cd service;\
 	xvfb-run --server-args="-screen 0 1280x1024x24" behave --tags ~@wip --tags ~@smoke test/functional/features
 
+smoke_tests: clean install
+	@. $(VIRTUALENV)/bin/activate;\
+	export PATH=$(PATH):/usr/lib/chromium/;\
+	cd service;\
+	xvfb-run --server-args="-screen 0 1280x1024x24" behave --tags ~@wip --tags @smoke test/functional/features -k -D host=$(provider)
+
 functional_tests_ci: clean requirements install
 	@. $(VIRTUALENV)/bin/activate;\
 	cd service;\
