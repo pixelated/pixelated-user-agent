@@ -1,3 +1,4 @@
+@startuml
 title Backup Account Flow
 
 actor User
@@ -35,3 +36,4 @@ else bonafide failure
   note right: delete new recovery code
   PixUA -> User : error message
 end
+@enduml
