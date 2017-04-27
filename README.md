@@ -121,8 +121,11 @@ You can install the Pixelated User Agent and the Leap Platform at once, just by 
 
  NOTE: Be aware that you will not be able to send mails outside, but you can test sending mails internally from one user to another.
 
-## Running tests on your local machine
+## Running tests
 
+[Here](https://github.com/pixelated/pixelated-user-agent/wiki/Running-Tests) you will find informations about how to run Pixelated tests.
+
+### Running tests on your local machine
 If you want to run the tests in your host machine outside of vagrant:
 
 ```
