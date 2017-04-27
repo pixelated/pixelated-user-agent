@@ -12,7 +12,7 @@ Here's the brief:
   * Twitter: [@pixelatedteam](https://twitter.com/pixelatedteam)
 
 
-  This document outlines our way of working, gives hints and outlines the steps to make your contribution to Pixelated as smooth as possible. You're not required to read this before getting started. We're explaining the way we work to make sure you're having a good experience and can make best use of the time you're contributing to our project.
+This document outlines our way of working, gives hints and outlines the steps to make your contribution to Pixelated as smooth as possible. You're not required to read this before getting started. We're explaining the way we work to make sure you're having a good experience and can make best use of the time you're contributing to our project.
 
 ## Contributions steps
 
