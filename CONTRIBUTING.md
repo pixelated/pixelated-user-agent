@@ -5,7 +5,7 @@ Here's the brief:
 * We welcome contributions of all kinds, including but not limited to features, bug fixes, quality assurance, documentation, security review or asking questions
 * Pull requests are based off, integrated into & rebased against master
 * Write automated tests, ideally using TDD. CI needs to be green in order to merge.
-* [Waffle](https://waffle.io/pixelated/pixelated-user-agent) board for ready to play work
+* Feel free to review the repository's issues for ideas on what to work on
 * Contact us for questions & suggestions:
   * IRC: #pixelated @ chat.freenode.org ([join via webchat](https://webchat.freenode.net/))
   * Email: [team@pixelated-project.org](mailto:team@pixelated-project.org)
@@ -26,11 +26,15 @@ We follow a simplified fork + pull request workflow:
 * Please keep your feature branch updated. Rebase your branch against upstream changes on the master branch, resolve any conflicts and make sure the tests are staying green.
 * Your pull request will be reviewed and merged
 
+### Getting acquainted with the code
+
+If you're not sure how to start development, check out [our short guide](https://github.com/pixelated/pixelated-user-agent/wiki/Starting-Development) on how to start getting to know the code.
+
 ### What to work on
 
-Our [Kanban board "Waffle"](https://waffle.io/pixelated/pixelated-user-agent) provides an overview of issues that are ready to play or awaiting QA. If you're just getting familiar with Pixelated, see the [issues labeled 'Volunteer Task'](https://github.com/pixelated/pixelated-user-agent/labels/Volunteer%20task).
+Our Github provides an overview of issues that are ready to play. If you're just getting familiar with Pixelated, see the [issues labeled 'Volunteer Task'](https://github.com/pixelated/pixelated-user-agent/labels/Volunteer%20task).
 
-Generally, all issues that have no user assigned are awaiting work and free to play. If you want to make sure, or you think it will take more than a couple of days to complete your work, please reach out to us using the contact info above.
+Generally, all issues that have no user assigned are awaiting work and free to play.
 
 ### Guidelines
 
@@ -48,8 +52,8 @@ When implementing your change, please follow this advice:
 
 When reviewing your contribution, we apply the following criteria:
 
-* Test must be green. This usually includes an automatic check of the style guide using e.g. pep8 or jshint. All tests should be executed locally before you push, as well as on CI. If you struggle to reproduce a failure on CI locally, please notify us on IRC so we can resolve the issue.
-* Your change should be in-line with Pixelated's direction. Chances that it is are good if, in descending priority:
+* Test must be green. This usually includes an automatic check of the style guide using e.g. pep8 or jshint. All tests should be executed locally before you push, as outlined in the [wiki](https://github.com/pixelated/pixelated-user-agent/wiki/Running-Tests), as well as on CI. If you struggle to reproduce a failure on CI locally, please notify us on IRC so we can resolve the issue.
+* Your change should be in line with Pixelated's direction. Chances that it is are good if, in descending priority:
   * It is described by an issue that is labelled as 'ready'
   * It is described by an issue that is labelled as 'backlog'
   * You've fixed a bug for which no issue existed yet, but described it in the pull request as explained in the section *Steps*
@@ -68,7 +72,6 @@ Contributions we appreciate:
 * Documentation: Feedback & improvements of our guides & tutorial copywritings.
 * Security review
 * Translations
-* Asking questions on IRC
 
 ## Translating UI
 
@@ -81,11 +84,3 @@ Anyone can contribute with Pixelated translating our user interface and making i
 We strongly recommend you read [Transifex User Guide](http://docs.transifex.com/) if it's the first time using this tool.
 
 More information see [Managing Translations page](https://github.com/pixelated/pixelated-user-agent/wiki/Managing-translations)
-
-## ThoughtWorks' role
-
-ThoughtWorks seeds the community that builds pixelated. We seed the development, investing our own resources: We provide a team of 10+ software delivery experts to lay the foundation for the project. We use our network and contacts to approach customers and users.
-
-ThoughtWorks started building Pixelated because it is right. In combining our passion for defending a free internet and our capability to deliver software, we build software to counter widespread mass surveillance of email communication.
-
-It is not ThoughWorks' goal to make money from Pixelated. The reasons are multiple, but at the end of the day, we believe that our goals of mass adoption and decentralization can best be achieved if Pixelated puts end users and providers before a revenue stream.
