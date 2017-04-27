@@ -245,6 +245,6 @@ For people who want to run the user agent on docker container can use the Docker
 
 ## How to translate the user interface
 
-See: [Contributor's Guide](https://github.com/pixelated/pixelated-user-agent/blob/master/CONTRIBUTING.md#translating-ui)
+See: [Contributor's Guide](https://github.com/pixelated/pixelated-user-agent/blob/master/CONTRIBUTING.md)
 
 
