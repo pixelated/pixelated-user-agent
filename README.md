@@ -176,10 +176,6 @@ You might also need to add your LEAP provider ssl certificate to pixelated manua
 The easiest way to get this is downloading if from https://your.provider.org/ca.crt.
 Rename the certificate based on your provider domain name like this `your.leapprovider.org.crt` and put it into `services/pixelated/certificates/`.
 
-
-## Continuous Integration
-All commits to the pixelated user agent code trigger all tests to be run in [snap-ci](https://snap-ci.com/pixelated/pixelated-user-agent/branch/master).
-
 ## Misc
 * You can access the guest OS shell via the command `vagrant ssh` run within the `pixelated-user-agent/` folder in the host OS.
 * `/vagrant/` in the guest OS is mapped to the `pixelated-user-agent/` folder in the host OS. File changes on either side will reflect in the other.
