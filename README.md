@@ -13,10 +13,6 @@ Here's a [podcast](https://soundcloud.com/thoughtworks/pixelated-why-secure-comm
 
 ![High level architecture User Agent](https://raw.githubusercontent.com/pixelated/website/master/assets/images/pixelated-user-agent.png)
 
-## Try it!
-
-If you are curious,  have a look at the pixelated web client, it as simple as clicking *[here!](https://try.pixelated-project.org:8080/)*
-
 ## Getting started
 
 You are most welcome to contribute to the pixelated user agent code base. Please have a look at the [contributions how to](https://github.com/pixelated/pixelated-user-agent/blob/master/CONTRIBUTING.md).
