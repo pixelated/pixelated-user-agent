@@ -9,10 +9,9 @@ Here's the brief:
 * Contact us for questions & suggestions:
   * IRC: #pixelated @ chat.freenode.org ([join via webchat](https://webchat.freenode.net/))
   * Email: [team@pixelated-project.org](mailto:team@pixelated-project.org)
-  * Twitter: [@pixelatedteam](https://twitter.com/pixelatedteam)
 
 
-This document outlines our way of working, gives hints and outlines the steps to make your contribution to Pixelated as smooth as possible. You're not required to read this before getting started. We're explaining the way we work to make sure you're having a good experience and can make best use of the time you're contributing to our project.
+This document gives hints and outlines the steps to make your contribution to Pixelated as smooth as possible. You're not required to read this before getting started. We're giving suggestions to make sure you're having a good experience and can make best use of the time you're contributing to our project.
 
 ## Contributions steps
 
@@ -52,11 +51,10 @@ When implementing your change, please follow this advice:
 
 When reviewing your contribution, we apply the following criteria:
 
-* Test must be green. This usually includes an automatic check of the style guide using e.g. pep8 or jshint. All tests should be executed locally before you push, as outlined in the [wiki](https://github.com/pixelated/pixelated-user-agent/wiki/Running-Tests), as well as on CI. If you struggle to reproduce a failure on CI locally, please notify us on IRC so we can resolve the issue.
+* Test must be green. This usually includes an automatic check of the style guide using e.g. pep8 or jshint. All tests should be executed locally before you push, as outlined in the [wiki](https://github.com/pixelated/pixelated-user-agent/wiki/Running-Tests), as well as on CI.
 * Your change should be in line with Pixelated's direction. Chances that it is are good if, in descending priority:
-  * It is described by an issue that is labelled as 'ready'
-  * It is described by an issue that is labelled as 'backlog'
-  * You've fixed a bug for which no issue existed yet, but described it in the pull request as explained in the section *Steps*
+  * It is described by an existing issue
+  * You've fixed a bug for which no issue existed yet, but described it in the pull request as explained in the section *Guidelines*
   * You've implemented a feature for which no issue existed yet. While we don't require up-front consensus, we strongly encourage you to describe feature suggestions in issues to get feedback before you spent significant time on implementation.
 * We won't tolerate abusive, exploitative or harassing behavior in every context of our project and refuse collaboration with any individual who exposes such behavior.
 
@@ -68,19 +66,11 @@ Contributions we appreciate:
 
 * Features: New functionality is described in issues in the form of a user story to capture the end-user benefit.
 * Bug fixes: Things go wrong from time to time.
-* Quality Assurance: While every software change should be covered by automated tests, there are certain types of errors that are best spotted by a human. We apply QA to dev-complete changes.
+* Quality Assurance: While every software change should be covered by automated tests, there are certain types of errors that are best spotted by a human.
 * Documentation: Feedback & improvements of our guides & tutorial copywritings.
 * Security review
 * Translations
 
 ## Translating UI
 
-Anyone can contribute with Pixelated translating our user interface and making it accessible for more people. All the translation work is managed at [Transifex](https://www.transifex.com). Follow the steps below to start contributing:
-
-* Sign up at [Transifex](https://www.transifex.com) and visit our [Pixelated project](https://www.transifex.com/pixelated/) page.
-* On the project page, choose the language you want to work on. If the language doesn’t exist yet you can request a new language by clicking on the “Request language”.
-* Then, click the “Join this Team” button to become a member of this team. You will be accepted as soon as possible.
-
-We strongly recommend you read [Transifex User Guide](http://docs.transifex.com/) if it's the first time using this tool.
-
-More information see [Managing Translations page](https://github.com/pixelated/pixelated-user-agent/wiki/Managing-translations)
+Anyone can contribute with Pixelated translating our user interface and making it accessible for more people. To learn how to contribute to Pixelated's translations, see the [Translations page](https://github.com/pixelated/pixelated-user-agent/wiki/Translating-Pixelated).
