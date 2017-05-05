@@ -7,8 +7,7 @@ Here's the brief:
 * Write automated tests, ideally using TDD. CI needs to be green in order to merge.
 * Feel free to review the repository's issues for ideas on what to work on
 * Contact us for questions & suggestions:
-  * IRC: #pixelated @ chat.freenode.org ([join via webchat](https://webchat.freenode.net/))
-  * Email: [team@pixelated-project.org](mailto:team@pixelated-project.org)
+  * Email: [pixelated-team@thoughtworks.com](mailto:pixelated-team@thoughtworks.com)
 
 
 This document gives hints and outlines the steps to make your contribution to Pixelated as smooth as possible. You're not required to read this before getting started. We're giving suggestions to make sure you're having a good experience and can make best use of the time you're contributing to our project.
