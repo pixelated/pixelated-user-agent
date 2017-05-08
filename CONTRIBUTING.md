@@ -70,6 +70,10 @@ Contributions we appreciate:
 * Security review
 * Translations
 
+## I think I might be able to hack together a quick-and-dirty lo-fi solution for the issue I’m working with… what do I do?
+
+Do it the easy way first, and submit a pull request as a “work in progress” as soon as you have a quick-and-dirty solution (or even an unfinished solution) — that means you can get feedback from the other developers about whether you’re heading in the right direction sooner rather than later. Include “WIP” (work in progress) in the description of your pull request and ask for review, or feedback on anything specific.
+
 ## Translating UI
 
 Anyone can contribute with Pixelated translating our user interface and making it accessible for more people. To learn how to contribute to Pixelated's translations, see the [Translations page](https://github.com/pixelated/pixelated-user-agent/wiki/Translating-Pixelated).
