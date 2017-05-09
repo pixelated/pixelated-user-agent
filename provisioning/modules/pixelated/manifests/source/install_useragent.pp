@@ -31,7 +31,12 @@ class pixelated::source::install_useragent {
   }
   exec { 'add_custom_node_path_to_bashrc':
     command => "/bin/bash -c 'echo NODE_PATH=/home/vagrant/boxed_node_modules/node_modules/ >> /home/vagrant/.bashrc'",
-    unless  => "/bin/grep NODE_PATH /home/vagrant/.bashrc",
+    unless  => '/bin/grep NODE_PATH /home/vagrant/.bashrc',
+    user    => 'vagrant',
+  }
+  exec { 'add_rule_to_change_to_vagrant_folder_on_login':
+    command => "/bin/echo 'cd /vagrant' >> /home/vagrant/.bashrc",
+    unless  => "/bin/grep 'cd /vagrant' /home/vagrant/.bashrc",
     user    => 'vagrant',
   }
 }
