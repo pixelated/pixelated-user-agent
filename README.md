@@ -59,13 +59,9 @@ $ pixelated-user-agent --host 0.0.0.0 --multi-user --provider=mail.bitmask.net
 
 First time email sync could be slow, please be patient. This could be the case if you have a lot of emails and it is the first time you setup the user agent on your machine.
 
-#### How do I see the result of my changes?
+#### How to get start with development?
 
-For all **Python changes**, you will need to kill (Ctrl-C) the server and start the pixelated user agent again.
-
-For most **JavaScript** or **HTML changes**, you will just need to reload the browser.
-
-For most **CSS or Handlebars templates changes**, you will also need to run: `$ cd /vagrant && make install_js`
+See the [Starting Development page](https://github.com/pixelated/pixelated-user-agent/wiki/Starting-Development)
 
 ### Option 2: Pixelated User Agent + Leap Platform
 
