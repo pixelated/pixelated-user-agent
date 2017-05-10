@@ -86,36 +86,6 @@ If you just want to try the user agent with debian packages. See [this page](htt
 
 # Further Notes
 
-## Multi User Mode
-
-To run the pixelated user agent multi user mode, please run the following:
-```bash
- vagrant@jessie:/vagrant$ pixelated-user-agent --host 0.0.0.0 --multi-user --provider=dev.pixelated-project.org
-```
-
-You will need to change `dev.pixelated-project.org` to the hostname of the leap provider that you will be using.
-Once that is done, you can use by browsing to [http://localhost:3333](http://localhost:3333), where you will be prompted for your email username and password.
-
-## Config file with credentials
-
-Create a config file with `ini` format in the root directory, see the example:
-
-*credentials.ini*
-```
-[pixelated]
-HOST=0.0.0.0
-PORT=8080
-leap_server_name=<your_provider>
-leap_username=<your_username>
-leap_password=<your_password>
-```
-Host and port is optional.
-
-To use it, start the user agent like this:
-`$ pixelated-user-agent --host 0.0.0.0 --config credentials.ini`
-
-
-
 ## How to translate the user interface
 
 See: [Translating Pixelated](https://github.com/pixelated/pixelated-user-agent/wiki/Translating-Pixelated)
