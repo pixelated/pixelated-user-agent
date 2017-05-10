@@ -80,7 +80,7 @@ You can install the Pixelated User Agent and the Leap Platform at once, just by 
 
 ## Debian package
 
-If you just want to try the user agent with debian packages. See [this page](https://github.com/pixelated/pixelated-user-agent/wiki/Debian-package).
+If you just want to try the user agent with debian packages, see [this page](https://github.com/pixelated/pixelated-user-agent/wiki/Debian-package).
 
 ## Running tests
 
