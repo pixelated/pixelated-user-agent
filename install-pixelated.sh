@@ -129,9 +129,7 @@ cat <<EOF
 
 ###############
 
-## You will need an account in a LEAP provider with mail support. You can request an invite code for
-## https://dev.pixelated-project.org, please refer to point 4) in the [Getting started guide](https://github.com/pixelated/pixelated-user-agent#getting-started).
-
+## You will need an account in a LEAP provider with mail support.
 ## Once you are done, activate your virtual environment by running:
 ## source $VIRTUALENV_PATH/bin/activate
 
