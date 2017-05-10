@@ -30,4 +30,3 @@ deployment:
     branch: master
     commands:
       - "curl -X POST --insecure -H 'Confirm: true' --fail --data \"materials[pixelated-user-agent]=$CIRCLE_SHA1\" https://$USERPASS@go.pixelated-project.org/go/api/pipelines/jessie-pixelated-user-agent-packaging/schedule"
-      - "curl --fail -H \"Content-Type: application/json\" --data '{\"build\": \"true\"}' -X POST https://registry.hub.docker.com/u/pixelated/pixelated-user-agent/trigger/$DOCKERHUB_TOKEN/"
