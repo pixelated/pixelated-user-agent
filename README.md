@@ -55,6 +55,8 @@ $ cd /vagrant
 $ pixelated-user-agent --host 0.0.0.0 --multi-user --provider=mail.bitmask.net
 ```
 
+You also have other ways to start the user agent. Check the ["Single User Mode vs Multi User Mode"](https://github.com/pixelated/pixelated-user-agent/wiki/Single-User-mode-vs-Multi-User-mode) page.
+
 5) Go to [localhost:3333](http://localhost:3333/) on your browser. You should see the login screen, where you can put your username and password created on step 1. Once you login, you'll see your inbox.
 
 First time email sync could be slow, please be patient. This could be the case if you have a lot of emails and it is the first time you setup the user agent on your machine.
