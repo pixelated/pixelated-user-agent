@@ -25,58 +25,50 @@ To run your own instance of Pixelated, follow these instructions: https://github
 
 If you want to run and test it locally, then before you have to install the following dependencies:
 
-* [Vagrant](https://www.vagrantup.com/downloads.html), Vagrant is a tool that automates the setup of a virtual machine with the development environment
-* A vagrant [compatible provider](https://www.vagrantup.com/docs/providers/), e.g. [Virtual Box](https://www.virtualbox.org/wiki/Downloads).
+* [Vagrant](https://www.vagrantup.com/downloads.html), a tool that automates the setup of a virtual machine with the development environment;
+* A vagrant [compatible provider](https://www.vagrantup.com/docs/providers/), e.g. [Virtual Box](https://www.virtualbox.org/wiki/Downloads);
+* If you don't want to use vagrant, check the [Developer-Setup-on-native-OS](https://github.com/pixelated/pixelated-user-agent/wiki/Developer-Setup-on-native-OS) page.
 
 ### Option 1: Run Pixelated User Agent against an existing LEAP provider
 
-1) If you don't have access to an existing LEAP provider, you can create an account at [Bitmask mail demo provider](https://mail.bitmask.net/).
+1. If you don't have access to an existing LEAP provider, you can create an account at [Bitmask mail demo provider](https://mail.bitmask.net/).
 
-2) Clone the Pixelated User Agent repo and start the virtual machine (downloads 600MB, you may want get a coffee or tea in the meantime):
+2. Clone the Pixelated User Agent repo and start the virtual machine (downloads 600MB, you may want get a coffee or tea in the meantime):
 
-```
-$ git clone https://github.com/pixelated/pixelated-user-agent.git
-$ cd pixelated-user-agent
-$ vagrant up
-```
+    ```
+    $ git clone https://github.com/pixelated/pixelated-user-agent.git
+    $ cd pixelated-user-agent
+    $ vagrant up
+    ```
 
-3) Log into the VM:
-* You can access the guest OS shell via the command `vagrant ssh` run within the `pixelated-user-agent/` folder in the host OS.
-* /vagrant/ in the guest OS is mapped to the pixelated-user-agent/ folder in the host OS. File changes on either side will reflect in the other.
+3. Log into the VM:
+    * You can access the guest OS shell via the command `vagrant ssh` run within the `pixelated-user-agent` folder in the host OS.
+    * `/vagrant` in the guest OS is mapped to the `pixelated-user-agent` folder in the host OS. File changes on either side will reflect in the other.
 
-```
-$ vagrant ssh
-$ cd /vagrant
-```
+    ```
+    $ vagrant ssh
+    $ cd /vagrant
+    ```
 
-4) Start the pixelated user agent:
+4. Start the pixelated user agent:
 
-```
-$ pixelated-user-agent --host 0.0.0.0 --multi-user --provider=mail.bitmask.net
-```
+    ```
+    $ pixelated-user-agent --host 0.0.0.0 --multi-user --provider=mail.bitmask.net
+    ```
 
-You also have other ways to start the user agent. Check the ["Single User Mode vs Multi User Mode"](https://github.com/pixelated/pixelated-user-agent/wiki/Single-User-mode-vs-Multi-User-mode) page.
+    You also have other ways to start the user agent. Check the ["Single User Mode vs Multi User Mode"](https://github.com/pixelated/pixelated-user-agent/wiki/Single-User-mode-vs-Multi-User-mode) page.
 
-5) Go to [localhost:3333](http://localhost:3333/) on your browser. You should see the login screen, where you can put your username and password created on step 1. Once you login, you'll see your inbox.
+5. Go to [localhost:3333](http://localhost:3333/) on your browser. You should see the login screen, where you can put your username and password created on step 1. Once you login, you'll see your inbox.
 
-First time email sync could be slow, please be patient. This could be the case if you have a lot of emails and it is the first time you setup the user agent on your machine.
+    First time email sync could be slow, please be patient. This could be the case if you have a lot of emails and it is the first time you setup the user agent on your machine.
 
 #### How to get start with development?
 
 See the [Starting Development page](https://github.com/pixelated/pixelated-user-agent/wiki/Starting-Development)
 
-### Option 2: Pixelated User Agent + Leap Platform
+### Option 2: Run Pixelated User Agent against a local LEAP provider
 
-You can install the Pixelated User Agent and the Leap Platform at once, just by running the following command on your console (this may take a while, please be patient):
-
-```bash
- curl https://raw.githubusercontent.com/pixelated/puppet-pixelated/master/vagrant_platform.sh | sh
-```
-
- Once installed, you can create accounts by visiting the LEAP Webapp at [localhost:4443/signup](https://localhost:4443/signup) and see Pixelated in action at [localhost:8080](https://localhost:8080/).
-
- NOTE: Be aware that you will not be able to send mails outside, but you can test sending mails internally from one user to another.
-
+You can follow the steps described on the [puppet-pixelated repo](https://github.com/pixelated/puppet-pixelated#testing-pixelated).
 
 ## Debian package
 
