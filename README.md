@@ -68,7 +68,10 @@ See the [Starting Development page](https://github.com/pixelated/pixelated-user-
 
 ### Option 2: Run Pixelated User Agent against a local LEAP provider
 
-You can follow the steps described on the [puppet-pixelated repo](https://github.com/pixelated/puppet-pixelated#testing-pixelated).
+We suggest you to use the following instructions:
+
+* Install Pixelated User Agent using [Developer-Setup-on-native-OS](https://github.com/pixelated/pixelated-user-agent/wiki/Developer-Setup-on-native-OS) page;
+* Install a local LEAP provider using the [LEAP Platform installation with vagrant](https://leap.se/en/docs/platform/tutorials/vagrant#2-vagrant-with-static-vagrantfile) instructions.
 
 ## Debian package
 
