@@ -19,7 +19,7 @@
 USER_PREFIX="loadtest"
 PASSWORD_PREFIX="password_"
 
-PROVIDER="dev.pixelated-project.org"
+PROVIDER=""
 RUNS=9
 USERS=1
 SLEEP=1
