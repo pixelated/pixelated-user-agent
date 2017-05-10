@@ -75,57 +75,10 @@ You can install the Pixelated User Agent and the Leap Platform at once, just by 
 
  NOTE: Be aware that you will not be able to send mails outside, but you can test sending mails internally from one user to another.
 
- ## Developer Setup On Native OS
 
- Please ensure that you have an email user from your preferred leap provider (Step 3).
- Details for developer installations [on OSX](#on-osx) and [Debian distributions](#on-debian-distributions) are explained below.
+## Debian package
 
-
- ### On OSX
-
- First, you will need to install the [GPG tools](https://gpgtools.org/) for Mac.
- Then, run the following sequence of commands:
- ```bash
- $ curl https://raw.githubusercontent.com/pixelated/pixelated-user-agent/master/osx_setup.sh | sh
- $ cd pixelated-user-agent && source ~/.virtualenv/user-agent-venv/bin/activate
- ```
-
- Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenv/user-agent-venv/bin/activate` first.
-
- Running the user agent and the various tests are the same as in the vagrant setup in step 4) and 6) above.
-
- ### On Debian distributions
-
- This is the setup for developers. Please run the following commands:
-
- ```bash
- $ curl https://raw.githubusercontent.com/pixelated/pixelated-user-agent/master/debian_setup.sh | bash
- $ cd pixelated-user-agent && source ~/.virtualenv/user-agent-venv/bin/activate
- ```
-
- Please note that you will have to activate the virtualenv anytime you work on a different terminal. This is done by simply running `$ source ~/.virtualenv/user-agent-venv/bin/activate` first.
-
- Running the user agent and the various tests are the same as in the vagrant setup in step 4) and 6) above.
-
- ## Debian package
-
- For people that just want to try the user agent, we have debian packages available in our [repository](http://packages.pixelated-project.org/debian/). To use it, you have to add it to your sources list:
-
- ```shell
-
- echo "deb [arch=amd64] http://packages.pixelated-project.org/debian jessie-snapshots main" > /etc/apt/sources.list.d/pixelated.list
-
- apt-key adv --keyserver pool.sks-keyservers.net --recv-key 287A1542472DC0E3
-
- apt-get update
-
- apt-get install pixelated-user-agent
- ```
-
- for multi-user mode, change the last line above to
- ```shell
- apt-get install pixelated-server
- ```
+If you just want to try the user agent with debian packages. See [this page](https://github.com/pixelated/pixelated-user-agent/wiki/Debian-package).
 
 ## Running tests
 
