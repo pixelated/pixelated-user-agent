@@ -3,7 +3,7 @@ VIRTUALENV=~/.venvs/pixua
 .PHONY: setup requirements install requirements_py install_py requirements_js install_js create_virtualenv
 .PHONY: test test_py test_js test_all linters linters_py linters_js coverage unit_tests_py unit_tests_js
 .PHONY: integration_tests_py functional_tests functional_tests_ci ensure_virtualenv_installed clean
-.PHONY: clean_all clean_py clean_js clean_cache remove_virtualenv remove_javascript_packages
+.PHONY: clean_all clean_py clean_js clean_cache remove_virtualenv remove_javascript_packages run
 setup: install
 
 requirements: requirements_py requirements_js
@@ -135,3 +135,7 @@ diagrams:
 	pip install plantuml;\
 	cd service/diagrams/png;\
 	python -m plantuml *.txt
+
+run:
+	@. $(VIRTUALENV)/bin/activate;\
+	pixelated-user-agent --host 0.0.0.0 --multi-user --provider=$(provider)
