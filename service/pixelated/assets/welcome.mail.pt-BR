@@ -40,8 +40,8 @@ QUdQTCAzLjAuIMOJIGNvbXBvc3RvIGRlIGR1YXMgcGFydGVzIHByaW5jaXBhaXMsIG8gY2xpZW50ZS
 B3ZWIgKHF1ZSB2b2PDqiBlc3TDoSB1c2FuZG8gYWdvcmEpIGUgYSBwbGF0YWZvcm1hIChvIHNlcnZp
 ZG9yIHBvciB0csOhcyBkbyBzaW5hbCBkZSAiQCIsIHF1ZSBwcm92w6ogbyBzZXJ2acOnbyBkZSBlbW
 FpbCBxdWUgdm9jw6ogdXNhcsOhIHBhcmEgbWFuZGFyIGUgcmVjZWJlciBtZW5zYWdlbnMpLiBWb2PD
-qiBwb2RlIGFwcmVuZGVyIG1haXMgdmlzaXRhbmRvIGh0dHBzOi8vcGl4ZWxhdGVkLXByb2plY3Qub3
-JnLy4KCkFwcm92ZWl0ZSBzZXUgZW1haWwgc2VndXJvIQo=
+qiBwb2RlIGFwcmVuZGVyIG1haXMgdmlzaXRhbmRvIGh0dHBzOi8vZ2l0aHViLmNvbS9waXhlbGF0ZW
+QuCgpBcHJvdmVpdGUgc2V1IGVtYWlsIHNlZ3VybyEK=
 --000boundary000
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
@@ -95,8 +95,8 @@ z tudo automaticamente. :D</li>
 =C3=89 composto de duas partes principais, o cliente web (que voc=C3=AA est=
 =C3=A1 usando agora) e a plataforma (o servidor por tr=C3=A1s do sinal de "=
 @", que prov=C3=AA o servi=C3=A7o de email que voc=C3=AA usar=C3=A1 para ma=
-ndar e receber mensagens). Voc=C3=AA pode aprender mais visitando https://p=
-ixelated-project.org/.</p>
+ndar e receber mensagens). Voc=C3=AA pode aprender mais visitando https://g=
+ithub.com/pixelated.</p>
 
 <p>Aproveite seu email seguro!</p>
 --000boundary000--

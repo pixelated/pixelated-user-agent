@@ -34,7 +34,7 @@ There are two ways to send encrypted messages from Pixelated:
 
 A bit more about Pixelated
 
-Pixelated is an open source project licensed under AGPL 3.0. It is composed of two main parts, the web client (that you are using now) and the provider (which will send and receive your emails, the server behind the "@" sign on your new mail address). You can learn more by visiting https://pixelated-project.org/.
+Pixelated is an open source project licensed under AGPL 3.0. It is composed of two main parts, the web client (that you are using now) and the provider (which will send and receive your emails, the server behind the "@" sign on your new mail address). You can learn more by visiting https://github.com/pixelated.
 
 Enjoy your secure email!
 
@@ -87,8 +87,8 @@ ally as any other e-mail client. Pixelated does all of this automatically. =
 <p>Pixelated is an open source project licensed under AGPL 3.0. It is compo=
 sed of two main parts, the web client (that you are using now) and the prov=
 ider (which will send and receive your emails, the server behind the @ sign=
- on your new mail address). You can learn more by visiting https://pixelate=
-d-project.org/.</p>
+ on your new mail address). You can learn more by visiting https://github.c=
+om/pixelated.</p>
 
 <p>Enjoy your secure email!</p>
 --000boundary000--

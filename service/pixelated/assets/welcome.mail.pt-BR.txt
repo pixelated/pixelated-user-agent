@@ -25,6 +25,6 @@ Para enviar mensagens criptografadas no Pixelated, existem 2 possibilidades:
 
 Um pouco mais sobre o Pixelated
 
-Pixelated é um projeto de código-aberto licenciado sob AGPL 3.0. É composto de duas partes principais, o cliente web (que você está usando agora) e a plataforma (o servidor por trás do sinal de "@", que provê o serviço de email que você usará para mandar e receber mensagens). Você pode aprender mais visitando https://pixelated-project.org/.
+Pixelated é um projeto de código-aberto licenciado sob AGPL 3.0. É composto de duas partes principais, o cliente web (que você está usando agora) e a plataforma (o servidor por trás do sinal de "@", que provê o serviço de email que você usará para mandar e receber mensagens). Você pode aprender mais visitando https://github.com/pixelated.
 
 Aproveite seu email seguro!
