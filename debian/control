@@ -4,7 +4,7 @@ Section: python
 Priority: optional
 Build-Depends: build-essential, debhelper (>= 7.4.3), libsqlcipher-dev, libsqlite3-dev, libffi-dev, nodejs, nodejs, pixpybuild, python-all (>= 2.6.6-3), python-dev, python-setuptools (>= 0.6b3), ruby-compass
 Standards-Version: 3.9.1
-Homepage: http://pixelated-project.org
+Homepage: https://github.com/pixelated
 Vcs-Git: https://github.com/pixelated-project/pixelated-user-agent.git
 Vcs-Browser: https://github.com/pixelated-project/pixelated-user-agent
 X-Python-Version: >= 2.7
