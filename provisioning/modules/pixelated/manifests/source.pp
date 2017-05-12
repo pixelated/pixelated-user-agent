@@ -21,6 +21,11 @@ class pixelated::source {
       ensure => latest
   }
 
+  package { ['sass', 'compass']:
+    ensure => latest,
+    provider => 'gem',
+  }
+
   # from jessie on, the 'virtualenv' cmd is provided
   # by a seperate package that is recommended by
   # 'python-virtualenv'
