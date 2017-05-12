@@ -72,6 +72,7 @@ We suggest you to use the following instructions:
 
 * Install Pixelated User Agent using [Developer-Setup-on-native-OS](https://github.com/pixelated/pixelated-user-agent/wiki/Developer-Setup-on-native-OS) page;
 * Install a local LEAP provider using the [LEAP Platform installation with vagrant](https://leap.se/en/docs/platform/tutorials/vagrant#2-vagrant-with-static-vagrantfile) instructions.
+* Setup local certificate for the user-agent <-> provider communication using - [Setup Local Certificate For Provider](https://github.com/pixelated/pixelated-user-agent/wiki/Running-user-agent-against-a-vagrant-LEAP-provider)
 
 ## Debian package
 
