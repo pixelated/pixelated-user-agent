@@ -17,11 +17,11 @@ Here's a [podcast](https://soundcloud.com/thoughtworks/pixelated-why-secure-comm
 
 You are most welcome to contribute to the pixelated user agent code base. Please have a look at the [contributions how to](https://github.com/pixelated/pixelated-user-agent/blob/master/CONTRIBUTING.md).
 
-## Installing Pixelated
+## Installing Pixelated as a Service
 
 To run your own instance of Pixelated, follow these instructions: https://github.com/pixelated/puppet-pixelated#manual-installation
 
-## Development
+## Installing Pixelated for Development
 
 If you want to run and test it locally, then before you have to install the following dependencies:
 
@@ -62,10 +62,6 @@ If you want to run and test it locally, then before you have to install the foll
 
     First time email sync could be slow, please be patient. This could be the case if you have a lot of emails and it is the first time you setup the user agent on your machine.
 
-#### How to get start with development?
-
-See the [Starting Development page](https://github.com/pixelated/pixelated-user-agent/wiki/Starting-Development)
-
 ### Option 2: Run Pixelated User Agent against a local LEAP provider
 
 We suggest you to use the following instructions:
@@ -74,20 +70,11 @@ We suggest you to use the following instructions:
 * Install a local LEAP provider using the [LEAP Platform installation with vagrant](https://leap.se/en/docs/platform/tutorials/vagrant#2-vagrant-with-static-vagrantfile) instructions.
 * Setup local certificate for the user-agent <-> provider communication using - [Setup Local Certificate For Provider](https://github.com/pixelated/pixelated-user-agent/wiki/Running-user-agent-against-a-vagrant-LEAP-provider)
 
-## Debian package
+## Useful links
 
-If you just want to try the user agent with debian packages, see [this page](https://github.com/pixelated/pixelated-user-agent/wiki/Debian-package).
+* [Starting Development](https://github.com/pixelated/pixelated-user-agent/wiki/Starting-Development)
+* [Running tests](https://github.com/pixelated/pixelated-user-agent/wiki/Running-Tests)
+* [User Agent with Debian packages](https://github.com/pixelated/pixelated-user-agent/wiki/Debian-package)
+* [Translating Pixelated](https://github.com/pixelated/pixelated-user-agent/wiki/Translating-Pixelated)
 
-## Running tests
-
-[Here](https://github.com/pixelated/pixelated-user-agent/wiki/Running-Tests) you will find informations about how to run Pixelated tests.
-
-# Further Notes
-
-## How to translate the user interface
-
-See: [Translating Pixelated](https://github.com/pixelated/pixelated-user-agent/wiki/Translating-Pixelated)
-
-## More informations
-
-Read the [wiki pages](https://github.com/pixelated/pixelated-user-agent/wiki)
+And much more in our [wiki pages](https://github.com/pixelated/pixelated-user-agent/wiki)
