@@ -68,6 +68,7 @@ Contributions we appreciate:
 * Quality Assurance: While every software change should be covered by automated tests, there are certain types of errors that are best spotted by a human.
 * Documentation: Feedback & improvements of our guides & tutorial copywritings.
 * Security review
+* Design: We have some issues which needs prototypes. You can contribute with sketches, wireframes, etc. See the [issues labeled 'Needs Prototype'](https://github.com/pixelated/pixelated-user-agent/labels/Needs%20Prototype).
 * Translations
 
 ## I think I might be able to hack together a quick-and-dirty lo-fi solution for the issue I’m working with… what do I do?

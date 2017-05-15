@@ -17,6 +17,8 @@ Here's a [podcast](https://soundcloud.com/thoughtworks/pixelated-why-secure-comm
 
 You are most welcome to contribute to the pixelated user agent code base. Please have a look at the [contributions how to](https://github.com/pixelated/pixelated-user-agent/blob/master/CONTRIBUTING.md).
 
+If you want to contribute as a designer or XD, see the [issues labeled 'Needs Prototype'](https://github.com/pixelated/pixelated-user-agent/labels/Needs%20Prototype).
+
 ## Installing Pixelated as a Service
 
 To run your own instance of Pixelated, follow these instructions: https://github.com/pixelated/puppet-pixelated#manual-installation
