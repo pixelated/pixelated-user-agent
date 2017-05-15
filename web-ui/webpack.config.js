@@ -15,6 +15,10 @@ var commonConfiguration = {
   module: {
     loaders: loaders
   },
+  watchOptions: {
+      poll: true
+
+  },
   postcss: {}
 };
 
