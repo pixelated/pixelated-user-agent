@@ -1,3 +1,9 @@
+pixelated-user-agent (1.0beta2) jessie; urgency=medium
+
+  * Tag 1.0beta2
+
+ -- Varac <varacanero@zeromail.org>  Tue, 16 May 2017 14:03:52 +0200
+
 pixelated-user-agent (0.5) jessie; urgency=medium
 
   * user-agent is now multi-user capable. 
