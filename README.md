@@ -13,12 +13,6 @@ Here's a [podcast](https://soundcloud.com/thoughtworks/pixelated-why-secure-comm
 
 ![High level architecture User Agent](https://raw.githubusercontent.com/pixelated/website/master/assets/images/pixelated-user-agent.png)
 
-## Getting started
-
-You are most welcome to contribute to the pixelated user agent code base. Please have a look at the [contributions how to](https://github.com/pixelated/pixelated-user-agent/blob/master/CONTRIBUTING.md).
-
-If you want to contribute as a designer or XD, see the [issues labeled 'Needs Prototype'](https://github.com/pixelated/pixelated-user-agent/labels/Needs%20Prototype).
-
 ## Installing Pixelated as a Service
 
 To run your own instance of Pixelated, follow these instructions: https://github.com/pixelated/puppet-pixelated#manual-installation
@@ -71,6 +65,12 @@ We suggest you to use the following instructions:
 * Install Pixelated User Agent using [Developer-Setup-on-native-OS](https://github.com/pixelated/pixelated-user-agent/wiki/Developer-Setup-on-native-OS) page;
 * Install a local LEAP provider using the [LEAP Platform installation with vagrant](https://leap.se/en/docs/platform/tutorials/vagrant#2-vagrant-with-static-vagrantfile) instructions.
 * [Running user agent against a local LEAP provider](https://github.com/pixelated/pixelated-user-agent/wiki/Running-user-agent-against-a-local-LEAP-provider)
+
+## Contributing
+
+You are most welcome to contribute to the Pixelated User Agent code base. Please have a look at the [contributions guide](https://github.com/pixelated/pixelated-user-agent/blob/master/CONTRIBUTING.md).
+
+If you want to contribute as a designer or XD, see the [issues labeled 'Needs Prototype'](https://github.com/pixelated/pixelated-user-agent/labels/Needs%20Prototype) for some ideas of where to start!
 
 ## Useful links
 
