@@ -1,4 +1,4 @@
-# install useragent in a virtualenv, deploy helper script
+# install useragent in a virtualenv
 # and make sure venv is activated on login
 class pixelated::source::install_useragent {
 
@@ -9,34 +9,18 @@ class pixelated::source::install_useragent {
     # see https://projects.puppetlabs.com/issues/23053
     # therefore we need to explicitily set them here
     environment => [ 'USERNAME=vagrant', 'HOME=/home/vagrant' ],
-    command     => "/vagrant/install-pixelated.sh -v \"${virtualenv_path}\" -n /home/vagrant/boxed_node_modules",
+    command     => '/usr/bin/make install',
     cwd         => '/vagrant',
     user        => 'vagrant',
     # to debug use this
-    # logoutput   => true,
+    logoutput   => true,
     timeout     => 0
   }
 
-  file { '/home/vagrant/activate_custom_node_modules.sh':
+  file { '/home/vagrant/.bashrc':
     owner  => 'vagrant',
-    mode   => '0755',
-    source => 'puppet:///modules/pixelated/activate_custom_node_modules.sh',
+    mode   => '0644',
+    source => 'puppet:///modules/pixelated/.bashrc',
   }
 
-  exec { 'add_custom_node_modules_to_bashrc':
-    command => "/bin/bash -c 'echo \"source ${virtualenv_path}/bin/activate\" >> /home/vagrant/.bashrc'",
-    unless  => "/bin/grep \"source ${virtualenv_path}/bin/activate\" /home/vagrant/.bashrc",
-    user    => 'vagrant',
-    require => [Exec['install-pixelated'], File['/home/vagrant/activate_custom_node_modules.sh']]
-  }
-  exec { 'add_custom_node_path_to_bashrc':
-    command => "/bin/bash -c 'echo NODE_PATH=/home/vagrant/boxed_node_modules/node_modules/ >> /home/vagrant/.bashrc'",
-    unless  => '/bin/grep NODE_PATH /home/vagrant/.bashrc',
-    user    => 'vagrant',
-  }
-  exec { 'add_rule_to_change_to_vagrant_folder_on_login':
-    command => "/bin/echo 'cd /vagrant' >> /home/vagrant/.bashrc",
-    unless  => "/bin/grep 'cd /vagrant' /home/vagrant/.bashrc",
-    user    => 'vagrant',
-  }
 }
