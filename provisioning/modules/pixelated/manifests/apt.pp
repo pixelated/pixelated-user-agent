@@ -1,24 +1,9 @@
 # add the pixelated sources needed to install everything
 class pixelated::apt {
-
   package { [
     'apt-transport-https',
     'lsb-release']:
-    ensure => installed
-  }
-
-  # pixelated repo
-  file { '/etc/apt/sources.list.d/pixelated.list':
-    source  => 'puppet:///modules/pixelated/apt/pixelated.list',
-    owner   => 'root',
-    require => Exec['add_pixelated_key'],
-    notify  => Exec['apt_get_update'],
-  }
-
-  exec{'add_pixelated_key':
-    command => '/usr/bin/apt-key adv --keyserver pool.sks-keyservers.net --recv-keys F4C220FCD74F4DF45DD78FC0287A1542472DC0E3',
-    unless  => '/usr/bin/apt-key finger 2>&1 | grep -q "F4C2 20FC D74F 4DF4 5DD7  8FC0 287A 1542 472D C0E3"',
-    notify  => Exec['apt_get_update'],
+      ensure => installed
   }
 
   # nodejs latest repo

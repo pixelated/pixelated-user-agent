@@ -6,19 +6,11 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "LEAP/jessie"
 
-  config.vm.define "source", primary: true do |source|
+  config.vm.define "source" do |source|
     source.vm.provision "puppet" do |puppet|
       puppet.manifests_path = "provisioning/manifests"
       puppet.module_path    = "provisioning/modules"
       puppet.manifest_file  = "source.pp"
-    end
-  end
-
-  config.vm.define "deb", autostart: false do |deb|
-    deb.vm.provision "puppet" do |puppet|
-      puppet.manifests_path = "provisioning/manifests"
-      puppet.module_path    = "provisioning/modules"
-      puppet.manifest_file  = "deb.pp"
     end
   end
 
