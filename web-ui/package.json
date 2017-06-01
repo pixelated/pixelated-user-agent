@@ -36,7 +36,9 @@
     "i18next-browser-languagedetector": "1.0.1",
     "i18next-xhr-backend": "1.2.1",
     "iframe-resizer": "3.5.7",
-    "imagemin": "5.2.1",
+    "imagemin": "5.2.1"
+  },
+  "dependencies": {
     "imagemin-pngquant": "5.0.0",
     "imagemin-svgo": "5.2.0",
     "isomorphic-fetch": "2.2.1",
