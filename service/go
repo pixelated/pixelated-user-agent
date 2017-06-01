@@ -1,0 +1,7 @@
+#!/bin/bash
+
+type -t deactivate && deactivate
+set -e
+pushd ..
+make $*
+popd
