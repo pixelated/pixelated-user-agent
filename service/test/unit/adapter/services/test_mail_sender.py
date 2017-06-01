@@ -24,8 +24,7 @@ from pixelated.adapter.model.mail import InputMail
 from pixelated.bitmask_libraries.smtp import LeapSMTPConfig
 from pixelated.support.functional import flatten
 from test.support.test_helper import mail_dict
-from twisted.internet import reactor, defer
-from twisted.internet.defer import Deferred
+from twisted.internet import defer
 from mockito.matchers import Matcher
 
 
@@ -108,7 +107,7 @@ class MailSenderTest(unittest.TestCase):
     def test_keymanager_encrypt_problem_raises_exception(self):
         input_mail = InputMail.from_dict(mail_dict(), from_address='pixelated@org')
 
-        when(OutgoingMail)._maybe_attach_key(any(), any(), any()).thenReturn(
+        when(OutgoingMail)._attach_key(any(), any()).thenReturn(
             defer.succeed(None))
         when(OutgoingMail)._fix_headers(any(), any(), any()).thenReturn(
             defer.succeed((None, mock())))
