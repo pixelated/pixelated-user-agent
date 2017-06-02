@@ -22,6 +22,7 @@ install_py: service/requirements.txt service/test_requirements.txt
 
 requirements_js:
 	@cd web-ui;\
+	npm install --production;\
 	npm install;\
 	node_modules/.bin/bower install
 
