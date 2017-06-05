@@ -1,5 +1,6 @@
 # install requirements for setting up the useragent from source
 class pixelated::source {
+  include chromedriver
 
   package { [
     'git',
@@ -15,14 +16,13 @@ class pixelated::source {
     'ruby-compass',
     'xvfb',
     'xauth',
-    'chromedriver',
     'phantomjs'
     ]:
       ensure => latest
   }
 
   package { ['sass', 'compass']:
-    ensure => latest,
+    ensure   => latest,
     provider => 'gem',
   }
 
