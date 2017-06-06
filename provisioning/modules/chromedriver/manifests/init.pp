@@ -25,13 +25,14 @@ class chromedriver (
     command => "/usr/bin/unzip ${chromedriver} -d /usr/local/bin/",
     cwd     => '/var/tmp/',
     creates => '/usr/local/bin/chromedriver',
+    require => [ Exec['fetch_chromedriver'] ],
   }
 
   exec { 'install_google_chrome':
     command => "/usr/bin/dpkg -i ${google_chrome} || /usr/bin/apt-get -y -f install",
     cwd     => '/var/tmp/',
     unless  => '/usr/bin/dpkg -l google-chrome-stable > /dev/null 2>&1',
-    require => [ Exec['apt_get_update'] ],
+    require => [ Exec['fetch_google_chrome'], Exec['apt_get_update'] ],
   }
 
 }
