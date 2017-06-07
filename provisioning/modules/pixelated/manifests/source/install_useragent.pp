@@ -9,7 +9,7 @@ class pixelated::source::install_useragent {
     # see https://projects.puppetlabs.com/issues/23053
     # therefore we need to explicitily set them here
     environment => [ 'USERNAME=vagrant', 'HOME=/home/vagrant' ],
-    command     => '/usr/bin/make install',
+    command     => "/vagrant/install-pixelated.sh -v \"${virtualenv_path}\" -n /home/vagrant/boxed_node_modules",
     cwd         => '/vagrant',
     user        => 'vagrant',
     # to debug use this
@@ -17,10 +17,15 @@ class pixelated::source::install_useragent {
     timeout     => 0
   }
 
-  file { '/home/vagrant/.bashrc':
-    owner  => 'vagrant',
-    mode   => '0644',
-    source => 'puppet:///modules/pixelated/.bashrc',
+  file {
+    '/home/vagrant/.bashrc':
+      owner  => 'vagrant',
+      mode   => '0644',
+      source => 'puppet:///modules/pixelated/.bashrc';
+    '/home/vagrant/activate_custom_node_modules.sh':
+      owner  => 'vagrant',
+      mode   => '0755',
+      source => 'puppet:///modules/pixelated/activate_custom_node_modules.sh';
   }
 
 }

@@ -120,5 +120,6 @@ fi
 # Pixelated
 
 cd /vagrant || exit
-# shellcheck disable=SC1091
-source /home/vagrant/.venvs/pixua/bin/activate
+export NODE_PATH=/home/vagrant/boxed_node_modules/node_modules/
+# shellcheck disable=SC1090
+source ${virtualenv_path}/bin/activate
